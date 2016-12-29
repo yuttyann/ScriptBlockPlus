@@ -35,8 +35,7 @@ public class VaultPermission {
 	}
 
 	public String getPrimaryGroup(Player player) {
-		String group = permission.getPrimaryGroup(player);
-		return group != null ? group : "None";
+		return permission.getPrimaryGroup(player);
 	}
 
 	public boolean playerInGroup(Player player, String group) {
