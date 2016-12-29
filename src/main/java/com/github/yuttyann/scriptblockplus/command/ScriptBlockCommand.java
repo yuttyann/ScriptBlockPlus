@@ -251,10 +251,6 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 			return commands;
 		}
 		if (args.length == 3) {
-			String arg0 = args[0];
-			if (arg0.equalsIgnoreCase("tool") || arg0.equalsIgnoreCase("reload")) {
-				return null;
-			}
 			String arg1 = args[1];
 			if (arg1.equalsIgnoreCase("remove") || arg1.equalsIgnoreCase("view")) {
 				return null;
@@ -263,7 +259,7 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 			String prefix = args[2].toLowerCase();
 			for (String c : prefixs) {
 				if (c.startsWith(prefix)) {
-					commands.add(c);
+					commands.add(c.trim());
 				}
 			}
 			return commands;
