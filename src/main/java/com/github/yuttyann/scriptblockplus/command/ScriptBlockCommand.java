@@ -236,8 +236,12 @@ public class ScriptBlockCommand implements TabExecutor {
 			return commands;
 		}
 		if (args.length == 2) {
-			String prefix = args[1].toLowerCase();
+			String arg0 = args[0];
+			if (arg0.equalsIgnoreCase("tool") || arg0.equalsIgnoreCase("reload")) {
+				return null;
+			}
 			ArrayList<String> commands = new ArrayList<String>();
+			String prefix = args[1].toLowerCase();
 			for (String c : new String[]{"create", "add", "remove", "view"}) {
 				if (c.startsWith(prefix)) {
 					commands.add(c);
