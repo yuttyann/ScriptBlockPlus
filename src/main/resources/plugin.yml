@@ -1,0 +1,46 @@
+name: ScriptBlockPlus
+main: com.github.yuttyann.scriptblockplus.Main
+version: 1.0.0
+softdepend: [Vault, ScriptBlock, PermissionsEx, bPermissions, iConomy, Jecon]
+author: yuttyann44581
+website: http://file.yuttyann44581.net/
+
+commands:
+  scriptblockplus:
+    description: ScriptBlockPlus コマンド
+    usage: |
+           /<command> tool - 実行者にスクリプト編集ツールを配布します。
+           /<command> reload - 全てのファイルの再読み込みを行います。
+           /<command> interact <options> - 実行後クリックしたブロックにスクリプトを設定します。
+           /<command> interact remove - 実行後クリックしたブロックのスクリプトを削除します。
+           /<command> interact view - 実行後クリックしたブロックのスクリプトを表示します。
+           /<command> walk <options> - 実行後クリックしたブロックにスクリプトを設定します。
+           /<command> walk remove - 実行後クリックしたブロックのスクリプトを削除します。
+           /<command> walk view - 実行後クリックしたブロックのスクリプトを表示します。
+    aliases: [sbp]
+
+permissions:
+  scriptblockplus.*:
+    default: op
+    children:
+      scriptblockplus.command.tool: true
+      scriptblockplus.command.reload: true
+      scriptblockplus.command.interact: true
+      scriptblockplus.command.walk: true
+      scriptblockplus.interact.use: true
+      scriptblockplus.walk.use: true
+      scriptblockplus.tool.scripteditor: true
+  scriptblockplus.command.tool:
+    default: op
+  scriptblockplus.command.reload:
+    default: op
+  scriptblockplus.command.interact:
+    default: op
+  scriptblockplus.command.walk:
+    default: op
+  scriptblockplus.interact.use:
+    default: true
+  scriptblockplus.walk.use:
+    default: true
+  scriptblockplus.tool.scripteditor:
+    default: op
