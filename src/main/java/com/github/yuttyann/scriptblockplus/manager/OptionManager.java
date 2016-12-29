@@ -54,7 +54,7 @@ public class OptionManager {
 		Yaml scripts = Files.getScripts(scriptType);
 		String coords = location.getCoords(false);
 		String scriptPath = location.getWorld().getName() + "." + coords;
-		if (!scripts.getFile().exists() || !scripts.contains(scriptPath + ".Author")) {
+		if (!scripts.contains(scriptPath + ".Author")) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
