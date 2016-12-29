@@ -38,29 +38,29 @@ public class Messages {
 	public Messages() {
 		instance = this;
 		messages = Files.getMessages();
-		scriptCopyMessage = messages.getString("scriptCopyMessage");
-		scriptPasteMessage = messages.getString("scriptPasteMessage");
-		scriptCreateMessage = messages.getString("scriptCreateMessage");
-		scriptAddMessage = messages.getString("scriptAddMessage");
-		scriptRemoveMessage = messages.getString("scriptRemoveMessage");
-		activeDelayMessage = messages.getString("activeDelayMessage");
-		activeCooldownMessage = messages.getString("activeCooldownMessage");
-		succEditDataMessage = messages.getString("succEditDataMessage");
-		errorEditDataMessage = messages.getString("errorEditDataMessage");
-		errorScriptCheckMessage = messages.getString("errorScriptCheckMessage");
-		errorScriptFileCheckMessage = messages.getString("errorScriptFileCheckMessage");
-		errorScriptExecMessage = messages.getString("errorScriptExecMessage");
-		errorGroupMessage = messages.getString("errorGroupMessage");
-		errorCostMessage = messages.getString("errorCostMessage");
-		errorItemMessage = messages.getString("errorItemMessage");
-		consoleScriptCopyMessage = messages.getString("consoleScriptCopyMessage");
-		consoleScriptPasteMessage = messages.getString("consoleScriptPasteMessage");
-		consoleScriptCreateMessage = messages.getString("consoleScriptCreateMessage");
-		consoleScriptAddMessage = messages.getString("consoleScriptAddMessage");
-		consoleScriptRemoveMessage = messages.getString("consoleScriptRemoveMessage");
-		consoleScriptViewMessage = messages.getString("consoleScriptViewMessage");
-		consoleSuccScriptExecMessage = messages.getString("consoleSuccScriptExecMessage");
-		consoleErrorScriptExecMessage = messages.getString("consoleErrorScriptExecMessage");
+		this.scriptCopyMessage = messages.getString("scriptCopyMessage");
+		this.scriptPasteMessage = messages.getString("scriptPasteMessage");
+		this.scriptCreateMessage = messages.getString("scriptCreateMessage");
+		this.scriptAddMessage = messages.getString("scriptAddMessage");
+		this.scriptRemoveMessage = messages.getString("scriptRemoveMessage");
+		this.activeDelayMessage = messages.getString("activeDelayMessage");
+		this.activeCooldownMessage = messages.getString("activeCooldownMessage");
+		this.succEditDataMessage = messages.getString("succEditDataMessage");
+		this.errorEditDataMessage = messages.getString("errorEditDataMessage");
+		this.errorScriptCheckMessage = messages.getString("errorScriptCheckMessage");
+		this.errorScriptFileCheckMessage = messages.getString("errorScriptFileCheckMessage");
+		this.errorScriptExecMessage = messages.getString("errorScriptExecMessage");
+		this.errorGroupMessage = messages.getString("errorGroupMessage");
+		this.errorCostMessage = messages.getString("errorCostMessage");
+		this.errorItemMessage = messages.getString("errorItemMessage");
+		this.consoleScriptCopyMessage = messages.getString("consoleScriptCopyMessage");
+		this.consoleScriptPasteMessage = messages.getString("consoleScriptPasteMessage");
+		this.consoleScriptCreateMessage = messages.getString("consoleScriptCreateMessage");
+		this.consoleScriptAddMessage = messages.getString("consoleScriptAddMessage");
+		this.consoleScriptRemoveMessage = messages.getString("consoleScriptRemoveMessage");
+		this.consoleScriptViewMessage = messages.getString("consoleScriptViewMessage");
+		this.consoleSuccScriptExecMessage = messages.getString("consoleSuccScriptExecMessage");
+		this.consoleErrorScriptExecMessage = messages.getString("consoleErrorScriptExecMessage");
 	}
 
 	public static String getScriptCopyMessage(ScriptType scriptType) {

@@ -1,6 +1,6 @@
 name: ScriptBlockPlus
 main: com.github.yuttyann.scriptblockplus.Main
-version: 1.0.0
+version: 1.0.1
 softdepend: [Vault, ScriptBlock, PermissionsEx, bPermissions, iConomy, Jecon]
 author: yuttyann44581
 website: http://file.yuttyann44581.net/

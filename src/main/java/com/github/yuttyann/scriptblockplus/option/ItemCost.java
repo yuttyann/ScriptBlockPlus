@@ -15,9 +15,9 @@ public class ItemCost {
 
 	@SuppressWarnings("deprecation")
 	public ItemCost(ItemStack item) {
-		id = item.getType().getId();
-		amount = item.getAmount();
-		damage = item.getDurability();
+		this.id = item.getType().getId();
+		this.amount = item.getAmount();
+		this.damage = item.getDurability();
 	}
 
 	public ItemCost(int id, int amount, short damage) {

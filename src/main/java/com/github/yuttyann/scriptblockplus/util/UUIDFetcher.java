@@ -15,7 +15,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 	private JsonMap jsonMap;
 
 	public UUIDFetcher(String name) {
-		jsonMap = new WebJson(PROFILE_URL + name).getJsonMap();
+		this.jsonMap = new WebJson(PROFILE_URL + name).getJsonMap();
 	}
 
 	@Override

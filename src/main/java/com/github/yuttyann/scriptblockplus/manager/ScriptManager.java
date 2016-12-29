@@ -115,25 +115,25 @@ public class ScriptManager extends Prefix {
 	}
 
 	public void resetAll() {
-		scriptType = null;
-		location = null;
+		this.scriptType = null;
+		this.location = null;
 		reset();
 	}
 
 	public void reset() {
-		command = null;
-		player = null;
-		say = null;
-		group = null;
-		groupADD = null;
-		groupREMOVE = null;
-		amount = null;
-		delay = null;
-		cooldown = null;
-		itemCost = null;
-		moneyCost = null;
-		isBypass = false;
-		isSuccess = true;
+		this.command = null;
+		this.player = null;
+		this.say = null;
+		this.group = null;
+		this.groupADD = null;
+		this.groupREMOVE = null;
+		this.amount = null;
+		this.delay = null;
+		this.cooldown = null;
+		this.itemCost = null;
+		this.moneyCost = null;
+		this.isBypass = false;
+		this.isSuccess = true;
 	}
 
 	public ScriptManager setType(ScriptType scriptType) {
@@ -189,7 +189,7 @@ public class ScriptManager extends Prefix {
 	}
 
 	private boolean check(String script) throws Exception {
-		if (script.startsWith(COMMAND)
+		return script.startsWith(COMMAND)
 			|| script.startsWith(BYPASS)
 			|| script.startsWith(PLAYER)
 			|| script.startsWith(SAY)
@@ -203,10 +203,7 @@ public class ScriptManager extends Prefix {
 			|| script.startsWith(DELAY)
 			|| script.startsWith(COOLDOWN)
 			|| script.startsWith(COST)
-			|| script.startsWith(ITEM)) {
-			return true;
-		}
-		return false;
+			|| script.startsWith(ITEM);
 	}
 
 	private void read(String script) throws Exception {

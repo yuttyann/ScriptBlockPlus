@@ -11,10 +11,10 @@ public class Files {
 	private Yaml walk;
 
 	public Files() {
-		config = new Yaml("config");
-		messages = new Yaml("messages");
-		interact = new Yaml("scripts/interact", false);
-		walk = new Yaml("scripts/walk", false);
+		this.config = new Yaml("config");
+		this.messages = new Yaml("messages");
+		this.interact = new Yaml("scripts/interact", false);
+		this.walk = new Yaml("scripts/walk", false);
 	}
 
 	public static Yaml getConfig() {

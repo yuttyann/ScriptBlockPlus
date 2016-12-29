@@ -58,7 +58,7 @@ public class ScriptFileManager {
 		}
 
 		Utils.sendPluginMessage(player, Messages.getScriptCreateMessage(scriptType));
-		if (Files.getConfig().isBoolean("ConsoleLog"))
+		if (Files.getConfig().getBoolean("ConsoleLog"))
 			Utils.sendPluginMessage(Messages.getConsoleScriptCreateMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
 	}
 
@@ -87,7 +87,7 @@ public class ScriptFileManager {
 		scripts.save();
 
 		Utils.sendPluginMessage(player, Messages.getScriptAddMessage(scriptType));
-		if (Files.getConfig().isBoolean("ConsoleLog"))
+		if (Files.getConfig().getBoolean("ConsoleLog"))
 			Utils.sendPluginMessage(Messages.getConsoleScriptAddMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
 	}
 
@@ -113,7 +113,7 @@ public class ScriptFileManager {
 		}
 
 		Utils.sendPluginMessage(player, Messages.getScriptRemoveMessage(scriptType));
-		if (Files.getConfig().isBoolean("ConsoleLog"))
+		if (Files.getConfig().getBoolean("ConsoleLog"))
 			Utils.sendPluginMessage(Messages.getConsoleScriptRemoveMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
 	}
 
@@ -152,7 +152,7 @@ public class ScriptFileManager {
 			Utils.sendPluginMessage(player, builder.append("- ").append(script).toString());
 		}
 
-		if (Files.getConfig().isBoolean("ConsoleLog"))
+		if (Files.getConfig().getBoolean("ConsoleLog"))
 			Utils.sendPluginMessage(Messages.getConsoleScriptViewMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
 	}
 }

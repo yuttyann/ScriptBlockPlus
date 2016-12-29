@@ -15,7 +15,7 @@ public class Group {
 	public Group(String group, PermType permType) {
 		this.group = group;
 		this.permType = permType;
-		permission = CollPlugins.getVaultPermission();
+		this.permission = CollPlugins.getVaultPermission();
 	}
 
 	public String getName() {

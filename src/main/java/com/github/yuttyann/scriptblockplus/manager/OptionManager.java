@@ -58,7 +58,7 @@ public class OptionManager {
 			return;
 		}
 
-		boolean isConsoleLog = Files.getConfig().isBoolean("ConsoleLog");
+		boolean isConsoleLog = Files.getConfig().getBoolean("ConsoleLog");
 		ScriptManager manager = new ScriptManager().setType(scriptType).setLocation(location);
 		List<String> list = scripts.getStringList(scriptPath + ".Scripts");
 		String script;

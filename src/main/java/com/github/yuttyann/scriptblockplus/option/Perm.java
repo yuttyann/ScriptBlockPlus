@@ -15,7 +15,7 @@ public class Perm {
 	public Perm(String perm, PermType permType) {
 		this.perm = perm;
 		this.permType = permType;
-		permission = CollPlugins.getVaultPermission();
+		this.permission = CollPlugins.getVaultPermission();
 	}
 
 	public String getNode() {

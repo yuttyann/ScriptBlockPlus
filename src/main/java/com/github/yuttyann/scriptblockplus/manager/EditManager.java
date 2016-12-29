@@ -48,7 +48,7 @@ public class EditManager {
 		}
 		Edit.setMetadata(player, getScriptType(), this);
 		Utils.sendPluginMessage(player, Messages.getScriptCopyMessage(scriptType));
-		if (Files.getConfig().isBoolean("ConsoleLog"))
+		if (Files.getConfig().getBoolean("ConsoleLog"))
 			Utils.sendPluginMessage(Messages.getConsoleScriptCopyMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
 	}
 
@@ -74,7 +74,7 @@ public class EditManager {
 		}
 
 		Utils.sendPluginMessage(player, Messages.getScriptPasteMessage(scriptType));
-		if (Files.getConfig().isBoolean("ConsoleLog"))
+		if (Files.getConfig().getBoolean("ConsoleLog"))
 			Utils.sendPluginMessage(Messages.getConsoleScriptPasteMessage(player, scriptType, location.getWorld(), coords));
 	}
 }
