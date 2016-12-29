@@ -19,6 +19,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.github.yuttyann.scriptblockplus.file.FileDownload;
+import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
@@ -120,7 +121,7 @@ public class Updater extends FileDownload implements Listener {
 	}
 
 	private void updateCheck() {
-		Yaml config = new Yaml("config");
+		Yaml config = Files.getConfig();
 		if(config.getBoolean("UpdateChecker") && Utils.versionInt(getVersion().split("\\.")) > Utils.versionInt(getPluginVersion().split("\\."))) {
 			isEnable = true;
 			boolean first = false;
