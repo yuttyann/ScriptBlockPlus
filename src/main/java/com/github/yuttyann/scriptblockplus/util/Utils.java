@@ -28,21 +28,12 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.Main;
 import com.github.yuttyann.scriptblockplus.PlayerSelector;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
 
 public class Utils {
-
-	public static boolean isLinux() {
-		return System.getProperty("os.name").toLowerCase().startsWith("linux");
-	}
-
-	public static boolean isMac() {
-		return System.getProperty("os.name").toLowerCase().startsWith("mac");
-	}
 
 	public static boolean isWindows() {
 		return System.getProperty("os.name").toLowerCase().startsWith("windows");
@@ -109,29 +100,6 @@ public class Utils {
 		}
 		versions[2] = "0" + versions[2];
 		return Integer.parseInt(versions[0]) * 100000 + Integer.parseInt(versions[1]) * 1000 + Integer.parseInt(versions[2]);
-	}
-
-	public static void dispatchCommand(CommandSender sender, String command) {
-		if (command.startsWith("/")) {
-			command = command.substring(1);
-		}
-		String pattern = PlayerSelector.getCommandBlockPattern(command);
-		if (pattern != null) {
-			Location location = null;
-			if (sender instanceof Player) {
-				location = ((Player) sender).getLocation().clone();
-			} else if (sender instanceof BlockCommandSender) {
-				location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
-			}
-			Player[] players = PlayerSelector.getPlayers(location, pattern);
-			if (players != null) {
-				for (Player player : players) {
-					Bukkit.dispatchCommand(sender, command.replace(pattern, player.getName()));
-				}
-			}
-		} else {
-			Bukkit.dispatchCommand(sender, command);
-		}
 	}
 
 	public static void dispatchCommand(CommandSender sender, Location location, String command) {
@@ -259,14 +227,6 @@ public class Utils {
 
 	public static Set<String> getConfigSection(Yaml yaml, String path, boolean key) {
 		return yaml.getConfigurationSection(path).getKeys(key);
-	}
-
-	public static Plugin getPlugin(String plugin) {
-		return Bukkit.getServer().getPluginManager().getPlugin(plugin);
-	}
-
-	public static Plugin[] getPlugins() {
-		return Bukkit.getServer().getPluginManager().getPlugins();
 	}
 
 	public static World getWorld(String name) {

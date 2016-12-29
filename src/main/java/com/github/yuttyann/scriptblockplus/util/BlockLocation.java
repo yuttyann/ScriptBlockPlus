@@ -15,24 +15,24 @@ public class BlockLocation {
 
 	public BlockLocation(Location location) {
 		this.location = location;
-		world = location.getWorld();
-		block = location.getBlock();
-		x = location.getBlockX();
-		y = location.getBlockY();
-		z = location.getBlockZ();
-		coords = x + ", " + y + ", " + z;
-		fullcoords = world.getName() + ", " + coords;
+		this.world = location.getWorld();
+		this.block = location.getBlock();
+		this.x = location.getBlockX();
+		this.y = location.getBlockY();
+		this.z = location.getBlockZ();
+		this.coords = x + ", " + y + ", " + z;
+		this.fullcoords = world.getName() + ", " + coords;
 	}
 
 	public BlockLocation(World world, int x, int y, int z) {
-		location = new Location(world, x, y, z);
+		this.location = new Location(world, x, y, z);
 		this.world = world;
 		this.block = location.getBlock();
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		coords = x + ", " + y + ", " + z;
-		fullcoords = world.getName() + ", " + coords;
+		this.coords = x + ", " + y + ", " + z;
+		this.fullcoords = world.getName() + ", " + coords;
 	}
 
 	public String getCoords(boolean isFull) {
