@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.yuttyann.scriptblockplus.Permission;
+import com.github.yuttyann.scriptblockplus.Prefix;
 import com.github.yuttyann.scriptblockplus.command.help.CommandHelp;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
@@ -23,7 +24,7 @@ import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Script;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
-public class ScriptBlockCommand implements TabExecutor {
+public class ScriptBlockCommand extends Prefix implements TabExecutor {
 
 	public ScriptBlockCommand() {
 		CommandHelp help = new CommandHelp();
@@ -243,6 +244,24 @@ public class ScriptBlockCommand implements TabExecutor {
 			ArrayList<String> commands = new ArrayList<String>();
 			String prefix = args[1].toLowerCase();
 			for (String c : new String[]{"create", "add", "remove", "view"}) {
+				if (c.startsWith(prefix)) {
+					commands.add(c);
+				}
+			}
+			return commands;
+		}
+		if (args.length == 3) {
+			String arg0 = args[0];
+			if (arg0.equalsIgnoreCase("tool") || arg0.equalsIgnoreCase("reload")) {
+				return null;
+			}
+			String arg1 = args[1];
+			if (arg1.equalsIgnoreCase("remove") || arg1.equalsIgnoreCase("view")) {
+				return null;
+			}
+			ArrayList<String> commands = new ArrayList<String>();
+			String prefix = args[2].toLowerCase();
+			for (String c : prefixs) {
 				if (c.startsWith(prefix)) {
 					commands.add(c);
 				}
