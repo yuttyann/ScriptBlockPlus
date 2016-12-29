@@ -27,6 +27,10 @@ public class ScriptFileManager {
 		this.scriptPath = location.getWorld().getName() + "." + location.getCoords(false);
 	}
 
+	public boolean checkPath() {
+		return scripts.contains(scriptPath + ".Author");
+	}
+
 	public void scriptCreate(Player player, String script) {
 		MetadataManager.removeAllMetadata(player);
 		List<String> list = scripts.getStringList(scriptPath + ".Scripts");
@@ -60,7 +64,7 @@ public class ScriptFileManager {
 
 	public void scriptAdd(Player player, String script) {
 		MetadataManager.removeAllMetadata(player);
-		if (!scripts.getFile().exists() || !scripts.contains(scriptPath + ".Author")) {
+		if (!checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
@@ -89,7 +93,7 @@ public class ScriptFileManager {
 
 	public void scriptRemove(Player player) {
 		MetadataManager.removeAllMetadata(player);
-		if (!scripts.getFile().exists() || !scripts.contains(scriptPath + ".Author")) {
+		if (!checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
@@ -115,7 +119,7 @@ public class ScriptFileManager {
 
 	public void scriptView(Player player) {
 		MetadataManager.removeAllMetadata(player);
-		if (!scripts.getFile().exists() || !scripts.contains(scriptPath + ".Author")) {
+		if (!checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}

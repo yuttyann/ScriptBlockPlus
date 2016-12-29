@@ -33,16 +33,12 @@ public class MetadataManager {
 	}
 
 	public static void removeAllMetadata(Player player) {
-		if (Click.hasAllMetadata(player))
-			Click.removeAllMetadata(player);
-		if (Script.hasAllMetadata(player))
-			Script.removeAllMetadata(player);
-		if (Edit.hasAllMetadata(player))
-			Edit.removeAllMetadata(player);
+		Click.removeAllMetadata(player);
+		Script.removeAllMetadata(player);
 	}
 
 	public static boolean hasAllMetadata(Player player) {
-		return Click.hasAllMetadata(player) || Script.hasAllMetadata(player) || Edit.hasAllMetadata(player);
+		return Click.hasAllMetadata(player) || Script.hasAllMetadata(player);
 	}
 
 	public static class Click {

@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
@@ -57,8 +56,7 @@ public class EditManager {
 		MetadataManager.removeAllMetadata(player);
 		String coords = location.getCoords(false);
 		String scriptPath = location.getWorld().getName() + "." + coords;
-		String group = ":" + CollPlugins.getVaultPermission().getPrimaryGroup(player);
-		scripts.set(scriptPath + ".Author", player.getUniqueId().toString() + group);
+		scripts.set(scriptPath + ".Author", player.getUniqueId().toString());
 		scripts.set(scriptPath + ".LastEdit", Utils.getTime("yyyy/MM/dd HH:mm:ss"));
 		scripts.set(scriptPath + ".Scripts", scripts.getStringList(getScriptPath() + ".Scripts"));
 		scripts.save();

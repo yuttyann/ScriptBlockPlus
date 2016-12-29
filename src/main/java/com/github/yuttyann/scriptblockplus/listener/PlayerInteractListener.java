@@ -80,10 +80,15 @@ public class PlayerInteractListener implements Listener {
 				break;
 			case RIGHT_CLICK_BLOCK:
 				if (player.isSneaking()) {
-					if (Edit.hasMetadata(player, ScriptType.INTERACT))
-						new ScriptFileManager(location, ScriptType.INTERACT).scriptRemove(player);
-					if (Edit.hasMetadata(player, ScriptType.WALK))
-						new ScriptFileManager(location, ScriptType.WALK).scriptRemove(player);
+					ScriptFileManager interact = new ScriptFileManager(location, ScriptType.INTERACT);
+					ScriptFileManager walk = new ScriptFileManager(location, ScriptType.WALK);
+					if (interact.checkPath()) {
+						interact.scriptRemove(player);
+					} else if (walk.checkPath()) {
+						walk.scriptRemove(player);
+					} else {
+						Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
+					}
 				} else {
 					new EditManager(Files.getWalk(), location).scriptCopy(player);
 				}
