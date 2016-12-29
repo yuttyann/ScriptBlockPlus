@@ -210,16 +210,18 @@ public class Updater extends FileDownload implements Listener {
 				Utils.sendPluginMessage(sender, "§bプラグイン名: " + getPluginName());
 				Utils.sendPluginMessage(sender, "§b☆アップデート内容☆");
 				for (String content : getDetails()) {
-					if (content != null)
+					if (content != null) {
 						Utils.sendPluginMessage(sender, "§b- " + content);
+					}
 				}
 			} else {
 				Utils.sendPluginMessage("§b最新のバージョンが存在します。v" + getVersion() + "にアップデートしてください。");
 				Utils.sendPluginMessage("§bプラグイン名: " + getPluginName());
 				Utils.sendPluginMessage("§b☆アップデート内容☆");
 				for (String content : getDetails()) {
-					if (content != null)
+					if (content != null) {
 						Utils.sendPluginMessage("§b- " + content);
+					}
 				}
 			}
 		}

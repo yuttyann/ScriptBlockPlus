@@ -50,6 +50,7 @@ public class OptionManager {
 			player.sendMessage(Messages.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
 			return;
 		}
+
 		Yaml scripts = Files.getScripts(scriptType);
 		String coords = location.getCoords(false);
 		String scriptPath = location.getWorld().getName() + "." + coords;

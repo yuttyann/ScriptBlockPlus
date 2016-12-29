@@ -17,10 +17,13 @@ public class BlockListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		ItemStack item = Utils.getItemInHand(player);
-		if (item != null && item.getType() == Material.BLAZE_ROD && item.hasItemMeta()
-				&& item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equals("§dScript Editor")) {
-			if (Permission.has(Permission.SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR, player))
-				event.setCancelled(true);
+		if (item != null && item.getType() == Material.BLAZE_ROD
+				&& item.hasItemMeta() && item.getItemMeta().hasDisplayName()
+				&& item.getItemMeta().getDisplayName().equals("§dScript Editor")) {
+			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR, player)) {
+				return;
+			}
+			event.setCancelled(true);
 		}
 	}
 }

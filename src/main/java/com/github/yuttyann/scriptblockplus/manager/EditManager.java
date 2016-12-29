@@ -42,7 +42,7 @@ public class EditManager {
 
 	public void scriptCopy(Player player) {
 		MetadataManager.removeAllMetadata(player);
-		if (!scripts.getFile().exists() || !scripts.contains(getScriptPath() + ".Author")) {
+		if (!scripts.contains(getScriptPath() + ".Author")) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}

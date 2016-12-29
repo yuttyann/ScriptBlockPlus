@@ -56,16 +56,17 @@ public class PlayerInteractListener implements Listener {
 	public void onScriptBlcokInteract(ScriptBlockInteractEvent event) {
 		Player player = event.getPlayer();
 		BlockLocation location = event.getBlockLocation();
+		PlayerInteractEvent inEvent = event.getPlayerInteractEvent();
+
 		ItemStack item = event.getItem();
-		if (event.hasItem() && item.getType() == Material.BLAZE_ROD && item.hasItemMeta()
-				&& item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equals("§dScript Editor")) {
-			event.setCancelled(true);
-			event.getPlayerInteractEvent().setCancelled(true);
+		if (event.hasItem() && item.getType() == Material.BLAZE_ROD
+				&& item.hasItemMeta() && item.getItemMeta().hasDisplayName()
+				&& item.getItemMeta().getDisplayName().equals("§dScript Editor")) {
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR, player)) {
 				Utils.sendPluginMessage(player, "§cパーミッションが無いため、使用できません。");
 				return;
 			}
-			Action action = event.getPlayerInteractEvent().getAction();
+			Action action = inEvent.getAction();
 			switch (action) {
 			case LEFT_CLICK_BLOCK:
 				if (player.isSneaking()) {
@@ -96,8 +97,11 @@ public class PlayerInteractListener implements Listener {
 			default:
 				break;
 			}
+			event.setCancelled(true);
+			inEvent.setCancelled(true);
 			return;
 		}
+
 		String script = null;
 		for (ClickType type : ClickType.values()) {
 			if (Click.hasMetadata(player, type)) {
@@ -106,37 +110,45 @@ public class PlayerInteractListener implements Listener {
 					script = Script.getMetadata(player, type);
 					new ScriptFileManager(location, ScriptType.INTERACT).scriptCreate(player, script);
 					event.setCancelled(true);
+					inEvent.setCancelled(true);
 					return;
 				case INTERACT_ADD:
 					script = Script.getMetadata(player, type);
 					new ScriptFileManager(location, ScriptType.INTERACT).scriptAdd(player, script);
 					event.setCancelled(true);
+					inEvent.setCancelled(true);
 					return;
 				case INTERACT_REMOVE:
 					new ScriptFileManager(location, ScriptType.INTERACT).scriptRemove(player);
 					event.setCancelled(true);
+					inEvent.setCancelled(true);
 					return;
 				case INTERACT_VIEW:
 					new ScriptFileManager(location, ScriptType.INTERACT).scriptView(player);
 					event.setCancelled(true);
+					inEvent.setCancelled(true);
 					return;
 				case WALK_CREATE:
 					script = Script.getMetadata(player, type);
 					new ScriptFileManager(location, ScriptType.WALK).scriptCreate(player, script);
 					event.setCancelled(true);
+					inEvent.setCancelled(true);
 					return;
 				case WALK_ADD:
 					script = Script.getMetadata(player, type);
 					new ScriptFileManager(location, ScriptType.WALK).scriptAdd(player, script);
 					event.setCancelled(true);
+					inEvent.setCancelled(true);
 					return;
 				case WALK_REMOVE:
 					new ScriptFileManager(location, ScriptType.WALK).scriptRemove(player);
 					event.setCancelled(true);
+					inEvent.setCancelled(true);
 					return;
 				case WALK_VIEW:
 					new ScriptFileManager(location, ScriptType.WALK).scriptView(player);
 					event.setCancelled(true);
+					inEvent.setCancelled(true);
 					return;
 				}
 			}
