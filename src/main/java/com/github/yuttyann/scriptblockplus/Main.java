@@ -7,7 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
@@ -26,7 +25,6 @@ public class Main extends JavaPlugin {
 
 	public static Main instance;
 	private String encode;
-	private PluginManager manager;
 	private PluginDescriptionFile description;
 	private HashMap<String, TabExecutor> commands;
 	private HashMap<String, List<CommandView>> commandhelp;
@@ -34,22 +32,21 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
-		manager = getServer().getPluginManager();
 		description = getDescription();
-		if(!(Double.parseDouble(System.getProperty("java.specification.version")) >= 1.7))
+		if(!(Utils.getJavaVersion() >= 1.7))
 		{
 			Utils.sendPluginMessage("§cJava7以上をインストールしてください。");
 			Utils.sendPluginMessage("§cJavaのバージョンが古いため、プラグインを無効化します。");
-			manager.disablePlugin(this);
+			Utils.disablePlugin(this);
 			return;
 		}
 		if (!CollPlugins.hasVault()) {
 			Utils.sendPluginMessage("§cVaultが導入されていないため、プラグインを無効化します。");
-			manager.disablePlugin(this);
+			Utils.disablePlugin(this);
 			return;
 		}
 		if (Utils.isPluginEnabled("ScriptBlock")) {
-			manager.disablePlugin(manager.getPlugin("ScriptBlock"));
+			Utils.disablePlugin(Utils.getPlugin("ScriptBlock"));
 		}
 		setupFile();
 		loadClass();
@@ -96,11 +93,11 @@ public class Main extends JavaPlugin {
 	private void loadClass() {
 		new MapManager();
 		MapManager.putAllScripts();
-		manager.registerEvents(new BlockListener(), this);
-		manager.registerEvents(new PlayerInteractListener(), this);
-		manager.registerEvents(new PlayerMoveListener(), this);
-		manager.registerEvents(new PlayerQuitListener(), this);
-		manager.registerEvents(new Updater(this), this);
+		getServer().getPluginManager().registerEvents(new BlockListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+		getServer().getPluginManager().registerEvents(new Updater(this), this);
 	}
 
 	private void loadCommand() {

@@ -15,7 +15,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 	private JsonMap jsonMap;
 
 	public UUIDFetcher(String name) {
-		this.jsonMap = new WebJson(PROFILE_URL + name).getJsonMap();
+		jsonMap = new WebJson(PROFILE_URL + name).getJsonMap();
 	}
 
 	@Override
@@ -25,14 +25,10 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 			Map<Object, Object> map = jsonMap.get(0);
 			String id = map.get("id").toString();
 			String name = map.get("name").toString();
-			UUID uuid = fromString(id);
+			UUID uuid = Utils.fromString(id);
 			uuidMap.put(name, uuid);
 		}
 		return uuidMap;
-	}
-
-	private UUID fromString(String id) {
-		return UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" + id.substring(20, 32));
 	}
 
 	public static UUID getUniqueId(String name) throws Exception {

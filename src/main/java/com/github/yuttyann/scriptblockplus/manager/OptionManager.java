@@ -50,7 +50,6 @@ public class OptionManager {
 			player.sendMessage(Messages.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
 			return;
 		}
-
 		Yaml scripts = Files.getScripts(scriptType);
 		String coords = location.getCoords(false);
 		String scriptPath = location.getWorld().getName() + "." + coords;
@@ -58,9 +57,7 @@ public class OptionManager {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
-
-		boolean isConsoleLog = Files.getConfig().getBoolean("ConsoleLog");
-		ScriptManager manager = new ScriptManager().setType(scriptType).setLocation(location);
+		ScriptManager manager = new ScriptManager(location, scriptType);
 		List<String> list = scripts.getStringList(scriptPath + ".Scripts");
 		String script;
 		for (int i = 0, l = list.size(); i < l; i++) {
@@ -68,13 +65,10 @@ public class OptionManager {
 			manager.reset();
 			if (!manager.readScript(script)) {
 				Utils.sendPluginMessage(player, Messages.getErrorScriptMessage(scriptType));
-				if (isConsoleLog)
-					Utils.sendPluginMessage(Messages.getConsoleErrorScriptExecMessage(player, scriptType, location.getWorld(), coords));
+				Utils.sendPluginMessage(Messages.getConsoleErrorScriptExecMessage(player, scriptType, location.getWorld(), coords));
 				return;
 			}
-			if (isConsoleLog)
-				Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
-
+			Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
 			if (!manager.hasOption()) {
 				dispatchCommand(player, location, manager.getCommand(), manager.getScriptType(), manager.isBypass());
 				continue;
@@ -82,18 +76,12 @@ public class OptionManager {
 			Perm perm = manager.getPerm();
 			if (perm != null && !perm.playerPerm(player)) {
 				player.sendMessage("§cパーミッションが無いため、実行できません。");
-				if (i == 0)
-					return;
-				else
-					continue;
+				return;
 			}
 			Group group = manager.getGroup();
 			if (group != null && !group.playerGroup(player)) {
 				player.sendMessage(Messages.getErrorGroupMessage(group.getName()));
-				if (i == 0)
-					return;
-				else
-					continue;
+				return;
 			}
 			if (manager.getDelay() == null) {
 				scriptOptions(player, uuid, fullcoords, location, manager);
@@ -117,25 +105,25 @@ public class OptionManager {
 
 	private static void scriptOptions(Player player, UUID uuid, String fullcoords, BlockLocation location, ScriptManager manager) {
 		Perm permADD = manager.getPermADD();
-		if (permADD != null)
+		if (permADD != null) {
 			permADD.playerPerm(player);
-
+		}
 		Perm permREMOVE = manager.getPermREMOVE();
-		if (permREMOVE != null)
+		if (permREMOVE != null) {
 			permREMOVE.playerPerm(player);
-
+		}
 		Group groupADD = manager.getGroupADD();
-		if (groupADD != null)
+		if (groupADD != null) {
 			groupADD.playerGroup(player);
-
+		}
 		Group groupREMOVE = manager.getGroupREMOVE();
-		if (groupREMOVE != null)
+		if (groupREMOVE != null) {
 			groupREMOVE.playerGroup(player);
-
+		}
 		Cooldown cooldown = manager.getCooldown();
-		if (cooldown != null)
+		if (cooldown != null) {
 			cooldown.run(uuid, fullcoords);
-
+		}
 		MoneyCost moneyCost = manager.getMoneyCost();
 		if (moneyCost != null) {
 			if (!moneyCost.payment(player)) {
@@ -155,17 +143,19 @@ public class OptionManager {
 		Amount amount = manager.getAmount();
 		if (amount != null) {
 			amount.plus();
-			if (amount.check())
+			if (amount.check()) {
 				amount.remove();
+			}
 		}
-		if (manager.getPlayer() != null && player.isOnline())
+		if (manager.getPlayer() != null && player.isOnline()) {
 			player.sendMessage(manager.getPlayer().replace("&", "§").replace("<player>", player.getName()));
-
-		if (manager.getSay() != null && player.isOnline())
+		}
+		if (manager.getSay() != null && player.isOnline()) {
 			dispatchCommand(player, location, "/say " + manager.getSay().replace("<player>", player.getName()), manager.getScriptType(), true);
-
-		if (manager.getCommand() != null && player.isOnline())
+		}
+		if (manager.getCommand() != null && player.isOnline()) {
 			dispatchCommand(player, location, manager.getCommand().replace("<player>", player.getName()), manager.getScriptType(), manager.isBypass());
+		}
 	}
 
 	private static void dispatchCommand(Player player, BlockLocation location, String command, ScriptType scriptType, boolean isBypass) {

@@ -39,27 +39,25 @@ public class ScriptFileManager {
 		} catch (IndexOutOfBoundsException e) {
 			list.add(script);
 		}
-
 		scripts.set(scriptPath + ".Author", player.getUniqueId().toString());
-		scripts.set(scriptPath + ".LastEdit", Utils.getTime("yyyy/MM/dd HH:mm:ss"));
+		scripts.set(scriptPath + ".LastEdit", Utils.getTimeFormat("yyyy/MM/dd HH:mm:ss"));
 		scripts.set(scriptPath + ".Scripts", list);
 		scripts.save();
-
 		String fullcoords = location.getCoords(true);
 		switch (scriptType) {
 		case INTERACT:
-			if (!MapManager.getInteractCoords().contains(fullcoords))
+			if (!MapManager.getInteractCoords().contains(fullcoords)) {
 				MapManager.getInteractCoords().add(fullcoords);
+			}
 			break;
 		case WALK:
-			if (!MapManager.getWalkCoords().contains(fullcoords))
+			if (!MapManager.getWalkCoords().contains(fullcoords)) {
 				MapManager.getWalkCoords().add(fullcoords);
+			}
 			break;
 		}
-
 		Utils.sendPluginMessage(player, Messages.getScriptCreateMessage(scriptType));
-		if (Files.getConfig().getBoolean("ConsoleLog"))
-			Utils.sendPluginMessage(Messages.getConsoleScriptCreateMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
+		Utils.sendPluginMessage(Messages.getConsoleScriptCreateMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
 	}
 
 	public void scriptAdd(Player player, String script) {
@@ -70,7 +68,6 @@ public class ScriptFileManager {
 		}
 		List<String> list = scripts.getStringList(scriptPath + ".Scripts");
 		list.add(script);
-
 		StringBuilder builder = new StringBuilder();
 		String uuid = player.getUniqueId().toString();
 		String author = scripts.getString(scriptPath + ".Author");
@@ -82,13 +79,11 @@ public class ScriptFileManager {
 			builder.append(author);
 		}
 		scripts.set(scriptPath + ".Author", builder.toString());
-		scripts.set(scriptPath + ".LastEdit", Utils.getTime("yyyy/MM/dd HH:mm:ss"));
+		scripts.set(scriptPath + ".LastEdit", Utils.getTimeFormat("yyyy/MM/dd HH:mm:ss"));
 		scripts.set(scriptPath + ".Scripts", list);
 		scripts.save();
-
 		Utils.sendPluginMessage(player, Messages.getScriptAddMessage(scriptType));
-		if (Files.getConfig().getBoolean("ConsoleLog"))
-			Utils.sendPluginMessage(Messages.getConsoleScriptAddMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
+		Utils.sendPluginMessage(Messages.getConsoleScriptAddMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
 	}
 
 	public void scriptRemove(Player player) {
@@ -99,22 +94,21 @@ public class ScriptFileManager {
 		}
 		scripts.set(scriptPath, null);
 		scripts.save();
-
 		String fullcoords = location.getCoords(true);
 		switch (scriptType) {
 		case INTERACT:
-			if (MapManager.getInteractCoords().contains(fullcoords))
+			if (MapManager.getInteractCoords().contains(fullcoords)) {
 				MapManager.getInteractCoords().remove(fullcoords);
+			}
 			break;
 		case WALK:
-			if (MapManager.getWalkCoords().contains(fullcoords))
+			if (MapManager.getWalkCoords().contains(fullcoords)) {
 				MapManager.getWalkCoords().remove(fullcoords);
+			}
 			break;
 		}
-
 		Utils.sendPluginMessage(player, Messages.getScriptRemoveMessage(scriptType));
-		if (Files.getConfig().getBoolean("ConsoleLog"))
-			Utils.sendPluginMessage(Messages.getConsoleScriptRemoveMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
+		Utils.sendPluginMessage(Messages.getConsoleScriptRemoveMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
 	}
 
 	public void scriptView(Player player) {
@@ -151,8 +145,6 @@ public class ScriptFileManager {
 			builder.setLength(0);
 			Utils.sendPluginMessage(player, builder.append("- ").append(script).toString());
 		}
-
-		if (Files.getConfig().getBoolean("ConsoleLog"))
-			Utils.sendPluginMessage(Messages.getConsoleScriptViewMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
+		Utils.sendPluginMessage(Messages.getConsoleScriptViewMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
 	}
 }

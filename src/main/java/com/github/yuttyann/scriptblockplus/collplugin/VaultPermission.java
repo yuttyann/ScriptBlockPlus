@@ -16,17 +16,18 @@ public class VaultPermission {
 	}
 
 	public static VaultPermission setupPermission() {
-		if (!CollPlugins.hasVault())
+		if (!CollPlugins.hasVault()) {
 			return null;
-
+		}
 		ServicesManager services = Bukkit.getServer().getServicesManager();
 		RegisteredServiceProvider<Permission> provider = services.getRegistration(Permission.class);
 		if (provider != null) {
 			VaultPermission vault = new VaultPermission();
 			vault.permission = provider.getProvider();
 			try {
-				if (vault.permission.isEnabled())
+				if (vault.permission.isEnabled()) {
 					return vault;
+				}
 			} catch (Exception e) {
 				return vault;
 			}

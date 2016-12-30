@@ -27,11 +27,13 @@ public class Group {
 		case CHECK:
 			return permission.playerInGroup(player, group);
 		case ADD:
-			if (!permission.playerInGroup(player, group))
+			if (!permission.playerInGroup(player, group)) {
 				return permission.playerAddGroup(player, group);
+			}
 		case REMOVE:
-			if (permission.playerInGroup(player, group))
+			if (permission.playerInGroup(player, group)) {
 				return permission.playerRemoveGroup(player, group);
+			}
 		default:
 			return false;
 		}

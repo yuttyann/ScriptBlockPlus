@@ -36,6 +36,11 @@ public class ScriptManager extends Prefix {
 	private boolean isBypass;
 	private boolean isSuccess;
 
+	public ScriptManager(BlockLocation location, ScriptType scriptType) {
+		this.location = location;
+		this.scriptType = scriptType;
+	}
+
 	public ScriptType getScriptType() {
 		return scriptType;
 	}
@@ -115,35 +120,25 @@ public class ScriptManager extends Prefix {
 	}
 
 	public void resetAll() {
-		this.scriptType = null;
-		this.location = null;
+		scriptType = null;
+		location = null;
 		reset();
 	}
 
 	public void reset() {
-		this.command = null;
-		this.player = null;
-		this.say = null;
-		this.group = null;
-		this.groupADD = null;
-		this.groupREMOVE = null;
-		this.amount = null;
-		this.delay = null;
-		this.cooldown = null;
-		this.itemCost = null;
-		this.moneyCost = null;
-		this.isBypass = false;
-		this.isSuccess = true;
-	}
-
-	public ScriptManager setType(ScriptType scriptType) {
-		this.scriptType = scriptType;
-		return this;
-	}
-
-	public ScriptManager setLocation(BlockLocation location) {
-		this.location = location;
-		return this;
+		command = null;
+		player = null;
+		say = null;
+		group = null;
+		groupADD = null;
+		groupREMOVE = null;
+		amount = null;
+		delay = null;
+		cooldown = null;
+		itemCost = null;
+		moneyCost = null;
+		isBypass = false;
+		isSuccess = true;
 	}
 
 	public boolean checkScript(String script) {
@@ -152,13 +147,15 @@ public class ScriptManager extends Prefix {
 			Pattern pattern = Pattern.compile(regex);
 			Matcher matcher = pattern.matcher(script);
 			if (!matcher.find() || !script.startsWith("[")) {
-				if (!check(script) && isSuccess)
+				if (!check(script) && isSuccess) {
 					isSuccess = false;
+				}
 			} else {
 				matcher.reset();
 				while (matcher.find()) {
-					if (!check(matcher.group(1)) && isSuccess)
+					if (!check(matcher.group(1)) && isSuccess) {
 						isSuccess = false;
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -208,17 +205,19 @@ public class ScriptManager extends Prefix {
 
 	private void read(String script) throws Exception {
 		for (String prefix : prefixs) {
-			switch (startsWith(script, prefix, "null")) {
+			switch (startsWith(script, prefix)) {
 			case COMMAND:
 				command = removeFirst(script, prefix).trim();
-				if (!command.startsWith("/"))
+				if (!command.startsWith("/")) {
 					command = new StringBuilder(command).insert(0, "/").toString();
+				}
 				return;
 			case BYPASS:
 				isBypass = true;
 				command = removeFirst(script, prefix).trim();
-				if (!command.startsWith("/"))
+				if (!command.startsWith("/")) {
 					command = new StringBuilder(command).insert(0, "/").toString();
+				}
 				return;
 			case PLAYER:
 				player = removeFirst(script, prefix).trim();
@@ -245,7 +244,7 @@ public class ScriptManager extends Prefix {
 				groupREMOVE = new Group(removeFirst(script, prefix).trim(), PermType.REMOVE);
 				return;
 			case AMOUNT:
-				amount = new Amount(removeFirst(script, prefix).trim()).setYaml(scriptType).setPath(location);
+				amount = new Amount(removeFirst(script, prefix).trim(), location, scriptType);
 				return;
 			case DELAY:
 				delay = new Delay(removeFirst(script, prefix).trim());
@@ -273,15 +272,17 @@ public class ScriptManager extends Prefix {
 		}
 	}
 
-	private static String startsWith(String allstrs, String prefix, String nullstr) {
-		if (allstrs.startsWith(prefix))
-			return allstrs.substring(0, prefix.length());
-		return nullstr;
+	private static String startsWith(String strs, String prefix) {
+		if (strs.startsWith(prefix)) {
+			return strs.substring(0, prefix.length());
+		}
+		return "null";
 	}
 
 	private String removeFirst(String all, String prefix) {
-		if (all.startsWith(prefix))
+		if (all.startsWith(prefix)) {
 			return all.substring(prefix.length(), all.length());
+		}
 		return all;
 	}
 }

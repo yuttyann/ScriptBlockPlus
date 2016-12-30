@@ -15,12 +15,22 @@ public class Amount {
 	private BlockLocation location;
 	private int amount;
 
-	public Amount(int amount) {
+	public Amount(int amount, BlockLocation location, ScriptType scriptType) {
 		this.amount = amount;
+		this.location = location;
+		this.scriptPath = location.getWorld().getName() + "." + location.getCoords(false);
+		this.amountPath = scriptPath + ".Amount";
+		this.scriptType = scriptType;
+		this.scripts = Files.getScripts(scriptType);
 	}
 
-	public Amount(String amount) {
+	public Amount(String amount, BlockLocation location, ScriptType scriptType) {
 		this.amount = Integer.parseInt(amount);
+		this.location = location;
+		this.scriptPath = location.getWorld().getName() + "." + location.getCoords(false);
+		this.amountPath = scriptPath + ".Amount";
+		this.scriptType = scriptType;
+		this.scripts = Files.getScripts(scriptType);
 	}
 
 	public int getAmount() {
@@ -37,22 +47,6 @@ public class Amount {
 
 	public BlockLocation getBlockLocation() {
 		return location;
-	}
-
-	public Amount setYaml(ScriptType scriptType) {
-		if (scripts == null)
-			this.scriptType = scriptType;
-			scripts = Files.getScripts(scriptType);
-		return this;
-	}
-
-	public Amount setPath(BlockLocation location) {
-		if (scriptPath == null) {
-			this.location = location;
-			scriptPath = location.getWorld().getName() + "." + location.getCoords(false);
-			amountPath = scriptPath + ".Amount";
-		}
-		return this;
 	}
 
 	public boolean check() {

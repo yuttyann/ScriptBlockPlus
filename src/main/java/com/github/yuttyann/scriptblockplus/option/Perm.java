@@ -27,11 +27,13 @@ public class Perm {
 		case CHECK:
 			return permission.has(player, perm);
 		case ADD:
-			if (!permission.has(player, perm))
+			if (!permission.has(player, perm)) {
 				return permission.playerAdd(player, perm);
+			}
 		case REMOVE:
-			if (permission.has(player, perm))
+			if (permission.has(player, perm)) {
 				return permission.playerRemove(player, perm);
+			}
 		default:
 			return false;
 		}

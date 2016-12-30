@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Edit;
@@ -46,10 +45,10 @@ public class EditManager {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
+		Edit.removeAllMetadata(player);
 		Edit.setMetadata(player, getScriptType(), this);
 		Utils.sendPluginMessage(player, Messages.getScriptCopyMessage(scriptType));
-		if (Files.getConfig().getBoolean("ConsoleLog"))
-			Utils.sendPluginMessage(Messages.getConsoleScriptCopyMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
+		Utils.sendPluginMessage(Messages.getConsoleScriptCopyMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
 	}
 
 	public void scriptPaste(Player player, BlockLocation location) {
@@ -57,24 +56,23 @@ public class EditManager {
 		String coords = location.getCoords(false);
 		String scriptPath = location.getWorld().getName() + "." + coords;
 		scripts.set(scriptPath + ".Author", player.getUniqueId().toString());
-		scripts.set(scriptPath + ".LastEdit", Utils.getTime("yyyy/MM/dd HH:mm:ss"));
+		scripts.set(scriptPath + ".LastEdit", Utils.getTimeFormat("yyyy/MM/dd HH:mm:ss"));
 		scripts.set(scriptPath + ".Scripts", scripts.getStringList(getScriptPath() + ".Scripts"));
 		scripts.save();
-
 		String fullcoords = location.getCoords(true);
 		switch (scriptType) {
 		case INTERACT:
-			if (!MapManager.getInteractCoords().contains(fullcoords))
+			if (!MapManager.getInteractCoords().contains(fullcoords)) {
 				MapManager.getInteractCoords().add(fullcoords);
+			}
 			break;
 		case WALK:
-			if (!MapManager.getWalkCoords().contains(fullcoords))
+			if (!MapManager.getWalkCoords().contains(fullcoords)) {
 				MapManager.getWalkCoords().add(fullcoords);
+			}
 			break;
 		}
-
 		Utils.sendPluginMessage(player, Messages.getScriptPasteMessage(scriptType));
-		if (Files.getConfig().getBoolean("ConsoleLog"))
-			Utils.sendPluginMessage(Messages.getConsoleScriptPasteMessage(player, scriptType, location.getWorld(), coords));
+		Utils.sendPluginMessage(Messages.getConsoleScriptPasteMessage(player, scriptType, location.getWorld(), coords));
 	}
 }

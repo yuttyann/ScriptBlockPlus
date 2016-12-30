@@ -54,7 +54,7 @@ public class CommandHelp {
 		builder.append("§d==== ").append(Main.instance.getPluginName()).append(" Commands ====");
 		sender.sendMessage(builder.toString());
 		for (CommandView view : views) {
-			if (view.isCommandHelp()) {
+			if (view.isHelp()) {
 				builder.setLength(0);
 				builder.append("§b/").append(name).append(" ").append(view.getMessage());
 				sender.sendMessage(builder.toString());

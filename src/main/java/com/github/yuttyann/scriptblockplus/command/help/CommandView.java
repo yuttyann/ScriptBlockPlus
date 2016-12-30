@@ -6,25 +6,25 @@ public class CommandView {
 
 	private String message;
 	private String permission;
-	private boolean isCommandHelp;
+	private boolean isHelp;
 
-	public CommandView setAll(String message, String permission, boolean isCommandHelp) {
+	public CommandView setAll(String message, String permission, boolean isHelp) {
 		this.message = message;
 		this.permission = permission;
-		this.isCommandHelp = isCommandHelp;
+		this.isHelp = isHelp;
 		return this;
 	}
 
-	public CommandView setAll(String message, Permission permission, boolean isCommandHelp) {
+	public CommandView setAll(String message, Permission permission, boolean isHelp) {
 		this.message = message;
 		this.permission = permission.getNode();
-		this.isCommandHelp = isCommandHelp;
+		this.isHelp = isHelp;
 		return this;
 	}
 
-	public CommandView setMessage(String message, boolean isCommandHelp) {
+	public CommandView setMessage(String message, boolean isHelp) {
 		this.message = message;
-		this.isCommandHelp = isCommandHelp;
+		this.isHelp = isHelp;
 		return this;
 	}
 
@@ -46,8 +46,8 @@ public class CommandView {
 		return permission;
 	}
 
-	public boolean isCommandHelp() {
-		return isCommandHelp;
+	public boolean isHelp() {
+		return isHelp;
 	}
 
 	public boolean hasMessage() {

@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
-import com.github.yuttyann.scriptblockplus.util.Utils;
 
 public class MapManager {
 
@@ -48,15 +47,15 @@ public class MapManager {
 		try {
 			Yaml interact = Files.getInteract();
 			StringBuilder builder = new StringBuilder();
-			for (String world : Utils.getConfigSection(interact, "", false)) {
-				for (String coords : Utils.getConfigSection(interact, world, false)) {
+			for (String world : interact.getConfigurationSection("").getKeys(false)) {
+				for (String coords : interact.getConfigurationSection(world).getKeys(false)) {
 					interactCoords.add(builder.append(world).append(", ").append(coords).toString());
 					builder.setLength(0);
 				}
 			}
 			Yaml walk = Files.getWalk();
-			for (String world : Utils.getConfigSection(walk, "", false)) {
-				for (String coords : Utils.getConfigSection(walk, world, false)) {
+			for (String world : walk.getConfigurationSection("").getKeys(false)) {
+				for (String coords : walk.getConfigurationSection(world).getKeys(false)) {
 					walkCoords.add(builder.append(world).append(", ").append(coords).toString());
 					builder.setLength(0);
 				}

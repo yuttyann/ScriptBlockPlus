@@ -13,17 +13,18 @@ public class VaultEconomy {
 	private Economy economy;
 
 	public static VaultEconomy setupEconomy() {
-		if (!CollPlugins.hasVault())
+		if (!CollPlugins.hasVault()) {
 			return null;
-
+		}
 		ServicesManager services = Bukkit.getServer().getServicesManager();
 		RegisteredServiceProvider<Economy> provider = services.getRegistration(Economy.class);
 		if (provider != null) {
 			VaultEconomy vault = new VaultEconomy();
 			vault.economy = provider.getProvider();
 			try {
-				if (vault.economy.isEnabled())
+				if (vault.economy.isEnabled()) {
 					return vault;
+				}
 			} catch (Exception e) {
 				return vault;
 			}

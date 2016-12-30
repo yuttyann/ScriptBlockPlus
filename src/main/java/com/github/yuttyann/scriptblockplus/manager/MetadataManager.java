@@ -53,8 +53,9 @@ public class MetadataManager {
 
 		public static void removeAllMetadata(Player player) {
 			for (ClickType type : ClickType.values()) {
-				if (hasMetadata(player, type))
+				if (hasMetadata(player, type)) {
 					removeMetadata(player, type);
+				}
 			}
 		}
 
@@ -64,8 +65,9 @@ public class MetadataManager {
 
 		public static boolean hasAllMetadata(Player player) {
 			for (ClickType clickType : ClickType.values()) {
-				if (hasMetadata(player, clickType))
+				if (hasMetadata(player, clickType)) {
 					return true;
+				}
 			}
 			return false;
 		}
@@ -73,8 +75,9 @@ public class MetadataManager {
 		public static boolean getMetadata(Player player, ClickType clickType) {
 			List<MetadataValue> values = player.getMetadata(clickType.getString());
 			for (MetadataValue value : values) {
-				if (value.asBoolean())
+				if (value.asBoolean()) {
 					return true;
+				}
 			}
 			return false;
 		}
@@ -92,8 +95,9 @@ public class MetadataManager {
 
 		public static void removeAllMetadata(Player player) {
 			for (ClickType clickType : ClickType.values()) {
-				if (hasMetadata(player, clickType))
+				if (hasMetadata(player, clickType)) {
 					removeMetadata(player, clickType);
+				}
 			}
 		}
 
@@ -103,8 +107,9 @@ public class MetadataManager {
 
 		public static boolean hasAllMetadata(Player player) {
 			for (ClickType clickType : ClickType.values()) {
-				if (hasMetadata(player, clickType))
+				if (hasMetadata(player, clickType)) {
 					return true;
+				}
 			}
 			return false;
 		}
@@ -114,8 +119,9 @@ public class MetadataManager {
 			String script;
 			for (MetadataValue value : values) {
 				script = value.asString();
-				if (script != null)
+				if (script != null) {
 					return script;
+				}
 			}
 			return null;
 		}
@@ -133,8 +139,9 @@ public class MetadataManager {
 
 		public static void removeAllMetadata(Player player) {
 			for (ScriptType scriptType : ScriptType.values()) {
-				if (hasMetadata(player, scriptType))
+				if (hasMetadata(player, scriptType)) {
 					removeMetadata(player, scriptType);
+				}
 			}
 		}
 
@@ -144,8 +151,9 @@ public class MetadataManager {
 
 		public static boolean hasAllMetadata(Player player) {
 			for (ScriptType scriptType : ScriptType.values()) {
-				if (hasMetadata(player, scriptType))
+				if (hasMetadata(player, scriptType)) {
 					return true;
+				}
 			}
 			return false;
 		}
@@ -154,8 +162,9 @@ public class MetadataManager {
 			for (ScriptType scriptType : ScriptType.values()) {
 				List<MetadataValue> values = player.getMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString());
 				for (MetadataValue value : values) {
-					if (value != null)
+					if (value != null) {
 						return (EditManager) value.value();
+					}
 				}
 			}
 			return null;

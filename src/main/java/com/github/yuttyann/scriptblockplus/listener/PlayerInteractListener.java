@@ -57,7 +57,6 @@ public class PlayerInteractListener implements Listener {
 		Player player = event.getPlayer();
 		BlockLocation location = event.getBlockLocation();
 		PlayerInteractEvent inEvent = event.getPlayerInteractEvent();
-
 		ItemStack item = event.getItem();
 		if (event.hasItem() && item.getType() == Material.BLAZE_ROD
 				&& item.hasItemMeta() && item.getItemMeta().hasDisplayName()
@@ -101,7 +100,6 @@ public class PlayerInteractListener implements Listener {
 			inEvent.setCancelled(true);
 			return;
 		}
-
 		String script = null;
 		for (ClickType type : ClickType.values()) {
 			if (Click.hasMetadata(player, type)) {

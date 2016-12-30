@@ -1,9 +1,16 @@
 package com.github.yuttyann.scriptblockplus;
 
 import java.awt.Desktop;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
@@ -129,7 +136,7 @@ public class Updater extends FileDownload implements Listener {
 			File changelogFile = new File(data, "更新履歴.txt");
 			ArrayList<String> changelog = new ArrayList<String>();
 			if (changelogFile.exists()) {
-				changelog = Utils.getTextList(changelogFile);
+				changelog = getTextList(changelogFile);
 			}
 			sendCheckMessage(Bukkit.getConsoleSender());
 			if(config.getBoolean("AutoDownload")) {
@@ -165,7 +172,7 @@ public class Updater extends FileDownload implements Listener {
 	}
 
 	private void openTextFile(File file, ArrayList<String> changelog, boolean first) {
-		if (!first && changelog.equals(Utils.getTextList(getChangeLogURL()))) {
+		if (!first && changelog.equals(getTextList(getChangeLogURL()))) {
 			return;
 		}
 		Desktop desktop = Desktop.getDesktop();
@@ -174,6 +181,85 @@ public class Updater extends FileDownload implements Listener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private ArrayList<String> getTextList(File file) {
+		FileReader fileReader = null;
+		BufferedReader buReader = null;
+		try {
+			fileReader = new FileReader(file);
+			buReader = new BufferedReader(fileReader);
+			ArrayList<String> list = new ArrayList<String>();
+			String line;
+			while ((line = buReader.readLine()) != null) {
+				list.add(line);
+			}
+			return list;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (buReader != null) {
+				try {
+					buReader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (fileReader != null) {
+				try {
+					fileReader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return new ArrayList<String>();
+	}
+
+	private ArrayList<String> getTextList(String url) {
+		InputStream input = null;
+		InputStreamReader inReader = null;
+		BufferedReader buReader = null;
+		try {
+			input = new URL(url).openStream();
+			inReader = new InputStreamReader(input);
+			buReader = new BufferedReader(inReader);
+			String line;
+			ArrayList<String> list = new ArrayList<String>();
+			while ((line = buReader.readLine()) != null) {
+				list.add(line);
+			}
+			return list;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (buReader != null) {
+				try {
+					buReader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (inReader != null) {
+				try {
+					inReader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return new ArrayList<String>();
 	}
 
 	private String getSize(long size) {

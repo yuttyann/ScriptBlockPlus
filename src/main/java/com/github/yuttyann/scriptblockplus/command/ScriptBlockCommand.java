@@ -62,8 +62,8 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 					"§aスクリプトをコピー、削除するツールです。",
 					"§6左クリック: §e種類\"interact\"のスクリプトをコピーします。",
 					"§6右クリック: §e種類\"walk\"のスクリプトをコピーします。",
-					"§6シフト&左クリック: §eスクリプトをペーストします。",
-					"§6シフト&右クリック: §eスクリプトを削除します。")
+					"§6シフトand左クリック: §eスクリプトをペーストします。",
+					"§6シフトand右クリック: §eスクリプトを削除します。")
 				);
 				item.setItemMeta(meta);
 				player.getInventory().addItem(item);
@@ -145,7 +145,7 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 					return true;
 				}
 				String script = Utils.stringBuilder(args, 2).trim();
-				ScriptManager manager = new ScriptManager();
+				ScriptManager manager = new ScriptManager(null, null);
 				manager.reset();
 				if (!manager.checkScript(script)) {
 					Utils.sendPluginMessage(player, Messages.getErrorScriptCheckMessage());
@@ -166,7 +166,7 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 					return true;
 				}
 				String script = Utils.stringBuilder(args, 2).trim();
-				ScriptManager manager = new ScriptManager();
+				ScriptManager manager = new ScriptManager(null, null);
 				manager.reset();
 				if (!manager.checkScript(script)) {
 					Utils.sendPluginMessage(player, Messages.getErrorScriptCheckMessage());
@@ -187,7 +187,7 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 					return true;
 				}
 				String script = Utils.stringBuilder(args, 2).trim();
-				ScriptManager manager = new ScriptManager();
+				ScriptManager manager = new ScriptManager(null, null);
 				manager.reset();
 				if (!manager.checkScript(script)) {
 					Utils.sendPluginMessage(player, Messages.getErrorScriptCheckMessage());
@@ -208,7 +208,7 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 					return true;
 				}
 				String script = Utils.stringBuilder(args, 2).trim();
-				ScriptManager manager = new ScriptManager();
+				ScriptManager manager = new ScriptManager(null, null);
 				manager.reset();
 				if (!manager.checkScript(script)) {
 					Utils.sendPluginMessage(player, Messages.getErrorScriptCheckMessage());
