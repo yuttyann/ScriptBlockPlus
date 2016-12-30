@@ -11,10 +11,12 @@ commands:
     usage: |
            /<command> tool - 実行者にスクリプト編集ツールを配布します。
            /<command> reload - 全てのファイルの再読み込みを行います。
-           /<command> interact <options> - 実行後クリックしたブロックにスクリプトを設定します。
+           /<command> interact create <options> - 実行後クリックしたブロックにスクリプトを設定します。
+           /<command> interact add <options> - 実行後クリックしたブロックにスクリプトを追加します。
            /<command> interact remove - 実行後クリックしたブロックのスクリプトを削除します。
            /<command> interact view - 実行後クリックしたブロックのスクリプトを表示します。
-           /<command> walk <options> - 実行後クリックしたブロックにスクリプトを設定します。
+           /<command> walk create <options> - 実行後クリックしたブロックにスクリプトを設定します。
+           /<command> walk add <options> - 実行後クリックしたブロックにスクリプトを追加します。
            /<command> walk remove - 実行後クリックしたブロックのスクリプトを削除します。
            /<command> walk view - 実行後クリックしたブロックのスクリプトを表示します。
     aliases: [sbp]
