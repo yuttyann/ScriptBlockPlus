@@ -130,11 +130,11 @@ public class MetadataManager {
 	public static class Edit {
 
 		public static void setMetadata(Player player, ScriptType scriptType, EditManager value) {
-			player.setMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString(), new FixedMetadataValue(Main.instance, value));
+			player.setMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase(), new FixedMetadataValue(Main.instance, value));
 		}
 
 		public static void removeMetadata(Player player, ScriptType scriptType) {
-			player.removeMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString(), Main.instance);
+			player.removeMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase(), Main.instance);
 		}
 
 		public static void removeAllMetadata(Player player) {
@@ -146,7 +146,7 @@ public class MetadataManager {
 		}
 
 		public static boolean hasMetadata(Player player, ScriptType scriptType) {
-			return player.hasMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString());
+			return player.hasMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase());
 		}
 
 		public static boolean hasAllMetadata(Player player) {
@@ -160,7 +160,7 @@ public class MetadataManager {
 
 		public static EditManager getMetadata(Player player) {
 			for (ScriptType scriptType : ScriptType.values()) {
-				List<MetadataValue> values = player.getMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString());
+				List<MetadataValue> values = player.getMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase());
 				for (MetadataValue value : values) {
 					if (value != null) {
 						return (EditManager) value.value();

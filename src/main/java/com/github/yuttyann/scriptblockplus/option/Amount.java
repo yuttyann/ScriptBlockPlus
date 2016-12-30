@@ -9,7 +9,7 @@ import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 public class Amount {
 
 	private ScriptType scriptType;
-	private Yaml scripts;
+	private Yaml scriptFile;
 	private String scriptPath;
 	private String amountPath;
 	private BlockLocation location;
@@ -21,7 +21,7 @@ public class Amount {
 		this.scriptPath = location.getWorld().getName() + "." + location.getCoords(false);
 		this.amountPath = scriptPath + ".Amount";
 		this.scriptType = scriptType;
-		this.scripts = Files.getScripts(scriptType);
+		this.scriptFile = Files.getScriptFile(scriptType);
 	}
 
 	public Amount(String amount, BlockLocation location, ScriptType scriptType) {
@@ -30,7 +30,7 @@ public class Amount {
 		this.scriptPath = location.getWorld().getName() + "." + location.getCoords(false);
 		this.amountPath = scriptPath + ".Amount";
 		this.scriptType = scriptType;
-		this.scripts = Files.getScripts(scriptType);
+		this.scriptFile = Files.getScriptFile(scriptType);
 	}
 
 	public int getAmount() {
@@ -50,17 +50,17 @@ public class Amount {
 	}
 
 	public boolean check() {
-		return scripts.getInt(amountPath, 0) >= amount;
+		return scriptFile.getInt(amountPath, 0) >= amount;
 	}
 
 	public void plus() {
-		scripts.set(amountPath, scripts.getInt(amountPath, 0) + 1);
-		scripts.save();
+		scriptFile.set(amountPath, scriptFile.getInt(amountPath, 0) + 1);
+		scriptFile.save();
 	}
 
 	public void remove() {
-		scripts.set(scriptPath, null);
-		scripts.save();
+		scriptFile.set(scriptPath, null);
+		scriptFile.save();
 
 		switch (scriptType) {
 		case INTERACT:

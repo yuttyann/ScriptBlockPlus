@@ -33,7 +33,7 @@ public class Files {
 		return instance.walk;
 	}
 
-	public static Yaml getScripts(ScriptType scriptType) {
+	public static Yaml getScriptFile(ScriptType scriptType) {
 		switch (scriptType) {
 		case INTERACT:
 			return instance.interact;

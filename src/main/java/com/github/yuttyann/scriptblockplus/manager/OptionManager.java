@@ -50,15 +50,15 @@ public class OptionManager {
 			player.sendMessage(Messages.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
 			return;
 		}
-		Yaml scripts = Files.getScripts(scriptType);
+		Yaml scriptFile = Files.getScriptFile(scriptType);
 		String coords = location.getCoords(false);
 		String scriptPath = location.getWorld().getName() + "." + coords;
-		if (!scripts.contains(scriptPath + ".Author")) {
+		if (!scriptFile.contains(scriptPath + ".Author")) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
 		ScriptManager manager = new ScriptManager(location, scriptType);
-		List<String> list = scripts.getStringList(scriptPath + ".Scripts");
+		List<String> list = scriptFile.getStringList(scriptPath + ".Scripts");
 		String script;
 		for (int i = 0, l = list.size(); i < l; i++) {
 			script = list.get(i);
