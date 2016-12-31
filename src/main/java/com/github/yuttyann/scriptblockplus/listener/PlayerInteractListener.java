@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.yuttyann.scriptblockplus.Permission;
@@ -32,7 +33,8 @@ public class PlayerInteractListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action action = event.getAction();
-		if (action == Action.LEFT_CLICK_AIR || action == Action.RIGHT_CLICK_AIR) {
+		if ((action == Action.LEFT_CLICK_AIR || action == Action.RIGHT_CLICK_AIR)
+				|| (Utils.isUpperVersion_v19() && isSlotHand(event))) {
 			return;
 		}
 		Player player = event.getPlayer();
@@ -151,5 +153,10 @@ public class PlayerInteractListener implements Listener {
 				}
 			}
 		}
+	}
+
+	private boolean isSlotHand(PlayerInteractEvent event) {
+		EquipmentSlot hand = event.getHand();
+		return hand != null && hand != EquipmentSlot.HAND;
 	}
 }

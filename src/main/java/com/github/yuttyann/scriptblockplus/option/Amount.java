@@ -61,7 +61,6 @@ public class Amount {
 	public void remove() {
 		scriptFile.set(scriptPath, null);
 		scriptFile.save();
-
 		switch (scriptType) {
 		case INTERACT:
 			MapManager.getInteractCoords().remove(location.getCoords(true));

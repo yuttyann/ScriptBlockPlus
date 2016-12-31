@@ -160,16 +160,16 @@ public class OptionManager {
 
 	private static void dispatchCommand(Player player, BlockLocation location, String command, ScriptType scriptType, boolean isBypass) {
 		if (!isBypass) {
-			Utils.dispatchCommand(player, location.getLocation(), command);
+			Utils.dispatchCommand(player, location.toLocation(), command);
 			return;
 		}
 		if (player.isOp()) {
-			Utils.dispatchCommand(player, location.getLocation(), command);
+			Utils.dispatchCommand(player, location.toLocation(), command);
 			return;
 		}
 		try {
 			player.setOp(true);
-			Utils.dispatchCommand(player, location.getLocation(), command);
+			Utils.dispatchCommand(player, location.toLocation(), command);
 		} finally {
 			player.setOp(false);
 		}

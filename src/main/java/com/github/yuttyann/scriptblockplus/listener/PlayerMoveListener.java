@@ -1,5 +1,7 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,10 +19,22 @@ import com.github.yuttyann.scriptblockplus.util.Utils;
 
 public class PlayerMoveListener implements Listener {
 
+	private HashMap<Player, BlockLocation> oldLocation;
+
+	public PlayerMoveListener() {
+		this.oldLocation = new HashMap<Player, BlockLocation>();
+	}
+
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerMoveEvent(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		BlockLocation location = new BlockLocation(event.getTo().clone().add(0, -0.1, 0));
+		if (oldLocation.containsKey(player)
+				&& oldLocation.get(player).getBlockX() == location.getBlockX()
+				&& oldLocation.get(player).getBlockZ() == location.getBlockZ()) {
+			return;
+		}
+		oldLocation.put(player, location);
 		ScriptBlockWalkEvent scriptEvent = new ScriptBlockWalkEvent(event, player, location.getBlock(), Utils.getItemInHand(player), location);
 		Bukkit.getServer().getPluginManager().callEvent(scriptEvent);
 		if (!scriptEvent.isCancelled() && MapManager.getWalkCoords().contains(location.getCoords(true))) {
