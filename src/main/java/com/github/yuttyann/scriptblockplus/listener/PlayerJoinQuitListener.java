@@ -1,5 +1,7 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,8 +19,10 @@ public class PlayerJoinQuitListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		MapManager.getOldLocation().put(player.getUniqueId(),
-				new BlockLocation(player.getLocation().clone().add(0, -0.5, 0)).getCoords(true));
+		UUID uuid = player.getUniqueId();
+		if (!MapManager.getOldLocation().containsKey(uuid)) {
+			MapManager.getOldLocation().put(uuid, new BlockLocation(player.getLocation().clone().add(0, -0.5, 0)).getCoords(true));
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
