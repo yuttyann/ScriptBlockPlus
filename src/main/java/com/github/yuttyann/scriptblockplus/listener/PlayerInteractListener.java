@@ -1,16 +1,21 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.BlockIterator;
 
 import com.github.yuttyann.scriptblockplus.Permission;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
@@ -31,27 +36,23 @@ import com.github.yuttyann.scriptblockplus.util.Utils;
 public class PlayerInteractListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		Action action = event.getAction();
-		if ((action == Action.LEFT_CLICK_AIR || action == Action.RIGHT_CLICK_AIR)
-				|| (Utils.isUpperVersion_v19() && isSlotHand(event))) {
+	public void onPlayerAnimation(PlayerAnimationEvent event) {
+		Player player = event.getPlayer();
+		if (event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
 			return;
 		}
-		Player player = event.getPlayer();
-		Block block = event.getClickedBlock();
-		BlockLocation location = new BlockLocation(block.getLocation());
-		ScriptBlockInteractEvent scriptEvent = new ScriptBlockInteractEvent(event, player, block, event.getItem(), location);
-		Bukkit.getServer().getPluginManager().callEvent(scriptEvent);
-		if (!scriptEvent.isCancelled() && MapManager.getInteractCoords().contains(location.getCoords(true))) {
-			if (!Files.getConfig().getBoolean("LeftClick") && action == Action.LEFT_CLICK_BLOCK) {
-				return;
-			}
-			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_INTERACT_USE, player)) {
-				Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
-				return;
-			}
-			OptionManager.scriptExec(player, location, ScriptType.INTERACT);
+		Block block = getTargetBlock(player, 5);
+		scriptEvent(new PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, Utils.getItemInHand(player), block, BlockFace.SELF));
+	}
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		Action action = event.getAction();
+		if ((action != Action.LEFT_CLICK_BLOCK || action != Action.RIGHT_CLICK_BLOCK)
+				&& (Utils.isUpperVersion_v19() && !isSlotHand(event))) {
+			return;
 		}
+		scriptEvent(event);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -155,8 +156,43 @@ public class PlayerInteractListener implements Listener {
 		}
 	}
 
+	private void scriptEvent(PlayerInteractEvent event) {
+		Block block = event.getClickedBlock();
+		if (block == null) {
+			return;
+		}
+		Player player = event.getPlayer();
+		BlockLocation location = new BlockLocation(block.getLocation());
+		ScriptBlockInteractEvent scriptEvent = new ScriptBlockInteractEvent(event, player, block, event.getItem(), location);
+		Bukkit.getServer().getPluginManager().callEvent(scriptEvent);
+		if (!scriptEvent.isCancelled() && MapManager.getInteractCoords().contains(location.getCoords(true))) {
+			if (!Files.getConfig().getBoolean("LeftClick") && event.getAction() == Action.LEFT_CLICK_BLOCK) {
+				return;
+			}
+			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_INTERACT_USE, player)) {
+				Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+				return;
+			}
+			OptionManager.scriptExec(player, location, ScriptType.INTERACT);
+		}
+	}
+
 	private boolean isSlotHand(PlayerInteractEvent event) {
 		EquipmentSlot hand = event.getHand();
-		return hand != null && hand != EquipmentSlot.HAND;
+		return hand != null && hand == EquipmentSlot.HAND;
+	}
+
+	private Block getTargetBlock(Player player, int distance) {
+		BlockIterator iterator = new BlockIterator(player, distance);
+		while (iterator.hasNext()) {
+			Block block = iterator.next();
+			Material type = block.getType();
+			if (type != Material.AIR
+					&& type != Material.STATIONARY_LAVA
+					&& type != Material.STATIONARY_WATER) {
+				return block;
+			}
+		}
+		return null;
 	}
 }

@@ -44,6 +44,7 @@ public class Utils {
 
 	private static Boolean isUpperVersion_v175;
 	private static Boolean isUpperVersion_v178;
+	private static Boolean isUpperVersion_v18;
 	private static Boolean isUpperVersion_v19;
 
 	public static boolean isUpperVersion_v175() {
@@ -58,6 +59,13 @@ public class Utils {
 			isUpperVersion_v178 = isUpperVersion(getVersion(), "1.7.8");
 		}
 		return isUpperVersion_v178;
+	}
+
+	public static boolean isUpperVersion_v18() {
+		if (isUpperVersion_v18 == null) {
+			isUpperVersion_v18 = isUpperVersion(getVersion(), "1.8");
+		}
+		return isUpperVersion_v18;
 	}
 
 	public static boolean isUpperVersion_v19() {
