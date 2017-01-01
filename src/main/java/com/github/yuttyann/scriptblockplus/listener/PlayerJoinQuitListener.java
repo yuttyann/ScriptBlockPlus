@@ -4,12 +4,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Edit;
+import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 
-public class PlayerQuitListener implements Listener {
+public class PlayerJoinQuitListener implements Listener {
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		MapManager.getOldLocation().put(player.getUniqueId(),
+				new BlockLocation(player.getLocation().clone().add(0, -0.5, 0)).getCoords(true));
+	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {

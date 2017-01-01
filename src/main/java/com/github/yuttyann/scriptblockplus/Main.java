@@ -16,8 +16,8 @@ import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
 import com.github.yuttyann.scriptblockplus.listener.BlockListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerInteractListener;
+import com.github.yuttyann.scriptblockplus.listener.PlayerJoinQuitListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerMoveListener;
-import com.github.yuttyann.scriptblockplus.listener.PlayerQuitListener;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
@@ -96,7 +96,7 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new BlockListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
-		getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(), this);
 		getServer().getPluginManager().registerEvents(new Updater(this), this);
 	}
 

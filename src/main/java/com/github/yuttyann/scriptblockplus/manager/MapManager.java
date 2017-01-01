@@ -9,6 +9,7 @@ import com.github.yuttyann.scriptblockplus.file.Yaml;
 
 public class MapManager {
 
+	private static HashMap<UUID, String> oldLocation;
 	private static HashMap<String, ArrayList<UUID>> delay;
 	private static HashMap<String, ArrayList<UUID>> cooldown;
 	private static HashMap<String, HashMap<UUID, long[]>> cooldownParams;
@@ -16,11 +17,16 @@ public class MapManager {
 	private static ArrayList<String> walkCoords;
 
 	public MapManager() {
+		oldLocation = new HashMap<UUID, String>();
 		delay = new HashMap<String, ArrayList<UUID>>();
 		cooldown = new HashMap<String, ArrayList<UUID>>();
 		cooldownParams = new HashMap<String, HashMap<UUID, long[]>>();
 		interactCoords = new ArrayList<String>();
 		walkCoords = new ArrayList<String>();
+	}
+
+	public static HashMap<UUID, String> getOldLocation() {
+		return oldLocation;
 	}
 
 	public static HashMap<String, ArrayList<UUID>> getDelay() {
