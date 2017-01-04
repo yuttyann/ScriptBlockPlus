@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -40,7 +39,7 @@ public class ScriptFileManager {
 			list.add(script);
 		}
 		scriptFile.set(scriptPath + ".Author", player.getUniqueId().toString());
-		scriptFile.set(scriptPath + ".LastEdit", Utils.getTimeFormat("yyyy/MM/dd HH:mm:ss"));
+		scriptFile.set(scriptPath + ".LastEdit", Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
 		scriptFile.set(scriptPath + ".Scripts", list);
 		scriptFile.save();
 		String fullcoords = location.getCoords(true);
@@ -79,7 +78,7 @@ public class ScriptFileManager {
 			builder.append(author);
 		}
 		scriptFile.set(scriptPath + ".Author", builder.toString());
-		scriptFile.set(scriptPath + ".LastEdit", Utils.getTimeFormat("yyyy/MM/dd HH:mm:ss"));
+		scriptFile.set(scriptPath + ".LastEdit", Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
 		scriptFile.set(scriptPath + ".Scripts", list);
 		scriptFile.save();
 		Utils.sendPluginMessage(player, Messages.getScriptAddMessage(scriptType));
@@ -129,7 +128,7 @@ public class ScriptFileManager {
 				if (i == 0) {
 					builder.append("[");
 				}
-				builder.append(Utils.getName(UUID.fromString(authors[i])));
+				builder.append(Utils.getName(authors[i]));
 				if (i != (length - 1)) {
 					builder.append(", ");
 				} else {
@@ -137,7 +136,7 @@ public class ScriptFileManager {
 				}
 			}
 		} else {
-			builder.append(Utils.getName(UUID.fromString(authors[0])));
+			builder.append(Utils.getName(authors[0]));
 		}
 		Utils.sendPluginMessage(player, "Author: " + builder.toString());
 		Utils.sendPluginMessage(player, "LastEdit: " + scriptFile.getString(scriptPath + ".LastEdit"));

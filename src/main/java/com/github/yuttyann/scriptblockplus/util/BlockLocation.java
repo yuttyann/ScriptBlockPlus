@@ -22,17 +22,7 @@ public class BlockLocation implements Cloneable, ConfigurationSerializable {
 	private String fullcoords;
 
 	public BlockLocation(Location location) {
-		this.world = location.getWorld();
-		this.block = location.getBlock();
-		this.x = location.getX();
-		this.y = location.getY();
-		this.z = location.getZ();
-		this.blockX = Location.locToBlock(x);
-		this.blockY = Location.locToBlock(y);
-		this.blockZ = Location.locToBlock(z);
-		this.block = world.getBlockAt(blockX, blockY, blockZ);
-		this.coords = blockX + ", " + blockY + ", " + blockZ;
-		this.fullcoords = world.getName() + ", " + coords;
+		this(location.getWorld(), location.getX(), location.getY(), location.getZ());
 	}
 
 	public BlockLocation(World world, double x, double y, double z) {
@@ -90,7 +80,7 @@ public class BlockLocation implements Cloneable, ConfigurationSerializable {
 
 	@Override
 	public String toString() {
-		return "BlockLocation{world=" + world + ",x=" + x + ",y=" + y + ",z=" + z + '}';
+		return "BlockLocation{world=" + world + ",x=" + x + ",y=" + y + ",z=" + z + "}";
 	}
 
 	public BlockLocation clone() {

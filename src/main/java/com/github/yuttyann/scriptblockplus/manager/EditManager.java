@@ -62,7 +62,7 @@ public class EditManager {
 		String scriptPath = location.getWorld().getName() + "." + coords;
 		System.out.println(scripts);
 		scriptFile.set(scriptPath + ".Author", player.getUniqueId().toString());
-		scriptFile.set(scriptPath + ".LastEdit", Utils.getTimeFormat("yyyy/MM/dd HH:mm:ss"));
+		scriptFile.set(scriptPath + ".LastEdit", Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
 		scriptFile.set(scriptPath + ".Scripts", new ArrayList<String>(scripts));
 		scriptFile.save();
 		String fullcoords = location.getCoords(true);

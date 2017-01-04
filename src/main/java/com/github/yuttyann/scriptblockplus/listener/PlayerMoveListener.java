@@ -19,13 +19,12 @@ import com.github.yuttyann.scriptblockplus.util.Utils;
 
 public class PlayerMoveListener implements Listener {
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerMoveEvent(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueId();
 		BlockLocation location = new BlockLocation(player.getLocation().clone().add(0, -0.5, 0));
-		if (MapManager.getOldLocation().containsKey(uuid)
-				&& MapManager.getOldLocation().get(uuid).equals(location.getCoords(true))) {
+		if (MapManager.getOldLocation().containsKey(uuid) && MapManager.getOldLocation().get(uuid).equals(location.getCoords(true))) {
 			return;
 		}
 		MapManager.getOldLocation().put(uuid, location.getCoords(true));

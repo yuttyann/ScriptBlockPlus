@@ -3,10 +3,15 @@ package com.github.yuttyann.scriptblockplus.manager;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.command.BlockCommandSender;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.yuttyann.scriptblockplus.Main;
+import com.github.yuttyann.scriptblockplus.PlayerSelector;
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
@@ -70,7 +75,7 @@ public class OptionManager {
 			}
 			Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
 			if (!manager.hasOption()) {
-				dispatchCommand(player, location, manager.getCommand(), manager.getScriptType(), manager.isBypass());
+				commandExec(player, location, manager.getCommand().replace("<player>", player.getName()), manager.getScriptType(), manager.isBypass());
 				continue;
 			}
 			Perm perm = manager.getPerm();
@@ -134,8 +139,9 @@ public class OptionManager {
 		ItemCost itemCost = manager.getItemCost();
 		if (itemCost != null) {
 			if (!itemCost.payment(player)) {
-				if (moneyCost != null && moneyCost.isSuccess())
+				if (moneyCost != null && moneyCost.isSuccess()) {
 					CollPlugins.getVaultEconomy().depositPlayer(player, moneyCost.getCost());
+				}
 				Utils.sendPluginMessage(player, Messages.getErrorItemMessage(itemCost.getMaterial(), itemCost.getId(), itemCost.getAmount(), itemCost.getDurability()));
 				return;
 			}
@@ -151,27 +157,51 @@ public class OptionManager {
 			player.sendMessage(manager.getPlayer().replace("&", "§").replace("<player>", player.getName()));
 		}
 		if (manager.getSay() != null && player.isOnline()) {
-			dispatchCommand(player, location, "/say " + manager.getSay().replace("<player>", player.getName()), manager.getScriptType(), true);
+			commandExec(player, location, "/say " + manager.getSay().replace("<player>", player.getName()), manager.getScriptType(), true);
 		}
 		if (manager.getCommand() != null && player.isOnline()) {
-			dispatchCommand(player, location, manager.getCommand().replace("<player>", player.getName()), manager.getScriptType(), manager.isBypass());
+			commandExec(player, location, manager.getCommand().replace("<player>", player.getName()), manager.getScriptType(), manager.isBypass());
 		}
 	}
 
-	private static void dispatchCommand(Player player, BlockLocation location, String command, ScriptType scriptType, boolean isBypass) {
+	private static void commandExec(Player player, BlockLocation location, String command, ScriptType scriptType, boolean isBypass) {
 		if (!isBypass) {
-			Utils.dispatchCommand(player, location.toLocation(), command);
+			dispatchCommand(player, location.toLocation(), command);
 			return;
 		}
 		if (player.isOp()) {
-			Utils.dispatchCommand(player, location.toLocation(), command);
+			dispatchCommand(player, location.toLocation(), command);
 			return;
 		}
 		try {
 			player.setOp(true);
-			Utils.dispatchCommand(player, location.toLocation(), command);
+			dispatchCommand(player, location.toLocation(), command);
 		} finally {
 			player.setOp(false);
+		}
+	}
+
+	private static void dispatchCommand(CommandSender sender, Location location, String command) {
+		if (command.startsWith("/")) {
+			command = command.substring(1);
+		}
+		String pattern = PlayerSelector.getCommandBlockPattern(command);
+		if (pattern != null) {
+			if (location == null) {
+				if (sender instanceof Player) {
+					location = ((Player) sender).getLocation().clone();
+				} else if (sender instanceof BlockCommandSender) {
+					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
+				}
+			}
+			Player[] players = PlayerSelector.getPlayers(location, pattern);
+			if (players != null) {
+				for (Player player : players) {
+					Bukkit.dispatchCommand(sender, command.replace(pattern, player.getName()));
+				}
+			}
+		} else {
+			Bukkit.dispatchCommand(sender, command);
 		}
 	}
 }

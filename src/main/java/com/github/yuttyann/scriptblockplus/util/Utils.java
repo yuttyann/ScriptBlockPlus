@@ -9,16 +9,13 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.Main;
-import com.github.yuttyann.scriptblockplus.PlayerSelector;
 
 public class Utils {
 
@@ -156,13 +153,13 @@ public class Utils {
 		return getItemInHand(player);
 	}
 
-	public static String getTimeFormat(String format) {
+	public static String getDateFormat(String format) {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		return sdf.format(date);
 	}
 
-	public static String getName(UUID uuid) {
+	public static String getName(String uuid) {
 		String name = null;
 		Object player = null;
 		if ((player = getOnlinePlayer(uuid)) != null) {
@@ -190,37 +187,13 @@ public class Utils {
 		return uuid;
 	}
 
-	public static void dispatchCommand(CommandSender sender, Location location, String command) {
-		if (command.startsWith("/")) {
-			command = command.substring(1);
-		}
-		String pattern = PlayerSelector.getCommandBlockPattern(command);
-		if (pattern != null) {
-			if (location == null) {
-				if (sender instanceof Player) {
-					location = ((Player) sender).getLocation().clone();
-				} else if (sender instanceof BlockCommandSender) {
-					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
-				}
-			}
-			Player[] players = PlayerSelector.getPlayers(location, pattern);
-			if (players != null) {
-				for (Player player : players) {
-					Bukkit.dispatchCommand(sender, command.replace(pattern, player.getName()));
-				}
-			}
-		} else {
-			Bukkit.dispatchCommand(sender, command);
-		}
-	}
-
 	public static Player getOnlinePlayer(Object uuid_or_name) {
 		boolean isUUID = false;
 		if (uuid_or_name instanceof UUID) {
 			isUUID = true;
 		} else if (uuid_or_name instanceof String) {
 			try {
-				if (((String) uuid_or_name).contains("-")) {
+				if (!((String) uuid_or_name).contains("-")) {
 					uuid_or_name = fromString(uuid_or_name.toString());
 				} else {
 					uuid_or_name = UUID.fromString(uuid_or_name.toString());
@@ -250,7 +223,7 @@ public class Utils {
 			isUUID = true;
 		} else if (uuid_or_name instanceof String) {
 			try {
-				if (((String) uuid_or_name).contains("-")) {
+				if (!((String) uuid_or_name).contains("-")) {
 					uuid_or_name = fromString(uuid_or_name.toString());
 				} else {
 					uuid_or_name = UUID.fromString(uuid_or_name.toString());
@@ -278,8 +251,8 @@ public class Utils {
 		return null;
 	}
 
-	public static UUID fromString(String id) {
-		return UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" + id.substring(20, 32));
+	public static UUID fromString(String uuid) {
+		return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));
 	}
 
 	public static ArrayList<Player> getOnlinePlayers() {

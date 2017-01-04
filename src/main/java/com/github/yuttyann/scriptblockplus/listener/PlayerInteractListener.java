@@ -1,10 +1,15 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,14 +47,21 @@ public class PlayerInteractListener implements Listener {
 			return;
 		}
 		Block block = getTargetBlock(player, 5);
-		scriptEvent(new PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, Utils.getItemInHand(player), block, BlockFace.SELF));
+		if (block == null) {
+			return;
+		}
+		for (Entity entity : getNearbyEntities(block.getLocation(), 5.5D, 5.5D, 5.5D)) {
+			if (entity instanceof Player && ((Player) entity).equals(player)) {
+				scriptEvent(new PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, Utils.getItemInHand(player), block, BlockFace.SELF));
+				break;
+			}
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action action = event.getAction();
-		if ((action != Action.LEFT_CLICK_BLOCK || action != Action.RIGHT_CLICK_BLOCK)
-				&& (Utils.isUpperVersion_v19() && !isSlotHand(event))) {
+		if (action == Action.LEFT_CLICK_AIR || action == Action.RIGHT_CLICK_AIR) {
 			return;
 		}
 		scriptEvent(event);
@@ -157,11 +169,11 @@ public class PlayerInteractListener implements Listener {
 	}
 
 	private void scriptEvent(PlayerInteractEvent event) {
-		Block block = event.getClickedBlock();
-		if (block == null) {
+		if (Utils.isUpperVersion_v19() && !isSlotHand(event)) {
 			return;
 		}
 		Player player = event.getPlayer();
+		Block block = event.getClickedBlock();
 		BlockLocation location = new BlockLocation(block.getLocation());
 		ScriptBlockInteractEvent scriptEvent = new ScriptBlockInteractEvent(event, player, block, event.getItem(), location);
 		Bukkit.getServer().getPluginManager().callEvent(scriptEvent);
@@ -180,6 +192,25 @@ public class PlayerInteractListener implements Listener {
 	private boolean isSlotHand(PlayerInteractEvent event) {
 		EquipmentSlot hand = event.getHand();
 		return hand != null && hand == EquipmentSlot.HAND;
+	}
+
+	private List<Entity> getNearbyEntities(Location where, double rangex, double rangey, double rangez) {
+		List<Entity> found = new ArrayList<Entity>();
+		for (Entity entity : where.getWorld().getEntities()) {
+			if (isInBorder(where, entity.getLocation(), rangex, rangey, rangez)) {
+				found.add(entity);
+			}
+		}
+		return found;
+	}
+
+	private boolean isInBorder(Location center, Location notCenter, double rangex, double rangey, double rangez) {
+		double x = center.getX(), y = center.getY(), z = center.getZ();
+		double x1 = notCenter.getX(), y1 = notCenter.getY(), z1 = notCenter.getZ();
+		if (x1 >= (x + rangex) || y1 >= (y + rangey) || z1 >= (z + rangez) || x1 <= (x - rangex) || y1 <= (y - rangey) || z1 <= (z - rangez)) {
+			return false;
+		}
+		return true;
 	}
 
 	private Block getTargetBlock(Player player, int distance) {
