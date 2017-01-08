@@ -51,6 +51,8 @@ public class MapManager {
 
 	public static void putAllScripts() {
 		try {
+			interactCoords.clear();
+			walkCoords.clear();
 			Yaml interact = Files.getInteract();
 			StringBuilder builder = new StringBuilder();
 			for (String world : interact.getConfigurationSection("").getKeys(false)) {

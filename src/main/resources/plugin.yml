@@ -1,7 +1,7 @@
 name: ScriptBlockPlus
 main: com.github.yuttyann.scriptblockplus.Main
-version: 1.0.5
-softdepend: [Vault, ScriptBlock, PermissionsEx, bPermissions, iConomy, Jecon]
+version: 1.0.6
+softdepend: [Vault, ScriptBlock, WorldEdit, PermissionsEx, bPermissions, iConomy, Jecon]
 author: yuttyann44581
 website: http://file.yuttyann44581.net/
 
@@ -19,6 +19,9 @@ commands:
            /<command> walk add <options> - 実行後クリックしたブロックにスクリプトを追加します。
            /<command> walk remove - 実行後クリックしたブロックのスクリプトを削除します。
            /<command> walk view - 実行後クリックしたブロックのスクリプトを表示します。
+           /<command> worldedit paste - WorldEditで選択した範囲にスクリプトをペーストします。
+           /<command> worldedit remove - WorldEditで選択した範囲のスクリプトを削除します。
+           ※スクリプトをペーストするためには編集ツールでコピーしておく必要があります。
     aliases: [sbp]
 
 permissions:
@@ -29,6 +32,7 @@ permissions:
       scriptblockplus.command.reload: true
       scriptblockplus.command.interact: true
       scriptblockplus.command.walk: true
+      scriptblockplus.command.worldedit: true
       scriptblockplus.interact.use: true
       scriptblockplus.walk.use: true
       scriptblockplus.tool.scripteditor: true
@@ -39,6 +43,8 @@ permissions:
   scriptblockplus.command.interact:
     default: op
   scriptblockplus.command.walk:
+    default: op
+  scriptblockplus.command.worldedit:
     default: op
   scriptblockplus.interact.use:
     default: true

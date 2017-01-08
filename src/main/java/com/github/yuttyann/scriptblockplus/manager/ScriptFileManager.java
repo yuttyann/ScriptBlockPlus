@@ -30,6 +30,10 @@ public class ScriptFileManager {
 		return scriptFile.contains(scriptPath + ".Author");
 	}
 
+	public void save() {
+		scriptFile.save();
+	}
+
 	public void scriptCreate(Player player, String script) {
 		MetadataManager.removeAllMetadata(player);
 		List<String> list = scriptFile.getStringList(scriptPath + ".Scripts");
@@ -80,7 +84,7 @@ public class ScriptFileManager {
 		scriptFile.set(scriptPath + ".Author", builder.toString());
 		scriptFile.set(scriptPath + ".LastEdit", Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
 		scriptFile.set(scriptPath + ".Scripts", list);
-		scriptFile.save();
+		save();
 		Utils.sendPluginMessage(player, Messages.getScriptAddMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptAddMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
 	}
@@ -92,7 +96,7 @@ public class ScriptFileManager {
 			return;
 		}
 		scriptFile.set(scriptPath, null);
-		scriptFile.save();
+		save();
 		String fullcoords = location.getCoords(true);
 		switch (scriptType) {
 		case INTERACT:
@@ -108,6 +112,24 @@ public class ScriptFileManager {
 		}
 		Utils.sendPluginMessage(player, Messages.getScriptRemoveMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptRemoveMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
+	}
+
+	//WorldEdit用に軽量化
+	public void scriptWERemove(Player player) {
+		scriptFile.set(scriptPath, null);
+		String fullcoords = location.getCoords(true);
+		switch (scriptType) {
+		case INTERACT:
+			if (MapManager.getInteractCoords().contains(fullcoords)) {
+				MapManager.getInteractCoords().remove(fullcoords);
+			}
+			break;
+		case WALK:
+			if (MapManager.getWalkCoords().contains(fullcoords)) {
+				MapManager.getWalkCoords().remove(fullcoords);
+			}
+			break;
+		}
 	}
 
 	public void scriptView(Player player) {

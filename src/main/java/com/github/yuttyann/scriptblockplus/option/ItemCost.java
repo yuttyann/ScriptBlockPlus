@@ -11,7 +11,7 @@ public class ItemCost {
 	private int id;
 	private int amount;
 	private short damage;
-	private boolean success;
+	private boolean isSuccess;
 
 	@SuppressWarnings("deprecation")
 	public ItemCost(ItemStack item) {
@@ -39,7 +39,7 @@ public class ItemCost {
 	}
 
 	public boolean isSuccess() {
-		return success;
+		return isSuccess;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -64,10 +64,8 @@ public class ItemCost {
 				Utils.setItemInHand(player, new ItemStack(Material.AIR));
 			}
 			player.updateInventory();
-			success = true;
-		} else {
-			success = false;
+			isSuccess = true;
 		}
-		return success;
+		return isSuccess;
 	}
 }

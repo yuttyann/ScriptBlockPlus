@@ -1,11 +1,13 @@
 package com.github.yuttyann.scriptblockplus.file;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ClickType;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
+import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 
 public class Messages {
 
@@ -16,6 +18,8 @@ public class Messages {
 	private String scriptCreateMessage;
 	private String scriptAddMessage;
 	private String scriptRemoveMessage;
+	private String worldEditPasteMessage;
+	private String worldEditRemoveMessage;
 	private String activeDelayMessage;
 	private String activeCooldownMessage;
 	private String succEditDataMessage;
@@ -32,6 +36,8 @@ public class Messages {
 	private String consoleScriptAddMessage;
 	private String consoleScriptRemoveMessage;
 	private String consoleScriptViewMessage;
+	private String consoleWorldEditPasteMessage;
+	private String consoleWorldEditRemoveMessage;
 	private String consoleSuccScriptExecMessage;
 	private String consoleErrorScriptExecMessage;
 	private boolean isConsoleLog;
@@ -44,6 +50,8 @@ public class Messages {
 		this.scriptCreateMessage = messages.getString("scriptCreateMessage");
 		this.scriptAddMessage = messages.getString("scriptAddMessage");
 		this.scriptRemoveMessage = messages.getString("scriptRemoveMessage");
+		this.worldEditPasteMessage = messages.getString("worldEditPasteMessage");
+		this.worldEditRemoveMessage = messages.getString("worldEditRemoveMessage");
 		this.activeDelayMessage = messages.getString("activeDelayMessage");
 		this.activeCooldownMessage = messages.getString("activeCooldownMessage");
 		this.succEditDataMessage = messages.getString("succEditDataMessage");
@@ -60,6 +68,8 @@ public class Messages {
 		this.consoleScriptAddMessage = messages.getString("consoleScriptAddMessage");
 		this.consoleScriptRemoveMessage = messages.getString("consoleScriptRemoveMessage");
 		this.consoleScriptViewMessage = messages.getString("consoleScriptViewMessage");
+		this.consoleWorldEditPasteMessage = messages.getString("consoleWorldEditPasteMessage");
+		this.consoleWorldEditRemoveMessage = messages.getString("consoleWorldEditRemoveMessage");
 		this.consoleSuccScriptExecMessage = messages.getString("consoleSuccScriptExecMessage");
 		this.consoleErrorScriptExecMessage = messages.getString("consoleErrorScriptExecMessage");
 		this.isConsoleLog = Files.getConfig().getBoolean("ConsoleLog");
@@ -98,6 +108,20 @@ public class Messages {
 			return null;
 		}
 		return replaceColorCode(instance.scriptRemoveMessage.replace("%scripttype%", scriptType.getString()));
+	}
+
+	public static String getWorldEditPasteMessage(ScriptType scriptType) {
+		if (instance.worldEditPasteMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.worldEditPasteMessage.replace("%scripttype%", scriptType.getString()));
+	}
+
+	public static String getWorldEditRemoveMessage(String scriptType) {
+		if (instance.worldEditRemoveMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.worldEditRemoveMessage.replace("%scripttype%", scriptType));
 	}
 
 	public static String getActiveDelayMessage() {
@@ -237,6 +261,26 @@ public class Messages {
 			return null;
 		}
 		return replaceColorCode(instance.consoleScriptViewMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.getString()).replace("%world%", world.getName()).replace("%coords%", coords));
+	}
+
+	public static String getConsoleWorldEditPasteMessage(ScriptType scriptType, Location min, Location max) {
+		if (instance.consoleWorldEditPasteMessage == null || !instance.isConsoleLog) {
+			return null;
+		}
+		String world = min.getWorld().getName();
+		String minCoords = new BlockLocation(min).getCoords(false);
+		String maxCoords = new BlockLocation(max).getCoords(false);
+		return replaceColorCode(instance.consoleWorldEditPasteMessage.replace("%scripttype%", scriptType.getString()).replace("%world%", world).replace("%mincoords%", minCoords).replace("%maxcoords%", maxCoords));
+	}
+
+	public static String getConsoleWorldEditRemoveMessage(String scriptType, Location min, Location max) {
+		if (instance.consoleWorldEditRemoveMessage == null) {
+			return null;
+		}
+		String world = min.getWorld().getName();
+		String minCoords = new BlockLocation(min).getCoords(false);
+		String maxCoords = new BlockLocation(max).getCoords(false);
+		return replaceColorCode(instance.consoleWorldEditRemoveMessage.replace("%scripttype%", scriptType).replace("%world%", world).replace("%mincoords%", minCoords).replace("%maxcoords%", maxCoords));
 	}
 
 	public static String getConsoleSuccScriptExecMessage(Player player, ScriptType scriptType, World world, String coords) {

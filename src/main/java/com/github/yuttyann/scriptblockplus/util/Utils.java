@@ -200,7 +200,7 @@ public class Utils {
 				}
 				isUUID = true;
 			} catch (Exception e) {
-				e.printStackTrace();
+				isUUID = false;
 			}
 		}
 		Object value;
@@ -230,7 +230,7 @@ public class Utils {
 				}
 				isUUID = true;
 			} catch (Exception e) {
-				e.printStackTrace();
+				isUUID = false;
 			}
 		}
 		Object value;

@@ -31,18 +31,7 @@ public class Yaml extends FileDownload {
 	private YamlConfiguration yaml;
 
 	public Yaml(String fileName) {
-		Main main = Main.instance;
-		File data = main.getDataFolder();
-		String encode = main.getEncode();
-		file = new File(data, this.fileName = fileName + "_" + encode + ".yml");
-		if (!file.exists()) {
-			if (!data.exists()) {
-				data.mkdirs();
-			}
-			String[] args = new String[]{fileName};
-			create(data, new StringBuilder(), encode, args);
-		}
-		yaml = YamlConfiguration.loadConfiguration(file);
+		this(fileName, true);
 	}
 
 	public Yaml(String fileName, boolean isDownload) {

@@ -108,10 +108,10 @@ public class JsonMap extends HashMap<Integer, Map<Object, Object>> implements Ma
 
 	/**
 	 * 文字列を取得する
-	 * @return Jsonの文字列
+	 * @return HashMapの文字列
 	 */
 	@Override
 	public String toString() {
-		return json;
+		return super.toString();
 	}
 }
