@@ -161,7 +161,7 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 					Utils.sendPluginMessage(player, "§cWorldEditが導入されていないため、実行に失敗しました。");
 					return true;
 				}
-				WorldEditAPI api = CollPlugins.getWorldEditPlugin();
+				WorldEditAPI api = CollPlugins.getWorldEditAPI();
 				Selection selection = api.getSelection(player);
 				Location min = selection.getMinimumPoint();
 				Location max = selection.getMaximumPoint();
@@ -189,7 +189,7 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 					Utils.sendPluginMessage(player, "§cWorldEditが導入されていないため、実行に失敗しました。");
 					return true;
 				}
-				WorldEditAPI api = CollPlugins.getWorldEditPlugin();
+				WorldEditAPI api = CollPlugins.getWorldEditAPI();
 				Selection selection = api.getSelection(player);
 				if (selection == null) {
 					Utils.sendPluginMessage(player, "§cWorldEditで座標を選択してください。");

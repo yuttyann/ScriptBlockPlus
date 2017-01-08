@@ -38,7 +38,7 @@ public class CollPlugins {
 		return vaultPermission;
 	}
 
-	public static WorldEditAPI getWorldEditPlugin() {
+	public static WorldEditAPI getWorldEditAPI() {
 		if (worldEditAPI == null) {
 			worldEditAPI = WorldEditAPI.setupWorldEditAPI();
 		}
