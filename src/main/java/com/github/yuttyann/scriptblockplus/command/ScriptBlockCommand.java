@@ -163,6 +163,10 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 				}
 				WorldEditAPI api = CollPlugins.getWorldEditAPI();
 				Selection selection = api.getSelection(player);
+				if (selection == null) {
+					Utils.sendPluginMessage(player, "§cWorldEditで座標を選択してください。");
+					return true;
+				}
 				Location min = selection.getMinimumPoint();
 				Location max = selection.getMaximumPoint();
 				List<Block> blocks = api.getSelectionBlocks(selection);
