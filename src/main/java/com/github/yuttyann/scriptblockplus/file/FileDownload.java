@@ -39,9 +39,8 @@ public class FileDownload {
 
 	protected static InputStream getInputStream(String name) throws IOException {
 		try {
-			StringBuilder builder = new StringBuilder();
-			builder.append("http://xml.yuttyann44581.net/uploads//").append(name).append(".xml");
-			URLConnection urlconn = new URL(builder.toString()).openConnection();
+			String url = "http://xml.yuttyann44581.net/uploads//" + name + ".xml";
+			URLConnection urlconn = new URL(url).openConnection();
 			HttpURLConnection httpconn = (HttpURLConnection) urlconn;
 			httpconn.setAllowUserInteraction(false);
 			httpconn.setInstanceFollowRedirects(true);

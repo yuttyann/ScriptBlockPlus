@@ -21,6 +21,7 @@ public class ScriptManager extends Prefix {
 	private BlockLocation location;
 	private String command;
 	private String player;
+	private String server;
 	private String say;
 	private Perm perm;
 	private Perm permADD;
@@ -55,6 +56,10 @@ public class ScriptManager extends Prefix {
 
 	public String getPlayer() {
 		return player;
+	}
+
+	public String getServer() {
+		return server;
 	}
 
 	public String getSay() {
@@ -106,7 +111,7 @@ public class ScriptManager extends Prefix {
 	}
 
 	public boolean hasOption() {
-		return player != null || say != null || perm != null || permADD != null || permREMOVE != null
+		return player != null || server != null || say != null || perm != null || permADD != null || permREMOVE != null
 				|| group != null || groupADD != null || groupREMOVE != null || amount != null
 				|| delay != null || cooldown != null || moneyCost != null || itemCost != null;
 	}
@@ -128,6 +133,7 @@ public class ScriptManager extends Prefix {
 	public void reset() {
 		command = null;
 		player = null;
+		server = null;
 		say = null;
 		group = null;
 		groupADD = null;
@@ -189,6 +195,7 @@ public class ScriptManager extends Prefix {
 		return script.startsWith(COMMAND)
 			|| script.startsWith(BYPASS)
 			|| script.startsWith(PLAYER)
+			|| script.startsWith(SERVER)
 			|| script.startsWith(SAY)
 			|| script.startsWith(PERM)
 			|| script.startsWith(PERM_ADD)
@@ -204,7 +211,7 @@ public class ScriptManager extends Prefix {
 	}
 
 	private void read(String script) throws Exception {
-		for (String prefix : prefixs) {
+		for (String prefix : PREFIXS) {
 			switch (startsWith(script, prefix)) {
 			case COMMAND:
 				command = removeFirst(script, prefix).trim();
@@ -221,6 +228,9 @@ public class ScriptManager extends Prefix {
 				return;
 			case PLAYER:
 				player = removeFirst(script, prefix).trim();
+				return;
+			case SERVER:
+				server = removeFirst(script, prefix).trim();
 				return;
 			case SAY:
 				say = removeFirst(script, prefix).trim();

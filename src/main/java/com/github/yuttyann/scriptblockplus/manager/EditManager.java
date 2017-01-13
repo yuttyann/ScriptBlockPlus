@@ -38,7 +38,7 @@ public class EditManager {
 
 	public String getScriptPath() {
 		if (scriptPath == null) {
-			scriptPath = location.getWorld().getName() + "." + location.getCoords(false);
+			scriptPath = location.getWorld().getName() + "." + location.getCoords();
 		}
 		return scriptPath;
 	}
@@ -57,27 +57,27 @@ public class EditManager {
 		Edit.removeAllMetadata(player);
 		Edit.setMetadata(player, getScriptType(), this);
 		Utils.sendPluginMessage(player, Messages.getScriptCopyMessage(scriptType));
-		Utils.sendPluginMessage(Messages.getConsoleScriptCopyMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
+		Utils.sendPluginMessage(Messages.getConsoleScriptCopyMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
 
 	public void scriptPaste(Player player, BlockLocation location) {
 		MetadataManager.removeAllMetadata(player);
-		String coords = location.getCoords(false);
+		String coords = location.getCoords();
 		String scriptPath = location.getWorld().getName() + "." + coords;
 		scriptFile.set(scriptPath + ".Author", player.getUniqueId().toString());
 		scriptFile.set(scriptPath + ".LastEdit", Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
 		scriptFile.set(scriptPath + ".Scripts", new ArrayList<String>(scripts));
-		save();
-		String fullcoords = location.getCoords(true);
+		scriptFile.save();
+		String fullCoords = location.getFullCoords();
 		switch (scriptType) {
 		case INTERACT:
-			if (!MapManager.getInteractCoords().contains(fullcoords)) {
-				MapManager.getInteractCoords().add(fullcoords);
+			if (!MapManager.getInteractCoords().contains(fullCoords)) {
+				MapManager.getInteractCoords().add(fullCoords);
 			}
 			break;
 		case WALK:
-			if (!MapManager.getWalkCoords().contains(fullcoords)) {
-				MapManager.getWalkCoords().add(fullcoords);
+			if (!MapManager.getWalkCoords().contains(fullCoords)) {
+				MapManager.getWalkCoords().add(fullCoords);
 			}
 			break;
 		}
@@ -87,20 +87,20 @@ public class EditManager {
 
 	//WorldEdit用に軽量化
 	public void scriptWEPaste(Player player, BlockLocation location) {
-		String scriptPath = location.getWorld().getName() + "." + location.getCoords(false);
+		String scriptPath = location.getWorld().getName() + "." + location.getCoords();
 		scriptFile.set(scriptPath + ".Author", player.getUniqueId().toString());
 		scriptFile.set(scriptPath + ".LastEdit", Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
 		scriptFile.set(scriptPath + ".Scripts", new ArrayList<String>(scripts));
-		String fullcoords = location.getCoords(true);
+		String fullCoords = location.getFullCoords();
 		switch (scriptType) {
 		case INTERACT:
-			if (!MapManager.getInteractCoords().contains(fullcoords)) {
-				MapManager.getInteractCoords().add(fullcoords);
+			if (!MapManager.getInteractCoords().contains(fullCoords)) {
+				MapManager.getInteractCoords().add(fullCoords);
 			}
 			break;
 		case WALK:
-			if (!MapManager.getWalkCoords().contains(fullcoords)) {
-				MapManager.getWalkCoords().add(fullcoords);
+			if (!MapManager.getWalkCoords().contains(fullCoords)) {
+				MapManager.getWalkCoords().add(fullCoords);
 			}
 			break;
 		}

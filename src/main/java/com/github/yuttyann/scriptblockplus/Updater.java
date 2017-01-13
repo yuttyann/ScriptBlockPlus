@@ -27,6 +27,7 @@ import org.w3c.dom.NodeList;
 
 import com.github.yuttyann.scriptblockplus.file.FileDownload;
 import com.github.yuttyann.scriptblockplus.file.Files;
+import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
@@ -81,9 +82,8 @@ public class Updater extends FileDownload implements Listener {
 	private void setup() {
 		isEnable = false;
 		isError = false;
-		pluginName = Main.instance.getPluginName();
-		pluginVersion = Main.instance.getPluginVersion();
-
+		pluginName = PluginYaml.getName();
+		pluginVersion = PluginYaml.getVersion();
 		Document document = getDocument(getPluginName());
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();

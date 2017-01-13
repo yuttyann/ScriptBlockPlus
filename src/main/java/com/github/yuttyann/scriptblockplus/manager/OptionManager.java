@@ -45,7 +45,7 @@ public class OptionManager {
 
 	public static void scriptExec(Player player, BlockLocation location, ScriptType scriptType) {
 		UUID uuid = player.getUniqueId();
-		String fullcoords = location.getCoords(true);
+		String fullcoords = location.getFullCoords();
 		if (Delay.contains(fullcoords, uuid)) {
 			player.sendMessage(Messages.getActiveDelayMessage());
 			return;
@@ -56,7 +56,7 @@ public class OptionManager {
 			return;
 		}
 		Yaml scriptFile = Files.getScriptFile(scriptType);
-		String coords = location.getCoords(false);
+		String coords = location.getCoords();
 		String scriptPath = location.getWorld().getName() + "." + coords;
 		if (!scriptFile.contains(scriptPath + ".Author")) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
@@ -75,7 +75,7 @@ public class OptionManager {
 			}
 			Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
 			if (!manager.hasOption()) {
-				commandExec(player, location, manager.getCommand().replace("<player>", player.getName()), manager.getScriptType(), manager.isBypass());
+				commandExec(player, location, replace(player, manager.getCommand(), false), manager.getScriptType(), manager.isBypass());
 				continue;
 			}
 			Perm perm = manager.getPerm();
@@ -154,14 +154,25 @@ public class OptionManager {
 			}
 		}
 		if (manager.getPlayer() != null && player.isOnline()) {
-			player.sendMessage(manager.getPlayer().replace("&", "§").replace("<player>", player.getName()));
+			player.sendMessage(replace(player, manager.getPlayer(), true));
+		}
+		if (manager.getServer() != null && player.isOnline()) {
+			Bukkit.broadcastMessage(replace(player, manager.getServer(), true));
 		}
 		if (manager.getSay() != null && player.isOnline()) {
-			commandExec(player, location, "/say " + manager.getSay().replace("<player>", player.getName()), manager.getScriptType(), true);
+			commandExec(player, location, "/say " + replace(player, manager.getSay(), false), manager.getScriptType(), true);
 		}
 		if (manager.getCommand() != null && player.isOnline()) {
-			commandExec(player, location, manager.getCommand().replace("<player>", player.getName()), manager.getScriptType(), manager.isBypass());
+			commandExec(player, location, replace(player, manager.getCommand(), false), manager.getScriptType(), manager.isBypass());
 		}
+	}
+
+	private static String replace(Player player, String text, boolean isColor) {
+		text = text.replace("<player>", player.getName()).replace("<dplayer>", player.getDisplayName());
+		if (isColor) {
+			return text.replace("&rc", Utils.getRandomColor()).replace("&", "§");
+		}
+		return text;
 	}
 
 	private static void commandExec(Player player, BlockLocation location, String command, ScriptType scriptType, boolean isBypass) {

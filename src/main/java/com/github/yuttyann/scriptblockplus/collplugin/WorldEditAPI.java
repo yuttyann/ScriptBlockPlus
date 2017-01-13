@@ -28,16 +28,13 @@ public class WorldEditAPI {
 	}
 
 	public List<Block> getSelectionBlocks(Selection selection) {
-		if (selection == null) {
-			return null;
-		}
+		List<Block> blocks = new ArrayList<Block>();
 		if (!(selection instanceof CuboidSelection)) {
-			return null;
+			return blocks;
 		}
 		World world = selection.getWorld();
 		Location min = selection.getMinimumPoint();
 		Location max = selection.getMaximumPoint();
-		List<Block> blocks = new ArrayList<Block>();
 		for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
 			for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
 				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {

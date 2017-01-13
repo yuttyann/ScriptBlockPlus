@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.yuttyann.scriptblockplus.Main;
+import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 
 public class CommandHelp {
 
@@ -51,7 +52,7 @@ public class CommandHelp {
 			return;
 		}
 		StringBuilder builder = new StringBuilder();
-		builder.append("§d==== ").append(Main.instance.getPluginName()).append(" Commands ====");
+		builder.append("§d==== ").append(PluginYaml.getName()).append(" Commands ====");
 		sender.sendMessage(builder.toString());
 		for (CommandView view : views) {
 			if (view.isHelp()) {

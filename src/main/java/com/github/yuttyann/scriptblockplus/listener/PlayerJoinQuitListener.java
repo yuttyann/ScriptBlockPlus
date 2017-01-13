@@ -21,7 +21,7 @@ public class PlayerJoinQuitListener implements Listener {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueId();
 		if (!MapManager.getOldLocation().containsKey(uuid)) {
-			MapManager.getOldLocation().put(uuid, new BlockLocation(player.getLocation().clone().add(0, -0.5, 0)).getCoords(true));
+			MapManager.getOldLocation().put(uuid, BlockLocation.fromLocation(player.getLocation()).subtract(0, 0.5, 0).getFullCoords());
 		}
 	}
 

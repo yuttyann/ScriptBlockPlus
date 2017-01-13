@@ -50,13 +50,15 @@ public class Yaml extends FileDownload {
 	}
 
 	public static void create(File data, StringBuilder builder, String encode, String[] args) {
-		long start = 0, end = 0;
-		boolean isError = false, isMessage = false;
+		long start = 0;
+		long end = 0;
+		boolean isError = false;
+		boolean isMessage = false;
 		File file = null;
 		String fileName = null;
 		Long[] fileTimes = null;
 		String[] fileNames = null;
-		Document document = getDocument(Main.instance.getPluginName());
+		Document document = getDocument(PluginYaml.getName());
 		for (int i = 0, n = 0, l = args.length; i < l; i++) {
 			builder.append(args[i]).append("_").append(encode).append(".yml");
 			if (!(file = new File(data, fileName = builder.toString())).exists()) {
@@ -122,7 +124,7 @@ public class Yaml extends FileDownload {
 					continue;
 				}
 				String version = ((Element) filesNode).getAttribute("version");
-				if (!Main.instance.getPluginVersion().equals(version)) {
+				if (!PluginYaml.getVersion().equals(version)) {
 					continue;
 				}
 				NodeList yamlChildren = filesNode.getChildNodes();

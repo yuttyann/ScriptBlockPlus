@@ -268,8 +268,8 @@ public class Messages {
 			return null;
 		}
 		String world = min.getWorld().getName();
-		String minCoords = new BlockLocation(min).getCoords(false);
-		String maxCoords = new BlockLocation(max).getCoords(false);
+		String minCoords = BlockLocation.fromLocation(min).getCoords();
+		String maxCoords = BlockLocation.fromLocation(max).getCoords();
 		return replaceColorCode(instance.consoleWorldEditPasteMessage.replace("%scripttype%", scriptType.getString()).replace("%world%", world).replace("%mincoords%", minCoords).replace("%maxcoords%", maxCoords));
 	}
 
@@ -278,8 +278,8 @@ public class Messages {
 			return null;
 		}
 		String world = min.getWorld().getName();
-		String minCoords = new BlockLocation(min).getCoords(false);
-		String maxCoords = new BlockLocation(max).getCoords(false);
+		String minCoords = BlockLocation.fromLocation(min).getCoords();
+		String maxCoords = BlockLocation.fromLocation(max).getCoords();
 		return replaceColorCode(instance.consoleWorldEditRemoveMessage.replace("%scripttype%", scriptType).replace("%world%", world).replace("%mincoords%", minCoords).replace("%maxcoords%", maxCoords));
 	}
 

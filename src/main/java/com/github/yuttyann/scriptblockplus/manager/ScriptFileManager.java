@@ -23,7 +23,7 @@ public class ScriptFileManager {
 		this.location = location;
 		this.scriptType = scriptType;
 		this.scriptFile = Files.getScriptFile(scriptType);
-		this.scriptPath = location.getWorld().getName() + "." + location.getCoords(false);
+		this.scriptPath = location.getWorld().getName() + "." + location.getCoords();
 	}
 
 	public boolean checkPath() {
@@ -46,21 +46,21 @@ public class ScriptFileManager {
 		scriptFile.set(scriptPath + ".LastEdit", Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
 		scriptFile.set(scriptPath + ".Scripts", list);
 		scriptFile.save();
-		String fullcoords = location.getCoords(true);
+		String fullCoords = location.getFullCoords();
 		switch (scriptType) {
 		case INTERACT:
-			if (!MapManager.getInteractCoords().contains(fullcoords)) {
-				MapManager.getInteractCoords().add(fullcoords);
+			if (!MapManager.getInteractCoords().contains(fullCoords)) {
+				MapManager.getInteractCoords().add(fullCoords);
 			}
 			break;
 		case WALK:
-			if (!MapManager.getWalkCoords().contains(fullcoords)) {
-				MapManager.getWalkCoords().add(fullcoords);
+			if (!MapManager.getWalkCoords().contains(fullCoords)) {
+				MapManager.getWalkCoords().add(fullCoords);
 			}
 			break;
 		}
 		Utils.sendPluginMessage(player, Messages.getScriptCreateMessage(scriptType));
-		Utils.sendPluginMessage(Messages.getConsoleScriptCreateMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
+		Utils.sendPluginMessage(Messages.getConsoleScriptCreateMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
 
 	public void scriptAdd(Player player, String script) {
@@ -84,9 +84,9 @@ public class ScriptFileManager {
 		scriptFile.set(scriptPath + ".Author", builder.toString());
 		scriptFile.set(scriptPath + ".LastEdit", Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
 		scriptFile.set(scriptPath + ".Scripts", list);
-		save();
+		scriptFile.save();
 		Utils.sendPluginMessage(player, Messages.getScriptAddMessage(scriptType));
-		Utils.sendPluginMessage(Messages.getConsoleScriptAddMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
+		Utils.sendPluginMessage(Messages.getConsoleScriptAddMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
 
 	public void scriptRemove(Player player) {
@@ -96,37 +96,37 @@ public class ScriptFileManager {
 			return;
 		}
 		scriptFile.set(scriptPath, null);
-		save();
-		String fullcoords = location.getCoords(true);
+		scriptFile.save();
+		String fullCoords = location.getFullCoords();
 		switch (scriptType) {
 		case INTERACT:
-			if (MapManager.getInteractCoords().contains(fullcoords)) {
-				MapManager.getInteractCoords().remove(fullcoords);
+			if (MapManager.getInteractCoords().contains(fullCoords)) {
+				MapManager.getInteractCoords().remove(fullCoords);
 			}
 			break;
 		case WALK:
-			if (MapManager.getWalkCoords().contains(fullcoords)) {
-				MapManager.getWalkCoords().remove(fullcoords);
+			if (MapManager.getWalkCoords().contains(fullCoords)) {
+				MapManager.getWalkCoords().remove(fullCoords);
 			}
 			break;
 		}
 		Utils.sendPluginMessage(player, Messages.getScriptRemoveMessage(scriptType));
-		Utils.sendPluginMessage(Messages.getConsoleScriptRemoveMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
+		Utils.sendPluginMessage(Messages.getConsoleScriptRemoveMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
 
 	//WorldEdit用に軽量化
 	public void scriptWERemove(Player player) {
 		scriptFile.set(scriptPath, null);
-		String fullcoords = location.getCoords(true);
+		String fullCoords = location.getFullCoords();
 		switch (scriptType) {
 		case INTERACT:
-			if (MapManager.getInteractCoords().contains(fullcoords)) {
-				MapManager.getInteractCoords().remove(fullcoords);
+			if (MapManager.getInteractCoords().contains(fullCoords)) {
+				MapManager.getInteractCoords().remove(fullCoords);
 			}
 			break;
 		case WALK:
-			if (MapManager.getWalkCoords().contains(fullcoords)) {
-				MapManager.getWalkCoords().remove(fullcoords);
+			if (MapManager.getWalkCoords().contains(fullCoords)) {
+				MapManager.getWalkCoords().remove(fullCoords);
 			}
 			break;
 		}
@@ -166,6 +166,6 @@ public class ScriptFileManager {
 			builder.setLength(0);
 			Utils.sendPluginMessage(player, builder.append("- ").append(script).toString());
 		}
-		Utils.sendPluginMessage(Messages.getConsoleScriptViewMessage(player, scriptType, location.getWorld(), location.getCoords(false)));
+		Utils.sendPluginMessage(Messages.getConsoleScriptViewMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
 }

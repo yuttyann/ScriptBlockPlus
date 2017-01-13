@@ -1,21 +1,25 @@
 package com.github.yuttyann.scriptblockplus.util;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import com.github.yuttyann.scriptblockplus.Main;
+import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 
 public class Utils {
 
@@ -97,11 +101,15 @@ public class Utils {
 		return version;
 	}
 
+	public static String getRandomColor() {
+		return ChatColor.getByChar(Integer.toHexString(new Random().nextInt(16))).toString();
+	}
+
 	public static String sendPluginMessage(Object msg) {
 		if (msg == null) {
 			return null;
 		}
-		String result = "[" + Main.instance.getPluginName() + "] " + msg.toString();
+		String result = "[" + PluginYaml.getName() + "] " + msg.toString();
 		Bukkit.getConsoleSender().sendMessage(result);
 		return result;
 	}
@@ -111,7 +119,7 @@ public class Utils {
 			return null;
 		}
 		String message = msg.toString();
-		String result = "[" + Main.instance.getPluginName() + "] " + message;
+		String result = "[" + PluginYaml.getName() + "] " + message;
 		String colorcode = "";
 		for (ChatColor color : ChatColor.values()) {
 			if (message.startsWith(color.toString())) {
@@ -151,6 +159,20 @@ public class Utils {
 			player.getInventory().setItemInHand(item);
 		}
 		return getItemInHand(player);
+	}
+
+	public static World getWorld(String name) {
+		World world = null;
+		if (Bukkit.getWorld(name) != null) {
+			world = Bukkit.getWorld(name);
+		} else if (isWorld(name)) {
+			world = Bukkit.createWorld(WorldCreator.name(name));
+		}
+		return world;
+	}
+
+	public static boolean isWorld(String world) {
+		return new File(world + "/level.dat").exists();
 	}
 
 	public static String getDateFormat(String format) {
@@ -193,7 +215,7 @@ public class Utils {
 			isUUID = true;
 		} else if (uuid_or_name instanceof String) {
 			try {
-				if (!((String) uuid_or_name).contains("-")) {
+				if (!uuid_or_name.toString().contains("-")) {
 					uuid_or_name = fromString(uuid_or_name.toString());
 				} else {
 					uuid_or_name = UUID.fromString(uuid_or_name.toString());
@@ -223,7 +245,7 @@ public class Utils {
 			isUUID = true;
 		} else if (uuid_or_name instanceof String) {
 			try {
-				if (!((String) uuid_or_name).contains("-")) {
+				if (!uuid_or_name.toString().contains("-")) {
 					uuid_or_name = fromString(uuid_or_name.toString());
 				} else {
 					uuid_or_name = UUID.fromString(uuid_or_name.toString());

@@ -28,6 +28,7 @@ import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.manager.EditManager;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
+import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Click;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ClickType;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Edit;
@@ -52,7 +53,11 @@ public class PlayerInteractListener implements Listener {
 		}
 		for (Entity entity : getNearbyEntities(block.getLocation(), 5.5D, 5.5D, 5.5D)) {
 			if (entity instanceof Player && ((Player) entity).equals(player)) {
-				scriptEvent(new PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, Utils.getItemInHand(player), block, BlockFace.SELF));
+				PlayerInteractEvent inEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, Utils.getItemInHand(player), block, BlockFace.SELF);
+				BlockLocation location = BlockLocation.fromLocation(block.getLocation());
+				if (!scriptSetting(inEvent, Action.LEFT_CLICK_BLOCK, block, location)) {
+					scriptEvent(inEvent, block, location);
+				}
 				break;
 			}
 		}
@@ -61,26 +66,26 @@ public class PlayerInteractListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action action = event.getAction();
-		if (action == Action.LEFT_CLICK_AIR || action == Action.RIGHT_CLICK_AIR) {
+		if (action == Action.LEFT_CLICK_AIR || action == Action.RIGHT_CLICK_AIR || action == Action.PHYSICAL) {
 			return;
 		}
-		scriptEvent(event);
+		Block block = event.getClickedBlock();
+		BlockLocation location = BlockLocation.fromLocation(block.getLocation());
+		if (!scriptSetting(event, action, block, location)) {
+			scriptEvent(event, block, location);
+		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onScriptBlcokInteract(ScriptBlockInteractEvent event) {
+	private boolean scriptSetting(PlayerInteractEvent event, Action action, Block block, BlockLocation location) {
 		Player player = event.getPlayer();
-		BlockLocation location = event.getBlockLocation();
-		PlayerInteractEvent inEvent = event.getPlayerInteractEvent();
 		ItemStack item = event.getItem();
 		if (event.hasItem() && item.getType() == Material.BLAZE_ROD
 				&& item.hasItemMeta() && item.getItemMeta().hasDisplayName()
 				&& item.getItemMeta().getDisplayName().equals("§dScript Editor")) {
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR, player)) {
 				Utils.sendPluginMessage(player, "§cパーミッションが無いため、使用できません。");
-				return;
+				return false;
 			}
-			Action action = inEvent.getAction();
 			switch (action) {
 			case LEFT_CLICK_BLOCK:
 				if (player.isSneaking()) {
@@ -92,7 +97,8 @@ public class PlayerInteractListener implements Listener {
 				} else {
 					new EditManager(Files.getInteract(), location).scriptCopy(player);
 				}
-				break;
+				event.setCancelled(true);
+				return true;
 			case RIGHT_CLICK_BLOCK:
 				if (player.isSneaking()) {
 					ScriptFileManager interact = new ScriptFileManager(location, ScriptType.INTERACT);
@@ -107,13 +113,12 @@ public class PlayerInteractListener implements Listener {
 				} else {
 					new EditManager(Files.getWalk(), location).scriptCopy(player);
 				}
-				break;
+				event.setCancelled(true);
+				return true;
 			default:
-				break;
+				MetadataManager.removeAllMetadata(player);
+				return false;
 			}
-			event.setCancelled(true);
-			inEvent.setCancelled(true);
-			return;
 		}
 		String script = null;
 		for (ClickType type : ClickType.values()) {
@@ -123,61 +128,55 @@ public class PlayerInteractListener implements Listener {
 					script = Script.getMetadata(player, type);
 					new ScriptFileManager(location, ScriptType.INTERACT).scriptCreate(player, script);
 					event.setCancelled(true);
-					inEvent.setCancelled(true);
-					return;
+					return true;
 				case INTERACT_ADD:
 					script = Script.getMetadata(player, type);
 					new ScriptFileManager(location, ScriptType.INTERACT).scriptAdd(player, script);
 					event.setCancelled(true);
-					inEvent.setCancelled(true);
-					return;
+					return true;
 				case INTERACT_REMOVE:
 					new ScriptFileManager(location, ScriptType.INTERACT).scriptRemove(player);
 					event.setCancelled(true);
-					inEvent.setCancelled(true);
-					return;
+					return true;
 				case INTERACT_VIEW:
 					new ScriptFileManager(location, ScriptType.INTERACT).scriptView(player);
 					event.setCancelled(true);
-					inEvent.setCancelled(true);
-					return;
+					return true;
 				case WALK_CREATE:
 					script = Script.getMetadata(player, type);
 					new ScriptFileManager(location, ScriptType.WALK).scriptCreate(player, script);
 					event.setCancelled(true);
-					inEvent.setCancelled(true);
-					return;
+					return true;
 				case WALK_ADD:
 					script = Script.getMetadata(player, type);
 					new ScriptFileManager(location, ScriptType.WALK).scriptAdd(player, script);
 					event.setCancelled(true);
-					inEvent.setCancelled(true);
-					return;
+					return true;
 				case WALK_REMOVE:
 					new ScriptFileManager(location, ScriptType.WALK).scriptRemove(player);
 					event.setCancelled(true);
-					inEvent.setCancelled(true);
-					return;
+					return true;
 				case WALK_VIEW:
 					new ScriptFileManager(location, ScriptType.WALK).scriptView(player);
 					event.setCancelled(true);
-					inEvent.setCancelled(true);
-					return;
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
-	private void scriptEvent(PlayerInteractEvent event) {
+	private void scriptEvent(PlayerInteractEvent event, Block block, BlockLocation location) {
 		if (Utils.isUpperVersion_v19() && !isSlotHand(event)) {
 			return;
 		}
 		Player player = event.getPlayer();
-		Block block = event.getClickedBlock();
-		BlockLocation location = new BlockLocation(block.getLocation());
-		ScriptBlockInteractEvent scriptEvent = new ScriptBlockInteractEvent(event, player, block, event.getItem(), location);
-		Bukkit.getServer().getPluginManager().callEvent(scriptEvent);
-		if (!scriptEvent.isCancelled() && MapManager.getInteractCoords().contains(location.getCoords(true))) {
+		if (MapManager.getInteractCoords().contains(location.getFullCoords())) {
+			ScriptBlockInteractEvent scriptEvent = new ScriptBlockInteractEvent(event, player, block, event.getItem(), location);
+			Bukkit.getServer().getPluginManager().callEvent(scriptEvent);
+			if (scriptEvent.isCancelled()) {
+				return;
+			}
 			if (!Files.getConfig().getBoolean("LeftClick") && event.getAction() == Action.LEFT_CLICK_BLOCK) {
 				return;
 			}

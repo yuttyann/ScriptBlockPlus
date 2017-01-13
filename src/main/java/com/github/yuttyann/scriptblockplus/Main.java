@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
@@ -25,14 +24,12 @@ public class Main extends JavaPlugin {
 
 	public static Main instance;
 	private String encode;
-	private PluginDescriptionFile description;
 	private HashMap<String, TabExecutor> commands;
 	private HashMap<String, List<CommandView>> commandhelp;
 
 	@Override
 	public void onEnable() {
 		instance = this;
-		description = getDescription();
 		if(!(Utils.getJavaVersion() >= 1.7))
 		{
 			Utils.sendPluginMessage("§cJava7以上をインストールしてください。");
@@ -65,14 +62,6 @@ public class Main extends JavaPlugin {
 
 	public HashMap<String, List<CommandView>> getCommandHelp() {
 		return commandhelp;
-	}
-
-	public String getPluginName() {
-		return description.getName();
-	}
-
-	public String getPluginVersion() {
-		return description.getVersion();
 	}
 
 	public String getEncode() {

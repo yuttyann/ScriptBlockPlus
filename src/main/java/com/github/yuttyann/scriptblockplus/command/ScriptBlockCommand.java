@@ -176,7 +176,7 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 					if (block == null || block.getType() == Material.AIR) {
 						continue;
 					}
-					edit.scriptWEPaste(player, new BlockLocation(block.getLocation()));
+					edit.scriptWEPaste(player, BlockLocation.fromLocation(block.getLocation()));
 				}
 				edit.save();
 				ScriptType scriptType = Edit.getMetadata(player).getScriptType();
@@ -206,7 +206,7 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 				boolean isInteract = false;
 				boolean isWalk = false;
 				for (Block block : blocks) {
-					BlockLocation location = new BlockLocation(block.getLocation());
+					BlockLocation location = BlockLocation.fromLocation(block.getLocation());
 					ScriptFileManager interact = new ScriptFileManager(location, ScriptType.INTERACT);
 					if (interact.checkPath()) {
 						interact.scriptWERemove(player);
@@ -373,7 +373,7 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 			}
 			ArrayList<String> commands = new ArrayList<String>();
 			String prefix = args[2].toLowerCase();
-			for (String c : prefixs) {
+			for (String c : PREFIXS) {
 				if (c.startsWith(prefix)) {
 					commands.add(c.trim());
 				}

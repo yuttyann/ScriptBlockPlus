@@ -23,14 +23,18 @@ public class PlayerMoveListener implements Listener {
 	public void onPlayerMoveEvent(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueId();
-		BlockLocation location = new BlockLocation(player.getLocation().clone().add(0, -0.5, 0));
-		if (MapManager.getOldLocation().containsKey(uuid) && MapManager.getOldLocation().get(uuid).equals(location.getCoords(true))) {
+		BlockLocation location = BlockLocation.fromLocation(player.getLocation()).subtract(0, 0.5, 0);
+		String fullCoords = location.getFullCoords();
+		if (MapManager.getOldLocation().containsKey(uuid) && MapManager.getOldLocation().get(uuid).equals(fullCoords)) {
 			return;
 		}
-		MapManager.getOldLocation().put(uuid, location.getCoords(true));
-		ScriptBlockWalkEvent scriptEvent = new ScriptBlockWalkEvent(event, player, location.getBlock(), Utils.getItemInHand(player), location);
-		Bukkit.getServer().getPluginManager().callEvent(scriptEvent);
-		if (!scriptEvent.isCancelled() && MapManager.getWalkCoords().contains(location.getCoords(true))) {
+		MapManager.getOldLocation().put(uuid, fullCoords);
+		if (MapManager.getWalkCoords().contains(fullCoords)) {
+			ScriptBlockWalkEvent scriptEvent = new ScriptBlockWalkEvent(event, player, location.getBlock(), Utils.getItemInHand(player), location);
+			Bukkit.getServer().getPluginManager().callEvent(scriptEvent);
+			if (scriptEvent.isCancelled()) {
+				return;
+			}
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_WALK_USE, player)) {
 				Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
 				return;

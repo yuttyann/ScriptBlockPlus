@@ -18,7 +18,7 @@ public class Amount {
 	public Amount(int amount, BlockLocation location, ScriptType scriptType) {
 		this.amount = amount;
 		this.location = location;
-		this.scriptPath = location.getWorld().getName() + "." + location.getCoords(false);
+		this.scriptPath = location.getWorld().getName() + "." + location.getCoords();
 		this.amountPath = scriptPath + ".Amount";
 		this.scriptType = scriptType;
 		this.scriptFile = Files.getScriptFile(scriptType);
@@ -27,7 +27,7 @@ public class Amount {
 	public Amount(String amount, BlockLocation location, ScriptType scriptType) {
 		this.amount = Integer.parseInt(amount);
 		this.location = location;
-		this.scriptPath = location.getWorld().getName() + "." + location.getCoords(false);
+		this.scriptPath = location.getWorld().getName() + "." + location.getCoords();
 		this.amountPath = scriptPath + ".Amount";
 		this.scriptType = scriptType;
 		this.scriptFile = Files.getScriptFile(scriptType);
@@ -63,10 +63,10 @@ public class Amount {
 		scriptFile.save();
 		switch (scriptType) {
 		case INTERACT:
-			MapManager.getInteractCoords().remove(location.getCoords(true));
+			MapManager.getInteractCoords().remove(location.getCoords());
 			break;
 		case WALK:
-			MapManager.getWalkCoords().remove(location.getCoords(true));
+			MapManager.getWalkCoords().remove(location.getCoords());
 			break;
 		}
 	}

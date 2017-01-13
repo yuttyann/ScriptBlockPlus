@@ -5,6 +5,7 @@ public class Prefix {
 	protected static final String COMMAND = "@command ";
 	protected static final String BYPASS = "@bypass ";
 	protected static final String PLAYER = "@player ";
+	protected static final String SERVER = "@server ";
 	protected static final String SAY = "@say ";
 	protected static final String PERM = "@perm:";
 	protected static final String PERM_ADD = "@permADD:";
@@ -17,7 +18,7 @@ public class Prefix {
 	protected static final String COOLDOWN = "@cooldown:";
 	protected static final String COST = "$cost:";
 	protected static final String ITEM = "$item:";
-	protected static final String[] prefixs = getPrefixs(15);
+	protected static final String[] PREFIXS = getPrefixs(16);
 
 	private static String[] getPrefixs(int max) {
 		String[] prefixs = new String[max];
@@ -33,39 +34,42 @@ public class Prefix {
 				prefixs[i] = PLAYER;
 				break;
 			case 3:
-				prefixs[i] = SAY;
+				prefixs[i] = SERVER;
 				break;
 			case 4:
-				prefixs[i] = PERM;
+				prefixs[i] = SAY;
 				break;
 			case 5:
-				prefixs[i] = PERM_ADD;
+				prefixs[i] = PERM;
 				break;
 			case 6:
 				prefixs[i] = PERM_ADD;
 				break;
 			case 7:
-				prefixs[i] = GROUP;
+				prefixs[i] = PERM_ADD;
 				break;
 			case 8:
-				prefixs[i] = GROUP_ADD;
+				prefixs[i] = GROUP;
 				break;
 			case 9:
-				prefixs[i] = GROUP_REMOVE;
+				prefixs[i] = GROUP_ADD;
 				break;
 			case 10:
-				prefixs[i] = AMOUNT;
+				prefixs[i] = GROUP_REMOVE;
 				break;
 			case 11:
-				prefixs[i] = DELAY;
+				prefixs[i] = AMOUNT;
 				break;
 			case 12:
-				prefixs[i] = COOLDOWN;
+				prefixs[i] = DELAY;
 				break;
 			case 13:
-				prefixs[i] = COST;
+				prefixs[i] = COOLDOWN;
 				break;
 			case 14:
+				prefixs[i] = COST;
+				break;
+			case 15:
 				prefixs[i] = ITEM;
 				break;
 			default:
