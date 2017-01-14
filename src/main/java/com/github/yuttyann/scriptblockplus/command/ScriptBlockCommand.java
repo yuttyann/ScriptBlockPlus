@@ -15,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.yuttyann.scriptblockplus.Permission;
-import com.github.yuttyann.scriptblockplus.Prefix;
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
 import com.github.yuttyann.scriptblockplus.collplugin.WorldEditAPI;
 import com.github.yuttyann.scriptblockplus.command.help.CommandHelp;
@@ -31,11 +30,12 @@ import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Script;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
+import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class ScriptBlockCommand extends Prefix implements TabExecutor {
+public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 
 	public ScriptBlockCommand() {
 		CommandHelp help = new CommandHelp();
@@ -158,13 +158,13 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 					return true;
 				}
 				if (!CollPlugins.hasWorldEdit()) {
-					Utils.sendPluginMessage(player, "§cWorldEditが導入されていないため、実行に失敗しました。");
+					Utils.sendPluginMessage(player, Messages.getNotWorldEditMessage());
 					return true;
 				}
 				WorldEditAPI api = CollPlugins.getWorldEditAPI();
 				Selection selection = api.getSelection(player);
 				if (selection == null) {
-					Utils.sendPluginMessage(player, "§cWorldEditで座標を選択してください。");
+					Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 					return true;
 				}
 				Location min = selection.getMinimumPoint();
@@ -190,13 +190,13 @@ public class ScriptBlockCommand extends Prefix implements TabExecutor {
 					return true;
 				}
 				if (!CollPlugins.hasWorldEdit()) {
-					Utils.sendPluginMessage(player, "§cWorldEditが導入されていないため、実行に失敗しました。");
+					Utils.sendPluginMessage(player, Messages.getNotWorldEditMessage());
 					return true;
 				}
 				WorldEditAPI api = CollPlugins.getWorldEditAPI();
 				Selection selection = api.getSelection(player);
 				if (selection == null) {
-					Utils.sendPluginMessage(player, "§cWorldEditで座標を選択してください。");
+					Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 					return true;
 				}
 				Location min = selection.getMinimumPoint();

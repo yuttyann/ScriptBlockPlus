@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
-import com.github.yuttyann.scriptblockplus.Main;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
 
 public class MetadataManager {
@@ -44,11 +44,11 @@ public class MetadataManager {
 	public static class Click {
 
 		public static void setMetadata(Player player, ClickType clickType, boolean value) {
-			player.setMetadata(clickType.getString(), new FixedMetadataValue(Main.instance, value));
+			player.setMetadata(clickType.getString(), new FixedMetadataValue(ScriptBlock.instance, value));
 		}
 
 		public static void removeMetadata(Player player, ClickType clickType) {
-			player.removeMetadata(clickType.getString(), Main.instance);
+			player.removeMetadata(clickType.getString(), ScriptBlock.instance);
 		}
 
 		public static void removeAllMetadata(Player player) {
@@ -86,11 +86,11 @@ public class MetadataManager {
 	public static class Script {
 
 		public static void setMetadata(Player player, ClickType clickType, String value) {
-			player.setMetadata(clickType.getString(), new FixedMetadataValue(Main.instance, value));
+			player.setMetadata(clickType.getString(), new FixedMetadataValue(ScriptBlock.instance, value));
 		}
 
 		public static void removeMetadata(Player player, ClickType clickType) {
-			player.removeMetadata(clickType.getString(), Main.instance);
+			player.removeMetadata(clickType.getString(), ScriptBlock.instance);
 		}
 
 		public static void removeAllMetadata(Player player) {
@@ -130,11 +130,11 @@ public class MetadataManager {
 	public static class Edit {
 
 		public static void setMetadata(Player player, ScriptType scriptType, EditManager value) {
-			player.setMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase(), new FixedMetadataValue(Main.instance, value));
+			player.setMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase(), new FixedMetadataValue(ScriptBlock.instance, value));
 		}
 
 		public static void removeMetadata(Player player, ScriptType scriptType) {
-			player.removeMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase(), Main.instance);
+			player.removeMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase(), ScriptBlock.instance);
 		}
 
 		public static void removeAllMetadata(Player player) {

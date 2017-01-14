@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.manager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.yuttyann.scriptblockplus.Prefix;
 import com.github.yuttyann.scriptblockplus.collplugin.VaultPermission.PermType;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
 import com.github.yuttyann.scriptblockplus.option.Amount;
@@ -12,13 +11,14 @@ import com.github.yuttyann.scriptblockplus.option.Delay;
 import com.github.yuttyann.scriptblockplus.option.Group;
 import com.github.yuttyann.scriptblockplus.option.ItemCost;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
+import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
 import com.github.yuttyann.scriptblockplus.option.Perm;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 
-public class ScriptManager extends Prefix {
+public class ScriptManager extends OptionPrefix {
 
-	private ScriptType scriptType;
 	private BlockLocation location;
+	private ScriptType scriptType;
 	private String command;
 	private String player;
 	private String server;
@@ -42,12 +42,12 @@ public class ScriptManager extends Prefix {
 		this.scriptType = scriptType;
 	}
 
-	public ScriptType getScriptType() {
-		return scriptType;
-	}
-
 	public BlockLocation getBlockLocation() {
 		return location;
+	}
+
+	public ScriptType getScriptType() {
+		return scriptType;
 	}
 
 	public String getCommand() {
@@ -125,8 +125,8 @@ public class ScriptManager extends Prefix {
 	}
 
 	public void resetAll() {
-		scriptType = null;
 		location = null;
+		scriptType = null;
 		reset();
 	}
 

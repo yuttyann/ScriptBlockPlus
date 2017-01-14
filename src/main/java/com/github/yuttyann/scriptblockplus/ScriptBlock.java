@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -12,17 +13,19 @@ import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockCommand;
 import com.github.yuttyann.scriptblockplus.command.help.CommandView;
 import com.github.yuttyann.scriptblockplus.file.Files;
+import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
 import com.github.yuttyann.scriptblockplus.listener.BlockListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerInteractListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerJoinQuitListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerMoveListener;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
-public class Main extends JavaPlugin {
+public class ScriptBlock extends JavaPlugin {
 
-	public static Main instance;
+	public static ScriptBlock instance;
 	private String encode;
 	private HashMap<String, TabExecutor> commands;
 	private HashMap<String, List<CommandView>> commandhelp;
@@ -30,22 +33,21 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
+		setupFile();
 		if(!(Utils.getJavaVersion() >= 1.7))
 		{
-			Utils.sendPluginMessage("§cJava7以上をインストールしてください。");
-			Utils.sendPluginMessage("§cJavaのバージョンが古いため、プラグインを無効化します。");
+			Utils.sendPluginMessage(Messages.getOldJavaMessage());
 			Utils.disablePlugin(this);
 			return;
 		}
 		if (!CollPlugins.hasVault()) {
-			Utils.sendPluginMessage("§cVaultが導入されていないため、プラグインを無効化します。");
+			Utils.sendPluginMessage(Messages.getNotVaultMessage());
 			Utils.disablePlugin(this);
 			return;
 		}
 		if (Utils.isPluginEnabled("ScriptBlock")) {
 			Utils.disablePlugin(Utils.getPlugin("ScriptBlock"));
 		}
-		setupFile();
 		loadClass();
 		loadCommand();
 	}
@@ -64,6 +66,10 @@ public class Main extends JavaPlugin {
 		return commandhelp;
 	}
 
+	public ScriptBlockAPI getAPI(Block block, ScriptType scriptType) {
+		return new ScriptBlockAPI(block, scriptType);
+	}
+
 	public String getEncode() {
 		return encode;
 	}
@@ -74,14 +80,13 @@ public class Main extends JavaPlugin {
 		} else {
 			encode = "utf-8";
 		}
-		String[] args = new String[]{"config", "messages"};
+		String[] args = {"config", "messages"};
 		Yaml.create(getDataFolder(), new StringBuilder(), encode, args);
 		Files.reload();
 	}
 
 	private void loadClass() {
 		new MapManager();
-		MapManager.putAllScripts();
 		getServer().getPluginManager().registerEvents(new BlockListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);

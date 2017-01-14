@@ -95,7 +95,7 @@ public class PlayerInteractListener implements Listener {
 					}
 					Edit.getMetadata(player).scriptPaste(player, location);
 				} else {
-					new EditManager(Files.getInteract(), location).scriptCopy(player);
+					new EditManager(location, ScriptType.INTERACT).scriptCopy(player);
 				}
 				event.setCancelled(true);
 				return true;
@@ -111,7 +111,7 @@ public class PlayerInteractListener implements Listener {
 						Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 					}
 				} else {
-					new EditManager(Files.getWalk(), location).scriptCopy(player);
+					new EditManager(location, ScriptType.WALK).scriptCopy(player);
 				}
 				event.setCancelled(true);
 				return true;

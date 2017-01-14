@@ -23,16 +23,13 @@ import org.bukkit.scoreboard.Team;
 
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
-/*
- * うっちぃさんのソースを流用
- */
 public class PlayerSelector {
 
 	private static final Pattern a = Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$");
 	private static final Pattern b = Pattern.compile("\\G([-!]?[\\w-]*)(?:$|,)");
 	private static final Pattern c = Pattern.compile("\\G(\\w+)=([-!]?[\\w-]*)(?:$|,)");
 
-	public static Player[] getPlayers(Location location, String s) {
+	protected static Player[] getPlayers(Location location, String s) {
 		Matcher matcher = a.matcher(s);
 		if (!matcher.matches()) {
 			return null;
@@ -127,7 +124,7 @@ public class PlayerSelector {
 		return hashmap;
 	}
 
-	public static boolean isList(String s) {
+	protected static boolean isList(String s) {
 		Matcher matcher = a.matcher(s);
 		if (matcher.matches()) {
 			Map<String, String> map = h(matcher.group(2));
@@ -142,7 +139,7 @@ public class PlayerSelector {
 		}
 	}
 
-	public static boolean isPattern(String s, String s1) {
+	protected static boolean isPattern(String s, String s1) {
 		Matcher matcher = a.matcher(s);
 		if (matcher.matches()) {
 			String s2 = matcher.group(1);
@@ -152,7 +149,7 @@ public class PlayerSelector {
 		}
 	}
 
-	public static boolean isPattern(String s) {
+	protected static boolean isPattern(String s) {
 		return isPattern(s, (String) null);
 	}
 
@@ -330,7 +327,7 @@ public class PlayerSelector {
 		}
 	}
 
-	public static String getCommandBlockPattern(String command) {
+	protected static String getCommandBlockPattern(String command) {
 		String[] arguments = command.split(" ");
 		for (int i = 1; i < arguments.length; i++) {
 			if (isPattern(arguments[i])) {

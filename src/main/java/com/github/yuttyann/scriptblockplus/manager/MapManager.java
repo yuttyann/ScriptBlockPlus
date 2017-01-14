@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
+import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 
 public class MapManager {
 
@@ -23,6 +25,7 @@ public class MapManager {
 		cooldownParams = new HashMap<String, HashMap<UUID, long[]>>();
 		interactCoords = new ArrayList<String>();
 		walkCoords = new ArrayList<String>();
+		MapManager.putAllScripts();
 	}
 
 	public static HashMap<UUID, String> getOldLocation() {
@@ -49,10 +52,41 @@ public class MapManager {
 		return walkCoords;
 	}
 
+	public static void addCoords(BlockLocation location, ScriptType scriptType) {
+		String fullCoords = location.getFullCoords();
+		switch (scriptType) {
+		case INTERACT:
+			if (!MapManager.getInteractCoords().contains(fullCoords)) {
+				MapManager.getInteractCoords().add(fullCoords);
+			}
+			break;
+		case WALK:
+			if (!MapManager.getWalkCoords().contains(fullCoords)) {
+				MapManager.getWalkCoords().add(fullCoords);
+			}
+			break;
+		}
+	}
+
+	public static void removeCoords(BlockLocation location, ScriptType scriptType) {
+		String fullCoords = location.getFullCoords();
+		switch (scriptType) {
+		case INTERACT:
+			if (MapManager.getInteractCoords().contains(fullCoords)) {
+				MapManager.getInteractCoords().remove(fullCoords);
+			}
+			break;
+		case WALK:
+			if (MapManager.getWalkCoords().contains(fullCoords)) {
+				MapManager.getWalkCoords().remove(fullCoords);
+			}
+			break;
+		}
+	}
+
 	public static void putAllScripts() {
 		try {
-			interactCoords.clear();
-			walkCoords.clear();
+			coordsAllClear();
 			Yaml interact = Files.getInteract();
 			StringBuilder builder = new StringBuilder();
 			for (String world : interact.getConfigurationSection("").getKeys(false)) {
@@ -69,8 +103,12 @@ public class MapManager {
 				}
 			}
 		} catch (Exception e) {
-			interactCoords.clear();
-			walkCoords.clear();
+			coordsAllClear();
 		}
+	}
+
+	private static void coordsAllClear() {
+		interactCoords.clear();
+		walkCoords.clear();
 	}
 }

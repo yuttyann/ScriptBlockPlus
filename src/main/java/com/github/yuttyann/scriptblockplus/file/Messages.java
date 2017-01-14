@@ -13,11 +13,15 @@ public class Messages {
 
 	private static Messages instance;
 	private static Yaml messages;
+	private String oldJavaMessage;
+	private String notVaultMessage;
+	private String notWorldEditMessage;
 	private String scriptCopyMessage;
 	private String scriptPasteMessage;
 	private String scriptCreateMessage;
 	private String scriptAddMessage;
 	private String scriptRemoveMessage;
+	private String worldEditNotSelectionMessage;
 	private String worldEditPasteMessage;
 	private String worldEditRemoveMessage;
 	private String activeDelayMessage;
@@ -43,13 +47,16 @@ public class Messages {
 	private boolean isConsoleLog;
 
 	public Messages() {
-		instance = this;
 		messages = Files.getMessages();
+		this.oldJavaMessage = messages.getString("oldJavaMessage");
+		this.notVaultMessage = messages.getString("notVaultMessage");
+		this.notWorldEditMessage = messages.getString("notWorldEditMessage");
 		this.scriptCopyMessage = messages.getString("scriptCopyMessage");
 		this.scriptPasteMessage = messages.getString("scriptPasteMessage");
 		this.scriptCreateMessage = messages.getString("scriptCreateMessage");
 		this.scriptAddMessage = messages.getString("scriptAddMessage");
 		this.scriptRemoveMessage = messages.getString("scriptRemoveMessage");
+		this.worldEditNotSelectionMessage = messages.getString("worldEditNotSelectionMessage");
 		this.worldEditPasteMessage = messages.getString("worldEditPasteMessage");
 		this.worldEditRemoveMessage = messages.getString("worldEditRemoveMessage");
 		this.activeDelayMessage = messages.getString("activeDelayMessage");
@@ -73,6 +80,27 @@ public class Messages {
 		this.consoleSuccScriptExecMessage = messages.getString("consoleSuccScriptExecMessage");
 		this.consoleErrorScriptExecMessage = messages.getString("consoleErrorScriptExecMessage");
 		this.isConsoleLog = Files.getConfig().getBoolean("ConsoleLog");
+	}
+
+	public static String getOldJavaMessage() {
+		if (instance.oldJavaMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.oldJavaMessage);
+	}
+
+	public static String getNotVaultMessage() {
+		if (instance.notVaultMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.notVaultMessage);
+	}
+
+	public static String getNotWorldEditMessage() {
+		if (instance.notWorldEditMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.notWorldEditMessage);
 	}
 
 	public static String getScriptCopyMessage(ScriptType scriptType) {
@@ -108,6 +136,13 @@ public class Messages {
 			return null;
 		}
 		return replaceColorCode(instance.scriptRemoveMessage.replace("%scripttype%", scriptType.getString()));
+	}
+
+	public static String getWorldEditNotSelectionMessage() {
+		if (instance.worldEditNotSelectionMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.worldEditNotSelectionMessage);
 	}
 
 	public static String getWorldEditPasteMessage(ScriptType scriptType) {

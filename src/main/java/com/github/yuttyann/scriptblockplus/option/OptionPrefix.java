@@ -1,6 +1,6 @@
-package com.github.yuttyann.scriptblockplus;
+package com.github.yuttyann.scriptblockplus.option;
 
-public class Prefix {
+public class OptionPrefix {
 
 	protected static final String COMMAND = "@command ";
 	protected static final String BYPASS = "@bypass ";

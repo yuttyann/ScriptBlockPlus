@@ -6,7 +6,7 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import com.github.yuttyann.scriptblockplus.Main;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 
 public class CommandHelp {
@@ -20,24 +20,24 @@ public class CommandHelp {
 		for (CommandView view : args) {
 			views.add(view);
 		}
-		return Main.instance.getCommandHelp().put(label.toLowerCase(), views);
+		return ScriptBlock.instance.getCommandHelp().put(label.toLowerCase(), views);
 	}
 
 	public List<CommandView> get(int index) {
-		return Main.instance.getCommandHelp().get(index);
+		return ScriptBlock.instance.getCommandHelp().get(index);
 	}
 
 	public List<CommandView> remove(String label) {
-		return Main.instance.getCommandHelp().remove(label);
+		return ScriptBlock.instance.getCommandHelp().remove(label);
 	}
 
 	public void clear() {
-		Main.instance.getCommandHelp().clear();
+		ScriptBlock.instance.getCommandHelp().clear();
 	}
 
 	public static void sendHelpMessage(CommandSender sender, Command command) {
 		String name = command.getName().toLowerCase();
-		List<CommandView> views = Main.instance.getCommandHelp().get(name);
+		List<CommandView> views = ScriptBlock.instance.getCommandHelp().get(name);
 		int viewcount = 0;
 		for (CommandView view : views) {
 			if (view.hasPermission() && !sender.hasPermission(view.getPermission())) {

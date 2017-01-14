@@ -11,7 +11,7 @@ import org.bukkit.plugin.PluginAwareness;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoadOrder;
 
-import com.github.yuttyann.scriptblockplus.Main;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 
 
 public class PluginYaml {
@@ -20,12 +20,8 @@ public class PluginYaml {
 	private PluginDescriptionFile description;
 
 	static {
-		instance = new PluginYaml(Main.instance);
-	}
-
-	private PluginYaml(Main plugin) {
-		instance = this;
-		this.description = plugin.getDescription();
+		instance = new PluginYaml();
+		instance.description = ScriptBlock.instance.getDescription();
 	}
 
 	public static String getName() {

@@ -16,16 +16,16 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 	private Player player;
 	private Block block;
 	private ItemStack item;
-	private BlockLocation blocklocation;
+	private Location location;
 	private boolean cancelled;
 
 	public ScriptBlockInteractEvent(PlayerInteractEvent event, Player player,
-			Block block, ItemStack item, BlockLocation blocklocation) {
+			Block block, ItemStack item, BlockLocation blockLocation) {
 		this.event = event;
 		this.player = player;
 		this.block = block;
 		this.item = item;
-		this.blocklocation = blocklocation;
+		this.location = blockLocation.toLocation();
 	}
 
 	public PlayerInteractEvent getPlayerInteractEvent() {
@@ -45,11 +45,7 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 	}
 
 	public Location getLocation() {
-		return block.getLocation();
-	}
-
-	public BlockLocation getBlockLocation() {
-		return blocklocation;
+		return location;
 	}
 
 	public boolean hasItem() {

@@ -10,12 +10,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.github.yuttyann.scriptblockplus.Main;
 import com.github.yuttyann.scriptblockplus.PlayerSelector;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
-import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
-import com.github.yuttyann.scriptblockplus.file.Yaml;
+import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.option.Amount;
 import com.github.yuttyann.scriptblockplus.option.Cooldown;
 import com.github.yuttyann.scriptblockplus.option.Delay;
@@ -26,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.option.Perm;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
-public class OptionManager {
+public class OptionManager extends PlayerSelector {
 
 	public enum ScriptType {
 		INTERACT("interact"),
@@ -55,18 +54,17 @@ public class OptionManager {
 			player.sendMessage(Messages.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
 			return;
 		}
-		Yaml scriptFile = Files.getScriptFile(scriptType);
-		String coords = location.getCoords();
-		String scriptPath = location.getWorld().getName() + "." + coords;
-		if (!scriptFile.contains(scriptPath + ".Author")) {
+		ScriptData scriptData = new ScriptData(location, scriptType);
+		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
+		String script = null;
+		String coords = location.getCoords();
 		ScriptManager manager = new ScriptManager(location, scriptType);
-		List<String> list = scriptFile.getStringList(scriptPath + ".Scripts");
-		String script;
-		for (int i = 0, l = list.size(); i < l; i++) {
-			script = list.get(i);
+		List<String> scripts = scriptData.getScripts();
+		for (int i = 0, l = scripts.size(); i < l; i++) {
+			script = scripts.get(i);
 			manager.reset();
 			if (!manager.readScript(script)) {
 				Utils.sendPluginMessage(player, Messages.getErrorScriptMessage(scriptType));
@@ -104,7 +102,7 @@ public class OptionManager {
 					Delay.remove(fullcoords2, uuid2);
 					scriptOptions(player2, uuid2, fullcoords2, location2, manager2);
 				}
-			}.runTaskLater(Main.instance, manager.getDelay().getTick());
+			}.runTaskLater(ScriptBlock.instance, manager.getDelay().getTick());
 		}
 	}
 
@@ -148,7 +146,7 @@ public class OptionManager {
 		}
 		Amount amount = manager.getAmount();
 		if (amount != null) {
-			amount.plus();
+			amount.add();
 			if (amount.check()) {
 				amount.remove();
 			}
@@ -196,7 +194,7 @@ public class OptionManager {
 		if (command.startsWith("/")) {
 			command = command.substring(1);
 		}
-		String pattern = PlayerSelector.getCommandBlockPattern(command);
+		String pattern = getCommandBlockPattern(command);
 		if (pattern != null) {
 			if (location == null) {
 				if (sender instanceof Player) {
@@ -205,7 +203,7 @@ public class OptionManager {
 					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
 				}
 			}
-			Player[] players = PlayerSelector.getPlayers(location, pattern);
+			Player[] players = getPlayers(location, pattern);
 			if (players != null) {
 				for (Player player : players) {
 					Bukkit.dispatchCommand(sender, command.replace(pattern, player.getName()));

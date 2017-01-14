@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.github.yuttyann.scriptblockplus.Main;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 
 public class Cooldown {
@@ -87,7 +87,7 @@ public class Cooldown {
 			public void run() {
 				remove(fullcoords, uuid);
 			}
-		}.runTaskLater(Main.instance, tick);
+		}.runTaskLater(ScriptBlock.instance, tick);
 		new BukkitRunnable() {
 			long second = getSecond();
 			@Override
@@ -102,6 +102,6 @@ public class Cooldown {
 				putParams(fullcoords, uuid);
 				second--;
 			}
-		}.runTaskTimer(Main.instance, 0, 20);
+		}.runTaskTimer(ScriptBlock.instance, 0, 20);
 	}
 }

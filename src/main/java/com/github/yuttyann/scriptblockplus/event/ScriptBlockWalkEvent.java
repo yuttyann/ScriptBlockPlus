@@ -15,16 +15,16 @@ public class ScriptBlockWalkEvent extends ScriptBlockEvent implements Cancellabl
 	private Player player;
 	private Block block;
 	private ItemStack item;
-	private BlockLocation blocklocation;
+	private Location location;
 	private boolean cancelled;
 
 	public ScriptBlockWalkEvent(PlayerMoveEvent event, Player player,
-			Block block, ItemStack item, BlockLocation blocklocation) {
+			Block block, ItemStack item, BlockLocation blockLocation) {
 		this.event = event;
 		this.player = player;
 		this.block = block;
 		this.item = item;
-		this.blocklocation = blocklocation;
+		this.location = blockLocation.toLocation();
 	}
 
 	public PlayerMoveEvent getPlayerMoveEvent() {
@@ -44,11 +44,7 @@ public class ScriptBlockWalkEvent extends ScriptBlockEvent implements Cancellabl
 	}
 
 	public Location getLocation() {
-		return block.getLocation();
-	}
-
-	public BlockLocation getBlockLocation() {
-		return blocklocation;
+		return location;
 	}
 
 	public boolean hasBlock() {

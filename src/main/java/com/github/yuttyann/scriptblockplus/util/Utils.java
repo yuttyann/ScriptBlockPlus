@@ -15,6 +15,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -105,30 +106,44 @@ public class Utils {
 		return ChatColor.getByChar(Integer.toHexString(new Random().nextInt(16))).toString();
 	}
 
-	public static String sendPluginMessage(Object msg) {
+	public static void sendPluginMessage(Object msg) {
 		if (msg == null) {
-			return null;
-		}
-		String result = "[" + PluginYaml.getName() + "] " + msg.toString();
-		Bukkit.getConsoleSender().sendMessage(result);
-		return result;
-	}
-
-	public static String sendPluginMessage(CommandSender sender, Object msg) {
-		if (msg == null) {
-			return null;
+			return;
 		}
 		String message = msg.toString();
-		String result = "[" + PluginYaml.getName() + "] " + message;
-		String colorcode = "";
+		String prefix = "[" + PluginYaml.getName() + "] ";
+		if (message.contains("\\n")) {
+			String[] newLine = message.split("\\\\n");
+			ConsoleCommandSender sender = Bukkit.getConsoleSender();
+			for(int i = 0, l = newLine.length ; i < l ; i++) {
+				sender.sendMessage(prefix + newLine[i]);
+			}
+		} else {
+			Bukkit.getConsoleSender().sendMessage(prefix + message);
+		}
+	}
+
+	public static void sendPluginMessage(CommandSender sender, Object msg) {
+		if (msg == null) {
+			return;
+		}
+		String message = msg.toString();
+		String colorCode = "";
 		for (ChatColor color : ChatColor.values()) {
 			if (message.startsWith(color.toString())) {
-				colorcode = color.toString();
+				colorCode = color.toString();
 				break;
 			}
 		}
-		sender.sendMessage(colorcode + result);
-		return result;
+		String prefix = "[" + PluginYaml.getName() + "] ";
+		if (message.contains("\\n")) {
+			String[] newLine = message.split("\\\\n");
+			for(int i = 0, l = newLine.length ; i < l ; i++) {
+				sender.sendMessage(colorCode + prefix + newLine[i]);
+			}
+		} else {
+			sender.sendMessage(colorCode + prefix + message);
+		}
 	}
 
 	public static String stringBuilder(String[] args, Integer integer) {

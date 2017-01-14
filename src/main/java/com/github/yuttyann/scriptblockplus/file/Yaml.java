@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.github.yuttyann.scriptblockplus.Main;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 import com.google.common.base.Charsets;
 
@@ -35,9 +35,8 @@ public class Yaml extends FileDownload {
 	}
 
 	public Yaml(String fileName, boolean isDownload) {
-		Main main = Main.instance;
-		File data = main.getDataFolder();
-		String encode = main.getEncode();
+		File data = ScriptBlock.instance.getDataFolder();
+		String encode = ScriptBlock.instance.getEncode();
 		file = new File(data, this.fileName = fileName + "_" + encode + ".yml");
 		if (isDownload && !file.exists()) {
 			if (!data.exists()) {
@@ -145,7 +144,7 @@ public class Yaml extends FileDownload {
 	@SuppressWarnings("deprecation")
 	public void reload() {
 		yaml = YamlConfiguration.loadConfiguration(file);
-		InputStream defConfigStream = Main.instance.getResource(fileName);
+		InputStream defConfigStream = ScriptBlock.instance.getResource(fileName);
 		if (defConfigStream != null) {
 			YamlConfiguration defConfig;
 			if(Utils.isUpperVersion_v19()) {

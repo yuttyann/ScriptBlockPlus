@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.file;
 
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
 
+
 public class Files {
 
 	private static Files instance;

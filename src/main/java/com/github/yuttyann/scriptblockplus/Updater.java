@@ -42,7 +42,7 @@ public class Updater extends FileDownload implements Listener {
 	private boolean isEnable;
 	private boolean isError;
 
-	public Updater(Main plugin) {
+	public Updater(ScriptBlock plugin) {
 		setup();
 		updateCheck();
 	}
@@ -132,7 +132,7 @@ public class Updater extends FileDownload implements Listener {
 		if(config.getBoolean("UpdateChecker") && Utils.versionInt(getVersion().split("\\.")) > Utils.versionInt(getPluginVersion().split("\\."))) {
 			isEnable = true;
 			boolean first = false;
-			File data = Main.instance.getDataFolder();
+			File data = ScriptBlock.instance.getDataFolder();
 			File changelogFile = new File(data, "更新履歴.txt");
 			ArrayList<String> changelog = new ArrayList<String>();
 			if (changelogFile.exists()) {
