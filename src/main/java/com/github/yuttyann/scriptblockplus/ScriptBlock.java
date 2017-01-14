@@ -66,12 +66,12 @@ public class ScriptBlock extends JavaPlugin {
 		return commandhelp;
 	}
 
-	public ScriptBlockAPI getAPI(Block block, ScriptType scriptType) {
-		return new ScriptBlockAPI(block, scriptType);
-	}
-
 	public String getEncode() {
 		return encode;
+	}
+
+	public ScriptBlockAPI getAPI(Block block, ScriptType scriptType) {
+		return new ScriptBlockAPI(block, scriptType);
 	}
 
 	private void setupFile() {

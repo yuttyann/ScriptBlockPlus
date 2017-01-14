@@ -42,7 +42,7 @@ public class Yaml extends FileDownload {
 			if (!data.exists()) {
 				data.mkdirs();
 			}
-			String[] args = new String[]{fileName};
+			String[] args = {fileName};
 			create(data, new StringBuilder(), encode, args);
 		}
 		yaml = YamlConfiguration.loadConfiguration(file);
