@@ -7,30 +7,10 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
+import com.github.yuttyann.scriptblockplus.type.ClickType;
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 
 public class MetadataManager {
-
-	public enum ClickType {
-		INTERACT_CREATE("INTERACT_SCRIPTBLOCKPLUS_CREATECLICK"),
-		INTERACT_ADD("INTERACT_SCRIPTBLOCKPLUS_ADDCLICK"),
-		INTERACT_REMOVE("INTERACT_SCRIPTBLOCKPLUS_REMOVECLICK"),
-		INTERACT_VIEW("INTERACT_SCRIPTBLOCKPLUS_VIEWCLICK"),
-		WALK_CREATE("WALK_SCRIPTBLOCKPLUS_CREATECLICK"),
-		WALK_ADD("WALK_SCRIPTBLOCKPLUS_ADDCLICK"),
-		WALK_REMOVE("WALK_SCRIPTBLOCKPLUS_REMOVECLICK"),
-		WALK_VIEW("WALK_SCRIPTBLOCKPLUS_VIEWCLICK");
-
-		private String type;
-
-		private ClickType(String type) {
-			this.type = type;
-		}
-
-		public String getString() {
-			return type;
-		}
-	}
 
 	public static void removeAllMetadata(Player player) {
 		Click.removeAllMetadata(player);
@@ -44,11 +24,11 @@ public class MetadataManager {
 	public static class Click {
 
 		public static void setMetadata(Player player, ClickType clickType, boolean value) {
-			player.setMetadata(clickType.getString(), new FixedMetadataValue(ScriptBlock.instance, value));
+			player.setMetadata(clickType.toString(), new FixedMetadataValue(ScriptBlock.instance, value));
 		}
 
 		public static void removeMetadata(Player player, ClickType clickType) {
-			player.removeMetadata(clickType.getString(), ScriptBlock.instance);
+			player.removeMetadata(clickType.toString(), ScriptBlock.instance);
 		}
 
 		public static void removeAllMetadata(Player player) {
@@ -60,7 +40,7 @@ public class MetadataManager {
 		}
 
 		public static boolean hasMetadata(Player player, ClickType clickType) {
-			return player.hasMetadata(clickType.getString());
+			return player.hasMetadata(clickType.toString());
 		}
 
 		public static boolean hasAllMetadata(Player player) {
@@ -73,7 +53,7 @@ public class MetadataManager {
 		}
 
 		public static boolean getMetadata(Player player, ClickType clickType) {
-			List<MetadataValue> values = player.getMetadata(clickType.getString());
+			List<MetadataValue> values = player.getMetadata(clickType.toString());
 			for (MetadataValue value : values) {
 				if (value.asBoolean()) {
 					return true;
@@ -86,11 +66,11 @@ public class MetadataManager {
 	public static class Script {
 
 		public static void setMetadata(Player player, ClickType clickType, String value) {
-			player.setMetadata(clickType.getString(), new FixedMetadataValue(ScriptBlock.instance, value));
+			player.setMetadata(clickType.toString(), new FixedMetadataValue(ScriptBlock.instance, value));
 		}
 
 		public static void removeMetadata(Player player, ClickType clickType) {
-			player.removeMetadata(clickType.getString(), ScriptBlock.instance);
+			player.removeMetadata(clickType.toString(), ScriptBlock.instance);
 		}
 
 		public static void removeAllMetadata(Player player) {
@@ -102,7 +82,7 @@ public class MetadataManager {
 		}
 
 		public static boolean hasMetadata(Player player, ClickType clickType) {
-			return player.hasMetadata(clickType.getString());
+			return player.hasMetadata(clickType.toString());
 		}
 
 		public static boolean hasAllMetadata(Player player) {
@@ -115,7 +95,7 @@ public class MetadataManager {
 		}
 
 		public static String getMetadata(Player player, ClickType clickType) {
-			List<MetadataValue> values = player.getMetadata(clickType.getString());
+			List<MetadataValue> values = player.getMetadata(clickType.toString());
 			String script;
 			for (MetadataValue value : values) {
 				script = value.asString();
@@ -130,11 +110,11 @@ public class MetadataManager {
 	public static class Edit {
 
 		public static void setMetadata(Player player, ScriptType scriptType, EditManager value) {
-			player.setMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase(), new FixedMetadataValue(ScriptBlock.instance, value));
+			player.setMetadata("SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase(), new FixedMetadataValue(ScriptBlock.instance, value));
 		}
 
 		public static void removeMetadata(Player player, ScriptType scriptType) {
-			player.removeMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase(), ScriptBlock.instance);
+			player.removeMetadata("SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase(), ScriptBlock.instance);
 		}
 
 		public static void removeAllMetadata(Player player) {
@@ -146,7 +126,7 @@ public class MetadataManager {
 		}
 
 		public static boolean hasMetadata(Player player, ScriptType scriptType) {
-			return player.hasMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase());
+			return player.hasMetadata("SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase());
 		}
 
 		public static boolean hasAllMetadata(Player player) {
@@ -160,7 +140,7 @@ public class MetadataManager {
 
 		public static EditManager getMetadata(Player player) {
 			for (ScriptType scriptType : ScriptType.values()) {
-				List<MetadataValue> values = player.getMetadata("SCRIPTBLOCKPLUS_" + scriptType.getString().toUpperCase());
+				List<MetadataValue> values = player.getMetadata("SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase());
 				for (MetadataValue value : values) {
 					if (value != null) {
 						return (EditManager) value.value();

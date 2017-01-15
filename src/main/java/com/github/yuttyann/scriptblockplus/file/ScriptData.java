@@ -7,15 +7,15 @@ import java.util.List;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
 public class ScriptData {
 
+	private Yaml scriptFile;
 	private BlockLocation location;
 	private ScriptType scriptType;
-	private Yaml scriptFile;
 	private String scriptPath;
 
 	public ScriptData(Block block, ScriptType scriptType) {
@@ -23,9 +23,9 @@ public class ScriptData {
 	}
 
 	public ScriptData(BlockLocation location, ScriptType scriptType) {
+		this.scriptFile = Files.getScriptFile(scriptType);
 		this.location = location;
 		this.scriptType = scriptType;
-		this.scriptFile = Files.getScriptFile(scriptType);
 		this.scriptPath = location.getWorld().getName() + "." + location.getCoords();
 	}
 
@@ -43,7 +43,7 @@ public class ScriptData {
 	}
 
 	public boolean checkPath() {
-		return scriptFile.contains(scriptPath + ".Author");
+		return scriptFile.contains(scriptPath);
 	}
 
 	public void save() {

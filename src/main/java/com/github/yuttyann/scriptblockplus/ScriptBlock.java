@@ -20,7 +20,7 @@ import com.github.yuttyann.scriptblockplus.listener.PlayerInteractListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerJoinQuitListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerMoveListener;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
 public class ScriptBlock extends JavaPlugin {

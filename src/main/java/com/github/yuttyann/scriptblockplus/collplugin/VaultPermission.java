@@ -11,10 +11,6 @@ public class VaultPermission {
 
 	private Permission permission;
 
-	public enum PermType {
-		CHECK, ADD, REMOVE
-	}
-
 	public static VaultPermission setupPermission() {
 		if (!CollPlugins.hasVault()) {
 			return null;

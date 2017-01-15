@@ -30,12 +30,12 @@ import com.github.yuttyann.scriptblockplus.manager.EditManager;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Click;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ClickType;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Edit;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Script;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
+import com.github.yuttyann.scriptblockplus.type.ClickType;
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
@@ -184,7 +184,7 @@ public class PlayerInteractListener implements Listener {
 				Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
 				return;
 			}
-			OptionManager.scriptExec(player, location, ScriptType.INTERACT);
+			new OptionManager(location, ScriptType.INTERACT).scriptExec(player);
 		}
 	}
 

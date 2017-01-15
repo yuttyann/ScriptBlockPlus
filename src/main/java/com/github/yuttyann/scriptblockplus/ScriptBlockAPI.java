@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 
 public class ScriptBlockAPI {
@@ -30,7 +30,7 @@ public class ScriptBlockAPI {
 	 * @param player プレイヤー
 	 */
 	public void scriptExec(Player player) {
-		OptionManager.scriptExec(player, scriptData.getBlockLocation(), getScriptType());
+		new OptionManager(scriptData.getBlockLocation(), getScriptType()).scriptExec(player);
 	}
 
 	/**

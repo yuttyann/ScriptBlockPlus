@@ -3,8 +3,6 @@ package com.github.yuttyann.scriptblockplus.manager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.yuttyann.scriptblockplus.collplugin.VaultPermission.PermType;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
 import com.github.yuttyann.scriptblockplus.option.Amount;
 import com.github.yuttyann.scriptblockplus.option.Cooldown;
 import com.github.yuttyann.scriptblockplus.option.Delay;
@@ -13,6 +11,8 @@ import com.github.yuttyann.scriptblockplus.option.ItemCost;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
 import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
 import com.github.yuttyann.scriptblockplus.option.Perm;
+import com.github.yuttyann.scriptblockplus.type.PermType;
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 
 public class ScriptManager extends OptionPrefix {

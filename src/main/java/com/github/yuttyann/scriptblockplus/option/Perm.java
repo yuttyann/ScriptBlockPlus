@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
 import com.github.yuttyann.scriptblockplus.collplugin.VaultPermission;
-import com.github.yuttyann.scriptblockplus.collplugin.VaultPermission.PermType;
+import com.github.yuttyann.scriptblockplus.type.PermType;
 
 public class Perm {
 

@@ -5,8 +5,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.command.BlockCommandSender;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -22,27 +20,23 @@ import com.github.yuttyann.scriptblockplus.option.Group;
 import com.github.yuttyann.scriptblockplus.option.ItemCost;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
 import com.github.yuttyann.scriptblockplus.option.Perm;
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
 public class OptionManager extends PlayerSelector {
 
-	public enum ScriptType {
-		INTERACT("interact"),
-		WALK("walk");
+	private ScriptData scriptData;
+	private BlockLocation location;
+	private ScriptType scriptType;
 
-		private String type;
-
-		private ScriptType(String type) {
-			this.type = type;
-		}
-
-		public String getString() {
-			return type;
-		}
+	public OptionManager(BlockLocation location, ScriptType scriptType) {
+		this.scriptData = new ScriptData(location, scriptType);
+		this.location = location;
+		this.scriptType = scriptType;
 	}
 
-	public static void scriptExec(Player player, BlockLocation location, ScriptType scriptType) {
+	public void scriptExec(Player player) {
 		UUID uuid = player.getUniqueId();
 		String fullcoords = location.getFullCoords();
 		if (Delay.contains(fullcoords, uuid)) {
@@ -54,7 +48,6 @@ public class OptionManager extends PlayerSelector {
 			player.sendMessage(Messages.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
 			return;
 		}
-		ScriptData scriptData = new ScriptData(location, scriptType);
 		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
@@ -73,7 +66,7 @@ public class OptionManager extends PlayerSelector {
 			}
 			Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
 			if (!manager.hasOption()) {
-				commandExec(player, location, replace(player, manager.getCommand(), false), manager.getScriptType(), manager.isBypass());
+				commandExec(player, replace(player, manager.getCommand(), false), manager.isBypass());
 				continue;
 			}
 			Perm perm = manager.getPerm();
@@ -87,26 +80,25 @@ public class OptionManager extends PlayerSelector {
 				return;
 			}
 			if (manager.getDelay() == null) {
-				scriptOptions(player, uuid, fullcoords, location, manager);
+				scriptOptions(player, fullcoords, manager);
 				continue;
 			}
 			final Player player2 = player;
 			final UUID uuid2 = uuid;
 			final String fullcoords2 = fullcoords;
-			final BlockLocation location2 = location;
 			final ScriptManager manager2 = manager;
 			Delay.put(fullcoords2, uuid2);
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					Delay.remove(fullcoords2, uuid2);
-					scriptOptions(player2, uuid2, fullcoords2, location2, manager2);
+					scriptOptions(player2, fullcoords2, manager2);
 				}
 			}.runTaskLater(ScriptBlock.instance, manager.getDelay().getTick());
 		}
 	}
 
-	private static void scriptOptions(Player player, UUID uuid, String fullcoords, BlockLocation location, ScriptManager manager) {
+	private void scriptOptions(Player player, String fullcoords, ScriptManager manager) {
 		Perm permADD = manager.getPermADD();
 		if (permADD != null) {
 			permADD.playerPerm(player);
@@ -125,7 +117,7 @@ public class OptionManager extends PlayerSelector {
 		}
 		Cooldown cooldown = manager.getCooldown();
 		if (cooldown != null) {
-			cooldown.run(uuid, fullcoords);
+			cooldown.run(player.getUniqueId(), fullcoords);
 		}
 		MoneyCost moneyCost = manager.getMoneyCost();
 		if (moneyCost != null) {
@@ -158,14 +150,14 @@ public class OptionManager extends PlayerSelector {
 			Bukkit.broadcastMessage(replace(player, manager.getServer(), true));
 		}
 		if (manager.getSay() != null && player.isOnline()) {
-			commandExec(player, location, "/say " + replace(player, manager.getSay(), false), manager.getScriptType(), true);
+			commandExec(player, "/say " + replace(player, manager.getSay(), false), true);
 		}
 		if (manager.getCommand() != null && player.isOnline()) {
-			commandExec(player, location, replace(player, manager.getCommand(), false), manager.getScriptType(), manager.isBypass());
+			commandExec(player, replace(player, manager.getCommand(), false), manager.isBypass());
 		}
 	}
 
-	private static String replace(Player player, String text, boolean isColor) {
+	private String replace(Player player, String text, boolean isColor) {
 		text = text.replace("<player>", player.getName()).replace("<dplayer>", player.getDisplayName());
 		if (isColor) {
 			return text.replace("&rc", Utils.getRandomColor()).replace("&", "§");
@@ -173,44 +165,41 @@ public class OptionManager extends PlayerSelector {
 		return text;
 	}
 
-	private static void commandExec(Player player, BlockLocation location, String command, ScriptType scriptType, boolean isBypass) {
+	private void commandExec(Player player, String command, boolean isBypass) {
 		if (!isBypass) {
-			dispatchCommand(player, location.toLocation(), command);
+			dispatchCommand(player, command);
 			return;
 		}
 		if (player.isOp()) {
-			dispatchCommand(player, location.toLocation(), command);
+			dispatchCommand(player, command);
 			return;
 		}
 		try {
 			player.setOp(true);
-			dispatchCommand(player, location.toLocation(), command);
+			dispatchCommand(player, command);
 		} finally {
 			player.setOp(false);
 		}
 	}
 
-	private static void dispatchCommand(CommandSender sender, Location location, String command) {
+	protected void dispatchCommand(Player player, String command) {
 		if (command.startsWith("/")) {
 			command = command.substring(1);
 		}
 		String pattern = getCommandBlockPattern(command);
+		Location location = this.location.toLocation();
 		if (pattern != null) {
 			if (location == null) {
-				if (sender instanceof Player) {
-					location = ((Player) sender).getLocation().clone();
-				} else if (sender instanceof BlockCommandSender) {
-					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
-				}
+				location = player.getLocation().clone();
 			}
 			Player[] players = getPlayers(location, pattern);
 			if (players != null) {
-				for (Player player : players) {
-					Bukkit.dispatchCommand(sender, command.replace(pattern, player.getName()));
+				for (Player p : players) {
+					Bukkit.dispatchCommand(p, command.replace(pattern, player.getName()));
 				}
 			}
 		} else {
-			Bukkit.dispatchCommand(sender, command);
+			Bukkit.dispatchCommand(player, command);
 		}
 	}
 }

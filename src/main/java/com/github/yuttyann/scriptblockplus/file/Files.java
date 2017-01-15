@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file;
 
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
-
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 
 public class Files {
 

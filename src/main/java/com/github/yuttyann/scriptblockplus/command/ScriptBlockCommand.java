@@ -24,13 +24,13 @@ import com.github.yuttyann.scriptblockplus.manager.EditManager;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Click;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ClickType;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Edit;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Script;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
+import com.github.yuttyann.scriptblockplus.type.ClickType;
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 import com.sk89q.worldedit.bukkit.selections.Selection;
@@ -50,7 +50,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			help.getView().setAll("walk add <options> - 実行後クリックしたブロックにスクリプトを追加します。", Permission.SCRIPTBLOCKPLUS_COMMAND_WALK, true),
 			help.getView().setAll("walk remove - 実行後クリックしたブロックのスクリプトを削除します。", Permission.SCRIPTBLOCKPLUS_COMMAND_WALK, true),
 			help.getView().setAll("walk view - 実行後クリックしたブロックのスクリプトを表示します。", Permission.SCRIPTBLOCKPLUS_COMMAND_WALK, true),
-			help.getView().setAll("worldedit paste - WorldEditで選択した範囲にスクリプトをペーストします。", Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, true),
+			help.getView().setAll("worldedit paste [overwrite] - WorldEditで選択した範囲にスクリプトをペーストします。", Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, true),
 			help.getView().setAll("worldedit remove - WorldEditで選択した範囲のスクリプトを削除します。", Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, true),
 			help.getView().setAll("§c※スクリプトをペーストするためには編集ツールでコピーしておく必要があります。", Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, false)
 		);
@@ -176,7 +176,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 					if (block == null || block.getType() == Material.AIR) {
 						continue;
 					}
-					edit.scriptWEPaste(player, BlockLocation.fromLocation(block.getLocation()));
+					edit.scriptWEPaste(player, BlockLocation.fromLocation(block.getLocation()), true);
 				}
 				edit.save();
 				ScriptType scriptType = Edit.getMetadata(player).getScriptType();
@@ -225,14 +225,14 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 				String type = "";
 				if (isInteract) {
 					Files.getInteract().save();
-					type += ScriptType.INTERACT.getString();
+					type += ScriptType.INTERACT.toString();
 				}
 				if (isWalk) {
 					Files.getWalk().save();
 					if (type.equals("")) {
-						type = ScriptType.WALK.getString();
+						type = ScriptType.WALK.toString();
 					} else {
-						type += ", " + ScriptType.WALK.getString();
+						type += ", " + ScriptType.WALK.toString();
 					}
 				}
 				if (type.equals("")) {
@@ -241,6 +241,44 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 				}
 				Utils.sendPluginMessage(player, Messages.getWorldEditRemoveMessage(type));
 				Utils.sendPluginMessage(Messages.getConsoleWorldEditRemoveMessage(type, min, max));
+				return true;
+			}
+		}
+		if (args.length == 3) {
+			if (args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
+				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
+					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+					return true;
+				}
+				if (!Edit.hasAllMetadata(player)) {
+					Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
+					return true;
+				}
+				if (!CollPlugins.hasWorldEdit()) {
+					Utils.sendPluginMessage(player, Messages.getNotWorldEditMessage());
+					return true;
+				}
+				WorldEditAPI api = CollPlugins.getWorldEditAPI();
+				Selection selection = api.getSelection(player);
+				if (selection == null) {
+					Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
+					return true;
+				}
+				Location min = selection.getMinimumPoint();
+				Location max = selection.getMaximumPoint();
+				List<Block> blocks = api.getSelectionBlocks(selection);
+				MetadataManager.removeAllMetadata(player);
+				EditManager edit = Edit.getMetadata(player);
+				for (Block block : blocks) {
+					if (block == null || block.getType() == Material.AIR) {
+						continue;
+					}
+					edit.scriptWEPaste(player, BlockLocation.fromLocation(block.getLocation()), Boolean.parseBoolean(args[2]));
+				}
+				edit.save();
+				ScriptType scriptType = Edit.getMetadata(player).getScriptType();
+				Utils.sendPluginMessage(player, Messages.getWorldEditPasteMessage(scriptType));
+				Utils.sendPluginMessage(Messages.getConsoleWorldEditPasteMessage(scriptType, min, max));
 				return true;
 			}
 		}
@@ -371,9 +409,15 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			if (arg1.equalsIgnoreCase("remove") || arg1.equalsIgnoreCase("view")) {
 				return null;
 			}
+			String[] args_;
+			if (arg1.equalsIgnoreCase("paste")) {
+				args_ = new String[]{"true", "false"};
+			} else {
+				args_ = PREFIXS;
+			}
 			ArrayList<String> commands = new ArrayList<String>();
 			String prefix = args[2].toLowerCase();
-			for (String c : PREFIXS) {
+			for (String c : args_) {
 				if (c.startsWith(prefix)) {
 					commands.add(c.trim());
 				}

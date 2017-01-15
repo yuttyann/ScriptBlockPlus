@@ -230,11 +230,7 @@ public class Utils {
 			isUUID = true;
 		} else if (uuid_or_name instanceof String) {
 			try {
-				if (!uuid_or_name.toString().contains("-")) {
-					uuid_or_name = fromString(uuid_or_name.toString());
-				} else {
-					uuid_or_name = UUID.fromString(uuid_or_name.toString());
-				}
+				uuid_or_name = fromString(uuid_or_name.toString());
 				isUUID = true;
 			} catch (Exception e) {
 				isUUID = false;
@@ -260,11 +256,7 @@ public class Utils {
 			isUUID = true;
 		} else if (uuid_or_name instanceof String) {
 			try {
-				if (!uuid_or_name.toString().contains("-")) {
-					uuid_or_name = fromString(uuid_or_name.toString());
-				} else {
-					uuid_or_name = UUID.fromString(uuid_or_name.toString());
-				}
+				uuid_or_name = fromString(uuid_or_name.toString());
 				isUUID = true;
 			} catch (Exception e) {
 				isUUID = false;
@@ -289,7 +281,11 @@ public class Utils {
 	}
 
 	public static UUID fromString(String uuid) {
-		return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));
+		if (!uuid.contains("-")) {
+			return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));
+		} else {
+			return UUID.fromString(uuid);
+		}
 	}
 
 	public static ArrayList<Player> getOnlinePlayers() {

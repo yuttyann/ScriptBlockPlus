@@ -5,8 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ClickType;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
+import com.github.yuttyann.scriptblockplus.type.ClickType;
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 
 public class Messages {
@@ -107,35 +107,35 @@ public class Messages {
 		if (instance.scriptCopyMessage == null) {
 			return null;
 		}
-		return replaceColorCode(instance.scriptCopyMessage.replace("%scripttype%", scriptType.getString()));
+		return replaceColorCode(instance.scriptCopyMessage.replace("%scripttype%", scriptType.toString()));
 	}
 
 	public static String getScriptPasteMessage(ScriptType scriptType) {
 		if (instance.scriptPasteMessage == null) {
 			return null;
 		}
-		return replaceColorCode(instance.scriptPasteMessage.replace("%scripttype%", scriptType.getString()));
+		return replaceColorCode(instance.scriptPasteMessage.replace("%scripttype%", scriptType.toString()));
 	}
 
 	public static String getScriptCreateMessage(ScriptType scriptType) {
 		if (instance.scriptCreateMessage == null) {
 			return null;
 		}
-		return replaceColorCode(instance.scriptCreateMessage.replace("%scripttype%", scriptType.getString()));
+		return replaceColorCode(instance.scriptCreateMessage.replace("%scripttype%", scriptType.toString()));
 	}
 
 	public static String getScriptAddMessage(ScriptType scriptType) {
 		if (instance.scriptAddMessage == null) {
 			return null;
 		}
-		return replaceColorCode(instance.scriptAddMessage.replace("%scripttype%", scriptType.getString()));
+		return replaceColorCode(instance.scriptAddMessage.replace("%scripttype%", scriptType.toString()));
 	}
 
 	public static String getScriptRemoveMessage(ScriptType scriptType) {
 		if (instance.scriptRemoveMessage == null) {
 			return null;
 		}
-		return replaceColorCode(instance.scriptRemoveMessage.replace("%scripttype%", scriptType.getString()));
+		return replaceColorCode(instance.scriptRemoveMessage.replace("%scripttype%", scriptType.toString()));
 	}
 
 	public static String getWorldEditNotSelectionMessage() {
@@ -149,7 +149,7 @@ public class Messages {
 		if (instance.worldEditPasteMessage == null) {
 			return null;
 		}
-		return replaceColorCode(instance.worldEditPasteMessage.replace("%scripttype%", scriptType.getString()));
+		return replaceColorCode(instance.worldEditPasteMessage.replace("%scripttype%", scriptType.toString()));
 	}
 
 	public static String getWorldEditRemoveMessage(String scriptType) {
@@ -232,7 +232,7 @@ public class Messages {
 		if (instance.errorScriptExecMessage == null) {
 			return null;
 		}
-		return replaceColorCode(instance.errorScriptExecMessage.replace("%scripttype%", scriptType.getString()));
+		return replaceColorCode(instance.errorScriptExecMessage.replace("%scripttype%", scriptType.toString()));
 	}
 
 	public static String getErrorGroupMessage(String group) {
@@ -260,42 +260,42 @@ public class Messages {
 		if (instance.consoleScriptCopyMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		return replaceColorCode(instance.consoleScriptCopyMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.getString()).replace("%world%", world.getName()).replace("%coords%", coords));
+		return replaceColorCode(instance.consoleScriptCopyMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.toString()).replace("%world%", world.getName()).replace("%coords%", coords));
 	}
 
 	public static String getConsoleScriptPasteMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleScriptPasteMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		return replaceColorCode(instance.consoleScriptPasteMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.getString()).replace("%world%", world.getName()).replace("%coords%", coords));
+		return replaceColorCode(instance.consoleScriptPasteMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.toString()).replace("%world%", world.getName()).replace("%coords%", coords));
 	}
 
 	public static String getConsoleScriptCreateMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleScriptCreateMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		return replaceColorCode(instance.consoleScriptCreateMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.getString()).replace("%world%", world.getName()).replace("%coords%", coords));
+		return replaceColorCode(instance.consoleScriptCreateMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.toString()).replace("%world%", world.getName()).replace("%coords%", coords));
 	}
 
 	public static String getConsoleScriptAddMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleScriptAddMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		return replaceColorCode(instance.consoleScriptAddMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.getString()).replace("%world%", world.getName()).replace("%coords%", coords));
+		return replaceColorCode(instance.consoleScriptAddMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.toString()).replace("%world%", world.getName()).replace("%coords%", coords));
 	}
 
 	public static String getConsoleScriptRemoveMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleScriptRemoveMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		return replaceColorCode(instance.consoleScriptRemoveMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.getString()).replace("%world%", world.getName()).replace("%coords%", coords));
+		return replaceColorCode(instance.consoleScriptRemoveMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.toString()).replace("%world%", world.getName()).replace("%coords%", coords));
 	}
 
 	public static String getConsoleScriptViewMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleScriptViewMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		return replaceColorCode(instance.consoleScriptViewMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.getString()).replace("%world%", world.getName()).replace("%coords%", coords));
+		return replaceColorCode(instance.consoleScriptViewMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.toString()).replace("%world%", world.getName()).replace("%coords%", coords));
 	}
 
 	public static String getConsoleWorldEditPasteMessage(ScriptType scriptType, Location min, Location max) {
@@ -305,7 +305,7 @@ public class Messages {
 		String world = min.getWorld().getName();
 		String minCoords = BlockLocation.fromLocation(min).getCoords();
 		String maxCoords = BlockLocation.fromLocation(max).getCoords();
-		return replaceColorCode(instance.consoleWorldEditPasteMessage.replace("%scripttype%", scriptType.getString()).replace("%world%", world).replace("%mincoords%", minCoords).replace("%maxcoords%", maxCoords));
+		return replaceColorCode(instance.consoleWorldEditPasteMessage.replace("%scripttype%", scriptType.toString()).replace("%world%", world).replace("%mincoords%", minCoords).replace("%maxcoords%", maxCoords));
 	}
 
 	public static String getConsoleWorldEditRemoveMessage(String scriptType, Location min, Location max) {
@@ -322,14 +322,14 @@ public class Messages {
 		if (instance.consoleSuccScriptExecMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		return replaceColorCode(instance.consoleSuccScriptExecMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.getString()).replace("%world%", world.getName()).replace("%coords%", coords));
+		return replaceColorCode(instance.consoleSuccScriptExecMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.toString()).replace("%world%", world.getName()).replace("%coords%", coords));
 	}
 
 	public static String getConsoleErrorScriptExecMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleErrorScriptExecMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		return replaceColorCode(instance.consoleErrorScriptExecMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.getString()).replace("%world%", world.getName()).replace("%coords%", coords));
+		return replaceColorCode(instance.consoleErrorScriptExecMessage.replace("%player%", player.getName()).replace("%scripttype%", scriptType.toString()).replace("%world%", world.getName()).replace("%coords%", coords));
 	}
 
 	public static void reload() {

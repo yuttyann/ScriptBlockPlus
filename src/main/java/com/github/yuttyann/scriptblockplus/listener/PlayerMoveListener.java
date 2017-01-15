@@ -13,7 +13,7 @@ import com.github.yuttyann.scriptblockplus.Permission;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
@@ -39,7 +39,7 @@ public class PlayerMoveListener implements Listener {
 				Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
 				return;
 			}
-			OptionManager.scriptExec(player, location, ScriptType.WALK);
+			new OptionManager(location, ScriptType.WALK).scriptExec(player);
 		}
 	}
 }

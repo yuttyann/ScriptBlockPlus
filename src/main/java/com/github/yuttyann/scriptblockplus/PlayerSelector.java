@@ -25,11 +25,11 @@ import com.github.yuttyann.scriptblockplus.util.Utils;
 
 public class PlayerSelector {
 
-	private static final Pattern a = Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$");
-	private static final Pattern b = Pattern.compile("\\G([-!]?[\\w-]*)(?:$|,)");
-	private static final Pattern c = Pattern.compile("\\G(\\w+)=([-!]?[\\w-]*)(?:$|,)");
+	private final Pattern a = Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$");
+	private final Pattern b = Pattern.compile("\\G([-!]?[\\w-]*)(?:$|,)");
+	private final Pattern c = Pattern.compile("\\G(\\w+)=([-!]?[\\w-]*)(?:$|,)");
 
-	protected static Player[] getPlayers(Location location, String s) {
+	protected Player[] getPlayers(Location location, String s) {
 		Matcher matcher = a.matcher(s);
 		if (!matcher.matches()) {
 			return null;
@@ -113,7 +113,7 @@ public class PlayerSelector {
 		}
 	}
 
-	private static Map<String, Integer> a(Map<String, String> map) {
+	private Map<String, Integer> a(Map<String, String> map) {
 		HashMap<String, Integer> hashmap = new HashMap<String, Integer>();
 		for (String s : map.keySet()) {
 			if (s.startsWith("score_") && s.length() > "score_".length()) {
@@ -124,7 +124,7 @@ public class PlayerSelector {
 		return hashmap;
 	}
 
-	protected static boolean isList(String s) {
+	protected boolean isList(String s) {
 		Matcher matcher = a.matcher(s);
 		if (matcher.matches()) {
 			Map<String, String> map = h(matcher.group(2));
@@ -139,7 +139,7 @@ public class PlayerSelector {
 		}
 	}
 
-	protected static boolean isPattern(String s, String s1) {
+	protected boolean isPattern(String s, String s1) {
 		Matcher matcher = a.matcher(s);
 		if (matcher.matches()) {
 			String s2 = matcher.group(1);
@@ -149,31 +149,31 @@ public class PlayerSelector {
 		}
 	}
 
-	protected static boolean isPattern(String s) {
+	protected boolean isPattern(String s) {
 		return isPattern(s, (String) null);
 	}
 
-	private static final int c(String s) {
+	private final int c(String s) {
 		return 0;
 	}
 
-	private static final int d(String s) {
+	private final int d(String s) {
 		return 0;
 	}
 
-	private static final int e(String s) {
+	private final int e(String s) {
 		return Integer.MAX_VALUE;
 	}
 
-	private static final int f(String s) {
+	private final int f(String s) {
 		return 0;
 	}
 
-	private static final int g(String s) {
+	private final int g(String s) {
 		return s.equals("a") ? 0 : 1;
 	}
 
-	private static Map<String, String> h(String s) {
+	private Map<String, String> h(String s) {
 		HashMap<String, String> hashmap = new HashMap<String, String>();
 		if (s == null) {
 			return hashmap;
@@ -209,7 +209,7 @@ public class PlayerSelector {
 		return hashmap;
 	}
 
-	private static int a(String s, int i) {
+	private int a(String s, int i) {
 		int j = i;
 		try {
 			j = Integer.parseInt(s);
@@ -217,7 +217,7 @@ public class PlayerSelector {
 		return j;
 	}
 
-	private static double a(String s, double d0) {
+	private double a(String s, double d0) {
 
 		double d1 = d0;
 
@@ -227,7 +227,7 @@ public class PlayerSelector {
 		return d1;
 	}
 
-	private static List<Player> a(final Location location, int i, int j, int k, GameMode l, int i1, int j1, Map<String, Integer> map, String s, String s1, World world) {
+	private List<Player> a(final Location location, int i, int j, int k, GameMode l, int i1, int j1, Map<String, Integer> map, String s, String s1, World world) {
 		List<Player> list = new ArrayList<Player>();
 		boolean flag = k < 0;
 		boolean flag1 = s != null && s.startsWith("!");
@@ -284,7 +284,7 @@ public class PlayerSelector {
 		return list;
 	}
 
-	private static boolean a(Player player, Map<String, Integer> map) {
+	private boolean a(Player player, Map<String, Integer> map) {
 		if (map == null || map.size() == 0) {
 			return true;
 		}
@@ -318,7 +318,7 @@ public class PlayerSelector {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static Score getScore(Objective objective, Player player) {
+	private Score getScore(Objective objective, Player player) {
 		if (Utils.isUpperVersion_v178()) {
 			return objective.getScore(player.getName());
 		} else {
@@ -327,7 +327,7 @@ public class PlayerSelector {
 		}
 	}
 
-	protected static String getCommandBlockPattern(String command) {
+	protected String getCommandBlockPattern(String command) {
 		String[] arguments = command.split(" ");
 		for (int i = 1; i < arguments.length; i++) {
 			if (isPattern(arguments[i])) {

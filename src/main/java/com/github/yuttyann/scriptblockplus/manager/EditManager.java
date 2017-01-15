@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Edit;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.ScriptType;
+import com.github.yuttyann.scriptblockplus.type.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
@@ -64,8 +64,11 @@ public class EditManager {
 	}
 
 	//WorldEdit用に軽量化
-	public void scriptWEPaste(Player player, BlockLocation location) {
+	public void scriptWEPaste(Player player, BlockLocation location, boolean overwrite) {
 		scriptData.setBlockLocation(location);
+		if (!overwrite && scriptData.checkPath()) {
+			return;
+		}
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
 		scriptData.setScripts(new ArrayList<String>(scripts));
