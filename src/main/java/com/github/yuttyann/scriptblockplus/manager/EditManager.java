@@ -57,7 +57,6 @@ public class EditManager {
 		scriptData.setLastEdit();
 		scriptData.setScripts(new ArrayList<String>(scripts));
 		scriptData.save();
-		System.out.println(scriptData.getLastEdit());
 		MapManager.addCoords(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptPasteMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptPasteMessage(player, scriptType, location.getWorld(), location.getCoords()));
