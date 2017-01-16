@@ -182,7 +182,7 @@ public class OptionManager extends PlayerSelector {
 		}
 	}
 
-	protected void dispatchCommand(Player player, String command) {
+	private void dispatchCommand(Player player, String command) {
 		if (command.startsWith("/")) {
 			command = command.substring(1);
 		}

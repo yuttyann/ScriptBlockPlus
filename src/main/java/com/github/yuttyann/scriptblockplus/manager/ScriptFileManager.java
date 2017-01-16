@@ -85,7 +85,7 @@ public class ScriptFileManager {
 			return;
 		}
 		StringBuilder builder = new StringBuilder();
-		List<String> authors = scriptData.getAuthors();
+		List<String> authors = scriptData.getAuthors(true);
 		int length = authors.size();
 		if (length > 1) {
 			for (int i = 0 ; i < length; i++) {
@@ -100,7 +100,11 @@ public class ScriptFileManager {
 				}
 			}
 		} else {
-			builder.append(authors.get(0));
+			try {
+				builder.append(authors.get(0));
+			} catch (NullPointerException e) {
+				builder.append("null");
+			}
 		}
 		Utils.sendPluginMessage(player, "Author: " + builder.toString());
 		Utils.sendPluginMessage(player, "LastEdit: " + scriptData.getLastEdit());

@@ -21,7 +21,7 @@ public class ScriptBlockAPI {
 	 * @param block
 	 * @param scriptType
 	 */
-	public ScriptBlockAPI(Block block, ScriptType scriptType) {
+	protected ScriptBlockAPI(Block block, ScriptType scriptType) {
 		scriptData = new ScriptData(block, scriptType);
 	}
 
@@ -66,7 +66,7 @@ public class ScriptBlockAPI {
 	}
 
 	/**
-	 * 設定したスクリプトを保存する。
+	 * スクリプトを保存する。
 	 */
 	public void save() {
 		scriptData.save();
@@ -82,10 +82,11 @@ public class ScriptBlockAPI {
 
 	/**
 	 * スクリプトの作者を取得する。
+	 * @param isName UUIDをMinecraftIDに変換するかどうか
 	 * @return 作者
 	 */
-	public List<String> getAuthors() {
-		return scriptData.getAuthors();
+	public List<String> getAuthors(boolean isName) {
+		return scriptData.getAuthors(isName);
 	}
 
 	/**
@@ -127,6 +128,14 @@ public class ScriptBlockAPI {
 	 */
 	public void addAuthor(Player player) {
 		scriptData.addAuthor(player);
+	}
+
+	/**
+	 * スクリプトの作者を削除する。
+	 * @param player 作者
+	 */
+	public void removeAuthor(Player player) {
+		scriptData.removeAuthor(player);
 	}
 
 	/**

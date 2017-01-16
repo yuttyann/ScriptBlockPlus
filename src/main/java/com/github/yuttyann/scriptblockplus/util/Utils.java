@@ -229,11 +229,10 @@ public class Utils {
 		if (uuid_or_name instanceof UUID) {
 			isUUID = true;
 		} else if (uuid_or_name instanceof String) {
-			try {
-				uuid_or_name = fromString(uuid_or_name.toString());
+			String str = uuid_or_name.toString();
+			if (isUUID(str)) {
+				uuid_or_name = fromString(str);
 				isUUID = true;
-			} catch (Exception e) {
-				isUUID = false;
 			}
 		}
 		Object value;
@@ -255,11 +254,10 @@ public class Utils {
 		if (uuid_or_name instanceof UUID) {
 			isUUID = true;
 		} else if (uuid_or_name instanceof String) {
-			try {
-				uuid_or_name = fromString(uuid_or_name.toString());
+			String str = uuid_or_name.toString();
+			if (isUUID(str)) {
+				uuid_or_name = fromString(str);
 				isUUID = true;
-			} catch (Exception e) {
-				isUUID = false;
 			}
 		}
 		Object value;
@@ -280,12 +278,18 @@ public class Utils {
 		return null;
 	}
 
+	private static final String REGEX_H = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
+	private static final String REGEX_NH = "[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}";
+
+	public static boolean isUUID(String uuid) {
+		return uuid.matches(REGEX_H) || uuid.matches(REGEX_NH);
+	}
+
 	public static UUID fromString(String uuid) {
-		if (!uuid.contains("-")) {
+		if (uuid.matches(REGEX_NH)) {
 			return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));
-		} else {
-			return UUID.fromString(uuid);
 		}
+		return UUID.fromString(uuid);
 	}
 
 	public static ArrayList<Player> getOnlinePlayers() {

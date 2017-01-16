@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.block.Block;
@@ -54,11 +53,11 @@ public class ScriptData {
 		return scriptFile.getString(scriptPath + ".Author");
 	}
 
-	public List<String> getAuthors() {
-		String[] authors = scriptFile.getString(scriptPath + ".Author").split(", ");
+	public List<String> getAuthors(boolean isName) {
+		String[] authors = getAuthor().split(", ");
 		List<String> list = new ArrayList<String>();
 		for (String author : authors) {
-			list.add(Utils.getName(author));
+			list.add(isName ? Utils.getName(author) : author);
 		}
 		return list;
 	}
@@ -81,10 +80,25 @@ public class ScriptData {
 
 	public void addAuthor(Player player) {
 		String uuid = player.getUniqueId().toString();
-		String author = getAuthor();
-		String[] split = author.split(", ");
-		if (split.length > 0 && !Arrays.asList(split).contains(uuid)) {
-			scriptFile.set(scriptPath + ".Author", author + ", " + uuid);
+		List<String> authors = getAuthors(false);
+		if (authors.size() > 0 && !authors.contains(uuid)) {
+			scriptFile.set(scriptPath + ".Author", getAuthor() + ", " + player.getUniqueId().toString());
+		}
+	}
+
+	public void removeAuthor(Player player) {
+		String uuid = player.getUniqueId().toString();
+		List<String> authors = getAuthors(false);
+		if (authors.size() > 0 && authors.contains(uuid)) {
+			authors.remove(uuid);
+			StringBuilder builder = new StringBuilder();
+			for (int i = 0, l = authors.size(); i < l; i++) {
+				builder.append(authors.get(i));
+				if (i != (l - 1)) {
+					builder.append(", ");
+				}
+			}
+			scriptFile.set(scriptPath + ".Author", builder.toString());
 		}
 	}
 
