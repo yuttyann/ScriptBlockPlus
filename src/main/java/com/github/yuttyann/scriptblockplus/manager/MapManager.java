@@ -85,7 +85,6 @@ public class MapManager {
 	}
 
 	public static void putAllScripts() {
-		System.out.println("put");
 		try {
 			coordsAllClear();
 			Yaml interact = Files.getInteract();
