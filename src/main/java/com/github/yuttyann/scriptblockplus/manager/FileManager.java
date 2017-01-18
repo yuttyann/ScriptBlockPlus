@@ -520,7 +520,7 @@ public class FileManager {
 
 	protected void renameToEncode(File file, boolean isUTF8) {
 		File data = ScriptBlock.instance.getDataFolder();
-		File temp = new File(data, "☃☃☃.yml");
+		File temp = new File(data, "☃.yml");
 		fileEncode(file, temp, isUTF8);
 		file.delete();
 		temp.renameTo(file);
