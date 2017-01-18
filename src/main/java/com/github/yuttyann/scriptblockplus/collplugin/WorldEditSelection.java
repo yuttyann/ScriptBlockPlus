@@ -14,15 +14,19 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class WorldEditAPI {
+public class WorldEditSelection {
 
 	private WorldEditPlugin worldEdit;
 
-	public static WorldEditAPI setupWorldEditAPI() {
+	private WorldEditSelection() {
+		throw new AssertionError();
+	}
+
+	protected static WorldEditSelection setupWorldEditAPI() {
 		if (!CollPlugins.hasWorldEdit()) {
 			return null;
 		}
-		WorldEditAPI worldEdit = new WorldEditAPI();
+		WorldEditSelection worldEdit = new WorldEditSelection();
 		worldEdit.worldEdit = (WorldEditPlugin) Utils.getPlugin("WorldEdit");
 		return worldEdit;
 	}

@@ -24,8 +24,13 @@ import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 
 public class Utils {
 
+	private static Boolean isWindows;
+
 	public static boolean isWindows() {
-		return System.getProperty("os.name").toLowerCase().startsWith("windows");
+		if (isWindows == null) {
+			isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
+		}
+		return isWindows;
 	}
 
 	public static double getJavaVersion() {
@@ -44,37 +49,37 @@ public class Utils {
 		Bukkit.getServer().getPluginManager().disablePlugin(plugin);
 	}
 
-	private static Boolean isUpperVersion_v175;
-	private static Boolean isUpperVersion_v178;
-	private static Boolean isUpperVersion_v18;
-	private static Boolean isUpperVersion_v19;
+	private static Boolean isCB175orLaterCache;
+	private static Boolean isCB178orLaterCache;
+	private static Boolean isCB18orLaterCache;
+	private static Boolean isCB19orLaterCache;
 
-	public static boolean isUpperVersion_v175() {
-		if (isUpperVersion_v175 == null) {
-			isUpperVersion_v175 = isUpperVersion(getVersion(), "1.7.5");
+	public static boolean isCB175orLater() {
+		if (isCB175orLaterCache == null) {
+			isCB175orLaterCache = isUpperVersion(getVersion(), "1.7.5");
 		}
-		return isUpperVersion_v175;
+		return isCB175orLaterCache;
 	}
 
-	public static boolean isUpperVersion_v178() {
-		if (isUpperVersion_v178 == null) {
-			isUpperVersion_v178 = isUpperVersion(getVersion(), "1.7.8");
+	public static boolean isCB178orLater() {
+		if (isCB178orLaterCache == null) {
+			isCB178orLaterCache = isUpperVersion(getVersion(), "1.7.8");
 		}
-		return isUpperVersion_v178;
+		return isCB178orLaterCache;
 	}
 
-	public static boolean isUpperVersion_v18() {
-		if (isUpperVersion_v18 == null) {
-			isUpperVersion_v18 = isUpperVersion(getVersion(), "1.8");
+	public static boolean isCB18orLater() {
+		if (isCB18orLaterCache == null) {
+			isCB18orLaterCache = isUpperVersion(getVersion(), "1.8");
 		}
-		return isUpperVersion_v18;
+		return isCB18orLaterCache;
 	}
 
-	public static boolean isUpperVersion_v19() {
-		if (isUpperVersion_v19 == null) {
-			isUpperVersion_v19 = isUpperVersion(getVersion(), "1.9");
+	public static boolean isCB19orLater() {
+		if (isCB19orLaterCache == null) {
+			isCB19orLaterCache = isUpperVersion(getVersion(), "1.9");
 		}
-		return isUpperVersion_v19;
+		return isCB19orLaterCache;
 	}
 
 	public static boolean isUpperVersion(String version, String target) {
@@ -129,10 +134,12 @@ public class Utils {
 		}
 		String message = msg.toString();
 		String colorCode = "";
-		for (ChatColor color : ChatColor.values()) {
-			if (message.startsWith(color.toString())) {
-				colorCode = color.toString();
-				break;
+		if (sender instanceof Player) {
+			for (ChatColor color : ChatColor.values()) {
+				if (message.startsWith(color.toString())) {
+					colorCode = color.toString();
+					break;
+				}
 			}
 		}
 		String prefix = "[" + PluginYaml.getName() + "] ";
@@ -159,7 +166,7 @@ public class Utils {
 
 	@SuppressWarnings("deprecation")
 	public static ItemStack getItemInHand(Player player) {
-		if(isUpperVersion_v19()) {
+		if(isCB19orLater()) {
 			return player.getInventory().getItemInMainHand();
 		} else {
 			return player.getInventory().getItemInHand();
@@ -168,7 +175,7 @@ public class Utils {
 
 	@SuppressWarnings("deprecation")
 	public static ItemStack setItemInHand(Player player, ItemStack item) {
-		if(isUpperVersion_v19()) {
+		if(isCB19orLater()) {
 			player.getInventory().setItemInMainHand(item);
 		} else {
 			player.getInventory().setItemInHand(item);
@@ -213,7 +220,7 @@ public class Utils {
 		if ((player = getOnlinePlayer(name)) != null) {
 			uuid = ((Player) player).getUniqueId();
 		} else if ((player = getOfflinePlayer(name)) != null) {
-			if (isUpperVersion_v175()) {
+			if (isCB175orLater()) {
 				uuid = ((OfflinePlayer) player).getUniqueId();
 			} else {
 				try {
@@ -263,7 +270,7 @@ public class Utils {
 		Object value;
 		for (OfflinePlayer player : getOfflinePlayers()) {
 			if (isUUID) {
-				if (isUpperVersion_v175()) {
+				if (isCB175orLater()) {
 					value = player.getUniqueId();
 				} else {
 					value = getUniqueId(player.getName());

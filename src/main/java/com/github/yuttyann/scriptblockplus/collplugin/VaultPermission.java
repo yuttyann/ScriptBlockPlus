@@ -11,7 +11,11 @@ public class VaultPermission {
 
 	private Permission permission;
 
-	public static VaultPermission setupPermission() {
+	private VaultPermission() {
+		throw new AssertionError();
+	}
+
+	protected static VaultPermission setupPermission() {
 		if (!CollPlugins.hasVault()) {
 			return null;
 		}

@@ -319,7 +319,7 @@ public class PlayerSelector {
 
 	@SuppressWarnings("deprecation")
 	private Score getScore(Objective objective, Player player) {
-		if (Utils.isUpperVersion_v178()) {
+		if (Utils.isCB178orLater()) {
 			return objective.getScore(player.getName());
 		} else {
 			Score score = objective.getScore(player);

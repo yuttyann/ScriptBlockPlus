@@ -12,7 +12,11 @@ public class VaultEconomy {
 
 	private Economy economy;
 
-	public static VaultEconomy setupEconomy() {
+	private VaultEconomy() {
+		throw new AssertionError();
+	}
+
+	protected static VaultEconomy setupEconomy() {
 		if (!CollPlugins.hasVault()) {
 			return null;
 		}

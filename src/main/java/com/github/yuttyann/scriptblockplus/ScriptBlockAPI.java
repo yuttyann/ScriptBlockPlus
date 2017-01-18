@@ -12,9 +12,14 @@ import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.type.ScriptType;
 import com.github.yuttyann.scriptblockplus.util.BlockLocation;
 
+/**
+ * @author ゆっちゃん
+ * ScriptBlockPlus APIクラス
+ */
 public class ScriptBlockAPI {
 
 	private ScriptData scriptData;
+	private OptionManager optionManager;
 
 	/**
 	 * コンストラクタ
@@ -22,7 +27,8 @@ public class ScriptBlockAPI {
 	 * @param scriptType
 	 */
 	protected ScriptBlockAPI(Block block, ScriptType scriptType) {
-		scriptData = new ScriptData(block, scriptType);
+		this.scriptData = new ScriptData(block, scriptType);
+		this.optionManager = new OptionManager(scriptData.getBlockLocation(), scriptType);
 	}
 
 	/**
@@ -30,7 +36,7 @@ public class ScriptBlockAPI {
 	 * @param player プレイヤー
 	 */
 	public void scriptExec(Player player) {
-		new OptionManager(scriptData.getBlockLocation(), getScriptType()).scriptExec(player);
+		optionManager.scriptExec(player);
 	}
 
 	/**
@@ -39,6 +45,7 @@ public class ScriptBlockAPI {
 	 */
 	public void setLocation(Location location) {
 		scriptData.setBlockLocation(BlockLocation.fromLocation(location));
+		optionManager = new OptionManager(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**

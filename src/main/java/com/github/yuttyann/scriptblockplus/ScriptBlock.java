@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,7 +15,6 @@ import com.github.yuttyann.scriptblockplus.command.ScriptBlockCommand;
 import com.github.yuttyann.scriptblockplus.command.help.CommandView;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
-import com.github.yuttyann.scriptblockplus.file.Yaml;
 import com.github.yuttyann.scriptblockplus.listener.BlockListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerInteractListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerJoinQuitListener;
@@ -26,14 +26,13 @@ import com.github.yuttyann.scriptblockplus.util.Utils;
 public class ScriptBlock extends JavaPlugin {
 
 	public static ScriptBlock instance;
-	private String encode;
 	private HashMap<String, TabExecutor> commands;
 	private HashMap<String, List<CommandView>> commandhelp;
 
 	@Override
 	public void onEnable() {
 		instance = this;
-		setupFile();
+		Files.reload();
 		if(!(Utils.getJavaVersion() >= 1.7))
 		{
 			Utils.sendPluginMessage(Messages.getOldJavaMessage());
@@ -66,23 +65,12 @@ public class ScriptBlock extends JavaPlugin {
 		return commandhelp;
 	}
 
-	public String getEncode() {
-		return encode;
+	public File getJarFile() {
+		return this.getFile();
 	}
 
 	public ScriptBlockAPI getAPI(Block block, ScriptType scriptType) {
 		return new ScriptBlockAPI(block, scriptType);
-	}
-
-	private void setupFile() {
-		if (Utils.isWindows() && !Utils.isUpperVersion_v19()) {
-			encode = "s-jis";
-		} else {
-			encode = "utf-8";
-		}
-		String[] args = {"config", "messages"};
-		Yaml.create(getDataFolder(), new StringBuilder(), encode, args);
-		Files.reload();
 	}
 
 	private void loadClass() {

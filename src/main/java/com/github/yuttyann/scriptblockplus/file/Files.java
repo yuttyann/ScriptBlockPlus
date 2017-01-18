@@ -4,6 +4,10 @@ import com.github.yuttyann.scriptblockplus.type.ScriptType;
 
 public class Files {
 
+	public static final String[] FILE_NAMES = {
+		"config", "messages", "scripts/interact", "scripts/walk"
+	};
+
 	private static Files instance;
 	private Yaml config;
 	private Yaml messages;
@@ -11,10 +15,10 @@ public class Files {
 	private Yaml walk;
 
 	public Files() {
-		this.config = new Yaml("config");
-		this.messages = new Yaml("messages");
-		this.interact = new Yaml("scripts/interact", false);
-		this.walk = new Yaml("scripts/walk", false);
+		this.config = new Yaml(FILE_NAMES[0]);
+		this.messages = new Yaml(FILE_NAMES[1]);
+		this.interact = new Yaml(FILE_NAMES[2], false);
+		this.walk = new Yaml(FILE_NAMES[3], false);
 	}
 
 	public static Yaml getConfig() {

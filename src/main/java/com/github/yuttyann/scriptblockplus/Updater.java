@@ -1,21 +1,13 @@
 package com.github.yuttyann.scriptblockplus;
 
 import java.awt.Desktop;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,13 +17,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.github.yuttyann.scriptblockplus.file.FileDownload;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
+import com.github.yuttyann.scriptblockplus.manager.FileManager;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 
-public class Updater extends FileDownload implements Listener {
+public class Updater extends FileManager implements Listener {
 
 	private String pluginName;
 	private String pluginVersion;
@@ -183,85 +175,6 @@ public class Updater extends FileDownload implements Listener {
 		}
 	}
 
-	private ArrayList<String> getTextList(File file) {
-		FileReader fileReader = null;
-		BufferedReader buReader = null;
-		try {
-			fileReader = new FileReader(file);
-			buReader = new BufferedReader(fileReader);
-			ArrayList<String> list = new ArrayList<String>();
-			String line;
-			while ((line = buReader.readLine()) != null) {
-				list.add(line);
-			}
-			return list;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (buReader != null) {
-				try {
-					buReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (fileReader != null) {
-				try {
-					fileReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return new ArrayList<String>();
-	}
-
-	private ArrayList<String> getTextList(String url) {
-		InputStream input = null;
-		InputStreamReader inReader = null;
-		BufferedReader buReader = null;
-		try {
-			input = new URL(url).openStream();
-			inReader = new InputStreamReader(input);
-			buReader = new BufferedReader(inReader);
-			String line;
-			ArrayList<String> list = new ArrayList<String>();
-			while ((line = buReader.readLine()) != null) {
-				list.add(line);
-			}
-			return list;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (buReader != null) {
-				try {
-					buReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (inReader != null) {
-				try {
-					inReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return new ArrayList<String>();
-	}
-
 	private String getSize(long size) {
 		if (1024 > size) {
 			return size + " Byte";
@@ -291,23 +204,15 @@ public class Updater extends FileDownload implements Listener {
 
 	private void sendCheckMessage(CommandSender sender) {
 		if(isEnable() && !isError()) {
-			if (sender instanceof Player && sender.isOp()) {
-				Utils.sendPluginMessage(sender, "§b最新のバージョンが存在します。v" + getVersion() + "にアップデートしてください。");
-				Utils.sendPluginMessage(sender, "§bプラグイン名: " + getPluginName());
-				Utils.sendPluginMessage(sender, "§b☆アップデート内容☆");
-				for (String content : getDetails()) {
-					if (content != null) {
-						Utils.sendPluginMessage(sender, "§b- " + content);
-					}
-				}
-			} else {
-				Utils.sendPluginMessage("§b最新のバージョンが存在します。v" + getVersion() + "にアップデートしてください。");
-				Utils.sendPluginMessage("§bプラグイン名: " + getPluginName());
-				Utils.sendPluginMessage("§b☆アップデート内容☆");
-				for (String content : getDetails()) {
-					if (content != null) {
-						Utils.sendPluginMessage("§b- " + content);
-					}
+			if (!sender.isOp()) {
+				return;
+			}
+			Utils.sendPluginMessage(sender, "§b最新のバージョンが存在します。v" + getVersion() + "にアップデートしてください。");
+			Utils.sendPluginMessage(sender, "§bプラグイン名: " + getPluginName());
+			Utils.sendPluginMessage(sender, "§b☆アップデート内容☆");
+			for (String content : getDetails()) {
+				if (content != null) {
+					Utils.sendPluginMessage(sender, "§b- " + content);
 				}
 			}
 		}

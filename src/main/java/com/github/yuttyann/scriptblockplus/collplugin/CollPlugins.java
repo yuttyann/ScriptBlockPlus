@@ -8,7 +8,7 @@ public class CollPlugins {
 	private static Boolean hasWorldEdit;
 	private static VaultEconomy vaultEconomy;
 	private static VaultPermission vaultPermission;
-	private static WorldEditAPI worldEditAPI;
+	private static WorldEditSelection worldEditSelection;
 
 	public static boolean hasVault() {
 		if (hasVault == null) {
@@ -38,10 +38,10 @@ public class CollPlugins {
 		return vaultPermission;
 	}
 
-	public static WorldEditAPI getWorldEditAPI() {
-		if (worldEditAPI == null) {
-			worldEditAPI = WorldEditAPI.setupWorldEditAPI();
+	public static WorldEditSelection getWorldEditSelection() {
+		if (worldEditSelection == null) {
+			worldEditSelection = WorldEditSelection.setupWorldEditAPI();
 		}
-		return worldEditAPI;
+		return worldEditSelection;
 	}
 }

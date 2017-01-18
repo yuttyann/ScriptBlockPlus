@@ -15,16 +15,13 @@ import org.bukkit.configuration.file.FileConfigurationOptions;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.manager.FileManager;
 import com.github.yuttyann.scriptblockplus.util.Utils;
 import com.google.common.base.Charsets;
 
-public class Yaml extends FileDownload {
+public class Yaml extends FileManager {
 
 	private String fileName;
 	private File file;
@@ -34,111 +31,15 @@ public class Yaml extends FileDownload {
 		this(fileName, true);
 	}
 
-	public Yaml(String fileName, boolean isDownload) {
+	public Yaml(String fileName, boolean isCreate) {
 		File data = ScriptBlock.instance.getDataFolder();
-		String encode = ScriptBlock.instance.getEncode();
-		file = new File(data, this.fileName = fileName + "_" + encode + ".yml");
-		if (isDownload && !file.exists()) {
-			if (!data.exists()) {
-				data.mkdirs();
-			}
-			String[] args = {fileName};
-			create(data, new StringBuilder(), encode, args);
+		this.file = new File(data, fileName + ".yml");
+		this.fileName = file.getName();
+		if (isCreate && !file.exists()) {
+			copyFileFromJar(ScriptBlock.instance.getJarFile(), file, this.fileName);
 		}
-		yaml = YamlConfiguration.loadConfiguration(file);
-	}
-
-	public static void create(File data, StringBuilder builder, String encode, String[] args) {
-		long start = 0;
-		long end = 0;
-		boolean isError = false;
-		boolean isMessage = false;
-		File file = null;
-		String fileName = null;
-		Long[] fileTimes = null;
-		String[] fileNames = null;
-		Document document = getDocument(PluginYaml.getName());
-		for (int i = 0, n = 0, l = args.length; i < l; i++) {
-			builder.append(args[i]).append("_").append(encode).append(".yml");
-			if (!(file = new File(data, fileName = builder.toString())).exists()) {
-				if (!isMessage) {
-					isMessage = true;
-					Utils.sendPluginMessage("§a生成されていないファイルが見つかりました。");
-					Utils.sendPluginMessage("§aファイルを生成しています...");
-				}
-				try {
-					start = System.currentTimeMillis();
-					if (!data.exists()) {
-						data.mkdir();
-					}
-					yamlDownload(file, document);
-					end = System.currentTimeMillis();
-					if (fileTimes == null && fileNames == null) {
-						fileTimes = new Long[l];
-						fileNames = new String[l];
-					}
-					fileTimes[n] = end - start;
-					fileNames[n] = fileName;
-					n++;
-				} catch (IOException e) {
-					isError = true;
-					e.printStackTrace();
-					Utils.sendPluginMessage("§cファイルの生成に失敗しました。");
-				}
-			}
-			builder.setLength(0);
-			if (i == (l - 1) && !isError && isMessage) {
-				for (int i2 = 0; i2 < n; i2++) {
-					builder.append(fileNames[i2]).append("(").append(fileTimes[i2]).append("ms)");
-					if(i2 != (n - 1)) {
-						builder.append(", ");
-					}
-				}
-				Utils.sendPluginMessage("§aファイルの生成が終了しました。");
-				if (l > 1) {
-					Utils.sendPluginMessage("§a生成ファイル一覧: [" + builder.toString() + "]");
-				} else {
-					Utils.sendPluginMessage("§a生成ファイル: [" + builder.toString() + "]");
-				}
-			}
-		}
-	}
-
-	private static void yamlDownload(File file, Document document) throws IOException {
-		Element root = document.getDocumentElement();
-		NodeList rootChildren = root.getChildNodes();
-		for(int i = 0, l = rootChildren.getLength(); i < l; i++) {
-			Node node = rootChildren.item(i);
-			if (node.getNodeType() != Node.ELEMENT_NODE) {
-				continue;
-			}
-			Element element = (Element) node;
-			if (!element.getNodeName().equals("files")) {
-				continue;
-			}
-			NodeList filesChildren = node.getChildNodes();
-			for (int j = 0, l2 = filesChildren.getLength(); j < l2; j++) {
-				Node filesNode = filesChildren.item(j);
-				if (filesNode.getNodeType() != Node.ELEMENT_NODE) {
-					continue;
-				}
-				String version = ((Element) filesNode).getAttribute("version");
-				if (!PluginYaml.getVersion().equals(version)) {
-					continue;
-				}
-				NodeList yamlChildren = filesNode.getChildNodes();
-				for(int k = 0, l3 = yamlChildren.getLength(); k < l3; k++) {
-					Node yamlNode = yamlChildren.item(k);
-					if (yamlNode.getNodeType() != Node.ELEMENT_NODE) {
-						continue;
-					}
-					if (!file.getName().equals(yamlNode.getNodeName())) {
-						continue;
-					}
-					fileDownload(((Element) yamlNode).getAttribute("url"), file);
-				}
-			}
-		}
+		fileEncode(file);
+		this.yaml = YamlConfiguration.loadConfiguration(file);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -147,7 +48,7 @@ public class Yaml extends FileDownload {
 		InputStream defConfigStream = ScriptBlock.instance.getResource(fileName);
 		if (defConfigStream != null) {
 			YamlConfiguration defConfig;
-			if(Utils.isUpperVersion_v19()) {
+			if(!Utils.isWindows() || Utils.isCB19orLater()) {
 				defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8));
 			} else {
 				defConfig = YamlConfiguration.loadConfiguration(defConfigStream);

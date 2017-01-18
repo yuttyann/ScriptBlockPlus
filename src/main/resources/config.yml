@@ -1,0 +1,23 @@
+﻿# ScriptBlockPlus Config #
+
+## === 自動アップデートの設定 === ##
+# [true で有効 | false で無効]
+# 初期: true
+# このプラグインが最新バージョンかチェックします。
+# メッセージはOPにしか表示されません。
+UpdateChecker: true
+AutoDownload: true
+OpenTextFile: true
+
+## === 左クリックの設定 === ##
+# [true で有効 | false で無効]
+# 初期: true
+# スクリプトが左クリックでも実行できるようにします。
+LeftClick: true
+
+## === コンソールログの設定 === ##
+# [true で有効 | false で無効]
+# 初期: true
+# コンソールにログを表示します。
+# メッセージファイルの"console"が対象です。
+ConsoleLog: true

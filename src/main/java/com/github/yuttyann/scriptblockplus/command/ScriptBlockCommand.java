@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.yuttyann.scriptblockplus.Permission;
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
-import com.github.yuttyann.scriptblockplus.collplugin.WorldEditAPI;
+import com.github.yuttyann.scriptblockplus.collplugin.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.command.help.CommandHelp;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
@@ -161,15 +161,15 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 					Utils.sendPluginMessage(player, Messages.getNotWorldEditMessage());
 					return true;
 				}
-				WorldEditAPI api = CollPlugins.getWorldEditAPI();
-				Selection selection = api.getSelection(player);
+				WorldEditSelection selectionAPI = CollPlugins.getWorldEditSelection();
+				Selection selection = selectionAPI.getSelection(player);
 				if (selection == null) {
 					Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 					return true;
 				}
 				Location min = selection.getMinimumPoint();
 				Location max = selection.getMaximumPoint();
-				List<Block> blocks = api.getSelectionBlocks(selection);
+				List<Block> blocks = selectionAPI.getSelectionBlocks(selection);
 				MetadataManager.removeAllMetadata(player);
 				EditManager edit = Edit.getMetadata(player);
 				for (Block block : blocks) {
@@ -193,15 +193,15 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 					Utils.sendPluginMessage(player, Messages.getNotWorldEditMessage());
 					return true;
 				}
-				WorldEditAPI api = CollPlugins.getWorldEditAPI();
-				Selection selection = api.getSelection(player);
+				WorldEditSelection selectionAPI = CollPlugins.getWorldEditSelection();
+				Selection selection = selectionAPI.getSelection(player);
 				if (selection == null) {
 					Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 					return true;
 				}
 				Location min = selection.getMinimumPoint();
 				Location max = selection.getMaximumPoint();
-				List<Block> blocks = api.getSelectionBlocks(selection);
+				List<Block> blocks = selectionAPI.getSelectionBlocks(selection);
 				MetadataManager.removeAllMetadata(player);
 				boolean isInteract = false;
 				boolean isWalk = false;
@@ -258,15 +258,15 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 					Utils.sendPluginMessage(player, Messages.getNotWorldEditMessage());
 					return true;
 				}
-				WorldEditAPI api = CollPlugins.getWorldEditAPI();
-				Selection selection = api.getSelection(player);
+				WorldEditSelection selectionAPI = CollPlugins.getWorldEditSelection();
+				Selection selection = selectionAPI.getSelection(player);
 				if (selection == null) {
 					Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 					return true;
 				}
 				Location min = selection.getMinimumPoint();
 				Location max = selection.getMaximumPoint();
-				List<Block> blocks = api.getSelectionBlocks(selection);
+				List<Block> blocks = selectionAPI.getSelectionBlocks(selection);
 				MetadataManager.removeAllMetadata(player);
 				EditManager edit = Edit.getMetadata(player);
 				for (Block block : blocks) {

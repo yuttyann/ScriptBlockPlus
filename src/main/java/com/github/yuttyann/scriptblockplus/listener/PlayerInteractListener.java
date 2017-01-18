@@ -167,7 +167,7 @@ public class PlayerInteractListener implements Listener {
 	}
 
 	private void scriptEvent(PlayerInteractEvent event, Block block, BlockLocation location) {
-		if (Utils.isUpperVersion_v19() && !isSlotHand(event)) {
+		if (Utils.isCB19orLater() && !isSlotHand(event)) {
 			return;
 		}
 		Player player = event.getPlayer();
