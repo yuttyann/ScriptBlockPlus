@@ -118,7 +118,7 @@ public class ScriptData {
 		scriptFile.set(scriptPath + ".Scripts", scripts);
 	}
 
-	public void setCreateScript(String script) {
+	public void setCreateScripts(String script) {
 		List<String> scripts = getScripts();
 		try {
 			scripts.set(0, script);

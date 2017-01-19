@@ -180,8 +180,8 @@ public class ScriptBlockAPI {
 	 * 一番最初のスクリプトを設定する。
 	 * @param script スクリプト
 	 */
-	public void setCreateScript(String script) {
-		scriptData.setCreateScript(script);
+	public void setCreateScripts(String script) {
+		scriptData.setCreateScripts(script);
 	}
 
 	/**

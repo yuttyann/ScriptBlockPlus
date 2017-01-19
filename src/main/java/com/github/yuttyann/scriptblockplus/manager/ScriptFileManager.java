@@ -34,7 +34,7 @@ public class ScriptFileManager {
 		MetadataManager.removeAllMetadata(player);
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
-		scriptData.setCreateScript(script);
+		scriptData.setCreateScripts(script);
 		scriptData.save();
 		MapManager.addCoords(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptCreateMessage(scriptType));
