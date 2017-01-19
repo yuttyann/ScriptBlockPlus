@@ -40,7 +40,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 		return new UUIDFetcher(name).call().get(name);
 	}
 
-	public String getJsonString(String url) {
+	private String getJsonString(String url) {
 		InputStream input = null;
 		InputStreamReader inReader = null;
 		BufferedReader buReader = null;
