@@ -1,13 +1,14 @@
-name: ScriptBlockPlus
+name: ${project.name}
 main: com.github.yuttyann.scriptblockplus.ScriptBlock
-version: 1.1.1
-softdepend: [Vault, ScriptBlock, WorldEdit, PermissionsEx, bPermissions, iConomy, Jecon]
+version: ${project.version}
+description: ${project.description}
 author: yuttyann44581
-website: http://file.yuttyann44581.net/
+website: http://forum.minecraftuser.jp/viewtopic.php?f=38&t=33171
+softdepend: [Vault, ScriptBlock, WorldEdit, PermissionsEx, bPermissions, iConomy, Jecon]
 
 commands:
   scriptblockplus:
-    description: ScriptBlockPlus コマンド
+    description: ScriptBlockPlus メインコマンド
     usage: |
            /<command> tool - 実行者にスクリプト編集ツールを配布します。
            /<command> reload - 全てのファイルの再読み込みを行います。

@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.type;
+package com.github.yuttyann.scriptblockplus.enums;
 
 public enum ScriptType {
 	INTERACT("interact"),

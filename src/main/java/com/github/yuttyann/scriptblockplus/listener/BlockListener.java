@@ -8,8 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.github.yuttyann.scriptblockplus.Permission;
-import com.github.yuttyann.scriptblockplus.util.Utils;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockListener implements Listener {
 

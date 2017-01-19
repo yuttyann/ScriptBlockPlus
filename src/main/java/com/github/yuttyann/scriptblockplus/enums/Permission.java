@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus;
+package com.github.yuttyann.scriptblockplus.enums;
 
 import org.bukkit.command.CommandSender;
 
@@ -11,6 +11,8 @@ public enum Permission {
 	SCRIPTBLOCKPLUS_INTERACT_USE("scriptblockplus.interact.use"),
 	SCRIPTBLOCKPLUS_WALK_USE("scriptblockplus.walk.use"),
 	SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR("scriptblockplus.tool.scripteditor");
+
+	public static final String COMMAND_PERM_PREFIX = "scriptblockplus.command.";
 
 	private String node;
 

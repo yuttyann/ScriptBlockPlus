@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.collplugin;
 
-import com.github.yuttyann.scriptblockplus.util.Utils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class CollPlugins {
 

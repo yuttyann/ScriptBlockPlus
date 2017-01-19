@@ -7,7 +7,8 @@ import com.github.yuttyann.scriptblockplus.collplugin.VaultEconomy;
 
 public class MoneyCost {
 
-	private double amount, result;
+	private double amount;
+	private double result;
 	private boolean isSuccess;
 
 	public MoneyCost(double amount) {

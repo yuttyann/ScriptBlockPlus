@@ -1,75 +1,51 @@
-package com.github.yuttyann.scriptblockplus.json;
+package com.github.yuttyann.scriptblockplus.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.Callable;
 
-/**
- * @author ゆっちゃん
- * Web上のJsonを取得するクラス
- */
-public class WebJson {
+public class UUIDFetcher implements Callable<Map<String, UUID>> {
 
-	private String url;
+	private static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
 
-	/**
-	 * コンストラクタ
-	 * @param url
-	 */
-	public WebJson(String url) {
-		if (isURL(url)) {
-			this.url = url;
-		}
+	private JsonMap jsonMap;
+
+	public UUIDFetcher(String name) {
+		jsonMap = new JsonMap(getJsonString(PROFILE_URL + name));
 	}
 
-	/**
-	 * 文字列がURLなのか確認する
-	 * @param url WebサイトのURL
-	 * @return 文字列がURLかどうか
-	 */
-	public boolean isURL(String url) {
-		return url.startsWith("http://") || url.startsWith("https://");
-	}
-
-	/**
-	 * URLを取得する
-	 * @return WebサイトのURL
-	 */
-	public URL getURL() {
-		try {
-			return new URL(url);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/**
-	 * JsonMapを取得する
-	 * @return JsonMap
-	 */
-	public JsonMap getJsonMap() {
-		return new JsonMap(toString());
-	}
-
-	/**
-	 * 文字列を取得する
-	 * @return Jsonの文字列
-	 */
 	@Override
-	public String toString() {
-		String json = null;
+	public Map<String, UUID> call() throws Exception {
+		Map<String, UUID> uuidMap = new HashMap<String, UUID>();
+		if (jsonMap != null) {
+			Map<Object, Object> map = jsonMap.get(0);
+			String id = map.get("id").toString();
+			String name = map.get("name").toString();
+			UUID uuid = Utils.fromString(id);
+			uuidMap.put(name, uuid);
+		}
+		return uuidMap;
+	}
+
+	public static UUID getUniqueId(String name) throws Exception {
+		return new UUIDFetcher(name).call().get(name);
+	}
+
+	public String getJsonString(String url) {
 		InputStream input = null;
 		InputStreamReader inReader = null;
 		BufferedReader buReader = null;
 		try {
-			URLConnection urlconn = getURL().openConnection();
+			URLConnection urlconn = new URL(url).openConnection();
 			HttpURLConnection httpconn = (HttpURLConnection) urlconn;
 			httpconn.setRequestMethod("GET");
 			httpconn.setInstanceFollowRedirects(false);
@@ -82,7 +58,7 @@ public class WebJson {
 			while ((line = buReader.readLine()) != null) {
 				builder.append(line);
 			}
-			return json = builder.toString();
+			return builder.toString();
 		} catch (ProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -110,6 +86,6 @@ public class WebJson {
 				}
 			}
 		}
-		return json;
+		return null;
 	}
 }

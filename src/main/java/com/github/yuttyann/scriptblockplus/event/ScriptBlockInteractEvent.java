@@ -8,7 +8,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.util.BlockLocation;
+import com.github.yuttyann.scriptblockplus.file.Yaml;
+import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
 
 public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancellable {
 
@@ -16,6 +17,7 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 	private Player player;
 	private Block block;
 	private ItemStack item;
+	private Yaml config;
 	private Location location;
 	private boolean cancelled;
 
@@ -25,6 +27,7 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 		this.player = player;
 		this.block = block;
 		this.item = item;
+		this.config = Files.getConfig();
 		this.location = blockLocation.toLocation();
 	}
 
@@ -53,7 +56,7 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 	}
 
 	public boolean isLeftClick() {
-		return Files.getConfig().getBoolean("LeftClick");
+		return config.getBoolean("LeftClick");
 	}
 
 	public boolean isCancelled() {
@@ -61,8 +64,8 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 	}
 
 	public void setLeftClick(boolean value) {
-		Files.getConfig().set("LeftClick", value);
-		Files.getConfig().save();
+		config.set("LeftClick", value);
+		config.save();
 	}
 
 	public void setCancelled(boolean cancel) {

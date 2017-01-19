@@ -21,7 +21,7 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import com.github.yuttyann.scriptblockplus.util.Utils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class PlayerSelector {
 

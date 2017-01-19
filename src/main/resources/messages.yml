@@ -3,7 +3,6 @@
 ## === メッセージの設定 === ##
 # メッセージはコメントアウトすることで、非表示にすることができます。
 
-oldJavaMessage: '&cJava7以上をインストールしてください。\n&cJavaのバージョンが古いため、プラグインを無効化します。'
 notVaultMessage: '&cVaultが導入されていないため、プラグインを無効化します。'
 notWorldEditMessage: '&cWorldEditが導入されていないため、実行に失敗しました。'
 

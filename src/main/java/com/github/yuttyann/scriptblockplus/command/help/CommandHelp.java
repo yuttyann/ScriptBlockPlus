@@ -11,23 +11,34 @@ import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 
 public class CommandHelp {
 
-	public CommandView getView() {
-		return new CommandView();
-	}
-
-	public List<CommandView> put(String label, CommandView... args) {
-		List<CommandView> views = new ArrayList<CommandView>();
-		for (CommandView view : args) {
-			views.add(view);
+	public List<CommandData> putCommands(String commandName, CommandData... args) {
+		String[] split = ScriptBlock.instance.getCommand(commandName).getUsage().split("/<command>");
+		List<CommandData> datas = new ArrayList<CommandData>();
+		CommandData temp;
+		String temp2;
+		for (int i = 0, j = 1, l = args.length; i < l; i++, j++) {
+			temp = args[i];
+			if (split.length > j && (temp2 = split[j].trim()).length() > 0) {
+				temp = temp.setMessage(temp2);
+			}
+			datas.add(temp);
 		}
-		return ScriptBlock.instance.getCommandHelp().put(label.toLowerCase(), views);
+		return ScriptBlock.instance.getCommandHelp().put(commandName.toLowerCase(), datas);
 	}
 
-	public List<CommandView> get(int index) {
+	public List<CommandData> put(String commandName, CommandData... args) {
+		List<CommandData> datas = new ArrayList<CommandData>();
+		for (CommandData data : args) {
+			datas.add(data);
+		}
+		return ScriptBlock.instance.getCommandHelp().put(commandName.toLowerCase(), datas);
+	}
+
+	public List<CommandData> get(int index) {
 		return ScriptBlock.instance.getCommandHelp().get(index);
 	}
 
-	public List<CommandView> remove(String label) {
+	public List<CommandData> remove(String label) {
 		return ScriptBlock.instance.getCommandHelp().remove(label);
 	}
 
@@ -37,30 +48,26 @@ public class CommandHelp {
 
 	public static void sendHelpMessage(CommandSender sender, Command command) {
 		String name = command.getName().toLowerCase();
-		List<CommandView> views = ScriptBlock.instance.getCommandHelp().get(name);
-		int viewcount = 0;
-		for (CommandView view : views) {
-			if (view.hasPermission() && !sender.hasPermission(view.getPermission())) {
-				views.remove(view.getMessage());
-				continue;
-			} else {
-				viewcount++;
+		List<CommandData> temps = new ArrayList<CommandData>();
+		for (CommandData data : ScriptBlock.instance.getCommandHelp().get(name)) {
+			if (data.hasPermission() && sender.hasPermission(data.getPermission())) {
+				temps.add(data);
 			}
 		}
-		if (!(viewcount > 0)) {
+		if (temps.isEmpty()) {
 			sender.sendMessage("Unknown command. Type \"/help\" for help.");
 			return;
 		}
 		StringBuilder builder = new StringBuilder();
 		builder.append("§d==== ").append(PluginYaml.getName()).append(" Commands ====");
 		sender.sendMessage(builder.toString());
-		for (CommandView view : views) {
-			if (view.isHelp()) {
+		for (CommandData data : temps) {
+			if (data.isHelp()) {
 				builder.setLength(0);
-				builder.append("§b/").append(name).append(" ").append(view.getMessage());
+				builder.append("§b/").append(name).append(" ").append(data.getMessage());
 				sender.sendMessage(builder.toString());
 			} else {
-				sender.sendMessage(view.getMessage());
+				sender.sendMessage(data.getMessage());
 			}
 		}
 	}

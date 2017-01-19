@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file;
 
-import com.github.yuttyann.scriptblockplus.type.ScriptType;
+import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 
 public class Files {
 

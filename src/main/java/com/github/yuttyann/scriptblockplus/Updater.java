@@ -21,7 +21,7 @@ import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
 import com.github.yuttyann.scriptblockplus.manager.FileManager;
-import com.github.yuttyann.scriptblockplus.util.Utils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Updater extends FileManager implements Listener {
 
@@ -103,7 +103,7 @@ public class Updater extends FileManager implements Listener {
 				}
 				if (updateNode.getNodeName().equals("details")) {
 					NodeList detailsChildren = updateNode.getChildNodes();
-					for(int k = 0, n = 0, l3 = detailsChildren.getLength(); k < l3; k++) {
+					for(int k = 0, n = 0, l3 = detailsChildren.getLength(); k < l3; k++, n++) {
 						Node detailsNode = detailsChildren.item(k);
 						if (detailsNode.getNodeType() != Node.ELEMENT_NODE) {
 							continue;
@@ -112,7 +112,6 @@ public class Updater extends FileManager implements Listener {
 							details = new String[l3];
 						}
 						details[n] = ((Element) detailsNode).getAttribute("info");
-						n++;
 					}
 				}
 			}

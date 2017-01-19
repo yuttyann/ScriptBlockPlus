@@ -7,8 +7,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
-import com.github.yuttyann.scriptblockplus.util.Utils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
@@ -18,17 +19,15 @@ public class WorldEditSelection {
 
 	private WorldEditPlugin worldEdit;
 
-	private WorldEditSelection() {
-		throw new AssertionError();
+	private WorldEditSelection(Plugin plugin) {
+		this.worldEdit = (WorldEditPlugin) plugin;
 	}
 
 	protected static WorldEditSelection setupWorldEditAPI() {
 		if (!CollPlugins.hasWorldEdit()) {
 			return null;
 		}
-		WorldEditSelection worldEdit = new WorldEditSelection();
-		worldEdit.worldEdit = (WorldEditPlugin) Utils.getPlugin("WorldEdit");
-		return worldEdit;
+		return new WorldEditSelection(Utils.getPlugin("WorldEdit"));
 	}
 
 	public List<Block> getSelectionBlocks(Selection selection) {

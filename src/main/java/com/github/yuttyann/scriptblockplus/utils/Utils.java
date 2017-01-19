@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.util;
+package com.github.yuttyann.scriptblockplus.utils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -31,10 +31,6 @@ public class Utils {
 			isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
 		}
 		return isWindows;
-	}
-
-	public static double getJavaVersion() {
-		return Double.parseDouble(System.getProperty("java.specification.version"));
 	}
 
 	public static boolean isPluginEnabled(String plugin) {

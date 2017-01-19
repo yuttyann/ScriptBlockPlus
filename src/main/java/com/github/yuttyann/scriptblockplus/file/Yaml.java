@@ -18,7 +18,7 @@ import org.bukkit.util.Vector;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.manager.FileManager;
-import com.github.yuttyann.scriptblockplus.util.Utils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.google.common.base.Charsets;
 
 public class Yaml extends FileManager {

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Yaml;
-import com.github.yuttyann.scriptblockplus.type.ScriptType;
-import com.github.yuttyann.scriptblockplus.util.BlockLocation;
+import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
 
 public class MapManager {
 

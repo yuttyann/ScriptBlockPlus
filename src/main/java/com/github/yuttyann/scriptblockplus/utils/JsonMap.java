@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.json;
+package com.github.yuttyann.scriptblockplus.utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,9 +52,7 @@ public class JsonMap extends HashMap<Integer, Map<Object, Object>> implements Ma
 				jsonObject = (JSONObject) jsonParser.parse(object2.toString());
 				entrySet = jsonObject.entrySet();
 				for(Entry<Object, Object> entry : entrySet) {
-					Object key = entry.getKey();
-					Object value = entry.getValue();
-					objectMap.put(key, value);
+					objectMap.put(entry.getKey(), entry.getValue());
 				}
 				super.put(i, objectMap);
 			}
@@ -63,9 +61,7 @@ public class JsonMap extends HashMap<Integer, Map<Object, Object>> implements Ma
 			jsonObject = (JSONObject) object;
 			entrySet = jsonObject.entrySet();
 			for(Entry<Object, Object> entry : entrySet) {
-				Object key = entry.getKey();
-				Object value = entry.getValue();
-				objectMap.put(key, value);
+				objectMap.put(entry.getKey(), entry.getValue());
 			}
 			super.put(0, objectMap);
 		}

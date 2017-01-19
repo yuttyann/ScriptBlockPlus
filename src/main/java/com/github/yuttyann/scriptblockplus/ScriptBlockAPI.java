@@ -6,11 +6,11 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
-import com.github.yuttyann.scriptblockplus.type.ScriptType;
-import com.github.yuttyann.scriptblockplus.util.BlockLocation;
+import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
 
 /**
  * @author ゆっちゃん

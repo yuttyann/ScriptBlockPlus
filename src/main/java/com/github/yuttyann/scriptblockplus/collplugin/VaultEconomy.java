@@ -12,8 +12,8 @@ public class VaultEconomy {
 
 	private Economy economy;
 
-	private VaultEconomy() {
-		throw new AssertionError();
+	private VaultEconomy(Economy economy) {
+		this.economy = economy;
 	}
 
 	protected static VaultEconomy setupEconomy() {
@@ -23,8 +23,7 @@ public class VaultEconomy {
 		ServicesManager services = Bukkit.getServer().getServicesManager();
 		RegisteredServiceProvider<Economy> provider = services.getRegistration(Economy.class);
 		if (provider != null) {
-			VaultEconomy vault = new VaultEconomy();
-			vault.economy = provider.getProvider();
+			VaultEconomy vault = new VaultEconomy(provider.getProvider());
 			try {
 				if (vault.economy.isEnabled()) {
 					return vault;

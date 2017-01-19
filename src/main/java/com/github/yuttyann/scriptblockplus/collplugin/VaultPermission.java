@@ -11,8 +11,8 @@ public class VaultPermission {
 
 	private Permission permission;
 
-	private VaultPermission() {
-		throw new AssertionError();
+	private VaultPermission(Permission permission) {
+		this.permission = permission;
 	}
 
 	protected static VaultPermission setupPermission() {
@@ -22,8 +22,7 @@ public class VaultPermission {
 		ServicesManager services = Bukkit.getServer().getServicesManager();
 		RegisteredServiceProvider<Permission> provider = services.getRegistration(Permission.class);
 		if (provider != null) {
-			VaultPermission vault = new VaultPermission();
-			vault.permission = provider.getProvider();
+			VaultPermission vault = new VaultPermission(provider.getProvider());
 			try {
 				if (vault.permission.isEnabled()) {
 					return vault;

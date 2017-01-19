@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Edit;
-import com.github.yuttyann.scriptblockplus.util.BlockLocation;
+import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
 
 public class PlayerJoinQuitListener implements Listener {
 

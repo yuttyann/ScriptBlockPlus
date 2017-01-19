@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.type;
+package com.github.yuttyann.scriptblockplus.enums;
 
 public enum ClickType {
 	INTERACT_CREATE("INTERACT_SCRIPTBLOCKPLUS_CREATECLICK"),

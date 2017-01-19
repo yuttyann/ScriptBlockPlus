@@ -7,8 +7,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.type.ClickType;
-import com.github.yuttyann.scriptblockplus.type.ScriptType;
+import com.github.yuttyann.scriptblockplus.enums.ClickType;
+import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 
 public class MetadataManager {
 

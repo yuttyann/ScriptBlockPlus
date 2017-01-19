@@ -6,9 +6,9 @@ import java.util.List;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.type.ScriptType;
-import com.github.yuttyann.scriptblockplus.util.BlockLocation;
-import com.github.yuttyann.scriptblockplus.util.Utils;
+import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptData {
 

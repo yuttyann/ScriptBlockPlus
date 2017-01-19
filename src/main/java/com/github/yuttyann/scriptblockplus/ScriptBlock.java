@@ -12,7 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockCommand;
-import com.github.yuttyann.scriptblockplus.command.help.CommandView;
+import com.github.yuttyann.scriptblockplus.command.help.CommandData;
+import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.listener.BlockListener;
@@ -20,25 +21,18 @@ import com.github.yuttyann.scriptblockplus.listener.PlayerInteractListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerJoinQuitListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerMoveListener;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.type.ScriptType;
-import com.github.yuttyann.scriptblockplus.util.Utils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptBlock extends JavaPlugin {
 
 	public static ScriptBlock instance;
 	private HashMap<String, TabExecutor> commands;
-	private HashMap<String, List<CommandView>> commandhelp;
+	private HashMap<String, List<CommandData>> commandHelp;
 
 	@Override
 	public void onEnable() {
 		instance = this;
 		Files.reload();
-		if(!(Utils.getJavaVersion() >= 1.7))
-		{
-			Utils.sendPluginMessage(Messages.getOldJavaMessage());
-			Utils.disablePlugin(this);
-			return;
-		}
 		if (!CollPlugins.hasVault()) {
 			Utils.sendPluginMessage(Messages.getNotVaultMessage());
 			Utils.disablePlugin(this);
@@ -61,8 +55,8 @@ public class ScriptBlock extends JavaPlugin {
 		return commands.get(command.getName()).onTabComplete(sender, command, label, args);
 	}
 
-	public HashMap<String, List<CommandView>> getCommandHelp() {
-		return commandhelp;
+	public HashMap<String, List<CommandData>> getCommandHelp() {
+		return commandHelp;
 	}
 
 	public File getJarFile() {
@@ -83,7 +77,7 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	private void loadCommand() {
-		commandhelp = new HashMap<String, List<CommandView>>();
+		commandHelp = new HashMap<String, List<CommandData>>();
 		commands = new HashMap<String, TabExecutor>();
 		commands.put("scriptblockplus", new ScriptBlockCommand());
 	}

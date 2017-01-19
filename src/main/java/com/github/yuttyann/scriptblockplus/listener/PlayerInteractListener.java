@@ -22,7 +22,9 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
-import com.github.yuttyann.scriptblockplus.Permission;
+import com.github.yuttyann.scriptblockplus.enums.ClickType;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
@@ -34,10 +36,8 @@ import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Edit;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Script;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
-import com.github.yuttyann.scriptblockplus.type.ClickType;
-import com.github.yuttyann.scriptblockplus.type.ScriptType;
-import com.github.yuttyann.scriptblockplus.util.BlockLocation;
-import com.github.yuttyann.scriptblockplus.util.Utils;
+import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class PlayerInteractListener implements Listener {
 
@@ -52,7 +52,7 @@ public class PlayerInteractListener implements Listener {
 			return;
 		}
 		for (Entity entity : getNearbyEntities(block.getLocation(), 5.5D, 5.5D, 5.5D)) {
-			if (entity instanceof Player && ((Player) entity).equals(player)) {
+			if (entity instanceof Player && ((Player) entity) == player) {
 				PlayerInteractEvent inEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, Utils.getItemInHand(player), block, BlockFace.SELF);
 				BlockLocation location = BlockLocation.fromLocation(block.getLocation());
 				if (!scriptSetting(inEvent, Action.LEFT_CLICK_BLOCK, block, location)) {

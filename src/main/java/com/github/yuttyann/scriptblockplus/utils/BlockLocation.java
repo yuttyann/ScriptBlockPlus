@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.util;
+package com.github.yuttyann.scriptblockplus.utils;
 
 import java.util.HashMap;
 import java.util.Map;

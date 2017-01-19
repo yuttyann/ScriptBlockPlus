@@ -3,6 +3,8 @@ package com.github.yuttyann.scriptblockplus.manager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.github.yuttyann.scriptblockplus.enums.PermType;
+import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.option.Amount;
 import com.github.yuttyann.scriptblockplus.option.Cooldown;
 import com.github.yuttyann.scriptblockplus.option.Delay;
@@ -11,11 +13,11 @@ import com.github.yuttyann.scriptblockplus.option.ItemCost;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
 import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
 import com.github.yuttyann.scriptblockplus.option.Perm;
-import com.github.yuttyann.scriptblockplus.type.PermType;
-import com.github.yuttyann.scriptblockplus.type.ScriptType;
-import com.github.yuttyann.scriptblockplus.util.BlockLocation;
+import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
 
 public class ScriptManager extends OptionPrefix {
+
+	private static final String REGEX = "\\[(.+?)\\]";
 
 	private BlockLocation location;
 	private ScriptType scriptType;
@@ -149,8 +151,7 @@ public class ScriptManager extends OptionPrefix {
 
 	public boolean checkScript(String script) {
 		try {
-			String regex = "\\[(.+?)\\]";
-			Pattern pattern = Pattern.compile(regex);
+			Pattern pattern = Pattern.compile(REGEX);
 			Matcher matcher = pattern.matcher(script);
 			if (!matcher.find() || !script.startsWith("[")) {
 				if (!check(script) && isSuccess) {
@@ -173,8 +174,7 @@ public class ScriptManager extends OptionPrefix {
 
 	public boolean readScript(String script) {
 		try {
-			String regex = "\\[(.+?)\\]";
-			Pattern pattern = Pattern.compile(regex);
+			Pattern pattern = Pattern.compile(REGEX);
 			Matcher matcher = pattern.matcher(script);
 			if (!matcher.find() || !script.startsWith("[")) {
 				read(script);

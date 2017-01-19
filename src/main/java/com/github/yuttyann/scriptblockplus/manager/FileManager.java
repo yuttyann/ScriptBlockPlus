@@ -33,7 +33,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.util.Utils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class FileManager {
 

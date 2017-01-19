@@ -5,15 +5,14 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.type.ClickType;
-import com.github.yuttyann.scriptblockplus.type.ScriptType;
-import com.github.yuttyann.scriptblockplus.util.BlockLocation;
+import com.github.yuttyann.scriptblockplus.enums.ClickType;
+import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
 
 public class Messages {
 
 	private static Messages instance;
 	private static Yaml messages;
-	private String oldJavaMessage;
 	private String notVaultMessage;
 	private String notWorldEditMessage;
 	private String scriptCopyMessage;
@@ -48,7 +47,6 @@ public class Messages {
 
 	public Messages() {
 		messages = Files.getMessages();
-		this.oldJavaMessage = messages.getString("oldJavaMessage");
 		this.notVaultMessage = messages.getString("notVaultMessage");
 		this.notWorldEditMessage = messages.getString("notWorldEditMessage");
 		this.scriptCopyMessage = messages.getString("scriptCopyMessage");
@@ -80,13 +78,6 @@ public class Messages {
 		this.consoleSuccScriptExecMessage = messages.getString("consoleSuccScriptExecMessage");
 		this.consoleErrorScriptExecMessage = messages.getString("consoleErrorScriptExecMessage");
 		this.isConsoleLog = Files.getConfig().getBoolean("ConsoleLog");
-	}
-
-	public static String getOldJavaMessage() {
-		if (instance.oldJavaMessage == null) {
-			return null;
-		}
-		return replaceColorCode(instance.oldJavaMessage);
 	}
 
 	public static String getNotVaultMessage() {

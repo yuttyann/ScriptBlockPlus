@@ -21,23 +21,23 @@ public class Delay {
 		return tick;
 	}
 
-	public static void put(String fullcoords, UUID uuid) {
-		ArrayList<UUID> uuids = MapManager.getDelay().get(fullcoords);
+	public static void put(String fullCoords, UUID uuid) {
+		ArrayList<UUID> uuids = MapManager.getDelay().get(fullCoords);
 		ArrayList<UUID> uuids2 = uuids != null ? uuids : new ArrayList<UUID>();
 		uuids2.add(uuid);
-		MapManager.getDelay().put(fullcoords, uuids2);
+		MapManager.getDelay().put(fullCoords, uuids2);
 	}
 
-	public static void remove(String fullcoords, UUID uuid) {
-		ArrayList<UUID> uuids = MapManager.getDelay().get(fullcoords);
+	public static void remove(String fullCoords, UUID uuid) {
+		ArrayList<UUID> uuids = MapManager.getDelay().get(fullCoords);
 		if (uuids != null) {
 			uuids.remove(uuid);
-			MapManager.getDelay().put(fullcoords, uuids);
+			MapManager.getDelay().put(fullCoords, uuids);
 		}
 	}
 
-	public static boolean contains(String fullcoords, UUID uuid) {
-		ArrayList<UUID> uuids = MapManager.getDelay().get(fullcoords);
+	public static boolean contains(String fullCoords, UUID uuid) {
+		ArrayList<UUID> uuids = MapManager.getDelay().get(fullCoords);
 		return uuids != null && uuids.contains(uuid);
 	}
 }

@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.github.yuttyann.scriptblockplus.PlayerSelector;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
+import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.option.Amount;
@@ -20,9 +21,8 @@ import com.github.yuttyann.scriptblockplus.option.Group;
 import com.github.yuttyann.scriptblockplus.option.ItemCost;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
 import com.github.yuttyann.scriptblockplus.option.Perm;
-import com.github.yuttyann.scriptblockplus.type.ScriptType;
-import com.github.yuttyann.scriptblockplus.util.BlockLocation;
-import com.github.yuttyann.scriptblockplus.util.Utils;
+import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class OptionManager extends PlayerSelector {
 
