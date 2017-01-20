@@ -238,11 +238,11 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 		Location min = selection.getMinimumPoint();
 		Location max = selection.getMaximumPoint();
 		List<Block> blocks = selectionAPI.getSelectionBlocks(selection);
-		boolean isInteract = false;
-		boolean isWalk = false;
 		BlockLocation location;
 		ScriptFileManager interact;
 		ScriptFileManager walk;
+		boolean isInteract = false;
+		boolean isWalk = false;
 		for (Block block : blocks) {
 			location = BlockLocation.fromLocation(block.getLocation());
 			interact = new ScriptFileManager(location, ScriptType.INTERACT);

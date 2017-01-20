@@ -236,22 +236,22 @@ public class ScriptManager extends OptionPrefix {
 				say = removeFirst(script, prefix).trim();
 				return;
 			case PERM:
-				perm = new Perm(removeFirst(script, prefix).trim(), PermType.CHECK);
+				perm = getPerm(removeFirst(script, prefix).trim(), PermType.CHECK);
 				return;
 			case PERM_ADD:
-				permADD = new Perm(removeFirst(script, prefix).trim(), PermType.ADD);
+				permADD = getPerm(removeFirst(script, prefix).trim(), PermType.ADD);
 				return;
 			case PERM_REMOVE:
-				permREMOVE = new Perm(removeFirst(script, prefix).trim(), PermType.REMOVE);
+				permREMOVE = getPerm(removeFirst(script, prefix).trim(), PermType.REMOVE);
 				return;
 			case GROUP:
-				group = new Group(removeFirst(script, prefix).trim(), PermType.CHECK);
+				group = getGroup(removeFirst(script, prefix).trim(), PermType.CHECK);
 				return;
 			case GROUP_ADD:
-				groupADD = new Group(removeFirst(script, prefix).trim(), PermType.ADD);
+				groupADD = getGroup(removeFirst(script, prefix).trim(), PermType.ADD);
 				return;
 			case GROUP_REMOVE:
-				groupREMOVE = new Group(removeFirst(script, prefix).trim(), PermType.REMOVE);
+				groupREMOVE = getGroup(removeFirst(script, prefix).trim(), PermType.REMOVE);
 				return;
 			case AMOUNT:
 				amount = new Amount(removeFirst(script, prefix).trim(), location, scriptType);
@@ -266,20 +266,44 @@ public class ScriptManager extends OptionPrefix {
 				moneyCost = new MoneyCost(removeFirst(script, prefix).trim());
 				return;
 			case ITEM:
-				String[] split = removeFirst(script, prefix).trim().split(":");
-				switch (split.length) {
-				case 1:
-					itemCost = new ItemCost(Integer.parseInt(split[0]), 1, (short) 0);
-					return;
-				case 2:
-					itemCost = new ItemCost(Integer.parseInt(split[0]), Integer.parseInt(split[1]), (short) 0);
-					return;
-				case 3:
-					itemCost = new ItemCost(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Short.parseShort(split[2]));
-					return;
-				}
+				itemCost = getItem(removeFirst(script, prefix).trim());
 			}
 		}
+	}
+
+	private Perm getPerm(String permission, PermType permType) {
+		String[] split = permission.split("/");
+		switch (split.length) {
+		case 1:
+			return new Perm(split[0], permType);
+		case 2:
+			return new Perm(split[0], split[1], permType);
+		}
+		return null;
+	}
+
+	private Group getGroup(String group, PermType permType) {
+		String[] split = group.split("/");
+		switch (split.length) {
+		case 1:
+			return new Group(split[0], permType);
+		case 2:
+			return new Group(split[0], split[1], permType);
+		}
+		return null;
+	}
+
+	private ItemCost getItem(String itemCost) {
+		String[] split = itemCost.split(":");
+		switch (split.length) {
+		case 1:
+			return new ItemCost(Integer.parseInt(split[0]), 1, (short) 0);
+		case 2:
+			return new ItemCost(Integer.parseInt(split[0]), Integer.parseInt(split[1]), (short) 0);
+		case 3:
+			return new ItemCost(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Short.parseShort(split[2]));
+		}
+		return null;
 	}
 
 	private static String startsWith(String strs, String prefix) {

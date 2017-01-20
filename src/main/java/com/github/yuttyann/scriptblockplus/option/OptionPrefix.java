@@ -46,7 +46,7 @@ public class OptionPrefix {
 				prefixs[i] = PERM_ADD;
 				break;
 			case 7:
-				prefixs[i] = PERM_ADD;
+				prefixs[i] = PERM_REMOVE;
 				break;
 			case 8:
 				prefixs[i] = GROUP;

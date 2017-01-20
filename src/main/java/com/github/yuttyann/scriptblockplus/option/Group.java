@@ -8,11 +8,17 @@ import com.github.yuttyann.scriptblockplus.enums.PermType;
 
 public class Group {
 
-	private PermType permType;
+	private String world;
 	private String group;
+	private PermType permType;
 	private VaultPermission permission;
 
 	public Group(String group, PermType permType) {
+		this(null, group, permType);
+	}
+
+	public Group(String world, String group, PermType permType) {
+		this.world = world;
 		this.group = group;
 		this.permType = permType;
 		this.permission = CollPlugins.getVaultPermission();
@@ -25,17 +31,27 @@ public class Group {
 	public boolean playerGroup(Player player) {
 		switch (permType) {
 		case CHECK:
+			if (world != null) {
+				return permission.playerInGroup(world, player, group);
+			}
 			return permission.playerInGroup(player, group);
 		case ADD:
+			if (world != null && !permission.playerInGroup(world, player, group)) {
+				return permission.playerAddGroup(world, player, group);
+			}
 			if (!permission.playerInGroup(player, group)) {
 				return permission.playerAddGroup(player, group);
 			}
+			return false;
 		case REMOVE:
+			if (world != null && permission.playerInGroup(world, player, group)) {
+				return permission.playerRemoveGroup(world, player, group);
+			}
 			if (permission.playerInGroup(player, group)) {
 				return permission.playerRemoveGroup(player, group);
 			}
-		default:
 			return false;
 		}
+		return false;
 	}
 }

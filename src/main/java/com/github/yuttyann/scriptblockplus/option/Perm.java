@@ -8,11 +8,17 @@ import com.github.yuttyann.scriptblockplus.enums.PermType;
 
 public class Perm {
 
-	private PermType permType;
+	private String world;
 	private String perm;
+	private PermType permType;
 	private VaultPermission permission;
 
 	public Perm(String perm, PermType permType) {
+		this(null, perm, permType);
+	}
+
+	public Perm(String world, String perm, PermType permType) {
+		this.world = world;
 		this.perm = perm;
 		this.permType = permType;
 		this.permission = CollPlugins.getVaultPermission();
@@ -25,17 +31,27 @@ public class Perm {
 	public boolean playerPerm(Player player) {
 		switch (permType) {
 		case CHECK:
-			return permission.has(player, perm);
+			if (world != null) {
+				return permission.playerHas(world, player, perm);
+			}
+			return permission.playerHas(player, perm);
 		case ADD:
-			if (!permission.has(player, perm)) {
+			if (world != null && !permission.playerHas(world, player, perm)) {
+				return permission.playerAdd(world, player, perm);
+			}
+			if (!permission.playerHas(player, perm)) {
 				return permission.playerAdd(player, perm);
 			}
+			return false;
 		case REMOVE:
-			if (permission.has(player, perm)) {
+			if (world != null && permission.playerHas(world, player, perm)) {
+				return permission.playerRemove(world, player, perm);
+			}
+			if (permission.playerHas(player, perm)) {
 				return permission.playerRemove(player, perm);
 			}
-		default:
 			return false;
 		}
+		return false;
 	}
 }

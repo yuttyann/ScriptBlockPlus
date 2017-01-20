@@ -35,23 +35,39 @@ public class VaultPermission {
 	}
 
 	public String getPrimaryGroup(Player player) {
-		return permission.getPrimaryGroup(player);
+		return permission.getPrimaryGroup(null, player);
+	}
+
+	public String getPrimaryGroup(String world, Player player) {
+		return permission.getPrimaryGroup(world, player);
 	}
 
 	public boolean playerInGroup(Player player, String group) {
-		return permission.playerInGroup(player, group);
+		return permission.playerInGroup(null, player, group);
+	}
+
+	public boolean playerInGroup(String world, Player player, String group) {
+		return permission.playerInGroup(world, player, group);
 	}
 
 	public boolean playerAddGroup(Player player, String group) {
-		return permission.playerAddGroup(player, group);
+		return permission.playerAddGroup(null, player, group);
+	}
+
+	public boolean playerAddGroup(String world, Player player, String group) {
+		return permission.playerAddGroup(world, player, group);
 	}
 
 	public boolean playerRemoveGroup(Player player, String group) {
-		return permission.playerRemoveGroup(player, group);
+		return permission.playerRemoveGroup(null, player, group);
+	}
+
+	public boolean playerRemoveGroup(String world, Player player, String group) {
+		return permission.playerRemoveGroup(world, player, group);
 	}
 
 	public boolean playerAdd(Player player, String permission) {
-		return this.permission.playerAdd(player, permission);
+		return this.permission.playerAdd(null, player, permission);
 	}
 
 	public boolean playerAdd(String world, Player player, String permission) {
@@ -59,14 +75,18 @@ public class VaultPermission {
 	}
 
 	public boolean playerRemove(Player player, String permission) {
-		return this.permission.playerRemove(player, permission);
+		return this.permission.playerRemove(null, player, permission);
 	}
 
 	public boolean playerRemove(String world, Player player, String permission) {
 		return this.permission.playerRemove(world, player, permission);
 	}
 
-	public boolean has(Player player, String permission) {
-		return this.permission.has(player, permission);
+	public boolean playerHas(Player player, String permission) {
+		return this.permission.playerHas(null, player, permission);
+	}
+
+	public boolean playerHas(String world, Player player, String permission) {
+		return this.permission.playerHas(world, player, permission);
 	}
 }
