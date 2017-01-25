@@ -30,7 +30,7 @@ import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class EventListener implements Listener {
+public class InteractListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerAnimation(PlayerAnimationEvent event) {
