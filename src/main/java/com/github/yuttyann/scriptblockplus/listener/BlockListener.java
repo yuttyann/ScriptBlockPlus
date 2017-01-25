@@ -100,25 +100,10 @@ public class BlockListener implements Listener {
 		String[] split;
 		for (ClickType type : ClickType.values()) {
 			if (Click.hasMetadata(player, type)) {
-				switch ((split = type.name().split("_"))[0]) {
-				case "INTERACT":
-					if (clickScript(player, split[1], location, type, ScriptType.INTERACT)) {
-						event.setCancelled(true);
-						return true;
-					}
-					return false;
-				case "BREAK":
-					if (clickScript(player, split[1], location, type, ScriptType.BREAK)) {
-						event.setCancelled(true);
-						return true;
-					}
-					return false;
-				case "WALK":
-					if (clickScript(player, split[1], location, type, ScriptType.WALK)) {
-						event.setCancelled(true);
-						return true;
-					}
-					return false;
+				split = type.name().split("_");
+				if (clickScript(player, split[1], location, type, ScriptType.valueOf(split[0]))) {
+					event.setCancelled(true);
+					return true;
 				}
 			}
 		}
