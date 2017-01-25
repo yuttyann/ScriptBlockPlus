@@ -17,8 +17,7 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.listener.BlockListener;
-import com.github.yuttyann.scriptblockplus.listener.EventListener;
-import com.github.yuttyann.scriptblockplus.listener.PlayerInteractListener;
+import com.github.yuttyann.scriptblockplus.listener.InteractListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerJoinQuitListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerMoveListener;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -77,9 +76,8 @@ public class ScriptBlock extends JavaPlugin {
 
 	private void loadClass() {
 		new MapManager();
-		getServer().getPluginManager().registerEvents(new EventListener(), this);
 		getServer().getPluginManager().registerEvents(new BlockListener(), this);
-		getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
+		getServer().getPluginManager().registerEvents(new InteractListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(), this);
 		getServer().getPluginManager().registerEvents(new Updater(this), this);

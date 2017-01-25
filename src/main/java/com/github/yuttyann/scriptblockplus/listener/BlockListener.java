@@ -27,6 +27,7 @@ public class BlockListener implements Listener {
 		if (Utils.checkItem(item, Material.BLAZE_ROD, "§dScript Editor")
 				&& Permission.has(Permission.SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR, player)) {
 			event.setCancelled(true);
+			return;
 		}
 		Block block = event.getBlock();
 		BlockLocation location = BlockLocation.fromLocation(block.getLocation());
