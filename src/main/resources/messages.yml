@@ -21,7 +21,7 @@ worldEditRemoveMessage: '&c種類"%scripttype%"のスクリプトを削除しま
 
 activeDelayMessage: '&c遅延したスクリプトが実行されるまで、スクリプトを実行することはできません。'
 
-# %hour%   : 時間
+# %hour%   : 時
 # %minute% : 分
 # %second% : 秒
 activeCooldownMessage: '&cクールダウン"%hour%時間%minute%分%second%秒"が終了するまで、スクリプトを実行することはできません。'

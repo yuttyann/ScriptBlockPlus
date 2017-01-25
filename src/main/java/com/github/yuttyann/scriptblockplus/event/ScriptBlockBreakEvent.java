@@ -17,12 +17,11 @@ public class ScriptBlockBreakEvent extends ScriptBlockEvent implements Cancellab
 	private Location location;
 	private boolean cancelled;
 
-	public ScriptBlockBreakEvent(Player player,
-			Block block, ItemStack item, BlockLocation blockLocation) {
+	public ScriptBlockBreakEvent(Player player, Block block, ItemStack item, BlockLocation location) {
 		this.player = player;
 		this.block = block;
 		this.item = item;
-		this.location = blockLocation.toLocation();
+		this.location = location.toLocation();
 	}
 
 	public Player getPlayer() {

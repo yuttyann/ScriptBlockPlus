@@ -101,7 +101,7 @@ public class OptionManager extends PlayerSelector {
 		}
 	}
 
-	private void scriptOptions(Player player, String fullcoords, ScriptManager manager) {
+	private void scriptOptions(Player player, String fullCoords, ScriptManager manager) {
 		Hand hand = manager.getHand();
 		if (hand != null) {
 			if (!hand.check(player)) {
@@ -146,7 +146,7 @@ public class OptionManager extends PlayerSelector {
 		}
 		Cooldown cooldown = manager.getCooldown();
 		if (cooldown != null) {
-			cooldown.run(player.getUniqueId(), fullcoords);
+			cooldown.run(player.getUniqueId(), fullCoords);
 		}
 		Amount amount = manager.getAmount();
 		if (amount != null) {

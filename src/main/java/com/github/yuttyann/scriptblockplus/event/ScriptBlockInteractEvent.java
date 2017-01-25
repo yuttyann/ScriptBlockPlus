@@ -20,12 +20,12 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 	private Location location;
 	private boolean cancelled;
 
-	public ScriptBlockInteractEvent(Player player, Block block, ItemStack item, BlockLocation blockLocation) {
+	public ScriptBlockInteractEvent(Player player, Block block, ItemStack item, BlockLocation location) {
 		this.player = player;
 		this.block = block;
 		this.item = item;
 		this.config = Files.getConfig();
-		this.location = blockLocation.toLocation();
+		this.location = location.toLocation();
 	}
 
 	public Player getPlayer() {
