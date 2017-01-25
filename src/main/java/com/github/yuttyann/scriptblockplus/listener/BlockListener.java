@@ -97,10 +97,9 @@ public class BlockListener implements Listener {
 				return false;
 			}
 		}
-		String[] split;
 		for (ClickType type : ClickType.values()) {
 			if (Click.hasMetadata(player, type)) {
-				split = type.name().split("_");
+				String[] split = type.name().split("_");
 				if (clickScript(player, split[1], location, type, ScriptType.valueOf(split[0]))) {
 					event.setCancelled(true);
 					return true;
