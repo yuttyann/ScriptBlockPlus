@@ -12,14 +12,10 @@ commands:
     usage: |
            /<command> tool - 実行者にスクリプト編集ツールを配布します。
            /<command> reload - 全てのファイルの再読み込みを行います。
-           /<command> interact create <options> - 実行後クリックしたブロックにスクリプトを設定します。
-           /<command> interact add <options> - 実行後クリックしたブロックにスクリプトを追加します。
-           /<command> interact remove - 実行後クリックしたブロックのスクリプトを削除します。
-           /<command> interact view - 実行後クリックしたブロックのスクリプトを表示します。
-           /<command> walk create <options> - 実行後クリックしたブロックにスクリプトを設定します。
-           /<command> walk add <options> - 実行後クリックしたブロックにスクリプトを追加します。
-           /<command> walk remove - 実行後クリックしたブロックのスクリプトを削除します。
-           /<command> walk view - 実行後クリックしたブロックのスクリプトを表示します。
+           /<command> <scripttype> create <options> - 実行後クリックしたブロックにスクリプトを設定します。
+           /<command> <scripttype> add <options> - 実行後クリックしたブロックにスクリプトを追加します。
+           /<command> <scripttype> remove - 実行後クリックしたブロックのスクリプトを削除します。
+           /<command> <scripttype> view - 実行後クリックしたブロックのスクリプトを表示します。
            /<command> worldedit paste [overwrite] - WorldEditで選択した範囲にスクリプトをペーストします。
            /<command> worldedit remove - WorldEditで選択した範囲のスクリプトを削除します。
     aliases: [sbp]
@@ -31,9 +27,11 @@ permissions:
       scriptblockplus.command.tool: true
       scriptblockplus.command.reload: true
       scriptblockplus.command.interact: true
+      scriptblockplus.command.break: true
       scriptblockplus.command.walk: true
       scriptblockplus.command.worldedit: true
       scriptblockplus.interact.use: true
+      scriptblockplus.break.use: true
       scriptblockplus.walk.use: true
       scriptblockplus.tool.scripteditor: true
   scriptblockplus.command.tool:
@@ -47,6 +45,8 @@ permissions:
   scriptblockplus.command.worldedit:
     default: op
   scriptblockplus.interact.use:
+    default: true
+  scriptblockplus.break.use:
     default: true
   scriptblockplus.walk.use:
     default: true

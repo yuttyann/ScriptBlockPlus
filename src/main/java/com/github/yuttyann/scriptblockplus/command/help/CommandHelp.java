@@ -50,7 +50,7 @@ public class CommandHelp {
 		String name = command.getName().toLowerCase();
 		List<CommandData> temps = new ArrayList<CommandData>();
 		for (CommandData data : ScriptBlock.instance.getCommandHelp().get(name)) {
-			if (data.hasPermission() && sender.hasPermission(data.getPermission())) {
+			if (data.hasPermission() && data.hasPermission(sender)) {
 				temps.add(data);
 			}
 		}

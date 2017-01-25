@@ -11,12 +11,13 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -43,6 +44,10 @@ public class Utils {
 
 	public static void disablePlugin(Plugin plugin) {
 		Bukkit.getServer().getPluginManager().disablePlugin(plugin);
+	}
+
+	public static void callEvent(Event event) {
+		Bukkit.getServer().getPluginManager().callEvent(event);
 	}
 
 	private static Boolean isCB175orLaterCache;
@@ -108,20 +113,7 @@ public class Utils {
 	}
 
 	public static void sendPluginMessage(Object msg) {
-		if (msg == null) {
-			return;
-		}
-		String message = msg.toString();
-		String prefix = "[" + PluginYaml.getName() + "] ";
-		if (message.contains("\\n")) {
-			String[] newLine = message.split("\\\\n");
-			ConsoleCommandSender sender = Bukkit.getConsoleSender();
-			for(int i = 0, l = newLine.length ; i < l ; i++) {
-				sender.sendMessage(prefix + newLine[i]);
-			}
-		} else {
-			Bukkit.getConsoleSender().sendMessage(prefix + message);
-		}
+		sendPluginMessage(Bukkit.getConsoleSender(), msg);
 	}
 
 	public static void sendPluginMessage(CommandSender sender, Object msg) {
@@ -149,15 +141,9 @@ public class Utils {
 		}
 	}
 
-	public static String stringBuilder(String[] args, Integer integer) {
-		StringBuilder builder = new StringBuilder();
-		for (int i = integer; i < args.length; i++) {
-			if (i > integer) {
-				builder.append(" ");
-			}
-			builder.append(args[i]);
-		}
-		return builder.toString();
+	@SuppressWarnings("deprecation")
+	public static void updateInventory(Player player) {
+		player.updateInventory();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -179,18 +165,28 @@ public class Utils {
 		return getItemInHand(player);
 	}
 
+	public static String getItemName(ItemStack item) {
+		if (item == null || item.getType() == Material.AIR
+			|| !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+			return null;
+		}
+		return item.getItemMeta().getDisplayName();
+	}
+
+	public static boolean checkItem(ItemStack item, Material material, String name) {
+		return item != null && item.getType() == material
+				&& item.hasItemMeta() && item.getItemMeta().hasDisplayName()
+				&& item.getItemMeta().getDisplayName().equals(name);
+	}
+
 	public static World getWorld(String name) {
 		World world = null;
 		if (Bukkit.getWorld(name) != null) {
 			world = Bukkit.getWorld(name);
-		} else if (isWorld(name)) {
+		} else if (new File(world + "/level.dat").exists()) {
 			world = Bukkit.createWorld(WorldCreator.name(name));
 		}
 		return world;
-	}
-
-	public static boolean isWorld(String world) {
-		return new File(world + "/level.dat").exists();
 	}
 
 	public static String getDateFormat(String format) {

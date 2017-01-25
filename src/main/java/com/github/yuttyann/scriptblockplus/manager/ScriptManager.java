@@ -9,6 +9,7 @@ import com.github.yuttyann.scriptblockplus.option.Amount;
 import com.github.yuttyann.scriptblockplus.option.Cooldown;
 import com.github.yuttyann.scriptblockplus.option.Delay;
 import com.github.yuttyann.scriptblockplus.option.Group;
+import com.github.yuttyann.scriptblockplus.option.Hand;
 import com.github.yuttyann.scriptblockplus.option.ItemCost;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
 import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
@@ -34,6 +35,7 @@ public class ScriptManager extends OptionPrefix {
 	private Amount amount;
 	private Delay delay;
 	private Cooldown cooldown;
+	private Hand hand;
 	private ItemCost itemCost;
 	private MoneyCost moneyCost;
 	private boolean isBypass;
@@ -104,6 +106,10 @@ public class ScriptManager extends OptionPrefix {
 		return cooldown;
 	}
 
+	public Hand getHand() {
+		return hand;
+	}
+
 	public ItemCost getItemCost() {
 		return itemCost;
 	}
@@ -114,8 +120,8 @@ public class ScriptManager extends OptionPrefix {
 
 	public boolean hasOption() {
 		return player != null || server != null || say != null || perm != null || permADD != null || permREMOVE != null
-				|| group != null || groupADD != null || groupREMOVE != null || amount != null
-				|| delay != null || cooldown != null || moneyCost != null || itemCost != null;
+				|| group != null || groupADD != null || groupREMOVE != null || amount != null || delay != null
+				|| cooldown != null || hand != null || moneyCost != null || itemCost != null;
 	}
 
 	public boolean isBypass() {
@@ -143,6 +149,7 @@ public class ScriptManager extends OptionPrefix {
 		amount = null;
 		delay = null;
 		cooldown = null;
+		hand = null;
 		itemCost = null;
 		moneyCost = null;
 		isBypass = false;
@@ -206,6 +213,7 @@ public class ScriptManager extends OptionPrefix {
 			|| script.startsWith(AMOUNT)
 			|| script.startsWith(DELAY)
 			|| script.startsWith(COOLDOWN)
+			|| script.startsWith(HAND)
 			|| script.startsWith(COST)
 			|| script.startsWith(ITEM);
 	}
@@ -262,11 +270,15 @@ public class ScriptManager extends OptionPrefix {
 			case COOLDOWN:
 				cooldown = new Cooldown(removeFirst(script, prefix).trim());
 				return;
+			case HAND:
+				hand = getHand(removeFirst(script, prefix).trim());
+				return;
 			case COST:
 				moneyCost = new MoneyCost(removeFirst(script, prefix).trim());
 				return;
 			case ITEM:
 				itemCost = getItem(removeFirst(script, prefix).trim());
+				return;
 			}
 		}
 	}
@@ -293,20 +305,45 @@ public class ScriptManager extends OptionPrefix {
 		return null;
 	}
 
-	private ItemCost getItem(String itemCost) {
+	private Hand getHand(String itemCost) {
 		String[] split = itemCost.split(":");
 		switch (split.length) {
 		case 1:
-			return new ItemCost(Integer.parseInt(split[0]), 1, (short) 0);
+			return new Hand(parseInt(split[0]), 1, (short) 0, null);
 		case 2:
-			return new ItemCost(Integer.parseInt(split[0]), Integer.parseInt(split[1]), (short) 0);
+			return new Hand(parseInt(split[0]), parseInt(split[1]), (short) 0, null);
 		case 3:
-			return new ItemCost(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Short.parseShort(split[2]));
+			return new Hand(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), null);
+		case 4:
+			return new Hand(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), split[3]);
 		}
 		return null;
 	}
 
-	private static String startsWith(String strs, String prefix) {
+	private ItemCost getItem(String itemCost) {
+		String[] split = itemCost.split(":");
+		switch (split.length) {
+		case 1:
+			return new ItemCost(parseInt(split[0]), 1, (short) 0, null);
+		case 2:
+			return new ItemCost(parseInt(split[0]), parseInt(split[1]), (short) 0, null);
+		case 3:
+			return new ItemCost(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), null);
+		case 4:
+			return new ItemCost(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), split[3]);
+		}
+		return null;
+	}
+
+	private int parseInt(String source) {
+		return Integer.parseInt(source);
+	}
+
+	private short parseShort(String source) {
+		return Short.parseShort(source);
+	}
+
+	private String startsWith(String strs, String prefix) {
 		if (strs.startsWith(prefix)) {
 			return strs.substring(0, prefix.length());
 		}

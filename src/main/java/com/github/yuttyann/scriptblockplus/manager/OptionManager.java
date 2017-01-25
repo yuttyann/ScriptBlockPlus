@@ -18,6 +18,7 @@ import com.github.yuttyann.scriptblockplus.option.Amount;
 import com.github.yuttyann.scriptblockplus.option.Cooldown;
 import com.github.yuttyann.scriptblockplus.option.Delay;
 import com.github.yuttyann.scriptblockplus.option.Group;
+import com.github.yuttyann.scriptblockplus.option.Hand;
 import com.github.yuttyann.scriptblockplus.option.ItemCost;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
 import com.github.yuttyann.scriptblockplus.option.Perm;
@@ -61,17 +62,19 @@ public class OptionManager extends PlayerSelector {
 			manager.reset();
 			if (!manager.readScript(script)) {
 				Utils.sendPluginMessage(player, Messages.getErrorScriptMessage(scriptType));
-				Utils.sendPluginMessage(Messages.getConsoleErrorScriptExecMessage(player, scriptType, location.getWorld(), coords));
+				Utils.sendPluginMessage(Messages.getConsoleErrorScriptExecMessage(player, scriptType,
+					location.getWorld(), coords));
 				return;
 			}
-			Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
+			Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType,
+				location.getWorld(), coords));
 			if (!manager.hasOption()) {
 				commandExec(player, replace(player, manager.getCommand(), false), manager.isBypass());
 				continue;
 			}
 			Perm perm = manager.getPerm();
 			if (perm != null && !perm.playerPerm(player)) {
-				player.sendMessage("§cパーミッションが無いため、実行できません。");
+				player.sendMessage(Messages.notPermissionMessage);
 				return;
 			}
 			Group group = manager.getGroup();
@@ -99,6 +102,32 @@ public class OptionManager extends PlayerSelector {
 	}
 
 	private void scriptOptions(Player player, String fullcoords, ScriptManager manager) {
+		Hand hand = manager.getHand();
+		if (hand != null) {
+			if (!hand.check(player)) {
+				Utils.sendPluginMessage(player, Messages.getErrorHandMessage(hand.getMaterial(), hand.getId(),
+					hand.getAmount(), hand.getDurability(), hand.getItemName()));
+				return;
+			}
+		}
+		MoneyCost moneyCost = manager.getMoneyCost();
+		if (moneyCost != null) {
+			if (!moneyCost.payment(player)) {
+				Utils.sendPluginMessage(player, Messages.getErrorCostMessage(moneyCost.getCost(), moneyCost.getResult()));
+				return;
+			}
+		}
+		ItemCost itemCost = manager.getItemCost();
+		if (itemCost != null) {
+			if (!itemCost.payment(player)) {
+				if (moneyCost != null && moneyCost.isSuccess()) {
+					CollPlugins.getVaultEconomy().depositPlayer(player, moneyCost.getCost());
+				}
+				Utils.sendPluginMessage(player, Messages.getErrorItemMessage(itemCost.getMaterial(), itemCost.getId(),
+					itemCost.getAmount(), itemCost.getDurability(), itemCost.getItemName()));
+				return;
+			}
+		}
 		Perm permADD = manager.getPermADD();
 		if (permADD != null) {
 			permADD.playerPerm(player);
@@ -118,23 +147,6 @@ public class OptionManager extends PlayerSelector {
 		Cooldown cooldown = manager.getCooldown();
 		if (cooldown != null) {
 			cooldown.run(player.getUniqueId(), fullcoords);
-		}
-		MoneyCost moneyCost = manager.getMoneyCost();
-		if (moneyCost != null) {
-			if (!moneyCost.payment(player)) {
-				Utils.sendPluginMessage(player, Messages.getErrorCostMessage(moneyCost.getCost(), moneyCost.getResult()));
-				return;
-			}
-		}
-		ItemCost itemCost = manager.getItemCost();
-		if (itemCost != null) {
-			if (!itemCost.payment(player)) {
-				if (moneyCost != null && moneyCost.isSuccess()) {
-					CollPlugins.getVaultEconomy().depositPlayer(player, moneyCost.getCost());
-				}
-				Utils.sendPluginMessage(player, Messages.getErrorItemMessage(itemCost.getMaterial(), itemCost.getId(), itemCost.getAmount(), itemCost.getDurability()));
-				return;
-			}
 		}
 		Amount amount = manager.getAmount();
 		if (amount != null) {

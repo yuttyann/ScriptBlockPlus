@@ -36,21 +36,15 @@ public class Perm {
 			}
 			return permission.playerHas(player, perm);
 		case ADD:
-			if (world != null && !permission.playerHas(world, player, perm)) {
+			if (world != null) {
 				return permission.playerAdd(world, player, perm);
 			}
-			if (!permission.playerHas(player, perm)) {
-				return permission.playerAdd(player, perm);
-			}
-			return false;
+			return permission.playerAdd(player, perm);
 		case REMOVE:
-			if (world != null && permission.playerHas(world, player, perm)) {
+			if (world != null) {
 				return permission.playerRemove(world, player, perm);
 			}
-			if (permission.playerHas(player, perm)) {
-				return permission.playerRemove(player, perm);
-			}
-			return false;
+			return permission.playerRemove(player, perm);
 		}
 		return false;
 	}

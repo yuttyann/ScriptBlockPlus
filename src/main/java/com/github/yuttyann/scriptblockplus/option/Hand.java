@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class ItemCost {
+public class Hand {
 
 	private int id;
 	private int amount;
@@ -16,12 +16,12 @@ public class ItemCost {
 	private boolean isSuccess;
 
 	@SuppressWarnings("deprecation")
-	public ItemCost(ItemStack item) {
+	public Hand(ItemStack item) {
 		this(item.getType().getId(), item.getAmount(), item.getDurability(), Utils.getItemName(item));
 	}
 
 	@SuppressWarnings("deprecation")
-	public ItemCost(int id, int amount, short damage, String itemName) {
+	public Hand(int id, int amount, short damage, String itemName) {
 		this.id = id;
 		this.amount = amount;
 		this.damage = damage;
@@ -57,24 +57,15 @@ public class ItemCost {
 		return new ItemStack(material, amount, damage);
 	}
 
-	public boolean payment(Player player) {
-		for (ItemStack item : player.getInventory().getContents()) {
-			item = item != null ? item : new ItemStack(Material.AIR);
-			if (item.getType() == material
-				&& item.getAmount() >= amount
-				&& item.getDurability() == damage) {
-				String itemName = Utils.getItemName(item);
-				if (this.itemName == null || (itemName != null && itemName.equals(this.itemName))) {
-					int result = item.getAmount() - amount;
-					if (result > 0) {
-						item.setAmount(result);
-					} else {
-						Utils.setItemInHand(player, new ItemStack(Material.AIR));
-					}
-					Utils.updateInventory(player);
-					isSuccess = true;
-					break;
-				}
+	public boolean check(Player player) {
+		ItemStack hand = Utils.getItemInHand(player);
+		ItemStack item = hand != null ? hand : new ItemStack(Material.AIR, 1);
+		if (item.getType() == material
+			&& item.getAmount() >= amount
+			&& item.getDurability() == damage) {
+			String itemName = Utils.getItemName(item);
+			if (this.itemName == null || (itemName != null && itemName.equals(this.itemName))) {
+				isSuccess = true;
 			}
 		}
 		return isSuccess;

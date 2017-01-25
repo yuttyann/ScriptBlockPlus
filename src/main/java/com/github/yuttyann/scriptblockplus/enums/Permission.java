@@ -6,9 +6,11 @@ public enum Permission {
 	SCRIPTBLOCKPLUS_COMMAND_TOOL("scriptblockplus.command.tool"),
 	SCRIPTBLOCKPLUS_COMMAND_RELOAD("scriptblockplus.command.reload"),
 	SCRIPTBLOCKPLUS_COMMAND_INTERACT("scriptblockplus.command.interact"),
+	SCRIPTBLOCKPLUS_COMMAND_BREAK("scriptblockplus.command.break"),
 	SCRIPTBLOCKPLUS_COMMAND_WALK("scriptblockplus.command.walk"),
 	SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT("scriptblockplus.command.worldedit"),
 	SCRIPTBLOCKPLUS_INTERACT_USE("scriptblockplus.interact.use"),
+	SCRIPTBLOCKPLUS_BREAK_USE("scriptblockplus.break.use"),
 	SCRIPTBLOCKPLUS_WALK_USE("scriptblockplus.walk.use"),
 	SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR("scriptblockplus.tool.scripteditor");
 

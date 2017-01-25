@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Edit;
+import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
 import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
 
 public class PlayerJoinQuitListener implements Listener {
@@ -29,6 +29,7 @@ public class PlayerJoinQuitListener implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		MetadataManager.removeAllMetadata(player);
-		Edit.removeAllMetadata(player);
+		ScriptFile.removeAllMetadata(player);
+		MapManager.removeEvents(player.getUniqueId());
 	}
 }

@@ -35,8 +35,10 @@ public class Updater extends FileManager implements Listener {
 	private boolean isError;
 
 	public Updater(ScriptBlock plugin) {
-		setup();
-		updateCheck();
+		try {
+			setup();
+			updateCheck();
+		} catch (Exception e) {}
 	}
 
 	public String getPluginName() {
@@ -71,7 +73,7 @@ public class Updater extends FileManager implements Listener {
 		return isError;
 	}
 
-	private void setup() {
+	private void setup() throws Exception {
 		isEnable = false;
 		isError = false;
 		pluginName = PluginYaml.getName();

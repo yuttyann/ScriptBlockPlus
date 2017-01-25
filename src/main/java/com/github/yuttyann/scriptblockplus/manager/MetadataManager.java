@@ -107,9 +107,9 @@ public class MetadataManager {
 		}
 	}
 
-	public static class Edit {
+	public static class ScriptFile {
 
-		public static void setMetadata(Player player, ScriptType scriptType, EditManager value) {
+		public static void setMetadata(Player player, ScriptType scriptType, ScriptFileManager value) {
 			player.setMetadata("SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase(), new FixedMetadataValue(ScriptBlock.instance, value));
 		}
 
@@ -138,12 +138,12 @@ public class MetadataManager {
 			return false;
 		}
 
-		public static EditManager getMetadata(Player player) {
+		public static ScriptFileManager getMetadata(Player player) {
 			for (ScriptType scriptType : ScriptType.values()) {
 				List<MetadataValue> values = player.getMetadata("SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase());
 				for (MetadataValue value : values) {
 					if (value != null) {
-						return (EditManager) value.value();
+						return (ScriptFileManager) value.value();
 					}
 				}
 			}

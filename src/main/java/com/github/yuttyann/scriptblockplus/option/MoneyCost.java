@@ -33,11 +33,11 @@ public class MoneyCost {
 
 	public boolean payment(Player player) {
 		VaultEconomy economy = CollPlugins.getVaultEconomy();
-		if (economy.has(player, getCost())) {
-			economy.withdrawPlayer(player, getCost());
+		if (economy.has(player, amount)) {
+			economy.withdrawPlayer(player, amount);
 			isSuccess = true;
 		} else {
-			result = getCost() - economy.getBalance(player);
+			result = amount - economy.getBalance(player);
 		}
 		return isSuccess;
 	}

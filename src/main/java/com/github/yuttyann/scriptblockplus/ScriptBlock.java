@@ -17,6 +17,7 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.listener.BlockListener;
+import com.github.yuttyann.scriptblockplus.listener.EventListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerInteractListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerJoinQuitListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerMoveListener;
@@ -46,6 +47,13 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	@Override
+	public void onDisable() {
+		/*for (Block block : EventListener.blocks) {
+			System.out.println(block.getType().name());
+		}*/
+	}
+
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		return commands.get(command.getName()).onCommand(sender, command, label, args);
 	}
@@ -69,6 +77,7 @@ public class ScriptBlock extends JavaPlugin {
 
 	private void loadClass() {
 		new MapManager();
+		getServer().getPluginManager().registerEvents(new EventListener(), this);
 		getServer().getPluginManager().registerEvents(new BlockListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);

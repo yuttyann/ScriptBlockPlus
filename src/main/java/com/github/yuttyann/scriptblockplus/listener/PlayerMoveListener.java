@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.listener;
 
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,6 +11,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
+import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
@@ -30,13 +30,13 @@ public class PlayerMoveListener implements Listener {
 		}
 		MapManager.getOldLocation().put(uuid, fullCoords);
 		if (MapManager.getWalkCoords().contains(fullCoords)) {
-			ScriptBlockWalkEvent scriptEvent = new ScriptBlockWalkEvent(event, player, location.getBlock(), Utils.getItemInHand(player), location);
-			Bukkit.getServer().getPluginManager().callEvent(scriptEvent);
-			if (scriptEvent.isCancelled()) {
+			ScriptBlockWalkEvent scEvent = new ScriptBlockWalkEvent(player, location.getBlock(), Utils.getItemInHand(player), location);
+			Utils.callEvent(scEvent);
+			if (scEvent.isCancelled()) {
 				return;
 			}
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_WALK_USE, player)) {
-				Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+				Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 				return;
 			}
 			new OptionManager(location, ScriptType.WALK).scriptExec(player);

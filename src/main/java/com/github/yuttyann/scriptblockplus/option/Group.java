@@ -36,21 +36,15 @@ public class Group {
 			}
 			return permission.playerInGroup(player, group);
 		case ADD:
-			if (world != null && !permission.playerInGroup(world, player, group)) {
+			if (world != null) {
 				return permission.playerAddGroup(world, player, group);
 			}
-			if (!permission.playerInGroup(player, group)) {
-				return permission.playerAddGroup(player, group);
-			}
-			return false;
+			return permission.playerAddGroup(player, group);
 		case REMOVE:
-			if (world != null && permission.playerInGroup(world, player, group)) {
+			if (world != null) {
 				return permission.playerRemoveGroup(world, player, group);
 			}
-			if (permission.playerInGroup(player, group)) {
-				return permission.playerRemoveGroup(player, group);
-			}
-			return false;
+			return permission.playerRemoveGroup(player, group);
 		}
 		return false;
 	}

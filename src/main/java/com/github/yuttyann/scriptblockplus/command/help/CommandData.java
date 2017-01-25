@@ -1,12 +1,21 @@
 package com.github.yuttyann.scriptblockplus.command.help;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.command.CommandSender;
+
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 
 public class CommandData {
 
 	private String message;
-	private String permission;
+	private List<String> permissions;
 	private boolean isHelp;
+
+	public CommandData() {
+		this(null, null, true);
+	}
 
 	public CommandData(boolean isHelp) {
 		this(null, null, isHelp);
@@ -26,7 +35,9 @@ public class CommandData {
 
 	public CommandData(String message, Object permission, boolean isHelp) {
 		setMessage(message);
-		setPermission(permission);
+		if (permission != null) {
+			addPermissions(permission);
+		}
 		setHelp(isHelp);
 	}
 
@@ -35,11 +46,17 @@ public class CommandData {
 		return this;
 	}
 
-	public CommandData setPermission(Object permission) {
-		if (permission == null) {
-			return this;
+	public CommandData addPermissions(Object... args) {
+		if (permissions == null) {
+			permissions = new ArrayList<String>();
 		}
-		this.permission = (permission instanceof Permission ? ((Permission) permission).getNode() : permission.toString());
+		for (Object permission : args) {
+			permissions.add(
+				permission instanceof Permission
+				? ((Permission) permission).getNode()
+				: permission.toString()
+			);
+		}
 		return this;
 	}
 
@@ -52,8 +69,18 @@ public class CommandData {
 		return message;
 	}
 
-	public String getPermission() {
-		return permission;
+	public List<String> getPermissions() {
+		return permissions;
+	}
+
+	public boolean hasPermission(CommandSender sender) {
+		boolean has = false;
+		for (String permission : permissions) {
+			if (!has && Permission.has(permission, sender)) {
+				has = true;
+			}
+		}
+		return has;
 	}
 
 	public boolean isHelp() {
@@ -65,6 +92,6 @@ public class CommandData {
 	}
 
 	public boolean hasPermission() {
-		return permission != null;
+		return permissions != null && !permissions.isEmpty();
 	}
 }

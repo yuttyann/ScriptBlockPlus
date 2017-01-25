@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -23,12 +22,11 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
-import com.github.yuttyann.scriptblockplus.manager.EditManager;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Click;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Edit;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Script;
+import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
@@ -40,17 +38,30 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 
 	public ScriptBlockCommand() {
 		CommandHelp help = new CommandHelp();
-		help.putCommands("scriptblockplus",
+		help.putCommands(
+			"scriptblockplus",
 			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_TOOL),      //tool
 			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_RELOAD),    //reload
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT),  //interact_create
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT),  //interact_add
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT),  //interact_remove
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT),  //interact_view
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK),      //walk_create
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK),      //walk_add
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK),      //walk_remove
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK),      //walk_view
+			new CommandData().addPermissions(                              //<scripttype>_create
+				Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT,
+				Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK,
+				Permission.SCRIPTBLOCKPLUS_COMMAND_WALK
+			),
+			new CommandData().addPermissions(                              //<scripttype>_add
+				Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT,
+				Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK,
+				Permission.SCRIPTBLOCKPLUS_COMMAND_WALK
+			),
+			new CommandData().addPermissions(                              //<scripttype>_remove
+				Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT,
+				Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK,
+				Permission.SCRIPTBLOCKPLUS_COMMAND_WALK
+			),
+			new CommandData().addPermissions(                              //<scripttype>_view
+				Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT,
+				Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK,
+				Permission.SCRIPTBLOCKPLUS_COMMAND_WALK
+			),
 			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT), //worldedit_paste
 			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT)  //worldedit_remove
 		);
@@ -59,14 +70,14 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (!(sender instanceof Player)) {
-			Utils.sendPluginMessage("§cコマンドはゲーム内から実行してください。");
+			Utils.sendPluginMessage(Messages.commandNoPlayerMessage);
 			return true;
 		}
 		Player player = (Player) sender;
 		if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("tool")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_TOOL, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
 				giveTool(player);
@@ -74,69 +85,79 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			}
 			if (args[0].equalsIgnoreCase("reload")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_RELOAD, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
 				Files.reload();
 				MapManager.putAllScripts();
-				Utils.sendPluginMessage(player, "§a全てのファイルの再読み込みが完了しました。");
+				Utils.sendPluginMessage(player, Messages.allFileReloadMessage);
 				return true;
 			}
 		}
 		if (args.length == 2) {
-			if (args[0].equalsIgnoreCase("interact") && args[1].equalsIgnoreCase("remove")) {
+			if (args[0].equalsIgnoreCase("interact")
+				&& (args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("view"))) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
-				setClickMeta(player, ClickType.INTERACT_REMOVE);
+				ClickType type;
+				if (args[1].equalsIgnoreCase("remove")) {
+					type = ClickType.INTERACT_REMOVE;
+				} else {
+					type = ClickType.INTERACT_VIEW;
+				}
+				setClickMeta(player, type);
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("interact") && args[1].equalsIgnoreCase("view")) {
-				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+			if (args[0].equalsIgnoreCase("break")
+				&& (args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("view"))) {
+				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK, player)) {
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
-				setClickMeta(player, ClickType.INTERACT_VIEW);
+				ClickType type;
+				if (args[1].equalsIgnoreCase("remove")) {
+					type = ClickType.BREAK_REMOVE;
+				} else {
+					type = ClickType.BREAK_VIEW;
+				}
+				setClickMeta(player, type);
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("walk") && args[1].equalsIgnoreCase("remove")) {
+			if (args[0].equalsIgnoreCase("walk")
+				&& (args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("view"))) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
-				setClickMeta(player, ClickType.WALK_REMOVE);
-				return true;
-			}
-			if (args[0].equalsIgnoreCase("walk") && args[1].equalsIgnoreCase("view")) {
-				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
-					return true;
+				ClickType type;
+				if (args[1].equalsIgnoreCase("remove")) {
+					type = ClickType.WALK_REMOVE;
+				} else {
+					type = ClickType.WALK_VIEW;
 				}
-				setClickMeta(player, ClickType.WALK_VIEW);
+				setClickMeta(player, type);
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
+			if (args[0].equalsIgnoreCase("worldedit")
+				&& (args[1].equalsIgnoreCase("paste") || args[1].equalsIgnoreCase("remove"))) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
-				scriptWEPaste(player, true);
-				return true;
-			}
-			if (args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("remove")) {
-				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
-					return true;
+				if (args[1].equalsIgnoreCase("paste")) {
+					scriptWEPaste(player, true);
+				} else {
+					scriptWERemove(player);
 				}
-				scriptWERemove(player);
 				return true;
 			}
 		}
 		if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
 				scriptWEPaste(player, Boolean.parseBoolean(args[2]));
@@ -144,36 +165,49 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			}
 		}
 		if (args.length > 2) {
-			if (args[0].equalsIgnoreCase("interact") && args[1].equalsIgnoreCase("create")) {
+			if (args[0].equalsIgnoreCase("interact")
+				&& (args[1].equalsIgnoreCase("create") || args[1].equalsIgnoreCase("add"))) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
-				setClickMeta(player, args, ClickType.INTERACT_CREATE);
+				ClickType type;
+				if (args[1].equalsIgnoreCase("create")) {
+					type = ClickType.INTERACT_CREATE;
+				} else {
+					type = ClickType.INTERACT_ADD;
+				}
+				setClickMeta(player, args, type);
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("interact") && args[1].equalsIgnoreCase("add")) {
-				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+			if (args[0].equalsIgnoreCase("break")
+				&& (args[1].equalsIgnoreCase("create") || args[1].equalsIgnoreCase("add"))) {
+				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK, player)) {
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
-				setClickMeta(player, args, ClickType.INTERACT_ADD);
+				ClickType type;
+				if (args[1].equalsIgnoreCase("create")) {
+					type = ClickType.BREAK_CREATE;
+				} else {
+					type = ClickType.BREAK_ADD;
+				}
+				setClickMeta(player, args, type);
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("walk") && args[1].equalsIgnoreCase("create")) {
+			if (args[0].equalsIgnoreCase("walk")
+				&& (args[1].equalsIgnoreCase("create") || args[1].equalsIgnoreCase("add"))) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
-				setClickMeta(player, args, ClickType.WALK_CREATE);
-				return true;
-			}
-			if (args[0].equalsIgnoreCase("walk") && args[1].equalsIgnoreCase("add")) {
-				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK, player)) {
-					Utils.sendPluginMessage(player, "§cパーミッションが無いため、実行できません。");
-					return true;
+				ClickType type;
+				if (args[1].equalsIgnoreCase("create")) {
+					type = ClickType.WALK_CREATE;
+				} else {
+					type = ClickType.WALK_ADD;
 				}
-				setClickMeta(player, args, ClickType.WALK_ADD);
+				setClickMeta(player, args, type);
 				return true;
 			}
 		}
@@ -186,11 +220,11 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§dScript Editor");
 		meta.setLore(Arrays.asList(
-			"§aスクリプトをコピー、削除するツールです。",
+			"§aスクリプトをコピー、ペーストするツールです。",
 			"§6左クリック: §e種類\"interact\"のスクリプトをコピーします。",
-			"§6右クリック: §e種類\"walk\"のスクリプトをコピーします。",
-			"§6シフトand左クリック: §eスクリプトをペーストします。",
-			"§6シフトand右クリック: §eスクリプトを削除します。")
+			"§6右クリック: §e種類\"break\"のスクリプトをコピーします。",
+			"§6シフトand左クリック: §e種類\"walk\"のスクリプトをコピーします。",
+			"§6シフトand右クリック: §eスクリプトをペーストします。")
 		);
 		item.setItemMeta(meta);
 		player.getInventory().addItem(item);
@@ -211,7 +245,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			Utils.sendPluginMessage(player, Messages.getErrorEditDataMessage());
 			return;
 		}
-		String script = Utils.stringBuilder(args, 2).trim();
+		String script = getBuilder(args, 2).trim();
 		ScriptManager manager = new ScriptManager(null, null);
 		manager.reset();
 		if (!manager.checkScript(script)) {
@@ -221,6 +255,17 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 		Click.setMetadata(player, clickType, true);
 		Script.setMetadata(player, clickType, script);
 		Utils.sendPluginMessage(player, Messages.getSuccEditDataMessage(clickType));
+	}
+
+	private String getBuilder(String[] args, int length) {
+		StringBuilder builder = new StringBuilder();
+		for (int i = length; i < args.length; i++) {
+			if (i > length) {
+				builder.append(" ");
+			}
+			builder.append(args[i]);
+		}
+		return builder.toString();
 	}
 
 	private void scriptWERemove(Player player) {
@@ -235,21 +280,23 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			return;
 		}
 		MetadataManager.removeAllMetadata(player);
-		Location min = selection.getMinimumPoint();
-		Location max = selection.getMaximumPoint();
-		List<Block> blocks = selectionAPI.getSelectionBlocks(selection);
 		BlockLocation location;
-		ScriptFileManager interact;
-		ScriptFileManager walk;
-		boolean isInteract = false;
-		boolean isWalk = false;
-		for (Block block : blocks) {
+		ScriptFileManager interact, break_, walk;
+		boolean isInteract = false, isBreak = false, isWalk = false;
+		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
 			location = BlockLocation.fromLocation(block.getLocation());
 			interact = new ScriptFileManager(location, ScriptType.INTERACT);
 			if (interact.checkPath()) {
 				interact.scriptWERemove(player);
 				if (!isInteract) {
 					isInteract = true;
+				}
+			}
+			break_ = new ScriptFileManager(location, ScriptType.BREAK);
+			if (break_.checkPath()) {
+				break_.scriptWERemove(player);
+				if (!isBreak) {
+					isBreak = true;
 				}
 			}
 			walk = new ScriptFileManager(location, ScriptType.WALK);
@@ -265,6 +312,14 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			Files.getInteract().save();
 			type = ScriptType.INTERACT.toString();
 		}
+		if (isBreak) {
+			Files.getBreak().save();
+			if (type.length() == 0) {
+				type = ScriptType.BREAK.toString();
+			} else {
+				type += ", " + ScriptType.BREAK.toString();
+			}
+		}
 		if (isWalk) {
 			Files.getWalk().save();
 			if (type.length() == 0) {
@@ -278,11 +333,11 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			return;
 		}
 		Utils.sendPluginMessage(player, Messages.getWorldEditRemoveMessage(type));
-		Utils.sendPluginMessage(Messages.getConsoleWorldEditRemoveMessage(type, min, max));
+		Utils.sendPluginMessage(Messages.getConsoleWorldEditRemoveMessage(type, selection.getMinimumPoint(), selection.getMaximumPoint()));
 	}
 
 	private void scriptWEPaste(Player player, boolean overwrite) {
-		if (!Edit.hasAllMetadata(player)) {
+		if (!ScriptFile.hasAllMetadata(player)) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
@@ -296,21 +351,18 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 			return;
 		}
-		Location min = selection.getMinimumPoint();
-		Location max = selection.getMaximumPoint();
-		List<Block> blocks = selectionAPI.getSelectionBlocks(selection);
 		MetadataManager.removeAllMetadata(player);
-		EditManager edit = Edit.getMetadata(player);
-		for (Block block : blocks) {
+		ScriptFileManager edit = ScriptFile.getMetadata(player);
+		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
 			if (block == null || block.getType() == Material.AIR) {
 				continue;
 			}
 			edit.scriptWEPaste(player, BlockLocation.fromLocation(block.getLocation()), overwrite);
 		}
 		edit.save();
-		ScriptType scriptType = Edit.getMetadata(player).getScriptType();
+		ScriptType scriptType = ScriptFile.getMetadata(player).getScriptType();
 		Utils.sendPluginMessage(player, Messages.getWorldEditPasteMessage(scriptType));
-		Utils.sendPluginMessage(Messages.getConsoleWorldEditPasteMessage(scriptType, min, max));
+		Utils.sendPluginMessage(Messages.getConsoleWorldEditPasteMessage(scriptType, selection.getMinimumPoint(), selection.getMaximumPoint()));
 	}
 
 	@Override
@@ -320,6 +372,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 				perm(sender, "tool", Permission.SCRIPTBLOCKPLUS_COMMAND_TOOL),
 				perm(sender, "reload", Permission.SCRIPTBLOCKPLUS_COMMAND_RELOAD),
 				perm(sender, "interact", Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT),
+				perm(sender, "break", Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK),
 				perm(sender, "walk", Permission.SCRIPTBLOCKPLUS_COMMAND_WALK),
 				perm(sender, "worldedit", Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT)
 			};
@@ -338,20 +391,22 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			if (args[0].equalsIgnoreCase("tool") || args[0].equalsIgnoreCase("reload")) {
 				return null;
 			}
-			String node;
+			Permission perm;
 			String[] args_;
 			if (args[0].equalsIgnoreCase("worldedit")) {
-				node = Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT.getNode();
+				perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT;
 				args_ = new String[]{"paste", "remove"};
 			} else {
 				if (args[0].equalsIgnoreCase("interact")) {
-					node = Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT.getNode();
+					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT;
+				} else if (args[0].equalsIgnoreCase("break")) {
+					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK;
 				} else {
-					node = Permission.SCRIPTBLOCKPLUS_COMMAND_WALK.getNode();
+					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WALK;
 				}
 				args_ = new String[]{"create", "add", "remove", "view"};
 			}
-			if ((args_ = perm(sender, args_, node)) == null) {
+			if ((args_ = perm(sender, args_, perm)) == null) {
 				return null;
 			}
 			String prefix = args[1].toLowerCase();
@@ -376,6 +431,8 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			} else {
 				if (args[0].equalsIgnoreCase("interact")) {
 					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT;
+				} else if (args[0].equalsIgnoreCase("break")) {
+					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK;
 				} else {
 					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WALK;
 				}

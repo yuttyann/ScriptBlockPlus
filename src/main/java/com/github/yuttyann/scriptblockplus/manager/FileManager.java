@@ -416,7 +416,7 @@ public class FileManager {
 		return new ArrayList<String>();
 	}
 
-	protected Document getDocument(String name) {
+	protected Document getDocument(String name) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 		Document document = null;
@@ -424,11 +424,11 @@ public class FileManager {
 			builder = factory.newDocumentBuilder();
 			document = builder.parse(getInputStream(name));
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			throw e;
 		} catch (SAXException e) {
-			e.printStackTrace();
+			throw e;
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw e;
 		}
 		return document;
 	}

@@ -11,6 +11,10 @@ import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
 
 public class Messages {
 
+	public static final String commandNoPlayerMessage = "§cコマンドはゲーム内から実行してください。";
+	public static final String notPermissionMessage = "§cパーミッションが無いため、実行できません。";
+	public static final String allFileReloadMessage = "§a全てのファイルの再読み込みが完了しました。";
+
 	private static Messages instance;
 	private static Yaml messages;
 	private String notVaultMessage;
@@ -31,6 +35,7 @@ public class Messages {
 	private String errorScriptFileCheckMessage;
 	private String errorScriptExecMessage;
 	private String errorGroupMessage;
+	private String errorHandMessage;
 	private String errorCostMessage;
 	private String errorItemMessage;
 	private String consoleScriptCopyMessage;
@@ -65,6 +70,7 @@ public class Messages {
 		this.errorScriptFileCheckMessage = messages.getString("errorScriptFileCheckMessage");
 		this.errorScriptExecMessage = messages.getString("errorScriptExecMessage");
 		this.errorGroupMessage = messages.getString("errorGroupMessage");
+		this.errorHandMessage = messages.getString("errorHandMessage");
 		this.errorCostMessage = messages.getString("errorCostMessage");
 		this.errorItemMessage = messages.getString("errorItemMessage");
 		this.consoleScriptCopyMessage = messages.getString("consoleScriptCopyMessage");
@@ -168,33 +174,7 @@ public class Messages {
 		if (instance.succEditDataMessage == null) {
 			return null;
 		}
-		String type = "";
-		switch (clickType) {
-		case INTERACT_CREATE:
-			type = "interact-create";
-			break;
-		case INTERACT_ADD:
-			type = "interact-add";
-			break;
-		case INTERACT_REMOVE:
-			type = "interact-remove";
-			break;
-		case INTERACT_VIEW:
-			type = "interact-view";
-			break;
-		case WALK_CREATE:
-			type = "walk-create";
-			break;
-		case WALK_ADD:
-			type = "walk-add";
-			break;
-		case WALK_REMOVE:
-			type = "walk-remove";
-			break;
-		case WALK_VIEW:
-			type = "walk-view";
-			break;
-		}
+		String type = clickType.name().toLowerCase().replace("_", "-");
 		return replaceColorCode(instance.succEditDataMessage.replace("%clicktype%", type));
 	}
 
@@ -233,6 +213,13 @@ public class Messages {
 		return replaceColorCode(instance.errorGroupMessage.replace("%group%", group));
 	}
 
+	public static String getErrorHandMessage(Material material, int id, int amount, short damage, String itemName) {
+		if (instance.errorHandMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.errorHandMessage.replace("%material%", material.toString()).replace("%id%", id + "").replace("%amount%", amount + "").replace("%damage%", damage + "").replace("%itemname%", itemName));
+	}
+
 	public static String getErrorCostMessage(double cost, double result) {
 		if (instance.errorCostMessage == null) {
 			return null;
@@ -240,11 +227,11 @@ public class Messages {
 		return replaceColorCode(instance.errorCostMessage.replace("%cost%", cost + "").replace("%result%", result + ""));
 	}
 
-	public static String getErrorItemMessage(Material material, int id, int amount, short damage) {
+	public static String getErrorItemMessage(Material material, int id, int amount, short damage, String itemName) {
 		if (instance.errorItemMessage == null) {
 			return null;
 		}
-		return replaceColorCode(instance.errorItemMessage.replace("%material%", material.toString()).replace("%id%", id + "").replace("%amount%", amount + "").replace("%damage%", damage + ""));
+		return replaceColorCode(instance.errorItemMessage.replace("%material%", material.toString()).replace("%id%", id + "").replace("%amount%", amount + "").replace("%damage%", damage + "").replace("%itemname%", itemName));
 	}
 
 	public static String getConsoleScriptCopyMessage(Player player, ScriptType scriptType, World world, String coords) {
