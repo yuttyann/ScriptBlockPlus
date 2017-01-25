@@ -47,7 +47,7 @@ errorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプ�
 errorHandMessage: '&cアイテムを所持していません。スクリプトの実行にはアイテム"%material%(%id%:%damage%)"が"%amount%個"必要です。'
 errorItemMessage: '&cアイテムが足りません。スクリプトの実行にはアイテム"%material%(%id%:%damage%)"が"%amount%個"必要です。'
 
-# %cost% : 必要な金額
+# %cost%   : 必要な金額
 # %result% : 必要な残りの金額
 errorCostMessage: '&cお金が"%result%"円足りません。スクリプトの実行には"%cost%"円必要です。'
 
