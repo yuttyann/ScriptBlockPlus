@@ -113,7 +113,7 @@ public class MapManager {
 					builder.setLength(0);
 				}
 			}
-			Yaml break_ = Files.getWalk();
+			Yaml break_ = Files.getBreak();
 			for (String world : break_.getConfigurationSection("").getKeys(false)) {
 				for (String coords : break_.getConfigurationSection(world).getKeys(false)) {
 					breakCoords.add(builder.append(world).append(", ").append(coords).toString());

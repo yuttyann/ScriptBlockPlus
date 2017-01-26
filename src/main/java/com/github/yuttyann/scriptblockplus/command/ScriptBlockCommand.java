@@ -211,7 +211,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 				return true;
 			}
 		}
-		CommandHelp.sendHelpMessage(sender, command);
+		CommandHelp.sendHelpMessage(sender, command, false);
 		return true;
 	}
 

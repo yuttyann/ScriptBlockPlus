@@ -60,7 +60,7 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	public File getJarFile() {
-		return this.getFile();
+		return getFile();
 	}
 
 	public ScriptBlockAPI getAPI(Block block, ScriptType scriptType) {

@@ -14,8 +14,6 @@ public enum Permission {
 	SCRIPTBLOCKPLUS_WALK_USE("scriptblockplus.walk.use"),
 	SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR("scriptblockplus.tool.scripteditor");
 
-	public static final String COMMAND_PERM_PREFIX = "scriptblockplus.command.";
-
 	private String node;
 
 	private Permission(String node) {

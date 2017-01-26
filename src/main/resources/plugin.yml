@@ -12,12 +12,12 @@ commands:
     usage: |
            /<command> tool - 実行者にスクリプト編集ツールを配布します。
            /<command> reload - 全てのファイルの再読み込みを行います。
-           /<command> <scripttype> create <options> - 実行後クリックしたブロックにスクリプトを設定します。
-           /<command> <scripttype> add <options> - 実行後クリックしたブロックにスクリプトを追加します。
-           /<command> <scripttype> remove - 実行後クリックしたブロックのスクリプトを削除します。
-           /<command> <scripttype> view - 実行後クリックしたブロックのスクリプトを表示します。
-           /<command> worldedit paste [overwrite] - WorldEditで選択した範囲にスクリプトをペーストします。
-           /<command> worldedit remove - WorldEditで選択した範囲のスクリプトを削除します。
+           /<command> <scripttype> create <options> - ブロックにスクリプトを設定します。
+           /<command> <scripttype> add <options> - ブロックにスクリプトを追加します。
+           /<command> <scripttype> remove - ブロックのスクリプトを削除します。
+           /<command> <scripttype> view - ブロックのスクリプトを表示します。
+           /<command> worldedit paste [overwrite] - 選択した範囲にスクリプトをペーストします。
+           /<command> worldedit remove - 選択した範囲のスクリプトを削除します。
     aliases: [sbp]
 
 permissions:

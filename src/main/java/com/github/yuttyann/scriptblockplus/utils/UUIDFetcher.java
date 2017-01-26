@@ -28,8 +28,8 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 		Map<String, UUID> uuidMap = new HashMap<String, UUID>();
 		if (jsonMap != null) {
 			Map<Object, Object> map = jsonMap.get(0);
-			String id = map.get("id").toString();
-			String name = map.get("name").toString();
+			String id = (String) map.get("id");
+			String name = (String) map.get("name");
 			UUID uuid = Utils.fromString(id);
 			uuidMap.put(name, uuid);
 		}

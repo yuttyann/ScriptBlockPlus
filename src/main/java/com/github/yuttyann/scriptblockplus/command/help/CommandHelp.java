@@ -46,10 +46,10 @@ public class CommandHelp {
 		ScriptBlock.instance.getCommandHelp().clear();
 	}
 
-	public static void sendHelpMessage(CommandSender sender, Command command) {
-		String name = command.getName().toLowerCase();
+	public static void sendHelpMessage(CommandSender sender, Command command, boolean isName) {
+		String commandName = command.getName().toLowerCase();
 		List<CommandData> temps = new ArrayList<CommandData>();
-		for (CommandData data : ScriptBlock.instance.getCommandHelp().get(name)) {
+		for (CommandData data : ScriptBlock.instance.getCommandHelp().get(commandName)) {
 			if (data.hasPermission() && data.hasPermission(sender)) {
 				temps.add(data);
 			}
@@ -58,13 +58,16 @@ public class CommandHelp {
 			sender.sendMessage("Unknown command. Type \"/help\" for help.");
 			return;
 		}
+		if (!isName && command.getAliases().size() > 0) {
+			commandName = command.getAliases().get(0).toLowerCase();
+		}
 		StringBuilder builder = new StringBuilder();
 		builder.append("§d==== ").append(PluginYaml.getName()).append(" Commands ====");
 		sender.sendMessage(builder.toString());
 		for (CommandData data : temps) {
 			if (data.isHelp()) {
 				builder.setLength(0);
-				builder.append("§b/").append(name).append(" ").append(data.getMessage());
+				builder.append("§b/").append(commandName).append(" ").append(data.getMessage());
 				sender.sendMessage(builder.toString());
 			} else {
 				sender.sendMessage(data.getMessage());
