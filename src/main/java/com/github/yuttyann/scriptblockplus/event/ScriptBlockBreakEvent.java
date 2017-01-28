@@ -21,7 +21,7 @@ public class ScriptBlockBreakEvent extends ScriptBlockEvent implements Cancellab
 		this.player = player;
 		this.block = block;
 		this.item = item;
-		this.location = location.toLocation();
+		this.location = location;
 	}
 
 	public Player getPlayer() {

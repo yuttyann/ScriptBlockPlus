@@ -245,7 +245,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			Utils.sendPluginMessage(player, Messages.getErrorEditDataMessage());
 			return;
 		}
-		String script = getBuilder(args, 2).trim();
+		String script = createString(args, 2).trim();
 		ScriptManager manager = new ScriptManager(null, null);
 		manager.reset();
 		if (!manager.checkScript(script)) {
@@ -257,7 +257,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 		Utils.sendPluginMessage(player, Messages.getSuccEditDataMessage(clickType));
 	}
 
-	private String getBuilder(String[] args, int length) {
+	private String createString(String[] args, int length) {
 		StringBuilder builder = new StringBuilder();
 		for (int i = length; i < args.length; i++) {
 			if (i > length) {

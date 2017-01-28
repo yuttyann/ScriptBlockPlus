@@ -25,7 +25,7 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 		this.block = block;
 		this.item = item;
 		this.config = Files.getConfig();
-		this.location = location.toLocation();
+		this.location = location;
 	}
 
 	public Player getPlayer() {

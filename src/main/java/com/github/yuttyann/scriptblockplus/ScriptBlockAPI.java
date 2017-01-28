@@ -53,7 +53,7 @@ public class ScriptBlockAPI {
 	 * @return 座標
 	 */
 	public Location getLocation() {
-		return scriptData.getBlockLocation().toLocation();
+		return scriptData.getBlockLocation();
 	}
 
 	/**

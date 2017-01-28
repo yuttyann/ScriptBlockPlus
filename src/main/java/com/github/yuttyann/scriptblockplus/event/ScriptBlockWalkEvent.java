@@ -21,7 +21,7 @@ public class ScriptBlockWalkEvent extends ScriptBlockEvent implements Cancellabl
 		this.player = player;
 		this.block = block;
 		this.item = item;
-		this.location = location.toLocation();
+		this.location = location;
 	}
 
 	public Player getPlayer() {

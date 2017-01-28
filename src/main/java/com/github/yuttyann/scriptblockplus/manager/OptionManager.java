@@ -199,7 +199,7 @@ public class OptionManager extends PlayerSelector {
 			command = command.substring(1);
 		}
 		String pattern = getCommandBlockPattern(command);
-		Location location = this.location.toLocation();
+		Location location = this.location;
 		if (pattern != null) {
 			if (location == null) {
 				location = player.getLocation().clone();
