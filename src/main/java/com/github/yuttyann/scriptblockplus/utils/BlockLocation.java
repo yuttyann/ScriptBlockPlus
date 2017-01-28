@@ -197,13 +197,11 @@ public class BlockLocation extends Location {
 		return this;
 	}
 
-	public BlockLocation reset() {
+	public BlockLocation zero() {
 		setX(0.0D);
 		setY(0.0D);
 		setZ(0.0D);
-		super.setX(0.0D);
-		super.setY(0.0D);
-		super.setZ(0.0D);
+		super.zero();
 		return this;
 	}
 
