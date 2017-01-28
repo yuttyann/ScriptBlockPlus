@@ -37,8 +37,8 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class FileManager {
 
-	private static final String MS932 = "MS932";
 	private static final String UTF8 = "UTF-8";
+	private static final String MS932 = "MS932";
 
 	protected void fileEncode(File file) {
 		if (!file.exists()) {
