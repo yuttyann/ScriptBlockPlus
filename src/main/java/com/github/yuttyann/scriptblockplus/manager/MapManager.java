@@ -2,62 +2,105 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
+import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.Yaml;
-import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
+import com.github.yuttyann.scriptblockplus.file.YamlConfig;
 
 public class MapManager {
 
-	private static HashMap<UUID, String> oldLocation;
-	private static HashMap<String, ArrayList<UUID>> delay;
-	private static HashMap<String, ArrayList<UUID>> cooldown;
-	private static HashMap<String, HashMap<UUID, long[]>> cooldownParams;
-	private static ArrayList<UUID> interactEvents;
-	private static ArrayList<String> interactCoords;
-	private static ArrayList<String> breakCoords;
-	private static ArrayList<String> walkCoords;
+	private static Map<UUID, String> oldLocation;
+	private static Map<String, List<UUID>> delay;
+	private static Map<String, List<UUID>> cooldown;
+	private static Map<String, Map<UUID, long[]>> cooldownParams;
+	private static Set<String> interactCoords;
+	private static Set<String> breakCoords;
+	private static Set<String> walkCoords;
+	private static List<UUID> interactEvents;
 
 	public MapManager() {
 		oldLocation = new HashMap<UUID, String>();
-		delay = new HashMap<String, ArrayList<UUID>>();
-		cooldown = new HashMap<String, ArrayList<UUID>>();
-		cooldownParams = new HashMap<String, HashMap<UUID, long[]>>();
+		delay = new HashMap<String, List<UUID>>();
+		cooldown = new HashMap<String, List<UUID>>();
+		cooldownParams = new HashMap<String, Map<UUID, long[]>>();
 		interactEvents = new ArrayList<UUID>();
-		interactCoords = new ArrayList<String>();
-		breakCoords = new ArrayList<String>();
-		walkCoords = new ArrayList<String>();
-		MapManager.putAllScripts();
+		interactCoords = new HashSet<String>();
+		breakCoords = new HashSet<String>();
+		walkCoords = new HashSet<String>();
+		setupScripts();
 	}
 
-	public static HashMap<UUID, String> getOldLocation() {
+	public static Map<UUID, String> getOldLocation() {
 		return oldLocation;
 	}
 
-	public static HashMap<String, ArrayList<UUID>> getDelay() {
+	public static Map<String, List<UUID>> getDelay() {
 		return delay;
 	}
 
-	public static HashMap<String, ArrayList<UUID>> getCooldown() {
+	public static Map<String, List<UUID>> getCooldown() {
 		return cooldown;
 	}
 
-	public static HashMap<String, HashMap<UUID, long[]>> getCooldownParams() {
+	public static Map<String, Map<UUID, long[]>> getCooldownParams() {
 		return cooldownParams;
 	}
 
-	public static ArrayList<String> getInteractCoords() {
+	public static Set<String> getInteractCoords() {
 		return interactCoords;
 	}
 
-	public static ArrayList<String> getBreakCoords() {
+	public static Set<String> getBreakCoords() {
 		return breakCoords;
 	}
 
-	public static ArrayList<String> getWalkCoords() {
+	public static Set<String> getWalkCoords() {
 		return walkCoords;
+	}
+
+	public static void setupScripts() {
+		try {
+			reloadScripts(Files.getInteract(), ScriptType.INTERACT);
+			reloadScripts(Files.getBreak(), ScriptType.BREAK);
+			reloadScripts(Files.getWalk(), ScriptType.WALK);
+		} catch (Exception e) {
+			coordsAllClear();
+		}
+	}
+
+	public static void reloadScripts(YamlConfig scriptFile, ScriptType scriptType) {
+		switch (scriptType) {
+		case INTERACT:
+			interactCoords.clear();
+			for (String world : scriptFile.getKeys(false)) {
+				for (String coords : scriptFile.getConfigurationSection(world).getKeys(false)) {
+					interactCoords.add(world + ", " + coords);
+				}
+			}
+			break;
+		case BREAK:
+			breakCoords.clear();
+			for (String world : scriptFile.getKeys(false)) {
+				for (String coords : scriptFile.getConfigurationSection(world).getKeys(false)) {
+					breakCoords.add(world + ", " + coords);
+				}
+			}
+			break;
+		case WALK:
+			walkCoords.clear();
+			for (String world : scriptFile.getKeys(false)) {
+				for (String coords : scriptFile.getConfigurationSection(world).getKeys(false)) {
+					walkCoords.add(world + ", " + coords);
+				}
+			}
+			break;
+		}
 	}
 
 	public static void addCoords(BlockLocation location, ScriptType scriptType) {
@@ -102,36 +145,6 @@ public class MapManager {
 		}
 	}
 
-	public static void putAllScripts() {
-		try {
-			coordsAllClear();
-			StringBuilder builder = new StringBuilder();
-			Yaml interact = Files.getInteract();
-			for (String world : interact.getConfigurationSection("").getKeys(false)) {
-				for (String coords : interact.getConfigurationSection(world).getKeys(false)) {
-					interactCoords.add(builder.append(world).append(", ").append(coords).toString());
-					builder.setLength(0);
-				}
-			}
-			Yaml break_ = Files.getBreak();
-			for (String world : break_.getConfigurationSection("").getKeys(false)) {
-				for (String coords : break_.getConfigurationSection(world).getKeys(false)) {
-					breakCoords.add(builder.append(world).append(", ").append(coords).toString());
-					builder.setLength(0);
-				}
-			}
-			Yaml walk = Files.getWalk();
-			for (String world : walk.getConfigurationSection("").getKeys(false)) {
-				for (String coords : walk.getConfigurationSection(world).getKeys(false)) {
-					walkCoords.add(builder.append(world).append(", ").append(coords).toString());
-					builder.setLength(0);
-				}
-			}
-		} catch (Exception e) {
-			coordsAllClear();
-		}
-	}
-
 	public static boolean addEvents(UUID uuid) {
 		if (!interactEvents.contains(uuid)) {
 			return interactEvents.add(uuid);
@@ -148,6 +161,7 @@ public class MapManager {
 
 	private static void coordsAllClear() {
 		interactCoords.clear();
+		breakCoords.clear();
 		walkCoords.clear();
 	}
 }
