@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.command;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
 import com.github.yuttyann.scriptblockplus.collplugin.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.command.help.CommandData;
@@ -20,8 +22,10 @@ import com.github.yuttyann.scriptblockplus.command.help.CommandHelp;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.file.Configuration;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
+import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Click;
@@ -30,7 +34,7 @@ import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
-import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
@@ -42,6 +46,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			"scriptblockplus",
 			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_TOOL),      //tool
 			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_RELOAD),    //reload
+			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_DATAMIGR),  //datamigr
 			new CommandData().addPermissions(                              //<scripttype>_create
 				Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT,
 				Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK,
@@ -70,7 +75,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (!(sender instanceof Player)) {
-			Utils.sendPluginMessage(Messages.commandNoPlayerMessage);
+			Utils.sendPluginMessage(Messages.senderNoPlayerMessage);
 			return true;
 		}
 		Player player = (Player) sender;
@@ -89,8 +94,16 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 					return true;
 				}
 				Files.reload();
-				MapManager.putAllScripts();
+				MapManager.setupScripts();
 				Utils.sendPluginMessage(player, Messages.allFileReloadMessage);
+				return true;
+			}
+			if (args[0].equalsIgnoreCase("datamigr")) {
+				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_DATAMIGR, player)) {
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					return true;
+				}
+				sbDataMigr(player);
 				return true;
 			}
 		}
@@ -228,7 +241,65 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 		);
 		item.setItemMeta(meta);
 		player.getInventory().addItem(item);
-		Utils.sendPluginMessage(player, "§aScript Editorが配布されました。");
+		Utils.sendPluginMessage(player, Messages.giveToolMessage);
+	}
+
+	private void sbDataMigr(Player player) {
+		File interactFile = new File("plugins/ScriptBlock/BlocksData/interact_Scripts.yml");
+		File walkFile = new File("plugins/ScriptBlock/BlocksData/walk_Scripts.yml");
+		boolean interactExists = interactFile.exists();
+		boolean walkExists = walkFile.exists();
+		if (!interactExists && !walkExists) {
+			Utils.sendPluginMessage(player, Messages.notScriptBlockFileMessage);
+			return;
+		}
+		Utils.sendPluginMessage(player, Messages.dataMigrStartMessage);
+		Configuration config;
+		if (interactExists) {
+			config = Configuration.loadConfiguration(interactFile);
+			ScriptData scriptData = new ScriptData((BlockLocation) null, ScriptType.INTERACT);
+			for (String world : config.getKeys()) {
+				for (String coords : config.getKeys(world)) {
+					List<String> scripts = config.getStringList(world + "." + StringUtils.replace(coords, " ", ""), null);
+					scripts.remove(0);
+					String[] array = StringUtils.split(coords, ",");
+					scriptData.setBlockLocation(new BlockLocation(
+						Utils.getWorld(world),
+						Integer.parseInt(array[0]),
+						Integer.parseInt(array[1]),
+						Integer.parseInt(array[2]))
+					);
+					scriptData.setAuthor(player);
+					scriptData.setLastEdit();
+					scriptData.setScripts(scripts);
+				}
+			}
+			scriptData.save();
+			MapManager.reloadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
+		}
+		if (walkExists) {
+			config = Configuration.loadConfiguration(walkFile);
+			ScriptData scriptData = new ScriptData((BlockLocation) null, ScriptType.WALK);
+			for (String world : config.getKeys()) {
+				for (String coords : config.getKeys(world)) {
+					List<String> scripts = config.getStringList(world + "." + StringUtils.replace(coords, " ", ""), null);
+					scripts.remove(0);
+					String[] array = StringUtils.split(coords, ",");
+					scriptData.setBlockLocation(new BlockLocation(
+						Utils.getWorld(world),
+						Integer.parseInt(array[0]),
+						Integer.parseInt(array[1]),
+						Integer.parseInt(array[2]))
+					);
+					scriptData.setAuthor(player);
+					scriptData.setLastEdit();
+					scriptData.setScripts(scripts);
+				}
+			}
+			scriptData.save();
+			MapManager.reloadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
+		}
+		Utils.sendPluginMessage(player, Messages.dataMigrEndMessage);
 	}
 
 	private void setClickMeta(Player player, ClickType clickType) {
@@ -245,7 +316,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			Utils.sendPluginMessage(player, Messages.getErrorEditDataMessage());
 			return;
 		}
-		String script = createString(args, 2).trim();
+		String script = StringUtils.createString(args, 2).trim();
 		ScriptManager manager = new ScriptManager(null, null);
 		manager.reset();
 		if (!manager.checkScript(script)) {
@@ -257,20 +328,9 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 		Utils.sendPluginMessage(player, Messages.getSuccEditDataMessage(clickType));
 	}
 
-	private String createString(String[] args, int length) {
-		StringBuilder builder = new StringBuilder();
-		for (int i = length; i < args.length; i++) {
-			if (i > length) {
-				builder.append(" ");
-			}
-			builder.append(args[i]);
-		}
-		return builder.toString();
-	}
-
 	private void scriptWERemove(Player player) {
 		if (!CollPlugins.hasWorldEdit()) {
-			Utils.sendPluginMessage(player, Messages.getNotWorldEditMessage());
+			Utils.sendPluginMessage(player, Messages.notWorldEditMessage);
 			return;
 		}
 		WorldEditSelection selectionAPI = CollPlugins.getWorldEditSelection();
@@ -342,7 +402,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			return;
 		}
 		if (!CollPlugins.hasWorldEdit()) {
-			Utils.sendPluginMessage(player, Messages.getNotWorldEditMessage());
+			Utils.sendPluginMessage(player, Messages.notWorldEditMessage);
 			return;
 		}
 		WorldEditSelection selectionAPI = CollPlugins.getWorldEditSelection();
@@ -371,13 +431,14 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			String[] args_ = {
 				perm(sender, "tool", Permission.SCRIPTBLOCKPLUS_COMMAND_TOOL),
 				perm(sender, "reload", Permission.SCRIPTBLOCKPLUS_COMMAND_RELOAD),
+				perm(sender, "datamigr", Permission.SCRIPTBLOCKPLUS_COMMAND_DATAMIGR),
 				perm(sender, "interact", Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT),
 				perm(sender, "break", Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK),
 				perm(sender, "walk", Permission.SCRIPTBLOCKPLUS_COMMAND_WALK),
 				perm(sender, "worldedit", Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT)
 			};
 			String prefix = args[0].toLowerCase();
-			ArrayList<String> commands = new ArrayList<String>();
+			List<String> commands = new ArrayList<String>();
 			for (String c : args_) {
 				if (c != null && c.startsWith(prefix)) {
 					commands.add(c);
@@ -410,7 +471,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 				return null;
 			}
 			String prefix = args[1].toLowerCase();
-			ArrayList<String> commands = new ArrayList<String>();
+			List<String> commands = new ArrayList<String>();
 			for (String c : args_) {
 				if (c.startsWith(prefix)) {
 					commands.add(c);
@@ -420,7 +481,8 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 		}
 		if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("tool") || args[0].equalsIgnoreCase("reload")
-					|| args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("view")) {
+					|| args[0].equalsIgnoreCase("datamigr") || args[1].equalsIgnoreCase("remove")
+					|| args[1].equalsIgnoreCase("view")) {
 				return null;
 			}
 			Permission perm;
@@ -442,7 +504,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 				return null;
 			}
 			String prefix = args[2].toLowerCase();
-			ArrayList<String> commands = new ArrayList<String>();
+			List<String> commands = new ArrayList<String>();
 			for (String c : args_) {
 				if (c.startsWith(prefix)) {
 					commands.add(c.trim());
