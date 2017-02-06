@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -26,15 +27,15 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class ScriptBlock extends JavaPlugin {
 
 	public static ScriptBlock instance;
-	private HashMap<String, TabExecutor> commands;
-	private HashMap<String, List<CommandData>> commandHelp;
+	private Map<String, TabExecutor> commands;
+	private Map<String, List<CommandData>> commandHelp;
 
 	@Override
 	public void onEnable() {
 		instance = this;
 		Files.reload();
 		if (!CollPlugins.hasVault()) {
-			Utils.sendPluginMessage(Messages.getNotVaultMessage());
+			Utils.sendPluginMessage(Messages.notVaultMessage);
 			Utils.disablePlugin(this);
 			return;
 		}
@@ -55,7 +56,7 @@ public class ScriptBlock extends JavaPlugin {
 		return commands.get(command.getName()).onTabComplete(sender, command, label, args);
 	}
 
-	public HashMap<String, List<CommandData>> getCommandHelp() {
+	public Map<String, List<CommandData>> getCommandHelp() {
 		return commandHelp;
 	}
 
