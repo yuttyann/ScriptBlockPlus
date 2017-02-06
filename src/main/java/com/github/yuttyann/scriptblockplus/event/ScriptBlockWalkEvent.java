@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
-import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
+import com.github.yuttyann.scriptblockplus.BlockLocation;
 
 public class ScriptBlockWalkEvent extends ScriptBlockEvent implements Cancellable {
 

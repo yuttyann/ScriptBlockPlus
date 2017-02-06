@@ -1,9 +1,9 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Random;
@@ -21,11 +21,20 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 
 public class Utils {
 
+	private static final String REGEX_H = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
+	private static final String REGEX_NH = "[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}";
+
+	private static String serverVersion;
 	private static Boolean isWindows;
+	private static Boolean isCB175orLaterCache;
+	private static Boolean isCB178orLaterCache;
+	private static Boolean isCB18orLaterCache;
+	private static Boolean isCB19orLaterCache;
 
 	public static boolean isWindows() {
 		if (isWindows == null) {
@@ -49,11 +58,6 @@ public class Utils {
 	public static void callEvent(Event event) {
 		Bukkit.getServer().getPluginManager().callEvent(event);
 	}
-
-	private static Boolean isCB175orLaterCache;
-	private static Boolean isCB178orLaterCache;
-	private static Boolean isCB18orLaterCache;
-	private static Boolean isCB19orLaterCache;
 
 	public static boolean isCB175orLater() {
 		if (isCB175orLaterCache == null) {
@@ -84,28 +88,24 @@ public class Utils {
 	}
 
 	public static boolean isUpperVersion(String version, String target) {
-		return versionInt(version.split("\\.")) >= versionInt(target.split("\\."));
+		return getVersionInt(version) >= getVersionInt(target);
 	}
 
-	public static int versionInt(String[] versions) {
-		if (versions.length < 3) {
-			versions = new String[]{versions[0], versions[1], "0"};
+	public static int getVersionInt(String version) {
+		String[] array = StringUtils.split(version, ".");
+		int result = (Integer.parseInt(array[0]) * 100000) + (Integer.parseInt(array[1]) * 1000);
+		if (array.length == 3) {
+			result += Integer.parseInt(array[2]);
 		}
-		if (versions[1].length() == 1) {
-			versions[1] = "0" + versions[1];
-		}
-		if (versions[2].length() == 1) {
-			versions[2] = "0" + versions[2];
-		}
-		versions[2] = "0" + versions[2];
-		return Integer.parseInt(versions[0]) * 100000 + Integer.parseInt(versions[1]) * 1000 + Integer.parseInt(versions[2]);
+		return result;
 	}
 
 	public static String getVersion() {
-		String version = Bukkit.getServer().getVersion();
-		version = version.split("\\(")[1];
-		version = version.substring(4, version.length() - 1);
-		return version;
+		if (serverVersion == null) {
+			String version = Bukkit.getBukkitVersion();
+			serverVersion = version.substring(0, version.indexOf("-"));
+		}
+		return serverVersion;
 	}
 
 	public static String getRandomColor() {
@@ -121,23 +121,26 @@ public class Utils {
 			return;
 		}
 		String message = msg.toString();
-		String colorCode = "";
+		String color = "";
 		if (sender instanceof Player) {
-			for (ChatColor color : ChatColor.values()) {
-				if (message.startsWith(color.toString())) {
-					colorCode = color.toString();
+			for (ChatColor ccolor : ChatColor.values()) {
+				if (message.startsWith(ccolor.toString())) {
+					color = ccolor.toString();
 					break;
 				}
 			}
 		}
-		String prefix = "[" + PluginYaml.getName() + "] ";
+		String prefix = "";
+		if (Files.getConfig().getBoolean("MessagePrefix")) {
+			prefix = "[" + PluginYaml.getName() + "] ";
+		}
 		if (message.contains("\\n")) {
-			String[] newLine = message.split("\\\\n");
+			String[] newLine = StringUtils.split(message, "\n");
 			for(int i = 0, l = newLine.length ; i < l ; i++) {
-				sender.sendMessage(colorCode + prefix + newLine[i]);
+				sender.sendMessage(color + prefix + newLine[i]);
 			}
 		} else {
-			sender.sendMessage(colorCode + prefix + message);
+			sender.sendMessage(color + prefix + message);
 		}
 	}
 
@@ -259,9 +262,10 @@ public class Utils {
 			}
 		}
 		Object value;
+		boolean isCB175orLater = isCB175orLater();
 		for (OfflinePlayer player : getOfflinePlayers()) {
 			if (isUUID) {
-				if (isCB175orLater()) {
+				if (isCB175orLater) {
 					value = player.getUniqueId();
 				} else {
 					value = getUniqueId(player.getName());
@@ -276,87 +280,31 @@ public class Utils {
 		return null;
 	}
 
-	private static final String REGEX_H = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
-	private static final String REGEX_NH = "[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}";
-
 	public static boolean isUUID(String uuid) {
 		return uuid.matches(REGEX_H) || uuid.matches(REGEX_NH);
 	}
 
 	public static UUID fromString(String uuid) {
-		if (uuid.matches(REGEX_NH)) {
-			return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));
+		try {
+			if (uuid.matches(REGEX_NH)) {
+				return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));
+			}
+			return UUID.fromString(uuid);
+		} catch (Exception e) {
+			return null;
 		}
-		return UUID.fromString(uuid);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static ArrayList<Player> getOnlinePlayers() {
-		try {
-			return getOnlinePlayers_Method();
-		} catch (Exception e) {
-			ArrayList<Player> players = new ArrayList<Player>();
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				players.add(player);
-			}
-			return players;
+		Object players = Bukkit.getOnlinePlayers();
+		if (players instanceof Collection) {
+			return new ArrayList<Player>((Collection<? extends Player>) players);
 		}
+		return new ArrayList<Player>(Arrays.asList((Player[]) players));
 	}
 
 	public static ArrayList<OfflinePlayer> getOfflinePlayers() {
-		try {
-			return getOfflinePlayers_Method();
-		} catch (Exception e) {
-			ArrayList<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
-			for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-				players.add(player);
-			}
-			return players;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private static ArrayList<Player> getOnlinePlayers_Method() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		try {
-			if (Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0]).getReturnType() == Collection.class) {
-				Collection<?> temp = ((Collection<?>) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0]).invoke(null, new Object[0]));
-				return new ArrayList<Player>((Collection<? extends Player>) temp);
-			} else {
-				Player[] temp = ((Player[]) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0]).invoke(null, new Object[0]));
-				ArrayList<Player> players = new ArrayList<Player>();
-				for (Player t : temp) {
-					players.add(t);
-				}
-				return players;
-			}
-		} catch (NoSuchMethodException e) {
-			throw e;
-		} catch (InvocationTargetException e) {
-			throw e;
-		} catch (IllegalAccessException e) {
-			throw e;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private static ArrayList<OfflinePlayer> getOfflinePlayers_Method() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		try {
-			if (Bukkit.class.getMethod("getOfflinePlayers", new Class<?>[0]).getReturnType() == Collection.class) {
-				Collection<?> temp = ((Collection<?>) Bukkit.class.getMethod("getOfflinePlayers", new Class<?>[0]).invoke(null, new Object[0]));
-				return new ArrayList<OfflinePlayer>((Collection<? extends OfflinePlayer>) temp);
-			} else {
-				OfflinePlayer[] temp = ((OfflinePlayer[]) Bukkit.class.getMethod("getOfflinePlayers", new Class<?>[0]).invoke(null, new Object[0]));
-				ArrayList<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
-				for (OfflinePlayer t : temp) {
-					players.add(t);
-				}
-				return players;
-			}
-		} catch (NoSuchMethodException e) {
-			throw e;
-		} catch (InvocationTargetException e) {
-			throw e;
-		} catch (IllegalAccessException e) {
-			throw e;
-		}
+		return new ArrayList<OfflinePlayer>(Arrays.asList(Bukkit.getOfflinePlayers()));
 	}
 }

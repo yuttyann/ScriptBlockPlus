@@ -7,16 +7,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
+import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.Yaml;
-import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
+import com.github.yuttyann.scriptblockplus.file.YamlConfig;
 
 public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancellable {
 
 	private Player player;
 	private Block block;
 	private ItemStack item;
-	private Yaml config;
+	private YamlConfig config;
 	private Location location;
 	private boolean cancelled;
 

@@ -4,9 +4,6 @@
 # メッセージはコメントアウトすることで、非表示にすることができます。
 # \n : 改行
 
-notVaultMessage: '&cVaultが導入されていないため、プラグインを無効化します。'
-notWorldEditMessage: '&cWorldEditが導入されていないため、実行に失敗しました。'
-
 # %scripttype% : スクリプトの種類
 scriptCopyMessage: '&a種類"%scripttype%"のスクリプトをコピーしました。'
 scriptPasteMessage: '&a種類"%scripttype%"のスクリプトをペーストしました。'

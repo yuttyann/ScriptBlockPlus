@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
-import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptFileManager {

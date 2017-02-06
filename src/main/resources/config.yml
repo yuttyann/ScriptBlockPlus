@@ -15,6 +15,12 @@ OpenTextFile: true
 # スクリプトが左クリックでも実行できるようにします。
 LeftClick: true
 
+## === メッセージの設定 === ##
+# [true で有効 | false で無効]
+# 初期: true
+# メッセージの左側にプラグイン名を表示します。
+MessagePrefix: true
+
 ## === コンソールログの設定 === ##
 # [true で有効 | false で無効]
 # 初期: true

@@ -2,6 +2,8 @@ package com.github.yuttyann.scriptblockplus.option;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.scheduler.BukkitRunnable;
@@ -33,7 +35,7 @@ public class Cooldown {
 	}
 
 	public static long[] getParams(String fullCoords, UUID uuid) {
-		HashMap<UUID, long[]> params = MapManager.getCooldownParams().get(fullCoords);
+		Map<UUID, long[]> params = MapManager.getCooldownParams().get(fullCoords);
 		if (params != null && params.containsKey(uuid)) {
 			return params.get(uuid);
 		}
@@ -41,21 +43,21 @@ public class Cooldown {
 	}
 
 	public static void put(String fullCoords, UUID uuid) {
-		ArrayList<UUID> uuids = MapManager.getCooldown().get(fullCoords);
-		ArrayList<UUID> uuids2 = uuids != null ? uuids : new ArrayList<UUID>();
+		List<UUID> uuids = MapManager.getCooldown().get(fullCoords);
+		List<UUID> uuids2 = uuids != null ? uuids : new ArrayList<UUID>();
 		uuids2.add(uuid);
 		MapManager.getCooldown().put(fullCoords, uuids2);
 	}
 
 	public static void putParams(String fullCoords, UUID uuid) {
-		HashMap<UUID, long[]> params = MapManager.getCooldownParams().get(fullCoords);
-		HashMap<UUID, long[]> params2 = params != null ? params : new HashMap<UUID, long[]>();
+		Map<UUID, long[]> params = MapManager.getCooldownParams().get(fullCoords);
+		Map<UUID, long[]> params2 = params != null ? params : new HashMap<UUID, long[]>();
 		params2.put(uuid, cooldownParams);
 		MapManager.getCooldownParams().put(fullCoords, params2);
 	}
 
 	public static void remove(String fullCoords, UUID uuid) {
-		ArrayList<UUID> uuids = MapManager.getCooldown().get(fullCoords);
+		List<UUID> uuids = MapManager.getCooldown().get(fullCoords);
 		if (uuids != null) {
 			uuids.remove(uuid);
 			MapManager.getCooldown().put(fullCoords, uuids);
@@ -63,7 +65,7 @@ public class Cooldown {
 	}
 
 	public static void removeParams(String fullCoords, UUID uuid) {
-		HashMap<UUID, long[]> params = MapManager.getCooldownParams().get(fullCoords);
+		Map<UUID, long[]> params = MapManager.getCooldownParams().get(fullCoords);
 		if (params != null && params.containsKey(uuid)) {
 			params.remove(uuid);
 			MapManager.getCooldownParams().put(fullCoords, params);
@@ -71,12 +73,12 @@ public class Cooldown {
 	}
 
 	public static boolean contains(String fullCoords, UUID uuid) {
-		ArrayList<UUID> uuids = MapManager.getCooldown().get(fullCoords);
+		List<UUID> uuids = MapManager.getCooldown().get(fullCoords);
 		return uuids != null && uuids.contains(uuid);
 	}
 
 	public static boolean containsParams(String fullCoords, UUID uuid) {
-		HashMap<UUID, long[]> params = MapManager.getCooldownParams().get(fullCoords);
+		Map<UUID, long[]> params = MapManager.getCooldownParams().get(fullCoords);
 		return params != null && params.containsKey(uuid);
 	}
 

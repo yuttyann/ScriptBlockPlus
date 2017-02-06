@@ -8,13 +8,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
-import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class PlayerMoveListener implements Listener {

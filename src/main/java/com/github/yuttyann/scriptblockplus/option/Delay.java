@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.option;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -22,14 +23,14 @@ public class Delay {
 	}
 
 	public static void put(String fullCoords, UUID uuid) {
-		ArrayList<UUID> uuids = MapManager.getDelay().get(fullCoords);
-		ArrayList<UUID> uuids2 = uuids != null ? uuids : new ArrayList<UUID>();
+		List<UUID> uuids = MapManager.getDelay().get(fullCoords);
+		List<UUID> uuids2 = uuids != null ? uuids : new ArrayList<UUID>();
 		uuids2.add(uuid);
 		MapManager.getDelay().put(fullCoords, uuids2);
 	}
 
 	public static void remove(String fullCoords, UUID uuid) {
-		ArrayList<UUID> uuids = MapManager.getDelay().get(fullCoords);
+		List<UUID> uuids = MapManager.getDelay().get(fullCoords);
 		if (uuids != null) {
 			uuids.remove(uuid);
 			MapManager.getDelay().put(fullCoords, uuids);
@@ -37,7 +38,7 @@ public class Delay {
 	}
 
 	public static boolean contains(String fullCoords, UUID uuid) {
-		ArrayList<UUID> uuids = MapManager.getDelay().get(fullCoords);
+		List<UUID> uuids = MapManager.getDelay().get(fullCoords);
 		return uuids != null && uuids.contains(uuid);
 	}
 }

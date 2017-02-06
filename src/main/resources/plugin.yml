@@ -12,6 +12,7 @@ commands:
     usage: |
            /<command> tool - 実行者にスクリプト編集ツールを配布します。
            /<command> reload - 全てのファイルの再読み込みを行います。
+           /<command> datamigr - ScriptBlockのスクリプトをPlusに移行します。
            /<command> <scripttype> create <options> - ブロックにスクリプトを設定します。
            /<command> <scripttype> add <options> - ブロックにスクリプトを追加します。
            /<command> <scripttype> remove - ブロックのスクリプトを削除します。
@@ -26,6 +27,7 @@ permissions:
     children:
       scriptblockplus.command.tool: true
       scriptblockplus.command.reload: true
+      scriptblockplus.command.datamigr: true
       scriptblockplus.command.interact: true
       scriptblockplus.command.break: true
       scriptblockplus.command.walk: true
@@ -37,6 +39,8 @@ permissions:
   scriptblockplus.command.tool:
     default: op
   scriptblockplus.command.reload:
+    default: op
+  scriptblockplus.command.datamigr:
     default: op
   scriptblockplus.command.interact:
     default: op

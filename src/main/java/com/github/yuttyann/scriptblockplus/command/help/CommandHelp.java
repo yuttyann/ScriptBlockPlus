@@ -8,18 +8,17 @@ import org.bukkit.command.CommandSender;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.PluginYaml;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class CommandHelp {
 
 	public List<CommandData> putCommands(String commandName, CommandData... args) {
-		String[] split = ScriptBlock.instance.getCommand(commandName).getUsage().split("/<command>");
 		List<CommandData> datas = new ArrayList<CommandData>();
-		CommandData temp;
-		String temp2;
+		String[] array = StringUtils.split(ScriptBlock.instance.getCommand(commandName).getUsage(), "/<command>");
 		for (int i = 0, j = 1, l = args.length; i < l; i++, j++) {
-			temp = args[i];
-			if (split.length > j && (temp2 = split[j].trim()).length() > 0) {
-				temp = temp.setMessage(temp2);
+			CommandData temp = args[i];
+			if (array.length > j && array[j].length() > 0) {
+				temp = temp.setMessage(array[j].trim());
 			}
 			datas.add(temp);
 		}
@@ -47,8 +46,8 @@ public class CommandHelp {
 	}
 
 	public static void sendHelpMessage(CommandSender sender, Command command, boolean isName) {
-		String commandName = command.getName().toLowerCase();
 		List<CommandData> temps = new ArrayList<CommandData>();
+		String commandName = command.getName().toLowerCase();
 		for (CommandData data : ScriptBlock.instance.getCommandHelp().get(commandName)) {
 			if (data.hasPermission() && data.hasPermission(sender)) {
 				temps.add(data);

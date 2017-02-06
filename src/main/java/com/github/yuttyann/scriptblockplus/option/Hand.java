@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Hand {
@@ -25,7 +26,7 @@ public class Hand {
 		this.id = id;
 		this.amount = amount;
 		this.damage = damage;
-		this.itemName = itemName != null ? itemName.replace("&", "§") : itemName;
+		this.itemName = itemName != null ? StringUtils.replace(itemName, "&", "§") : itemName;
 		this.material = Material.getMaterial(id);
 	}
 
