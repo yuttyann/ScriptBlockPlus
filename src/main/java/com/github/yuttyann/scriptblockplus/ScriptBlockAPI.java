@@ -10,7 +10,6 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
-import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
 
 /**
  * @author ゆっちゃん
@@ -220,9 +219,9 @@ public class ScriptBlockAPI {
 	}
 
 	/**
-	 * 全ての設定を再読み込みする。
+	 * スクリプトを再読み込みする。
 	 */
 	public void reload() {
-		MapManager.putAllScripts();
+		scriptData.reload();
 	}
 }
