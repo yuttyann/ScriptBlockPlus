@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -8,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.PlayerSelector;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
@@ -22,7 +22,7 @@ import com.github.yuttyann.scriptblockplus.option.Hand;
 import com.github.yuttyann.scriptblockplus.option.ItemCost;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
 import com.github.yuttyann.scriptblockplus.option.Perm;
-import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class OptionManager extends PlayerSelector {
@@ -53,33 +53,28 @@ public class OptionManager extends PlayerSelector {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
-		String script = null;
 		String coords = location.getCoords();
 		ScriptManager manager = new ScriptManager(location, scriptType);
-		List<String> scripts = scriptData.getScripts();
-		for (int i = 0, l = scripts.size(); i < l; i++) {
-			script = scripts.get(i);
+		for (String script : scriptData.getScripts()) {
 			manager.reset();
 			if (!manager.readScript(script)) {
 				Utils.sendPluginMessage(player, Messages.getErrorScriptMessage(scriptType));
-				Utils.sendPluginMessage(Messages.getConsoleErrorScriptExecMessage(player, scriptType,
-					location.getWorld(), coords));
+				Utils.sendPluginMessage(Messages.getConsoleErrorScriptExecMessage(player, scriptType, location.getWorld(), coords));
 				return;
 			}
-			Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType,
-				location.getWorld(), coords));
+			Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
 			if (!manager.hasOption()) {
 				commandExec(player, replace(player, manager.getCommand(), false), manager.isBypass());
 				continue;
 			}
 			Perm perm = manager.getPerm();
 			if (perm != null && !perm.playerPerm(player)) {
-				player.sendMessage(Messages.notPermissionMessage);
+				Utils.sendPluginMessage(Messages.notPermissionMessage);
 				return;
 			}
 			Group group = manager.getGroup();
 			if (group != null && !group.playerGroup(player)) {
-				player.sendMessage(Messages.getErrorGroupMessage(group.getName()));
+				Utils.sendPluginMessage(Messages.getErrorGroupMessage(group.getName()));
 				return;
 			}
 			if (manager.getDelay() == null) {
@@ -170,9 +165,12 @@ public class OptionManager extends PlayerSelector {
 	}
 
 	private String replace(Player player, String text, boolean isColor) {
-		text = text.replace("<player>", player.getName()).replace("<dplayer>", player.getDisplayName());
+		text = StringUtils.replace(text, "<player>", player.getName());
+		text = StringUtils.replace(text, "<dplayer>", player.getDisplayName());
 		if (isColor) {
-			return text.replace("&rc", Utils.getRandomColor()).replace("&", "§");
+			text = StringUtils.replace(text, "&rc", Utils.getRandomColor());
+			text = StringUtils.replace(text, "&", "§");
+			return text;
 		}
 		return text;
 	}
@@ -207,7 +205,7 @@ public class OptionManager extends PlayerSelector {
 			Player[] players = getPlayers(location, pattern);
 			if (players != null) {
 				for (Player p : players) {
-					Bukkit.dispatchCommand(p, command.replace(pattern, player.getName()));
+					Bukkit.dispatchCommand(p, StringUtils.replace(command, pattern, p.getName()));
 				}
 			}
 		} else {
