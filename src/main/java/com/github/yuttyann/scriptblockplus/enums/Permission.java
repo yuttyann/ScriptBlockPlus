@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 public enum Permission {
 	SCRIPTBLOCKPLUS_COMMAND_TOOL("scriptblockplus.command.tool"),
 	SCRIPTBLOCKPLUS_COMMAND_RELOAD("scriptblockplus.command.reload"),
+	SCRIPTBLOCKPLUS_COMMAND_DATAMIGR("scriptblockplus.command.datamigr"),
 	SCRIPTBLOCKPLUS_COMMAND_INTERACT("scriptblockplus.command.interact"),
 	SCRIPTBLOCKPLUS_COMMAND_BREAK("scriptblockplus.command.break"),
 	SCRIPTBLOCKPLUS_COMMAND_WALK("scriptblockplus.command.walk"),
