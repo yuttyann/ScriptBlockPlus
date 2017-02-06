@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.manager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.enums.PermType;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.option.Amount;
@@ -14,7 +15,7 @@ import com.github.yuttyann.scriptblockplus.option.ItemCost;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
 import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
 import com.github.yuttyann.scriptblockplus.option.Perm;
-import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class ScriptManager extends OptionPrefix {
 
@@ -143,6 +144,9 @@ public class ScriptManager extends OptionPrefix {
 		player = null;
 		server = null;
 		say = null;
+		perm = null;
+		permADD = null;
+		permREMOVE = null;
 		group = null;
 		groupADD = null;
 		groupREMOVE = null;
@@ -198,93 +202,93 @@ public class ScriptManager extends OptionPrefix {
 		return isSuccess;
 	}
 
-	private boolean check(String script) throws Exception {
+	private boolean check(String script) {
 		return script.startsWith(COMMAND)
-			|| script.startsWith(BYPASS)
-			|| script.startsWith(PLAYER)
-			|| script.startsWith(SERVER)
-			|| script.startsWith(SAY)
-			|| script.startsWith(PERM)
-			|| script.startsWith(PERM_ADD)
-			|| script.startsWith(PERM_REMOVE)
-			|| script.startsWith(GROUP)
-			|| script.startsWith(GROUP_ADD)
-			|| script.startsWith(GROUP_REMOVE)
-			|| script.startsWith(AMOUNT)
-			|| script.startsWith(DELAY)
-			|| script.startsWith(COOLDOWN)
-			|| script.startsWith(HAND)
-			|| script.startsWith(COST)
-			|| script.startsWith(ITEM);
+				|| script.startsWith(BYPASS)
+				|| script.startsWith(PLAYER)
+				|| script.startsWith(SERVER)
+				|| script.startsWith(SAY)
+				|| script.startsWith(PERM)
+				|| script.startsWith(PERM_ADD)
+				|| script.startsWith(PERM_REMOVE)
+				|| script.startsWith(GROUP)
+				|| script.startsWith(GROUP_ADD)
+				|| script.startsWith(GROUP_REMOVE)
+				|| script.startsWith(AMOUNT)
+				|| script.startsWith(DELAY)
+				|| script.startsWith(COOLDOWN)
+				|| script.startsWith(HAND)
+				|| script.startsWith(COST)
+				|| script.startsWith(ITEM);
 	}
 
 	private void read(String script) throws Exception {
 		for (String prefix : PREFIXS) {
-			switch (startsWith(script, prefix)) {
+			switch (StringUtils.startText(script, prefix, "")) {
 			case COMMAND:
-				command = removeFirst(script, prefix).trim();
+				command = StringUtils.removeStart(script, prefix).trim();
 				if (!command.startsWith("/")) {
 					command = new StringBuilder(command).insert(0, "/").toString();
 				}
 				return;
 			case BYPASS:
 				isBypass = true;
-				command = removeFirst(script, prefix).trim();
+				command = StringUtils.removeStart(script, prefix).trim();
 				if (!command.startsWith("/")) {
 					command = new StringBuilder(command).insert(0, "/").toString();
 				}
 				return;
 			case PLAYER:
-				player = removeFirst(script, prefix).trim();
+				player = StringUtils.removeStart(script, prefix).trim();
 				return;
 			case SERVER:
-				server = removeFirst(script, prefix).trim();
+				server = StringUtils.removeStart(script, prefix).trim();
 				return;
 			case SAY:
-				say = removeFirst(script, prefix).trim();
+				say = StringUtils.removeStart(script, prefix).trim();
 				return;
 			case PERM:
-				perm = getPerm(removeFirst(script, prefix).trim(), PermType.CHECK);
+				perm = getPerm(StringUtils.removeStart(script, prefix).trim(), PermType.CHECK);
 				return;
 			case PERM_ADD:
-				permADD = getPerm(removeFirst(script, prefix).trim(), PermType.ADD);
+				permADD = getPerm(StringUtils.removeStart(script, prefix).trim(), PermType.ADD);
 				return;
 			case PERM_REMOVE:
-				permREMOVE = getPerm(removeFirst(script, prefix).trim(), PermType.REMOVE);
+				permREMOVE = getPerm(StringUtils.removeStart(script, prefix).trim(), PermType.REMOVE);
 				return;
 			case GROUP:
-				group = getGroup(removeFirst(script, prefix).trim(), PermType.CHECK);
+				group = getGroup(StringUtils.removeStart(script, prefix).trim(), PermType.CHECK);
 				return;
 			case GROUP_ADD:
-				groupADD = getGroup(removeFirst(script, prefix).trim(), PermType.ADD);
+				groupADD = getGroup(StringUtils.removeStart(script, prefix).trim(), PermType.ADD);
 				return;
 			case GROUP_REMOVE:
-				groupREMOVE = getGroup(removeFirst(script, prefix).trim(), PermType.REMOVE);
+				groupREMOVE = getGroup(StringUtils.removeStart(script, prefix).trim(), PermType.REMOVE);
 				return;
 			case AMOUNT:
-				amount = new Amount(removeFirst(script, prefix).trim(), location, scriptType);
+				amount = new Amount(StringUtils.removeStart(script, prefix).trim(), location, scriptType);
 				return;
 			case DELAY:
-				delay = new Delay(removeFirst(script, prefix).trim());
+				delay = new Delay(StringUtils.removeStart(script, prefix).trim());
 				return;
 			case COOLDOWN:
-				cooldown = new Cooldown(removeFirst(script, prefix).trim());
+				cooldown = new Cooldown(StringUtils.removeStart(script, prefix).trim());
 				return;
 			case HAND:
-				hand = getHand(removeFirst(script, prefix).trim());
+				hand = getHand(StringUtils.removeStart(script, prefix).trim());
 				return;
 			case COST:
-				moneyCost = new MoneyCost(removeFirst(script, prefix).trim());
+				moneyCost = new MoneyCost(StringUtils.removeStart(script, prefix).trim());
 				return;
 			case ITEM:
-				itemCost = getItem(removeFirst(script, prefix).trim());
+				itemCost = getItem(StringUtils.removeStart(script, prefix).trim());
 				return;
 			}
 		}
 	}
 
 	private Perm getPerm(String permission, PermType permType) {
-		String[] split = permission.split("/");
+		String[] split = StringUtils.split(permission, "/");
 		switch (split.length) {
 		case 1:
 			return new Perm(split[0], permType);
@@ -295,7 +299,7 @@ public class ScriptManager extends OptionPrefix {
 	}
 
 	private Group getGroup(String group, PermType permType) {
-		String[] split = group.split("/");
+		String[] split = StringUtils.split(group, "/");
 		switch (split.length) {
 		case 1:
 			return new Group(split[0], permType);
@@ -305,8 +309,8 @@ public class ScriptManager extends OptionPrefix {
 		return null;
 	}
 
-	private Hand getHand(String itemCost) {
-		String[] split = itemCost.split(":");
+	private Hand getHand(String hand) {
+		String[] split = StringUtils.split(hand, ":");
 		switch (split.length) {
 		case 1:
 			return new Hand(parseInt(split[0]), 1, (short) 0, null);
@@ -321,7 +325,7 @@ public class ScriptManager extends OptionPrefix {
 	}
 
 	private ItemCost getItem(String itemCost) {
-		String[] split = itemCost.split(":");
+		String[] split = StringUtils.split(itemCost, ":");
 		switch (split.length) {
 		case 1:
 			return new ItemCost(parseInt(split[0]), 1, (short) 0, null);
@@ -341,19 +345,5 @@ public class ScriptManager extends OptionPrefix {
 
 	private short parseShort(String source) {
 		return Short.parseShort(source);
-	}
-
-	private String startsWith(String strs, String prefix) {
-		if (strs.startsWith(prefix)) {
-			return strs.substring(0, prefix.length());
-		}
-		return "null";
-	}
-
-	private String removeFirst(String all, String prefix) {
-		if (all.startsWith(prefix)) {
-			return all.substring(prefix.length(), all.length());
-		}
-		return all;
 	}
 }
