@@ -1,6 +1,5 @@
-package com.github.yuttyann.scriptblockplus.listener;
+﻿package com.github.yuttyann.scriptblockplus.listener;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
@@ -22,9 +22,11 @@ import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -39,11 +41,11 @@ public class InteractListener implements Listener {
 			return;
 		}
 		List<Block> blocks = getLastTwoTargetBlocks(player, 5);
-		if (blocks.isEmpty() && blocks.size() > 1) {
+		if (blocks.isEmpty() && blocks.size() <= 1) {
 			return;
 		}
 		Block block = blocks.get(1);
-		for (Entity entity : getNearbyEntities(block.getLocation(), 5.5D, 5.5D, 5.5D)) {
+		for (Entity entity : getNearbyEntities(block.getLocation(), 5.5D)) {
 			if (entity instanceof Player && ((Player) entity) == player) {
 				if (MapManager.removeEvents(player.getUniqueId())) {
 					return;
@@ -102,23 +104,14 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	private List<Entity> getNearbyEntities(Location where, double rangeX, double rangeY, double rangeZ) {
-		List<Entity> found = new ArrayList<Entity>();
-		for (Entity entity : where.getWorld().getEntities()) {
-			if (isInBorder(where, entity.getLocation(), rangeX, rangeY, rangeZ)) {
-				found.add(entity);
-			}
-		}
-		return found;
-	}
-
-	private boolean isInBorder(Location center, Location notCenter, double rangeX, double rangeY, double rangeZ) {
-		double x = center.getX(), y = center.getY(), z = center.getZ();
-		double x1 = notCenter.getX(), y1 = notCenter.getY(), z1 = notCenter.getZ();
-		if (x1 >= (x + rangeX) || y1 >= (y + rangeY) || z1 >= (z + rangeZ)
-				|| x1 <= (x - rangeX) || y1 <= (y - rangeY) || z1 <= (z - rangeZ)) {
-			return false;
-		}
-		return true;
+	//試験的に実装 テレポートさせることで表示されないようにしている。
+	private List<Entity> getNearbyEntities(Location center, double radius) {
+		BlockLocation location = BlockLocation.fromLocation(center);
+		location.setXYZ(location.getBlockX() + 0.5D, 500.0D, location.getBlockZ() + 0.5D);
+		Entity entity = location.getWorld().spawnEntity(location, EntityType.SNOWBALL);
+		location.setY(center.getBlockY() + 0.5D);
+		entity.teleport(location, TeleportCause.UNKNOWN);
+		entity.remove();
+		return entity.getNearbyEntities(radius, radius, radius);
 	}
 }
