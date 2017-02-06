@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
@@ -25,7 +26,7 @@ import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Script;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
-import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockListener implements Listener {
@@ -99,7 +100,7 @@ public class BlockListener implements Listener {
 		}
 		for (ClickType type : ClickType.values()) {
 			if (Click.hasMetadata(player, type)) {
-				String[] split = type.name().split("_");
+				String[] split = StringUtils.split(type.name(), "_");
 				if (clickScript(player, split[1], location, type, ScriptType.valueOf(split[0]))) {
 					event.setCancelled(true);
 					return true;
