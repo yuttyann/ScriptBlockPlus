@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -19,11 +20,11 @@ import org.w3c.dom.NodeList;
 
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.PluginYaml;
-import com.github.yuttyann.scriptblockplus.file.Yaml;
-import com.github.yuttyann.scriptblockplus.manager.FileManager;
+import com.github.yuttyann.scriptblockplus.file.YamlConfig;
+import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class Updater extends FileManager implements Listener {
+public class Updater extends FileUtils implements Listener {
 
 	private String pluginName;
 	private String pluginVersion;
@@ -121,15 +122,16 @@ public class Updater extends FileManager implements Listener {
 	}
 
 	private void updateCheck() {
-		Yaml config = Files.getConfig();
-		if(config.getBoolean("UpdateChecker") && Utils.versionInt(getVersion().split("\\.")) > Utils.versionInt(getPluginVersion().split("\\."))) {
+		YamlConfig config = Files.getConfig();
+		if(config.getBoolean("UpdateChecker")
+				&& Utils.getVersionInt(getVersion()) > Utils.getVersionInt(getPluginVersion())) {
 			isEnable = true;
 			boolean first = false;
-			File data = ScriptBlock.instance.getDataFolder();
+			File data = config.getDataFolder();
 			File changelogFile = new File(data, "更新履歴.txt");
-			ArrayList<String> changelog = new ArrayList<String>();
+			List<String> changelog = new ArrayList<String>();
 			if (changelogFile.exists()) {
-				changelog = getTextList(changelogFile);
+				changelog = getFileText(changelogFile);
 			}
 			sendCheckMessage(Bukkit.getConsoleSender());
 			if(config.getBoolean("AutoDownload")) {
@@ -164,8 +166,8 @@ public class Updater extends FileManager implements Listener {
 		}
 	}
 
-	private void openTextFile(File file, ArrayList<String> changelog, boolean first) {
-		if (!first && changelog.equals(getTextList(getChangeLogURL()))) {
+	private void openTextFile(File file, List<String> changelog, boolean first) {
+		if (!first && changelog.equals(FileUtils.getFileText(getChangeLogURL()))) {
 			return;
 		}
 		Desktop desktop = Desktop.getDesktop();
