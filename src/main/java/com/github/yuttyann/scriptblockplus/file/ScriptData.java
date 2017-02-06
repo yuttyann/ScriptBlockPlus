@@ -6,13 +6,14 @@ import java.util.List;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
-import com.github.yuttyann.scriptblockplus.utils.BlockLocation;
+import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptData {
 
-	private Yaml scriptFile;
+	private YamlConfig scriptFile;
 	private BlockLocation location;
 	private ScriptType scriptType;
 	private String scriptPath;
@@ -25,12 +26,16 @@ public class ScriptData {
 		this.scriptFile = Files.getScriptFile(scriptType);
 		this.location = location;
 		this.scriptType = scriptType;
-		this.scriptPath = location.getWorld().getName() + "." + location.getCoords();
+		this.scriptPath = location != null ? (location.getWorld().getName() + "." + location.getCoords()) : null;
 	}
 
 	public void setBlockLocation(BlockLocation location) {
 		this.location = location;
 		this.scriptPath = location.getWorld().getName() + "." + location.getCoords();
+	}
+
+	public YamlConfig getScriptFile() {
+		return scriptFile;
 	}
 
 	public BlockLocation getBlockLocation() {
@@ -146,5 +151,9 @@ public class ScriptData {
 
 	public void remove() {
 		scriptFile.set(scriptPath, null);
+	}
+
+	public void reload() {
+		MapManager.reloadScripts(scriptFile, scriptType);
 	}
 }
