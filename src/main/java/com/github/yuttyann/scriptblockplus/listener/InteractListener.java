@@ -1,4 +1,4 @@
-﻿package com.github.yuttyann.scriptblockplus.listener;
+package com.github.yuttyann.scriptblockplus.listener;
 
 import java.util.HashSet;
 import java.util.List;
