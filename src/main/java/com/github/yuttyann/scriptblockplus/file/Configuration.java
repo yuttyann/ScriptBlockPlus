@@ -18,6 +18,8 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.reader.UnicodeReader;
 import org.yaml.snakeyaml.representer.Representer;
 
+import com.github.yuttyann.scriptblockplus.utils.FileUtils;
+
 @SuppressWarnings("unchecked")
 public class Configuration {
 
@@ -58,10 +60,13 @@ public class Configuration {
 
 	public boolean save() {
 		FileOutputStream fos = null;
-		file.getParentFile().mkdirs();
+		File parent = file.getParentFile();
+		if (!parent.exists()) {
+			parent.mkdirs();
+		}
 		try {
 			fos = new FileOutputStream(file);
-			yaml.dump(root, new OutputStreamWriter(fos, "UTF-8"));
+			yaml.dump(root, new OutputStreamWriter(fos, FileUtils.UTF8));
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
