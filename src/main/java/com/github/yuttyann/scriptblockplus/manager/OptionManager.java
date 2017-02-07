@@ -39,16 +39,7 @@ public class OptionManager extends PlayerSelector {
 
 	public void scriptExec(Player player) {
 		UUID uuid = player.getUniqueId();
-		String fullcoords = location.getFullCoords();
-		if (Delay.contains(fullcoords, uuid)) {
-			player.sendMessage(Messages.getActiveDelayMessage());
-			return;
-		}
-		if (Cooldown.contains(fullcoords, uuid)) {
-			long[] params = Cooldown.getParams(fullcoords, uuid);
-			player.sendMessage(Messages.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
-			return;
-		}
+		String fullCoords = location.getFullCoords();
 		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
@@ -62,34 +53,46 @@ public class OptionManager extends PlayerSelector {
 				Utils.sendPluginMessage(Messages.getConsoleErrorScriptExecMessage(player, scriptType, location.getWorld(), coords));
 				return;
 			}
-			Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
 			if (!manager.hasOption()) {
 				commandExec(player, replace(player, manager.getCommand(), false), manager.isBypass());
-				continue;
+				Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
+				return;
+			}
+			Delay delay = manager.getDelay();
+			if (delay != null && delay.contains(fullCoords, uuid)) {
+				Utils.sendPluginMessage(player, Messages.getActiveDelayMessage());
+				return;
+			}
+			Cooldown cooldown = manager.getCooldown();
+			if (cooldown != null && cooldown.contains(fullCoords, uuid)) {
+				int[] params = cooldown.get(fullCoords, uuid);
+				Utils.sendPluginMessage(player, Messages.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
+				return;
 			}
 			Perm perm = manager.getPerm();
 			if (perm != null && !perm.playerPerm(player)) {
-				Utils.sendPluginMessage(Messages.notPermissionMessage);
+				Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 				return;
 			}
 			Group group = manager.getGroup();
 			if (group != null && !group.playerGroup(player)) {
-				Utils.sendPluginMessage(Messages.getErrorGroupMessage(group.getName()));
+				Utils.sendPluginMessage(player, Messages.getErrorGroupMessage(group.getName()));
 				return;
 			}
-			if (manager.getDelay() == null) {
-				scriptOptions(player, fullcoords, manager);
+			if (delay == null) {
+				scriptOptions(player, fullCoords, manager);
 				continue;
 			}
 			final Player player2 = player;
 			final UUID uuid2 = uuid;
-			final String fullcoords2 = fullcoords;
+			final Delay delay2 = delay;
+			final String fullcoords2 = fullCoords;
 			final ScriptManager manager2 = manager;
-			Delay.put(fullcoords2, uuid2);
+			delay.put(fullcoords2, uuid2);
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					Delay.remove(fullcoords2, uuid2);
+					delay2.remove(fullcoords2, uuid2);
 					scriptOptions(player2, fullcoords2, manager2);
 				}
 			}.runTaskLater(ScriptBlock.instance, manager.getDelay().getTick());
@@ -139,16 +142,16 @@ public class OptionManager extends PlayerSelector {
 		if (groupREMOVE != null) {
 			groupREMOVE.playerGroup(player);
 		}
-		Cooldown cooldown = manager.getCooldown();
-		if (cooldown != null) {
-			cooldown.run(player.getUniqueId(), fullCoords);
-		}
 		Amount amount = manager.getAmount();
 		if (amount != null) {
 			amount.add();
 			if (amount.check()) {
 				amount.remove();
 			}
+		}
+		Cooldown cooldown = manager.getCooldown();
+		if (cooldown != null) {
+			cooldown.run(player.getUniqueId(), fullCoords);
 		}
 		if (manager.getPlayer() != null && player.isOnline()) {
 			player.sendMessage(replace(player, manager.getPlayer(), true));
@@ -162,6 +165,7 @@ public class OptionManager extends PlayerSelector {
 		if (manager.getCommand() != null && player.isOnline()) {
 			commandExec(player, replace(player, manager.getCommand(), false), manager.isBypass());
 		}
+		Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
 
 	private String replace(Player player, String text, boolean isColor) {
@@ -176,11 +180,7 @@ public class OptionManager extends PlayerSelector {
 	}
 
 	private void commandExec(Player player, String command, boolean isBypass) {
-		if (!isBypass) {
-			dispatchCommand(player, command);
-			return;
-		}
-		if (player.isOp()) {
+		if (!isBypass || player.isOp()) {
 			dispatchCommand(player, command);
 			return;
 		}
