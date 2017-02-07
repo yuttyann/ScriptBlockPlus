@@ -44,7 +44,7 @@ public class Configuration {
 		} catch (IOException e) {
 			root = new HashMap<String, Object>();
 		} catch (Exception e) {
-			e.printStackTrace();
+			root = new HashMap<String, Object>();
 		} finally {
 			try {
 				if (fis != null) {
@@ -64,6 +64,7 @@ public class Configuration {
 			yaml.dump(root, new OutputStreamWriter(fos, "UTF-8"));
 			return true;
 		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			try {
 				if (fos != null) {
