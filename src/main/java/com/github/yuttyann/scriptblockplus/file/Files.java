@@ -16,11 +16,11 @@ public class Files {
 	private YamlConfig walk;
 
 	public Files() {
-		this.config = new YamlConfig(FILE_NAMES[0]);
-		this.messages = new YamlConfig(FILE_NAMES[1]);
-		this.interact = new YamlConfig(FILE_NAMES[2], false);
-		this.break_ = new YamlConfig(FILE_NAMES[3], false);
-		this.walk = new YamlConfig(FILE_NAMES[4], false);
+		this.config = YamlConfig.load(FILE_NAMES[0]);
+		this.messages = YamlConfig.load(FILE_NAMES[1]);
+		this.interact = YamlConfig.load(FILE_NAMES[2], false);
+		this.break_ = YamlConfig.load(FILE_NAMES[3], false);
+		this.walk = YamlConfig.load(FILE_NAMES[4], false);
 	}
 
 	public static YamlConfig getConfig() {
