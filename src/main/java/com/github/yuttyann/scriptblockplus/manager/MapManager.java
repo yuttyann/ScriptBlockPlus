@@ -17,8 +17,7 @@ public class MapManager {
 
 	private static Map<UUID, String> oldLocation;
 	private static Map<String, List<UUID>> delay;
-	private static Map<String, List<UUID>> cooldown;
-	private static Map<String, Map<UUID, long[]>> cooldownParams;
+	private static Map<String, Map<UUID, int[]>> cooldownParams;
 	private static Set<String> interactCoords;
 	private static Set<String> breakCoords;
 	private static Set<String> walkCoords;
@@ -27,8 +26,7 @@ public class MapManager {
 	public MapManager() {
 		oldLocation = new HashMap<UUID, String>();
 		delay = new HashMap<String, List<UUID>>();
-		cooldown = new HashMap<String, List<UUID>>();
-		cooldownParams = new HashMap<String, Map<UUID, long[]>>();
+		cooldownParams = new HashMap<String, Map<UUID, int[]>>();
 		interactEvents = new ArrayList<UUID>();
 		interactCoords = new HashSet<String>();
 		breakCoords = new HashSet<String>();
@@ -44,11 +42,7 @@ public class MapManager {
 		return delay;
 	}
 
-	public static Map<String, List<UUID>> getCooldown() {
-		return cooldown;
-	}
-
-	public static Map<String, Map<UUID, long[]>> getCooldownParams() {
+	public static Map<String, Map<UUID, int[]>> getCooldownParams() {
 		return cooldownParams;
 	}
 
@@ -79,7 +73,7 @@ public class MapManager {
 		case INTERACT:
 			interactCoords.clear();
 			for (String world : scriptFile.getKeys(false)) {
-				for (String coords : scriptFile.getConfigurationSection(world).getKeys(false)) {
+				for (String coords : scriptFile.getKeys(world, false)) {
 					interactCoords.add(world + ", " + coords);
 				}
 			}
@@ -87,7 +81,7 @@ public class MapManager {
 		case BREAK:
 			breakCoords.clear();
 			for (String world : scriptFile.getKeys(false)) {
-				for (String coords : scriptFile.getConfigurationSection(world).getKeys(false)) {
+				for (String coords : scriptFile.getKeys(world, false)) {
 					breakCoords.add(world + ", " + coords);
 				}
 			}
@@ -95,7 +89,7 @@ public class MapManager {
 		case WALK:
 			walkCoords.clear();
 			for (String world : scriptFile.getKeys(false)) {
-				for (String coords : scriptFile.getConfigurationSection(world).getKeys(false)) {
+				for (String coords : scriptFile.getKeys(world, false)) {
 					walkCoords.add(world + ", " + coords);
 				}
 			}
