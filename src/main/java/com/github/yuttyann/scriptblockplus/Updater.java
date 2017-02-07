@@ -24,13 +24,13 @@ import com.github.yuttyann.scriptblockplus.file.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class Updater extends FileUtils implements Listener {
+public class Updater implements Listener {
 
 	private String pluginName;
 	private String pluginVersion;
 	private String version;
 	private String download;
-	private String changelog;
+	private String changeLog;
 	private String[] details;
 	private boolean isEnable;
 	private boolean isError;
@@ -59,7 +59,7 @@ public class Updater extends FileUtils implements Listener {
 	}
 
 	public String getChangeLogURL() {
-		return changelog;
+		return changeLog;
 	}
 
 	public String[] getDetails() {
@@ -79,7 +79,7 @@ public class Updater extends FileUtils implements Listener {
 		isError = false;
 		pluginName = PluginYaml.getName();
 		pluginVersion = PluginYaml.getVersion();
-		Document document = getDocument(getPluginName());
+		Document document = FileUtils.getDocument(getPluginName());
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
 		for(int i = 0, l = rootChildren.getLength(); i < l; i++) {
@@ -102,7 +102,7 @@ public class Updater extends FileUtils implements Listener {
 					download = ((Element) updateNode).getAttribute("url");
 				}
 				if (updateNode.getNodeName().equals("changelog")) {
-					changelog = ((Element) updateNode).getAttribute("url");
+					changeLog = ((Element) updateNode).getAttribute("url");
 				}
 				if (updateNode.getNodeName().equals("details")) {
 					NodeList detailsChildren = updateNode.getChildNodes();
@@ -128,15 +128,15 @@ public class Updater extends FileUtils implements Listener {
 			isEnable = true;
 			boolean first = false;
 			File data = config.getDataFolder();
-			File changelogFile = new File(data, "更新履歴.txt");
-			List<String> changelog = new ArrayList<String>();
-			if (changelogFile.exists()) {
-				changelog = getFileText(changelogFile);
+			File changeLogFile = new File(data, "更新履歴.txt");
+			List<String> changeLog = new ArrayList<String>();
+			if (changeLogFile.exists()) {
+				changeLog = FileUtils.getFileText(changeLogFile);
 			}
 			sendCheckMessage(Bukkit.getConsoleSender());
 			if(config.getBoolean("AutoDownload")) {
 				Utils.sendPluginMessage("§6最新のプラグインをダウンロードしています...");
-				if (!changelogFile.exists()) {
+				if (!changeLogFile.exists()) {
 					first = true;
 				}
 				File downloadFile = null;
@@ -146,8 +146,8 @@ public class Updater extends FileUtils implements Listener {
 						downloadFile.mkdir();
 					}
 					downloadFile = new File(data, "Downloads/" + getPluginName() + " v" + getVersion() + ".jar");
-					fileDownload(getChangeLogURL(), changelogFile);
-					fileDownload(getDownloadURL(), downloadFile);
+					FileUtils.fileDownload(getChangeLogURL(), changeLogFile);
+					FileUtils.fileDownload(getDownloadURL(), downloadFile);
 				} catch (IOException e) {
 					e.printStackTrace();
 					sendErrorMessage();
@@ -161,13 +161,13 @@ public class Updater extends FileUtils implements Listener {
 				}
 			}
 			if (config.getBoolean("OpenTextFile") && !isError()) {
-				openTextFile(changelogFile, changelog, first);
+				openTextFile(changeLogFile, changeLog, first);
 			}
 		}
 	}
 
-	private void openTextFile(File file, List<String> changelog, boolean first) {
-		if (!first && changelog.equals(FileUtils.getFileText(getChangeLogURL()))) {
+	private void openTextFile(File file, List<String> changeLog, boolean first) {
+		if (!first && changeLog.equals(FileUtils.getFileText(getChangeLogURL()))) {
 			return;
 		}
 		Desktop desktop = Desktop.getDesktop();
