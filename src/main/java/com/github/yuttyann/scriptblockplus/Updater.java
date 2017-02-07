@@ -214,9 +214,10 @@ public class Updater implements Listener {
 			Utils.sendPluginMessage(sender, "§bプラグイン名: " + getPluginName());
 			Utils.sendPluginMessage(sender, "§b☆アップデート内容☆");
 			for (String content : getDetails()) {
-				if (content != null) {
-					Utils.sendPluginMessage(sender, "§b- " + content);
+				if (content == null) {
+					continue;
 				}
+				Utils.sendPluginMessage(sender, "§b- " + content);
 			}
 		}
 	}
