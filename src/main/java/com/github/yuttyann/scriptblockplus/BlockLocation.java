@@ -122,6 +122,14 @@ public class BlockLocation extends Location {
 		return super.locToBlock(z);
 	}
 
+	public BlockLocation getAllCenter() {
+		BlockLocation location = clone();
+		location.setX(location.getBlockX() + 0.5D);
+		location.setY(location.getBlockY() + 0.5D);
+		location.setZ(location.getBlockZ() + 0.5D);
+		return location;
+	}
+
 	public BlockLocation getCenter() {
 		BlockLocation location = clone();
 		location.setX(location.getBlockX() + 0.5D);
