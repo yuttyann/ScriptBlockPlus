@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.file;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,36 +25,44 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class YamlConfig extends FileUtils {
+public class YamlConfig {
 
 	private String fileName;
 	private File file;
 	private YamlConfiguration yaml;
 
-	public YamlConfig(String pathName) {
-		this(pathName, true);
+	public static YamlConfig load(String pathName) {
+		return load(pathName, true);
 	}
 
-	public YamlConfig(String pathName, boolean fileCreate) {
-		this(new File(ScriptBlock.instance.getDataFolder(), pathName), fileCreate);
+	public static YamlConfig load(File file) {
+		return load(file, true);
 	}
 
-	public YamlConfig(File file, boolean fileCreate) {
+	public static YamlConfig load(String pathName, boolean fileCreate) {
+		return load(new File(ScriptBlock.instance.getDataFolder(), pathName), fileCreate);
+	}
+
+	public static YamlConfig load(File file, boolean fileCreate) {
+		Validate.notNull(file, "File cannot be null");
+		YamlConfig config = new YamlConfig();
 		if (fileCreate && !file.getPath().startsWith("plugins\\" + PluginYaml.getName())) {
-			fileCreate = false;
+			fileCreate = !fileCreate;
 		}
-		this.file = file;
-		this.fileName = file.getName();
+		config.file = file;
+		config.fileName = file.getName();
 		if (fileCreate && !file.exists()) {
-			copyFileFromJar(ScriptBlock.instance.getJarFile(), file, fileName);
+			FileUtils.copyFileFromJar(ScriptBlock.instance.getJarFile(), file, config.fileName);
 		}
 		try {
-			this.yaml = new YamlConfiguration();
-			this.yaml.load(file);
+			config.yaml = new YamlConfiguration();
+			config.yaml.load(file);
+		} catch (FileNotFoundException e) {
 		} catch (IOException | InvalidConfigurationException e) {
-			fileEncode(file);
-			this.yaml = YamlConfiguration.loadConfiguration(file);
+			FileUtils.fileEncode(file);
+			config.yaml = YamlConfiguration.loadConfiguration(file);
 		}
+		return config;
 	}
 
 	public File getFile() {
@@ -324,6 +333,10 @@ public class YamlConfig extends FileUtils {
 
 	public Set<String> getKeys(boolean deep) {
 		return yaml.getKeys(deep);
+	}
+
+	public Set<String> getKeys(String path, boolean deep) {
+		return yaml.getConfigurationSection(path).getKeys(deep);
 	}
 
 	public Map<String, Object> getValues(boolean deep) {
