@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.option.Perm;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class OptionManager extends PlayerSelector {
+public class OptionManager {
 
 	private ScriptData scriptData;
 	private BlockLocation location;
@@ -196,13 +196,13 @@ public class OptionManager extends PlayerSelector {
 		if (command.startsWith("/")) {
 			command = command.substring(1);
 		}
-		String pattern = getCommandBlockPattern(command);
+		String pattern = PlayerSelector.getCommandBlockPattern(command);
 		Location location = this.location;
 		if (pattern != null) {
 			if (location == null) {
 				location = player.getLocation().clone();
 			}
-			Player[] players = getPlayers(location, pattern);
+			Player[] players = PlayerSelector.getPlayers(location, pattern);
 			if (players != null) {
 				for (Player p : players) {
 					Bukkit.dispatchCommand(p, StringUtils.replace(command, pattern, p.getName()));
