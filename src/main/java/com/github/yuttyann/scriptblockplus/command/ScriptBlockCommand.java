@@ -340,26 +340,24 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			return;
 		}
 		MetadataManager.removeAllMetadata(player);
-		BlockLocation location;
-		ScriptFileManager interact, break_, walk;
 		boolean isInteract = false, isBreak = false, isWalk = false;
 		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
-			location = BlockLocation.fromLocation(block.getLocation());
-			interact = new ScriptFileManager(location, ScriptType.INTERACT);
+			BlockLocation location = BlockLocation.fromLocation(block.getLocation());
+			ScriptFileManager interact = new ScriptFileManager(location, ScriptType.INTERACT);
+			ScriptFileManager break_ = new ScriptFileManager(location, ScriptType.BREAK);
+			ScriptFileManager walk = new ScriptFileManager(location, ScriptType.WALK);
 			if (interact.checkPath()) {
 				interact.scriptWERemove(player);
 				if (!isInteract) {
 					isInteract = true;
 				}
 			}
-			break_ = new ScriptFileManager(location, ScriptType.BREAK);
 			if (break_.checkPath()) {
 				break_.scriptWERemove(player);
 				if (!isBreak) {
 					isBreak = true;
 				}
 			}
-			walk = new ScriptFileManager(location, ScriptType.WALK);
 			if (walk.checkPath()) {
 				walk.scriptWERemove(player);
 				if (!isWalk) {
@@ -449,7 +447,8 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			}
 		}
 		if (args.length == 2) {
-			if (args[0].equalsIgnoreCase("tool") || args[0].equalsIgnoreCase("reload")) {
+			if (args[0].equalsIgnoreCase("tool") || args[0].equalsIgnoreCase("datamigr")
+					|| args[0].equalsIgnoreCase("reload")) {
 				return null;
 			}
 			Permission perm;
