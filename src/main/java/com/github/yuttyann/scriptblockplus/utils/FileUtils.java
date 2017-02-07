@@ -346,6 +346,23 @@ public class FileUtils {
 		}
 	}
 
+	public static Document getDocument(String name) throws ParserConfigurationException, SAXException, IOException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		URLConnection urlconn = new URL(XMLUPLOADER_URL + name + ".xml").openConnection();
+		HttpURLConnection httpconn = (HttpURLConnection) urlconn;
+		httpconn.setAllowUserInteraction(false);
+		httpconn.setInstanceFollowRedirects(true);
+		httpconn.setRequestMethod("GET");
+		httpconn.connect();
+		int httpStatusCode = httpconn.getResponseCode();
+		if (httpStatusCode != HttpURLConnection.HTTP_OK) {
+			httpconn.disconnect();
+			return null;
+		}
+		return builder.parse(httpconn.getInputStream());
+	}
+
 	public static List<String> getFileText(File file) {
 		FileReader fileReader = null;
 		BufferedReader buReader = null;
@@ -493,23 +510,6 @@ public class FileUtils {
 			}
 		}
 		return null;
-	}
-
-	public static Document getDocument(String name) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		URLConnection urlconn = new URL(XMLUPLOADER_URL + name + ".xml").openConnection();
-		HttpURLConnection httpconn = (HttpURLConnection) urlconn;
-		httpconn.setAllowUserInteraction(false);
-		httpconn.setInstanceFollowRedirects(true);
-		httpconn.setRequestMethod("GET");
-		httpconn.connect();
-		int httpStatusCode = httpconn.getResponseCode();
-		if (httpStatusCode != HttpURLConnection.HTTP_OK) {
-			httpconn.disconnect();
-			return null;
-		}
-		return builder.parse(httpconn.getInputStream());
 	}
 
 	private static boolean identify(byte[] bytes, CharsetDecoder decoder) {
