@@ -16,16 +16,16 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 	private Player player;
 	private Block block;
 	private ItemStack item;
-	private YamlConfig config;
 	private Location location;
+	private YamlConfig config;
 	private boolean cancelled;
 
 	public ScriptBlockInteractEvent(Player player, Block block, ItemStack item, BlockLocation location) {
 		this.player = player;
 		this.block = block;
 		this.item = item;
-		this.config = Files.getConfig();
 		this.location = location;
+		this.config = Files.getConfig();
 	}
 
 	public Player getPlayer() {
