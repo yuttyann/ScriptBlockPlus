@@ -41,10 +41,12 @@ public class Group {
 			}
 			return permission.playerAddGroup(player, group);
 		case REMOVE:
-			if (world != null) {
+			if (world != null && permission.playerInGroup(world, player, group)) {
 				return permission.playerRemoveGroup(world, player, group);
+			} else if (world == null && permission.playerInGroup(player, group)) {
+				return permission.playerRemoveGroup(player, group);
 			}
-			return permission.playerRemoveGroup(player, group);
+			break;
 		}
 		return false;
 	}

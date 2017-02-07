@@ -22,14 +22,14 @@ public class Delay {
 		return tick;
 	}
 
-	public static void put(String fullCoords, UUID uuid) {
-		List<UUID> uuids = MapManager.getDelay().get(fullCoords);
-		List<UUID> uuids2 = uuids != null ? uuids : new ArrayList<UUID>();
-		uuids2.add(uuid);
-		MapManager.getDelay().put(fullCoords, uuids2);
+	public void put(String fullCoords, UUID uuid) {
+		List<UUID> temp = MapManager.getDelay().get(fullCoords);
+		List<UUID> uuids = temp != null ? temp : new ArrayList<UUID>();
+		uuids.add(uuid);
+		MapManager.getDelay().put(fullCoords, uuids);
 	}
 
-	public static void remove(String fullCoords, UUID uuid) {
+	public void remove(String fullCoords, UUID uuid) {
 		List<UUID> uuids = MapManager.getDelay().get(fullCoords);
 		if (uuids != null) {
 			uuids.remove(uuid);
@@ -37,7 +37,7 @@ public class Delay {
 		}
 	}
 
-	public static boolean contains(String fullCoords, UUID uuid) {
+	public boolean contains(String fullCoords, UUID uuid) {
 		List<UUID> uuids = MapManager.getDelay().get(fullCoords);
 		return uuids != null && uuids.contains(uuid);
 	}

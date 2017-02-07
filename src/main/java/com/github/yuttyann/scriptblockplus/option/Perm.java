@@ -41,10 +41,11 @@ public class Perm {
 			}
 			return permission.playerAdd(player, perm);
 		case REMOVE:
-			if (world != null) {
+			if (world != null && permission.playerHas(world, player, perm)) {
 				return permission.playerRemove(world, player, perm);
+			} else if (world == null && permission.playerHas(player, perm)) {
+				return permission.playerRemove(player, perm);
 			}
-			return permission.playerRemove(player, perm);
 		}
 		return false;
 	}
