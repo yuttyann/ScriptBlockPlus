@@ -156,10 +156,11 @@ public class Messages {
 		if (instance.activeCooldownMessage == null) {
 			return null;
 		}
-		instance.activeCooldownMessage = StringUtils.replace(instance.activeCooldownMessage, "%hour%", hour + "");
-		instance.activeCooldownMessage = StringUtils.replace(instance.activeCooldownMessage, "%minute%", minute + "");
-		instance.activeCooldownMessage = StringUtils.replace(instance.activeCooldownMessage, "%second%", second + "");
-		return replaceColorCode(instance.activeCooldownMessage);
+		String activeCooldownMessage = instance.activeCooldownMessage;
+		activeCooldownMessage = StringUtils.replace(activeCooldownMessage, "%hour%", hour + "");
+		activeCooldownMessage = StringUtils.replace(activeCooldownMessage, "%minute%", minute + "");
+		activeCooldownMessage = StringUtils.replace(activeCooldownMessage, "%second%", second + "");
+		return replaceColorCode(activeCooldownMessage);
 	}
 
 	public static String getSuccEditDataMessage(ClickType clickType) {
@@ -209,99 +210,108 @@ public class Messages {
 		if (instance.errorHandMessage == null) {
 			return null;
 		}
-		instance.errorHandMessage = StringUtils.replace(instance.errorHandMessage, "%material%", material.toString());
-		instance.errorHandMessage = StringUtils.replace(instance.errorHandMessage, "%id%", id + "");
-		instance.errorHandMessage = StringUtils.replace(instance.errorHandMessage, "%amount%", amount + "");
-		instance.errorHandMessage = StringUtils.replace(instance.errorHandMessage, "%damage%", damage + "");
-		instance.errorHandMessage = StringUtils.replace(instance.errorHandMessage, "%itemname%", itemName);
-		return replaceColorCode(instance.errorHandMessage);
+		String errorHandMessage = instance.errorHandMessage;
+		errorHandMessage = StringUtils.replace(errorHandMessage, "%material%", material.toString());
+		errorHandMessage = StringUtils.replace(errorHandMessage, "%id%", id + "");
+		errorHandMessage = StringUtils.replace(errorHandMessage, "%amount%", amount + "");
+		errorHandMessage = StringUtils.replace(errorHandMessage, "%damage%", damage + "");
+		errorHandMessage = StringUtils.replace(errorHandMessage, "%itemname%", itemName);
+		return replaceColorCode(errorHandMessage);
 	}
 
 	public static String getErrorCostMessage(double cost, double result) {
 		if (instance.errorCostMessage == null) {
 			return null;
 		}
-		instance.errorCostMessage = StringUtils.replace(instance.errorCostMessage, "%cost%", cost + "");
-		instance.errorCostMessage = StringUtils.replace(instance.errorCostMessage, "%result%", result + "");
-		return replaceColorCode(instance.errorCostMessage);
+		String errorCostMessage = instance.errorCostMessage;
+		errorCostMessage = StringUtils.replace(errorCostMessage, "%cost%", cost + "");
+		errorCostMessage = StringUtils.replace(errorCostMessage, "%result%", result + "");
+		return replaceColorCode(errorCostMessage);
 	}
 
 	public static String getErrorItemMessage(Material material, int id, int amount, short damage, String itemName) {
 		if (instance.errorItemMessage == null) {
 			return null;
 		}
-		instance.errorItemMessage = StringUtils.replace(instance.errorItemMessage, "%material%", material.toString());
-		instance.errorItemMessage = StringUtils.replace(instance.errorItemMessage, "%id%", id + "");
-		instance.errorItemMessage = StringUtils.replace(instance.errorItemMessage, "%amount%", amount + "");
-		instance.errorItemMessage = StringUtils.replace(instance.errorItemMessage, "%damage%", damage + "");
-		instance.errorItemMessage = StringUtils.replace(instance.errorItemMessage, "%itemname%", itemName);
-		return replaceColorCode(instance.errorItemMessage);
+		String errorItemMessage = instance.errorItemMessage;
+		errorItemMessage = StringUtils.replace(errorItemMessage, "%material%", material.toString());
+		errorItemMessage = StringUtils.replace(errorItemMessage, "%id%", id + "");
+		errorItemMessage = StringUtils.replace(errorItemMessage, "%amount%", amount + "");
+		errorItemMessage = StringUtils.replace(errorItemMessage, "%damage%", damage + "");
+		errorItemMessage = StringUtils.replace(errorItemMessage, "%itemname%", itemName);
+		return replaceColorCode(errorItemMessage);
 	}
 
 	public static String getConsoleScriptCopyMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleScriptCopyMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		instance.consoleScriptCopyMessage = StringUtils.replace(instance.consoleScriptCopyMessage, "%player%", player.getName());
-		instance.consoleScriptCopyMessage = StringUtils.replace(instance.consoleScriptCopyMessage, "%scripttype%", scriptType.toString());
-		instance.consoleScriptCopyMessage = StringUtils.replace(instance.consoleScriptCopyMessage, "%world%", world.getName());
-		instance.consoleScriptCopyMessage = StringUtils.replace(instance.consoleScriptCopyMessage, "%coords%", coords);
-		return replaceColorCode(instance.consoleScriptCopyMessage);
+		String consoleScriptCopyMessage = instance.consoleScriptCopyMessage;
+		consoleScriptCopyMessage = StringUtils.replace(consoleScriptCopyMessage, "%player%", player.getName());
+		consoleScriptCopyMessage = StringUtils.replace(consoleScriptCopyMessage, "%scripttype%", scriptType.toString());
+		consoleScriptCopyMessage = StringUtils.replace(consoleScriptCopyMessage, "%world%", world.getName());
+		consoleScriptCopyMessage = StringUtils.replace(consoleScriptCopyMessage, "%coords%", coords);
+		return replaceColorCode(consoleScriptCopyMessage);
 	}
 
 	public static String getConsoleScriptPasteMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleScriptPasteMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		instance.consoleScriptPasteMessage = StringUtils.replace(instance.consoleScriptPasteMessage, "%player%", player.getName());
-		instance.consoleScriptPasteMessage = StringUtils.replace(instance.consoleScriptPasteMessage, "%scripttype%", scriptType.toString());
-		instance.consoleScriptPasteMessage = StringUtils.replace(instance.consoleScriptPasteMessage, "%world%", world.getName());
-		instance.consoleScriptPasteMessage = StringUtils.replace(instance.consoleScriptPasteMessage, "%coords%", coords);
-		return replaceColorCode(instance.consoleScriptPasteMessage);
+		String consoleScriptPasteMessage = instance.consoleScriptPasteMessage;
+		consoleScriptPasteMessage = StringUtils.replace(consoleScriptPasteMessage, "%player%", player.getName());
+		consoleScriptPasteMessage = StringUtils.replace(consoleScriptPasteMessage, "%scripttype%", scriptType.toString());
+		consoleScriptPasteMessage = StringUtils.replace(consoleScriptPasteMessage, "%world%", world.getName());
+		consoleScriptPasteMessage = StringUtils.replace(consoleScriptPasteMessage, "%coords%", coords);
+		return replaceColorCode(consoleScriptPasteMessage);
 	}
 
 	public static String getConsoleScriptCreateMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleScriptCreateMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		instance.consoleScriptCreateMessage = StringUtils.replace(instance.consoleScriptCreateMessage, "%player%", player.getName());
-		instance.consoleScriptCreateMessage = StringUtils.replace(instance.consoleScriptCreateMessage, "%scripttype%", scriptType.toString());
-		instance.consoleScriptCreateMessage = StringUtils.replace(instance.consoleScriptCreateMessage, "%world%", world.getName());
-		instance.consoleScriptCreateMessage = StringUtils.replace(instance.consoleScriptCreateMessage, "%coords%", coords);
-		return replaceColorCode(instance.consoleScriptCreateMessage);
+		String consoleScriptCreateMessage = instance.consoleScriptCreateMessage;
+		consoleScriptCreateMessage = StringUtils.replace(consoleScriptCreateMessage, "%player%", player.getName());
+		consoleScriptCreateMessage = StringUtils.replace(consoleScriptCreateMessage, "%scripttype%", scriptType.toString());
+		consoleScriptCreateMessage = StringUtils.replace(consoleScriptCreateMessage, "%world%", world.getName());
+		consoleScriptCreateMessage = StringUtils.replace(consoleScriptCreateMessage, "%coords%", coords);
+		return replaceColorCode(consoleScriptCreateMessage);
 	}
 
 	public static String getConsoleScriptAddMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleScriptAddMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		instance.consoleScriptAddMessage = StringUtils.replace(instance.consoleScriptAddMessage, "%player%", player.getName());
-		instance.consoleScriptAddMessage = StringUtils.replace(instance.consoleScriptAddMessage, "%scripttype%", scriptType.toString());
-		instance.consoleScriptAddMessage = StringUtils.replace(instance.consoleScriptAddMessage, "%world%", world.getName());
-		instance.consoleScriptAddMessage = StringUtils.replace(instance.consoleScriptAddMessage, "%coords%", coords);
-		return replaceColorCode(instance.consoleScriptAddMessage);
+		String consoleScriptAddMessage = instance.consoleScriptAddMessage;
+		consoleScriptAddMessage = StringUtils.replace(consoleScriptAddMessage, "%player%", player.getName());
+		consoleScriptAddMessage = StringUtils.replace(consoleScriptAddMessage, "%scripttype%", scriptType.toString());
+		consoleScriptAddMessage = StringUtils.replace(consoleScriptAddMessage, "%world%", world.getName());
+		consoleScriptAddMessage = StringUtils.replace(consoleScriptAddMessage, "%coords%", coords);
+		return replaceColorCode(consoleScriptAddMessage);
 	}
 
 	public static String getConsoleScriptRemoveMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleScriptRemoveMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		instance.consoleScriptRemoveMessage = StringUtils.replace(instance.consoleScriptRemoveMessage, "%player%", player.getName());
-		instance.consoleScriptRemoveMessage = StringUtils.replace(instance.consoleScriptRemoveMessage, "%scripttype%", scriptType.toString());
-		instance.consoleScriptRemoveMessage = StringUtils.replace(instance.consoleScriptRemoveMessage, "%world%", world.getName());
-		instance.consoleScriptRemoveMessage = StringUtils.replace(instance.consoleScriptRemoveMessage, "%coords%", coords);
-		return replaceColorCode(instance.consoleScriptRemoveMessage);
+		String consoleScriptRemoveMessage = instance.consoleScriptRemoveMessage;
+		consoleScriptRemoveMessage = StringUtils.replace(consoleScriptRemoveMessage, "%player%", player.getName());
+		consoleScriptRemoveMessage = StringUtils.replace(consoleScriptRemoveMessage, "%scripttype%", scriptType.toString());
+		consoleScriptRemoveMessage = StringUtils.replace(consoleScriptRemoveMessage, "%world%", world.getName());
+		consoleScriptRemoveMessage = StringUtils.replace(consoleScriptRemoveMessage, "%coords%", coords);
+		return replaceColorCode(consoleScriptRemoveMessage);
 	}
 
 	public static String getConsoleScriptViewMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleScriptViewMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		instance.consoleScriptViewMessage = StringUtils.replace(instance.consoleScriptViewMessage, "%player%", player.getName());
-		instance.consoleScriptViewMessage = StringUtils.replace(instance.consoleScriptViewMessage, "%scripttype%", scriptType.toString());
-		instance.consoleScriptViewMessage = StringUtils.replace(instance.consoleScriptViewMessage, "%world%", world.getName());
-		instance.consoleScriptViewMessage = StringUtils.replace(instance.consoleScriptViewMessage, "%coords%", coords);
-		return replaceColorCode(instance.consoleScriptViewMessage);
+		String consoleScriptViewMessage = instance.consoleScriptViewMessage;
+		consoleScriptViewMessage = StringUtils.replace(consoleScriptViewMessage, "%player%", player.getName());
+		consoleScriptViewMessage = StringUtils.replace(consoleScriptViewMessage, "%scripttype%", scriptType.toString());
+		consoleScriptViewMessage = StringUtils.replace(consoleScriptViewMessage, "%world%", world.getName());
+		consoleScriptViewMessage = StringUtils.replace(consoleScriptViewMessage, "%coords%", coords);
+		return replaceColorCode(consoleScriptViewMessage);
 	}
 
 	public static String getConsoleWorldEditPasteMessage(ScriptType scriptType, Location min, Location max) {
@@ -311,11 +321,12 @@ public class Messages {
 		String world = min.getWorld().getName();
 		String minCoords = BlockLocation.fromLocation(min).getCoords();
 		String maxCoords = BlockLocation.fromLocation(max).getCoords();
-		instance.consoleWorldEditPasteMessage = StringUtils.replace(instance.consoleWorldEditPasteMessage, "%scripttype%", scriptType.toString());
-		instance.consoleWorldEditPasteMessage = StringUtils.replace(instance.consoleWorldEditPasteMessage, "%world%", world);
-		instance.consoleWorldEditPasteMessage = StringUtils.replace(instance.consoleWorldEditPasteMessage, "%mincoords%", minCoords);
-		instance.consoleWorldEditPasteMessage = StringUtils.replace(instance.consoleWorldEditPasteMessage, "%maxcoords%", maxCoords);
-		return replaceColorCode(instance.consoleWorldEditPasteMessage);
+		String consoleWorldEditPasteMessage = instance.consoleWorldEditPasteMessage;
+		consoleWorldEditPasteMessage = StringUtils.replace(consoleWorldEditPasteMessage, "%scripttype%", scriptType.toString());
+		consoleWorldEditPasteMessage = StringUtils.replace(consoleWorldEditPasteMessage, "%world%", world);
+		consoleWorldEditPasteMessage = StringUtils.replace(consoleWorldEditPasteMessage, "%mincoords%", minCoords);
+		consoleWorldEditPasteMessage = StringUtils.replace(consoleWorldEditPasteMessage, "%maxcoords%", maxCoords);
+		return replaceColorCode(consoleWorldEditPasteMessage);
 	}
 
 	public static String getConsoleWorldEditRemoveMessage(String scriptType, Location min, Location max) {
@@ -325,33 +336,36 @@ public class Messages {
 		String world = min.getWorld().getName();
 		String minCoords = BlockLocation.fromLocation(min).getCoords();
 		String maxCoords = BlockLocation.fromLocation(max).getCoords();
-		instance.consoleWorldEditRemoveMessage = StringUtils.replace(instance.consoleWorldEditRemoveMessage, "%scripttype%", scriptType.toString());
-		instance.consoleWorldEditRemoveMessage = StringUtils.replace(instance.consoleWorldEditRemoveMessage, "%world%", world);
-		instance.consoleWorldEditRemoveMessage = StringUtils.replace(instance.consoleWorldEditRemoveMessage, "%mincoords%", minCoords);
-		instance.consoleWorldEditRemoveMessage = StringUtils.replace(instance.consoleWorldEditRemoveMessage, "%maxcoords%", maxCoords);
-		return replaceColorCode(instance.consoleWorldEditRemoveMessage);
+		String consoleWorldEditRemoveMessage = instance.consoleWorldEditRemoveMessage;
+		consoleWorldEditRemoveMessage = StringUtils.replace(consoleWorldEditRemoveMessage, "%scripttype%", scriptType.toString());
+		consoleWorldEditRemoveMessage = StringUtils.replace(consoleWorldEditRemoveMessage, "%world%", world);
+		consoleWorldEditRemoveMessage = StringUtils.replace(consoleWorldEditRemoveMessage, "%mincoords%", minCoords);
+		consoleWorldEditRemoveMessage = StringUtils.replace(consoleWorldEditRemoveMessage, "%maxcoords%", maxCoords);
+		return replaceColorCode(consoleWorldEditRemoveMessage);
 	}
 
 	public static String getConsoleSuccScriptExecMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleSuccScriptExecMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		instance.consoleSuccScriptExecMessage = StringUtils.replace(instance.consoleSuccScriptExecMessage, "%player%", player.getName());
-		instance.consoleSuccScriptExecMessage = StringUtils.replace(instance.consoleSuccScriptExecMessage, "%scripttype%", scriptType.toString());
-		instance.consoleSuccScriptExecMessage = StringUtils.replace(instance.consoleSuccScriptExecMessage, "%world%", world.getName());
-		instance.consoleSuccScriptExecMessage = StringUtils.replace(instance.consoleSuccScriptExecMessage, "%coords%", coords);
-		return replaceColorCode(instance.consoleSuccScriptExecMessage);
+		String consoleSuccScriptExecMessage = instance.consoleSuccScriptExecMessage;
+		consoleSuccScriptExecMessage = StringUtils.replace(consoleSuccScriptExecMessage, "%player%", player.getName());
+		consoleSuccScriptExecMessage = StringUtils.replace(consoleSuccScriptExecMessage, "%scripttype%", scriptType.toString());
+		consoleSuccScriptExecMessage = StringUtils.replace(consoleSuccScriptExecMessage, "%world%", world.getName());
+		consoleSuccScriptExecMessage = StringUtils.replace(consoleSuccScriptExecMessage, "%coords%", coords);
+		return replaceColorCode(consoleSuccScriptExecMessage);
 	}
 
 	public static String getConsoleErrorScriptExecMessage(Player player, ScriptType scriptType, World world, String coords) {
 		if (instance.consoleErrorScriptExecMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
-		instance.consoleErrorScriptExecMessage = StringUtils.replace(instance.consoleErrorScriptExecMessage, "%player%", player.getName());
-		instance.consoleErrorScriptExecMessage = StringUtils.replace(instance.consoleErrorScriptExecMessage, "%scripttype%", scriptType.toString());
-		instance.consoleErrorScriptExecMessage = StringUtils.replace(instance.consoleErrorScriptExecMessage, "%world%", world.getName());
-		instance.consoleErrorScriptExecMessage = StringUtils.replace(instance.consoleErrorScriptExecMessage, "%coords%", coords);
-		return replaceColorCode(instance.consoleErrorScriptExecMessage);
+		String consoleErrorScriptExecMessage = instance.consoleErrorScriptExecMessage;
+		consoleErrorScriptExecMessage = StringUtils.replace(consoleErrorScriptExecMessage, "%player%", player.getName());
+		consoleErrorScriptExecMessage = StringUtils.replace(consoleErrorScriptExecMessage, "%scripttype%", scriptType.toString());
+		consoleErrorScriptExecMessage = StringUtils.replace(consoleErrorScriptExecMessage, "%world%", world.getName());
+		consoleErrorScriptExecMessage = StringUtils.replace(consoleErrorScriptExecMessage, "%coords%", coords);
+		return replaceColorCode(consoleErrorScriptExecMessage);
 	}
 
 	private static String replaceColorCode(String text) {
