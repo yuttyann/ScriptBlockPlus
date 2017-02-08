@@ -25,10 +25,6 @@ public class Cooldown {
 		return second;
 	}
 
-	public long getTick() {
-		return second * 20;
-	}
-
 	public int[] get(String fullCoords, UUID uuid) {
 		Map<UUID, int[]> params = MapManager.getCooldownParams().get(fullCoords);
 		if (params != null && params.containsKey(uuid)) {
@@ -60,16 +56,13 @@ public class Cooldown {
 	public void run(final UUID uuid, final String fullCoords) {
 		put(fullCoords, uuid, calcParams(get(fullCoords, uuid), second));
 		new BukkitRunnable() {
-			@Override
-			public void run() {
-				remove(fullCoords, uuid);
-			}
-		}.runTaskLater(ScriptBlock.instance, getTick());
-		new BukkitRunnable() {
 			int second = getSecond();
 			int[] params = new int[3];
 			@Override
 			public void run() {
+				if (second == 0) {
+					remove(fullCoords, uuid);
+				}
 				if (!contains(fullCoords, uuid)) {
 					cancel();
 				} else {
