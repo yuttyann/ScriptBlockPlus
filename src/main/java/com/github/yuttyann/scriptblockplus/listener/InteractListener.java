@@ -13,7 +13,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -41,7 +40,7 @@ public class InteractListener implements Listener {
 			return;
 		}
 		List<Block> blocks = getLastTwoTargetBlocks(player, 5);
-		if (blocks.isEmpty() && blocks.size() <= 1) {
+		if (blocks.isEmpty() && blocks.size() < 2) {
 			return;
 		}
 		Block block = blocks.get(1);
@@ -63,11 +62,8 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.useInteractedBlock() == Result.DENY) {
-			return;
-		}
 		Player player = event.getPlayer();
 		if (player.getGameMode() == GameMode.ADVENTURE) {
 			final UUID uuid = player.getUniqueId();
