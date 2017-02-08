@@ -45,7 +45,7 @@ public class InteractListener implements Listener {
 			return;
 		}
 		Block block = blocks.get(1);
-		for (Entity entity : getNearbyEntities(block.getLocation(), 5.5D)) {
+		for (Entity entity : getNearbyEntities(block.getLocation(), 4.3D)) {
 			if (entity instanceof Player && ((Player) entity) == player) {
 				if (MapManager.removeEvents(player.getUniqueId())) {
 					return;
@@ -105,6 +105,7 @@ public class InteractListener implements Listener {
 	}
 
 	//試験的に実装 テレポートさせることで表示されないようにしている。
+	//座標は自動的にブロックの中心になる。
 	private List<Entity> getNearbyEntities(Location center, double radius) {
 		BlockLocation location = BlockLocation.fromLocation(center);
 		location.setXYZ(location.getBlockX() + 0.5D, 500.0D, location.getBlockZ() + 0.5D);
