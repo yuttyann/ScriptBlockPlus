@@ -130,9 +130,10 @@ public class StringUtils {
 	public static int counter(String text, char search) {
 		int count = 0;
 		for(char i : text.toCharArray()) {
-			if(i == search) {
-				count++;
+			if(i != search) {
+				continue;
 			}
+			count++;
 		}
 		return count;
 	}
