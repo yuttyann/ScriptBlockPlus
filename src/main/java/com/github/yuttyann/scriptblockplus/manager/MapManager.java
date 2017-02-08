@@ -60,6 +60,8 @@ public class MapManager {
 
 	public static void setupScripts() {
 		try {
+			delay.clear();
+			cooldownParams.clear();
 			reloadScripts(Files.getInteract(), ScriptType.INTERACT);
 			reloadScripts(Files.getBreak(), ScriptType.BREAK);
 			reloadScripts(Files.getWalk(), ScriptType.WALK);
@@ -99,6 +101,7 @@ public class MapManager {
 
 	public static void addCoords(BlockLocation location, ScriptType scriptType) {
 		String fullCoords = location.getFullCoords();
+		removeTimes(fullCoords);
 		switch (scriptType) {
 		case INTERACT:
 			if (!interactCoords.contains(fullCoords)) {
@@ -120,6 +123,7 @@ public class MapManager {
 
 	public static void removeCoords(BlockLocation location, ScriptType scriptType) {
 		String fullCoords = location.getFullCoords();
+		removeTimes(fullCoords);
 		switch (scriptType) {
 		case INTERACT:
 			if (interactCoords.contains(fullCoords)) {
@@ -136,6 +140,15 @@ public class MapManager {
 				walkCoords.remove(fullCoords);
 			}
 			break;
+		}
+	}
+
+	public static void removeTimes(String fullCoords) {
+		if (delay.containsKey(fullCoords)) {
+			delay.remove(fullCoords);
+		}
+		if (cooldownParams.containsKey(fullCoords)) {
+			cooldownParams.remove(fullCoords);
 		}
 	}
 
