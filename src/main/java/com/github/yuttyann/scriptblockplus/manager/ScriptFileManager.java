@@ -58,6 +58,7 @@ public class ScriptFileManager {
 		scriptData.setLastEdit();
 		scriptData.addScripts(script);
 		scriptData.save();
+		MapManager.removeTimes(location.getFullCoords());
 		Utils.sendPluginMessage(player, Messages.getScriptAddMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptAddMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
