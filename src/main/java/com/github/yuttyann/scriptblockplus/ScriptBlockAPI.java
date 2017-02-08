@@ -173,6 +173,7 @@ public class ScriptBlockAPI {
 	 */
 	public void setScripts(List<String> scripts) {
 		scriptData.setScripts(scripts);
+		MapManager.addCoords(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**
@@ -181,6 +182,7 @@ public class ScriptBlockAPI {
 	 */
 	public void setCreateScripts(String script) {
 		scriptData.setCreateScripts(script);
+		MapManager.addCoords(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**
@@ -189,6 +191,7 @@ public class ScriptBlockAPI {
 	 */
 	public void addScripts(String script) {
 		scriptData.addScripts(script);
+		MapManager.removeTimes(scriptData.getBlockLocation().getFullCoords());
 	}
 
 	/**
@@ -199,6 +202,8 @@ public class ScriptBlockAPI {
 		scriptData.removeScripts(script);
 		if (scriptData.getScripts().isEmpty()) {
 			MapManager.removeCoords(scriptData.getBlockLocation(), getScriptType());
+		} else {
+			MapManager.removeTimes(scriptData.getBlockLocation().getFullCoords());
 		}
 	}
 
