@@ -56,7 +56,7 @@ public class OptionManager {
 			if (!manager.hasOption()) {
 				commandExec(player, replace(player, manager.getCommand(), false), manager.isBypass());
 				Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
-				return;
+				continue;
 			}
 			Delay delay = manager.getDelay();
 			if (delay != null && delay.contains(fullCoords, uuid)) {
