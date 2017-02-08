@@ -40,7 +40,7 @@ public class InteractListener implements Listener {
 			return;
 		}
 		List<Block> blocks = getLastTwoTargetBlocks(player, 5);
-		if (blocks.isEmpty() && blocks.size() < 2) {
+		if (blocks.size() < 2) {
 			return;
 		}
 		Block block = blocks.get(1);
