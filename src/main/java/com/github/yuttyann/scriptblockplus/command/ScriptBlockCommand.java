@@ -260,8 +260,10 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			ScriptData scriptData = new ScriptData((BlockLocation) null, ScriptType.INTERACT);
 			for (String world : config.getKeys()) {
 				for (String coords : config.getKeys(world)) {
-					List<String> scripts = config.getStringList(world + "." + StringUtils.replace(coords, " ", ""), null);
-					scripts.remove(0);
+					List<String> scripts = config.getStringList(world + "." + coords, null);
+					if (scripts.get(0).startsWith("Author:")) {
+						scripts.remove(0);
+					}
 					String[] array = StringUtils.split(coords, ",");
 					scriptData.setBlockLocation(new BlockLocation(
 						Utils.getWorld(world),
@@ -282,8 +284,10 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			ScriptData scriptData = new ScriptData((BlockLocation) null, ScriptType.WALK);
 			for (String world : config.getKeys()) {
 				for (String coords : config.getKeys(world)) {
-					List<String> scripts = config.getStringList(world + "." + StringUtils.replace(coords, " ", ""), null);
-					scripts.remove(0);
+					List<String> scripts = config.getStringList(world + "." + coords, null);
+					if (scripts.get(0).startsWith("Author:")) {
+						scripts.remove(0);
+					}
 					String[] array = StringUtils.split(coords, ",");
 					scriptData.setBlockLocation(new BlockLocation(
 						Utils.getWorld(world),
