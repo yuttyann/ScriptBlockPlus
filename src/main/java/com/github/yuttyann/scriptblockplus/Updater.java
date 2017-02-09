@@ -106,7 +106,7 @@ public class Updater implements Listener {
 				}
 				if (updateNode.getNodeName().equals("details")) {
 					NodeList detailsChildren = updateNode.getChildNodes();
-					for(int k = 0, n = 0, l3 = detailsChildren.getLength(); k < l3; k++, n++) {
+					for(int k = 0, n = 0, l3 = detailsChildren.getLength(); k < l3; k++) {
 						Node detailsNode = detailsChildren.item(k);
 						if (detailsNode.getNodeType() != Node.ELEMENT_NODE) {
 							continue;
@@ -115,6 +115,7 @@ public class Updater implements Listener {
 							details = new String[l3];
 						}
 						details[n] = ((Element) detailsNode).getAttribute("info");
+						n++;
 					}
 				}
 			}
