@@ -3,10 +3,8 @@ package com.github.yuttyann.scriptblockplus;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
@@ -14,11 +12,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockLocation extends Location {
 
-	private World world;
 	private int radius;
-	private double x;
-	private double y;
-	private double z;
 
 	public BlockLocation(World world, double x, double y, double z) {
 		this(world, 0, x, y, z);
@@ -26,11 +20,7 @@ public class BlockLocation extends Location {
 
 	public BlockLocation(World world, int radius, double x, double y, double z) {
 		super(world, x, y, z);
-		this.world = world;
 		this.radius = radius;
-		this.x = x;
-		this.y = y;
-		this.z = z;
 	}
 
 	public static BlockLocation fromLocation(Location location) {
@@ -46,27 +36,11 @@ public class BlockLocation extends Location {
 	}
 
 	public String getFullCoords() {
-		return world.getName() + ", " + getCoords();
+		return getWorld().getName() + ", " + getCoords();
 	}
 
 	public String getCoords() {
 		return getBlockX() + ", " + getBlockY() + ", " + getBlockZ();
-	}
-
-	public void setWorld(World world) {
-		this.world = world;
-	}
-
-	public World getWorld() {
-		return world;
-	}
-
-	public Chunk getChunk() {
-		return world.getChunkAt(getBlock());
-	}
-
-	public Block getBlock() {
-		return world.getBlockAt(getBlockX(), getBlockY(), getBlockZ());
 	}
 
 	public void setRadius(int radius) {
@@ -83,43 +57,40 @@ public class BlockLocation extends Location {
 		setZ(z);
 	}
 
-	public void setX(double x) {
-		this.x = x;
-		super.setX(x);
+	@Override
+	@Deprecated
+	public void setYaw(float yaw) {
+		super.setYaw(yaw);
 	}
 
-	public double getX() {
-		return x;
+	@Override
+	@Deprecated
+	public float getYaw() {
+		return super.getYaw();
 	}
 
-	public void setY(double y) {
-		this.y = y;
-		super.setY(y);
+	@Override
+	@Deprecated
+	public void setPitch(float pitch) {
+		super.setPitch(pitch);
 	}
 
-	public double getY() {
-		return y;
+	@Override
+	@Deprecated
+	public float getPitch() {
+		return super.getPitch();
 	}
 
-	public void setZ(double z) {
-		this.z = z;
-		super.setZ(z);
+	@Override
+	@Deprecated
+	public Vector getDirection() {
+		return super.getDirection();
 	}
 
-	public double getZ() {
-		return z;
-	}
-
-	public int getBlockX() {
-		return super.locToBlock(x);
-	}
-
-	public int getBlockY() {
-		return super.locToBlock(y);
-	}
-
-	public int getBlockZ() {
-		return super.locToBlock(z);
+	@Override
+	@Deprecated
+	public Location setDirection(Vector vector) {
+		return super.setDirection(vector);
 	}
 
 	public BlockLocation getAllCenter() {
@@ -145,60 +116,62 @@ public class BlockLocation extends Location {
 		return clone().subtract(radius, radius, radius);
 	}
 
+	@Override
 	public BlockLocation add(Location location) {
-		if (location == null || location.getWorld() != this.world) {
+		if (location == null || location.getWorld() != getWorld()) {
 			throw new IllegalArgumentException("Cannot add Locations of differing worlds");
 		}
 		add(location.getX(), location.getY(), location.getZ());
 		return this;
 	}
 
+	@Override
 	public BlockLocation add(Vector vector) {
 		add(vector.getX(), vector.getY(), vector.getZ());
 		return this;
 	}
 
+	@Override
 	public BlockLocation add(double x, double y, double z) {
-		setX(this.x + x);
-		setY(this.y + y);
-		setZ(this.z + z);
+		super.add(x, y, z);
 		return this;
 	}
 
+	@Override
 	public BlockLocation subtract(Location location) {
-		if (location == null || location.getWorld() != this.world) {
+		if (location == null || location.getWorld() != getWorld()) {
 			throw new IllegalArgumentException("Cannot add Locations of differing worlds");
 		}
 		subtract(location.getX(), location.getY(), location.getZ());
 		return this;
 	}
 
+	@Override
 	public BlockLocation subtract(Vector vector) {
 		subtract(vector.getX(), vector.getY(), vector.getZ());
 		return this;
 	}
 
+	@Override
 	public BlockLocation subtract(double x, double y, double z) {
-		setX(this.x - x);
-		setY(this.y - y);
-		setZ(this.z - z);
+		super.subtract(x, y, z);
 		return this;
 	}
 
+	@Override
 	public BlockLocation multiply(double m) {
-		setX(this.x * m);
-		setY(this.y * m);
-		setZ(this.z * m);
+		super.multiply(m);
 		return this;
 	}
 
 	public BlockLocation divide(double d) {
-		setX(this.x / d);
-		setY(this.y / d);
-		setZ(this.z / d);
+		setX(getX() / d);
+		setY(getY() / d);
+		setZ(getZ() / d);
 		return this;
 	}
 
+	@Override
 	public BlockLocation zero() {
 		setX(0.0D);
 		setY(0.0D);
@@ -206,82 +179,57 @@ public class BlockLocation extends Location {
 		return this;
 	}
 
-	public double length() {
-		return Math.sqrt(NumberConversions.square(x) + NumberConversions.square(y) + NumberConversions.square(z));
-	}
-
-	public double lengthSquared() {
-		return NumberConversions.square(x) + NumberConversions.square(y) + NumberConversions.square(z);
-	}
-
-	public double distance(Location location) {
-		return Math.sqrt(distanceSquared(location));
-	}
-
-	public double distanceSquared(Location location) {
-		if (location == null) {
-			throw new IllegalArgumentException("Cannot measure distance to a null location");
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
 		}
+		Location location = (Location) obj;
 		World world = location.getWorld();
-		if (world == null || this.world == null) {
-			throw new IllegalArgumentException("Cannot measure distance to a null world");
-		}
-		if (world != this.world) {
-			throw new IllegalArgumentException("Cannot measure distance between " + this.world.getName() + " and " + world.getName());
-		}
-		return NumberConversions.square(x - location.getX()) + NumberConversions.square(y - location.getY()) + NumberConversions.square(z - location.getZ());
-	}
-
-	public boolean equals(Object object) {
-		if (object == null || getClass() != object.getClass()) {
+		if (getWorld() != world && (getWorld() == null || !getWorld().equals(world))) {
 			return false;
 		}
-		Location location = (Location) object;
-		World world = location.getWorld();
-		if (this.world != world && (this.world == null || !this.world.equals(world))) {
+		if (Double.doubleToLongBits(getX()) != Double.doubleToLongBits(location.getX())) {
 			return false;
 		}
-		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(location.getX())) {
+		if (Double.doubleToLongBits(getY()) != Double.doubleToLongBits(location.getY())) {
 			return false;
 		}
-		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(location.getY())) {
-			return false;
-		}
-		if (Double.doubleToLongBits(z) != Double.doubleToLongBits(location.getZ())) {
+		if (Double.doubleToLongBits(getZ()) != Double.doubleToLongBits(location.getZ())) {
 			return false;
 		}
 		return true;
 	}
 
+	@Override
 	public int hashCode() {
 		int hash = 3;
-		hash = 19 * hash + (world != null ? world.hashCode() : 0);
-		hash = 19 * hash + (int) (Double.doubleToLongBits(x) ^ Double.doubleToLongBits(x) >>> 32);
-		hash = 19 * hash + (int) (Double.doubleToLongBits(y) ^ Double.doubleToLongBits(y) >>> 32);
-		hash = 19 * hash + (int) (Double.doubleToLongBits(z) ^ Double.doubleToLongBits(z) >>> 32);
+		hash = 19 * hash + (getWorld() != null ? getWorld().hashCode() : 0);
+		hash = 19 * hash + (int) (Double.doubleToLongBits(getX()) ^ Double.doubleToLongBits(getX()) >>> 32);
+		hash = 19 * hash + (int) (Double.doubleToLongBits(getY()) ^ Double.doubleToLongBits(getY()) >>> 32);
+		hash = 19 * hash + (int) (Double.doubleToLongBits(getZ()) ^ Double.doubleToLongBits(getZ()) >>> 32);
 		return hash;
 	}
 
-	public Vector toVector() {
-		return new Vector(x, y, z);
-	}
-
+	@Override
 	public String toString() {
-		return "BlockLocation{world=" + world.getName() + ", radius=" + radius + ", x=" + x + ", y=" + y + ", z=" + z + "}";
+		return "BlockLocation{world=" + getWorld().getName() + ", radius=" + radius
+				+ ", x=" + getBlockX() + ", y=" + getBlockY() + ", z=" + getBlockZ() + "}";
 	}
 
+	@Override
 	public BlockLocation clone() {
-		return new BlockLocation(world, radius, x, y, z);
+		return new BlockLocation(getWorld(), radius, getX(), getY(), getZ());
 	}
 
 	@Override
 	public Map<String, Object> serialize() {
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("world", world.getName());
+		data.put("world", getWorld().getName());
 		data.put("radius", radius);
-		data.put("x", Double.valueOf(x));
-		data.put("y", Double.valueOf(y));
-		data.put("z", Double.valueOf(z));
+		data.put("x", getX());
+		data.put("y", getY());
+		data.put("z", getZ());
 		return data;
 	}
 
