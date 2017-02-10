@@ -105,9 +105,9 @@ public class StringUtils {
 		return text;
 	}
 
-	public static String removeEnd(String text, String prefix) {
-		if (text.endsWith(prefix)) {
-			return text.substring(0, text.length() - prefix.length());
+	public static String removeEnd(String text, String suffix) {
+		if (text.endsWith(suffix)) {
+			return text.substring(0, text.length() - suffix.length());
 		}
 		return text;
 	}
