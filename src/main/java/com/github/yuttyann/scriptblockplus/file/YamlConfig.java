@@ -35,24 +35,28 @@ public class YamlConfig {
 		return load(pathName, true);
 	}
 
-	public static YamlConfig load(File file) {
-		return load(file, true);
+	public static YamlConfig load(String pathName, boolean fileCreate) {
+		YamlConfig config = new YamlConfig();
+		return load(config, new File(config.getDataFolder(), pathName), fileCreate);
 	}
 
-	public static YamlConfig load(String pathName, boolean fileCreate) {
-		return load(new File(ScriptBlock.instance.getDataFolder(), pathName), fileCreate);
+	public static YamlConfig load(File file) {
+		return load(new YamlConfig(), file, true);
 	}
 
 	public static YamlConfig load(File file, boolean fileCreate) {
+		return load(new YamlConfig(), file, fileCreate);
+	}
+
+	public static YamlConfig load(YamlConfig config, File file, boolean fileCreate) {
 		Validate.notNull(file, "File cannot be null");
-		YamlConfig config = new YamlConfig();
 		if (fileCreate && !file.getPath().startsWith("plugins\\" + PluginYaml.getName())) {
 			fileCreate = !fileCreate;
 		}
 		config.file = file;
 		config.fileName = file.getName();
 		if (fileCreate && !file.exists()) {
-			FileUtils.copyFileFromJar(ScriptBlock.instance.getJarFile(), file, config.fileName);
+			FileUtils.copyFileFromJar(config.getJarFile(), file, config.fileName);
 		}
 		try {
 			config.yaml = new YamlConfiguration();
@@ -69,16 +73,16 @@ public class YamlConfig {
 		return file;
 	}
 
-	public boolean exists() {
-		return file.exists();
-	}
-
 	public File getJarFile() {
 		return ScriptBlock.instance.getJarFile();
 	}
 
 	public File getDataFolder() {
 		return ScriptBlock.instance.getDataFolder();
+	}
+
+	public boolean exists() {
+		return file.exists();
 	}
 
 	public String getFileName() {
