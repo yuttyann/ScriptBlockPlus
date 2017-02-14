@@ -17,9 +17,9 @@ import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
  */
 public class ScriptBlockAPI {
 
+	private MapManager mapManager;
 	private ScriptData scriptData;
 	private ScriptManager scriptManager;
-	private MapManager mapManager;
 
 	/**
 	 * コンストラクタ
@@ -27,9 +27,9 @@ public class ScriptBlockAPI {
 	 * @param scriptType
 	 */
 	protected ScriptBlockAPI(Block block, ScriptType scriptType) {
+		this.mapManager = ScriptBlock.instance.getMapManager();
 		this.scriptData = new ScriptData(BlockLocation.fromLocation(block.getLocation()), scriptType);
 		this.scriptManager = new ScriptManager(scriptData.getBlockLocation(), scriptType);
-		this.mapManager = ScriptBlock.instance.getMapManager();
 	}
 
 	/**
