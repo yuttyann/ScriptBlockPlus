@@ -1,5 +1,8 @@
 package com.github.yuttyann.scriptblockplus.file;
 
+import org.bukkit.plugin.Plugin;
+
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 
 public class Files {
@@ -16,11 +19,12 @@ public class Files {
 	private YamlConfig walk;
 
 	public Files() {
-		this.config = YamlConfig.load(FILE_NAMES[0]);
-		this.messages = YamlConfig.load(FILE_NAMES[1]);
-		this.interact = YamlConfig.load(FILE_NAMES[2], false);
-		this.break_ = YamlConfig.load(FILE_NAMES[3], false);
-		this.walk = YamlConfig.load(FILE_NAMES[4], false);
+		Plugin plugin = ScriptBlock.instance;
+		this.config = YamlConfig.load(plugin, FILE_NAMES[0]);
+		this.messages = YamlConfig.load(plugin, FILE_NAMES[1]);
+		this.interact = YamlConfig.load(plugin, FILE_NAMES[2], false);
+		this.break_ = YamlConfig.load(plugin, FILE_NAMES[3], false);
+		this.walk = YamlConfig.load(plugin, FILE_NAMES[4], false);
 	}
 
 	public static YamlConfig getConfig() {

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager;
+import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 
 /**
  * @author ゆっちゃん
@@ -18,7 +18,8 @@ import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 public class ScriptBlockAPI {
 
 	private ScriptData scriptData;
-	private OptionManager optionManager;
+	private ScriptManager scriptManager;
+	private MapManager mapManager;
 
 	/**
 	 * コンストラクタ
@@ -26,8 +27,9 @@ public class ScriptBlockAPI {
 	 * @param scriptType
 	 */
 	protected ScriptBlockAPI(Block block, ScriptType scriptType) {
-		this.scriptData = new ScriptData(block, scriptType);
-		this.optionManager = new OptionManager(scriptData.getBlockLocation(), scriptType);
+		this.scriptData = new ScriptData(BlockLocation.fromLocation(block.getLocation()), scriptType);
+		this.scriptManager = new ScriptManager(scriptData.getBlockLocation(), scriptType);
+		this.mapManager = ScriptBlock.instance.getMapManager();
 	}
 
 	/**
@@ -35,7 +37,7 @@ public class ScriptBlockAPI {
 	 * @param player プレイヤー
 	 */
 	public void scriptExec(Player player) {
-		optionManager.scriptExec(player);
+		scriptManager.scriptExec(player);
 	}
 
 	/**
@@ -44,7 +46,7 @@ public class ScriptBlockAPI {
 	 */
 	public void setLocation(Location location) {
 		scriptData.setBlockLocation(BlockLocation.fromLocation(location));
-		optionManager = new OptionManager(scriptData.getBlockLocation(), getScriptType());
+		scriptManager = new ScriptManager(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**
@@ -173,7 +175,7 @@ public class ScriptBlockAPI {
 	 */
 	public void setScripts(List<String> scripts) {
 		scriptData.setScripts(scripts);
-		MapManager.addCoords(scriptData.getBlockLocation(), getScriptType());
+		mapManager.addCoords(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**
@@ -182,7 +184,7 @@ public class ScriptBlockAPI {
 	 */
 	public void setCreateScripts(String script) {
 		scriptData.setCreateScripts(script);
-		MapManager.addCoords(scriptData.getBlockLocation(), getScriptType());
+		mapManager.addCoords(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**
@@ -191,7 +193,7 @@ public class ScriptBlockAPI {
 	 */
 	public void addScripts(String script) {
 		scriptData.addScripts(script);
-		MapManager.removeTimes(scriptData.getBlockLocation().getFullCoords());
+		mapManager.removeTimes(scriptData.getBlockLocation().getFullCoords());
 	}
 
 	/**
@@ -201,9 +203,9 @@ public class ScriptBlockAPI {
 	public void removeScripts(String script) {
 		scriptData.removeScripts(script);
 		if (scriptData.getScripts().isEmpty()) {
-			MapManager.removeCoords(scriptData.getBlockLocation(), getScriptType());
+			mapManager.removeCoords(scriptData.getBlockLocation(), getScriptType());
 		} else {
-			MapManager.removeTimes(scriptData.getBlockLocation().getFullCoords());
+			mapManager.removeTimes(scriptData.getBlockLocation().getFullCoords());
 		}
 	}
 
@@ -212,7 +214,7 @@ public class ScriptBlockAPI {
 	 */
 	public void clearScripts() {
 		scriptData.clearScripts();
-		MapManager.removeCoords(scriptData.getBlockLocation(), getScriptType());
+		mapManager.removeCoords(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**
@@ -220,7 +222,7 @@ public class ScriptBlockAPI {
 	 */
 	public void remove() {
 		scriptData.remove();
-		MapManager.removeCoords(scriptData.getBlockLocation(), getScriptType());
+		mapManager.removeCoords(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**

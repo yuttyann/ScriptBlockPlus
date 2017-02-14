@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.option;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -8,10 +9,12 @@ import com.github.yuttyann.scriptblockplus.manager.MapManager;
 public class Amount {
 
 	private int amount;
+	private MapManager mapManager;
 	private ScriptData scriptData;
 
 	public Amount(int amount, BlockLocation location, ScriptType scriptType) {
 		this.amount = amount;
+		this.mapManager = ScriptBlock.instance.getMapManager();
 		this.scriptData = new ScriptData(location, scriptType);
 	}
 
@@ -20,8 +23,12 @@ public class Amount {
 		this.scriptData = new ScriptData(location, scriptType);
 	}
 
+	public int getAmount() {
+		return amount;
+	}
+
 	public boolean check() {
-		return scriptData.getAmount() >= amount;
+		return scriptData.getAmount() >= getAmount();
 	}
 
 	public void add() {
@@ -32,6 +39,6 @@ public class Amount {
 	public void remove() {
 		scriptData.remove();
 		scriptData.save();
-		MapManager.removeCoords(scriptData.getBlockLocation(), scriptData.getScriptType());
+		mapManager.removeCoords(scriptData.getBlockLocation(), scriptData.getScriptType());
 	}
 }

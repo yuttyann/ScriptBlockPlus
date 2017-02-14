@@ -75,6 +75,9 @@ public class CommandData {
 
 	public boolean hasPermission(CommandSender sender) {
 		boolean has = false;
+		if (isEmpty()) {
+			return !has;
+		}
 		for (String permission : permissions) {
 			if (!has && Permission.has(permission, sender)) {
 				has = true;
@@ -91,7 +94,7 @@ public class CommandData {
 		return message != null;
 	}
 
-	public boolean hasPermission() {
-		return permissions != null && !permissions.isEmpty();
+	public boolean isEmpty() {
+		return permissions == null || (permissions != null && permissions.isEmpty());
 	}
 }

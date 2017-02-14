@@ -15,53 +15,53 @@ import com.github.yuttyann.scriptblockplus.file.YamlConfig;
 
 public class MapManager {
 
-	private static Map<UUID, String> oldLocation;
-	private static Map<String, List<UUID>> delay;
-	private static Map<String, Map<UUID, int[]>> cooldownParams;
-	private static Set<String> interactCoords;
-	private static Set<String> breakCoords;
-	private static Set<String> walkCoords;
-	private static List<UUID> interactEvents;
+	private List<UUID> interactEvents;
+	private Set<String> interactLocation;
+	private Set<String> breakLocation;
+	private Set<String> walkLocation;
+	private Map<UUID, String> oldLocation;
+	private Map<String, List<UUID>> delay;
+	private Map<String, Map<UUID, int[]>> cooldown;
 
 	public MapManager() {
-		oldLocation = new HashMap<UUID, String>();
-		delay = new HashMap<String, List<UUID>>();
-		cooldownParams = new HashMap<String, Map<UUID, int[]>>();
-		interactEvents = new ArrayList<UUID>();
-		interactCoords = new HashSet<String>();
-		breakCoords = new HashSet<String>();
-		walkCoords = new HashSet<String>();
-		setupScripts();
+		this.interactEvents = new ArrayList<UUID>();
+		this.interactLocation = new HashSet<String>();
+		this.breakLocation = new HashSet<String>();
+		this.walkLocation = new HashSet<String>();
+		this.oldLocation = new HashMap<UUID, String>();
+		this.delay = new HashMap<String, List<UUID>>();
+		this.cooldown = new HashMap<String, Map<UUID, int[]>>();
+		reloadAllScripts();
 	}
 
-	public static Map<UUID, String> getOldLocation() {
+	public Set<String> getInteractLocation() {
+		return interactLocation;
+	}
+
+	public Set<String> getBreakLocation() {
+		return breakLocation;
+	}
+
+	public Set<String> getWalkLocation() {
+		return walkLocation;
+	}
+
+	public Map<UUID, String> getOldLocation() {
 		return oldLocation;
 	}
 
-	public static Map<String, List<UUID>> getDelay() {
+	public Map<String, List<UUID>> getDelay() {
 		return delay;
 	}
 
-	public static Map<String, Map<UUID, int[]>> getCooldownParams() {
-		return cooldownParams;
+	public Map<String, Map<UUID, int[]>> getCooldown() {
+		return cooldown;
 	}
 
-	public static Set<String> getInteractCoords() {
-		return interactCoords;
-	}
-
-	public static Set<String> getBreakCoords() {
-		return breakCoords;
-	}
-
-	public static Set<String> getWalkCoords() {
-		return walkCoords;
-	}
-
-	public static void setupScripts() {
+	public void reloadAllScripts() {
 		try {
 			delay.clear();
-			cooldownParams.clear();
+			cooldown.clear();
 			reloadScripts(Files.getInteract(), ScriptType.INTERACT);
 			reloadScripts(Files.getBreak(), ScriptType.BREAK);
 			reloadScripts(Files.getWalk(), ScriptType.WALK);
@@ -70,105 +70,105 @@ public class MapManager {
 		}
 	}
 
-	public static void reloadScripts(YamlConfig scriptFile, ScriptType scriptType) {
+	public void reloadScripts(YamlConfig scriptFile, ScriptType scriptType) {
 		switch (scriptType) {
 		case INTERACT:
-			interactCoords.clear();
+			interactLocation.clear();
 			for (String world : scriptFile.getKeys(false)) {
 				for (String coords : scriptFile.getKeys(world, false)) {
-					interactCoords.add(world + ", " + coords);
+					interactLocation.add(world + ", " + coords);
 				}
 			}
 			break;
 		case BREAK:
-			breakCoords.clear();
+			breakLocation.clear();
 			for (String world : scriptFile.getKeys(false)) {
 				for (String coords : scriptFile.getKeys(world, false)) {
-					breakCoords.add(world + ", " + coords);
+					breakLocation.add(world + ", " + coords);
 				}
 			}
 			break;
 		case WALK:
-			walkCoords.clear();
+			walkLocation.clear();
 			for (String world : scriptFile.getKeys(false)) {
 				for (String coords : scriptFile.getKeys(world, false)) {
-					walkCoords.add(world + ", " + coords);
+					walkLocation.add(world + ", " + coords);
 				}
 			}
 			break;
 		}
 	}
 
-	public static void addCoords(BlockLocation location, ScriptType scriptType) {
+	public void addCoords(BlockLocation location, ScriptType scriptType) {
 		String fullCoords = location.getFullCoords();
 		removeTimes(fullCoords);
 		switch (scriptType) {
 		case INTERACT:
-			if (!interactCoords.contains(fullCoords)) {
-				interactCoords.add(fullCoords);
+			if (!interactLocation.contains(fullCoords)) {
+				interactLocation.add(fullCoords);
 			}
 			break;
 		case BREAK:
-			if (!breakCoords.contains(fullCoords)) {
-				breakCoords.add(fullCoords);
+			if (!breakLocation.contains(fullCoords)) {
+				breakLocation.add(fullCoords);
 			}
 			break;
 		case WALK:
-			if (!walkCoords.contains(fullCoords)) {
-				walkCoords.add(fullCoords);
+			if (!walkLocation.contains(fullCoords)) {
+				walkLocation.add(fullCoords);
 			}
 			break;
 		}
 	}
 
-	public static void removeCoords(BlockLocation location, ScriptType scriptType) {
+	public void removeCoords(BlockLocation location, ScriptType scriptType) {
 		String fullCoords = location.getFullCoords();
 		removeTimes(fullCoords);
 		switch (scriptType) {
 		case INTERACT:
-			if (interactCoords.contains(fullCoords)) {
-				interactCoords.remove(fullCoords);
+			if (interactLocation.contains(fullCoords)) {
+				interactLocation.remove(fullCoords);
 			}
 			break;
 		case BREAK:
-			if (breakCoords.contains(fullCoords)) {
-				breakCoords.remove(fullCoords);
+			if (breakLocation.contains(fullCoords)) {
+				breakLocation.remove(fullCoords);
 			}
 			break;
 		case WALK:
-			if (walkCoords.contains(fullCoords)) {
-				walkCoords.remove(fullCoords);
+			if (walkLocation.contains(fullCoords)) {
+				walkLocation.remove(fullCoords);
 			}
 			break;
 		}
 	}
 
-	public static void removeTimes(String fullCoords) {
+	public void removeTimes(String fullCoords) {
 		if (delay.containsKey(fullCoords)) {
 			delay.remove(fullCoords);
 		}
-		if (cooldownParams.containsKey(fullCoords)) {
-			cooldownParams.remove(fullCoords);
+		if (cooldown.containsKey(fullCoords)) {
+			cooldown.remove(fullCoords);
 		}
 	}
 
-	public static boolean addEvents(UUID uuid) {
+	public boolean addEvents(UUID uuid) {
 		if (!interactEvents.contains(uuid)) {
 			return interactEvents.add(uuid);
 		}
 		return false;
 	}
 
-	public static boolean removeEvents(UUID uuid) {
+	public boolean removeEvents(UUID uuid) {
 		if (interactEvents.contains(uuid)) {
 			return interactEvents.remove(uuid);
 		}
 		return false;
 	}
 
-	private static void coordsAllClear() {
-		interactCoords.clear();
-		breakCoords.clear();
-		walkCoords.clear();
+	private void coordsAllClear() {
+		interactLocation.clear();
+		breakLocation.clear();
+		walkLocation.clear();
 	}
 }

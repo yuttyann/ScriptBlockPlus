@@ -43,7 +43,7 @@ public class ItemCost {
 	}
 
 	public String getItemName() {
-		return itemName != null ? itemName : "none";
+		return itemName;
 	}
 
 	public boolean isSuccess() {
@@ -61,12 +61,12 @@ public class ItemCost {
 	public boolean payment(Player player) {
 		for (ItemStack item : player.getInventory().getContents()) {
 			item = item != null ? item : new ItemStack(Material.AIR);
-			if (item.getType() == material
-				&& item.getAmount() >= amount
-				&& item.getDurability() == damage) {
+			if (item.getType() == getMaterial()
+				&& item.getAmount() >= getAmount()
+				&& item.getDurability() == getDurability()) {
 				String itemName = Utils.getItemName(item);
-				if (this.itemName == null || (itemName != null && itemName.equals(this.itemName))) {
-					int result = item.getAmount() - amount;
+				if (getItemName() == null || itemName.equals(getItemName())) {
+					int result = item.getAmount() - getAmount();
 					if (result > 0) {
 						item.setAmount(result);
 					} else {

@@ -32,19 +32,19 @@ public class Perm {
 		switch (permType) {
 		case CHECK:
 			if (world != null) {
-				return permission.playerHas(world, player, perm);
+				return permission.playerHas(world, player, getNode());
 			}
-			return permission.playerHas(player, perm);
+			return permission.playerHas(player, getNode());
 		case ADD:
 			if (world != null) {
-				return permission.playerAdd(world, player, perm);
+				return permission.playerAdd(world, player, getNode());
 			}
-			return permission.playerAdd(player, perm);
+			return permission.playerAdd(player, getNode());
 		case REMOVE:
-			if (world != null && permission.playerHas(world, player, perm)) {
-				return permission.playerRemove(world, player, perm);
-			} else if (world == null && permission.playerHas(player, perm)) {
-				return permission.playerRemove(player, perm);
+			if (world != null && permission.playerHas(world, player, getNode())) {
+				return permission.playerRemove(world, player, getNode());
+			} else if (world == null && permission.playerHas(player, getNode())) {
+				return permission.playerRemove(player, getNode());
 			}
 		}
 		return false;

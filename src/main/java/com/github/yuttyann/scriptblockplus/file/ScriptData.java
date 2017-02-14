@@ -3,26 +3,24 @@ package com.github.yuttyann.scriptblockplus.file;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptData {
 
+	private MapManager mapManager;
 	private YamlConfig scriptFile;
 	private BlockLocation location;
 	private ScriptType scriptType;
 	private String scriptPath;
 
-	public ScriptData(Block block, ScriptType scriptType) {
-		this(BlockLocation.fromLocation(block.getLocation()), scriptType);
-	}
-
 	public ScriptData(BlockLocation location, ScriptType scriptType) {
+		this.mapManager = ScriptBlock.instance.getMapManager();
 		this.scriptFile = Files.getScriptFile(scriptType);
 		this.location = location;
 		this.scriptType = scriptType;
@@ -154,6 +152,6 @@ public class ScriptData {
 	}
 
 	public void reload() {
-		MapManager.reloadScripts(scriptFile, scriptType);
+		mapManager.reloadScripts(scriptFile, scriptType);
 	}
 }

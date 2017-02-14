@@ -197,7 +197,7 @@ public class Utils {
 		return sdf.format(new Date());
 	}
 
-	public static String getName(String uuid) {
+	public static String getName(Object uuid) {
 		String name = null;
 		Object player = null;
 		if ((player = getOnlinePlayer(uuid)) != null) {

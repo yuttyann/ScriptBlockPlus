@@ -3,6 +3,8 @@ package com.github.yuttyann.scriptblockplus.file;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,71 +20,85 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfigurationOptions;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class YamlConfig {
 
+	private Plugin plugin;
 	private String fileName;
 	private File file;
 	private YamlConfiguration yaml;
 
-	public static YamlConfig load(String pathName) {
-		return load(pathName, true);
-	}
-
-	public static YamlConfig load(String pathName, boolean fileCreate) {
-		YamlConfig config = new YamlConfig();
-		return load(config, new File(config.getDataFolder(), pathName), fileCreate);
-	}
-
-	public static YamlConfig load(File file) {
-		return load(new YamlConfig(), file, true);
-	}
-
-	public static YamlConfig load(File file, boolean fileCreate) {
-		return load(new YamlConfig(), file, fileCreate);
-	}
-
-	public static YamlConfig load(YamlConfig config, File file, boolean fileCreate) {
+	protected YamlConfig(Plugin plugin, File file, boolean fileCreate) {
 		Validate.notNull(file, "File cannot be null");
-		if (fileCreate && !file.getPath().startsWith("plugins\\" + PluginYaml.getName())) {
-			fileCreate = !fileCreate;
-		}
-		config.file = file;
-		config.fileName = file.getName();
+		this.plugin = plugin;
+		this.file = file;
+		this.fileName = file.getName();
 		if (fileCreate && !file.exists()) {
-			FileUtils.copyFileFromJar(config.getJarFile(), file, config.fileName);
+			FileUtils.copyFileFromJar(getJarFile(), file, fileName);
 		}
 		try {
-			config.yaml = new YamlConfiguration();
-			config.yaml.load(file);
+			this.yaml = new YamlConfiguration();
+			this.yaml.load(file);
 		} catch (FileNotFoundException e) {
 		} catch (IOException | InvalidConfigurationException e) {
-			FileUtils.fileEncode(file);
-			config.yaml = YamlConfiguration.loadConfiguration(file);
+			FileUtils.fileEncode(plugin, file);
+			this.yaml = YamlConfiguration.loadConfiguration(file);
 		}
-		return config;
+	}
+
+	public static YamlConfig load(Plugin plugin, String pathName) {
+		return load(plugin, pathName, true);
+	}
+
+	public static YamlConfig load(Plugin plugin, String pathName, boolean fileCreate) {
+		return load(plugin, new File(plugin.getDataFolder(), pathName), fileCreate);
+	}
+
+	public static YamlConfig load(Plugin plugin, File file) {
+		return load(plugin, file, true);
+	}
+
+	public static YamlConfig load(Plugin plugin, File file, boolean fileCreate) {
+		return new YamlConfig(plugin, file, fileCreate);
 	}
 
 	public File getFile() {
 		return file;
 	}
 
-	public File getJarFile() {
-		return ScriptBlock.instance.getJarFile();
+	public boolean exists() {
+		return file.exists();
+	}
+
+	private File getJarFile() {
+		Method method = null;
+		try {
+			method = JavaPlugin.class.getDeclaredMethod("getFile");
+			method.setAccessible(true);
+			return (File) method.invoke((JavaPlugin) plugin);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public File getDataFolder() {
-		return ScriptBlock.instance.getDataFolder();
-	}
-
-	public boolean exists() {
-		return file.exists();
+		return plugin.getDataFolder();
 	}
 
 	public String getFileName() {

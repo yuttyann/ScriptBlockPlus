@@ -32,19 +32,19 @@ public class Group {
 		switch (permType) {
 		case CHECK:
 			if (world != null) {
-				return permission.playerInGroup(world, player, group);
+				return permission.playerInGroup(world, player, getName());
 			}
-			return permission.playerInGroup(player, group);
+			return permission.playerInGroup(player, getName());
 		case ADD:
 			if (world != null) {
-				return permission.playerAddGroup(world, player, group);
+				return permission.playerAddGroup(world, player, getName());
 			}
-			return permission.playerAddGroup(player, group);
+			return permission.playerAddGroup(player, getName());
 		case REMOVE:
-			if (world != null && permission.playerInGroup(world, player, group)) {
-				return permission.playerRemoveGroup(world, player, group);
-			} else if (world == null && permission.playerInGroup(player, group)) {
-				return permission.playerRemoveGroup(player, group);
+			if (world != null && permission.playerInGroup(world, player, getName())) {
+				return permission.playerRemoveGroup(world, player, getName());
+			} else if (world == null && permission.playerInGroup(player, getName())) {
+				return permission.playerRemoveGroup(player, getName());
 			}
 			break;
 		}

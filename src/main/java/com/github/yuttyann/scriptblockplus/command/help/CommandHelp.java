@@ -49,7 +49,7 @@ public class CommandHelp {
 		List<CommandData> temps = new ArrayList<CommandData>();
 		String commandName = command.getName().toLowerCase();
 		for (CommandData data : ScriptBlock.instance.getCommandHelp().get(commandName)) {
-			if (data.hasPermission() && data.hasPermission(sender)) {
+			if (data.hasPermission(sender)) {
 				temps.add(data);
 			}
 		}
@@ -60,14 +60,10 @@ public class CommandHelp {
 		if (!isName && command.getAliases().size() > 0) {
 			commandName = command.getAliases().get(0).toLowerCase();
 		}
-		StringBuilder builder = new StringBuilder();
-		builder.append("§d==== ").append(PluginYaml.getName()).append(" Commands ====");
-		sender.sendMessage(builder.toString());
+		sender.sendMessage("§d==== " + PluginYaml.getName() + " Commands ====");
 		for (CommandData data : temps) {
 			if (data.isHelp()) {
-				builder.setLength(0);
-				builder.append("§b/").append(commandName).append(" ").append(data.getMessage());
-				sender.sendMessage(builder.toString());
+				sender.sendMessage("§b/" + commandName + " " + data.getMessage());
 			} else {
 				sender.sendMessage(data.getMessage());
 			}

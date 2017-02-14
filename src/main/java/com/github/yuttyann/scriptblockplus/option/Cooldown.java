@@ -12,13 +12,16 @@ import com.github.yuttyann.scriptblockplus.manager.MapManager;
 public class Cooldown {
 
 	private int second;
+	private MapManager mapManager;
 
 	public Cooldown(int second) {
 		this.second = second;
+		this.mapManager = ScriptBlock.instance.getMapManager();
 	}
 
 	public Cooldown(String second) {
 		this.second = Integer.parseInt(second);
+		this.mapManager = ScriptBlock.instance.getMapManager();
 	}
 
 	public int getSecond() {
@@ -26,7 +29,7 @@ public class Cooldown {
 	}
 
 	public int[] get(String fullCoords, UUID uuid) {
-		Map<UUID, int[]> params = MapManager.getCooldownParams().get(fullCoords);
+		Map<UUID, int[]> params = mapManager.getCooldown().get(fullCoords);
 		if (params != null && params.containsKey(uuid)) {
 			return params.get(uuid);
 		}
@@ -34,22 +37,22 @@ public class Cooldown {
 	}
 
 	public Map<UUID, int[]> put(String fullCoords, UUID uuid, int[] params) {
-		Map<UUID, int[]> temp = MapManager.getCooldownParams().get(fullCoords);
+		Map<UUID, int[]> temp = mapManager.getCooldown().get(fullCoords);
 		Map<UUID, int[]> params2 = temp != null ? temp : new HashMap<UUID, int[]>();
 		params2.put(uuid, params);
-		return MapManager.getCooldownParams().put(fullCoords, params2);
+		return mapManager.getCooldown().put(fullCoords, params2);
 	}
 
 	public void remove(String fullCoords, UUID uuid) {
-		Map<UUID, int[]> params = MapManager.getCooldownParams().get(fullCoords);
+		Map<UUID, int[]> params = mapManager.getCooldown().get(fullCoords);
 		if (params != null && params.containsKey(uuid)) {
 			params.remove(uuid);
-			MapManager.getCooldownParams().put(fullCoords, params);
+			mapManager.getCooldown().put(fullCoords, params);
 		}
 	}
 
 	public boolean contains(String fullCoords, UUID uuid) {
-		Map<UUID, int[]> params = MapManager.getCooldownParams().get(fullCoords);
+		Map<UUID, int[]> params = mapManager.getCooldown().get(fullCoords);
 		return params != null && params.containsKey(uuid);
 	}
 

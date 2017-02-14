@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
 import com.github.yuttyann.scriptblockplus.collplugin.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.command.help.CommandData;
@@ -33,7 +34,7 @@ import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Click;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Script;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
-import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
+import com.github.yuttyann.scriptblockplus.manager.ScriptReadManager;
 import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -41,7 +42,10 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 
 public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 
+	private MapManager mapManager;
+
 	public ScriptBlockCommand() {
+		this.mapManager = ScriptBlock.instance.getMapManager();
 		CommandHelp help = new CommandHelp();
 		help.putCommands(
 			"scriptblockplus",
@@ -95,7 +99,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 					return true;
 				}
 				Files.reload();
-				MapManager.setupScripts();
+				mapManager.reloadAllScripts();
 				Utils.sendPluginMessage(player, Messages.allFileReloadMessage);
 				return true;
 			}
@@ -279,7 +283,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 				}
 			}
 			scriptData.save();
-			MapManager.reloadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
+			mapManager.reloadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
 		}
 		if (walkExists) {
 			config = Configuration.loadConfiguration(walkFile);
@@ -304,7 +308,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 				}
 			}
 			scriptData.save();
-			MapManager.reloadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
+			mapManager.reloadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
 		}
 		Utils.sendPluginMessage(player, Messages.dataMigrEndMessage);
 	}
@@ -324,9 +328,9 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			return;
 		}
 		String script = StringUtils.createString(args, 2).trim();
-		ScriptManager manager = new ScriptManager(null, null);
-		manager.reset();
-		if (!manager.checkScript(script)) {
+		ScriptReadManager readManager = new ScriptReadManager(null, null);
+		readManager.reset();
+		if (!readManager.checkScript(script)) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptCheckMessage());
 			return;
 		}

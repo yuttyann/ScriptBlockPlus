@@ -1,11 +1,20 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
-import com.github.yuttyann.scriptblockplus.enums.PermType;
+import com.github.yuttyann.scriptblockplus.PlayerSelector;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.file.Messages;
+import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.option.Amount;
 import com.github.yuttyann.scriptblockplus.option.Cooldown;
 import com.github.yuttyann.scriptblockplus.option.Delay;
@@ -13,337 +22,197 @@ import com.github.yuttyann.scriptblockplus.option.Group;
 import com.github.yuttyann.scriptblockplus.option.Hand;
 import com.github.yuttyann.scriptblockplus.option.ItemCost;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
-import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
 import com.github.yuttyann.scriptblockplus.option.Perm;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class ScriptManager extends OptionPrefix {
+public class ScriptManager extends ScriptReadManager {
 
-	private static final String REGEX = "\\[(.+?)\\]";
-
+	private ScriptData scriptData;
 	private BlockLocation location;
 	private ScriptType scriptType;
-	private String command;
-	private String player;
-	private String server;
-	private String say;
-	private Perm perm;
-	private Perm permADD;
-	private Perm permREMOVE;
-	private Group group;
-	private Group groupADD;
-	private Group groupREMOVE;
-	private Amount amount;
-	private Delay delay;
-	private Cooldown cooldown;
-	private Hand hand;
-	private ItemCost itemCost;
-	private MoneyCost moneyCost;
-	private boolean isBypass;
-	private boolean isSuccess;
 
 	public ScriptManager(BlockLocation location, ScriptType scriptType) {
+		super(location, scriptType);
+		this.scriptData = new ScriptData(location, scriptType);
 		this.location = location;
 		this.scriptType = scriptType;
 	}
 
-	public BlockLocation getBlockLocation() {
-		return location;
-	}
-
-	public ScriptType getScriptType() {
-		return scriptType;
-	}
-
-	public String getCommand() {
-		return command;
-	}
-
-	public String getPlayer() {
-		return player;
-	}
-
-	public String getServer() {
-		return server;
-	}
-
-	public String getSay() {
-		return say;
-	}
-
-	public Perm getPerm() {
-		return perm;
-	}
-
-	public Perm getPermADD() {
-		return permADD;
-	}
-
-	public Perm getPermREMOVE() {
-		return permREMOVE;
-	}
-
-	public Group getGroup() {
-		return group;
-	}
-
-	public Group getGroupADD() {
-		return groupADD;
-	}
-
-	public Group getGroupREMOVE() {
-		return groupREMOVE;
-	}
-
-	public Amount getAmount() {
-		return amount;
-	}
-
-	public Delay getDelay() {
-		return delay;
-	}
-
-	public Cooldown getCooldown() {
-		return cooldown;
-	}
-
-	public Hand getHand() {
-		return hand;
-	}
-
-	public ItemCost getItemCost() {
-		return itemCost;
-	}
-
-	public MoneyCost getMoneyCost() {
-		return moneyCost;
-	}
-
-	public boolean hasOption() {
-		return player != null || server != null || say != null || perm != null || permADD != null || permREMOVE != null
-				|| group != null || groupADD != null || groupREMOVE != null || amount != null || delay != null
-				|| cooldown != null || hand != null || moneyCost != null || itemCost != null;
-	}
-
-	public boolean isBypass() {
-		return isBypass;
-	}
-
-	public boolean isSuccess() {
-		return isSuccess;
-	}
-
-	public void resetAll() {
-		location = null;
-		scriptType = null;
-		reset();
-	}
-
-	public void reset() {
-		command = null;
-		player = null;
-		server = null;
-		say = null;
-		perm = null;
-		permADD = null;
-		permREMOVE = null;
-		group = null;
-		groupADD = null;
-		groupREMOVE = null;
-		amount = null;
-		delay = null;
-		cooldown = null;
-		hand = null;
-		itemCost = null;
-		moneyCost = null;
-		isBypass = false;
-		isSuccess = true;
-	}
-
-	public boolean checkScript(String script) {
-		try {
-			Pattern pattern = Pattern.compile(REGEX);
-			Matcher matcher = pattern.matcher(script);
-			if (!matcher.find() || !script.startsWith("[")) {
-				if (!check(script) && isSuccess) {
-					isSuccess = false;
+	public void scriptExec(Player player) {
+		UUID uuid = player.getUniqueId();
+		String fullCoords = location.getFullCoords();
+		if (!scriptData.checkPath()) {
+			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
+			return;
+		}
+		String coords = location.getCoords();
+		List<String> scripts = scriptData.getScripts();
+		for (int i = 0, s = scripts.size(); i < s; i++) {
+			reset();
+			if (!readScript(scripts.get(i))) {
+				Utils.sendPluginMessage(player, Messages.getErrorScriptMessage(scriptType));
+				Utils.sendPluginMessage(Messages.getConsoleErrorScriptExecMessage(player, scriptType, location.getWorld(), coords));
+				return;
+			}
+			if (hasOption()) {
+				Delay delay = getDelay();
+				if (delay != null && delay.contains(fullCoords, uuid)) {
+					Utils.sendPluginMessage(player, Messages.getActiveDelayMessage());
+					return;
 				}
-			} else {
-				matcher.reset();
-				while (matcher.find()) {
-					if (!check(matcher.group(1)) && isSuccess) {
-						isSuccess = false;
+				Cooldown cooldown = getCooldown();
+				if (cooldown != null && cooldown.contains(fullCoords, uuid)) {
+					int[] params = cooldown.get(fullCoords, uuid);
+					Utils.sendPluginMessage(player, Messages.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
+					return;
+				}
+				Perm perm = getPerm();
+				if (perm != null && !perm.playerPerm(player)) {
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					return;
+				}
+				Group group = getGroup();
+				if (group != null && !group.playerGroup(player)) {
+					Utils.sendPluginMessage(player, Messages.getErrorGroupMessage(group.getName()));
+					return;
+				}
+				Hand hand = getHand();
+				if (hand != null) {
+					if (!hand.check(player)) {
+						Utils.sendPluginMessage(player, Messages.getErrorHandMessage(hand.getMaterial(), hand.getId(),
+							hand.getAmount(), hand.getDurability(), hand.getItemName()));
+						return;
 					}
 				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			isSuccess = false;
-		}
-		return isSuccess;
-	}
-
-	public boolean readScript(String script) {
-		try {
-			Pattern pattern = Pattern.compile(REGEX);
-			Matcher matcher = pattern.matcher(script);
-			if (!matcher.find() || !script.startsWith("[")) {
-				read(script);
+				MoneyCost moneyCost = getMoneyCost();
+				if (moneyCost != null) {
+					if (!moneyCost.payment(player)) {
+						Utils.sendPluginMessage(player, Messages.getErrorCostMessage(moneyCost.getCost(), moneyCost.getResult()));
+						return;
+					}
+				}
+				ItemCost itemCost = getItemCost();
+				if (itemCost != null) {
+					if (!itemCost.payment(player)) {
+						if (moneyCost != null && moneyCost.isSuccess()) {
+							CollPlugins.getVaultEconomy().depositPlayer(player, moneyCost.getCost());
+						}
+						Utils.sendPluginMessage(player, Messages.getErrorItemMessage(itemCost.getMaterial(), itemCost.getId(),
+							itemCost.getAmount(), itemCost.getDurability(), itemCost.getItemName()));
+						return;
+					}
+				}
+				if (delay != null) {
+					final Player player2 = player;
+					final UUID uuid2 = uuid;
+					final Delay delay2 = delay;
+					final String fullCoords2 = fullCoords;
+					final ScriptReadManager readManager = this;
+					delay2.put(fullCoords2, uuid2);
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							scriptOptions(player2, uuid2, fullCoords2, readManager);
+							delay2.remove(fullCoords2, uuid2);
+						}
+					}.runTaskLater(ScriptBlock.instance, delay.getTick());
+				} else {
+					scriptOptions(player, uuid, fullCoords, this);
+				}
 			} else {
-				matcher.reset();
-				while (matcher.find()) {
-					read(matcher.group(1));
-				}
+				commandExec(player, replace(player, getCommand(), false), isBypass());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			isSuccess = false;
-		}
-		return isSuccess;
-	}
-
-	private boolean check(String script) {
-		return script.startsWith(COMMAND)
-				|| script.startsWith(BYPASS)
-				|| script.startsWith(PLAYER)
-				|| script.startsWith(SERVER)
-				|| script.startsWith(SAY)
-				|| script.startsWith(PERM)
-				|| script.startsWith(PERM_ADD)
-				|| script.startsWith(PERM_REMOVE)
-				|| script.startsWith(GROUP)
-				|| script.startsWith(GROUP_ADD)
-				|| script.startsWith(GROUP_REMOVE)
-				|| script.startsWith(AMOUNT)
-				|| script.startsWith(DELAY)
-				|| script.startsWith(COOLDOWN)
-				|| script.startsWith(HAND)
-				|| script.startsWith(COST)
-				|| script.startsWith(ITEM);
-	}
-
-	private void read(String script) throws Exception {
-		for (String prefix : PREFIXS) {
-			switch (StringUtils.startText(script, prefix, "")) {
-			case COMMAND:
-				command = StringUtils.removeStart(script, prefix).trim();
-				if (!command.startsWith("/")) {
-					command = new StringBuilder(command).insert(0, "/").toString();
-				}
-				return;
-			case BYPASS:
-				isBypass = true;
-				command = StringUtils.removeStart(script, prefix).trim();
-				if (!command.startsWith("/")) {
-					command = new StringBuilder(command).insert(0, "/").toString();
-				}
-				return;
-			case PLAYER:
-				player = StringUtils.removeStart(script, prefix).trim();
-				return;
-			case SERVER:
-				server = StringUtils.removeStart(script, prefix).trim();
-				return;
-			case SAY:
-				say = StringUtils.removeStart(script, prefix).trim();
-				return;
-			case PERM:
-				perm = getPerm(StringUtils.removeStart(script, prefix).trim(), PermType.CHECK);
-				return;
-			case PERM_ADD:
-				permADD = getPerm(StringUtils.removeStart(script, prefix).trim(), PermType.ADD);
-				return;
-			case PERM_REMOVE:
-				permREMOVE = getPerm(StringUtils.removeStart(script, prefix).trim(), PermType.REMOVE);
-				return;
-			case GROUP:
-				group = getGroup(StringUtils.removeStart(script, prefix).trim(), PermType.CHECK);
-				return;
-			case GROUP_ADD:
-				groupADD = getGroup(StringUtils.removeStart(script, prefix).trim(), PermType.ADD);
-				return;
-			case GROUP_REMOVE:
-				groupREMOVE = getGroup(StringUtils.removeStart(script, prefix).trim(), PermType.REMOVE);
-				return;
-			case AMOUNT:
-				amount = new Amount(StringUtils.removeStart(script, prefix).trim(), location, scriptType);
-				return;
-			case DELAY:
-				delay = new Delay(StringUtils.removeStart(script, prefix).trim());
-				return;
-			case COOLDOWN:
-				cooldown = new Cooldown(StringUtils.removeStart(script, prefix).trim());
-				return;
-			case HAND:
-				hand = getHand(StringUtils.removeStart(script, prefix).trim());
-				return;
-			case COST:
-				moneyCost = new MoneyCost(StringUtils.removeStart(script, prefix).trim());
-				return;
-			case ITEM:
-				itemCost = getItem(StringUtils.removeStart(script, prefix).trim());
-				return;
+			if (i == (s - 1)) {
+				Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
 			}
 		}
 	}
 
-	private Perm getPerm(String permission, PermType permType) {
-		String[] split = StringUtils.split(permission, "/");
-		switch (split.length) {
-		case 1:
-			return new Perm(split[0], permType);
-		case 2:
-			return new Perm(split[0], split[1], permType);
+	public void scriptOptions(Player player, UUID uuid, String fullCoords, ScriptReadManager readManager) {
+		Perm permADD = readManager.getPermADD();
+		if (permADD != null) {
+			permADD.playerPerm(player);
 		}
-		return null;
-	}
-
-	private Group getGroup(String group, PermType permType) {
-		String[] split = StringUtils.split(group, "/");
-		switch (split.length) {
-		case 1:
-			return new Group(split[0], permType);
-		case 2:
-			return new Group(split[0], split[1], permType);
+		Perm permREMOVE = readManager.getPermREMOVE();
+		if (permREMOVE != null) {
+			permREMOVE.playerPerm(player);
 		}
-		return null;
-	}
-
-	private Hand getHand(String hand) {
-		String[] split = StringUtils.split(hand, ":");
-		switch (split.length) {
-		case 1:
-			return new Hand(parseInt(split[0]), 1, (short) 0, null);
-		case 2:
-			return new Hand(parseInt(split[0]), parseInt(split[1]), (short) 0, null);
-		case 3:
-			return new Hand(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), null);
-		case 4:
-			return new Hand(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), split[3]);
+		Group groupADD = readManager.getGroupADD();
+		if (groupADD != null) {
+			groupADD.playerGroup(player);
 		}
-		return null;
-	}
-
-	private ItemCost getItem(String itemCost) {
-		String[] split = StringUtils.split(itemCost, ":");
-		switch (split.length) {
-		case 1:
-			return new ItemCost(parseInt(split[0]), 1, (short) 0, null);
-		case 2:
-			return new ItemCost(parseInt(split[0]), parseInt(split[1]), (short) 0, null);
-		case 3:
-			return new ItemCost(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), null);
-		case 4:
-			return new ItemCost(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), split[3]);
+		Group groupREMOVE = readManager.getGroupREMOVE();
+		if (groupREMOVE != null) {
+			groupREMOVE.playerGroup(player);
 		}
-		return null;
+		Amount amount = readManager.getAmount();
+		if (amount != null) {
+			amount.add();
+			if (amount.check()) {
+				amount.remove();
+			}
+		}
+		Cooldown cooldown = readManager.getCooldown();
+		if (cooldown != null) {
+			cooldown.run(player.getUniqueId(), fullCoords);
+		}
+		if (readManager.getPlayer() != null && player.isOnline()) {
+			player.sendMessage(replace(player, readManager.getPlayer(), true));
+		}
+		if (readManager.getServer() != null && player.isOnline()) {
+			Bukkit.broadcastMessage(replace(player, readManager.getServer(), true));
+		}
+		if (readManager.getSay() != null && player.isOnline()) {
+			commandExec(player, "/say " + replace(player, readManager.getSay(), false), true);
+		}
+		if (readManager.getCommand() != null && player.isOnline()) {
+			commandExec(player, replace(player, readManager.getCommand(), false), readManager.isBypass());
+		}
 	}
 
-	private int parseInt(String source) {
-		return Integer.parseInt(source);
+	private String replace(Player player, String text, boolean isColor) {
+		text = StringUtils.replace(text, "<player>", player.getName());
+		text = StringUtils.replace(text, "<dplayer>", player.getDisplayName());
+		if (isColor) {
+			text = StringUtils.replace(text, "&rc", Utils.getRandomColor());
+			text = StringUtils.replace(text, "&", "§");
+			return text;
+		}
+		return text;
 	}
 
-	private short parseShort(String source) {
-		return Short.parseShort(source);
+	private void commandExec(Player player, String command, boolean isBypass) {
+		if (!isBypass || player.isOp()) {
+			dispatchCommand(player, command);
+			return;
+		}
+		try {
+			player.setOp(true);
+			dispatchCommand(player, command);
+		} finally {
+			player.setOp(false);
+		}
+	}
+
+	private void dispatchCommand(Player player, String command) {
+		if (command.startsWith("/")) {
+			command = command.substring(1);
+		}
+		String pattern = PlayerSelector.getCommandBlockPattern(command);
+		Location location = this.location;
+		if (pattern != null) {
+			if (location == null) {
+				location = player.getLocation().clone();
+			}
+			Player[] players = PlayerSelector.getPlayers(location, pattern);
+			if (players != null) {
+				for (Player p : players) {
+					Bukkit.dispatchCommand(p, StringUtils.replace(command, pattern, p.getName()));
+				}
+			}
+		} else {
+			Bukkit.dispatchCommand(player, command);
+		}
 	}
 }

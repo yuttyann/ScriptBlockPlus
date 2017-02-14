@@ -12,6 +12,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
@@ -24,12 +25,18 @@ import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Click;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Script;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
+import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockListener implements Listener {
+
+	private MapManager mapManager;
+
+	public BlockListener() {
+		this.mapManager = ScriptBlock.instance.getMapManager();
+	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockBreak(BlockBreakEvent event) {
@@ -42,7 +49,7 @@ public class BlockListener implements Listener {
 		}
 		Block block = event.getBlock();
 		BlockLocation location = BlockLocation.fromLocation(block.getLocation());
-		if (MapManager.getBreakCoords().contains(location.getFullCoords())) {
+		if (mapManager.getBreakLocation().contains(location.getFullCoords())) {
 			ScriptBlockBreakEvent scEvent = new ScriptBlockBreakEvent(player, location.getBlock(), item, location);
 			Utils.callEvent(scEvent);
 			if (scEvent.isCancelled()) {
@@ -52,7 +59,7 @@ public class BlockListener implements Listener {
 				Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 				return;
 			}
-			new OptionManager(location, ScriptType.BREAK).scriptExec(player);
+			new ScriptManager(location, ScriptType.BREAK).scriptExec(player);
 		}
 	}
 
@@ -134,7 +141,7 @@ public class BlockListener implements Listener {
 			return;
 		}
 		Player player = event.getPlayer();
-		if (MapManager.getInteractCoords().contains(location.getFullCoords())) {
+		if (mapManager.getInteractLocation().contains(location.getFullCoords())) {
 			ScriptBlockInteractEvent scEvent = new ScriptBlockInteractEvent(player, block, event.getItem(), location);
 			Utils.callEvent(scEvent);
 			if (scEvent.isCancelled()) {
@@ -147,7 +154,7 @@ public class BlockListener implements Listener {
 				Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 				return;
 			}
-			new OptionManager(location, ScriptType.INTERACT).scriptExec(player);
+			new ScriptManager(location, ScriptType.INTERACT).scriptExec(player);
 		}
 	}
 

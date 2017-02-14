@@ -43,7 +43,7 @@ public class Hand {
 	}
 
 	public String getItemName() {
-		return itemName != null ? itemName : "none";
+		return itemName;
 	}
 
 	public boolean isSuccess() {
@@ -61,13 +61,11 @@ public class Hand {
 	public boolean check(Player player) {
 		ItemStack hand = Utils.getItemInHand(player);
 		ItemStack item = hand != null ? hand : new ItemStack(Material.AIR, 1);
-		if (item.getType() == material
-			&& item.getAmount() >= amount
-			&& item.getDurability() == damage) {
+		if (item.getType() == getMaterial()
+			&& item.getAmount() >= getAmount()
+			&& item.getDurability() == getDurability()) {
 			String itemName = Utils.getItemName(item);
-			if (this.itemName == null || (itemName != null && itemName.equals(this.itemName))) {
-				isSuccess = true;
-			}
+			isSuccess = getItemName() == null || itemName.equals(getItemName());
 		}
 		return isSuccess;
 	}

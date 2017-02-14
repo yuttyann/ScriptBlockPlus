@@ -32,10 +32,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.bukkit.plugin.Plugin;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
-
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
 
 public class FileUtils {
 
@@ -57,7 +56,7 @@ public class FileUtils {
 		return detectCharset(file, Charset.forName(ASCII)) != null;
 	}
 
-	public static void fileEncode(File file) {
+	public static void fileEncode(Plugin plugin, File file) {
 		if (!file.exists()) {
 			return;
 		}
@@ -67,9 +66,9 @@ public class FileUtils {
 			if (!Utils.isWindows()) {
 				return;
 			}
-			renameToEncode(file, true);
+			renameToEncode(plugin, file, true);
 		} else if (!isUTF8 && isCB19orLater) {
-			renameToEncode(file, false);
+			renameToEncode(plugin, file, false);
 		}
 	}
 
@@ -528,8 +527,8 @@ public class FileUtils {
 		return line;
 	}
 
-	private static void renameToEncode(File file, boolean isUTF8) {
-		File data = ScriptBlock.instance.getDataFolder();
+	private static void renameToEncode(Plugin plugin, File file, boolean isUTF8) {
+		File data = plugin.getDataFolder();
 		File temp = new File(data, "☃☃☃.yml");
 		fileEncode(file, temp, isUTF8);
 		file.delete();

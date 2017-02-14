@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +26,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class ScriptBlock extends JavaPlugin {
 
 	public static ScriptBlock instance;
+	private MapManager mapManager;
 	private Map<String, TabExecutor> commands;
 	private Map<String, List<CommandData>> commandHelp;
 
@@ -60,8 +60,8 @@ public class ScriptBlock extends JavaPlugin {
 		return commandHelp;
 	}
 
-	public File getJarFile() {
-		return getFile();
+	public MapManager getMapManager() {
+		return mapManager;
 	}
 
 	public ScriptBlockAPI getAPI(Block block, ScriptType scriptType) {
@@ -69,7 +69,7 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	private void loadClass() {
-		new MapManager();
+		mapManager = new MapManager();
 		getServer().getPluginManager().registerEvents(new InteractListener(), this);
 		getServer().getPluginManager().registerEvents(new BlockListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);

@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
@@ -14,12 +15,14 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptFileManager {
 
+	private MapManager mapManager;
 	private ScriptData scriptData;
 	private BlockLocation location;
 	private ScriptType scriptType;
 	private List<String> scripts;
 
 	public ScriptFileManager(BlockLocation location, ScriptType scriptType) {
+		this.mapManager = ScriptBlock.instance.getMapManager();
 		this.scriptData = new ScriptData(location, scriptType);
 		this.location = location;
 		this.scriptType = scriptType;
@@ -43,7 +46,7 @@ public class ScriptFileManager {
 		scriptData.setLastEdit();
 		scriptData.setCreateScripts(script);
 		scriptData.save();
-		MapManager.addCoords(location, scriptType);
+		mapManager.addCoords(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptCreateMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptCreateMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
@@ -58,7 +61,7 @@ public class ScriptFileManager {
 		scriptData.setLastEdit();
 		scriptData.addScripts(script);
 		scriptData.save();
-		MapManager.removeTimes(location.getFullCoords());
+		mapManager.removeTimes(location.getFullCoords());
 		Utils.sendPluginMessage(player, Messages.getScriptAddMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptAddMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
@@ -71,7 +74,7 @@ public class ScriptFileManager {
 		}
 		scriptData.remove();
 		scriptData.save();
-		MapManager.removeCoords(location, scriptType);
+		mapManager.removeCoords(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptRemoveMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptRemoveMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
@@ -137,7 +140,7 @@ public class ScriptFileManager {
 		scriptData.setLastEdit();
 		scriptData.setScripts(new ArrayList<String>(scripts));
 		scriptData.save();
-		MapManager.addCoords(location, scriptType);
+		mapManager.addCoords(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptPasteMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptPasteMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
@@ -145,7 +148,7 @@ public class ScriptFileManager {
 	//WorldEdit用に軽量化
 	public void scriptWERemove(Player player) {
 		scriptData.remove();
-		MapManager.removeCoords(location, scriptType);
+		mapManager.removeCoords(location, scriptType);
 	}
 
 	//WorldEdit用に軽量化
@@ -157,6 +160,6 @@ public class ScriptFileManager {
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
 		scriptData.setScripts(new ArrayList<String>(scripts));
-		MapManager.addCoords(location, scriptType);
+		mapManager.addCoords(location, scriptType);
 	}
 }

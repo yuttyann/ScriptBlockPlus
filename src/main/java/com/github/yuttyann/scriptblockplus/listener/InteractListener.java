@@ -33,6 +33,12 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class InteractListener implements Listener {
 
+	private MapManager mapManager;
+
+	public InteractListener() {
+		this.mapManager = ScriptBlock.instance.getMapManager();
+	}
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerAnimation(PlayerAnimationEvent event) {
 		Player player = event.getPlayer();
@@ -46,7 +52,7 @@ public class InteractListener implements Listener {
 		Block block = blocks.get(1);
 		for (Entity entity : getNearbyEntities(block.getLocation(), 4.3D)) {
 			if (entity instanceof Player && ((Player) entity) == player) {
-				if (MapManager.removeEvents(player.getUniqueId())) {
+				if (mapManager.removeEvents(player.getUniqueId())) {
 					return;
 				}
 				Action action = Action.LEFT_CLICK_BLOCK;
@@ -67,11 +73,11 @@ public class InteractListener implements Listener {
 		Player player = event.getPlayer();
 		if (player.getGameMode() == GameMode.ADVENTURE) {
 			final UUID uuid = player.getUniqueId();
-			MapManager.addEvents(uuid);
+			mapManager.addEvents(uuid);
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					MapManager.removeEvents(uuid);
+					mapManager.removeEvents(uuid);
 				}
 			}.runTaskLater(ScriptBlock.instance, 5);
 		}
@@ -88,7 +94,7 @@ public class InteractListener implements Listener {
 		if (event.getNewGameMode() == GameMode.ADVENTURE) {
 			return;
 		}
-		MapManager.removeEvents(player.getUniqueId());
+		mapManager.removeEvents(player.getUniqueId());
 	}
 
 	@SuppressWarnings("deprecation")
