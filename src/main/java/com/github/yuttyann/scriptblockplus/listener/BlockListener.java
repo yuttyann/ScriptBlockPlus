@@ -90,11 +90,12 @@ public class BlockListener implements Listener {
 				return true;
 			case RIGHT_CLICK_BLOCK:
 				if (player.isSneaking()) {
-					if (!ScriptFile.hasAllMetadata(player)) {
+					ScriptFileManager fileManager = ScriptFile.getMetadata(player);
+					if (fileManager == null) {
 						Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 						break;
 					}
-					ScriptFile.getMetadata(player).scriptPaste(player, location);
+					fileManager.scriptPaste(player, location);
 				} else {
 					new ScriptFileManager(location, ScriptType.BREAK).scriptCopy(player);
 				}

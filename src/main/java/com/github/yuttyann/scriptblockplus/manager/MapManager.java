@@ -99,7 +99,7 @@ public class MapManager {
 		}
 	}
 
-	public void addCoords(BlockLocation location, ScriptType scriptType) {
+	public void addLocation(BlockLocation location, ScriptType scriptType) {
 		String fullCoords = location.getFullCoords();
 		removeTimes(fullCoords);
 		switch (scriptType) {
@@ -121,7 +121,7 @@ public class MapManager {
 		}
 	}
 
-	public void removeCoords(BlockLocation location, ScriptType scriptType) {
+	public void removeLocation(BlockLocation location, ScriptType scriptType) {
 		String fullCoords = location.getFullCoords();
 		removeTimes(fullCoords);
 		switch (scriptType) {

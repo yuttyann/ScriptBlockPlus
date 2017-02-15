@@ -99,7 +99,7 @@ public class MetadataManager {
 			String script;
 			for (MetadataValue value : values) {
 				script = value.asString();
-				if (script != null) {
+				if (value != null) {
 					return script;
 				}
 			}

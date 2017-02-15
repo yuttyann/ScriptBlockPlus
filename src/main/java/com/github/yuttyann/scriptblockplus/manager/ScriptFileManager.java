@@ -46,7 +46,7 @@ public class ScriptFileManager {
 		scriptData.setLastEdit();
 		scriptData.setCreateScripts(script);
 		scriptData.save();
-		mapManager.addCoords(location, scriptType);
+		mapManager.addLocation(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptCreateMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptCreateMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
@@ -74,7 +74,7 @@ public class ScriptFileManager {
 		}
 		scriptData.remove();
 		scriptData.save();
-		mapManager.removeCoords(location, scriptType);
+		mapManager.removeLocation(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptRemoveMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptRemoveMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
@@ -140,7 +140,7 @@ public class ScriptFileManager {
 		scriptData.setLastEdit();
 		scriptData.setScripts(new ArrayList<String>(scripts));
 		scriptData.save();
-		mapManager.addCoords(location, scriptType);
+		mapManager.addLocation(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptPasteMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptPasteMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
@@ -148,7 +148,7 @@ public class ScriptFileManager {
 	//WorldEdit用に軽量化
 	public void scriptWERemove(Player player) {
 		scriptData.remove();
-		mapManager.removeCoords(location, scriptType);
+		mapManager.removeLocation(location, scriptType);
 	}
 
 	//WorldEdit用に軽量化
@@ -160,6 +160,6 @@ public class ScriptFileManager {
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
 		scriptData.setScripts(new ArrayList<String>(scripts));
-		mapManager.addCoords(location, scriptType);
+		mapManager.addLocation(location, scriptType);
 	}
 }

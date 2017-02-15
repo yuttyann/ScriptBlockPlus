@@ -175,7 +175,7 @@ public class ScriptBlockAPI {
 	 */
 	public void setScripts(List<String> scripts) {
 		scriptData.setScripts(scripts);
-		mapManager.addCoords(scriptData.getBlockLocation(), getScriptType());
+		mapManager.addLocation(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class ScriptBlockAPI {
 	 */
 	public void setCreateScripts(String script) {
 		scriptData.setCreateScripts(script);
-		mapManager.addCoords(scriptData.getBlockLocation(), getScriptType());
+		mapManager.addLocation(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**
@@ -203,7 +203,7 @@ public class ScriptBlockAPI {
 	public void removeScripts(String script) {
 		scriptData.removeScripts(script);
 		if (scriptData.getScripts().isEmpty()) {
-			mapManager.removeCoords(scriptData.getBlockLocation(), getScriptType());
+			mapManager.removeLocation(scriptData.getBlockLocation(), getScriptType());
 		} else {
 			mapManager.removeTimes(scriptData.getBlockLocation().getFullCoords());
 		}
@@ -214,7 +214,7 @@ public class ScriptBlockAPI {
 	 */
 	public void clearScripts() {
 		scriptData.clearScripts();
-		mapManager.removeCoords(scriptData.getBlockLocation(), getScriptType());
+		mapManager.removeLocation(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class ScriptBlockAPI {
 	 */
 	public void remove() {
 		scriptData.remove();
-		mapManager.removeCoords(scriptData.getBlockLocation(), getScriptType());
+		mapManager.removeLocation(scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**

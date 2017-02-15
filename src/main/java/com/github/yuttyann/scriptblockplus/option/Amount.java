@@ -39,6 +39,6 @@ public class Amount {
 	public void remove() {
 		scriptData.remove();
 		scriptData.save();
-		mapManager.removeCoords(scriptData.getBlockLocation(), scriptData.getScriptType());
+		mapManager.removeLocation(scriptData.getBlockLocation(), scriptData.getScriptType());
 	}
 }
