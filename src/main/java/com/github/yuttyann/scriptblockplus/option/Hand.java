@@ -65,7 +65,7 @@ public class Hand {
 			&& item.getAmount() >= getAmount()
 			&& item.getDurability() == getDurability()) {
 			String itemName = Utils.getItemName(item);
-			isSuccess = getItemName() == null || itemName.equals(getItemName());
+			isSuccess = getItemName() == null || (itemName != null && itemName.equals(getItemName()));
 		}
 		return isSuccess;
 	}

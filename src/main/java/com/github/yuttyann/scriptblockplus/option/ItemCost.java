@@ -65,7 +65,7 @@ public class ItemCost {
 				&& item.getAmount() >= getAmount()
 				&& item.getDurability() == getDurability()) {
 				String itemName = Utils.getItemName(item);
-				if (getItemName() == null || itemName.equals(getItemName())) {
+				if (getItemName() == null || (itemName != null && itemName.equals(getItemName()))) {
 					int result = item.getAmount() - getAmount();
 					if (result > 0) {
 						item.setAmount(result);
