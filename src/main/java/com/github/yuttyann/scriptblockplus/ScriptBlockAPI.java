@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
@@ -17,19 +16,20 @@ import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
  */
 public class ScriptBlockAPI {
 
+	private ScriptBlock plugin;
 	private MapManager mapManager;
 	private ScriptData scriptData;
 	private ScriptManager scriptManager;
 
 	/**
 	 * コンストラクタ
-	 * @param block
+	 * @param location
 	 * @param scriptType
 	 */
-	protected ScriptBlockAPI(Block block, ScriptType scriptType) {
-		this.mapManager = ScriptBlock.instance.getMapManager();
-		this.scriptData = new ScriptData(BlockLocation.fromLocation(block.getLocation()), scriptType);
-		this.scriptManager = new ScriptManager(scriptData.getBlockLocation(), scriptType);
+	protected ScriptBlockAPI(ScriptBlock plugin, Location location, ScriptType scriptType) {
+		this.mapManager = plugin.getMapManager();
+		this.scriptData = new ScriptData(plugin, BlockLocation.fromLocation(location), scriptType);
+		this.scriptManager = new ScriptManager(plugin, scriptData.getBlockLocation(), scriptType);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class ScriptBlockAPI {
 	 */
 	public void setLocation(Location location) {
 		scriptData.setBlockLocation(BlockLocation.fromLocation(location));
-		scriptManager = new ScriptManager(scriptData.getBlockLocation(), getScriptType());
+		scriptManager = new ScriptManager(plugin, scriptData.getBlockLocation(), getScriptType());
 	}
 
 	/**
@@ -119,6 +119,15 @@ public class ScriptBlockAPI {
 	 */
 	public List<String> getScripts() {
 		return scriptData.getScripts();
+	}
+
+	/**
+	 * スクリプトを移動する。
+	 * @param target 移動先
+	 * @param overwrite 上書きするか
+	 */
+	public void moveScripts(Location target, boolean overwrite) {
+		scriptData.moveScripts(BlockLocation.fromLocation(target), overwrite);
 	}
 
 	/**

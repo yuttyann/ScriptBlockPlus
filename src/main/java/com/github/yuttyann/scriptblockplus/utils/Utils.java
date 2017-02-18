@@ -193,8 +193,7 @@ public class Utils {
 	}
 
 	public static String getDateFormat(String format) {
-		SimpleDateFormat sdf = new SimpleDateFormat(format);
-		return sdf.format(new Date());
+		return new SimpleDateFormat(format).format(new Date());
 	}
 
 	public static String getName(Object uuid) {

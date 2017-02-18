@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.PermType;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.option.Amount;
@@ -21,6 +22,7 @@ public class ScriptReadManager extends OptionPrefix {
 
 	private static final String REGEX = "\\[(.+?)\\]";
 
+	private ScriptBlock plugin;
 	private BlockLocation location;
 	private ScriptType scriptType;
 	private String command;
@@ -42,7 +44,8 @@ public class ScriptReadManager extends OptionPrefix {
 	private boolean isBypass;
 	private boolean isSuccess;
 
-	public ScriptReadManager(BlockLocation location, ScriptType scriptType) {
+	public ScriptReadManager(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
+		this.plugin = plugin;
 		this.location = location;
 		this.scriptType = scriptType;
 	}
@@ -266,13 +269,13 @@ public class ScriptReadManager extends OptionPrefix {
 				groupREMOVE = getGroup(StringUtils.removeStart(script, prefix).trim(), PermType.REMOVE);
 				return;
 			case AMOUNT:
-				amount = new Amount(StringUtils.removeStart(script, prefix).trim(), location, scriptType);
+				amount = new Amount(plugin, StringUtils.removeStart(script, prefix).trim(), location, scriptType);
 				return;
 			case DELAY:
-				delay = new Delay(StringUtils.removeStart(script, prefix).trim());
+				delay = new Delay(plugin, StringUtils.removeStart(script, prefix).trim());
 				return;
 			case COOLDOWN:
-				cooldown = new Cooldown(StringUtils.removeStart(script, prefix).trim());
+				cooldown = new Cooldown(plugin, StringUtils.removeStart(script, prefix).trim());
 				return;
 			case HAND:
 				hand = getHand(StringUtils.removeStart(script, prefix).trim());

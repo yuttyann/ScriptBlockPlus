@@ -42,10 +42,12 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 
 public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 
+	private ScriptBlock plugin;
 	private MapManager mapManager;
 
-	public ScriptBlockCommand() {
-		this.mapManager = ScriptBlock.instance.getMapManager();
+	public ScriptBlockCommand(ScriptBlock plugin) {
+		this.plugin = plugin;
+		this.mapManager = plugin.getMapManager();
 		CommandHelp help = new CommandHelp();
 		help.putCommands(
 			"scriptblockplus",
@@ -98,7 +100,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
-				Files.reload();
+				Files.reload(plugin);
 				mapManager.reloadAllScripts();
 				Utils.sendPluginMessage(player, Messages.allFileReloadMessage);
 				return true;
@@ -262,7 +264,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 		Configuration config;
 		if (interactExists) {
 			config = Configuration.loadConfiguration(interactFile);
-			ScriptData scriptData = new ScriptData((BlockLocation) null, ScriptType.INTERACT);
+			ScriptData scriptData = new ScriptData(plugin, (BlockLocation) null, ScriptType.INTERACT);
 			for (String world : config.getKeys()) {
 				World temp = Utils.getWorld(world);
 				for (String coords : config.getKeys(world)) {
@@ -287,7 +289,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 		}
 		if (walkExists) {
 			config = Configuration.loadConfiguration(walkFile);
-			ScriptData scriptData = new ScriptData((BlockLocation) null, ScriptType.WALK);
+			ScriptData scriptData = new ScriptData(plugin, (BlockLocation) null, ScriptType.WALK);
 			for (String world : config.getKeys()) {
 				World temp = Utils.getWorld(world);
 				for (String coords : config.getKeys(world)) {
@@ -318,7 +320,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			Utils.sendPluginMessage(player, Messages.getErrorEditDataMessage());
 			return;
 		}
-		Click.setMetadata(player, clickType, true);
+		Click.setMetadata(plugin, player, clickType, true);
 		Utils.sendPluginMessage(player, Messages.getSuccEditDataMessage(clickType));
 	}
 
@@ -328,14 +330,14 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			return;
 		}
 		String script = StringUtils.createString(args, 2).trim();
-		ScriptReadManager readManager = new ScriptReadManager(null, null);
+		ScriptReadManager readManager = new ScriptReadManager(plugin, null, null);
 		readManager.reset();
 		if (!readManager.checkScript(script)) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptCheckMessage());
 			return;
 		}
-		Click.setMetadata(player, clickType, true);
-		Script.setMetadata(player, clickType, script);
+		Click.setMetadata(plugin, player, clickType, true);
+		Script.setMetadata(plugin, player, clickType, script);
 		Utils.sendPluginMessage(player, Messages.getSuccEditDataMessage(clickType));
 	}
 
@@ -350,13 +352,13 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 			return;
 		}
-		MetadataManager.removeAllMetadata(player);
+		MetadataManager.removeAllMetadata(plugin, player);
 		boolean isInteract = false, isBreak = false, isWalk = false;
 		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
 			BlockLocation location = BlockLocation.fromLocation(block.getLocation());
-			ScriptFileManager interact = new ScriptFileManager(location, ScriptType.INTERACT);
-			ScriptFileManager break_ = new ScriptFileManager(location, ScriptType.BREAK);
-			ScriptFileManager walk = new ScriptFileManager(location, ScriptType.WALK);
+			ScriptFileManager interact = new ScriptFileManager(plugin, location, ScriptType.INTERACT);
+			ScriptFileManager break_ = new ScriptFileManager(plugin, location, ScriptType.BREAK);
+			ScriptFileManager walk = new ScriptFileManager(plugin, location, ScriptType.WALK);
 			if (interact.checkPath()) {
 				interact.scriptWERemove(player);
 				if (!isInteract) {
@@ -420,7 +422,7 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 			return;
 		}
-		MetadataManager.removeAllMetadata(player);
+		MetadataManager.removeAllMetadata(plugin, player);
 		ScriptFileManager edit = ScriptFile.getMetadata(player);
 		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
 			if (block == null || block.getType() == Material.AIR) {

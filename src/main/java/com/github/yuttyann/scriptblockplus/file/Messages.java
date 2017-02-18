@@ -330,7 +330,7 @@ public class Messages {
 	}
 
 	public static String getConsoleWorldEditRemoveMessage(String scriptType, Location min, Location max) {
-		if (instance.consoleWorldEditRemoveMessage == null) {
+		if (instance.consoleWorldEditRemoveMessage == null || !instance.isConsoleLog) {
 			return null;
 		}
 		String world = min.getWorld().getName();

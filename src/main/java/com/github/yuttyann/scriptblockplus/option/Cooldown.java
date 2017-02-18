@@ -12,16 +12,19 @@ import com.github.yuttyann.scriptblockplus.manager.MapManager;
 public class Cooldown {
 
 	private int second;
+	private ScriptBlock plugin;
 	private MapManager mapManager;
 
-	public Cooldown(int second) {
+	public Cooldown(ScriptBlock plugin, int second) {
+		this.plugin = plugin;
 		this.second = second;
-		this.mapManager = ScriptBlock.instance.getMapManager();
+		this.mapManager = plugin.getMapManager();
 	}
 
-	public Cooldown(String second) {
+	public Cooldown(ScriptBlock plugin, String second) {
+		this.plugin = plugin;
 		this.second = Integer.parseInt(second);
-		this.mapManager = ScriptBlock.instance.getMapManager();
+		this.mapManager = plugin.getMapManager();
 	}
 
 	public int getSecond() {
@@ -73,7 +76,7 @@ public class Cooldown {
 					second--;
 				}
 			}
-		}.runTaskTimer(ScriptBlock.instance, 0, 20);
+		}.runTaskTimer(plugin, 0, 20);
 	}
 
 	private int[] calcParams(int[] params, int second) {

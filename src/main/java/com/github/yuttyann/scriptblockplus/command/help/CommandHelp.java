@@ -14,7 +14,7 @@ public class CommandHelp {
 
 	public List<CommandData> putCommands(String commandName, CommandData... args) {
 		List<CommandData> datas = new ArrayList<CommandData>();
-		String[] array = StringUtils.split(ScriptBlock.instance.getCommand(commandName).getUsage(), "/<command>");
+		String[] array = StringUtils.split(ScriptBlock.getInstance().getCommand(commandName).getUsage(), "/<command>");
 		for (int i = 0, j = 1, l = args.length; i < l; i++, j++) {
 			CommandData temp = args[i];
 			if (array.length > j && array[j].length() > 0) {
@@ -22,7 +22,7 @@ public class CommandHelp {
 			}
 			datas.add(temp);
 		}
-		return ScriptBlock.instance.getCommandHelp().put(commandName.toLowerCase(), datas);
+		return ScriptBlock.getInstance().getCommandHelp().put(commandName.toLowerCase(), datas);
 	}
 
 	public List<CommandData> put(String commandName, CommandData... args) {
@@ -30,25 +30,25 @@ public class CommandHelp {
 		for (CommandData data : args) {
 			datas.add(data);
 		}
-		return ScriptBlock.instance.getCommandHelp().put(commandName.toLowerCase(), datas);
+		return ScriptBlock.getInstance().getCommandHelp().put(commandName.toLowerCase(), datas);
 	}
 
 	public List<CommandData> get(int index) {
-		return ScriptBlock.instance.getCommandHelp().get(index);
+		return ScriptBlock.getInstance().getCommandHelp().get(index);
 	}
 
 	public List<CommandData> remove(String label) {
-		return ScriptBlock.instance.getCommandHelp().remove(label);
+		return ScriptBlock.getInstance().getCommandHelp().remove(label);
 	}
 
 	public void clear() {
-		ScriptBlock.instance.getCommandHelp().clear();
+		ScriptBlock.getInstance().getCommandHelp().clear();
 	}
 
 	public static void sendHelpMessage(CommandSender sender, Command command, boolean isName) {
 		List<CommandData> temps = new ArrayList<CommandData>();
 		String commandName = command.getName().toLowerCase();
-		for (CommandData data : ScriptBlock.instance.getCommandHelp().get(commandName)) {
+		for (CommandData data : ScriptBlock.getInstance().getCommandHelp().get(commandName)) {
 			if (data.hasPermission(sender)) {
 				temps.add(data);
 			}

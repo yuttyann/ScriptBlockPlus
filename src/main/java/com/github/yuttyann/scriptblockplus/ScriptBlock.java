@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -25,7 +26,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptBlock extends JavaPlugin {
 
-	public static ScriptBlock instance;
+	private static ScriptBlock instance;
 	private MapManager mapManager;
 	private Map<String, TabExecutor> commands;
 	private Map<String, List<CommandData>> commandHelp;
@@ -33,7 +34,7 @@ public class ScriptBlock extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
-		Files.reload();
+		Files.reload(this);
 		if (!CollPlugins.hasVault()) {
 			Utils.sendPluginMessage(Messages.notVaultMessage);
 			Utils.disablePlugin(this);
@@ -60,26 +61,35 @@ public class ScriptBlock extends JavaPlugin {
 		return commandHelp;
 	}
 
+	public static ScriptBlock getInstance() {
+		return instance;
+	}
+
 	public MapManager getMapManager() {
 		return mapManager;
 	}
 
+	@Deprecated
 	public ScriptBlockAPI getAPI(Block block, ScriptType scriptType) {
-		return new ScriptBlockAPI(block, scriptType);
+		return getAPI(block.getLocation(), scriptType);
+	}
+
+	public ScriptBlockAPI getAPI(Location location, ScriptType scriptType) {
+		return new ScriptBlockAPI(this, location, scriptType);
 	}
 
 	private void loadClass() {
 		mapManager = new MapManager();
-		getServer().getPluginManager().registerEvents(new InteractListener(), this);
-		getServer().getPluginManager().registerEvents(new BlockListener(), this);
-		getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
-		getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(), this);
+		getServer().getPluginManager().registerEvents(new InteractListener(this), this);
+		getServer().getPluginManager().registerEvents(new BlockListener(this), this);
+		getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
+		getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
 		getServer().getPluginManager().registerEvents(new Updater(this), this);
 	}
 
 	private void loadCommand() {
 		commandHelp = new HashMap<String, List<CommandData>>();
 		commands = new HashMap<String, TabExecutor>();
-		commands.put("scriptblockplus", new ScriptBlockCommand());
+		commands.put("scriptblockplus", new ScriptBlockCommand(this));
 	}
 }

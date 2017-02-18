@@ -12,14 +12,14 @@ public class Delay {
 	private long tick;
 	private MapManager mapManager;
 
-	public Delay(long tick) {
+	public Delay(ScriptBlock plugin, long tick) {
 		this.tick = tick;
-		this.mapManager = ScriptBlock.instance.getMapManager();
+		this.mapManager = plugin.getMapManager();
 	}
 
-	public Delay(String tick) {
+	public Delay(ScriptBlock plugin, String tick) {
 		this.tick = Long.parseLong(tick);
-		this.mapManager = ScriptBlock.instance.getMapManager();
+		this.mapManager = plugin.getMapManager();
 	}
 
 	public long getTick() {

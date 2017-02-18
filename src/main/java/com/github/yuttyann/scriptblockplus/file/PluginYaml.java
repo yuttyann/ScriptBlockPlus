@@ -21,7 +21,7 @@ public class PluginYaml {
 
 	static {
 		instance = new PluginYaml();
-		instance.description = ScriptBlock.instance.getDescription();
+		instance.description = ScriptBlock.getInstance().getDescription();
 	}
 
 	public static String getName() {

@@ -33,10 +33,12 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class InteractListener implements Listener {
 
+	private ScriptBlock plugin;
 	private MapManager mapManager;
 
-	public InteractListener() {
-		this.mapManager = ScriptBlock.instance.getMapManager();
+	public InteractListener(ScriptBlock plugin) {
+		this.plugin = plugin;
+		this.mapManager = plugin.getMapManager();
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -79,7 +81,7 @@ public class InteractListener implements Listener {
 				public void run() {
 					mapManager.removeEvents(uuid);
 				}
-			}.runTaskLater(ScriptBlock.instance, 5);
+			}.runTaskLater(plugin, 5);
 		}
 		BlockInteractEvent inEvent = new BlockInteractEvent(
 			event, player, event.getClickedBlock(), event.getItem(),

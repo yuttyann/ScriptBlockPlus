@@ -32,10 +32,12 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockListener implements Listener {
 
+	private ScriptBlock plugin;
 	private MapManager mapManager;
 
-	public BlockListener() {
-		this.mapManager = ScriptBlock.instance.getMapManager();
+	public BlockListener(ScriptBlock plugin) {
+		this.plugin = plugin;
+		this.mapManager = plugin.getMapManager();
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -59,7 +61,7 @@ public class BlockListener implements Listener {
 				Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 				return;
 			}
-			new ScriptManager(location, ScriptType.BREAK).scriptExec(player);
+			new ScriptManager(plugin, location, ScriptType.BREAK).scriptExec(player);
 		}
 	}
 
@@ -82,9 +84,9 @@ public class BlockListener implements Listener {
 			switch (action) {
 			case LEFT_CLICK_BLOCK:
 				if (player.isSneaking()) {
-					new ScriptFileManager(location, ScriptType.WALK).scriptCopy(player);
+					new ScriptFileManager(plugin, location, ScriptType.WALK).scriptCopy(player);
 				} else {
-					new ScriptFileManager(location, ScriptType.INTERACT).scriptCopy(player);
+					new ScriptFileManager(plugin, location, ScriptType.INTERACT).scriptCopy(player);
 				}
 				event.setCancelled(true);
 				return true;
@@ -97,12 +99,12 @@ public class BlockListener implements Listener {
 					}
 					fileManager.scriptPaste(player, location);
 				} else {
-					new ScriptFileManager(location, ScriptType.BREAK).scriptCopy(player);
+					new ScriptFileManager(plugin, location, ScriptType.BREAK).scriptCopy(player);
 				}
 				event.setCancelled(true);
 				return true;
 			default:
-				MetadataManager.removeAllMetadata(player);
+				MetadataManager.removeAllMetadata(plugin, player);
 				return false;
 			}
 		}
@@ -121,16 +123,16 @@ public class BlockListener implements Listener {
 	private boolean clickScript(Player player, String type, BlockLocation location, ClickType clickType, ScriptType scriptType) {
 		switch (type) {
 		case "CREATE":
-			new ScriptFileManager(location, scriptType).scriptCreate(player, Script.getMetadata(player, clickType));
+			new ScriptFileManager(plugin, location, scriptType).scriptCreate(player, Script.getMetadata(player, clickType));
 			return true;
 		case "ADD":
-			new ScriptFileManager(location, scriptType).scriptAdd(player, Script.getMetadata(player, clickType));
+			new ScriptFileManager(plugin, location, scriptType).scriptAdd(player, Script.getMetadata(player, clickType));
 			return true;
 		case "REMOVE":
-			new ScriptFileManager(location, scriptType).scriptRemove(player);
+			new ScriptFileManager(plugin, location, scriptType).scriptRemove(player);
 			return true;
 		case "VIEW":
-			new ScriptFileManager(location, scriptType).scriptView(player);
+			new ScriptFileManager(plugin, location, scriptType).scriptView(player);
 			return true;
 		default:
 			return false;
@@ -155,7 +157,7 @@ public class BlockListener implements Listener {
 				Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 				return;
 			}
-			new ScriptManager(location, ScriptType.INTERACT).scriptExec(player);
+			new ScriptManager(plugin, location, ScriptType.INTERACT).scriptExec(player);
 		}
 	}
 

@@ -15,15 +15,17 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptFileManager {
 
+	private ScriptBlock plugin;
 	private MapManager mapManager;
 	private ScriptData scriptData;
 	private BlockLocation location;
 	private ScriptType scriptType;
 	private List<String> scripts;
 
-	public ScriptFileManager(BlockLocation location, ScriptType scriptType) {
-		this.mapManager = ScriptBlock.instance.getMapManager();
-		this.scriptData = new ScriptData(location, scriptType);
+	public ScriptFileManager(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
+		this.plugin = plugin;
+		this.mapManager = plugin.getMapManager();
+		this.scriptData = new ScriptData(plugin, location, scriptType);
 		this.location = location;
 		this.scriptType = scriptType;
 	}
@@ -41,7 +43,7 @@ public class ScriptFileManager {
 	}
 
 	public void scriptCreate(Player player, String script) {
-		MetadataManager.removeAllMetadata(player);
+		MetadataManager.removeAllMetadata(plugin, player);
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
 		scriptData.setCreateScripts(script);
@@ -52,7 +54,7 @@ public class ScriptFileManager {
 	}
 
 	public void scriptAdd(Player player, String script) {
-		MetadataManager.removeAllMetadata(player);
+		MetadataManager.removeAllMetadata(plugin, player);
 		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
@@ -67,7 +69,7 @@ public class ScriptFileManager {
 	}
 
 	public void scriptRemove(Player player) {
-		MetadataManager.removeAllMetadata(player);
+		MetadataManager.removeAllMetadata(plugin, player);
 		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
@@ -80,25 +82,25 @@ public class ScriptFileManager {
 	}
 
 	public void scriptView(Player player) {
-		MetadataManager.removeAllMetadata(player);
+		MetadataManager.removeAllMetadata(plugin, player);
 		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
-		List<String> list = scriptData.getScripts();
-		if (list.isEmpty()) {
+		List<String> scripts = scriptData.getScripts();
+		if (scripts.isEmpty()) {
 			return;
 		}
 		StringBuilder builder = new StringBuilder();
 		List<String> authors = scriptData.getAuthors(true);
-		int length = authors.size();
-		if (length > 1) {
-			for (int i = 0 ; i < length; i++) {
+		int size = authors.size();
+		if (size > 1) {
+			for (int i = 0 ; i < size; i++) {
 				if (i == 0) {
 					builder.append("[");
 				}
 				builder.append(authors.get(i));
-				if (i != (length - 1)) {
+				if (i != (size - 1)) {
 					builder.append(", ");
 				} else {
 					builder.append("]");
@@ -113,28 +115,27 @@ public class ScriptFileManager {
 		}
 		Utils.sendPluginMessage(player, "Author: " + builder.toString());
 		Utils.sendPluginMessage(player, "LastEdit: " + scriptData.getLastEdit());
-		for (String script : list) {
-			builder.setLength(0);
-			Utils.sendPluginMessage(player, builder.append("- ").append(script).toString());
+		for (String script : scripts) {
+			Utils.sendPluginMessage(player, "- " + script);
 		}
 		Utils.sendPluginMessage(Messages.getConsoleScriptViewMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
 
 	public void scriptCopy(Player player) {
-		MetadataManager.removeAllMetadata(player);
+		MetadataManager.removeAllMetadata(plugin, player);
 		if (!checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
 		scripts = scriptData.getScripts();
-		ScriptFile.removeAllMetadata(player);
-		ScriptFile.setMetadata(player, scriptType, this);
+		ScriptFile.removeAllMetadata(plugin, player);
+		ScriptFile.setMetadata(plugin, player, scriptType, this);
 		Utils.sendPluginMessage(player, Messages.getScriptCopyMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptCopyMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
 
 	public void scriptPaste(Player player, BlockLocation location) {
-		MetadataManager.removeAllMetadata(player);
+		MetadataManager.removeAllMetadata(plugin, player);
 		scriptData.setBlockLocation(location);
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();

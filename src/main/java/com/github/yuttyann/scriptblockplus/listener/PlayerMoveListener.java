@@ -20,10 +20,12 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class PlayerMoveListener implements Listener {
 
+	private ScriptBlock plugin;
 	private MapManager mapManager;
 
-	public PlayerMoveListener() {
-		this.mapManager = ScriptBlock.instance.getMapManager();
+	public PlayerMoveListener(ScriptBlock plugin) {
+		this.plugin = plugin;
+		this.mapManager = plugin.getMapManager();
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -46,7 +48,7 @@ public class PlayerMoveListener implements Listener {
 				Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 				return;
 			}
-			new ScriptManager(location, ScriptType.WALK).scriptExec(player);
+			new ScriptManager(plugin, location, ScriptType.WALK).scriptExec(player);
 		}
 	}
 }

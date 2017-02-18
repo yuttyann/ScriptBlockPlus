@@ -28,13 +28,14 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptManager extends ScriptReadManager {
 
+	private ScriptBlock plugin;
 	private ScriptData scriptData;
 	private BlockLocation location;
 	private ScriptType scriptType;
 
-	public ScriptManager(BlockLocation location, ScriptType scriptType) {
-		super(location, scriptType);
-		this.scriptData = new ScriptData(location, scriptType);
+	public ScriptManager(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
+		super(plugin, location, scriptType);
+		this.scriptData = new ScriptData(plugin, location, scriptType);
 		this.location = location;
 		this.scriptType = scriptType;
 	}
@@ -116,7 +117,7 @@ public class ScriptManager extends ScriptReadManager {
 							scriptOptions(player2, uuid2, fullCoords2, readManager);
 							delay2.remove(fullCoords2, uuid2);
 						}
-					}.runTaskLater(ScriptBlock.instance, delay.getTick());
+					}.runTaskLater(plugin, delay.getTick());
 				} else {
 					scriptOptions(player, uuid, fullCoords, this);
 				}

@@ -12,15 +12,15 @@ public class Amount {
 	private MapManager mapManager;
 	private ScriptData scriptData;
 
-	public Amount(int amount, BlockLocation location, ScriptType scriptType) {
+	public Amount(ScriptBlock plugin, int amount, BlockLocation location, ScriptType scriptType) {
 		this.amount = amount;
-		this.mapManager = ScriptBlock.instance.getMapManager();
-		this.scriptData = new ScriptData(location, scriptType);
+		this.mapManager = plugin.getMapManager();
+		this.scriptData = new ScriptData(plugin, location, scriptType);
 	}
 
-	public Amount(String amount, BlockLocation location, ScriptType scriptType) {
+	public Amount(ScriptBlock plugin, String amount, BlockLocation location, ScriptType scriptType) {
 		this.amount = Integer.parseInt(amount);
-		this.scriptData = new ScriptData(location, scriptType);
+		this.scriptData = new ScriptData(plugin, location, scriptType);
 	}
 
 	public int getAmount() {

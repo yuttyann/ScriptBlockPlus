@@ -17,10 +17,11 @@ import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
 
 public class PlayerJoinQuitListener implements Listener {
 
+	private ScriptBlock plugin;
 	private MapManager mapManager;
 
-	public PlayerJoinQuitListener() {
-		this.mapManager = ScriptBlock.instance.getMapManager();
+	public PlayerJoinQuitListener(ScriptBlock plugin) {
+		this.mapManager = plugin.getMapManager();
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -35,8 +36,8 @@ public class PlayerJoinQuitListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		MetadataManager.removeAllMetadata(player);
-		ScriptFile.removeAllMetadata(player);
+		MetadataManager.removeAllMetadata(plugin, player);
+		ScriptFile.removeAllMetadata(plugin, player);
 		mapManager.removeEvents(player.getUniqueId());
 	}
 }

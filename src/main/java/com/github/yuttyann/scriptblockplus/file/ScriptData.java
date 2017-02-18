@@ -13,14 +13,16 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptData {
 
+	private ScriptBlock plugin;
 	private MapManager mapManager;
 	private YamlConfig scriptFile;
 	private BlockLocation location;
 	private ScriptType scriptType;
 	private String scriptPath;
 
-	public ScriptData(BlockLocation location, ScriptType scriptType) {
-		this.mapManager = ScriptBlock.instance.getMapManager();
+	public ScriptData(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
+		this.plugin = plugin;
+		this.mapManager = plugin.getMapManager();
 		this.scriptFile = Files.getScriptFile(scriptType);
 		this.location = location;
 		this.scriptType = scriptType;
@@ -81,6 +83,10 @@ public class ScriptData {
 		scriptFile.set(scriptPath + ".Author", player.getUniqueId().toString());
 	}
 
+	public void setAuthor(String uuids) {
+		scriptFile.set(scriptPath + ".Author", uuids);
+	}
+
 	public void addAuthor(Player player) {
 		String uuid = player.getUniqueId().toString();
 		List<String> authors = getAuthors(false);
@@ -95,9 +101,9 @@ public class ScriptData {
 		if (authors.size() > 0 && authors.contains(uuid)) {
 			authors.remove(uuid);
 			StringBuilder builder = new StringBuilder();
-			for (int i = 0, l = authors.size(); i < l; i++) {
+			for (int i = 0, s = authors.size(); i < s; i++) {
 				builder.append(authors.get(i));
-				if (i != (l - 1)) {
+				if (i != (s - 1)) {
 					builder.append(", ");
 				}
 			}
@@ -106,7 +112,11 @@ public class ScriptData {
 	}
 
 	public void setLastEdit() {
-		scriptFile.set(scriptPath + ".LastEdit", Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
+		setLastEdit(Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
+	}
+
+	public void setLastEdit(String date) {
+		scriptFile.set(scriptPath + ".LastEdit", date);
 	}
 
 	public void addAmount(int amount) {
@@ -115,6 +125,24 @@ public class ScriptData {
 
 	public void subtractAmount(int amount) {
 		scriptFile.set(scriptPath + ".Amount", getAmount() - amount);
+	}
+
+	public void moveScripts(BlockLocation target, boolean overwrite) {
+		BlockLocation targetLocation = target;
+		ScriptData targetData = new ScriptData(plugin, targetLocation, getScriptType());
+		if (location.equals(targetLocation)
+				|| !checkPath() || (targetData.checkPath() && overwrite)) {
+			return;
+		}
+		mapManager.addLocation(targetLocation, getScriptType());
+		mapManager.removeLocation(location, scriptType);
+		targetData.setAuthor(getAuthor());
+		targetData.setLastEdit(getLastEdit());
+		targetData.setScripts(getScripts());
+		targetData.save();
+		remove();
+		save();
+		setBlockLocation(targetLocation);
 	}
 
 	public void setScripts(List<String> scripts) {
