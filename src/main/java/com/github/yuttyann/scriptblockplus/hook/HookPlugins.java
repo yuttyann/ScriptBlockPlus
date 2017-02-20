@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.hookplugin;
+package com.github.yuttyann.scriptblockplus.hook;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 

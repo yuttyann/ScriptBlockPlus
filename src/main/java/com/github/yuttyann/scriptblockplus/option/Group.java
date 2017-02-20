@@ -3,8 +3,8 @@ package com.github.yuttyann.scriptblockplus.option;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.enums.PermType;
-import com.github.yuttyann.scriptblockplus.hookplugin.HookPlugins;
-import com.github.yuttyann.scriptblockplus.hookplugin.VaultPermission;
+import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
+import com.github.yuttyann.scriptblockplus.hook.VaultPermission;
 
 public class Group {
 

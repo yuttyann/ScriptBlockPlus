@@ -2,8 +2,8 @@ package com.github.yuttyann.scriptblockplus.option;
 
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.hookplugin.HookPlugins;
-import com.github.yuttyann.scriptblockplus.hookplugin.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
+import com.github.yuttyann.scriptblockplus.hook.VaultEconomy;
 
 public class MoneyCost {
 
