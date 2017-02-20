@@ -21,6 +21,7 @@ public class PlayerJoinQuitListener implements Listener {
 	private MapManager mapManager;
 
 	public PlayerJoinQuitListener(ScriptBlock plugin) {
+		this.plugin = plugin;
 		this.mapManager = plugin.getMapManager();
 	}
 
