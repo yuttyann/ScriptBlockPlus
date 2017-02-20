@@ -39,9 +39,9 @@ public class PlayerMoveListener implements Listener {
 		}
 		mapManager.getOldLocation().put(uuid, fullCoords);
 		if (mapManager.getWalkLocation().contains(fullCoords)) {
-			ScriptBlockWalkEvent scEvent = new ScriptBlockWalkEvent(player, location.getBlock(), Utils.getItemInHand(player), location);
-			Utils.callEvent(scEvent);
-			if (scEvent.isCancelled()) {
+			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(player, location.getBlock(), Utils.getItemInHand(player), location);
+			Utils.callEvent(walkEvent);
+			if (walkEvent.isCancelled()) {
 				return;
 			}
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_WALK_USE, player)) {

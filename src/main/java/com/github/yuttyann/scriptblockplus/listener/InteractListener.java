@@ -1,6 +1,9 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -8,10 +11,10 @@ import java.util.UUID;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,7 +24,6 @@ import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -47,26 +49,27 @@ public class InteractListener implements Listener {
 		if (event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
 			return;
 		}
-		List<Block> blocks = getLastTwoTargetBlocks(player, 5);
+		List<Block> blocks = getLastTwoTargetBlocks(player, 6);
 		if (blocks.size() < 2) {
 			return;
 		}
 		Block block = blocks.get(1);
-		for (Entity entity : getNearbyEntities(block.getLocation(), 4.3D)) {
-			if (entity instanceof Player && ((Player) entity) == player) {
-				if (mapManager.removeEvents(player.getUniqueId())) {
-					return;
-				}
-				Action action = Action.LEFT_CLICK_BLOCK;
-				BlockFace blockFace = block.getFace(blocks.get(0));
-				ItemStack item = Utils.getItemInHand(player);
-				BlockInteractEvent inEvent = new BlockInteractEvent(
-					new PlayerInteractEvent(player, action, item, block, blockFace),
-					player, block, item, action, blockFace, true
-				);
-				Utils.callEvent(inEvent);
-				break;
+		for (Entity entity : getNearbyEntities(block.getLocation(), 5.22D)) {
+			if (!(entity instanceof Player) || ((Player) entity) != player) {
+				continue;
 			}
+			if (mapManager.removeEvents(player.getUniqueId())) {
+				return;
+			}
+			Action action = Action.LEFT_CLICK_BLOCK;
+			BlockFace blockFace = block.getFace(blocks.get(0));
+			ItemStack item = Utils.getItemInHand(player);
+			BlockInteractEvent inEvent = new BlockInteractEvent(
+				new PlayerInteractEvent(player, action, item, block, blockFace),
+				player, block, item, action, blockFace, true
+			);
+			Utils.callEvent(inEvent);
+			break;
 		}
 	}
 
@@ -108,15 +111,34 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	//試験的に実装 テレポートさせることで表示されないようにしている。
-	//座標は自動的にブロックの中心になる。
-	private List<Entity> getNearbyEntities(Location center, double radius) {
-		BlockLocation location = BlockLocation.fromLocation(center);
-		location.setXYZ(location.getBlockX() + 0.5D, 500.0D, location.getBlockZ() + 0.5D);
-		Entity entity = location.getWorld().spawnEntity(location, EntityType.SNOWBALL);
-		location.setY(center.getBlockY() + 0.5D);
-		entity.teleport(location, TeleportCause.UNKNOWN);
-		entity.remove();
-		return entity.getNearbyEntities(radius, radius, radius);
+	private List<Entity> getNearbyEntities(Location location, double radius) {
+		List<Entity> entities = new ArrayList<Entity>();
+		location = BlockLocation.fromLocation(location).getAllCenter();
+		World world = location.getWorld();
+		int minX = floor((location.getX() - radius) / 16.0D);
+		int minZ = floor((location.getZ() - radius) / 16.0D);
+		int maxX = floor((location.getX() + radius) / 16.0D);
+		int maxZ = floor((location.getZ() + radius) / 16.0D);
+		for (int x = minX; x <= maxX; x++) {
+			for (int z = minZ; z <= maxZ; z++) {
+				if (!world.isChunkLoaded(x, z)) {
+					continue;
+				}
+				entities.addAll(Arrays.asList(world.getChunkAt(x, z).getEntities()));
+			}
+		}
+		Iterator<Entity> iterator = entities.iterator();
+		while (iterator.hasNext()) {
+			if (!(iterator.next().getLocation().distanceSquared(location) > radius * radius)) {
+				continue;
+			}
+			iterator.remove();
+		}
+		return entities;
+	}
+
+	private int floor(double paramDouble) {
+		int i = (int) paramDouble;
+		return paramDouble < i ? i - 1 : i;
 	}
 }

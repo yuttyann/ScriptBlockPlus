@@ -5,18 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
-import com.github.yuttyann.scriptblockplus.command.ScriptBlockCommand;
+import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.command.help.CommandData;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
+import com.github.yuttyann.scriptblockplus.hookplugin.HookPlugins;
 import com.github.yuttyann.scriptblockplus.listener.BlockListener;
 import com.github.yuttyann.scriptblockplus.listener.InteractListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerJoinQuitListener;
@@ -27,15 +25,16 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class ScriptBlock extends JavaPlugin {
 
 	private static ScriptBlock instance;
+
 	private MapManager mapManager;
-	private Map<String, TabExecutor> commands;
+	private ScriptBlockPlusCommand scriptBlockPlusCommand;
 	private Map<String, List<CommandData>> commandHelp;
 
 	@Override
 	public void onEnable() {
 		instance = this;
 		Files.reload(this);
-		if (!CollPlugins.hasVault()) {
+		if (!HookPlugins.hasVault()) {
 			Utils.sendPluginMessage(Messages.notVaultMessage);
 			Utils.disablePlugin(this);
 			return;
@@ -49,12 +48,22 @@ public class ScriptBlock extends JavaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		return commands.get(command.getName()).onCommand(sender, command, label, args);
+		if (command.getName().equals("scriptblockplus")) {
+			return scriptBlockPlusCommand.onCommand(sender, command, label, args);
+		}
+		return false;
 	}
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		return commands.get(command.getName()).onTabComplete(sender, command, label, args);
+		List<String> completeList = null;
+		if (command.getName().equals("scriptblockplus")) {
+			completeList = scriptBlockPlusCommand.onTabComplete(sender, command, label, args);
+		}
+		if (completeList != null) {
+			return completeList;
+		}
+		return super.onTabComplete(sender, command, label, args);
 	}
 
 	public Map<String, List<CommandData>> getCommandHelp() {
@@ -67,11 +76,6 @@ public class ScriptBlock extends JavaPlugin {
 
 	public MapManager getMapManager() {
 		return mapManager;
-	}
-
-	@Deprecated
-	public ScriptBlockAPI getAPI(Block block, ScriptType scriptType) {
-		return getAPI(block.getLocation(), scriptType);
 	}
 
 	public ScriptBlockAPI getAPI(Location location, ScriptType scriptType) {
@@ -89,7 +93,6 @@ public class ScriptBlock extends JavaPlugin {
 
 	private void loadCommand() {
 		commandHelp = new HashMap<String, List<CommandData>>();
-		commands = new HashMap<String, TabExecutor>();
-		commands.put("scriptblockplus", new ScriptBlockCommand(this));
+		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 	}
 }

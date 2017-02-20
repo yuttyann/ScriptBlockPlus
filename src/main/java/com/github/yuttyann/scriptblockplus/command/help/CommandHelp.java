@@ -47,7 +47,7 @@ public class CommandHelp {
 
 	public static void sendHelpMessage(CommandSender sender, Command command, boolean isName) {
 		List<CommandData> temps = new ArrayList<CommandData>();
-		String commandName = command.getName().toLowerCase();
+		String commandName = command.getName();
 		for (CommandData data : ScriptBlock.getInstance().getCommandHelp().get(commandName)) {
 			if (data.hasPermission(sender)) {
 				temps.add(data);

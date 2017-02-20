@@ -17,8 +17,8 @@ commands:
            /<command> <scripttype> add <options> - ブロックにスクリプトを追加します。
            /<command> <scripttype> remove - ブロックのスクリプトを削除します。
            /<command> <scripttype> view - ブロックのスクリプトを表示します。
-           /<command> worldedit paste [overwrite] - 選択した範囲にスクリプトをペーストします。
-           /<command> worldedit remove - 選択した範囲のスクリプトを削除します。
+           /<command> worldedit paste <pastetoair> [overwrite] - 選択範囲にスクリプトをペーストします。
+           /<command> worldedit remove - 選択範囲のスクリプトを削除します。
     aliases: [sbp]
 
 permissions:

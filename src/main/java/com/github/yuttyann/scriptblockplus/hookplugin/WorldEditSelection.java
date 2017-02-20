@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.collplugin;
+package com.github.yuttyann.scriptblockplus.hookplugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class WorldEditSelection {
 	}
 
 	protected static WorldEditSelection setupWorldEditAPI() {
-		if (!CollPlugins.hasWorldEdit()) {
+		if (!HookPlugins.hasWorldEdit()) {
 			return null;
 		}
 		return new WorldEditSelection(Utils.getPlugin("WorldEdit"));

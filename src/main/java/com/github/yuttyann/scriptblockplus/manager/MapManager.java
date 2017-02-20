@@ -66,7 +66,7 @@ public class MapManager {
 			reloadScripts(Files.getBreak(), ScriptType.BREAK);
 			reloadScripts(Files.getWalk(), ScriptType.WALK);
 		} catch (Exception e) {
-			coordsAllClear();
+			locationAllClear();
 		}
 	}
 
@@ -166,7 +166,7 @@ public class MapManager {
 		return false;
 	}
 
-	private void coordsAllClear() {
+	private void locationAllClear() {
 		interactLocation.clear();
 		breakLocation.clear();
 		walkLocation.clear();

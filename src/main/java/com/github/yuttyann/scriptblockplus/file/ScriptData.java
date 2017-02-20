@@ -115,8 +115,8 @@ public class ScriptData {
 		setLastEdit(Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
 	}
 
-	public void setLastEdit(String date) {
-		scriptFile.set(scriptPath + ".LastEdit", date);
+	public void setLastEdit(String time) {
+		scriptFile.set(scriptPath + ".LastEdit", time);
 	}
 
 	public void addAmount(int amount) {
@@ -127,29 +127,24 @@ public class ScriptData {
 		scriptFile.set(scriptPath + ".Amount", getAmount() - amount);
 	}
 
-	public void moveScripts(BlockLocation target, boolean overwrite) {
+	public void copyScripts(BlockLocation target, boolean overwrite) {
 		BlockLocation targetLocation = target;
 		ScriptData targetData = new ScriptData(plugin, targetLocation, getScriptType());
-		if (location.equals(targetLocation)
-				|| !checkPath() || (targetData.checkPath() && overwrite)) {
+		if (location.equals(targetLocation) || !checkPath() || (targetData.checkPath() && overwrite)) {
 			return;
 		}
 		mapManager.addLocation(targetLocation, getScriptType());
-		mapManager.removeLocation(location, scriptType);
 		targetData.setAuthor(getAuthor());
 		targetData.setLastEdit(getLastEdit());
 		targetData.setScripts(getScripts());
 		targetData.save();
-		remove();
-		save();
-		setBlockLocation(targetLocation);
 	}
 
 	public void setScripts(List<String> scripts) {
 		scriptFile.set(scriptPath + ".Scripts", scripts);
 	}
 
-	public void setCreateScripts(String script) {
+	public void setCreateScript(String script) {
 		List<String> scripts = getScripts();
 		try {
 			scripts.set(0, script);
@@ -159,13 +154,13 @@ public class ScriptData {
 		scriptFile.set(scriptPath + ".Scripts", scripts);
 	}
 
-	public void addScripts(String script) {
+	public void addScript(String script) {
 		List<String> scripts = getScripts();
 		scripts.add(script);
 		scriptFile.set(scriptPath + ".Scripts", scripts);
 	}
 
-	public void removeScripts(String script) {
+	public void removeScript(String script) {
 		List<String> scripts = getScripts();
 		scripts.remove(script);
 		scriptFile.set(scriptPath + ".Scripts", scripts);

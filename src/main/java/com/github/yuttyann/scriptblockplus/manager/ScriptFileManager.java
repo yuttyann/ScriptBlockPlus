@@ -46,7 +46,7 @@ public class ScriptFileManager {
 		MetadataManager.removeAllMetadata(plugin, player);
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
-		scriptData.setCreateScripts(script);
+		scriptData.setCreateScript(script);
 		scriptData.save();
 		mapManager.addLocation(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptCreateMessage(scriptType));
@@ -61,7 +61,7 @@ public class ScriptFileManager {
 		}
 		scriptData.addAuthor(player);
 		scriptData.setLastEdit();
-		scriptData.addScripts(script);
+		scriptData.addScript(script);
 		scriptData.save();
 		mapManager.removeTimes(location.getFullCoords());
 		Utils.sendPluginMessage(player, Messages.getScriptAddMessage(scriptType));

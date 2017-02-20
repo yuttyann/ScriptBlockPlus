@@ -122,12 +122,12 @@ public class ScriptBlockAPI {
 	}
 
 	/**
-	 * スクリプトを移動する。
-	 * @param target 移動先
+	 * スクリプトをコピーする。
+	 * @param target 保存先
 	 * @param overwrite 上書きするか
 	 */
-	public void moveScripts(Location target, boolean overwrite) {
-		scriptData.moveScripts(BlockLocation.fromLocation(target), overwrite);
+	public void copyScripts(Location target, boolean overwrite) {
+		scriptData.copyScripts(BlockLocation.fromLocation(target), overwrite);
 	}
 
 	/**
@@ -191,8 +191,8 @@ public class ScriptBlockAPI {
 	 * 一番最初のスクリプトを設定する。
 	 * @param script スクリプト
 	 */
-	public void setCreateScripts(String script) {
-		scriptData.setCreateScripts(script);
+	public void setCreateScript(String script) {
+		scriptData.setCreateScript(script);
 		mapManager.addLocation(scriptData.getBlockLocation(), getScriptType());
 	}
 
@@ -200,8 +200,8 @@ public class ScriptBlockAPI {
 	 * スクリプトを追加する。
 	 * @param script スクリプト
 	 */
-	public void addScripts(String script) {
-		scriptData.addScripts(script);
+	public void addScript(String script) {
+		scriptData.addScript(script);
 		mapManager.removeTimes(scriptData.getBlockLocation().getFullCoords());
 	}
 
@@ -209,8 +209,8 @@ public class ScriptBlockAPI {
 	 * スクリプトを削除する。
 	 * @param script スクリプト
 	 */
-	public void removeScripts(String script) {
-		scriptData.removeScripts(script);
+	public void removeScript(String script) {
+		scriptData.removeScript(script);
 		if (scriptData.getScripts().isEmpty()) {
 			mapManager.removeLocation(scriptData.getBlockLocation(), getScriptType());
 		} else {

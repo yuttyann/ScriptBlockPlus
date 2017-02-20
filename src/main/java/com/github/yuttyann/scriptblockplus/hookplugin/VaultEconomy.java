@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.collplugin;
+package com.github.yuttyann.scriptblockplus.hookplugin;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -17,7 +17,7 @@ public class VaultEconomy {
 	}
 
 	protected static VaultEconomy setupEconomy() {
-		if (!CollPlugins.hasVault()) {
+		if (!HookPlugins.hasVault()) {
 			return null;
 		}
 		ServicesManager services = Bukkit.getServer().getServicesManager();

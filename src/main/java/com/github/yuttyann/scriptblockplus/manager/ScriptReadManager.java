@@ -286,60 +286,63 @@ public class ScriptReadManager extends OptionPrefix {
 			case ITEM:
 				itemCost = getItem(StringUtils.removeStart(script, prefix).trim());
 				return;
+			default:
+				isSuccess = false;
+				return;
 			}
 		}
 	}
 
 	private Perm getPerm(String permission, PermType permType) {
-		String[] split = StringUtils.split(permission, "/");
-		switch (split.length) {
+		String[] array = StringUtils.split(permission, "/");
+		switch (array.length) {
 		case 1:
-			return new Perm(split[0], permType);
+			return new Perm(array[0], permType);
 		case 2:
-			return new Perm(split[0], split[1], permType);
+			return new Perm(array[0], array[1], permType);
 		}
 		return null;
 	}
 
 	private Group getGroup(String group, PermType permType) {
-		String[] split = StringUtils.split(group, "/");
-		switch (split.length) {
+		String[] array = StringUtils.split(group, "/");
+		switch (array.length) {
 		case 1:
-			return new Group(split[0], permType);
+			return new Group(array[0], permType);
 		case 2:
-			return new Group(split[0], split[1], permType);
+			return new Group(array[0], array[1], permType);
 		}
 		return null;
 	}
 
 	private Hand getHand(String hand) {
-		String[] split = StringUtils.split(hand, ":");
-		switch (split.length) {
+		String[] array = StringUtils.split(hand, ":");
+		switch (array.length) {
 		case 1:
-			return new Hand(parseInt(split[0]), 1, (short) 0, null);
+			return new Hand(parseInt(array[0]), 1, (short) 0, null);
 		case 2:
-			return new Hand(parseInt(split[0]), parseInt(split[1]), (short) 0, null);
+			return new Hand(parseInt(array[0]), parseInt(array[1]), (short) 0, null);
 		case 3:
-			return new Hand(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), null);
+			return new Hand(parseInt(array[0]), parseInt(array[1]), parseShort(array[2]), null);
 		case 4:
-			String itemName = StringUtils.createString(split, 3);
-			return new Hand(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), itemName);
+			String itemName = StringUtils.createString(array, 3);
+			return new Hand(parseInt(array[0]), parseInt(array[1]), parseShort(array[2]), itemName);
 		}
 		return null;
 	}
 
 	private ItemCost getItem(String itemCost) {
-		String[] split = StringUtils.split(itemCost, ":");
-		switch (split.length) {
+		String[] array = StringUtils.split(itemCost, ":");
+		switch (array.length) {
 		case 1:
-			return new ItemCost(parseInt(split[0]), 1, (short) 0, null);
+			return new ItemCost(parseInt(array[0]), 1, (short) 0, null);
 		case 2:
-			return new ItemCost(parseInt(split[0]), parseInt(split[1]), (short) 0, null);
+			return new ItemCost(parseInt(array[0]), parseInt(array[1]), (short) 0, null);
 		case 3:
-			return new ItemCost(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), null);
+			return new ItemCost(parseInt(array[0]), parseInt(array[1]), parseShort(array[2]), null);
 		case 4:
-			String itemName = StringUtils.createString(split, 3);
-			return new ItemCost(parseInt(split[0]), parseInt(split[1]), parseShort(split[2]), itemName);
+			String itemName = StringUtils.createString(array, 3);
+			return new ItemCost(parseInt(array[0]), parseInt(array[1]), parseShort(array[2]), itemName);
 		}
 		return null;
 	}

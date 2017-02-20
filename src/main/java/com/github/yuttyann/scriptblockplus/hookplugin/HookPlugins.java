@@ -1,8 +1,8 @@
-package com.github.yuttyann.scriptblockplus.collplugin;
+package com.github.yuttyann.scriptblockplus.hookplugin;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class CollPlugins {
+public class HookPlugins {
 
 	private static Boolean hasVault;
 	private static Boolean hasWorldEdit;

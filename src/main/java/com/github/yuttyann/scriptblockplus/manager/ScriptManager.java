@@ -11,10 +11,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.PlayerSelector;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
+import com.github.yuttyann.scriptblockplus.hookplugin.HookPlugins;
 import com.github.yuttyann.scriptblockplus.option.Amount;
 import com.github.yuttyann.scriptblockplus.option.Cooldown;
 import com.github.yuttyann.scriptblockplus.option.Delay;
@@ -97,7 +97,7 @@ public class ScriptManager extends ScriptReadManager {
 				if (itemCost != null) {
 					if (!itemCost.payment(player)) {
 						if (moneyCost != null && moneyCost.isSuccess()) {
-							CollPlugins.getVaultEconomy().depositPlayer(player, moneyCost.getCost());
+							HookPlugins.getVaultEconomy().depositPlayer(player, moneyCost.getCost());
 						}
 						Utils.sendPluginMessage(player, Messages.getErrorItemMessage(itemCost.getMaterial(), itemCost.getId(),
 							itemCost.getAmount(), itemCost.getDurability(), itemCost.getItemName()));

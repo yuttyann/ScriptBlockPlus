@@ -2,8 +2,8 @@ package com.github.yuttyann.scriptblockplus.option;
 
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
-import com.github.yuttyann.scriptblockplus.collplugin.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.hookplugin.HookPlugins;
+import com.github.yuttyann.scriptblockplus.hookplugin.VaultEconomy;
 
 public class MoneyCost {
 
@@ -32,7 +32,7 @@ public class MoneyCost {
 	}
 
 	public boolean payment(Player player) {
-		VaultEconomy economy = CollPlugins.getVaultEconomy();
+		VaultEconomy economy = HookPlugins.getVaultEconomy();
 		if (economy.has(player, getCost())) {
 			economy.withdrawPlayer(player, getCost());
 			isSuccess = true;

@@ -52,9 +52,9 @@ public class BlockListener implements Listener {
 		Block block = event.getBlock();
 		BlockLocation location = BlockLocation.fromLocation(block.getLocation());
 		if (mapManager.getBreakLocation().contains(location.getFullCoords())) {
-			ScriptBlockBreakEvent scEvent = new ScriptBlockBreakEvent(player, location.getBlock(), item, location);
-			Utils.callEvent(scEvent);
-			if (scEvent.isCancelled()) {
+			ScriptBlockBreakEvent breakEvent = new ScriptBlockBreakEvent(player, location.getBlock(), item, location);
+			Utils.callEvent(breakEvent);
+			if (breakEvent.isCancelled()) {
 				return;
 			}
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_BREAK_USE, player)) {
@@ -70,7 +70,7 @@ public class BlockListener implements Listener {
 		Block block = event.getBlock();
 		BlockLocation location = BlockLocation.fromLocation(block.getLocation());
 		if (!scriptSetting(event, event.getAction(), block, location)) {
-			scriptEvent(event, block, location);
+			callScriptEvent(event, block, location);
 		}
 	}
 
@@ -139,18 +139,18 @@ public class BlockListener implements Listener {
 		}
 	}
 
-	private void scriptEvent(BlockInteractEvent event, Block block, BlockLocation location) {
+	private void callScriptEvent(BlockInteractEvent event, Block block, BlockLocation location) {
 		if (Utils.isCB19orLater() && !isSlotHand(event.getHand())) {
 			return;
 		}
 		Player player = event.getPlayer();
 		if (mapManager.getInteractLocation().contains(location.getFullCoords())) {
-			ScriptBlockInteractEvent scEvent = new ScriptBlockInteractEvent(player, block, event.getItem(), location);
-			Utils.callEvent(scEvent);
-			if (scEvent.isCancelled()) {
+			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, event.getItem(), location);
+			Utils.callEvent(interactEvent);
+			if (interactEvent.isCancelled()) {
 				return;
 			}
-			if (!scEvent.isLeftClick() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
+			if (!interactEvent.isLeftClick() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
 				return;
 			}
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_INTERACT_USE, player)) {

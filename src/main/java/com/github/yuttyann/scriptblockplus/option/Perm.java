@@ -2,9 +2,9 @@ package com.github.yuttyann.scriptblockplus.option;
 
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
-import com.github.yuttyann.scriptblockplus.collplugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.enums.PermType;
+import com.github.yuttyann.scriptblockplus.hookplugin.HookPlugins;
+import com.github.yuttyann.scriptblockplus.hookplugin.VaultPermission;
 
 public class Perm {
 
@@ -21,7 +21,7 @@ public class Perm {
 		this.world = world;
 		this.perm = perm;
 		this.permType = permType;
-		this.permission = CollPlugins.getVaultPermission();
+		this.permission = HookPlugins.getVaultPermission();
 	}
 
 	public String getNode() {

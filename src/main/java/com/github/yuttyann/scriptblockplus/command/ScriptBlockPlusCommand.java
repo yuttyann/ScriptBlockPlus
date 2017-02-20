@@ -17,8 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.collplugin.CollPlugins;
-import com.github.yuttyann.scriptblockplus.collplugin.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.command.help.CommandData;
 import com.github.yuttyann.scriptblockplus.command.help.CommandHelp;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
@@ -28,6 +26,8 @@ import com.github.yuttyann.scriptblockplus.file.Configuration;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
+import com.github.yuttyann.scriptblockplus.hookplugin.HookPlugins;
+import com.github.yuttyann.scriptblockplus.hookplugin.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Click;
@@ -40,12 +40,12 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
+public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor {
 
 	private ScriptBlock plugin;
 	private MapManager mapManager;
 
-	public ScriptBlockCommand(ScriptBlock plugin) {
+	public ScriptBlockPlusCommand(ScriptBlock plugin) {
 		this.plugin = plugin;
 		this.mapManager = plugin.getMapManager();
 		CommandHelp help = new CommandHelp();
@@ -160,31 +160,32 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 				setClickMeta(player, type);
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("worldedit")
-				&& (args[1].equalsIgnoreCase("paste") || args[1].equalsIgnoreCase("remove"))) {
+			if (args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("remove")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
 					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
-				if (args[1].equalsIgnoreCase("paste")) {
-					scriptWEPaste(player, true);
-				} else {
-					scriptWERemove(player);
-				}
-				return true;
-			}
-		}
-		if (args.length == 3) {
-			if (args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
-				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
-					return true;
-				}
-				scriptWEPaste(player, Boolean.parseBoolean(args[2]));
+				scriptWERemove(player);
 				return true;
 			}
 		}
 		if (args.length > 2) {
+			if (args.length == 3 && args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
+				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					return true;
+				}
+				scriptWEPaste(player, false, Boolean.parseBoolean(args[2]));
+				return true;
+			}
+			if (args.length == 4 && args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
+				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					return true;
+				}
+				scriptWEPaste(player, Boolean.parseBoolean(args[2]), Boolean.parseBoolean(args[3]));
+				return true;
+			}
 			if (args[0].equalsIgnoreCase("interact")
 				&& (args[1].equalsIgnoreCase("create") || args[1].equalsIgnoreCase("add"))) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT, player)) {
@@ -342,11 +343,11 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 	}
 
 	private void scriptWERemove(Player player) {
-		if (!CollPlugins.hasWorldEdit()) {
+		if (!HookPlugins.hasWorldEdit()) {
 			Utils.sendPluginMessage(player, Messages.notWorldEditMessage);
 			return;
 		}
-		WorldEditSelection selectionAPI = CollPlugins.getWorldEditSelection();
+		WorldEditSelection selectionAPI = HookPlugins.getWorldEditSelection();
 		Selection selection = selectionAPI.getSelection(player);
 		if (selection == null) {
 			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
@@ -407,30 +408,30 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 		Utils.sendPluginMessage(Messages.getConsoleWorldEditRemoveMessage(type, selection.getMinimumPoint(), selection.getMaximumPoint()));
 	}
 
-	private void scriptWEPaste(Player player, boolean overwrite) {
+	private void scriptWEPaste(Player player, boolean pasteonair, boolean overwrite) {
 		if (!ScriptFile.hasAllMetadata(player)) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
-		if (!CollPlugins.hasWorldEdit()) {
+		if (!HookPlugins.hasWorldEdit()) {
 			Utils.sendPluginMessage(player, Messages.notWorldEditMessage);
 			return;
 		}
-		WorldEditSelection selectionAPI = CollPlugins.getWorldEditSelection();
+		WorldEditSelection selectionAPI = HookPlugins.getWorldEditSelection();
 		Selection selection = selectionAPI.getSelection(player);
 		if (selection == null) {
 			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 			return;
 		}
 		MetadataManager.removeAllMetadata(plugin, player);
-		ScriptFileManager edit = ScriptFile.getMetadata(player);
+		ScriptFileManager fileManager = ScriptFile.getMetadata(player);
 		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
-			if (block == null || block.getType() == Material.AIR) {
+			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
 				continue;
 			}
-			edit.scriptWEPaste(player, BlockLocation.fromLocation(block.getLocation()), overwrite);
+			fileManager.scriptWEPaste(player, BlockLocation.fromLocation(block.getLocation()), overwrite);
 		}
-		edit.save();
+		fileManager.save();
 		ScriptType scriptType = ScriptFile.getMetadata(player).getScriptType();
 		Utils.sendPluginMessage(player, Messages.getWorldEditPasteMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleWorldEditPasteMessage(scriptType, selection.getMinimumPoint(), selection.getMaximumPoint()));
@@ -520,6 +521,21 @@ public class ScriptBlockCommand extends OptionPrefix implements TabExecutor {
 			for (String c : args_) {
 				if (c.startsWith(prefix)) {
 					commands.add(c.trim());
+				}
+			}
+			return commands;
+		}
+		if (args.length == 4 && args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
+			Permission perm= Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT;
+			String[] args_ = new String[]{"true", "false"};;
+			if ((args_ = perm(sender, args_, perm)) == null) {
+				return null;
+			}
+			String prefix = args[2].toLowerCase();
+			List<String> commands = new ArrayList<String>();
+			for (String c : args_) {
+				if (c.startsWith(prefix)) {
+					commands.add(c);
 				}
 			}
 			return commands;
