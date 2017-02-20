@@ -527,12 +527,12 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 			return commands;
 		}
 		if (args.length == 4 && args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
-			Permission perm= Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT;
+			Permission perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT;
 			String[] args_ = new String[]{"true", "false"};;
 			if ((args_ = perm(sender, args_, perm)) == null) {
 				return null;
 			}
-			String prefix = args[2].toLowerCase();
+			String prefix = args[3].toLowerCase();
 			List<String> commands = new ArrayList<String>();
 			for (String c : args_) {
 				if (c.startsWith(prefix)) {
