@@ -249,6 +249,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 		);
 		item.setItemMeta(meta);
 		player.getInventory().addItem(item);
+		Utils.updateInventory(player);
 		Utils.sendPluginMessage(player, Messages.giveToolMessage);
 	}
 
