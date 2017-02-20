@@ -190,7 +190,7 @@ public class ScriptReadManager extends OptionPrefix {
 		try {
 			Pattern pattern = Pattern.compile(REGEX);
 			Matcher matcher = pattern.matcher(script);
-			if (!matcher.find() || !script.startsWith("[")) {
+			if (!matcher.find()) {
 				read(script);
 			} else {
 				matcher.reset();
@@ -285,9 +285,6 @@ public class ScriptReadManager extends OptionPrefix {
 				return;
 			case ITEM:
 				itemCost = getItem(StringUtils.removeStart(script, prefix).trim());
-				return;
-			default:
-				isSuccess = false;
 				return;
 			}
 		}
