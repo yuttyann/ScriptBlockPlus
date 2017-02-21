@@ -167,7 +167,7 @@ public class ScriptReadManager extends OptionPrefix {
 		try {
 			Pattern pattern = Pattern.compile(REGEX);
 			Matcher matcher = pattern.matcher(script);
-			if (!matcher.find() || !script.startsWith("[")) {
+			if (!matcher.find()) {
 				if (!check(script) && isSuccess) {
 					isSuccess = false;
 				}
