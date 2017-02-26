@@ -55,7 +55,7 @@ public class Hand {
 
 	public boolean check(Player player) {
 		ItemStack hand = Utils.getItemInHand(player);
-		ItemStack item = hand != null ? hand : new ItemStack(Material.AIR, 1);
+		ItemStack item = hand != null ? hand : new ItemStack(Material.AIR);
 		if (item.getType() == getMaterial()
 			&& item.getAmount() >= getAmount()
 			&& item.getDurability() == getDurability()) {
