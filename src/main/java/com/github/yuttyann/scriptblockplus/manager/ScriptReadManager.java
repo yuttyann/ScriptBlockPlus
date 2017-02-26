@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
@@ -19,8 +19,6 @@ import com.github.yuttyann.scriptblockplus.option.Perm;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class ScriptReadManager extends OptionPrefix {
-
-	private static final String REGEX = "\\[(.+?)\\]";
 
 	private ScriptBlock plugin;
 	private BlockLocation location;
@@ -160,27 +158,22 @@ public class ScriptReadManager extends OptionPrefix {
 		itemCost = null;
 		moneyCost = null;
 		isBypass = false;
-		isSuccess = true;
+		isSuccess = false;
 	}
 
 	public boolean checkScript(String script) {
 		try {
-			Pattern pattern = Pattern.compile(REGEX);
-			Matcher matcher = pattern.matcher(script);
-			if (!matcher.find()) {
-				if (!check(script) && isSuccess) {
-					isSuccess = false;
-				}
-			} else {
-				matcher.reset();
-				while (matcher.find()) {
-					if (!check(matcher.group(1)) && isSuccess) {
-						isSuccess = false;
+			boolean hasOption = script.startsWith("[");
+			if (!hasOption && check(script) && !isSuccess) {
+				isSuccess = true;
+			} else if (hasOption) {
+				for (String s : getScripts(script)) {
+					if (check(s) && !isSuccess) {
+						isSuccess = true;
 					}
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			isSuccess = false;
 		}
 		return isSuccess;
@@ -188,21 +181,53 @@ public class ScriptReadManager extends OptionPrefix {
 
 	public boolean readScript(String script) {
 		try {
-			Pattern pattern = Pattern.compile(REGEX);
-			Matcher matcher = pattern.matcher(script);
-			if (!matcher.find()) {
+			if (!(isSuccess = checkScript(script))) {
+				throw new Exception();
+			}
+			if (!script.startsWith("[")) {
 				read(script);
 			} else {
-				matcher.reset();
-				while (matcher.find()) {
-					read(matcher.group(1));
+				for (String s : getScripts(script)) {
+					read(s);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			isSuccess = false;
 		}
 		return isSuccess;
+	}
+
+	private List<String> getScripts(String script) throws Exception {
+		List<String> result = new ArrayList<String>();
+		char[] chars = script.toCharArray();
+		int start = 0;
+		int end = 0;
+		for(int i = 0; i < chars.length; i++) {
+			if(chars[i] == '[') {
+				start++;
+			} else if(chars[i] == ']') {
+				end++;
+			}
+		}
+		if(start != end) {
+			throw new Exception();
+		}
+		int count = 0;
+		int index = 0;
+		for(int i = 0; i < chars.length; i++) {
+			if(chars[i] == '[') {
+				if(count == 0) {
+					index = i;
+				}
+				count++;
+			} else if(chars[i] == ']') {
+				count--;
+				if(count == 0){
+					result.add(script.substring(index + 1, i));
+				}
+			}
+		}
+		return result;
 	}
 
 	private boolean check(String script) {
