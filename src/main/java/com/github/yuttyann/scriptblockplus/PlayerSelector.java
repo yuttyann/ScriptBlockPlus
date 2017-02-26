@@ -85,6 +85,8 @@ public class PlayerSelector {
 				mode = GameMode.CREATIVE;
 			} else if (j1 == 2) {
 				mode = GameMode.ADVENTURE;
+			} else if (Utils.isCB18orLater() && j1 == 3) {
+				mode = GameMode.SPECTATOR;
 			}
 		}
 		if (map.containsKey("c")) {
@@ -99,17 +101,16 @@ public class PlayerSelector {
 		World world = flag ? location.getWorld() : null;
 		List<Player> list;
 		if (!s1.equals("p") && !s1.equals("a")) {
-			if (s1.equals("r")) {
-				list = a(loc, i, j, 0, mode, k, l, map1, s2, s3, world);
-				Collections.shuffle(list);
-				list = list.subList(0, Math.min(i1, list.size()));
-				return list != null && !list.isEmpty() ? (Player[]) list.toArray(new Player[0]) : new Player[0];
-			} else {
+			if (!s1.equals("r")) {
 				return null;
 			}
+			list = a(loc, i, j, 0, mode, k, l, map1, s2, s3, world);
+			Collections.shuffle(list);
+			list = list.subList(0, Math.min(i1, list.size()));
+			return list != null && !list.isEmpty() ? (Player[]) list.toArray(new Player[list.size()]) : new Player[0];
 		} else {
 			list = a(loc, i, j, i1, mode, k, l, map1, s2, s3, world);
-			return list != null && !list.isEmpty() ? (Player[]) list.toArray(new Player[0]) : new Player[0];
+			return list != null && !list.isEmpty() ? (Player[]) list.toArray(new Player[list.size()]) : new Player[0];
 		}
 	}
 
@@ -126,17 +127,16 @@ public class PlayerSelector {
 
 	public static boolean isList(String s) {
 		Matcher matcher = a.matcher(s);
-		if (matcher.matches()) {
-			Map<String, String> map = h(matcher.group(2));
-			String s1 = matcher.group(1);
-			int i = g(s1);
-			if (map.containsKey("c")) {
-				i = a(map.get("c"), i);
-			}
-			return i != 1;
-		} else {
+		if (!matcher.matches()) {
 			return false;
 		}
+		Map<String, String> map = h(matcher.group(2));
+		String s1 = matcher.group(1);
+		int i = g(s1);
+		if (map.containsKey("c")) {
+			i = a(map.get("c"), i);
+		}
+		return i != 1;
 	}
 
 	public static boolean isPattern(String s, String s1) {
@@ -213,21 +213,20 @@ public class PlayerSelector {
 		int j = i;
 		try {
 			j = Integer.parseInt(s);
-		} catch (Throwable throwable) {}
+		} catch (Throwable t) {}
 		return j;
 	}
 
 	private static double a(String s, double d0) {
-
 		double d1 = d0;
-
 		try {
 			d1 = Double.parseDouble(s);
-		} catch (Throwable throwable) {}
+		} catch (Throwable t) {}
 		return d1;
 	}
 
-	private static List<Player> a(final Location location, int i, int j, int k, GameMode l, int i1, int j1, Map<String, Integer> map, String s, String s1, World world) {
+	private static List<Player> a(final Location location, int i, int j, int k,
+			GameMode l, int i1, int j1, Map<String, Integer> map, String s, String s1, World world) {
 		List<Player> list = new ArrayList<Player>();
 		boolean flag = k < 0;
 		boolean flag1 = s != null && s.startsWith("!");
@@ -240,7 +239,8 @@ public class PlayerSelector {
 			s1 = s1.substring(1);
 		}
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			if ((world == null || player.getWorld() == world) && (s == null || flag1 != s.equalsIgnoreCase(player.getName()))) {
+			if ((world == null || player.getWorld() == world)
+					&& (s == null || flag1 != s.equalsIgnoreCase(player.getName()))) {
 				if (s1 != null) {
 					Scoreboard sb = player.getScoreboard();
 					@SuppressWarnings("deprecation")
@@ -256,7 +256,8 @@ public class PlayerSelector {
 						continue;
 					}
 				}
-				if (a(player, map) && (l == null || l == player.getGameMode()) && (i1 <= 0 || player.getLevel() >= i1) && player.getLevel() <= j1) {
+				if (a(player, map) && (l == null || l == player.getGameMode())
+						&& (i1 <= 0 || player.getLevel() >= i1) && player.getLevel() <= j1) {
 					list.add(player);
 				}
 			}
@@ -317,23 +318,13 @@ public class PlayerSelector {
 		return false;
 	}
 
-	@SuppressWarnings("deprecation")
 	private static Score getScore(Objective objective, Player player) {
 		if (Utils.isCB178orLater()) {
 			return objective.getScore(player.getName());
 		} else {
+			@SuppressWarnings("deprecation")
 			Score score = objective.getScore(player);
 			return score;
 		}
-	}
-
-	public static String getCommandBlockPattern(String command) {
-		String[] arguments = command.split(" ");
-		for (int i = 1; i < arguments.length; i++) {
-			if (isPattern(arguments[i])) {
-				return arguments[i];
-			}
-		}
-		return null;
 	}
 }
