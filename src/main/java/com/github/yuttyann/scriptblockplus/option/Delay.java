@@ -12,11 +12,6 @@ public class Delay {
 	private long tick;
 	private MapManager mapManager;
 
-	public Delay(ScriptBlock plugin, long tick) {
-		this.tick = tick;
-		this.mapManager = plugin.getMapManager();
-	}
-
 	public Delay(ScriptBlock plugin, String tick) {
 		this.tick = Long.parseLong(tick);
 		this.mapManager = plugin.getMapManager();

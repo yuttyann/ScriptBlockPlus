@@ -11,10 +11,6 @@ public class MoneyCost {
 	private double result;
 	private boolean isSuccess;
 
-	public MoneyCost(double amount) {
-		this.amount = amount;
-	}
-
 	public MoneyCost(String amount) {
 		this.amount = Double.parseDouble(amount);
 	}

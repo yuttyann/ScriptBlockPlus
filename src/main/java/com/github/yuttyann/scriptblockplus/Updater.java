@@ -114,8 +114,7 @@ public class Updater implements Listener {
 						if (details == null) {
 							details = new String[l3];
 						}
-						details[n] = ((Element) detailsNode).getAttribute("info");
-						n++;
+						details[n++] = ((Element) detailsNode).getAttribute("info");
 					}
 				}
 			}

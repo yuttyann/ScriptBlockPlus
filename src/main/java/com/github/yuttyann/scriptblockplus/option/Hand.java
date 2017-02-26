@@ -17,11 +17,6 @@ public class Hand {
 	private boolean isSuccess;
 
 	@SuppressWarnings("deprecation")
-	public Hand(ItemStack item) {
-		this(item.getType().getId(), item.getAmount(), item.getDurability(), Utils.getItemName(item));
-	}
-
-	@SuppressWarnings("deprecation")
 	public Hand(int id, int amount, short damage, String itemName) {
 		this.id = id;
 		this.amount = amount;

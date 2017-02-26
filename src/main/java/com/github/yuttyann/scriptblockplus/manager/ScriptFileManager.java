@@ -17,17 +17,17 @@ public class ScriptFileManager {
 
 	private ScriptBlock plugin;
 	private MapManager mapManager;
-	private ScriptData scriptData;
 	private BlockLocation location;
 	private ScriptType scriptType;
+	private ScriptData scriptData;
 	private List<String> scripts;
 
 	public ScriptFileManager(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
 		this.plugin = plugin;
 		this.mapManager = plugin.getMapManager();
-		this.scriptData = new ScriptData(plugin, location, scriptType);
 		this.location = location;
 		this.scriptType = scriptType;
+		this.scriptData = new ScriptData(plugin, location, scriptType);
 	}
 
 	public ScriptType getScriptType() {
