@@ -10,16 +10,15 @@ public class Amount {
 
 	private int amount;
 	private MapManager mapManager;
+	private BlockLocation location;
+	private ScriptType scriptType;
 	private ScriptData scriptData;
-
-	public Amount(ScriptBlock plugin, int amount, BlockLocation location, ScriptType scriptType) {
-		this.amount = amount;
-		this.mapManager = plugin.getMapManager();
-		this.scriptData = new ScriptData(plugin, location, scriptType);
-	}
 
 	public Amount(ScriptBlock plugin, String amount, BlockLocation location, ScriptType scriptType) {
 		this.amount = Integer.parseInt(amount);
+		this.mapManager = plugin.getMapManager();
+		this.location = location;
+		this.scriptType = scriptType;
 		this.scriptData = new ScriptData(plugin, location, scriptType);
 	}
 
@@ -39,6 +38,6 @@ public class Amount {
 	public void remove() {
 		scriptData.remove();
 		scriptData.save();
-		mapManager.removeLocation(scriptData.getBlockLocation(), scriptData.getScriptType());
+		mapManager.removeLocation(location, scriptType);
 	}
 }
