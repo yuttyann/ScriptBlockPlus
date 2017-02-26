@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.option;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -15,11 +16,6 @@ public class ItemCost {
 	private String itemName;
 	private Material material;
 	private boolean isSuccess;
-
-	@SuppressWarnings("deprecation")
-	public ItemCost(ItemStack item) {
-		this(item.getType().getId(), item.getAmount(), item.getDurability(), Utils.getItemName(item));
-	}
 
 	@SuppressWarnings("deprecation")
 	public ItemCost(int id, int amount, short damage, String itemName) {
@@ -59,8 +55,10 @@ public class ItemCost {
 	}
 
 	public boolean payment(Player player) {
-		for (ItemStack item : player.getInventory().getContents()) {
-			item = item != null ? item : new ItemStack(Material.AIR);
+		PlayerInventory inventory = player.getInventory();
+		ItemStack[] items = inventory.getContents();
+		for (int i = 0; i < items.length; i++) {
+			ItemStack item = items[i] != null ? items[i] : new ItemStack(Material.AIR);
 			if (item.getType() == getMaterial()
 				&& item.getAmount() >= getAmount()
 				&& item.getDurability() == getDurability()) {
@@ -70,7 +68,8 @@ public class ItemCost {
 					if (result > 0) {
 						item.setAmount(result);
 					} else {
-						Utils.setItemInHand(player, new ItemStack(Material.AIR));
+						items[i] = new ItemStack(Material.AIR);
+						inventory.setContents(items);
 					}
 					Utils.updateInventory(player);
 					isSuccess = true;
