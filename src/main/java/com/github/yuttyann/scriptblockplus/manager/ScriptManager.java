@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -29,15 +28,16 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class ScriptManager extends ScriptReadManager {
 
 	private ScriptBlock plugin;
-	private ScriptData scriptData;
 	private BlockLocation location;
 	private ScriptType scriptType;
+	private ScriptData scriptData;
 
 	public ScriptManager(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
 		super(plugin, location, scriptType);
-		this.scriptData = new ScriptData(plugin, location, scriptType);
+		this.plugin = plugin;
 		this.location = location;
 		this.scriptType = scriptType;
+		this.scriptData = new ScriptData(plugin, location, scriptType);
 	}
 
 	public void scriptExec(Player player) {
@@ -185,35 +185,41 @@ public class ScriptManager extends ScriptReadManager {
 
 	private void commandExec(Player player, String command, boolean isBypass) {
 		if (!isBypass || player.isOp()) {
-			dispatchCommand(player, command);
-			return;
-		}
-		try {
-			player.setOp(true);
-			dispatchCommand(player, command);
-		} finally {
-			player.setOp(false);
+			dispatchCommand(player, command, location.getAllCenter());
+		} else {
+			try {
+				player.setOp(true);
+				dispatchCommand(player, command, location.getAllCenter());
+			} finally {
+				player.setOp(false);
+			}
 		}
 	}
 
-	private void dispatchCommand(Player player, String command) {
+	private void dispatchCommand(Player player, String command, BlockLocation location) {
 		if (command.startsWith("/")) {
 			command = command.substring(1);
 		}
-		String pattern = PlayerSelector.getCommandBlockPattern(command);
-		Location location = this.location;
+		String pattern = getCommandBlockPattern(command);
 		if (pattern != null) {
-			if (location == null) {
-				location = player.getLocation().clone();
-			}
 			Player[] players = PlayerSelector.getPlayers(location, pattern);
 			if (players != null) {
 				for (Player p : players) {
-					Bukkit.dispatchCommand(p, StringUtils.replace(command, pattern, p.getName()));
+					Bukkit.dispatchCommand(player, StringUtils.replace(command, pattern, p.getName()));
 				}
 			}
 		} else {
 			Bukkit.dispatchCommand(player, command);
 		}
+	}
+
+	private String getCommandBlockPattern(String command) {
+		String[] arguments = command.split(" ");
+		for (int i = 1; i < arguments.length; i++) {
+			if (PlayerSelector.isPattern(arguments[i])) {
+				return arguments[i];
+			}
+		}
+		return null;
 	}
 }
