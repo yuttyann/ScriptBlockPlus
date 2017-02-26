@@ -15,12 +15,6 @@ public class Cooldown {
 	private ScriptBlock plugin;
 	private MapManager mapManager;
 
-	public Cooldown(ScriptBlock plugin, int second) {
-		this.plugin = plugin;
-		this.second = second;
-		this.mapManager = plugin.getMapManager();
-	}
-
 	public Cooldown(ScriptBlock plugin, String second) {
 		this.plugin = plugin;
 		this.second = Integer.parseInt(second);
