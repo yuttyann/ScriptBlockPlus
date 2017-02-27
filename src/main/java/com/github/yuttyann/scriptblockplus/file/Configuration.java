@@ -100,7 +100,7 @@ public class Configuration {
 		}
 		String[] parts = path.split("\\.");
 		Map<String, Object> node = root;
-		for (int i = 0, l = parts.length; i < l; i++) {
+		for (int i = 0; i < parts.length; i++) {
 			Object obj = node.get(parts[i]);
 			if (obj == null) {
 				return null;
@@ -124,7 +124,7 @@ public class Configuration {
 		}
 		String[] parts = path.split("\\.");
 		Map<String, Object> node = root;
-		for (int i = 0, l = parts.length; i < l; i++) {
+		for (int i = 0; i < parts.length; i++) {
 			Object obj = node.get(parts[i]);
 			if (i == parts.length - 1) {
 				node.put(parts[i], value);

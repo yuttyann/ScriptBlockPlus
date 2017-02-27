@@ -49,8 +49,11 @@ public class InteractListener implements Listener {
 		if (event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
 			return;
 		}
-		List<Block> blocks = getLastTwoTargetBlocks(player, 5);
-		if (blocks.size() < 2) {
+		List<Block> blocks = null;
+		try {
+			blocks = getLastTwoTargetBlocks(player, 5);
+		} catch (IllegalStateException e) {}
+		if (blocks == null || blocks.size() < 2) {
 			return;
 		}
 		Block block = blocks.get(1);
