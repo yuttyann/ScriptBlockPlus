@@ -163,7 +163,7 @@ public class ScriptReadManager extends OptionPrefix {
 
 	public boolean checkScript(String script) {
 		try {
-			boolean hasOption = script.startsWith("[");
+			boolean hasOption = script.trim().startsWith("[");
 			if (!hasOption && check(script) && !isSuccess) {
 				isSuccess = true;
 			} else if (hasOption) {
@@ -181,7 +181,7 @@ public class ScriptReadManager extends OptionPrefix {
 
 	public boolean readScript(String script) {
 		try {
-			if (!(isSuccess = checkScript(script))) {
+			if (!checkScript(script)) {
 				throw new Exception();
 			}
 			if (!script.startsWith("[")) {

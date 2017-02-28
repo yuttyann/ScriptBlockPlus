@@ -67,11 +67,11 @@ public class InteractListener implements Listener {
 			Action action = Action.LEFT_CLICK_BLOCK;
 			BlockFace blockFace = block.getFace(blocks.get(0));
 			ItemStack item = Utils.getItemInHand(player);
-			BlockInteractEvent inEvent = new BlockInteractEvent(
+			BlockInteractEvent interactEvent = new BlockInteractEvent(
 				new PlayerInteractEvent(player, action, item, block, blockFace),
 				player, block, item, action, blockFace, true
 			);
-			Utils.callEvent(inEvent);
+			Utils.callEvent(interactEvent);
 			break;
 		}
 	}
@@ -79,7 +79,12 @@ public class InteractListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if (player.getGameMode() == GameMode.ADVENTURE) {
+		Action action = event.getAction();
+		boolean isAdventure = player.getGameMode() == GameMode.ADVENTURE;
+		if (isAdventure && (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR)) {
+			return;
+		}
+		if (isAdventure) {
 			final UUID uuid = player.getUniqueId();
 			mapManager.addEvents(uuid);
 			new BukkitRunnable() {
@@ -89,11 +94,11 @@ public class InteractListener implements Listener {
 				}
 			}.runTaskLater(plugin, 5);
 		}
-		BlockInteractEvent inEvent = new BlockInteractEvent(
+		BlockInteractEvent interactEvent = new BlockInteractEvent(
 			event, player, event.getClickedBlock(), event.getItem(),
-			event.getAction(), event.getBlockFace(), false
+			action, event.getBlockFace(), false
 		);
-		Utils.callEvent(inEvent);
+		Utils.callEvent(interactEvent);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
