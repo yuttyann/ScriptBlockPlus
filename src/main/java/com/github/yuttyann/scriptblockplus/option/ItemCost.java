@@ -57,26 +57,44 @@ public class ItemCost {
 	public boolean payment(Player player) {
 		PlayerInventory inventory = player.getInventory();
 		ItemStack[] items = inventory.getContents();
-		for (int i = 0; i < items.length; i++) {
-			ItemStack item = items[i] != null ? items[i] : new ItemStack(Material.AIR);
-			if (item.getType() == getMaterial()
-				&& item.getAmount() >= getAmount()
-				&& item.getDurability() == getDurability()) {
-				String itemName = Utils.getItemName(item);
-				if (getItemName() == null || (itemName != null && itemName.equals(getItemName()))) {
-					int result = item.getAmount() - getAmount();
-					if (result > 0) {
-						item.setAmount(result);
-					} else {
-						items[i] = new ItemStack(Material.AIR);
-						inventory.setContents(items);
-					}
-					Utils.updateInventory(player);
-					isSuccess = true;
-					break;
+		for (int i = 0, j = 0, l = items.length; i < l; i++) {
+			ItemStack item = items[i];
+			if (checkItem(item)) {
+				j += item.getAmount();
+				int result = item.getAmount() - getAmount();
+				if (j > getAmount()) {
+					result = j - getAmount();
 				}
+				items[i] = minusItem(item, result);
+			}
+			if (j >= getAmount()) {
+				inventory.setContents(items);
+				Utils.updateInventory(player);
+				isSuccess = true;
+				break;
 			}
 		}
 		return isSuccess;
+	}
+
+	private ItemStack minusItem(ItemStack item, int amount) {
+		item = item.clone();
+		if (amount > 0) {
+			item.setAmount(amount);
+		} else {
+			item = new ItemStack(Material.AIR);
+		}
+		return item;
+	}
+
+	private boolean checkItem(ItemStack item) {
+		if (item == null) {
+			return false;
+		}
+		if (item.getType() != getMaterial() || item.getDurability() != getDurability()) {
+			return false;
+		}
+		String itemName = Utils.getItemName(item);
+		return getItemName() == null || (itemName != null && itemName.equals(getItemName()));
 	}
 }

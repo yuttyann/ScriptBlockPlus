@@ -55,13 +55,17 @@ public class Hand {
 
 	public boolean check(Player player) {
 		ItemStack hand = Utils.getItemInHand(player);
-		ItemStack item = hand != null ? hand : new ItemStack(Material.AIR);
-		if (item.getType() == getMaterial()
-			&& item.getAmount() >= getAmount()
-			&& item.getDurability() == getDurability()) {
-			String itemName = Utils.getItemName(item);
-			isSuccess = getItemName() == null || (itemName != null && itemName.equals(getItemName()));
+		return isSuccess = checkItem(hand);
+	}
+
+	private boolean checkItem(ItemStack item) {
+		if (item == null) {
+			return false;
 		}
-		return isSuccess;
+		if (!(item.getType() == getMaterial() && item.getAmount() >= getAmount() && item.getDurability() == getDurability())) {
+			return false;
+		}
+		String itemName = Utils.getItemName(item);
+		return getItemName() == null || (itemName != null && itemName.equals(getItemName()));
 	}
 }

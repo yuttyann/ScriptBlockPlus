@@ -129,7 +129,7 @@ public class ScriptData {
 
 	public void copyScripts(BlockLocation target, boolean overwrite) {
 		BlockLocation targetLocation = target;
-		ScriptData targetData = new ScriptData(plugin, targetLocation, getScriptType());
+		ScriptData targetData = new ScriptData(plugin, targetLocation, scriptType);
 		if (location.equals(targetLocation) || !checkPath() || (targetData.checkPath() && overwrite)) {
 			return;
 		}

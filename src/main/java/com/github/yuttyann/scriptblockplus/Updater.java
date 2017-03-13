@@ -35,11 +35,9 @@ public class Updater implements Listener {
 	private boolean isEnable;
 	private boolean isError;
 
-	public Updater(ScriptBlock plugin) {
-		try {
-			setup();
-			updateCheck();
-		} catch (Exception e) {}
+	public Updater(ScriptBlock plugin) throws Exception {
+		setup();
+		updateCheck();
 	}
 
 	public String getPluginName() {
@@ -123,8 +121,7 @@ public class Updater implements Listener {
 
 	private void updateCheck() {
 		YamlConfig config = Files.getConfig();
-		if(config.getBoolean("UpdateChecker")
-				&& Utils.getVersionInt(getVersion()) > Utils.getVersionInt(getPluginVersion())) {
+		if(config.getBoolean("UpdateChecker") && Utils.getVersionInt(getVersion()) > Utils.getVersionInt(getPluginVersion())) {
 			isEnable = true;
 			boolean first = false;
 			File data = config.getDataFolder();

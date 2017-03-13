@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -24,12 +23,12 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 
 	private static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
 
-	private Map<Integer, Map<Object, Object>> arrayMap;
-	private Map<Integer, Map<Object, Object>> jsonMap;
+	private Map<Object, Object> arrayMap;
+	private Map<Object, Object> jsonMap;
 
-	public UUIDFetcher(String name) {
+	private UUIDFetcher(String name) {
 		try {
-			this.arrayMap = new HashMap<Integer, Map<Object, Object>>();
+			this.arrayMap = new HashMap<Object, Object>();
 			this.jsonMap = getJsonMap(getJsonString(PROFILE_URL + name));
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -40,9 +39,8 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 	public Map<String, UUID> call() throws Exception {
 		Map<String, UUID> uuidMap = new HashMap<String, UUID>();
 		if (jsonMap != null) {
-			Map<Object, Object> map = jsonMap.get(0);
-			String id = map.get("id").toString();
-			String name = map.get("name").toString();
+			String id = jsonMap.get("id").toString();
+			String name = jsonMap.get("name").toString();
 			uuidMap.put(name, Utils.fromString(id));
 		}
 		return uuidMap;
@@ -53,31 +51,15 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<Integer, Map<Object, Object>> getJsonMap(String json) throws ParseException {
+	private Map<Object, Object> getJsonMap(String json) throws ParseException {
 		JSONParser jsonParser = new JSONParser();
-		Object object = jsonParser.parse(json);
-		if (object instanceof JSONArray) {
-			JSONArray jsonArray = (JSONArray) object;
-			for (int i = 0, l = jsonArray.size(); i < l; i++) {
-				Object object2 = jsonArray.get(i);
-				if (object2 == null || object2.toString().length() == 0) {
-					continue;
-				}
-				Map<Object, Object> objectMap = new HashMap<Object, Object>();
-				Set<Entry<Object, Object>> entrySet = ((JSONObject) jsonParser.parse(object2.toString())).entrySet();
-				for(Entry<Object, Object> entry : entrySet) {
-					objectMap.put(entry.getKey(), entry.getValue());
-				}
-				arrayMap.put(i, objectMap);
-			}
-		} else if (object instanceof JSONObject) {
-			Map<Object, Object> objectMap = new HashMap<Object, Object>();
-			Set<Entry<Object, Object>> entrySet = ((JSONObject) object).entrySet();
-			for(Entry<Object, Object> entry : entrySet) {
-				objectMap.put(entry.getKey(), entry.getValue());
-			}
-			arrayMap.put(0, objectMap);
+		JSONObject jsonObject = (JSONObject) jsonParser.parse(json);
+		Map<Object, Object> objectMap = new HashMap<Object, Object>();
+		Set<Entry<Object, Object>> entrySet = jsonObject.entrySet();
+		for(Entry<Object, Object> entry : entrySet) {
+			objectMap.put(entry.getKey(), entry.getValue());
 		}
+		arrayMap.put(0, objectMap);
 		return arrayMap;
 	}
 

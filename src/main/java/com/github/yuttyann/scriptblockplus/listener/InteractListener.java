@@ -137,7 +137,7 @@ public class InteractListener implements Listener {
 		}
 		Iterator<Entity> iterator = entities.iterator();
 		while (iterator.hasNext()) {
-			if (!(iterator.next().getLocation().distanceSquared(location) > radius * radius)) {
+			if (!(iterator.next().getLocation().distanceSquared(location) > square(radius))) {
 				continue;
 			}
 			iterator.remove();
@@ -145,8 +145,12 @@ public class InteractListener implements Listener {
 		return entities;
 	}
 
-	private int floor(double paramDouble) {
-		int i = (int) paramDouble;
-		return paramDouble < i ? i - 1 : i;
+	public double square(double num) {
+		return num * num;
+	}
+
+	private int floor(double num) {
+		int i = (int) num;
+		return num < i ? i - 1 : i;
 	}
 }

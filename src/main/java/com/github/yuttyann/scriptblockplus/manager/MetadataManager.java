@@ -1,150 +1,167 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
-import java.util.List;
-
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.utils.SimpleMetadata;
 
 public class MetadataManager {
 
-	public static void removeAllMetadata(ScriptBlock plugin, Player player) {
-		Click.removeAllMetadata(plugin, player);
-		Script.removeAllMetadata(plugin, player);
+	private static Click click;
+	private static Script script;
+	private static ScriptFile scriptFile;
+
+	static {
+		Plugin plugin = ScriptBlock.getInstance();
+		click = new Click(plugin);
+		script = new Script(plugin);
+		scriptFile = new ScriptFile(plugin);
 	}
 
-	public static boolean hasAllMetadata(Player player) {
-		return Click.hasAllMetadata(player) || Script.hasAllMetadata(player);
+	public static Click getClick() {
+		return click;
 	}
 
-	public static class Click {
+	public static Script getScript() {
+		return script;
+	}
 
-		public static void setMetadata(ScriptBlock plugin, Player player, ClickType clickType, boolean value) {
-			player.setMetadata(clickType.toString(), new FixedMetadataValue(plugin, value));
+	public static ScriptFile getScriptFile() {
+		return scriptFile;
+	}
+
+	public static void removeAll(Player player) {
+		click.removeAll(player);
+		script.removeAll(player);
+	}
+
+	public static boolean hasAll(Player player) {
+		return click.hasAll(player) || script.hasAll(player);
+	}
+
+	public static class Click extends SimpleMetadata {
+
+		public Click(Plugin plugin) {
+			super(plugin);
 		}
 
-		public static void removeMetadata(ScriptBlock plugin, Player player, ClickType clickType) {
-			player.removeMetadata(clickType.toString(), plugin);
+		public void set(Player player, ClickType clickType, boolean value) {
+			set(player, clickType.toString(), value);
 		}
 
-		public static void removeAllMetadata(ScriptBlock plugin, Player player) {
+		public void remove(Player player, ClickType clickType) {
+			remove(player, clickType.toString());
+		}
+
+		public void removeAll(Player player) {
 			for (ClickType type : ClickType.values()) {
-				if (hasMetadata(player, type)) {
-					removeMetadata(plugin, player, type);
+				if (has(player, type)) {
+					remove(player, type);
 				}
 			}
 		}
 
-		public static boolean hasMetadata(Player player, ClickType clickType) {
-			return player.hasMetadata(clickType.toString());
+		public boolean has(Player player, ClickType clickType) {
+			return has(player, clickType.toString());
 		}
 
-		public static boolean hasAllMetadata(Player player) {
+		public boolean hasAll(Player player) {
 			for (ClickType clickType : ClickType.values()) {
-				if (hasMetadata(player, clickType)) {
+				if (has(player, clickType)) {
 					return true;
 				}
 			}
 			return false;
 		}
 
-		public static boolean getMetadata(Player player, ClickType clickType) {
-			List<MetadataValue> values = player.getMetadata(clickType.toString());
-			for (MetadataValue value : values) {
-				if (value.asBoolean()) {
-					return true;
-				}
-			}
-			return false;
+		public boolean get(Player player, ClickType clickType) {
+			return getBoolean(player, clickType.toString(), false);
 		}
 	}
 
-	public static class Script {
+	public static class Script extends SimpleMetadata {
 
-		public static void setMetadata(ScriptBlock plugin, Player player, ClickType clickType, String value) {
-			player.setMetadata(clickType.toString(), new FixedMetadataValue(plugin, value));
+		public Script(Plugin plugin) {
+			super(plugin);
 		}
 
-		public static void removeMetadata(ScriptBlock plugin, Player player, ClickType clickType) {
-			player.removeMetadata(clickType.toString(), plugin);
+		public void set(Player player, ClickType clickType, String value) {
+			set(player, clickType.toString(), value);
 		}
 
-		public static void removeAllMetadata(ScriptBlock plugin, Player player) {
+		public void remove(Player player, ClickType clickType) {
+			remove(player, clickType.toString());
+		}
+
+		public void removeAll(Player player) {
 			for (ClickType clickType : ClickType.values()) {
-				if (hasMetadata(player, clickType)) {
-					removeMetadata(plugin, player, clickType);
+				if (has(player, clickType)) {
+					remove(player, clickType);
 				}
 			}
 		}
 
-		public static boolean hasMetadata(Player player, ClickType clickType) {
-			return player.hasMetadata(clickType.toString());
+		public boolean has(Player player, ClickType clickType) {
+			return has(player, clickType.toString());
 		}
 
-		public static boolean hasAllMetadata(Player player) {
+		public boolean hasAll(Player player) {
 			for (ClickType clickType : ClickType.values()) {
-				if (hasMetadata(player, clickType)) {
+				if (has(player, clickType)) {
 					return true;
 				}
 			}
 			return false;
 		}
 
-		public static String getMetadata(Player player, ClickType clickType) {
-			List<MetadataValue> values = player.getMetadata(clickType.toString());
-			String script;
-			for (MetadataValue value : values) {
-				script = value.asString();
+		public String get(Player player, ClickType clickType) {
+			return getString(player, clickType.toString(), null);
+		}
+	}
+
+	public static class ScriptFile extends SimpleMetadata {
+
+		public ScriptFile(Plugin plugin) {
+			super(plugin);
+		}
+
+		public void set(Player player, ScriptType scriptType, ScriptFileManager value) {
+			set(player, "SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase(), value);
+		}
+
+		public void remove(Player player, ScriptType scriptType) {
+			remove(player, "SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase());
+		}
+
+		public void removeAll(Player player) {
+			for (ScriptType scriptType : ScriptType.values()) {
+				if (has(player, scriptType)) {
+					remove(player, scriptType);
+				}
+			}
+		}
+
+		public boolean has(Player player, ScriptType scriptType) {
+			return has(player, "SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase());
+		}
+
+		public boolean hasAll(Player player) {
+			for (ScriptType scriptType : ScriptType.values()) {
+				if (has(player, scriptType)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public ScriptFileManager get(Player player) {
+			for (ScriptType scriptType : ScriptType.values()) {
+				Object value = get(player, "SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase(), null);
 				if (value != null) {
-					return script;
-				}
-			}
-			return null;
-		}
-	}
-
-	public static class ScriptFile {
-
-		public static void setMetadata(ScriptBlock plugin, Player player, ScriptType scriptType, ScriptFileManager value) {
-			player.setMetadata("SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase(), new FixedMetadataValue(plugin, value));
-		}
-
-		public static void removeMetadata(ScriptBlock plugin, Player player, ScriptType scriptType) {
-			player.removeMetadata("SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase(), plugin);
-		}
-
-		public static void removeAllMetadata(ScriptBlock plugin, Player player) {
-			for (ScriptType scriptType : ScriptType.values()) {
-				if (hasMetadata(player, scriptType)) {
-					removeMetadata(plugin, player, scriptType);
-				}
-			}
-		}
-
-		public static boolean hasMetadata(Player player, ScriptType scriptType) {
-			return player.hasMetadata("SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase());
-		}
-
-		public static boolean hasAllMetadata(Player player) {
-			for (ScriptType scriptType : ScriptType.values()) {
-				if (hasMetadata(player, scriptType)) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		public static ScriptFileManager getMetadata(Player player) {
-			for (ScriptType scriptType : ScriptType.values()) {
-				List<MetadataValue> values = player.getMetadata("SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase());
-				for (MetadataValue value : values) {
-					if (value != null) {
-						return (ScriptFileManager) value.value();
-					}
+					return (ScriptFileManager) value;
 				}
 			}
 			return null;

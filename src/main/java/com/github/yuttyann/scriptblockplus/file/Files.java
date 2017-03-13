@@ -6,8 +6,9 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 
 public class Files {
 
-	public static final String[] FILE_NAMES = {
-		"config.yml", "messages.yml", "scripts/interact.yml", "scripts/break.yml", "scripts/walk.yml"
+	public static final String[] FILE_PATHS = {
+		"config.yml", "messages.yml", "scripts/interact.yml", "scripts/break.yml", "scripts/walk.yml",
+		"plugins/ScriptBlock/BlocksData/interact_Scripts.yml", "plugins/ScriptBlock/BlocksData/walk_Scripts.yml"
 	};
 
 	private static Files instance;
@@ -18,11 +19,11 @@ public class Files {
 	private YamlConfig walk;
 
 	public Files(Plugin plugin) {
-		this.config = YamlConfig.load(plugin, FILE_NAMES[0]);
-		this.messages = YamlConfig.load(plugin, FILE_NAMES[1]);
-		this.interact = YamlConfig.load(plugin, FILE_NAMES[2], false);
-		this.break_ = YamlConfig.load(plugin, FILE_NAMES[3], false);
-		this.walk = YamlConfig.load(plugin, FILE_NAMES[4], false);
+		this.config = YamlConfig.load(plugin, FILE_PATHS[0]);
+		this.messages = YamlConfig.load(plugin, FILE_PATHS[1]);
+		this.interact = YamlConfig.load(plugin, FILE_PATHS[2], false);
+		this.break_ = YamlConfig.load(plugin, FILE_PATHS[3], false);
+		this.walk = YamlConfig.load(plugin, FILE_PATHS[4], false);
 	}
 
 	public static YamlConfig getConfig() {

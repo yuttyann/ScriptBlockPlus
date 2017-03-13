@@ -88,7 +88,9 @@ public class ScriptBlock extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new BlockListener(this), this);
 		getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
 		getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
-		getServer().getPluginManager().registerEvents(new Updater(this), this);
+		try {
+			getServer().getPluginManager().registerEvents(new Updater(this), this);
+		} catch (Exception e) {}
 	}
 
 	private void loadCommand() {

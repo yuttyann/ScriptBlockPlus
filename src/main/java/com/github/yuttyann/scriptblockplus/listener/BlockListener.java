@@ -10,6 +10,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Button;
+import org.bukkit.material.Lever;
+import org.bukkit.material.MaterialData;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
@@ -22,9 +25,6 @@ import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Click;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Script;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -70,7 +70,28 @@ public class BlockListener implements Listener {
 		Block block = event.getBlock();
 		BlockLocation location = BlockLocation.fromLocation(block.getLocation());
 		if (!scriptSetting(event, event.getAction(), block, location)) {
-			callScriptEvent(event, block, location);
+			if (Utils.isCB19orLater() && !isSlotHand(event.getHand())) {
+				return;
+			}
+			Player player = event.getPlayer();
+			if (mapManager.getInteractLocation().contains(location.getFullCoords())) {
+				ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, event.getItem(), location);
+				Utils.callEvent(interactEvent);
+				if (interactEvent.isCancelled()) {
+					return;
+				}
+				if (!interactEvent.isLeftClick() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
+					return;
+				}
+				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_INTERACT_USE, player)) {
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					return;
+				}
+				if (isPowered(block)) {
+					return;
+				}
+				new ScriptManager(plugin, location, ScriptType.INTERACT).scriptExec(player);
+			}
 		}
 	}
 
@@ -92,7 +113,7 @@ public class BlockListener implements Listener {
 				return true;
 			case RIGHT_CLICK_BLOCK:
 				if (player.isSneaking()) {
-					ScriptFileManager fileManager = ScriptFile.getMetadata(player);
+					ScriptFileManager fileManager = MetadataManager.getScriptFile().get(player);
 					if (fileManager == null) {
 						Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 						break;
@@ -104,12 +125,12 @@ public class BlockListener implements Listener {
 				event.setCancelled(true);
 				return true;
 			default:
-				MetadataManager.removeAllMetadata(plugin, player);
+				MetadataManager.removeAll(player);
 				return false;
 			}
 		}
 		for (ClickType type : ClickType.values()) {
-			if (Click.hasMetadata(player, type)) {
+			if (MetadataManager.getClick().has(player, type)) {
 				String[] split = StringUtils.split(type.name(), "_");
 				if (clickScript(player, split[1], location, type, ScriptType.valueOf(split[0]))) {
 					event.setCancelled(true);
@@ -121,44 +142,34 @@ public class BlockListener implements Listener {
 	}
 
 	private boolean clickScript(Player player, String type, BlockLocation location, ClickType clickType, ScriptType scriptType) {
+		ScriptFileManager scriptFileManager = new ScriptFileManager(plugin, location, scriptType);
 		switch (type) {
 		case "CREATE":
-			new ScriptFileManager(plugin, location, scriptType).scriptCreate(player, Script.getMetadata(player, clickType));
+			scriptFileManager.scriptCreate(player, MetadataManager.getScript().get(player, clickType));
 			return true;
 		case "ADD":
-			new ScriptFileManager(plugin, location, scriptType).scriptAdd(player, Script.getMetadata(player, clickType));
+			scriptFileManager.scriptAdd(player, MetadataManager.getScript().get(player, clickType));
 			return true;
 		case "REMOVE":
-			new ScriptFileManager(plugin, location, scriptType).scriptRemove(player);
+			scriptFileManager.scriptRemove(player);
 			return true;
 		case "VIEW":
-			new ScriptFileManager(plugin, location, scriptType).scriptView(player);
+			scriptFileManager.scriptView(player);
 			return true;
 		default:
 			return false;
 		}
 	}
 
-	private void callScriptEvent(BlockInteractEvent event, Block block, BlockLocation location) {
-		if (Utils.isCB19orLater() && !isSlotHand(event.getHand())) {
-			return;
+	private boolean isPowered(Block block) {
+		MaterialData data = block.getState().getData();
+		if (data instanceof Button) {
+			return ((Button) data).isPowered();
 		}
-		Player player = event.getPlayer();
-		if (mapManager.getInteractLocation().contains(location.getFullCoords())) {
-			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, event.getItem(), location);
-			Utils.callEvent(interactEvent);
-			if (interactEvent.isCancelled()) {
-				return;
-			}
-			if (!interactEvent.isLeftClick() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
-				return;
-			}
-			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_INTERACT_USE, player)) {
-				Utils.sendPluginMessage(player, Messages.notPermissionMessage);
-				return;
-			}
-			new ScriptManager(plugin, location, ScriptType.INTERACT).scriptExec(player);
+		if (data instanceof Lever) {
+			return ((Lever) data).isPowered();
 		}
+		return false;
 	}
 
 	private boolean isSlotHand(EquipmentSlot hand) {

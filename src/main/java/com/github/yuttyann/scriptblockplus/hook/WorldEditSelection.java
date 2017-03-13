@@ -38,10 +38,10 @@ public class WorldEditSelection {
 		World world = selection.getWorld();
 		Location min = selection.getMinimumPoint();
 		Location max = selection.getMaximumPoint();
-		for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-			for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
-				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-					blocks.add(world.getBlockAt(x, y, z));
+		for (int x1 = min.getBlockX(), x2 = max.getBlockX(); x1 <= x2; x1++) {
+			for (int y1 = min.getBlockY(), y2 = max.getBlockY(); y1 <= y2; y1++) {
+				for (int z1 = min.getBlockZ(), z2 = max.getBlockZ(); z1 <= z2; z1++) {
+					blocks.add(world.getBlockAt(x1, y1, z1));
 				}
 			}
 		}

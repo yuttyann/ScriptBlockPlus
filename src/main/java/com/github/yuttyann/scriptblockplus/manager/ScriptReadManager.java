@@ -3,6 +3,8 @@ package com.github.yuttyann.scriptblockplus.manager;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Material;
+
 import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.PermType;
@@ -46,6 +48,33 @@ public class ScriptReadManager extends OptionPrefix {
 		this.plugin = plugin;
 		this.location = location;
 		this.scriptType = scriptType;
+	}
+
+	public void resetAll() {
+		location = null;
+		scriptType = null;
+		reset();
+	}
+
+	public void reset() {
+		command = null;
+		player = null;
+		server = null;
+		say = null;
+		perm = null;
+		permADD = null;
+		permREMOVE = null;
+		group = null;
+		groupADD = null;
+		groupREMOVE = null;
+		amount = null;
+		delay = null;
+		cooldown = null;
+		hand = null;
+		itemCost = null;
+		moneyCost = null;
+		isBypass = false;
+		isSuccess = false;
 	}
 
 	public BlockLocation getBlockLocation() {
@@ -134,33 +163,6 @@ public class ScriptReadManager extends OptionPrefix {
 		return isSuccess;
 	}
 
-	public void resetAll() {
-		location = null;
-		scriptType = null;
-		reset();
-	}
-
-	public void reset() {
-		command = null;
-		player = null;
-		server = null;
-		say = null;
-		perm = null;
-		permADD = null;
-		permREMOVE = null;
-		group = null;
-		groupADD = null;
-		groupREMOVE = null;
-		amount = null;
-		delay = null;
-		cooldown = null;
-		hand = null;
-		itemCost = null;
-		moneyCost = null;
-		isBypass = false;
-		isSuccess = false;
-	}
-
 	public boolean checkScript(String script) {
 		try {
 			boolean hasOption = script.trim().startsWith("[");
@@ -184,7 +186,7 @@ public class ScriptReadManager extends OptionPrefix {
 			if (!checkScript(script)) {
 				throw new Exception();
 			}
-			if (!script.startsWith("[")) {
+			if (!script.trim().startsWith("[")) {
 				read(script);
 			} else {
 				for (String s : getScripts(script)) {
@@ -341,14 +343,14 @@ public class ScriptReadManager extends OptionPrefix {
 		String[] array = StringUtils.split(hand, ":");
 		switch (array.length) {
 		case 1:
-			return new Hand(parseInt(array[0]), 1, (short) 0, null);
+			return new Hand(getId(array[0]), 1, (short) 0, null);
 		case 2:
-			return new Hand(parseInt(array[0]), parseInt(array[1]), (short) 0, null);
+			return new Hand(getId(array[0]), parseInt(array[1]), (short) 0, null);
 		case 3:
-			return new Hand(parseInt(array[0]), parseInt(array[1]), parseShort(array[2]), null);
+			return new Hand(getId(array[0]), parseInt(array[1]), parseShort(array[2]), null);
 		case 4:
 			String itemName = StringUtils.createString(array, 3);
-			return new Hand(parseInt(array[0]), parseInt(array[1]), parseShort(array[2]), itemName);
+			return new Hand(getId(array[0]), parseInt(array[1]), parseShort(array[2]), itemName);
 		}
 		return null;
 	}
@@ -357,16 +359,28 @@ public class ScriptReadManager extends OptionPrefix {
 		String[] array = StringUtils.split(itemCost, ":");
 		switch (array.length) {
 		case 1:
-			return new ItemCost(parseInt(array[0]), 1, (short) 0, null);
+			return new ItemCost(getId(array[0]), 1, (short) 0, null);
 		case 2:
-			return new ItemCost(parseInt(array[0]), parseInt(array[1]), (short) 0, null);
+			return new ItemCost(getId(array[0]), parseInt(array[1]), (short) 0, null);
 		case 3:
-			return new ItemCost(parseInt(array[0]), parseInt(array[1]), parseShort(array[2]), null);
+			return new ItemCost(getId(array[0]), parseInt(array[1]), parseShort(array[2]), null);
 		case 4:
 			String itemName = StringUtils.createString(array, 3);
-			return new ItemCost(parseInt(array[0]), parseInt(array[1]), parseShort(array[2]), itemName);
+			return new ItemCost(getId(array[0]), parseInt(array[1]), parseShort(array[2]), itemName);
 		}
 		return null;
+	}
+
+	@SuppressWarnings("deprecation")
+	private int getId(String source) {
+		if (isNumber(source)) {
+			return parseInt(source);
+		}
+		return Material.getMaterial(source.toUpperCase()).getId();
+	}
+
+	private boolean isNumber(String source) {
+		return source.matches("^-?[0-9]{1,9}$");
 	}
 
 	private int parseInt(String source) {

@@ -30,8 +30,6 @@ import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.hook.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Click;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.Script;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptReadManager;
@@ -254,8 +252,8 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 	}
 
 	private void sbDataMigr(Player player) {
-		File interactFile = new File("plugins/ScriptBlock/BlocksData/interact_Scripts.yml");
-		File walkFile = new File("plugins/ScriptBlock/BlocksData/walk_Scripts.yml");
+		File interactFile = new File(Files.FILE_PATHS[5]);
+		File walkFile = new File(Files.FILE_PATHS[6]);
 		boolean interactExists = interactFile.exists();
 		boolean walkExists = walkFile.exists();
 		if (!interactExists && !walkExists) {
@@ -266,9 +264,9 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 		Configuration config;
 		if (interactExists) {
 			config = Configuration.loadConfiguration(interactFile);
-			ScriptData scriptData = new ScriptData(plugin, (BlockLocation) null, ScriptType.INTERACT);
+			ScriptData scriptData = new ScriptData(plugin, null, ScriptType.INTERACT);
 			for (String world : config.getKeys()) {
-				World temp = Utils.getWorld(world);
+				World bWorld = Utils.getWorld(world);
 				for (String coords : config.getKeys(world)) {
 					List<String> scripts = config.getStringList(world + "." + coords, null);
 					if (scripts.size() > 0 && scripts.get(0).startsWith("Author:")) {
@@ -276,7 +274,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 					}
 					String[] array = StringUtils.split(coords, ",");
 					scriptData.setBlockLocation(new BlockLocation(
-						temp,
+						bWorld,
 						Integer.parseInt(array[0]),
 						Integer.parseInt(array[1]),
 						Integer.parseInt(array[2]))
@@ -291,9 +289,9 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 		}
 		if (walkExists) {
 			config = Configuration.loadConfiguration(walkFile);
-			ScriptData scriptData = new ScriptData(plugin, (BlockLocation) null, ScriptType.WALK);
+			ScriptData scriptData = new ScriptData(plugin, null, ScriptType.WALK);
 			for (String world : config.getKeys()) {
-				World temp = Utils.getWorld(world);
+				World bWorld = Utils.getWorld(world);
 				for (String coords : config.getKeys(world)) {
 					List<String> scripts = config.getStringList(world + "." + coords, null);
 					if (scripts.size() > 0 && scripts.get(0).startsWith("Author:")) {
@@ -301,7 +299,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 					}
 					String[] array = StringUtils.split(coords, ",");
 					scriptData.setBlockLocation(new BlockLocation(
-						temp,
+						bWorld,
 						Integer.parseInt(array[0]),
 						Integer.parseInt(array[1]),
 						Integer.parseInt(array[2]))
@@ -318,16 +316,16 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 	}
 
 	private void setClickMeta(Player player, ClickType clickType) {
-		if (MetadataManager.hasAllMetadata(player)) {
+		if (MetadataManager.hasAll(player)) {
 			Utils.sendPluginMessage(player, Messages.getErrorEditDataMessage());
 			return;
 		}
-		Click.setMetadata(plugin, player, clickType, true);
+		MetadataManager.getClick().set(player, clickType, true);
 		Utils.sendPluginMessage(player, Messages.getSuccEditDataMessage(clickType));
 	}
 
 	private void setClickMeta(Player player, String[] args, ClickType clickType) {
-		if (MetadataManager.hasAllMetadata(player)) {
+		if (MetadataManager.hasAll(player)) {
 			Utils.sendPluginMessage(player, Messages.getErrorEditDataMessage());
 			return;
 		}
@@ -338,9 +336,39 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 			Utils.sendPluginMessage(player, Messages.getErrorScriptCheckMessage());
 			return;
 		}
-		Click.setMetadata(plugin, player, clickType, true);
-		Script.setMetadata(plugin, player, clickType, script);
+		MetadataManager.getClick().set(player, clickType, true);
+		MetadataManager.getScript().set(player, clickType, script);
 		Utils.sendPluginMessage(player, Messages.getSuccEditDataMessage(clickType));
+	}
+
+	private void scriptWEPaste(Player player, boolean pasteonair, boolean overwrite) {
+		ScriptFile scriptFile = MetadataManager.getScriptFile();
+		if (!scriptFile.hasAll(player)) {
+			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
+			return;
+		}
+		if (!HookPlugins.hasWorldEdit()) {
+			Utils.sendPluginMessage(player, Messages.notWorldEditMessage);
+			return;
+		}
+		WorldEditSelection selectionAPI = HookPlugins.getWorldEditSelection();
+		Selection selection = selectionAPI.getSelection(player);
+		if (selection == null) {
+			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
+			return;
+		}
+		MetadataManager.removeAll(player);
+		ScriptFileManager fileManager = scriptFile.get(player);
+		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
+			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
+				continue;
+			}
+			fileManager.scriptWEPaste(player, BlockLocation.fromLocation(block.getLocation()), overwrite);
+		}
+		fileManager.save();
+		ScriptType scriptType = scriptFile.get(player).getScriptType();
+		Utils.sendPluginMessage(player, Messages.getWorldEditPasteMessage(scriptType));
+		Utils.sendPluginMessage(Messages.getConsoleWorldEditPasteMessage(scriptType, selection.getMinimumPoint(), selection.getMaximumPoint()));
 	}
 
 	private void scriptWERemove(Player player) {
@@ -354,7 +382,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 			return;
 		}
-		MetadataManager.removeAllMetadata(plugin, player);
+		MetadataManager.removeAll(player);
 		boolean isInteract = false, isBreak = false, isWalk = false;
 		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
 			BlockLocation location = BlockLocation.fromLocation(block.getLocation());
@@ -407,35 +435,6 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 		}
 		Utils.sendPluginMessage(player, Messages.getWorldEditRemoveMessage(type));
 		Utils.sendPluginMessage(Messages.getConsoleWorldEditRemoveMessage(type, selection.getMinimumPoint(), selection.getMaximumPoint()));
-	}
-
-	private void scriptWEPaste(Player player, boolean pasteonair, boolean overwrite) {
-		if (!ScriptFile.hasAllMetadata(player)) {
-			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
-			return;
-		}
-		if (!HookPlugins.hasWorldEdit()) {
-			Utils.sendPluginMessage(player, Messages.notWorldEditMessage);
-			return;
-		}
-		WorldEditSelection selectionAPI = HookPlugins.getWorldEditSelection();
-		Selection selection = selectionAPI.getSelection(player);
-		if (selection == null) {
-			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
-			return;
-		}
-		MetadataManager.removeAllMetadata(plugin, player);
-		ScriptFileManager fileManager = ScriptFile.getMetadata(player);
-		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
-			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
-				continue;
-			}
-			fileManager.scriptWEPaste(player, BlockLocation.fromLocation(block.getLocation()), overwrite);
-		}
-		fileManager.save();
-		ScriptType scriptType = ScriptFile.getMetadata(player).getScriptType();
-		Utils.sendPluginMessage(player, Messages.getWorldEditPasteMessage(scriptType));
-		Utils.sendPluginMessage(Messages.getConsoleWorldEditPasteMessage(scriptType, selection.getMinimumPoint(), selection.getMaximumPoint()));
 	}
 
 	@Override
@@ -528,7 +527,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 		}
 		if (args.length == 4 && args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
 			Permission perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT;
-			String[] args_ = new String[]{"true", "false"};;
+			String[] args_ = new String[]{"true", "false"};
 			if ((args_ = perm(sender, args_, perm)) == null) {
 				return null;
 			}

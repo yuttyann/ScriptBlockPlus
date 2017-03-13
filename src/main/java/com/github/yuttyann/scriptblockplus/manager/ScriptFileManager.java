@@ -15,7 +15,6 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptFileManager {
 
-	private ScriptBlock plugin;
 	private MapManager mapManager;
 	private BlockLocation location;
 	private ScriptType scriptType;
@@ -23,7 +22,6 @@ public class ScriptFileManager {
 	private List<String> scripts;
 
 	public ScriptFileManager(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
-		this.plugin = plugin;
 		this.mapManager = plugin.getMapManager();
 		this.location = location;
 		this.scriptType = scriptType;
@@ -43,7 +41,7 @@ public class ScriptFileManager {
 	}
 
 	public void scriptCreate(Player player, String script) {
-		MetadataManager.removeAllMetadata(plugin, player);
+		MetadataManager.removeAll(player);
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
 		scriptData.setCreateScript(script);
@@ -54,7 +52,7 @@ public class ScriptFileManager {
 	}
 
 	public void scriptAdd(Player player, String script) {
-		MetadataManager.removeAllMetadata(plugin, player);
+		MetadataManager.removeAll(player);
 		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
@@ -69,7 +67,7 @@ public class ScriptFileManager {
 	}
 
 	public void scriptRemove(Player player) {
-		MetadataManager.removeAllMetadata(plugin, player);
+		MetadataManager.removeAll(player);
 		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
@@ -82,7 +80,7 @@ public class ScriptFileManager {
 	}
 
 	public void scriptView(Player player) {
-		MetadataManager.removeAllMetadata(plugin, player);
+		MetadataManager.removeAll(player);
 		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
@@ -95,7 +93,7 @@ public class ScriptFileManager {
 		List<String> authors = scriptData.getAuthors(true);
 		int size = authors.size();
 		if (size > 1) {
-			for (int i = 0 ; i < size; i++) {
+			for (int i = 0; i < size; i++) {
 				if (i == 0) {
 					builder.append("[");
 				}
@@ -122,20 +120,21 @@ public class ScriptFileManager {
 	}
 
 	public void scriptCopy(Player player) {
-		MetadataManager.removeAllMetadata(plugin, player);
+		MetadataManager.removeAll(player);
 		if (!checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
 		scripts = scriptData.getScripts();
-		ScriptFile.removeAllMetadata(plugin, player);
-		ScriptFile.setMetadata(plugin, player, scriptType, this);
+		ScriptFile scriptFile = MetadataManager.getScriptFile();
+		scriptFile.removeAll(player);
+		scriptFile.set(player, scriptType, this);
 		Utils.sendPluginMessage(player, Messages.getScriptCopyMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptCopyMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}
 
 	public void scriptPaste(Player player, BlockLocation location) {
-		MetadataManager.removeAllMetadata(plugin, player);
+		MetadataManager.removeAll(player);
 		scriptData.setBlockLocation(location);
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();

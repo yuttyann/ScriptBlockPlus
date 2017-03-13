@@ -34,8 +34,10 @@ public class Cooldown {
 	}
 
 	public Map<UUID, int[]> put(String fullCoords, UUID uuid, int[] params) {
-		Map<UUID, int[]> temp = mapManager.getCooldown().get(fullCoords);
-		Map<UUID, int[]> params2 = temp != null ? temp : new HashMap<UUID, int[]>();
+		Map<UUID, int[]> params2 = mapManager.getCooldown().get(fullCoords);
+		if (params2 == null) {
+			params2 = new HashMap<UUID, int[]>();
+		}
 		params2.put(uuid, params);
 		return mapManager.getCooldown().put(fullCoords, params2);
 	}

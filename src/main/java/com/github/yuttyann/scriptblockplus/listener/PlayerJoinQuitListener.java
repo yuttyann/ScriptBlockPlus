@@ -13,15 +13,12 @@ import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
 
 public class PlayerJoinQuitListener implements Listener {
 
-	private ScriptBlock plugin;
 	private MapManager mapManager;
 
 	public PlayerJoinQuitListener(ScriptBlock plugin) {
-		this.plugin = plugin;
 		this.mapManager = plugin.getMapManager();
 	}
 
@@ -30,15 +27,16 @@ public class PlayerJoinQuitListener implements Listener {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueId();
 		if (!mapManager.getOldLocation().containsKey(uuid)) {
-			mapManager.getOldLocation().put(uuid, BlockLocation.fromLocation(player.getLocation()).subtract(0, 0.5, 0).getFullCoords());
+			BlockLocation location = BlockLocation.fromLocation(player.getLocation());
+			mapManager.getOldLocation().put(uuid, location.subtract(0.0D, 1.0D, 0.0D).getFullCoords());
 		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		MetadataManager.removeAllMetadata(plugin, player);
-		ScriptFile.removeAllMetadata(plugin, player);
+		MetadataManager.removeAll(player);
+		MetadataManager.getClick().removeAll(player);
 		mapManager.removeEvents(player.getUniqueId());
 	}
 }

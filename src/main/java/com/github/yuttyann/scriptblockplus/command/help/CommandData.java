@@ -95,6 +95,6 @@ public class CommandData {
 	}
 
 	public boolean isEmpty() {
-		return permissions == null || (permissions != null && permissions.isEmpty());
+		return permissions == null || permissions.isEmpty();
 	}
 }

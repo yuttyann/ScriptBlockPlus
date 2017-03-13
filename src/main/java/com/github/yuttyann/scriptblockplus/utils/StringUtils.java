@@ -67,9 +67,9 @@ public class StringUtils {
 
 	public static String createString(String[] args, int start, String glue) {
 		StringBuilder builder = new StringBuilder();
-		for (int i = start, l = args.length; i < l; i++) {
+		for (int i = start; i < args.length; i++) {
 			builder.append(args[i]);
-			if (i != (l - 1)) {
+			if (i != (args.length - 1)) {
 				builder.append(glue);
 			}
 		}

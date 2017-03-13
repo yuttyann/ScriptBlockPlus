@@ -22,8 +22,10 @@ public class Delay {
 	}
 
 	public void put(String fullCoords, UUID uuid) {
-		List<UUID> temp = mapManager.getDelay().get(fullCoords);
-		List<UUID> uuids = temp != null ? temp : new ArrayList<UUID>();
+		List<UUID> uuids = mapManager.getDelay().get(fullCoords);
+		if (uuids == null) {
+			uuids = new ArrayList<UUID>();
+		}
 		uuids.add(uuid);
 		mapManager.getDelay().put(fullCoords, uuids);
 	}

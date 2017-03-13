@@ -32,7 +32,7 @@ public class PlayerMoveListener implements Listener {
 	public void onPlayerMoveEvent(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueId();
-		BlockLocation location = BlockLocation.fromLocation(player.getLocation()).subtract(0, 0.5, 0);
+		BlockLocation location = BlockLocation.fromLocation(player.getLocation()).subtract(0.0D, 1.0D, 0.0D);
 		String fullCoords = location.getFullCoords();
 		if (mapManager.getOldLocation().containsKey(uuid) && mapManager.getOldLocation().get(uuid).equals(fullCoords)) {
 			return;

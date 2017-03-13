@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -295,7 +296,7 @@ public class Utils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Player> getOnlinePlayers() {
+	public static List<Player> getOnlinePlayers() {
 		Object players = Bukkit.getOnlinePlayers();
 		if (players instanceof Collection) {
 			return new ArrayList<Player>((Collection<? extends Player>) players);
@@ -303,7 +304,7 @@ public class Utils {
 		return new ArrayList<Player>(Arrays.asList((Player[]) players));
 	}
 
-	public static ArrayList<OfflinePlayer> getOfflinePlayers() {
+	public static List<OfflinePlayer> getOfflinePlayers() {
 		return new ArrayList<OfflinePlayer>(Arrays.asList(Bukkit.getOfflinePlayers()));
 	}
 }
