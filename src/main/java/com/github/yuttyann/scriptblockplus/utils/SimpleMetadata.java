@@ -29,53 +29,53 @@ public class SimpleMetadata {
 		return metadatable.hasMetadata(key);
 	}
 
-	public Object get(Metadatable metadatable, String key, Object defaultValue) {
+	public Object get(Metadatable metadatable, String key, Object def) {
 		List<MetadataValue> values = metadatable.getMetadata(key);
 		for (MetadataValue value : values) {
 			if (value.value() != null && value.getOwningPlugin().getName().equals(PluginYaml.getName())) {
 				return value.value();
 			}
 		}
-		return defaultValue;
+		return def;
 	}
 
-	public String getString(Metadatable metadatable, String key, String defaultValue) {
-		Object value = get(metadatable, key, defaultValue);
+	public String getString(Metadatable metadatable, String key, String def) {
+		Object value = get(metadatable, key, def);
 		return value instanceof String ? (String) value : null;
 	}
 
-	public boolean getBoolean(Metadatable metadatable, String key, boolean defaultValue) {
-		Object value = get(metadatable, key, defaultValue);
+	public boolean getBoolean(Metadatable metadatable, String key, boolean def) {
+		Object value = get(metadatable, key, def);
 		return value instanceof Boolean ? (boolean) value : false;
 	}
 
-	public byte getByte(Metadatable metadatable, String key, byte defaultValue) {
-		Object value = get(metadatable, key, defaultValue);
+	public byte getByte(Metadatable metadatable, String key, byte def) {
+		Object value = get(metadatable, key, def);
 		return value instanceof Byte ? (byte) value : 0;
 	}
 
-	public short getShort(Metadatable metadatable, String key, short defaultValue) {
-		Object value = get(metadatable, key, defaultValue);
+	public short getShort(Metadatable metadatable, String key, short def) {
+		Object value = get(metadatable, key, def);
 		return value instanceof Short ? (short) value : 0;
 	}
 
-	public int getInt(Metadatable metadatable, String key, int defaultValue) {
-		Object value = get(metadatable, key, defaultValue);
+	public int getInt(Metadatable metadatable, String key, int def) {
+		Object value = get(metadatable, key, def);
 		return value instanceof Integer ? (int) value : 0;
 	}
 
-	public long getLong(Metadatable metadatable, String key, long defaultValue) {
-		Object value = get(metadatable, key, defaultValue);
+	public long getLong(Metadatable metadatable, String key, long def) {
+		Object value = get(metadatable, key, def);
 		return value instanceof Long ? (long) value : 0;
 	}
 
-	public double getDouble(Metadatable metadatable, String key, double defaultValue) {
-		Object value = get(metadatable, key, defaultValue);
+	public double getDouble(Metadatable metadatable, String key, double def) {
+		Object value = get(metadatable, key, def);
 		return value instanceof Double ? (double) value : 0.0D;
 	}
 
-	public float getFloat(Metadatable metadatable, String key, float defaultValue) {
-		Object value = get(metadatable, key, defaultValue);
+	public float getFloat(Metadatable metadatable, String key, float def) {
+		Object value = get(metadatable, key, def);
 		return value instanceof Float ? (float) value : 0.0F;
 	}
 }

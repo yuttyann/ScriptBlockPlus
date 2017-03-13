@@ -129,11 +129,11 @@ public class MetadataManager {
 		}
 
 		public void set(Player player, ScriptType scriptType, ScriptFileManager value) {
-			set(player, "SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase(), value);
+			set(player, getType(scriptType), value);
 		}
 
 		public void remove(Player player, ScriptType scriptType) {
-			remove(player, "SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase());
+			remove(player, getType(scriptType));
 		}
 
 		public void removeAll(Player player) {
@@ -145,7 +145,7 @@ public class MetadataManager {
 		}
 
 		public boolean has(Player player, ScriptType scriptType) {
-			return has(player, "SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase());
+			return has(player, getType(scriptType));
 		}
 
 		public boolean hasAll(Player player) {
@@ -159,12 +159,16 @@ public class MetadataManager {
 
 		public ScriptFileManager get(Player player) {
 			for (ScriptType scriptType : ScriptType.values()) {
-				Object value = get(player, "SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase(), null);
+				Object value = get(player, getType(scriptType), null);
 				if (value != null) {
 					return (ScriptFileManager) value;
 				}
 			}
 			return null;
+		}
+
+		private String getType(ScriptType scriptType) {
+			return "SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase();
 		}
 	}
 }
