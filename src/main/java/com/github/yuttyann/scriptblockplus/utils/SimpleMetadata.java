@@ -7,8 +7,6 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
 
-import com.github.yuttyann.scriptblockplus.file.PluginYaml;
-
 public class SimpleMetadata {
 
 	private Plugin plugin;
@@ -32,7 +30,7 @@ public class SimpleMetadata {
 	public Object get(Metadatable metadatable, String key, Object def) {
 		List<MetadataValue> values = metadatable.getMetadata(key);
 		for (MetadataValue value : values) {
-			if (value.value() != null && value.getOwningPlugin().getName().equals(PluginYaml.getName())) {
+			if (value.getOwningPlugin().getName().equals(plugin.getName())) {
 				return value.value();
 			}
 		}
@@ -42,11 +40,6 @@ public class SimpleMetadata {
 	public String getString(Metadatable metadatable, String key, String def) {
 		Object value = get(metadatable, key, def);
 		return value instanceof String ? (String) value : null;
-	}
-
-	public boolean getBoolean(Metadatable metadatable, String key, boolean def) {
-		Object value = get(metadatable, key, def);
-		return value instanceof Boolean ? (boolean) value : false;
 	}
 
 	public byte getByte(Metadatable metadatable, String key, byte def) {
@@ -66,7 +59,7 @@ public class SimpleMetadata {
 
 	public long getLong(Metadatable metadatable, String key, long def) {
 		Object value = get(metadatable, key, def);
-		return value instanceof Long ? (long) value : 0;
+		return value instanceof Long ? (long) value : 0L;
 	}
 
 	public double getDouble(Metadatable metadatable, String key, double def) {
@@ -77,5 +70,10 @@ public class SimpleMetadata {
 	public float getFloat(Metadatable metadatable, String key, float def) {
 		Object value = get(metadatable, key, def);
 		return value instanceof Float ? (float) value : 0.0F;
+	}
+
+	public boolean getBoolean(Metadatable metadatable, String key, boolean def) {
+		Object value = get(metadatable, key, def);
+		return value instanceof Boolean ? (boolean) value : false;
 	}
 }

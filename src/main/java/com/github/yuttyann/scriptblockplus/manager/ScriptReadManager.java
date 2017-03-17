@@ -50,13 +50,11 @@ public class ScriptReadManager extends OptionPrefix {
 		this.scriptType = scriptType;
 	}
 
-	public void resetAll() {
-		location = null;
-		scriptType = null;
-		reset();
-	}
-
-	public void reset() {
+	public void init(boolean full) {
+		if (full) {
+			location = null;
+			scriptType = null;
+		}
 		command = null;
 		player = null;
 		server = null;

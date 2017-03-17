@@ -50,7 +50,7 @@ public class ScriptManager extends ScriptReadManager {
 		String coords = location.getCoords();
 		List<String> scripts = scriptData.getScripts();
 		for (int i = 0, s = scripts.size(); i < s; i++) {
-			reset();
+			init(false);
 			if (!readScript(scripts.get(i))) {
 				Utils.sendPluginMessage(player, Messages.getErrorScriptMessage(scriptType));
 				Utils.sendPluginMessage(Messages.getConsoleErrorScriptExecMessage(player, scriptType, location.getWorld(), coords));
@@ -81,8 +81,7 @@ public class ScriptManager extends ScriptReadManager {
 				Hand hand = getHand();
 				if (hand != null) {
 					if (!hand.check(player)) {
-						Utils.sendPluginMessage(player, Messages.getErrorHandMessage(hand.getMaterial(), hand.getId(),
-							hand.getAmount(), hand.getDurability(), hand.getItemName()));
+						Utils.sendPluginMessage(player, Messages.getErrorHandMessage(hand.getMaterial(), hand.getId(), hand.getAmount(), hand.getDurability(), hand.getItemName()));
 						return;
 					}
 				}
@@ -99,8 +98,7 @@ public class ScriptManager extends ScriptReadManager {
 						if (moneyCost != null && moneyCost.isSuccess()) {
 							HookPlugins.getVaultEconomy().depositPlayer(player, moneyCost.getCost());
 						}
-						Utils.sendPluginMessage(player, Messages.getErrorItemMessage(itemCost.getMaterial(), itemCost.getId(),
-							itemCost.getAmount(), itemCost.getDurability(), itemCost.getItemName()));
+						Utils.sendPluginMessage(player, Messages.getErrorItemMessage(itemCost.getMaterial(), itemCost.getId(), itemCost.getAmount(), itemCost.getDurability(), itemCost.getItemName()));
 						return;
 					}
 				}
