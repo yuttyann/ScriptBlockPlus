@@ -41,7 +41,8 @@ public class ScriptFileManager {
 	}
 
 	public void setBlockLocation(BlockLocation location) {
-		scriptData.setBlockLocation(location);;
+		this.location = location;
+		scriptData.setBlockLocation(location);
 	}
 
 	public void scriptCreate(Player player, String script) {
