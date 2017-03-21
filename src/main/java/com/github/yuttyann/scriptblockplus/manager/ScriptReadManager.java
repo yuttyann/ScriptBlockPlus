@@ -13,8 +13,8 @@ import com.github.yuttyann.scriptblockplus.option.Amount;
 import com.github.yuttyann.scriptblockplus.option.Cooldown;
 import com.github.yuttyann.scriptblockplus.option.Delay;
 import com.github.yuttyann.scriptblockplus.option.Group;
-import com.github.yuttyann.scriptblockplus.option.Hand;
 import com.github.yuttyann.scriptblockplus.option.ItemCost;
+import com.github.yuttyann.scriptblockplus.option.ItemHand;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
 import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
 import com.github.yuttyann.scriptblockplus.option.Perm;
@@ -38,7 +38,7 @@ public class ScriptReadManager extends OptionPrefix {
 	private Amount amount;
 	private Delay delay;
 	private Cooldown cooldown;
-	private Hand hand;
+	private ItemHand itemHand;
 	private ItemCost itemCost;
 	private MoneyCost moneyCost;
 	private boolean isBypass;
@@ -50,8 +50,8 @@ public class ScriptReadManager extends OptionPrefix {
 		this.scriptType = scriptType;
 	}
 
-	public void init(boolean full) {
-		if (full) {
+	public void init(boolean isAll) {
+		if (isAll) {
 			location = null;
 			scriptType = null;
 		}
@@ -68,7 +68,7 @@ public class ScriptReadManager extends OptionPrefix {
 		amount = null;
 		delay = null;
 		cooldown = null;
-		hand = null;
+		itemHand = null;
 		itemCost = null;
 		moneyCost = null;
 		isBypass = false;
@@ -135,8 +135,8 @@ public class ScriptReadManager extends OptionPrefix {
 		return cooldown;
 	}
 
-	public Hand getHand() {
-		return hand;
+	public ItemHand getItemHand() {
+		return itemHand;
 	}
 
 	public ItemCost getItemCost() {
@@ -147,18 +147,30 @@ public class ScriptReadManager extends OptionPrefix {
 		return moneyCost;
 	}
 
-	public boolean hasOption() {
-		return player != null || server != null || say != null || perm != null || permADD != null || permREMOVE != null
-				|| group != null || groupADD != null || groupREMOVE != null || amount != null || delay != null
-				|| cooldown != null || hand != null || moneyCost != null || itemCost != null;
-	}
-
 	public boolean isBypass() {
 		return isBypass;
 	}
 
 	public boolean isSuccess() {
 		return isSuccess;
+	}
+
+	public boolean hasOption() {
+		return player != null
+				|| server != null
+				|| say != null
+				|| perm != null
+				|| permADD != null
+				|| permREMOVE != null
+				|| group != null
+				|| groupADD != null
+				|| groupREMOVE != null
+				|| amount != null
+				|| delay != null
+				|| cooldown != null
+				|| itemHand != null
+				|| itemCost != null
+				|| moneyCost != null;
 	}
 
 	public boolean checkScript(String script) {
@@ -168,9 +180,10 @@ public class ScriptReadManager extends OptionPrefix {
 				isSuccess = true;
 			} else if (hasOption) {
 				for (String s : getScripts(script)) {
-					if (check(s) && !isSuccess) {
-						isSuccess = true;
+					if (!check(s) || isSuccess) {
+						continue;
 					}
+					isSuccess = true;
 				}
 			}
 		} catch (Exception e) {
@@ -246,70 +259,70 @@ public class ScriptReadManager extends OptionPrefix {
 				|| script.startsWith(DELAY)
 				|| script.startsWith(COOLDOWN)
 				|| script.startsWith(HAND)
-				|| script.startsWith(COST)
-				|| script.startsWith(ITEM);
+				|| script.startsWith(ITEM)
+				|| script.startsWith(COST);
 	}
 
 	private void read(String script) throws Exception {
 		for (String prefix : PREFIXS) {
 			switch (StringUtils.startText(script, prefix, "")) {
 			case COMMAND:
-				command = StringUtils.removeStart(script, prefix).trim();
+				command = removeStart(script, prefix);
 				if (!command.startsWith("/")) {
 					command = new StringBuilder(command).insert(0, "/").toString();
 				}
 				return;
 			case BYPASS:
 				isBypass = true;
-				command = StringUtils.removeStart(script, prefix).trim();
+				command = removeStart(script, prefix);
 				if (!command.startsWith("/")) {
 					command = new StringBuilder(command).insert(0, "/").toString();
 				}
 				return;
 			case PLAYER:
-				player = StringUtils.removeStart(script, prefix).trim();
+				player = removeStart(script, prefix);
 				return;
 			case SERVER:
-				server = StringUtils.removeStart(script, prefix).trim();
+				server = removeStart(script, prefix);
 				return;
 			case SAY:
-				say = StringUtils.removeStart(script, prefix).trim();
+				say = removeStart(script, prefix);
 				return;
 			case PERM:
-				perm = getPerm(StringUtils.removeStart(script, prefix).trim(), PermType.CHECK);
+				perm = getPerm(removeStart(script, prefix), PermType.CHECK);
 				return;
 			case PERM_ADD:
-				permADD = getPerm(StringUtils.removeStart(script, prefix).trim(), PermType.ADD);
+				permADD = getPerm(removeStart(script, prefix), PermType.ADD);
 				return;
 			case PERM_REMOVE:
-				permREMOVE = getPerm(StringUtils.removeStart(script, prefix).trim(), PermType.REMOVE);
+				permREMOVE = getPerm(removeStart(script, prefix), PermType.REMOVE);
 				return;
 			case GROUP:
-				group = getGroup(StringUtils.removeStart(script, prefix).trim(), PermType.CHECK);
+				group = getGroup(removeStart(script, prefix), PermType.CHECK);
 				return;
 			case GROUP_ADD:
-				groupADD = getGroup(StringUtils.removeStart(script, prefix).trim(), PermType.ADD);
+				groupADD = getGroup(removeStart(script, prefix), PermType.ADD);
 				return;
 			case GROUP_REMOVE:
-				groupREMOVE = getGroup(StringUtils.removeStart(script, prefix).trim(), PermType.REMOVE);
+				groupREMOVE = getGroup(removeStart(script, prefix), PermType.REMOVE);
 				return;
 			case AMOUNT:
-				amount = new Amount(plugin, StringUtils.removeStart(script, prefix).trim(), location, scriptType);
+				amount = new Amount(plugin, removeStart(script, prefix), location, scriptType);
 				return;
 			case DELAY:
-				delay = new Delay(plugin, StringUtils.removeStart(script, prefix).trim());
+				delay = new Delay(plugin, removeStart(script, prefix));
 				return;
 			case COOLDOWN:
-				cooldown = new Cooldown(plugin, StringUtils.removeStart(script, prefix).trim());
+				cooldown = new Cooldown(plugin, removeStart(script, prefix));
 				return;
 			case HAND:
-				hand = getHand(StringUtils.removeStart(script, prefix).trim());
-				return;
-			case COST:
-				moneyCost = new MoneyCost(StringUtils.removeStart(script, prefix).trim());
+				itemHand = getItemHand(removeStart(script, prefix));
 				return;
 			case ITEM:
-				itemCost = getItem(StringUtils.removeStart(script, prefix).trim());
+				itemCost = getItem(removeStart(script, prefix));
+				return;
+			case COST:
+				moneyCost = new MoneyCost(removeStart(script, prefix));
 				return;
 			}
 		}
@@ -337,18 +350,18 @@ public class ScriptReadManager extends OptionPrefix {
 		return null;
 	}
 
-	private Hand getHand(String hand) {
+	private ItemHand getItemHand(String hand) {
 		String[] array = StringUtils.split(hand, ":");
 		switch (array.length) {
 		case 1:
-			return new Hand(getId(array[0]), 1, (short) 0, null);
+			return new ItemHand(getId(array[0]), 1, (short) 0, null);
 		case 2:
-			return new Hand(getId(array[0]), parseInt(array[1]), (short) 0, null);
+			return new ItemHand(getId(array[0]), parseInt(array[1]), (short) 0, null);
 		case 3:
-			return new Hand(getId(array[0]), parseInt(array[1]), parseShort(array[2]), null);
+			return new ItemHand(getId(array[0]), parseInt(array[1]), parseShort(array[2]), null);
 		case 4:
 			String itemName = StringUtils.createString(array, 3);
-			return new Hand(getId(array[0]), parseInt(array[1]), parseShort(array[2]), itemName);
+			return new ItemHand(getId(array[0]), parseInt(array[1]), parseShort(array[2]), itemName);
 		}
 		return null;
 	}
@@ -387,5 +400,9 @@ public class ScriptReadManager extends OptionPrefix {
 
 	private short parseShort(String source) {
 		return Short.parseShort(source);
+	}
+
+	private String removeStart(String text, String prefix) {
+		return StringUtils.removeStart(text, prefix).trim();
 	}
 }

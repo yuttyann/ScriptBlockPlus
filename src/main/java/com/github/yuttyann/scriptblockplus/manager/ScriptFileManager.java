@@ -40,6 +40,10 @@ public class ScriptFileManager {
 		scriptData.save();
 	}
 
+	public void setBlockLocation(BlockLocation location) {
+		scriptData.setBlockLocation(location);;
+	}
+
 	public void scriptCreate(Player player, String script) {
 		MetadataManager.removeAll(player);
 		scriptData.setAuthor(player);

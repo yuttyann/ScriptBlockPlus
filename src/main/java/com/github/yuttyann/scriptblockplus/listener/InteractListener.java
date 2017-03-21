@@ -27,7 +27,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -121,8 +120,10 @@ public class InteractListener implements Listener {
 
 	private List<Entity> getNearbyEntities(Location location, double radius) {
 		List<Entity> entities = new ArrayList<Entity>();
-		location = BlockLocation.fromLocation(location).getAllCenter();
 		World world = location.getWorld();
+		location.setX(location.getBlockX() + 0.5D);
+		location.setY(location.getBlockY() + 0.5D);
+		location.setZ(location.getBlockZ() + 0.5D);
 		int minX = floor((location.getX() - radius) / 16.0D);
 		int minZ = floor((location.getZ() - radius) / 16.0D);
 		int maxX = floor((location.getX() + radius) / 16.0D);

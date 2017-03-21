@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ProxiedCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -79,13 +80,19 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (Utils.isCB18orLater() && sender instanceof ProxiedCommandSender) {
+			CommandSender pxSender = ((ProxiedCommandSender) sender).getCallee();
+			if (pxSender instanceof Player) {
+				sender = pxSender;
+			}
+		}
 		if (!(sender instanceof Player)) {
 			Utils.sendPluginMessage(Messages.senderNoPlayerMessage);
 			return true;
 		}
 		Player player = (Player) sender;
 		if (args.length == 1) {
-			if (args[0].equalsIgnoreCase("tool")) {
+			if (equals(args[0], "tool")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_TOOL, player)) {
 					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
@@ -93,7 +100,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 				giveTool(player);
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("reload")) {
+			if (equals(args[0], "reload")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_RELOAD, player)) {
 					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
@@ -103,7 +110,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 				Utils.sendPluginMessage(player, Messages.allFileReloadMessage);
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("datamigr")) {
+			if (equals(args[0], "datamigr")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_DATAMIGR, player)) {
 					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
@@ -113,52 +120,15 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 			}
 		}
 		if (args.length == 2) {
-			if (args[0].equalsIgnoreCase("interact")
-				&& (args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("view"))) {
-				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
-					return true;
-				}
-				ClickType type;
-				if (args[1].equalsIgnoreCase("remove")) {
-					type = ClickType.INTERACT_REMOVE;
-				} else {
-					type = ClickType.INTERACT_VIEW;
-				}
-				setClickMeta(player, type);
-				return true;
-			}
-			if (args[0].equalsIgnoreCase("break")
-				&& (args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("view"))) {
-				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
-					return true;
-				}
-				ClickType type;
-				if (args[1].equalsIgnoreCase("remove")) {
-					type = ClickType.BREAK_REMOVE;
-				} else {
-					type = ClickType.BREAK_VIEW;
-				}
-				setClickMeta(player, type);
-				return true;
-			}
-			if (args[0].equalsIgnoreCase("walk")
-				&& (args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("view"))) {
+			if (equals(args[0], "interact", "break", "walk") && equals(args[1], "remove", "view")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK, player)) {
 					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
-				ClickType type;
-				if (args[1].equalsIgnoreCase("remove")) {
-					type = ClickType.WALK_REMOVE;
-				} else {
-					type = ClickType.WALK_VIEW;
-				}
-				setClickMeta(player, type);
+				setClickMeta(player, ClickType.valueOf(args[0].toUpperCase() + "_" + args[1].toUpperCase()));
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("remove")) {
+			if (equals(args[0], "worldedit") && equals(args[1], "remove")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
 					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
@@ -168,7 +138,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 			}
 		}
 		if (args.length > 2) {
-			if (args.length == 3 && args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
+			if (args.length == 3 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
 					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
@@ -176,7 +146,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 				scriptWEPaste(player, false, Boolean.parseBoolean(args[2]));
 				return true;
 			}
-			if (args.length == 4 && args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
+			if (args.length == 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
 					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
@@ -184,49 +154,12 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 				scriptWEPaste(player, Boolean.parseBoolean(args[2]), Boolean.parseBoolean(args[3]));
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("interact")
-				&& (args[1].equalsIgnoreCase("create") || args[1].equalsIgnoreCase("add"))) {
-				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
-					return true;
-				}
-				ClickType type;
-				if (args[1].equalsIgnoreCase("create")) {
-					type = ClickType.INTERACT_CREATE;
-				} else {
-					type = ClickType.INTERACT_ADD;
-				}
-				setClickMeta(player, args, type);
-				return true;
-			}
-			if (args[0].equalsIgnoreCase("break")
-				&& (args[1].equalsIgnoreCase("create") || args[1].equalsIgnoreCase("add"))) {
-				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
-					return true;
-				}
-				ClickType type;
-				if (args[1].equalsIgnoreCase("create")) {
-					type = ClickType.BREAK_CREATE;
-				} else {
-					type = ClickType.BREAK_ADD;
-				}
-				setClickMeta(player, args, type);
-				return true;
-			}
-			if (args[0].equalsIgnoreCase("walk")
-				&& (args[1].equalsIgnoreCase("create") || args[1].equalsIgnoreCase("add"))) {
+			if (equals(args[0], "interact", "break", "walk") && equals(args[1], "create", "add")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK, player)) {
 					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return true;
 				}
-				ClickType type;
-				if (args[1].equalsIgnoreCase("create")) {
-					type = ClickType.WALK_CREATE;
-				} else {
-					type = ClickType.WALK_ADD;
-				}
-				setClickMeta(player, args, type);
+				setClickMeta(player, args, ClickType.valueOf(args[0].toUpperCase() + "_" + args[1].toUpperCase()));
 				return true;
 			}
 		}
@@ -264,55 +197,38 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 		Configuration config;
 		if (interactExists) {
 			config = Configuration.loadConfiguration(interactFile);
-			ScriptData scriptData = new ScriptData(plugin, null, ScriptType.INTERACT);
-			for (String world : config.getKeys()) {
-				World bWorld = Utils.getWorld(world);
-				for (String coords : config.getKeys(world)) {
-					List<String> scripts = config.getStringList(world + "." + coords, null);
-					if (scripts.size() > 0 && scripts.get(0).startsWith("Author:")) {
-						scripts.remove(0);
-					}
-					String[] array = StringUtils.split(coords, ",");
-					scriptData.setBlockLocation(new BlockLocation(
-						bWorld,
-						Integer.parseInt(array[0]),
-						Integer.parseInt(array[1]),
-						Integer.parseInt(array[2]))
-					);
-					scriptData.setAuthor(player);
-					scriptData.setLastEdit();
-					scriptData.setScripts(scripts);
-				}
-			}
-			scriptData.save();
-			mapManager.reloadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
+			saveScript(player, config, ScriptType.INTERACT);
 		}
 		if (walkExists) {
 			config = Configuration.loadConfiguration(walkFile);
-			ScriptData scriptData = new ScriptData(plugin, null, ScriptType.WALK);
-			for (String world : config.getKeys()) {
-				World bWorld = Utils.getWorld(world);
-				for (String coords : config.getKeys(world)) {
-					List<String> scripts = config.getStringList(world + "." + coords, null);
-					if (scripts.size() > 0 && scripts.get(0).startsWith("Author:")) {
-						scripts.remove(0);
-					}
-					String[] array = StringUtils.split(coords, ",");
-					scriptData.setBlockLocation(new BlockLocation(
-						bWorld,
-						Integer.parseInt(array[0]),
-						Integer.parseInt(array[1]),
-						Integer.parseInt(array[2]))
-					);
-					scriptData.setAuthor(player);
-					scriptData.setLastEdit();
-					scriptData.setScripts(scripts);
-				}
-			}
-			scriptData.save();
-			mapManager.reloadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
+			saveScript(player, config, ScriptType.WALK);
 		}
 		Utils.sendPluginMessage(player, Messages.dataMigrEndMessage);
+	}
+
+	private void saveScript(Player player, Configuration config, ScriptType type) {
+		ScriptData scriptData = new ScriptData(plugin, null, type);
+		for (String world : config.getKeys()) {
+			World bWorld = Utils.getWorld(world);
+			for (String coords : config.getKeys(world)) {
+				List<String> scripts = config.getStringList(world + "." + coords, null);
+				if (scripts.size() > 0 && scripts.get(0).startsWith("Author:")) {
+					scripts.remove(0);
+				}
+				String[] array = StringUtils.split(coords, ",");
+				scriptData.setBlockLocation(new BlockLocation(
+					bWorld,
+					Integer.parseInt(array[0]),
+					Integer.parseInt(array[1]),
+					Integer.parseInt(array[2]))
+				);
+				scriptData.setAuthor(player);
+				scriptData.setLastEdit();
+				scriptData.setScripts(scripts);
+			}
+		}
+		scriptData.save();
+		mapManager.reloadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
 	}
 
 	private void setClickMeta(Player player, ClickType clickType) {
@@ -331,7 +247,6 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 		}
 		String script = StringUtils.createString(args, 2).trim();
 		ScriptReadManager readManager = new ScriptReadManager(plugin, null, null);
-		readManager.reset();
 		if (!readManager.checkScript(script)) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptCheckMessage());
 			return;
@@ -384,23 +299,26 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 		}
 		MetadataManager.removeAll(player);
 		boolean isInteract = false, isBreak = false, isWalk = false;
+		ScriptFileManager interact = new ScriptFileManager(plugin, null, ScriptType.INTERACT);
+		ScriptFileManager break_ = new ScriptFileManager(plugin, null, ScriptType.BREAK);
+		ScriptFileManager walk = new ScriptFileManager(plugin, null, ScriptType.WALK);
 		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
 			BlockLocation location = BlockLocation.fromLocation(block.getLocation());
-			ScriptFileManager interact = new ScriptFileManager(plugin, location, ScriptType.INTERACT);
-			ScriptFileManager break_ = new ScriptFileManager(plugin, location, ScriptType.BREAK);
-			ScriptFileManager walk = new ScriptFileManager(plugin, location, ScriptType.WALK);
+			interact.setBlockLocation(location);
 			if (interact.checkPath()) {
 				interact.scriptWERemove(player);
 				if (!isInteract) {
 					isInteract = true;
 				}
 			}
+			break_.setBlockLocation(location);
 			if (break_.checkPath()) {
 				break_.scriptWERemove(player);
 				if (!isBreak) {
 					isBreak = true;
 				}
 			}
+			walk.setBlockLocation(location);
 			if (walk.checkPath()) {
 				walk.scriptWERemove(player);
 				if (!isWalk) {
@@ -408,33 +326,31 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 				}
 			}
 		}
-		String type = "";
+		StringBuilder type = new StringBuilder();
 		if (isInteract) {
 			Files.getInteract().save();
-			type = ScriptType.INTERACT.toString();
+			type.append(ScriptType.INTERACT.toString());
 		}
 		if (isBreak) {
 			Files.getBreak().save();
-			if (type.length() == 0) {
-				type = ScriptType.BREAK.toString();
-			} else {
-				type += ", " + ScriptType.BREAK.toString();
+			if (type.length() != 0) {
+				type.append(", ");
 			}
+			type.append(ScriptType.BREAK.toString());
 		}
 		if (isWalk) {
 			Files.getWalk().save();
-			if (type.length() == 0) {
-				type = ScriptType.WALK.toString();
-			} else {
-				type += ", " + ScriptType.WALK.toString();
+			if (type.length() != 0) {
+				type.append(", ");
 			}
+			type.append(ScriptType.WALK.toString());
 		}
 		if (type.length() == 0) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
-		Utils.sendPluginMessage(player, Messages.getWorldEditRemoveMessage(type));
-		Utils.sendPluginMessage(Messages.getConsoleWorldEditRemoveMessage(type, selection.getMinimumPoint(), selection.getMaximumPoint()));
+		Utils.sendPluginMessage(player, Messages.getWorldEditRemoveMessage(type.toString()));
+		Utils.sendPluginMessage(Messages.getConsoleWorldEditRemoveMessage(type.toString(), selection.getMinimumPoint(), selection.getMaximumPoint()));
 	}
 
 	@Override
@@ -460,104 +376,87 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 				return commands;
 			}
 		}
-		if (args.length == 2) {
-			if (args[0].equalsIgnoreCase("tool") || args[0].equalsIgnoreCase("datamigr")
-					|| args[0].equalsIgnoreCase("reload")) {
-				return null;
-			}
-			Permission perm;
+		if (args.length == 2 && !equals(args[0], "tool", "datamigr", "reload")) {
 			String[] args_;
-			if (args[0].equalsIgnoreCase("worldedit")) {
-				perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT;
+			Permission perm = null;
+			if (equals(args[0], "worldedit")) {
 				args_ = new String[]{"paste", "remove"};
+				perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT;
 			} else {
-				if (args[0].equalsIgnoreCase("interact")) {
+				if (equals(args[0], "interact")) {
 					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT;
-				} else if (args[0].equalsIgnoreCase("break")) {
+				} else if (equals(args[0], "break")) {
 					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK;
-				} else {
+				} else if (equals(args[0], "walk")) {
 					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WALK;
 				}
 				args_ = new String[]{"create", "add", "remove", "view"};
 			}
-			if ((args_ = perm(sender, args_, perm)) == null) {
-				return null;
-			}
-			String prefix = args[1].toLowerCase();
-			List<String> commands = new ArrayList<String>();
-			for (String c : args_) {
-				if (c.startsWith(prefix)) {
-					commands.add(c);
+			if ((args_ = perm(sender, args_, perm)) != null) {
+				String prefix = args[1].toLowerCase();
+				List<String> commands = new ArrayList<String>();
+				for (String c : args_) {
+					if (c.startsWith(prefix)) {
+						commands.add(c);
+					}
 				}
+				return commands;
 			}
-			return commands;
 		}
-		if (args.length == 3) {
-			if (args[0].equalsIgnoreCase("tool") || args[0].equalsIgnoreCase("reload")
-					|| args[0].equalsIgnoreCase("datamigr") || args[1].equalsIgnoreCase("remove")
-					|| args[1].equalsIgnoreCase("view")) {
-				return null;
-			}
-			Permission perm;
+		if (args.length == 3 && ((equals(args[0], "worldedit") && equals(args[1], "paste"))
+			|| ((equals(args[0], "interact", "break", "walk")) && (equals(args[1], "create", "add"))))) {
 			String[] args_;
-			if (args[1].equalsIgnoreCase("paste")) {
-				perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT;
+			Permission perm = null;
+			if (equals(args[0], "worldedit") && equals(args[1], "paste")) {
 				args_ = new String[]{"true", "false"};
+				perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT;
 			} else {
-				if (args[0].equalsIgnoreCase("interact")) {
+				if (equals(args[0], "interact")) {
 					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT;
-				} else if (args[0].equalsIgnoreCase("break")) {
+				} else if (equals(args[0], "break")) {
 					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK;
-				} else {
+				} else if (equals(args[0], "walk")) {
 					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WALK;
 				}
 				args_ = PREFIXS;
 			}
-			if ((args_ = perm(sender, args_, perm)) == null) {
-				return null;
-			}
-			String prefix = args[2].toLowerCase();
-			List<String> commands = new ArrayList<String>();
-			for (String c : args_) {
-				if (c.startsWith(prefix)) {
-					commands.add(c.trim());
+			if ((args_ = perm(sender, args_, perm)) != null) {
+				String prefix = args[2].toLowerCase();
+				List<String> commands = new ArrayList<String>();
+				for (String c : args_) {
+					if (c.startsWith(prefix)) {
+						commands.add(c.trim());
+					}
 				}
+				return commands;
 			}
-			return commands;
 		}
-		if (args.length == 4 && args[0].equalsIgnoreCase("worldedit") && args[1].equalsIgnoreCase("paste")) {
+		if (args.length == 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
 			Permission perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT;
 			String[] args_ = new String[]{"true", "false"};
-			if ((args_ = perm(sender, args_, perm)) == null) {
-				return null;
-			}
-			String prefix = args[3].toLowerCase();
-			List<String> commands = new ArrayList<String>();
-			for (String c : args_) {
-				if (c.startsWith(prefix)) {
-					commands.add(c);
+			if ((args_ = perm(sender, args_, perm)) != null) {
+				String prefix = args[3].toLowerCase();
+				List<String> commands = new ArrayList<String>();
+				for (String c : args_) {
+					if (c.startsWith(prefix)) {
+						commands.add(c);
+					}
 				}
+				return commands;
 			}
-			return commands;
 		}
-		return null;
+		return new ArrayList<String>();
 	}
 
 	private String perm(CommandSender sender, String command, Object permission) {
-		if (permission == null) {
-			return null;
-		}
-		if (sender.hasPermission(getNode(permission))) {
+		if (permission != null && sender.hasPermission(getNode(permission))) {
 			return command;
 		}
 		return null;
 	}
 
 	private String[] perm(CommandSender sender, String[] commands, Object permission) {
-		if (permission == null) {
-			return null;
-		}
-		if (sender.hasPermission(getNode(permission))) {
+		if (permission != null && sender.hasPermission(getNode(permission))) {
 			return commands;
 		}
 		return null;
@@ -565,5 +464,14 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 
 	private String getNode(Object permission) {
 		return (permission instanceof Permission ? ((Permission) permission).getNode() : permission.toString());
+	}
+
+	private boolean equals(String source, String... anothers) {
+		for (String another : anothers) {
+			if (source.equalsIgnoreCase(another)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

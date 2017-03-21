@@ -78,7 +78,7 @@ public class MetadataManager {
 		}
 
 		public boolean get(Player player, ClickType clickType) {
-			return getBoolean(player, clickType.toString(), false);
+			return getBoolean(player, clickType.toString());
 		}
 	}
 
@@ -118,7 +118,7 @@ public class MetadataManager {
 		}
 
 		public String get(Player player, ClickType clickType) {
-			return getString(player, clickType.toString(), null);
+			return getString(player, clickType.toString());
 		}
 	}
 
@@ -159,7 +159,7 @@ public class MetadataManager {
 
 		public ScriptFileManager get(Player player) {
 			for (ScriptType scriptType : ScriptType.values()) {
-				Object value = get(player, getType(scriptType), null);
+				Object value = get(player, getType(scriptType));
 				if (value != null) {
 					return (ScriptFileManager) value;
 				}

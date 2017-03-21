@@ -18,8 +18,8 @@ import com.github.yuttyann.scriptblockplus.option.Amount;
 import com.github.yuttyann.scriptblockplus.option.Cooldown;
 import com.github.yuttyann.scriptblockplus.option.Delay;
 import com.github.yuttyann.scriptblockplus.option.Group;
-import com.github.yuttyann.scriptblockplus.option.Hand;
 import com.github.yuttyann.scriptblockplus.option.ItemCost;
+import com.github.yuttyann.scriptblockplus.option.ItemHand;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
 import com.github.yuttyann.scriptblockplus.option.Perm;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -78,10 +78,10 @@ public class ScriptManager extends ScriptReadManager {
 					Utils.sendPluginMessage(player, Messages.getErrorGroupMessage(group.getName()));
 					return;
 				}
-				Hand hand = getHand();
-				if (hand != null) {
-					if (!hand.check(player)) {
-						Utils.sendPluginMessage(player, Messages.getErrorHandMessage(hand.getMaterial(), hand.getId(), hand.getAmount(), hand.getDurability(), hand.getItemName()));
+				ItemHand itemHand = getItemHand();
+				if (itemHand != null) {
+					if (!itemHand.check(player)) {
+						Utils.sendPluginMessage(player, Messages.getErrorHandMessage(itemHand.getMaterial(), itemHand.getId(), itemHand.getAmount(), itemHand.getDurability(), itemHand.getItemName()));
 						return;
 					}
 				}

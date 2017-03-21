@@ -17,8 +17,8 @@ public class OptionPrefix {
 	protected static final String DELAY = "@delay:";
 	protected static final String COOLDOWN = "@cooldown:";
 	protected static final String HAND = "@hand:";
-	protected static final String COST = "$cost:";
 	protected static final String ITEM = "$item:";
+	protected static final String COST = "$cost:";
 	protected static final String[] PREFIXS = getPrefixs(17);
 
 	private static String[] getPrefixs(int max) {
@@ -71,10 +71,10 @@ public class OptionPrefix {
 				prefixs[i] = HAND;
 				break;
 			case 15:
-				prefixs[i] = COST;
+				prefixs[i] = ITEM;
 				break;
 			case 16:
-				prefixs[i] = ITEM;
+				prefixs[i] = COST;
 				break;
 			default:
 				return prefixs;

@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class Hand {
+public class ItemHand {
 
 	private int id;
 	private int amount;
@@ -17,7 +17,7 @@ public class Hand {
 	private boolean isSuccess;
 
 	@SuppressWarnings("deprecation")
-	public Hand(int id, int amount, short damage, String itemName) {
+	public ItemHand(int id, int amount, short damage, String itemName) {
 		this.id = id;
 		this.amount = amount;
 		this.damage = damage;
@@ -59,10 +59,7 @@ public class Hand {
 	}
 
 	private boolean checkItem(ItemStack item) {
-		if (item == null) {
-			return false;
-		}
-		if (!(item.getType() == getMaterial() && item.getAmount() >= getAmount() && item.getDurability() == getDurability())) {
+		if (item == null || !(item.getType() == getMaterial() && item.getAmount() >= getAmount() && item.getDurability() == getDurability())) {
 			return false;
 		}
 		String itemName = Utils.getItemName(item);

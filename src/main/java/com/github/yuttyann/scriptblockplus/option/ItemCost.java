@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -51,13 +52,19 @@ public class ItemCost {
 	}
 
 	public ItemStack getItemStack() {
-		return new ItemStack(material, amount, damage);
+		ItemStack item = new ItemStack(material, amount, damage);
+		if (itemName != null) {
+			ItemMeta meta = item.getItemMeta();
+			meta.setDisplayName(itemName);
+			item.setItemMeta(meta);
+		}
+		return item;
 	}
 
 	public boolean payment(Player player) {
 		PlayerInventory inventory = player.getInventory();
 		ItemStack[] items = inventory.getContents();
-		for (int i = 0, j = 0, l = items.length; i < l; i++) {
+		for (int i = 0, j = 0; i < items.length; i++) {
 			ItemStack item = items[i];
 			if (checkItem(item)) {
 				j += item.getAmount();
@@ -88,10 +95,7 @@ public class ItemCost {
 	}
 
 	private boolean checkItem(ItemStack item) {
-		if (item == null) {
-			return false;
-		}
-		if (item.getType() != getMaterial() || item.getDurability() != getDurability()) {
+		if (item == null || item.getType() != getMaterial() || item.getDurability() != getDurability()) {
 			return false;
 		}
 		String itemName = Utils.getItemName(item);

@@ -178,9 +178,8 @@ public class Utils {
 	}
 
 	public static boolean checkItem(ItemStack item, Material material, String name) {
-		return item != null && item.getType() == material
-				&& item.hasItemMeta() && item.getItemMeta().hasDisplayName()
-				&& item.getItemMeta().getDisplayName().equals(name);
+		String itemName = getItemName(item);
+		return item != null && item.getType() == material && itemName != null && itemName.equals(name);
 	}
 
 	public static World getWorld(String name) {

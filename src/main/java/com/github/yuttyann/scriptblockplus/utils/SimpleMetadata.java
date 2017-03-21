@@ -6,6 +6,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.NumberConversions;
 
 public class SimpleMetadata {
 
@@ -27,6 +28,10 @@ public class SimpleMetadata {
 		return metadatable.hasMetadata(key);
 	}
 
+	public Object get(Metadatable metadatable, String key) {
+		return get(metadatable, key, null);
+	}
+
 	public Object get(Metadatable metadatable, String key, Object def) {
 		List<MetadataValue> values = metadatable.getMetadata(key);
 		for (MetadataValue value : values) {
@@ -37,43 +42,111 @@ public class SimpleMetadata {
 		return def;
 	}
 
+	public String getString(Metadatable metadatable, String key) {
+		return getString(metadatable, key, null);
+	}
+
 	public String getString(Metadatable metadatable, String key, String def) {
-		Object value = get(metadatable, key, def);
-		return value instanceof String ? (String) value : null;
+		return asString(get(metadatable, key, def));
+	}
+
+	public byte getByte(Metadatable metadatable, String key) {
+		return getByte(metadatable, key, (byte) 0);
 	}
 
 	public byte getByte(Metadatable metadatable, String key, byte def) {
-		Object value = get(metadatable, key, def);
-		return value instanceof Byte ? (byte) value : 0;
+		return asByte(get(metadatable, key, def));
+	}
+
+	public short getShort(Metadatable metadatable, String key) {
+		return getShort(metadatable, key, (short) 0);
 	}
 
 	public short getShort(Metadatable metadatable, String key, short def) {
-		Object value = get(metadatable, key, def);
-		return value instanceof Short ? (short) value : 0;
+		return asShort(get(metadatable, key, def));
+	}
+
+	public int getInt(Metadatable metadatable, String key) {
+		return getInt(metadatable, key, 0);
 	}
 
 	public int getInt(Metadatable metadatable, String key, int def) {
-		Object value = get(metadatable, key, def);
-		return value instanceof Integer ? (int) value : 0;
+		return asInt(get(metadatable, key, def));
+	}
+
+	public long getLong(Metadatable metadatable, String key) {
+		return getLong(metadatable, key, 0L);
 	}
 
 	public long getLong(Metadatable metadatable, String key, long def) {
-		Object value = get(metadatable, key, def);
-		return value instanceof Long ? (long) value : 0L;
+		return asLong(get(metadatable, key, def));
+	}
+
+	public double getDouble(Metadatable metadatable, String key) {
+		return getDouble(metadatable, key, 0.0D);
 	}
 
 	public double getDouble(Metadatable metadatable, String key, double def) {
-		Object value = get(metadatable, key, def);
-		return value instanceof Double ? (double) value : 0.0D;
+		return asDouble(get(metadatable, key, def));
+	}
+
+	public float getFloat(Metadatable metadatable, String key) {
+		return getFloat(metadatable, key, 0.0F);
 	}
 
 	public float getFloat(Metadatable metadatable, String key, float def) {
-		Object value = get(metadatable, key, def);
-		return value instanceof Float ? (float) value : 0.0F;
+		return asFloat(get(metadatable, key, def));
+	}
+
+	public boolean getBoolean(Metadatable metadatable, String key) {
+		return getBoolean(metadatable, key, false);
 	}
 
 	public boolean getBoolean(Metadatable metadatable, String key, boolean def) {
-		Object value = get(metadatable, key, def);
-		return value instanceof Boolean ? (boolean) value : false;
+		return asBoolean(get(metadatable, key, def));
+	}
+
+	private String asString(Object value) {
+		if (value == null) {
+			return "";
+		}
+		return value.toString();
+	}
+
+	private byte asByte(Object value) {
+		return NumberConversions.toByte(value);
+	}
+
+	private short asShort(Object value) {
+		return NumberConversions.toShort(value);
+	}
+
+	private int asInt(Object value) {
+		return NumberConversions.toInt(value);
+	}
+
+	private long asLong(Object value) {
+		return NumberConversions.toLong(value);
+	}
+
+	private double asDouble(Object value) {
+		return NumberConversions.toDouble(value);
+	}
+
+	private float asFloat(Object value) {
+		return NumberConversions.toFloat(value);
+	}
+
+	private boolean asBoolean(Object value) {
+		if (value instanceof Boolean) {
+			return (Boolean) value;
+		}
+		if (value instanceof Number) {
+			return ((Number) value).intValue() != 0;
+		}
+		if (value instanceof String) {
+			return Boolean.parseBoolean(value.toString());
+		}
+		return value != null;
 	}
 }
