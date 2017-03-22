@@ -15,17 +15,17 @@ public class ScriptData {
 
 	private ScriptBlock plugin;
 	private MapManager mapManager;
-	private YamlConfig scriptFile;
 	private BlockLocation location;
 	private ScriptType scriptType;
+	private YamlConfig scriptFile;
 	private String scriptPath;
 
 	public ScriptData(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
 		this.plugin = plugin;
 		this.mapManager = plugin.getMapManager();
-		this.scriptFile = Files.getScriptFile(scriptType);
 		this.location = location;
 		this.scriptType = scriptType;
+		this.scriptFile = Files.getScriptFile(scriptType);
 		this.scriptPath = location != null ? (location.getWorld().getName() + "." + location.getCoords()) : null;
 	}
 

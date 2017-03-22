@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
@@ -15,7 +14,7 @@ public class MetadataManager {
 	private static ScriptFile scriptFile;
 
 	static {
-		Plugin plugin = ScriptBlock.getInstance();
+		ScriptBlock plugin = ScriptBlock.getInstance();
 		click = new Click(plugin);
 		script = new Script(plugin);
 		scriptFile = new ScriptFile(plugin);
@@ -44,7 +43,7 @@ public class MetadataManager {
 
 	public static class Click extends SimpleMetadata {
 
-		public Click(Plugin plugin) {
+		public Click(ScriptBlock plugin) {
 			super(plugin);
 		}
 
@@ -84,7 +83,7 @@ public class MetadataManager {
 
 	public static class Script extends SimpleMetadata {
 
-		public Script(Plugin plugin) {
+		public Script(ScriptBlock plugin) {
 			super(plugin);
 		}
 
@@ -124,7 +123,7 @@ public class MetadataManager {
 
 	public static class ScriptFile extends SimpleMetadata {
 
-		public ScriptFile(Plugin plugin) {
+		public ScriptFile(ScriptBlock plugin) {
 			super(plugin);
 		}
 

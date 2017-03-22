@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file;
 
-import org.bukkit.plugin.Plugin;
-
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 
 public class Files {
@@ -18,7 +17,7 @@ public class Files {
 	private YamlConfig break_;
 	private YamlConfig walk;
 
-	public Files(Plugin plugin) {
+	public Files(ScriptBlock plugin) {
 		this.config = YamlConfig.load(plugin, FILE_PATHS[0]);
 		this.messages = YamlConfig.load(plugin, FILE_PATHS[1]);
 		this.interact = YamlConfig.load(plugin, FILE_PATHS[2], false);
@@ -58,7 +57,7 @@ public class Files {
 		return null;
 	}
 
-	public static void reload(Plugin plugin) {
+	public static void reload(ScriptBlock plugin) {
 		instance = new Files(plugin);
 		Messages.reload();
 	}

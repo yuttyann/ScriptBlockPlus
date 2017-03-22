@@ -63,7 +63,7 @@ public class ItemCost {
 
 	public boolean payment(Player player) {
 		PlayerInventory inventory = player.getInventory();
-		ItemStack[] items = inventory.getContents();
+		ItemStack[] items = inventory.getContents().clone();
 		for (int i = 0, j = 0; i < items.length; i++) {
 			ItemStack item = items[i];
 			if (checkItem(item)) {
@@ -85,7 +85,6 @@ public class ItemCost {
 	}
 
 	private ItemStack minusItem(ItemStack item, int amount) {
-		item = item.clone();
 		if (amount > 0) {
 			item.setAmount(amount);
 		} else {

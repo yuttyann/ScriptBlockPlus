@@ -28,6 +28,11 @@ public class ScriptFileManager {
 		this.scriptData = new ScriptData(plugin, location, scriptType);
 	}
 
+	public void setBlockLocation(BlockLocation location) {
+		this.location = location;
+		scriptData.setBlockLocation(location);
+	}
+
 	public ScriptType getScriptType() {
 		return scriptType;
 	}
@@ -38,11 +43,6 @@ public class ScriptFileManager {
 
 	public void save() {
 		scriptData.save();
-	}
-
-	public void setBlockLocation(BlockLocation location) {
-		this.location = location;
-		scriptData.setBlockLocation(location);
 	}
 
 	public void scriptCreate(Player player, String script) {
@@ -126,7 +126,7 @@ public class ScriptFileManager {
 
 	public void scriptCopy(Player player) {
 		MetadataManager.removeAll(player);
-		if (!checkPath()) {
+		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
 		}
