@@ -15,7 +15,7 @@ public class CommandHelp {
 	public List<CommandData> putCommands(String commandName, CommandData... args) {
 		List<CommandData> datas = new ArrayList<CommandData>();
 		String[] array = StringUtils.split(ScriptBlock.getInstance().getCommand(commandName).getUsage(), "/<command>");
-		for (int i = 0, j = 1, l = args.length; i < l; i++, j++) {
+		for (int i = 0, j = 1; i < args.length; i++, j++) {
 			CommandData temp = args[i];
 			if (array.length > j && array[j].length() > 0) {
 				temp = temp.setMessage(array[j].trim());

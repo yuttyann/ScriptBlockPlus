@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.reader.UnicodeReader;
@@ -21,17 +22,17 @@ import org.yaml.snakeyaml.representer.Representer;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 
 @SuppressWarnings("unchecked")
-public class Configuration {
+public class SBConfig {
 
 	private Yaml yaml;
 	private File file;
 	private Map<String, Object> root;
 
-	public static Configuration loadConfiguration(File file) {
+	public static SBConfig loadConfiguration(File file) {
 		DumperOptions options = new DumperOptions();
 		options.setIndent(4);
-		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-		Configuration config = new Configuration();
+		options.setDefaultFlowStyle(FlowStyle.BLOCK);
+		SBConfig config = new SBConfig();
 		config.yaml = new Yaml(new SafeConstructor(), new Representer(), options);
 		config.load(file);
 		return config;

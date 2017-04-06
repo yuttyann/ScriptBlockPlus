@@ -170,11 +170,10 @@ public class Utils {
 	}
 
 	public static String getItemName(ItemStack item) {
-		if (item == null || item.getType() == Material.AIR
-			|| !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+		if (item == null || item.getType() == Material.AIR) {
 			return null;
 		}
-		return item.getItemMeta().getDisplayName();
+		return (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) ? item.getItemMeta().getDisplayName() : null;
 	}
 
 	public static boolean checkItem(ItemStack item, Material material, String name) {
@@ -218,7 +217,9 @@ public class Utils {
 			} else {
 				try {
 					uuid = UUIDFetcher.getUniqueId(name);
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return uuid;

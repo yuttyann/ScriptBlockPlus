@@ -3,9 +3,9 @@ package com.github.yuttyann.scriptblockplus.manager;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.SimpleMetadata;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
-import com.github.yuttyann.scriptblockplus.utils.SimpleMetadata;
 
 public class MetadataManager {
 

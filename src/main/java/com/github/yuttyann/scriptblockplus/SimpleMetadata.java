@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.utils;
+package com.github.yuttyann.scriptblockplus;
 
 import java.util.List;
 

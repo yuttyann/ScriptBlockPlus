@@ -23,9 +23,9 @@ import com.github.yuttyann.scriptblockplus.command.help.CommandHelp;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
-import com.github.yuttyann.scriptblockplus.file.Configuration;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.hook.WorldEditSelection;
@@ -194,19 +194,19 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 			return;
 		}
 		Utils.sendPluginMessage(player, Messages.dataMigrStartMessage);
-		Configuration config;
+		SBConfig config;
 		if (interactExists) {
-			config = Configuration.loadConfiguration(interactFile);
+			config = SBConfig.loadConfiguration(interactFile);
 			saveScript(player, config, ScriptType.INTERACT);
 		}
 		if (walkExists) {
-			config = Configuration.loadConfiguration(walkFile);
+			config = SBConfig.loadConfiguration(walkFile);
 			saveScript(player, config, ScriptType.WALK);
 		}
 		Utils.sendPluginMessage(player, Messages.dataMigrEndMessage);
 	}
 
-	private void saveScript(Player player, Configuration config, ScriptType type) {
+	private void saveScript(Player player, SBConfig config, ScriptType type) {
 		ScriptData scriptData = new ScriptData(plugin, null, type);
 		for (String world : config.getKeys()) {
 			World bWorld = Utils.getWorld(world);
@@ -463,7 +463,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 	}
 
 	private String getNode(Object permission) {
-		return (permission instanceof Permission ? ((Permission) permission).getNode() : permission.toString());
+		return permission instanceof Permission ? ((Permission) permission).getNode() : permission.toString();
 	}
 
 	private boolean equals(String source, String... anothers) {

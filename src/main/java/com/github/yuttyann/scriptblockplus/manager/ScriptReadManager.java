@@ -176,11 +176,11 @@ public class ScriptReadManager extends OptionPrefix {
 	public boolean checkScript(String script) {
 		try {
 			boolean hasOption = script.trim().startsWith("[");
-			if (!hasOption && check(script) && !isSuccess) {
+			if (!hasOption && !isSuccess && check(script)) {
 				isSuccess = true;
 			} else if (hasOption) {
 				for (String s : getScripts(script)) {
-					if (!check(s) || isSuccess) {
+					if (isSuccess || !check(s)) {
 						continue;
 					}
 					isSuccess = true;
@@ -319,7 +319,7 @@ public class ScriptReadManager extends OptionPrefix {
 				itemHand = getItemHand(removeStart(script, prefix));
 				return;
 			case ITEM:
-				itemCost = getItem(removeStart(script, prefix));
+				itemCost = getItemCost(removeStart(script, prefix));
 				return;
 			case COST:
 				moneyCost = new MoneyCost(removeStart(script, prefix));
@@ -366,7 +366,7 @@ public class ScriptReadManager extends OptionPrefix {
 		return null;
 	}
 
-	private ItemCost getItem(String itemCost) {
+	private ItemCost getItemCost(String itemCost) {
 		String[] array = StringUtils.split(itemCost, ":");
 		switch (array.length) {
 		case 1:
@@ -391,7 +391,12 @@ public class ScriptReadManager extends OptionPrefix {
 	}
 
 	private boolean isNumber(String source) {
-		return source.matches("^-?[0-9]{1,9}$");
+		try {
+			Integer.parseInt(source);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 	private int parseInt(String source) {

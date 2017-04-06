@@ -128,16 +128,15 @@ public class ScriptData {
 	}
 
 	public void copyScripts(BlockLocation target, boolean overwrite) {
-		BlockLocation targetLocation = target;
-		ScriptData targetData = new ScriptData(plugin, targetLocation, scriptType);
-		if (location.equals(targetLocation) || !checkPath() || (targetData.checkPath() && overwrite)) {
+		ScriptData targetData = new ScriptData(plugin, target, scriptType);
+		if (location.equals(target) || !checkPath() || (targetData.checkPath() && overwrite)) {
 			return;
 		}
-		mapManager.addLocation(targetLocation, getScriptType());
 		targetData.setAuthor(getAuthor());
 		targetData.setLastEdit(getLastEdit());
 		targetData.setScripts(getScripts());
 		targetData.save();
+		mapManager.addLocation(target, getScriptType());
 	}
 
 	public void setScripts(List<String> scripts) {

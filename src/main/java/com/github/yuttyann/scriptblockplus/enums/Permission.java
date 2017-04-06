@@ -29,11 +29,11 @@ public enum Permission {
 		return permission.getNode();
 	}
 
-	public static Boolean has(Permission permission, CommandSender sender) {
+	public static boolean has(Permission permission, CommandSender sender) {
 		return sender.hasPermission(getPermission(permission));
 	}
 
-	public static Boolean has(String permission, CommandSender sender) {
+	public static boolean has(String permission, CommandSender sender) {
 		return sender.hasPermission(permission);
 	}
 }

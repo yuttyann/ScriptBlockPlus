@@ -38,8 +38,6 @@ import org.xml.sax.SAXException;
 
 public class FileUtils {
 
-	private static final String XMLUPLOADER_URL = "http://xml.yuttyann44581.net/uploads//";
-
 	public static final String UTF8 = "UTF-8";
 	public static final String MS932 = "MS932";
 	public static final String ASCII = "US-ASCII";
@@ -348,7 +346,7 @@ public class FileUtils {
 	public static Document getDocument(String name) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		URLConnection urlconn = new URL(XMLUPLOADER_URL + name + ".xml").openConnection();
+		URLConnection urlconn = new URL("http://xml.yuttyann44581.net/uploads//" + name + ".xml").openConnection();
 		HttpURLConnection httpconn = (HttpURLConnection) urlconn;
 		httpconn.setAllowUserInteraction(false);
 		httpconn.setInstanceFollowRedirects(true);

@@ -11,8 +11,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Button;
+import org.bukkit.material.Door;
 import org.bukkit.material.Lever;
 import org.bukkit.material.MaterialData;
+import org.bukkit.material.TrapDoor;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
@@ -87,7 +89,8 @@ public class BlockListener implements Listener {
 					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
 					return;
 				}
-				if (isPowered(block)) {
+				MaterialData data = block.getState().getData();
+				if (isPowered(data) || isOpen(data)) {
 					return;
 				}
 				new ScriptManager(plugin, location, ScriptType.INTERACT).scriptExec(player);
@@ -161,13 +164,22 @@ public class BlockListener implements Listener {
 		}
 	}
 
-	private boolean isPowered(Block block) {
-		MaterialData data = block.getState().getData();
+	private boolean isPowered(MaterialData data) {
 		if (data instanceof Button) {
 			return ((Button) data).isPowered();
 		}
 		if (data instanceof Lever) {
 			return ((Lever) data).isPowered();
+		}
+		return false;
+	}
+
+	private boolean isOpen(MaterialData data) {
+		if (data instanceof Door) {
+			return ((Door) data).isOpen();
+		}
+		if (data instanceof TrapDoor) {
+			return ((TrapDoor) data).isOpen();
 		}
 		return false;
 	}

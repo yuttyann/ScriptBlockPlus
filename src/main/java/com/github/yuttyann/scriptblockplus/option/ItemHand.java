@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.option;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -13,16 +14,13 @@ public class ItemHand {
 	private int amount;
 	private short damage;
 	private String itemName;
-	private Material material;
 	private boolean isSuccess;
 
-	@SuppressWarnings("deprecation")
 	public ItemHand(int id, int amount, short damage, String itemName) {
 		this.id = id;
 		this.amount = amount;
 		this.damage = damage;
 		this.itemName = itemName != null ? StringUtils.replace(itemName, "&", "§") : itemName;
-		this.material = Material.getMaterial(id);
 	}
 
 	public int getId() {
@@ -45,12 +43,19 @@ public class ItemHand {
 		return isSuccess;
 	}
 
+	@SuppressWarnings("deprecation")
 	public Material getMaterial() {
-		return material;
+		return Material.getMaterial(id);
 	}
 
 	public ItemStack getItemStack() {
-		return new ItemStack(material, amount, damage);
+		ItemStack item = new ItemStack(getMaterial(), amount, damage);
+		if (itemName != null) {
+			ItemMeta meta = item.getItemMeta();
+			meta.setDisplayName(itemName);
+			item.setItemMeta(meta);
+		}
+		return item;
 	}
 
 	public boolean check(Player player) {

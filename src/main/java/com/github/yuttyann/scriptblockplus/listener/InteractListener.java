@@ -1,9 +1,6 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -56,23 +53,17 @@ public class InteractListener implements Listener {
 			return;
 		}
 		Block block = blocks.get(1);
-		for (Entity entity : getNearbyEntities(block.getLocation(), 5.22D)) {
-			if (!(entity instanceof Player) || ((Player) entity) != player) {
-				continue;
-			}
-			if (mapManager.removeEvents(player.getUniqueId())) {
-				return;
-			}
-			Action action = Action.LEFT_CLICK_BLOCK;
-			BlockFace blockFace = block.getFace(blocks.get(0));
-			ItemStack item = Utils.getItemInHand(player);
-			BlockInteractEvent interactEvent = new BlockInteractEvent(
-				new PlayerInteractEvent(player, action, item, block, blockFace),
-				player, block, item, action, blockFace, true
-			);
-			Utils.callEvent(interactEvent);
-			break;
+		if (!isPlayerInRange(player, block.getLocation(), 5.22D) || mapManager.removeEvents(player.getUniqueId())) {
+			return;
 		}
+		Action action = Action.LEFT_CLICK_BLOCK;
+		BlockFace blockFace = block.getFace(blocks.get(0));
+		ItemStack item = Utils.getItemInHand(player);
+		BlockInteractEvent interactEvent = new BlockInteractEvent(
+			new PlayerInteractEvent(player, action, item, block, blockFace),
+			player, block, item, action, blockFace, true
+		);
+		Utils.callEvent(interactEvent);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -118,8 +109,7 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	private List<Entity> getNearbyEntities(Location location, double radius) {
-		List<Entity> entities = new ArrayList<Entity>();
+	private boolean isPlayerInRange(Player target, Location location, double radius) {
 		World world = location.getWorld();
 		location.setX(location.getBlockX() + 0.5D);
 		location.setY(location.getBlockY() + 0.5D);
@@ -133,20 +123,18 @@ public class InteractListener implements Listener {
 				if (!world.isChunkLoaded(x, z)) {
 					continue;
 				}
-				entities.addAll(Arrays.asList(world.getChunkAt(x, z).getEntities()));
+				for (Entity entity : world.getChunkAt(x, z).getEntities()) {
+					if (!(entity instanceof Player) || ((Player) entity) != target) {
+						continue;
+					}
+					return entity.getLocation().distanceSquared(location) < square(radius);
+				}
 			}
 		}
-		Iterator<Entity> iterator = entities.iterator();
-		while (iterator.hasNext()) {
-			if (!(iterator.next().getLocation().distanceSquared(location) > square(radius))) {
-				continue;
-			}
-			iterator.remove();
-		}
-		return entities;
+		return false;
 	}
 
-	public double square(double num) {
+	private double square(double num) {
 		return num * num;
 	}
 

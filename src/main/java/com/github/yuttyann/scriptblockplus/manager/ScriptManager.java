@@ -170,10 +170,10 @@ public class ScriptManager extends ScriptReadManager {
 		}
 	}
 
-	private String replace(Player player, String text, boolean isColor) {
+	private String replace(Player player, String text, boolean replaceColor) {
 		text = StringUtils.replace(text, "<player>", player.getName());
 		text = StringUtils.replace(text, "<dplayer>", player.getDisplayName());
-		if (isColor) {
+		if (replaceColor) {
 			text = StringUtils.replace(text, "&rc", Utils.getRandomColor());
 			text = StringUtils.replace(text, "&", "§");
 			return text;
