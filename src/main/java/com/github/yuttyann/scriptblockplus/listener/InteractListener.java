@@ -127,7 +127,11 @@ public class InteractListener implements Listener {
 					if (!(entity instanceof Player) || ((Player) entity) != target) {
 						continue;
 					}
-					return entity.getLocation().distanceSquared(location) < square(radius);
+					Location entityLocation = entity.getLocation();
+					if (entityLocation.getWorld() != location.getWorld()) {
+						return false;
+					}
+					return entityLocation.distanceSquared(location) < square(radius);
 				}
 			}
 		}
