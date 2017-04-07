@@ -192,7 +192,7 @@ public class ScriptBlockAPI {
 	 * @param script スクリプト
 	 */
 	public void setCreateScript(String script) {
-		scriptData.setCreateScript(script);
+		scriptData.createScript(script);
 		mapManager.addLocation(scriptData.getBlockLocation(), getScriptType());
 	}
 

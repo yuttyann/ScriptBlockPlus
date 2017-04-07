@@ -49,7 +49,7 @@ public class ScriptFileManager {
 		MetadataManager.removeAll(player);
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
-		scriptData.setCreateScript(script);
+		scriptData.createScript(script);
 		scriptData.save();
 		mapManager.addLocation(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptCreateMessage(scriptType));

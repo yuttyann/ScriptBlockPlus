@@ -20,6 +20,7 @@ import org.yaml.snakeyaml.reader.UnicodeReader;
 import org.yaml.snakeyaml.representer.Representer;
 
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 @SuppressWarnings("unchecked")
 public class SBConfig {
@@ -99,7 +100,7 @@ public class SBConfig {
 			}
 			return val;
 		}
-		String[] parts = path.split("\\.");
+		String[] parts = StringUtils.split(path, ".");
 		Map<String, Object> node = root;
 		for (int i = 0; i < parts.length; i++) {
 			Object obj = node.get(parts[i]);
@@ -123,7 +124,7 @@ public class SBConfig {
 			root.put(path, value);
 			return;
 		}
-		String[] parts = path.split("\\.");
+		String[] parts = StringUtils.split(path, ".");
 		Map<String, Object> node = root;
 		for (int i = 0; i < parts.length; i++) {
 			Object obj = node.get(parts[i]);
