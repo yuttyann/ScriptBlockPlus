@@ -7,6 +7,7 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
@@ -42,8 +43,14 @@ public class ScriptBlock extends JavaPlugin {
 		if (Utils.isPluginEnabled("ScriptBlock")) {
 			Utils.disablePlugin(Utils.getPlugin("ScriptBlock"));
 		}
+		loadMap();
 		loadClass();
 		loadCommand();
+	}
+
+	@Override
+	public void onDisable() {
+		mapManager.saveCooldown();
 	}
 
 	@Override
@@ -82,14 +89,20 @@ public class ScriptBlock extends JavaPlugin {
 		return new ScriptBlockAPI(this, location, scriptType);
 	}
 
+	private void loadMap() {
+		mapManager = new MapManager(this);
+		mapManager.loadAllScripts();
+		mapManager.loadCooldown();
+	}
+
 	private void loadClass() {
-		mapManager = new MapManager();
-		getServer().getPluginManager().registerEvents(new InteractListener(this), this);
-		getServer().getPluginManager().registerEvents(new BlockListener(this), this);
-		getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
-		getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
+		PluginManager pluginManager = getServer().getPluginManager();
+		pluginManager.registerEvents(new InteractListener(this), this);
+		pluginManager.registerEvents(new BlockListener(this), this);
+		pluginManager.registerEvents(new PlayerMoveListener(this), this);
+		pluginManager.registerEvents(new PlayerJoinQuitListener(this), this);
 		try {
-			getServer().getPluginManager().registerEvents(new Updater(this), this);
+			pluginManager.registerEvents(new Updater(this), this);
 		} catch (Exception e) {}
 	}
 

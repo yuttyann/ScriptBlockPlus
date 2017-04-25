@@ -55,7 +55,14 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 		return item != null;
 	}
 
-	public boolean isLeftClick() {
+	public boolean isBlockInHand() {
+		if (!hasItem()) {
+			return false;
+		}
+		return item.getType().isBlock();
+	}
+
+	public boolean getLeftClick() {
 		return config.getBoolean("LeftClick");
 	}
 

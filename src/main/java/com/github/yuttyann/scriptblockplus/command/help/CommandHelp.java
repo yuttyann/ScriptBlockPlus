@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.command.help;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,7 +23,7 @@ public class CommandHelp {
 			}
 			datas.add(temp);
 		}
-		return ScriptBlock.getInstance().getCommandHelp().put(commandName.toLowerCase(), datas);
+		return getCommandHelp().put(commandName.toLowerCase(), datas);
 	}
 
 	public List<CommandData> put(String commandName, CommandData... args) {
@@ -30,7 +31,7 @@ public class CommandHelp {
 		for (CommandData data : args) {
 			datas.add(data);
 		}
-		return ScriptBlock.getInstance().getCommandHelp().put(commandName.toLowerCase(), datas);
+		return getCommandHelp().put(commandName.toLowerCase(), datas);
 	}
 
 	public List<CommandData> get(int index) {
@@ -38,17 +39,17 @@ public class CommandHelp {
 	}
 
 	public List<CommandData> remove(String label) {
-		return ScriptBlock.getInstance().getCommandHelp().remove(label);
+		return getCommandHelp().remove(label);
 	}
 
 	public void clear() {
-		ScriptBlock.getInstance().getCommandHelp().clear();
+		getCommandHelp().clear();
 	}
 
 	public static void sendHelpMessage(CommandSender sender, Command command, boolean isName) {
 		List<CommandData> temps = new ArrayList<CommandData>();
 		String commandName = command.getName();
-		for (CommandData data : ScriptBlock.getInstance().getCommandHelp().get(commandName)) {
+		for (CommandData data : getCommandHelp().get(commandName)) {
 			if (data.hasPermission(sender)) {
 				temps.add(data);
 			}
@@ -68,5 +69,9 @@ public class CommandHelp {
 				sender.sendMessage(data.getMessage());
 			}
 		}
+	}
+
+	private static Map<String, List<CommandData>> getCommandHelp() {
+		return ScriptBlock.getInstance().getCommandHelp();
 	}
 }

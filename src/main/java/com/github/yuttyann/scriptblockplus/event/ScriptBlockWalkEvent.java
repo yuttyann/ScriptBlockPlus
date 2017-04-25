@@ -51,6 +51,13 @@ public class ScriptBlockWalkEvent extends ScriptBlockEvent implements Cancellabl
 		return block != null;
 	}
 
+	public boolean isBlockInHand() {
+		if (!hasItem()) {
+			return false;
+		}
+		return item.getType().isBlock();
+	}
+
 	public boolean hasItem() {
 		return item != null;
 	}

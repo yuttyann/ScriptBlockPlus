@@ -28,7 +28,7 @@ public class Updater implements Listener {
 
 	private String pluginName;
 	private String pluginVersion;
-	private String version;
+	private String updateVersion;
 	private String download;
 	private String changeLog;
 	private String[] details;
@@ -48,8 +48,8 @@ public class Updater implements Listener {
 		return pluginVersion;
 	}
 
-	public String getVersion() {
-		return version;
+	public String getUpdateVersion() {
+		return updateVersion;
 	}
 
 	public String getDownloadURL() {
@@ -89,7 +89,7 @@ public class Updater implements Listener {
 			if (!element.getNodeName().equals("update")) {
 				continue;
 			}
-			version = element.getAttribute("version");
+			updateVersion = element.getAttribute("version");
 			NodeList updateChildren = node.getChildNodes();
 			for (int j = 0, l2 = updateChildren.getLength(); j < l2; j++) {
 				Node updateNode = updateChildren.item(j);
@@ -121,7 +121,8 @@ public class Updater implements Listener {
 
 	private void updateCheck() {
 		YamlConfig config = Files.getConfig();
-		if(config.getBoolean("UpdateChecker") && Utils.getVersionInt(getVersion()) > Utils.getVersionInt(getPluginVersion())) {
+		boolean isUpperVersion = Utils.getVersionInt(getUpdateVersion()) > Utils.getVersionInt(getPluginVersion());
+		if(config.getBoolean("UpdateChecker") && isUpperVersion) {
 			isEnable = true;
 			boolean first = false;
 			File data = config.getDataFolder();
@@ -142,7 +143,7 @@ public class Updater implements Listener {
 					if (!downloadFile.exists()) {
 						downloadFile.mkdir();
 					}
-					downloadFile = new File(data, "Downloads/" + getPluginName() + " v" + getVersion() + ".jar");
+					downloadFile = new File(data, "Downloads/" + getPluginName() + " v" + getUpdateVersion() + ".jar");
 					FileUtils.fileDownload(getChangeLogURL(), changeLogFile);
 					FileUtils.fileDownload(getDownloadURL(), downloadFile);
 				} catch (IOException e) {
@@ -158,20 +159,16 @@ public class Updater implements Listener {
 				}
 			}
 			if (config.getBoolean("OpenTextFile") && !isError()) {
-				openTextFile(changeLogFile, changeLog, first);
+				if (!first && changeLog.equals(FileUtils.getFileText(getChangeLogURL()))) {
+					return;
+				}
+				Desktop desktop = Desktop.getDesktop();
+				try {
+					desktop.open(changeLogFile);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-		}
-	}
-
-	private void openTextFile(File file, List<String> changeLog, boolean first) {
-		if (!first && changeLog.equals(FileUtils.getFileText(getChangeLogURL()))) {
-			return;
-		}
-		Desktop desktop = Desktop.getDesktop();
-		try {
-			desktop.open(new File(file.getPath()));
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -195,7 +192,7 @@ public class Updater implements Listener {
 		if(!isError()) {
 			isError = true;
 			Utils.sendPluginMessage("§cプラグイン名: " + getPluginName());
-			Utils.sendPluginMessage("§cバージョン: v" + getVersion());
+			Utils.sendPluginMessage("§cバージョン: v" + getUpdateVersion());
 			Utils.sendPluginMessage("§c取得ファイル: http://xml.yuttyann44581.net/uploads//" + getPluginName() + ".xml/");
 			Utils.sendPluginMessage("§c連絡用ページ: http://file.yuttyann44581.net/contact/");
 			Utils.sendPluginMessage("§c解決しない場合は、製作者に連絡してください。");
@@ -207,7 +204,7 @@ public class Updater implements Listener {
 			if (!sender.isOp()) {
 				return;
 			}
-			Utils.sendPluginMessage(sender, "§b最新のバージョンが存在します。v" + getVersion() + "にアップデートしてください。");
+			Utils.sendPluginMessage(sender, "§b最新のバージョンが存在します。v" + getUpdateVersion() + "にアップデートしてください。");
 			Utils.sendPluginMessage(sender, "§bプラグイン名: " + getPluginName());
 			Utils.sendPluginMessage(sender, "§b☆アップデート内容☆");
 			for (String content : getDetails()) {

@@ -27,10 +27,10 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptManager extends ScriptReadManager {
 
-	private ScriptBlock plugin;
-	private BlockLocation location;
-	private ScriptType scriptType;
-	private ScriptData scriptData;
+	private final ScriptBlock plugin;
+	private final BlockLocation location;
+	private final ScriptType scriptType;
+	private final ScriptData scriptData;
 
 	public ScriptManager(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
 		super(plugin, location, scriptType);
@@ -58,13 +58,13 @@ public class ScriptManager extends ScriptReadManager {
 			}
 			if (hasOption()) {
 				Delay delay = getDelay();
-				if (delay != null && delay.contains(fullCoords, uuid)) {
+				if (delay != null && delay.contains(scriptType, fullCoords, uuid)) {
 					Utils.sendPluginMessage(player, Messages.getActiveDelayMessage());
 					return;
 				}
 				Cooldown cooldown = getCooldown();
-				if (cooldown != null && cooldown.contains(fullCoords, uuid)) {
-					int[] params = cooldown.get(fullCoords, uuid);
+				if (cooldown != null && cooldown.contains(scriptType, fullCoords, uuid)) {
+					int[] params = cooldown.get(scriptType, fullCoords, uuid);
 					Utils.sendPluginMessage(player, Messages.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
 					return;
 				}
@@ -108,12 +108,12 @@ public class ScriptManager extends ScriptReadManager {
 					final Delay delay2 = delay;
 					final String fullCoords2 = fullCoords;
 					final ScriptReadManager readManager = this;
-					delay2.put(fullCoords2, uuid2);
+					delay2.put(scriptType, fullCoords2, uuid2);
 					new BukkitRunnable() {
 						@Override
 						public void run() {
 							scriptOptions(player2, uuid2, fullCoords2, readManager);
-							delay2.remove(fullCoords2, uuid2);
+							delay2.remove(scriptType, fullCoords2, uuid2);
 						}
 					}.runTaskLater(plugin, delay.getTick());
 				} else {
@@ -154,7 +154,7 @@ public class ScriptManager extends ScriptReadManager {
 		}
 		Cooldown cooldown = readManager.getCooldown();
 		if (cooldown != null) {
-			cooldown.run(player.getUniqueId(), fullCoords);
+			cooldown.run(scriptType, player.getUniqueId(), fullCoords);
 		}
 		if (readManager.getPlayer() != null && player.isOnline()) {
 			player.sendMessage(replace(player, readManager.getPlayer(), true));

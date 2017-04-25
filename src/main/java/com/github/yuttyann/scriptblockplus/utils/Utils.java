@@ -62,28 +62,28 @@ public class Utils {
 
 	public static boolean isCB175orLater() {
 		if (isCB175orLaterCache == null) {
-			isCB175orLaterCache = isUpperVersion(getVersion(), "1.7.5");
+			isCB175orLaterCache = isUpperVersion(getServerVersion(), "1.7.5");
 		}
 		return isCB175orLaterCache;
 	}
 
 	public static boolean isCB178orLater() {
 		if (isCB178orLaterCache == null) {
-			isCB178orLaterCache = isUpperVersion(getVersion(), "1.7.8");
+			isCB178orLaterCache = isUpperVersion(getServerVersion(), "1.7.8");
 		}
 		return isCB178orLaterCache;
 	}
 
 	public static boolean isCB18orLater() {
 		if (isCB18orLaterCache == null) {
-			isCB18orLaterCache = isUpperVersion(getVersion(), "1.8");
+			isCB18orLaterCache = isUpperVersion(getServerVersion(), "1.8");
 		}
 		return isCB18orLaterCache;
 	}
 
 	public static boolean isCB19orLater() {
 		if (isCB19orLaterCache == null) {
-			isCB19orLaterCache = isUpperVersion(getVersion(), "1.9");
+			isCB19orLaterCache = isUpperVersion(getServerVersion(), "1.9");
 		}
 		return isCB19orLaterCache;
 	}
@@ -101,7 +101,7 @@ public class Utils {
 		return result;
 	}
 
-	public static String getVersion() {
+	public static String getServerVersion() {
 		if (serverVersion == null) {
 			String version = Bukkit.getBukkitVersion();
 			serverVersion = version.substring(0, version.indexOf("-"));
@@ -122,26 +122,26 @@ public class Utils {
 			return;
 		}
 		String message = msg.toString();
-		String color = "";
+		String prefix = "";
 		if (sender instanceof Player) {
-			for (ChatColor ccolor : ChatColor.values()) {
-				if (message.startsWith(ccolor.toString())) {
-					color = ccolor.toString();
-					break;
+			for (ChatColor color : ChatColor.values()) {
+				if (!message.startsWith(color.toString())) {
+					continue;
 				}
+				prefix = color.toString();
+				break;
 			}
 		}
-		String prefix = "";
 		if (Files.getConfig().getBoolean("MessagePrefix")) {
-			prefix = "[" + PluginYaml.getName() + "] ";
+			prefix += "[" + PluginYaml.getName() + "] ";
 		}
 		if (message.contains("\\n")) {
 			String[] newLine = StringUtils.split(message, "\n");
-			for(int i = 0, l = newLine.length ; i < l ; i++) {
-				sender.sendMessage(color + prefix + newLine[i]);
+			for(int i = 0, l = newLine.length; i < l; i++) {
+				sender.sendMessage(prefix + newLine[i]);
 			}
 		} else {
-			sender.sendMessage(color + prefix + message);
+			sender.sendMessage(prefix + message);
 		}
 	}
 

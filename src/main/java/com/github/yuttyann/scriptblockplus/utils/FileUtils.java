@@ -12,6 +12,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -298,6 +300,40 @@ public class FileUtils {
 		}
 	}
 
+	public static void saveFile(File targetFile, Object value) throws Exception {
+		ObjectOutputStream oos = null;
+		try {
+			oos = new ObjectOutputStream(new FileOutputStream(targetFile));
+			oos.writeObject(value);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (oos != null) {
+				oos.flush();
+				oos.close();
+			}
+		}
+	}
+
+	public static Object loadFile(File targetFile) throws Exception {
+		ObjectInputStream ois = null;
+		try {
+			ois = new ObjectInputStream(new FileInputStream(targetFile));
+			return ois.readObject();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (ois != null) {
+				ois.close();
+			}
+		}
+		return null;
+	}
+
 	public static void fileDownload(String url, File targetFile) throws IOException {
 		InputStream input = null;
 		FileOutputStream output = null;
@@ -481,7 +517,7 @@ public class FileUtils {
 		try {
 			fis = new FileInputStream(file);
 			baos = new ByteArrayOutputStream();
-			byte [] bytes = new byte[1024];
+			byte[] bytes = new byte[1024];
 			int length;
 			while ((length = fis.read(bytes)) > 0) {
 				baos.write(bytes, 0, length);

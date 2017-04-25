@@ -19,7 +19,7 @@ public class OptionPrefix {
 	protected static final String HAND = "@hand:";
 	protected static final String ITEM = "$item:";
 	protected static final String COST = "$cost:";
-	protected static final String[] PREFIXS = getPrefixs(17);
+	public static final String[] PREFIXS = getPrefixs(17);
 
 	private static String[] getPrefixs(int max) {
 		String[] prefixs = new String[max];

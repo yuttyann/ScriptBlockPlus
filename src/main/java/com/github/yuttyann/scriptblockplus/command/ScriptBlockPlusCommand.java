@@ -21,6 +21,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.command.help.CommandData;
 import com.github.yuttyann.scriptblockplus.command.help.CommandHelp;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
+import com.github.yuttyann.scriptblockplus.enums.Metadata;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
@@ -30,16 +31,16 @@ import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.hook.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager;
-import com.github.yuttyann.scriptblockplus.manager.MetadataManager.ScriptFile;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptReadManager;
+import com.github.yuttyann.scriptblockplus.metadata.SBMetadata;
+import com.github.yuttyann.scriptblockplus.metadata.ScriptFile;
 import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor {
+public class ScriptBlockPlusCommand implements TabExecutor {
 
 	private ScriptBlock plugin;
 	private MapManager mapManager;
@@ -106,7 +107,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 					return true;
 				}
 				Files.reload(plugin);
-				mapManager.reloadAllScripts();
+				mapManager.loadAllScripts();
 				Utils.sendPluginMessage(player, Messages.allFileReloadMessage);
 				return true;
 			}
@@ -228,20 +229,20 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 			}
 		}
 		scriptData.save();
-		mapManager.reloadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
+		mapManager.loadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
 	}
 
 	private void setClickMeta(Player player, ClickType clickType) {
-		if (MetadataManager.hasAll(player)) {
+		if (SBMetadata.has(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT)) {
 			Utils.sendPluginMessage(player, Messages.getErrorEditDataMessage());
 			return;
 		}
-		MetadataManager.getClick().set(player, clickType, true);
+		SBMetadata.getPlayerClick().set(player, clickType, true);
 		Utils.sendPluginMessage(player, Messages.getSuccEditDataMessage(clickType));
 	}
 
 	private void setClickMeta(Player player, String[] args, ClickType clickType) {
-		if (MetadataManager.hasAll(player)) {
+		if (SBMetadata.has(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT)) {
 			Utils.sendPluginMessage(player, Messages.getErrorEditDataMessage());
 			return;
 		}
@@ -251,13 +252,13 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 			Utils.sendPluginMessage(player, Messages.getErrorScriptCheckMessage());
 			return;
 		}
-		MetadataManager.getClick().set(player, clickType, true);
-		MetadataManager.getScript().set(player, clickType, script);
+		SBMetadata.getPlayerClick().set(player, clickType, true);
+		SBMetadata.getScriptText().set(player, clickType, script);
 		Utils.sendPluginMessage(player, Messages.getSuccEditDataMessage(clickType));
 	}
 
 	private void scriptWEPaste(Player player, boolean pasteonair, boolean overwrite) {
-		ScriptFile scriptFile = MetadataManager.getScriptFile();
+		ScriptFile scriptFile = SBMetadata.getScriptFile();
 		if (!scriptFile.hasAll(player)) {
 			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
 			return;
@@ -272,7 +273,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 			return;
 		}
-		MetadataManager.removeAll(player);
+		SBMetadata.removeAll(player);
 		ScriptFileManager fileManager = scriptFile.get(player);
 		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
 			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
@@ -297,7 +298,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
 			return;
 		}
-		MetadataManager.removeAll(player);
+		SBMetadata.removeAll(player);
 		boolean isInteract = false, isBreak = false, isWalk = false;
 		ScriptFileManager interact = new ScriptFileManager(plugin, null, ScriptType.INTERACT);
 		ScriptFileManager break_ = new ScriptFileManager(plugin, null, ScriptType.BREAK);
@@ -418,7 +419,7 @@ public class ScriptBlockPlusCommand extends OptionPrefix implements TabExecutor 
 				} else if (equals(args[0], "walk")) {
 					perm = Permission.SCRIPTBLOCKPLUS_COMMAND_WALK;
 				}
-				args_ = PREFIXS;
+				args_ = OptionPrefix.PREFIXS;
 			}
 			if ((args_ = perm(sender, args_, perm)) != null) {
 				String prefix = args[2].toLowerCase();

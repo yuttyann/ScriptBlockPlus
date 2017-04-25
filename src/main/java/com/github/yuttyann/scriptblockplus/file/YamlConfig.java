@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,7 @@ import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
+import com.github.yuttyann.scriptblockplus.utils.ReflectionUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class YamlConfig {
@@ -77,21 +77,16 @@ public class YamlConfig {
 		return file.exists();
 	}
 
-	private File getJarFile() {
-		Method method = null;
+	public File getJarFile() {
 		try {
-			method = JavaPlugin.class.getDeclaredMethod("getFile");
-			method.setAccessible(true);
-			return (File) method.invoke((JavaPlugin) plugin);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
+			return (File) ReflectionUtils.invokeMethod((JavaPlugin) plugin, JavaPlugin.class, "getFile");
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 		return null;

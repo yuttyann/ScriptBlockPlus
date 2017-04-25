@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.file;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -144,13 +145,7 @@ public class ScriptData {
 	}
 
 	public void createScript(String script) {
-		List<String> scripts = getScripts();
-		try {
-			scripts.set(0, script);
-		} catch (IndexOutOfBoundsException e) {
-			scripts.add(0, script);
-		}
-		scriptFile.set(scriptPath + ".Scripts", scripts);
+		scriptFile.set(scriptPath + ".Scripts", Arrays.asList(script));
 	}
 
 	public void addScript(String script) {
@@ -174,6 +169,6 @@ public class ScriptData {
 	}
 
 	public void reload() {
-		mapManager.reloadScripts(scriptFile, scriptType);
+		mapManager.loadScripts(scriptFile, scriptType);
 	}
 }

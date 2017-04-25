@@ -7,7 +7,8 @@ public class Files {
 
 	public static final String[] FILE_PATHS = {
 		"config.yml", "messages.yml", "scripts/interact.yml", "scripts/break.yml", "scripts/walk.yml",
-		"plugins/ScriptBlock/BlocksData/interact_Scripts.yml", "plugins/ScriptBlock/BlocksData/walk_Scripts.yml"
+		"plugins/ScriptBlock/BlocksData/interact_Scripts.yml", "plugins/ScriptBlock/BlocksData/walk_Scripts.yml",
+		"scripts/cooldown.dat"
 	};
 
 	private static Files instance;

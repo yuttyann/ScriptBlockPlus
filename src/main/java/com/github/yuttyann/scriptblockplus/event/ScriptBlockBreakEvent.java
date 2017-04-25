@@ -51,6 +51,13 @@ public class ScriptBlockBreakEvent extends ScriptBlockEvent implements Cancellab
 		return item != null;
 	}
 
+	public boolean isBlockInHand() {
+		if (!hasItem()) {
+			return false;
+		}
+		return item.getType().isBlock();
+	}
+
 	public boolean isCancelled() {
 		return cancelled;
 	}

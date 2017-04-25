@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 
 public class Cooldown {
@@ -25,54 +26,74 @@ public class Cooldown {
 		return second;
 	}
 
-	public int[] get(String fullCoords, UUID uuid) {
-		Map<UUID, int[]> params = mapManager.getCooldown().get(fullCoords);
+	public int[] get(ScriptType scriptType, String fullCoords, UUID uuid) {
+		Map<String, Map<UUID, int[]>> cooldown = mapManager.getCooldownScripts().get(scriptType);
+		if (cooldown == null) {
+			return new int[]{0, 0, 0};
+		}
+		Map<UUID, int[]> params = cooldown.get(fullCoords);
 		if (params != null && params.containsKey(uuid)) {
 			return params.get(uuid);
 		}
 		return new int[]{0, 0, 0};
 	}
 
-	public Map<UUID, int[]> put(String fullCoords, UUID uuid, int[] params) {
-		Map<UUID, int[]> params2 = mapManager.getCooldown().get(fullCoords);
+	public void put(ScriptType scriptType, String fullCoords, UUID uuid, int[] params) {
+		Map<String, Map<UUID, int[]>> cooldown = mapManager.getCooldownScripts().get(scriptType);
+		if (cooldown == null) {
+			cooldown = new HashMap<String, Map<UUID,int[]>>();
+		}
+		Map<UUID, int[]> params2 = cooldown.get(fullCoords);
 		if (params2 == null) {
 			params2 = new HashMap<UUID, int[]>();
 		}
 		params2.put(uuid, params);
-		return mapManager.getCooldown().put(fullCoords, params2);
+		mapManager.getCooldownScripts().put(scriptType, createMap(fullCoords, params2));
 	}
 
-	public void remove(String fullCoords, UUID uuid) {
-		Map<UUID, int[]> params = mapManager.getCooldown().get(fullCoords);
+	public void remove(ScriptType scriptType, String fullCoords, UUID uuid) {
+		Map<String, Map<UUID, int[]>> cooldown = mapManager.getCooldownScripts().get(scriptType);
+		if (cooldown == null) {
+			return;
+		}
+		Map<UUID, int[]> params = cooldown.get(fullCoords);
 		if (params != null && params.containsKey(uuid)) {
 			params.remove(uuid);
-			mapManager.getCooldown().put(fullCoords, params);
+			mapManager.getCooldownScripts().put(scriptType, createMap(fullCoords, params));
 		}
 	}
 
-	public boolean contains(String fullCoords, UUID uuid) {
-		Map<UUID, int[]> params = mapManager.getCooldown().get(fullCoords);
+	public boolean contains(ScriptType scriptType, String fullCoords, UUID uuid) {
+		Map<String, Map<UUID, int[]>> cooldown = mapManager.getCooldownScripts().get(scriptType);
+		if (cooldown == null) {
+			return false;
+		}
+		Map<UUID, int[]> params = cooldown.get(fullCoords);
 		return params != null && params.containsKey(uuid);
 	}
 
-	public void run(final UUID uuid, final String fullCoords) {
-		put(fullCoords, uuid, calcParams(get(fullCoords, uuid), second));
+	public void run(final ScriptType scriptType, final UUID uuid, final String fullCoords) {
+		put(scriptType, fullCoords, uuid, calcParams(get(scriptType, fullCoords, uuid), second));
 		new BukkitRunnable() {
 			int second = getSecond();
 			int[] params = new int[3];
 			@Override
 			public void run() {
 				if (second == 0) {
-					remove(fullCoords, uuid);
-				}
-				if (!contains(fullCoords, uuid)) {
+					remove(scriptType, fullCoords, uuid);
 					cancel();
 				} else {
-					put(fullCoords, uuid, calcParams(params, second > 0 ? second : (second = getSecond())));
+					put(scriptType, fullCoords, uuid, calcParams(params, second > 0 ? second : (second = getSecond())));
 					second--;
 				}
 			}
 		}.runTaskTimer(plugin, 0, 20);
+	}
+
+	private Map<String, Map<UUID, int[]>> createMap(String fullCoords, Map<UUID, int[]> params) {
+		Map<String, Map<UUID, int[]>> value = new HashMap<String, Map<UUID, int[]>>();
+		value.put(fullCoords, params);
+		return value;
 	}
 
 	private int[] calcParams(int[] params, int second) {
