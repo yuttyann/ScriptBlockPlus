@@ -72,7 +72,7 @@ public class BlockListener implements Listener {
 		Block block = event.getBlock();
 		BlockLocation location = BlockLocation.fromLocation(block.getLocation());
 		if (!scriptSetting(event, event.getAction(), block, location)) {
-			if (Utils.isCB19orLater() && !event.getHand().name().equals("HAND")) {
+			if (Utils.isCB19orLater() && (!isHand(event.getHand()))) {
 				return;
 			}
 			Player player = event.getPlayer();
@@ -185,5 +185,12 @@ public class BlockListener implements Listener {
 			return ((TrapDoor) data).isOpen();
 		}
 		return false;
+	}
+
+	private boolean isHand(Enum<?> equipmentSlot) {
+		if (equipmentSlot == null) {
+			return false;
+		}
+		return equipmentSlot.name().equals("HAND");
 	}
 }
