@@ -90,10 +90,10 @@ public class Cooldown {
 		}.runTaskTimer(plugin, 0, 20);
 	}
 
-	private Map<String, Map<UUID, int[]>> createMap(String fullCoords, Map<UUID, int[]> params) {
-		Map<String, Map<UUID, int[]>> value = new HashMap<String, Map<UUID, int[]>>();
-		value.put(fullCoords, params);
-		return value;
+	private Map<String, Map<UUID, int[]>> createMap(final String fullCoords, final Map<UUID, int[]> params) {
+		Map<String, Map<UUID, int[]>> map = new HashMap<String, Map<UUID, int[]>>();
+		map.put(fullCoords, params);
+		return map;
 	}
 
 	private int[] calcParams(int[] params, int second) {

@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.utils;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,9 +23,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -70,10 +67,6 @@ public class FileUtils {
 		} else if (!isUTF8 && isCB19orLater) {
 			renameToEncode(plugin, file, false);
 		}
-	}
-
-	public static void fileEncode(File sourceFile, File targetFile) {
-		fileEncode(sourceFile, targetFile, isUTF8(sourceFile));
 	}
 
 	public static void fileEncode(File sourceFile, File targetFile, boolean isUTF8) {
@@ -205,94 +198,6 @@ public class FileUtils {
 			if (is != null) {
 				try {
 					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	public static void copyFolderFromJar(File jarFile, File targetFilePath, String sourceFilePath) {
-		JarFile jar = null;
-		if (!targetFilePath.exists()) {
-			targetFilePath.mkdirs();
-		}
-		try {
-			jar = new JarFile(jarFile);
-			Enumeration<JarEntry> entries = jar.entries();
-			while (entries.hasMoreElements()) {
-				JarEntry entry = entries.nextElement();
-				if (!entry.isDirectory() && entry.getName().startsWith(sourceFilePath)) {
-					File targetFile = new File(targetFilePath, entry.getName().substring(sourceFilePath.length() + 1));
-					if (!targetFile.getParentFile().exists()) {
-						targetFile.getParentFile().mkdirs();
-					}
-					InputStream is = null;
-					FileOutputStream fos = null;
-					BufferedReader reader = null;
-					BufferedWriter writer = null;
-					try {
-						is = jar.getInputStream(entry);
-						fos = new FileOutputStream(targetFile);
-						reader = new BufferedReader(new InputStreamReader(is, UTF8));
-						if (!Utils.isWindows() || Utils.isCB19orLater()) {
-							writer = new BufferedWriter(new OutputStreamWriter(fos, UTF8));
-						} else {
-							writer = new BufferedWriter(new OutputStreamWriter(fos, MS932));
-						}
-						String line;
-						boolean first = true;
-						while ((line = reader.readLine()) != null) {
-							if (first && !(first = false)) {
-								line = removeBom(line, true);
-							}
-							writer.write(line);
-							writer.newLine();
-						}
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					} finally {
-						if (writer != null) {
-							try {
-								writer.flush();
-								writer.close();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-						if (reader != null) {
-							try {
-								reader.close();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-						if (fos != null) {
-							try {
-								fos.flush();
-								fos.close();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-						if (is != null) {
-							try {
-								is.close();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (jar != null) {
-				try {
-					jar.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -509,40 +414,6 @@ public class FileUtils {
 				}
 			}
 		}
-	}
-
-	public static byte[] readFileToByte(File file) {
-		FileInputStream fis = null;
-		ByteArrayOutputStream baos = null;
-		try {
-			fis = new FileInputStream(file);
-			baos = new ByteArrayOutputStream();
-			byte[] bytes = new byte[1024];
-			int length;
-			while ((length = fis.read(bytes)) > 0) {
-				baos.write(bytes, 0, length);
-			}
-			return baos.toByteArray();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (baos != null) {
-				try {
-					baos.flush();
-					baos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return null;
 	}
 
 	private static boolean identify(byte[] bytes, CharsetDecoder decoder) {

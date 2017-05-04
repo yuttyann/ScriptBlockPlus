@@ -144,7 +144,7 @@ public class MapManager {
 
 	public void addLocation(BlockLocation location, ScriptType scriptType) {
 		String fullCoords = location.getFullCoords();
-		removeTimes(scriptType, fullCoords);
+		removeTimes(location, scriptType);
 		switch (scriptType) {
 		case INTERACT:
 			if (!interactLocation.contains(fullCoords)) {
@@ -166,7 +166,7 @@ public class MapManager {
 
 	public void removeLocation(BlockLocation location, ScriptType scriptType) {
 		String fullCoords = location.getFullCoords();
-		removeTimes(scriptType, fullCoords);
+		removeTimes(location, scriptType);
 		switch (scriptType) {
 		case INTERACT:
 			if (interactLocation.contains(fullCoords)) {
@@ -186,7 +186,8 @@ public class MapManager {
 		}
 	}
 
-	public void removeTimes(ScriptType scriptType, String fullCoords) {
+	public void removeTimes(BlockLocation location, ScriptType scriptType) {
+		String fullCoords = location.getFullCoords();
 		Map<String, List<UUID>> delayFullCoords = delayScripts.get(scriptType);
 		Map<String, Map<UUID, int[]>> cooldownFullCoords = cooldownScripts.get(scriptType);
 		if (delayFullCoords != null && delayFullCoords.containsKey(fullCoords)) {

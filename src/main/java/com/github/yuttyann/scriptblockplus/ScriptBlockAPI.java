@@ -6,238 +6,164 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
-import com.github.yuttyann.scriptblockplus.file.ScriptData;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 
 /**
  * @author ゆっちゃん
  * ScriptBlockPlus APIクラス
  */
-public class ScriptBlockAPI {
-
-	private ScriptBlock plugin;
-	private MapManager mapManager;
-	private ScriptData scriptData;
-	private ScriptManager scriptManager;
-
-	/**
-	 * コンストラクタ
-	 * @param location
-	 * @param scriptType
-	 */
-	protected ScriptBlockAPI(ScriptBlock plugin, Location location, ScriptType scriptType) {
-		this.mapManager = plugin.getMapManager();
-		this.scriptData = new ScriptData(plugin, BlockLocation.fromLocation(location), scriptType);
-		this.scriptManager = new ScriptManager(plugin, scriptData.getBlockLocation(), scriptType);
-	}
+public interface ScriptBlockAPI {
 
 	/**
 	 * 設定されているスクリプトを実行する。
 	 * @param player プレイヤー
 	 */
-	public void scriptExec(Player player) {
-		scriptManager.scriptExec(player);
-	}
+	public void scriptExec(Player player);
 
 	/**
 	 * スクリプトの座標を設定する。
 	 * @param location 座標
 	 */
-	public void setLocation(Location location) {
-		scriptData.setBlockLocation(BlockLocation.fromLocation(location));
-		scriptManager = new ScriptManager(plugin, scriptData.getBlockLocation(), getScriptType());
-	}
+	public void setLocation(Location location);
 
 	/**
 	 * スクリプトの座標を取得する。
 	 * @return 座標
 	 */
-	public Location getLocation() {
-		return scriptData.getBlockLocation();
-	}
+	public Location getLocation();
 
 	/**
 	 * スクリプトの種類を取得する。
 	 * @return 種類
 	 */
-	public ScriptType getScriptType() {
-		return scriptData.getScriptType();
-	}
+	public ScriptType getScriptType();
 
 	/**
 	 * スクリプトが存在するかチェックする。
 	 * @return スクリプトが存在するか。
 	 */
-	public boolean checkPath() {
-		return scriptData.checkPath();
-	}
+	public boolean checkPath();
 
 	/**
 	 * スクリプトを保存する。
 	 */
-	public void save() {
-		scriptData.save();
-	}
+	public void save();
 
 	/**
 	 * スクリプトの作者を取得する。
 	 * @return 作者
 	 */
-	public String getAuthor() {
-		return scriptData.getAuthor();
-	}
+	public String getAuthor();
 
 	/**
 	 * スクリプトの作者を取得する。
 	 * @param isName UUIDをMinecraftIDに変換するかどうか
 	 * @return 作者
 	 */
-	public List<String> getAuthors(boolean isName) {
-		return scriptData.getAuthors(isName);
-	}
+	public List<String> getAuthors(boolean isName);
 
 	/**
 	 * スクリプトの編集時刻を取得する。
 	 * @return 時刻
 	 */
-	public String getLastEdit() {
-		return scriptData.getLastEdit();
-	}
+	public String getLastEdit();
 
 	/**
 	 * スクリプトの実行回数を取得する。
 	 * @return 実行回数
 	 */
-	public int getAmount() {
-		return scriptData.getAmount();
-	}
+	public int getAmount();
 
 	/**
 	 * スクリプトを取得する。
 	 * @return スクリプト
 	 */
-	public List<String> getScripts() {
-		return scriptData.getScripts();
-	}
+	public List<String> getScripts();
 
 	/**
 	 * スクリプトをコピーする。
 	 * @param target 保存先
 	 * @param overwrite 上書きするか
 	 */
-	public void copyScripts(Location target, boolean overwrite) {
-		scriptData.copyScripts(BlockLocation.fromLocation(target), overwrite);
-	}
+	public void copyScripts(Location target, boolean overwrite);
 
 	/**
 	 * スクリプトの作者を設定する。
 	 * @param player 作者
 	 */
-	public void setAuthor(Player player) {
-		scriptData.setAuthor(player);
-	}
+	public void setAuthor(Player player);
 
 	/**
 	 * スクリプトの作者を追加する。
 	 * 同じ作者は追加されません。
 	 * @param player 作者
 	 */
-	public void addAuthor(Player player) {
-		scriptData.addAuthor(player);
-	}
+	public void addAuthor(Player player);
 
 	/**
 	 * スクリプトの作者を削除する。
 	 * @param player 作者
 	 */
-	public void removeAuthor(Player player) {
-		scriptData.removeAuthor(player);
-	}
+	public void removeAuthor(Player player);
 
 	/**
 	 * スクリプトの編集時刻を設定する。
 	 */
-	public void setLastEdit() {
-		scriptData.setLastEdit();
-	}
+	public void setLastEdit();
 
 	/**
 	 * スクリプトの実行回数を増やす。
 	 * @param amount 量
 	 */
-	public void addAmount(int amount) {
-		scriptData.addAmount(amount);
-	}
+	public void addAmount(int amount);
 
 	/**
 	 * スクリプトの実行回数を減らす。
 	 * @param amount 量
 	 */
-	public void subtractAmount(int amount) {
-		scriptData.subtractAmount(amount);
-	}
+	public void subtractAmount(int amount);
 
 	/**
 	 * スクリプトを設定する。
 	 * @param scripts スクリプト
 	 */
-	public void setScripts(List<String> scripts) {
-		scriptData.setScripts(scripts);
-		mapManager.addLocation(scriptData.getBlockLocation(), getScriptType());
-	}
+	public void setScripts(List<String> scripts);
 
 	/**
-	 * 一番最初のスクリプトを設定する。
+	 * 指定した位置のスクリプトを上書きする。
 	 * @param script スクリプト
 	 */
-	public void setCreateScript(String script) {
-		scriptData.createScript(script);
-		mapManager.addLocation(scriptData.getBlockLocation(), getScriptType());
-	}
+	public void setScript(int index, String script);
 
 	/**
 	 * スクリプトを追加する。
 	 * @param script スクリプト
 	 */
-	public void addScript(String script) {
-		scriptData.addScript(script);
-		mapManager.removeTimes(getScriptType(), scriptData.getBlockLocation().getFullCoords());
-	}
+	public void addScript(String script);
+
+	/**
+	 * 指定した位置にスクリプトを追加する。
+	 * @param script スクリプト
+	 */
+	public void addScript(int index, String script);
 
 	/**
 	 * スクリプトを削除する。
 	 * @param script スクリプト
 	 */
-	public void removeScript(String script) {
-		scriptData.removeScript(script);
-		if (scriptData.getScripts().isEmpty()) {
-			mapManager.removeLocation(scriptData.getBlockLocation(), getScriptType());
-		} else {
-			mapManager.removeTimes(getScriptType(), scriptData.getBlockLocation().getFullCoords());
-		}
-	}
+	public void removeScript(String script);
 
 	/**
 	 * スクリプトを全て削除する。
 	 */
-	public void clearScripts() {
-		scriptData.clearScripts();
-		mapManager.removeLocation(scriptData.getBlockLocation(), getScriptType());
-	}
+	public void clearScripts();
 
 	/**
 	 * 全ての設定を削除する。
 	 */
-	public void remove() {
-		scriptData.remove();
-		mapManager.removeLocation(scriptData.getBlockLocation(), getScriptType());
-	}
+	public void remove();
 
 	/**
 	 * スクリプトを再読み込みする。
 	 */
-	public void reload() {
-		scriptData.reload();
-	}
+	public void reload();
 }

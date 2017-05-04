@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -51,7 +52,7 @@ public class ScriptFileManager {
 		SBMetadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
-		scriptData.createScript(script);
+		scriptData.setScripts(Arrays.asList(script));
 		scriptData.save();
 		mapManager.addLocation(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptCreateMessage(scriptType));
@@ -68,7 +69,7 @@ public class ScriptFileManager {
 		scriptData.setLastEdit();
 		scriptData.addScript(script);
 		scriptData.save();
-		mapManager.removeTimes(scriptType, location.getFullCoords());
+		mapManager.removeTimes(location, scriptType);
 		Utils.sendPluginMessage(player, Messages.getScriptAddMessage(scriptType));
 		Utils.sendPluginMessage(Messages.getConsoleScriptAddMessage(player, scriptType, location.getWorld(), location.getCoords()));
 	}

@@ -159,16 +159,6 @@ public class Utils {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	public static ItemStack setItemInHand(Player player, ItemStack item) {
-		if(isCB19orLater()) {
-			player.getInventory().setItemInMainHand(item);
-		} else {
-			player.getInventory().setItemInHand(item);
-		}
-		return getItemInHand(player);
-	}
-
 	public static String getItemName(ItemStack item) {
 		if (item == null || item.getType() == Material.AIR) {
 			return null;

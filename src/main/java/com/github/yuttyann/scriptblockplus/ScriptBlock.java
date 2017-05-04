@@ -21,6 +21,7 @@ import com.github.yuttyann.scriptblockplus.listener.InteractListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerJoinQuitListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerMoveListener;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
+import com.github.yuttyann.scriptblockplus.manager.ScriptBlockManager;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptBlock extends JavaPlugin {
@@ -86,7 +87,7 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	public ScriptBlockAPI getAPI(Location location, ScriptType scriptType) {
-		return new ScriptBlockAPI(this, location, scriptType);
+		return new ScriptBlockManager(this, location, scriptType);
 	}
 
 	private void loadMap() {

@@ -23,12 +23,10 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 
 	private static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
 
-	private Map<Object, Object> arrayMap;
 	private Map<Object, Object> jsonMap;
 
 	private UUIDFetcher(String name) {
 		try {
-			this.arrayMap = new HashMap<Object, Object>();
 			this.jsonMap = getJsonMap(getJsonString(PROFILE_URL + name));
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -59,8 +57,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 		for(Entry<Object, Object> entry : entrySet) {
 			objectMap.put(entry.getKey(), entry.getValue());
 		}
-		arrayMap.put(0, objectMap);
-		return arrayMap;
+		return objectMap;
 	}
 
 	private String getJsonString(String url) {

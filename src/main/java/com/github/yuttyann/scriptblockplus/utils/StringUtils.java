@@ -76,24 +76,9 @@ public class StringUtils {
 		return builder.toString();
 	}
 
-	public static String startText(String text, String prefix) {
-		return startText(text, prefix, null);
-	}
-
 	public static String startText(String text, String prefix, String nullCase) {
 		if (text.startsWith(prefix)) {
 			return text.substring(0, prefix.length());
-		}
-		return nullCase;
-	}
-
-	public static String endText(String text, String suffix) {
-		return endText(text, suffix, null);
-	}
-
-	public static String endText(String text, String suffix, String nullCase) {
-		if (text.endsWith(suffix)) {
-			return text.substring(text.length() - suffix.length());
 		}
 		return nullCase;
 	}
@@ -103,49 +88,5 @@ public class StringUtils {
 			return text.substring(prefix.length(), text.length());
 		}
 		return text;
-	}
-
-	public static String removeEnd(String text, String suffix) {
-		if (text.endsWith(suffix)) {
-			return text.substring(0, text.length() - suffix.length());
-		}
-		return text;
-	}
-
-	public static String remove(String text, String remove) {
-		return replace(text, remove, "");
-	}
-
-	public static String remove(String text, char remove) {
-		char[] array = text.toCharArray();
-		int count = 0;
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] != remove) {
-				array[(count++)] = array[i];
-			}
-		}
-		return new String(array, 0, count);
-	}
-
-	public static int counter(String text, char search) {
-		int count = 0;
-		for(char i : text.toCharArray()) {
-			if(i != search) {
-				continue;
-			}
-			count++;
-		}
-		return count;
-	}
-
-	public static int counter(String text, String search) {
-		int count = 0;
-		int index = 0;
-		int searchLength = search.length();
-		while ((index = text.indexOf(search, index)) != -1) {
-			count++;
-			index += searchLength;
-		}
-		return count;
 	}
 }

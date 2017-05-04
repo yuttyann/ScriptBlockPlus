@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -60,9 +59,10 @@ public class ScriptData {
 	}
 
 	public List<String> getAuthors(boolean isName) {
-		String[] authors = getAuthor().split(", ");
+		String[] authors = getAuthor().split(",");
 		List<String> list = new ArrayList<String>();
 		for (String author : authors) {
+			author = author.trim();
 			list.add(isName ? Utils.getName(author) : author);
 		}
 		return list;
@@ -144,14 +144,20 @@ public class ScriptData {
 		scriptFile.set(scriptPath + ".Scripts", scripts);
 	}
 
-	public void createScript(String script) {
-		scriptFile.set(scriptPath + ".Scripts", Arrays.asList(script));
+	public void setScript(int index, String script) {
+		List<String> scripts = getScripts();
+		scripts.set(index, script);
+		setScripts(scripts);
 	}
 
 	public void addScript(String script) {
+		addScript(getScripts().size(), script);
+	}
+
+	public void addScript(int index, String script) {
 		List<String> scripts = getScripts();
-		scripts.add(script);
-		scriptFile.set(scriptPath + ".Scripts", scripts);
+		scripts.add(index, script);
+		setScripts(scripts);
 	}
 
 	public void removeScript(String script) {
