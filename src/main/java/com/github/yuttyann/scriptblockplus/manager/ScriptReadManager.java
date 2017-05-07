@@ -215,27 +215,27 @@ public class ScriptReadManager extends OptionPrefix {
 		char[] chars = script.toCharArray();
 		int start = 0;
 		int end = 0;
-		for(int i = 0; i < chars.length; i++) {
-			if(chars[i] == '[') {
+		for (int i = 0; i < chars.length; i++) {
+			if (chars[i] == '[') {
 				start++;
-			} else if(chars[i] == ']') {
+			} else if (chars[i] == ']') {
 				end++;
 			}
 		}
-		if(start != end) {
+		if (start != end) {
 			throw new Exception();
 		}
 		int count = 0;
 		int index = 0;
-		for(int i = 0; i < chars.length; i++) {
-			if(chars[i] == '[') {
-				if(count == 0) {
+		for (int i = 0; i < chars.length; i++) {
+			if (chars[i] == '[') {
+				if (count == 0) {
 					index = i;
 				}
 				count++;
-			} else if(chars[i] == ']') {
+			} else if (chars[i] == ']') {
 				count--;
-				if(count == 0){
+				if (count == 0) {
 					result.add(script.substring(index + 1, i));
 				}
 			}

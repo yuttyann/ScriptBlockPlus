@@ -48,7 +48,8 @@ public class Cooldown {
 			params2 = new HashMap<UUID, int[]>();
 		}
 		params2.put(uuid, params);
-		mapManager.getCooldownScripts().put(scriptType, createMap(fullCoords, params2));
+		cooldown.put(fullCoords, params2);
+		mapManager.getCooldownScripts().put(scriptType, cooldown);
 	}
 
 	public void remove(ScriptType scriptType, String fullCoords, UUID uuid) {
@@ -59,7 +60,8 @@ public class Cooldown {
 		Map<UUID, int[]> params = cooldown.get(fullCoords);
 		if (params != null && params.containsKey(uuid)) {
 			params.remove(uuid);
-			mapManager.getCooldownScripts().put(scriptType, createMap(fullCoords, params));
+			cooldown.put(fullCoords, params);
+			mapManager.getCooldownScripts().put(scriptType, cooldown);
 		}
 	}
 
@@ -79,21 +81,15 @@ public class Cooldown {
 			int[] params = new int[3];
 			@Override
 			public void run() {
-				if (second == 0) {
+				if (second <= 0) {
 					remove(scriptType, fullCoords, uuid);
 					cancel();
 				} else {
-					put(scriptType, fullCoords, uuid, calcParams(params, second > 0 ? second : (second = getSecond())));
+					put(scriptType, fullCoords, uuid, calcParams(params, second));
 					second--;
 				}
 			}
 		}.runTaskTimer(plugin, 0, 20);
-	}
-
-	private Map<String, Map<UUID, int[]>> createMap(final String fullCoords, final Map<UUID, int[]> params) {
-		Map<String, Map<UUID, int[]>> map = new HashMap<String, Map<UUID, int[]>>();
-		map.put(fullCoords, params);
-		return map;
 	}
 
 	private int[] calcParams(int[] params, int second) {
