@@ -142,7 +142,7 @@ public class ScriptBlockManager implements ScriptBlockAPI {
 	@Override
 	public void setScripts(List<String> scripts) {
 		scriptData.setScripts(scripts);
-		scriptTemps.put(true, createMap(scriptData.getBlockLocation(), getScriptType()));
+		putScriptMap(true, scriptData.getBlockLocation(), getScriptType());
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class ScriptBlockManager implements ScriptBlockAPI {
 	public void removeScript(String script) {
 		scriptData.removeScript(script);
 		if (scriptData.getScripts().isEmpty()) {
-			scriptTemps.put(false, createMap(scriptData.getBlockLocation(), getScriptType()));
+			putScriptMap(false, scriptData.getBlockLocation(), getScriptType());
 		} else {
 			timerTemps.put(scriptData.getBlockLocation(), getScriptType());
 		}
@@ -175,13 +175,13 @@ public class ScriptBlockManager implements ScriptBlockAPI {
 	@Override
 	public void clearScripts() {
 		scriptData.clearScripts();
-		scriptTemps.put(false, createMap(scriptData.getBlockLocation(), getScriptType()));
+		putScriptMap(false, scriptData.getBlockLocation(), getScriptType());
 	}
 
 	@Override
 	public void remove() {
 		scriptData.remove();
-		scriptTemps.put(false, createMap(scriptData.getBlockLocation(), getScriptType()));
+		putScriptMap(false, scriptData.getBlockLocation(), getScriptType());
 	}
 
 	@Override
@@ -189,9 +189,12 @@ public class ScriptBlockManager implements ScriptBlockAPI {
 		scriptData.reload();
 	}
 
-	private Map<BlockLocation, ScriptType> createMap(final BlockLocation location, final ScriptType scriptType) {
-		Map<BlockLocation, ScriptType> map = new HashMap<BlockLocation, ScriptType>();
-		map.put(location, scriptType);
-		return map;
+	private void putScriptMap(boolean key, BlockLocation location, ScriptType scriptType) {
+		Map<BlockLocation, ScriptType> value = scriptTemps.get(location);
+		if (value == null) {
+			value = new HashMap<BlockLocation, ScriptType>();
+		}
+		value.put(location, scriptType);
+		scriptTemps.put(key, value);
 	}
 }

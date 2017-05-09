@@ -137,7 +137,7 @@ public class ScriptData {
 		targetData.setLastEdit(getLastEdit());
 		targetData.setScripts(getScripts());
 		targetData.save();
-		mapManager.addLocation(target, getScriptType());
+		mapManager.addLocation(target, scriptType);
 	}
 
 	public void setScripts(List<String> scripts) {
