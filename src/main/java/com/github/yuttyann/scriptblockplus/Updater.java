@@ -9,35 +9,34 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 import com.github.yuttyann.scriptblockplus.file.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class Updater implements Listener {
+public class Updater {
 
+	private Plugin plugin;
 	private String pluginName;
 	private String pluginVersion;
 	private String updateVersion;
 	private String download;
 	private String changeLog;
 	private String[] details;
+	private boolean isUpperVersion;
 	private boolean isEnable;
 	private boolean isError;
 
-	public Updater(ScriptBlock plugin) throws Exception {
-		setup();
-		updateCheck();
+	public Updater(Plugin plugin) {
+		this.plugin = plugin;
 	}
 
 	public String getPluginName() {
@@ -64,6 +63,10 @@ public class Updater implements Listener {
 		return details;
 	}
 
+	public boolean isUpperVersion() {
+		return isUpperVersion;
+	}
+
 	public boolean isEnable() {
 		return isEnable;
 	}
@@ -72,11 +75,15 @@ public class Updater implements Listener {
 		return isError;
 	}
 
-	private void setup() throws Exception {
+	public void debug() {
+		isUpperVersion = true;
+	}
+
+	public void load() throws Exception {
 		isEnable = false;
 		isError = false;
-		pluginName = PluginYaml.getName();
-		pluginVersion = PluginYaml.getVersion();
+		pluginName = plugin.getName();
+		pluginVersion = plugin.getDescription().getVersion();
 		Document document = FileUtils.getDocument(getPluginName());
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
@@ -109,7 +116,7 @@ public class Updater implements Listener {
 						if (detailsNode.getNodeType() != Node.ELEMENT_NODE) {
 							continue;
 						}
-						if (details == null) {
+						if (n == 0) {
 							details = new String[l3];
 						}
 						details[n++] = ((Element) detailsNode).getAttribute("info");
@@ -117,12 +124,12 @@ public class Updater implements Listener {
 				}
 			}
 		}
+		isUpperVersion = vInt(getUpdateVersion()) > vInt(getPluginVersion());
 	}
 
-	private void updateCheck() {
+	public boolean check(Player player) {
 		YamlConfig config = Files.getConfig();
-		boolean isUpperVersion = Utils.getVersionInt(getUpdateVersion()) > Utils.getVersionInt(getPluginVersion());
-		if(config.getBoolean("UpdateChecker") && isUpperVersion) {
+		if(config.getBoolean("UpdateChecker") && isUpperVersion()) {
 			isEnable = true;
 			boolean first = false;
 			File data = config.getDataFolder();
@@ -131,14 +138,12 @@ public class Updater implements Listener {
 			if (changeLogFile.exists()) {
 				changeLog = FileUtils.getFileText(changeLogFile);
 			}
-			sendCheckMessage(Bukkit.getConsoleSender());
+			sendCheckMessage(player != null ? player : Bukkit.getConsoleSender());
 			if(config.getBoolean("AutoDownload")) {
 				Utils.sendPluginMessage("§6最新のプラグインをダウンロードしています...");
-				if (!changeLogFile.exists()) {
-					first = true;
-				}
 				File downloadFile = null;
 				try {
+					first = !changeLogFile.exists();
 					downloadFile = new File(data, "Downloads");
 					if (!downloadFile.exists()) {
 						downloadFile.mkdir();
@@ -154,13 +159,13 @@ public class Updater implements Listener {
 						String prefix = "§6[" + downloadFile.getName() + "]";
 						Utils.sendPluginMessage(prefix + " ダウンロードが終了しました。");
 						Utils.sendPluginMessage(prefix + " ファイルサイズ: " + getSize(downloadFile.length()));
-						Utils.sendPluginMessage(prefix + " ファイルパス: " + downloadFile.getPath().replace("\\", "/"));
+						Utils.sendPluginMessage(prefix + " ファイルパス: " + StringUtils.replace(downloadFile.getPath(), "\\", "/"));
 					}
 				}
 			}
 			if (config.getBoolean("OpenTextFile") && !isError()) {
-				if (!first && changeLog.equals(FileUtils.getFileText(getChangeLogURL()))) {
-					return;
+				if (!first && changeLog.equals(fText(getChangeLogURL()))) {
+					return true;
 				}
 				Desktop desktop = Desktop.getDesktop();
 				try {
@@ -169,7 +174,9 @@ public class Updater implements Listener {
 					e.printStackTrace();
 				}
 			}
+			return true;
 		}
+		return false;
 	}
 
 	private String getSize(long size) {
@@ -199,11 +206,8 @@ public class Updater implements Listener {
 		}
 	}
 
-	private void sendCheckMessage(CommandSender sender) {
-		if(isEnable() && !isError()) {
-			if (!sender.isOp()) {
-				return;
-			}
+	public void sendCheckMessage(CommandSender sender) {
+		if(isUpperVersion() && !isError() && sender.isOp()) {
 			Utils.sendPluginMessage(sender, "§b最新のバージョンが存在します。v" + getUpdateVersion() + "にアップデートしてください。");
 			Utils.sendPluginMessage(sender, "§bプラグイン名: " + getPluginName());
 			Utils.sendPluginMessage(sender, "§b☆アップデート内容☆");
@@ -216,8 +220,11 @@ public class Updater implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
-	private void onPlayerJoin(PlayerJoinEvent event) {
-		sendCheckMessage(event.getPlayer());
+	private int vInt(String version) {
+		return Utils.getVersionInt(version);
+	}
+
+	private List<String> fText(String url) {
+		return FileUtils.getFileText(url);
 	}
 }

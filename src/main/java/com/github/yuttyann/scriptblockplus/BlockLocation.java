@@ -213,7 +213,7 @@ public class BlockLocation extends Location {
 
 	@Override
 	public String toString() {
-		return "BlockLocation{world=" + getWorld().getName() + ", radius=" + radius + ", x=" + getBlockX() + ", y=" + getBlockY() + ", z=" + getBlockZ() + "}";
+		return "BlockLocation{world=" + getWorld().getName() + ",radius=" + radius + ",x=" + getBlockX() + ",y=" + getBlockY() + ",z=" + getBlockZ() + "}";
 	}
 
 	@Override

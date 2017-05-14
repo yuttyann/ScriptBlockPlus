@@ -53,7 +53,7 @@ public class BlockListener implements Listener {
 		}
 		Block block = event.getBlock();
 		BlockLocation location = BlockLocation.fromLocation(block.getLocation());
-		if (mapManager.getBreakLocation().contains(location.getFullCoords())) {
+		if (mapManager.containsLocation(location, ScriptType.BREAK)) {
 			ScriptBlockBreakEvent breakEvent = new ScriptBlockBreakEvent(player, location.getBlock(), item, location);
 			Utils.callEvent(breakEvent);
 			if (breakEvent.isCancelled()) {
@@ -76,7 +76,7 @@ public class BlockListener implements Listener {
 				return;
 			}
 			Player player = event.getPlayer();
-			if (mapManager.getInteractLocation().contains(location.getFullCoords())) {
+			if (mapManager.containsLocation(location, ScriptType.INTERACT)) {
 				ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, event.getItem(), location);
 				Utils.callEvent(interactEvent);
 				if (interactEvent.isCancelled()) {

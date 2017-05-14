@@ -13,7 +13,6 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
-import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.option.Amount;
 import com.github.yuttyann.scriptblockplus.option.Cooldown;
 import com.github.yuttyann.scriptblockplus.option.Delay;
@@ -22,6 +21,7 @@ import com.github.yuttyann.scriptblockplus.option.ItemCost;
 import com.github.yuttyann.scriptblockplus.option.ItemHand;
 import com.github.yuttyann.scriptblockplus.option.MoneyCost;
 import com.github.yuttyann.scriptblockplus.option.Perm;
+import com.github.yuttyann.scriptblockplus.option.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 

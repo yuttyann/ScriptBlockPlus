@@ -38,7 +38,7 @@ public class PlayerMoveListener implements Listener {
 			return;
 		}
 		mapManager.getOldLocation().put(uuid, fullCoords);
-		if (mapManager.getWalkLocation().contains(fullCoords)) {
+		if (mapManager.containsLocation(location, ScriptType.WALK)) {
 			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(player, location.getBlock(), Utils.getItemInHand(player), location);
 			Utils.callEvent(walkEvent);
 			if (walkEvent.isCancelled()) {

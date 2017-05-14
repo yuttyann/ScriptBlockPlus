@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.hook;
+package com.github.yuttyann.scriptblockplus.option.hook;
 
 import java.util.ArrayList;
 import java.util.List;

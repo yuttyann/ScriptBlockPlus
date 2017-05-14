@@ -22,38 +22,26 @@ public class MapManager {
 
 	private ScriptBlock plugin;
 	private List<UUID> interactEvents;
-	private Set<String> interactLocation;
-	private Set<String> breakLocation;
-	private Set<String> walkLocation;
 	private Map<UUID, String> oldLocation;
+	private Map<ScriptType, Set<String>> scriptLocation;
 	private Map<ScriptType, Map<String, List<UUID>>> delayScripts;
 	private Map<ScriptType, Map<String, Map<UUID, int[]>>> cooldownScripts;
 
 	public MapManager(ScriptBlock plugin) {
 		this.plugin = plugin;
 		this.interactEvents = new ArrayList<UUID>();
-		this.interactLocation = new HashSet<String>();
-		this.breakLocation = new HashSet<String>();
-		this.walkLocation = new HashSet<String>();
 		this.oldLocation = new HashMap<UUID, String>();
+		this.scriptLocation = new HashMap<ScriptType, Set<String>>();
 		this.delayScripts =  new HashMap<ScriptType, Map<String, List<UUID>>>();
 		this.cooldownScripts = new HashMap<ScriptType, Map<String, Map<UUID, int[]>>>();
 	}
 
-	public Set<String> getInteractLocation() {
-		return interactLocation;
-	}
-
-	public Set<String> getBreakLocation() {
-		return breakLocation;
-	}
-
-	public Set<String> getWalkLocation() {
-		return walkLocation;
-	}
-
 	public Map<UUID, String> getOldLocation() {
 		return oldLocation;
+	}
+
+	public Map<ScriptType, Set<String>> getScriptLocation() {
+		return scriptLocation;
 	}
 
 	public Map<ScriptType, Map<String, List<UUID>>> getDelayScripts() {
@@ -70,39 +58,18 @@ public class MapManager {
 			loadScripts(Files.getBreak(), ScriptType.BREAK);
 			loadScripts(Files.getWalk(), ScriptType.WALK);
 		} catch (Exception e) {
-			interactLocation.clear();
-			breakLocation.clear();
-			walkLocation.clear();
+			scriptLocation.clear();
 		}
 	}
 
 	public void loadScripts(YamlConfig scriptFile, ScriptType scriptType) {
-		switch (scriptType) {
-		case INTERACT:
-			interactLocation.clear();
-			for (String world : scriptFile.getKeys(false)) {
-				for (String coords : scriptFile.getKeys(world, false)) {
-					interactLocation.add(world + ", " + coords);
-				}
+		Set<String> locationSet = new HashSet<String>();
+		for (String world : scriptFile.getKeys(false)) {
+			for (String coords : scriptFile.getKeys(world, false)) {
+				locationSet.add(world + ", " + coords);
 			}
-			break;
-		case BREAK:
-			breakLocation.clear();
-			for (String world : scriptFile.getKeys(false)) {
-				for (String coords : scriptFile.getKeys(world, false)) {
-					breakLocation.add(world + ", " + coords);
-				}
-			}
-			break;
-		case WALK:
-			walkLocation.clear();
-			for (String world : scriptFile.getKeys(false)) {
-				for (String coords : scriptFile.getKeys(world, false)) {
-					walkLocation.add(world + ", " + coords);
-				}
-			}
-			break;
 		}
+		scriptLocation.put(scriptType, locationSet);
 	}
 
 	public void saveCooldown() {
@@ -144,46 +111,36 @@ public class MapManager {
 
 	public void addLocation(BlockLocation location, ScriptType scriptType) {
 		String fullCoords = location.getFullCoords();
-		removeTimes(location, scriptType);
-		switch (scriptType) {
-		case INTERACT:
-			if (!interactLocation.contains(fullCoords)) {
-				interactLocation.add(fullCoords);
-			}
-			break;
-		case BREAK:
-			if (!breakLocation.contains(fullCoords)) {
-				breakLocation.add(fullCoords);
-			}
-			break;
-		case WALK:
-			if (!walkLocation.contains(fullCoords)) {
-				walkLocation.add(fullCoords);
-			}
-			break;
+		Set<String> locationSet = scriptLocation.get(scriptType);
+		if (locationSet == null) {
+			locationSet = new HashSet<String>();
 		}
+		if (!locationSet.contains(fullCoords)) {
+			locationSet.add(fullCoords);
+			scriptLocation.put(scriptType, locationSet);
+		}
+		removeTimes(location, scriptType);
 	}
 
 	public void removeLocation(BlockLocation location, ScriptType scriptType) {
 		String fullCoords = location.getFullCoords();
-		removeTimes(location, scriptType);
-		switch (scriptType) {
-		case INTERACT:
-			if (interactLocation.contains(fullCoords)) {
-				interactLocation.remove(fullCoords);
-			}
-			break;
-		case BREAK:
-			if (breakLocation.contains(fullCoords)) {
-				breakLocation.remove(fullCoords);
-			}
-			break;
-		case WALK:
-			if (walkLocation.contains(fullCoords)) {
-				walkLocation.remove(fullCoords);
-			}
-			break;
+		Set<String> locationSet = scriptLocation.get(scriptType);
+		if (locationSet == null) {
+			locationSet = new HashSet<String>();
 		}
+		if (locationSet.contains(fullCoords)) {
+			locationSet.remove(fullCoords);
+			scriptLocation.put(scriptType, locationSet);
+		}
+		removeTimes(location, scriptType);
+	}
+
+	public boolean containsLocation(BlockLocation location, ScriptType scriptType) {
+		Set<String> locationSet = scriptLocation.get(scriptType);
+		if (locationSet == null) {
+			locationSet = new HashSet<String>();
+		}
+		return locationSet.contains(location.getFullCoords());
 	}
 
 	public void removeTimes(BlockLocation location, ScriptType scriptType) {

@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.Updater;
 import com.github.yuttyann.scriptblockplus.command.help.CommandData;
 import com.github.yuttyann.scriptblockplus.command.help.CommandHelp;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
@@ -28,14 +29,14 @@ import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Messages;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
-import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
-import com.github.yuttyann.scriptblockplus.hook.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptReadManager;
 import com.github.yuttyann.scriptblockplus.metadata.SBMetadata;
 import com.github.yuttyann.scriptblockplus.metadata.ScriptFile;
 import com.github.yuttyann.scriptblockplus.option.OptionPrefix;
+import com.github.yuttyann.scriptblockplus.option.hook.HookPlugins;
+import com.github.yuttyann.scriptblockplus.option.hook.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.sk89q.worldedit.bukkit.selections.Selection;
@@ -53,6 +54,7 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 			"scriptblockplus",
 			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_TOOL),      //tool
 			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_RELOAD),    //reload
+			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_CHECKVER),  //checkver
 			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_DATAMIGR),  //datamigr
 			new CommandData().addPermissions(                              //<scripttype>_create
 				Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT,
@@ -109,6 +111,22 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 				Files.reload(plugin);
 				mapManager.loadAllScripts();
 				Utils.sendPluginMessage(player, Messages.allFileReloadMessage);
+				return true;
+			}
+			if (equals(args[0], "checkver")) {
+				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_CHECKVER, player)) {
+					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					return true;
+				}
+				Updater updater = plugin.getUpdater();
+				try {
+					updater.load();
+					if (!updater.check(player)) {
+						player.sendMessage(Messages.notLatestPluginMessage);
+					}
+				} catch (Exception e) {
+					player.sendMessage(Messages.updateErrorMessage);
+				}
 				return true;
 			}
 			if (equals(args[0], "datamigr")) {
@@ -360,6 +378,7 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 			String[] args_ = {
 				perm(sender, "tool", Permission.SCRIPTBLOCKPLUS_COMMAND_TOOL),
 				perm(sender, "reload", Permission.SCRIPTBLOCKPLUS_COMMAND_RELOAD),
+				perm(sender, "checkver", Permission.SCRIPTBLOCKPLUS_COMMAND_CHECKVER),
 				perm(sender, "datamigr", Permission.SCRIPTBLOCKPLUS_COMMAND_DATAMIGR),
 				perm(sender, "interact", Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT),
 				perm(sender, "break", Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK),

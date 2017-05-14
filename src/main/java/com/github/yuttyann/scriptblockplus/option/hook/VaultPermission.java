@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.hook;
+package com.github.yuttyann.scriptblockplus.option.hook;
 
 import net.milkbowl.vault.permission.Permission;
 
@@ -6,8 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
-
-import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
 
 public class VaultPermission {
 
