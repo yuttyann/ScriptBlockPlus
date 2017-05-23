@@ -323,14 +323,14 @@ public class Lang {
 			if (message.contains("%details%")) {
 				StringBuilder builder = new StringBuilder();
 				String color = Utils.getStartColor(message).toString();
-				for (int k = 0, l = details.length; k < l; k++) {
+				for (int k = 0; k < details.length; k++) {
 					builder.append(color);
 					if (details[k].startsWith("$")) {
 						builder.append("  - ").append(StringUtils.removeStart(details[k], "$"));
 					} else {
 						builder.append("・").append(details[k]);
 					}
-					if (k != (l - 1)) {
+					if (k != (details.length - 1)) {
 						builder.append("\\n");
 					}
 				}
