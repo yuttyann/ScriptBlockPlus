@@ -328,7 +328,7 @@ public class Lang {
 					if (details[k].startsWith("$")) {
 						builder.append("  - ").append(StringUtils.removeStart(details[k], "$"));
 					} else {
-						builder.append("・ ").append(details[k]);
+						builder.append("・").append(details[k]);
 					}
 					if (k != (l - 1)) {
 						builder.append("\\n");
