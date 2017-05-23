@@ -59,8 +59,7 @@ public class ItemHand {
 	}
 
 	public boolean check(Player player) {
-		ItemStack hand = Utils.getItemInHand(player);
-		return isSuccess = checkItem(hand);
+		return isSuccess = checkItem(Utils.getItemInHand(player));
 	}
 
 	private boolean checkItem(ItemStack item) {

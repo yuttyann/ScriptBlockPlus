@@ -17,7 +17,6 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 	private Block block;
 	private ItemStack item;
 	private Location location;
-	private YamlConfig config;
 	private boolean cancelled;
 
 	public ScriptBlockInteractEvent(Player player, Block block, ItemStack item, BlockLocation location) {
@@ -25,7 +24,6 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 		this.block = block;
 		this.item = item;
 		this.location = location;
-		this.config = Files.getConfig();
 	}
 
 	public Player getPlayer() {
@@ -63,7 +61,7 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 	}
 
 	public boolean getLeftClick() {
-		return config.getBoolean("LeftClick");
+		return Files.getConfig().getBoolean("LeftClick");
 	}
 
 	public boolean isCancelled() {
@@ -71,6 +69,7 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent implements Cancel
 	}
 
 	public void setLeftClick(boolean value) {
+		YamlConfig config = Files.getConfig();
 		config.set("LeftClick", value);
 		config.save();
 	}

@@ -74,7 +74,7 @@ public class MapManager {
 
 	public void saveCooldown() {
 		if (cooldownScripts.size() > 0) {
-			File cooldownFile = new File(plugin.getDataFolder(), Files.FILE_PATHS[7]);
+			File cooldownFile = new File(plugin.getDataFolder(), Files.FILE_PATHS[5]);
 			try {
 				FileUtils.saveFile(cooldownFile, cooldownScripts);
 			} catch (Exception e) {
@@ -85,7 +85,7 @@ public class MapManager {
 
 	@SuppressWarnings("unchecked")
 	public void loadCooldown() {
-		File cooldownFile = new File(plugin.getDataFolder(), Files.FILE_PATHS[7]);
+		File cooldownFile = new File(plugin.getDataFolder(), Files.FILE_PATHS[5]);
 		if (cooldownFile.exists()) {
 			Object cooldownData = null;
 			try {

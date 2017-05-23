@@ -206,12 +206,12 @@ public class YamlConfig {
 
 	public UUID getUUID(String path) {
 		Object def = getDefault(path);
-		return getUUID(path, def != null ? Utils.fromString(def.toString()) : null);
+		return getUUID(path, def != null ? Utils.uuidFromString(def.toString()) : null);
 	}
 
 	public UUID getUUID(String path, UUID def) {
 		Object val = get(path, def);
-		return val != null ? Utils.fromString(val.toString()) : def;
+		return val != null ? Utils.uuidFromString(val.toString()) : def;
 	}
 
 	public Color getColor(String path) {
@@ -382,7 +382,7 @@ public class YamlConfig {
 		List<UUID> result = new ArrayList<UUID>();
 		for (Object object : list) {
 			if (object instanceof String || isPrimitiveWrapper(object)) {
-				result.add(Utils.fromString(String.valueOf(object)));
+				result.add(Utils.uuidFromString(String.valueOf(object)));
 			}
 		}
 		return result;

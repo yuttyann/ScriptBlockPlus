@@ -2,9 +2,7 @@ package com.github.yuttyann.scriptblockplus.file;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,14 +17,12 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.reader.UnicodeReader;
 import org.yaml.snakeyaml.representer.Representer;
 
-import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 @SuppressWarnings("unchecked")
 public class SBConfig {
 
 	private Yaml yaml;
-	private File file;
 	private Map<String, Object> root;
 
 	public static SBConfig loadConfiguration(File file) {
@@ -42,7 +38,6 @@ public class SBConfig {
 	public void load(File file) {
 		FileInputStream fis = null;
 		try {
-			this.file = file;
 			fis = new FileInputStream(file);
 			read(yaml.load(new UnicodeReader(fis)));
 		} catch (IOException e) {
@@ -58,30 +53,6 @@ public class SBConfig {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public boolean save() {
-		FileOutputStream fos = null;
-		File parent = file.getParentFile();
-		if (!parent.exists()) {
-			parent.mkdirs();
-		}
-		try {
-			fos = new FileOutputStream(file);
-			yaml.dump(root, new OutputStreamWriter(fos, FileUtils.UTF8));
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return false;
 	}
 
 	private void read(Object input) throws Exception {
@@ -117,27 +88,6 @@ public class SBConfig {
 			}
 		}
 		return null;
-	}
-
-	public void setProperty(String path, Object value) {
-		if (!path.contains(".")) {
-			root.put(path, value);
-			return;
-		}
-		String[] parts = StringUtils.split(path, ".");
-		Map<String, Object> node = root;
-		for (int i = 0; i < parts.length; i++) {
-			Object obj = node.get(parts[i]);
-			if (i == parts.length - 1) {
-				node.put(parts[i], value);
-				return;
-			}
-			if (obj == null || !(obj instanceof Map)) {
-				obj = new HashMap<String, Object>();
-				node.put(parts[i], obj);
-			}
-			node = (Map<String, Object>) obj;
-		}
 	}
 
 	public Set<String> getKeys() {

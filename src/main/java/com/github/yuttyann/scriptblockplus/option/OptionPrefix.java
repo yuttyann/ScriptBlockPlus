@@ -19,67 +19,9 @@ public class OptionPrefix {
 	protected static final String HAND = "@hand:";
 	protected static final String ITEM = "$item:";
 	protected static final String COST = "$cost:";
-	public static final String[] PREFIXS = getPrefixs(17);
 
-	private static String[] getPrefixs(int max) {
-		String[] prefixs = new String[max];
-		for (int i = 0; i < max; i++) {
-			switch (i) {
-			case 0:
-				prefixs[i] = COMMAND;
-				break;
-			case 1:
-				prefixs[i] = BYPASS;
-				break;
-			case 2:
-				prefixs[i] = PLAYER;
-				break;
-			case 3:
-				prefixs[i] = SERVER;
-				break;
-			case 4:
-				prefixs[i] = SAY;
-				break;
-			case 5:
-				prefixs[i] = PERM;
-				break;
-			case 6:
-				prefixs[i] = PERM_ADD;
-				break;
-			case 7:
-				prefixs[i] = PERM_REMOVE;
-				break;
-			case 8:
-				prefixs[i] = GROUP;
-				break;
-			case 9:
-				prefixs[i] = GROUP_ADD;
-				break;
-			case 10:
-				prefixs[i] = GROUP_REMOVE;
-				break;
-			case 11:
-				prefixs[i] = AMOUNT;
-				break;
-			case 12:
-				prefixs[i] = DELAY;
-				break;
-			case 13:
-				prefixs[i] = COOLDOWN;
-				break;
-			case 14:
-				prefixs[i] = HAND;
-				break;
-			case 15:
-				prefixs[i] = ITEM;
-				break;
-			case 16:
-				prefixs[i] = COST;
-				break;
-			default:
-				return prefixs;
-			}
-		}
-		return prefixs;
-	}
+	public static final String[] PREFIXS = {
+		COMMAND, BYPASS, PLAYER, SERVER, SAY, PERM, PERM_ADD, PERM_REMOVE,
+		GROUP, GROUP_ADD, GROUP_REMOVE, AMOUNT, DELAY, COOLDOWN, HAND, ITEM, COST
+	};
 }

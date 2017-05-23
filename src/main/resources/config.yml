@@ -19,7 +19,7 @@ LeftClick: true
 # [trueで有効 | falseで無効]
 # 初期: true
 # メッセージの左側にプラグイン名を表示します。
-MessagePrefix: true
+MessagePrefix: false
 
 ## === コンソールログの設定 === ##
 # [trueで有効 | falseで無効]

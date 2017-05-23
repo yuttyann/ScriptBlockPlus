@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.command;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -26,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.enums.Metadata;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.Messages;
+import com.github.yuttyann.scriptblockplus.file.Lang;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -50,34 +49,34 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 		this.plugin = plugin;
 		this.mapManager = plugin.getMapManager();
 		CommandHelp help = new CommandHelp();
-		help.putCommands(
+		help.put(
 			"scriptblockplus",
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_TOOL),      //tool
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_RELOAD),    //reload
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_CHECKVER),  //checkver
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_DATAMIGR),  //datamigr
-			new CommandData().addPermissions(                              //<scripttype>_create
+			new CommandData("tool - " + Lang.getToolCommandMessage(), Permission.SCRIPTBLOCKPLUS_COMMAND_TOOL),
+			new CommandData("reload - " + Lang.getReloadCommandMessage(), Permission.SCRIPTBLOCKPLUS_COMMAND_RELOAD),
+			new CommandData("checkver - " + Lang.getCheckVerCommandMessage(), Permission.SCRIPTBLOCKPLUS_COMMAND_CHECKVER),
+			new CommandData("datamigr - " + Lang.getDataMigrCommandMessage(), Permission.SCRIPTBLOCKPLUS_COMMAND_DATAMIGR),
+			new CommandData("<scripttype> create <options> - " + Lang.getCreateCommandMessage()).addPermissions(
 				Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT,
 				Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK,
 				Permission.SCRIPTBLOCKPLUS_COMMAND_WALK
 			),
-			new CommandData().addPermissions(                              //<scripttype>_add
+			new CommandData("<scripttype> add <options> - " + Lang.getAddCommandMessage()).addPermissions(
 				Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT,
 				Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK,
 				Permission.SCRIPTBLOCKPLUS_COMMAND_WALK
 			),
-			new CommandData().addPermissions(                              //<scripttype>_remove
+			new CommandData("<scripttype> remove - " + Lang.getRemoveCommandMessage()).addPermissions(
 				Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT,
 				Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK,
 				Permission.SCRIPTBLOCKPLUS_COMMAND_WALK
 			),
-			new CommandData().addPermissions(                              //<scripttype>_view
+			new CommandData("<scripttype> view - " + Lang.getViewCommandMessage()).addPermissions(
 				Permission.SCRIPTBLOCKPLUS_COMMAND_INTERACT,
 				Permission.SCRIPTBLOCKPLUS_COMMAND_BREAK,
 				Permission.SCRIPTBLOCKPLUS_COMMAND_WALK
 			),
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT), //worldedit_paste
-			new CommandData(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT)  //worldedit_remove
+			new CommandData("worldedit paste <pasteonair> [overwrite] - " + Lang.getWorldEditPasteCommandMessage(), Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT),
+			new CommandData("worldedit remove - " + Lang.getWorldEditRemoveCommandMessage(), Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT)
 		);
 	}
 
@@ -90,48 +89,48 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 			}
 		}
 		if (!(sender instanceof Player)) {
-			Utils.sendPluginMessage(Messages.senderNoPlayerMessage);
+			Utils.sendPluginMessage(plugin, Lang.getSenderNoPlayerMessage());
 			return true;
 		}
 		Player player = (Player) sender;
 		if (args.length == 1) {
 			if (equals(args[0], "tool")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_TOOL, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 					return true;
 				}
-				giveTool(player);
+				giveScriptEditor(player);
 				return true;
 			}
 			if (equals(args[0], "reload")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_RELOAD, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 					return true;
 				}
 				Files.reload(plugin);
 				mapManager.loadAllScripts();
-				Utils.sendPluginMessage(player, Messages.allFileReloadMessage);
+				Utils.sendPluginMessage(plugin, player, Lang.getAllFileReloadMessage());
 				return true;
 			}
 			if (equals(args[0], "checkver")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_CHECKVER, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 					return true;
 				}
 				Updater updater = plugin.getUpdater();
 				try {
 					updater.load();
 					if (!updater.check(player)) {
-						player.sendMessage(Messages.notLatestPluginMessage);
+						player.sendMessage(Lang.getNotLatestPluginMessage());
 					}
 				} catch (Exception e) {
-					player.sendMessage(Messages.updateErrorMessage);
+					player.sendMessage(Lang.getUpdateErrorMessage());
 				}
 				return true;
 			}
 			if (equals(args[0], "datamigr")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_DATAMIGR, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 					return true;
 				}
 				sbDataMigr(player);
@@ -141,7 +140,7 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 		if (args.length == 2) {
 			if (equals(args[0], "interact", "break", "walk") && equals(args[1], "remove", "view")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 					return true;
 				}
 				setClickMeta(player, ClickType.valueOf(args[0].toUpperCase() + "_" + args[1].toUpperCase()));
@@ -149,7 +148,7 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 			}
 			if (equals(args[0], "worldedit") && equals(args[1], "remove")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 					return true;
 				}
 				scriptWERemove(player);
@@ -159,7 +158,7 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 		if (args.length > 2) {
 			if (args.length == 3 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 					return true;
 				}
 				scriptWEPaste(player, false, Boolean.parseBoolean(args[2]));
@@ -167,7 +166,7 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 			}
 			if (args.length == 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WORLDEDIT, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 					return true;
 				}
 				scriptWEPaste(player, Boolean.parseBoolean(args[2]), Boolean.parseBoolean(args[3]));
@@ -175,44 +174,38 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 			}
 			if (equals(args[0], "interact", "break", "walk") && equals(args[1], "create", "add")) {
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_COMMAND_WALK, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 					return true;
 				}
 				setClickMeta(player, args, ClickType.valueOf(args[0].toUpperCase() + "_" + args[1].toUpperCase()));
 				return true;
 			}
 		}
-		CommandHelp.sendHelpMessage(sender, command, false);
+		CommandHelp.sendHelpMessage(plugin, sender, command, false);
 		return true;
 	}
 
-	private void giveTool(Player player) {
+	private void giveScriptEditor(Player player) {
 		ItemStack item = new ItemStack(Material.BLAZE_ROD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§dScript Editor");
-		meta.setLore(Arrays.asList(
-			"§aスクリプトをコピー、ペーストするツールです。",
-			"§6左クリック: §e種類\"interact\"のスクリプトをコピーします。",
-			"§6右クリック: §e種類\"break\"のスクリプトをコピーします。",
-			"§6シフトand左クリック: §e種類\"walk\"のスクリプトをコピーします。",
-			"§6シフトand右クリック: §eスクリプトをペーストします。")
-		);
+		meta.setLore(Lang.getScriptEditorLore());
 		item.setItemMeta(meta);
 		player.getInventory().addItem(item);
 		Utils.updateInventory(player);
-		Utils.sendPluginMessage(player, Messages.giveToolMessage);
+		Utils.sendPluginMessage(plugin, player, Lang.getGiveScriptEditorMessage());
 	}
 
 	private void sbDataMigr(Player player) {
-		File interactFile = new File(Files.FILE_PATHS[5]);
-		File walkFile = new File(Files.FILE_PATHS[6]);
+		File interactFile = new File(Files.FILE_PATHS[6]);
+		File walkFile = new File(Files.FILE_PATHS[7]);
 		boolean interactExists = interactFile.exists();
 		boolean walkExists = walkFile.exists();
 		if (!interactExists && !walkExists) {
-			Utils.sendPluginMessage(player, Messages.notScriptBlockFileMessage);
+			Utils.sendPluginMessage(plugin, player, Lang.getNotScriptBlockFileMessage());
 			return;
 		}
-		Utils.sendPluginMessage(player, Messages.dataMigrStartMessage);
+		Utils.sendPluginMessage(plugin, player, Lang.getDataMigrStartMessage());
 		SBConfig config;
 		if (interactExists) {
 			config = SBConfig.loadConfiguration(interactFile);
@@ -222,7 +215,7 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 			config = SBConfig.loadConfiguration(walkFile);
 			saveScript(player, config, ScriptType.WALK);
 		}
-		Utils.sendPluginMessage(player, Messages.dataMigrEndMessage);
+		Utils.sendPluginMessage(plugin, player, Lang.getDataMigrEndMessage());
 	}
 
 	private void saveScript(Player player, SBConfig config, ScriptType type) {
@@ -252,46 +245,45 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 
 	private void setClickMeta(Player player, ClickType clickType) {
 		if (SBMetadata.has(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT)) {
-			Utils.sendPluginMessage(player, Messages.getErrorEditDataMessage());
+			Utils.sendPluginMessage(plugin, player, Lang.getErrorEditDataMessage());
 			return;
 		}
 		SBMetadata.getPlayerClick().set(player, clickType, true);
-		Utils.sendPluginMessage(player, Messages.getSuccEditDataMessage(clickType));
+		Utils.sendPluginMessage(plugin, player, Lang.getSuccEditDataMessage(clickType));
 	}
 
 	private void setClickMeta(Player player, String[] args, ClickType clickType) {
 		if (SBMetadata.has(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT)) {
-			Utils.sendPluginMessage(player, Messages.getErrorEditDataMessage());
+			Utils.sendPluginMessage(plugin, player, Lang.getErrorEditDataMessage());
 			return;
 		}
 		String script = StringUtils.createString(args, 2).trim();
 		ScriptReadManager readManager = new ScriptReadManager(plugin, null, null);
 		if (!readManager.checkScript(script)) {
-			Utils.sendPluginMessage(player, Messages.getErrorScriptCheckMessage());
+			Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptCheckMessage());
 			return;
 		}
 		SBMetadata.getPlayerClick().set(player, clickType, true);
 		SBMetadata.getScriptText().set(player, clickType, script);
-		Utils.sendPluginMessage(player, Messages.getSuccEditDataMessage(clickType));
+		Utils.sendPluginMessage(plugin, player, Lang.getSuccEditDataMessage(clickType));
 	}
 
 	private void scriptWEPaste(Player player, boolean pasteonair, boolean overwrite) {
 		ScriptFile scriptFile = SBMetadata.getScriptFile();
 		if (!scriptFile.hasAll(player)) {
-			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
+			Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptFileCheckMessage());
 			return;
 		}
 		if (!HookPlugins.hasWorldEdit()) {
-			Utils.sendPluginMessage(player, Messages.notWorldEditMessage);
+			Utils.sendPluginMessage(plugin, player, Lang.getNotWorldEditMessage());
 			return;
 		}
 		WorldEditSelection selectionAPI = HookPlugins.getWorldEditSelection();
 		Selection selection = selectionAPI.getSelection(player);
 		if (selection == null) {
-			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
+			Utils.sendPluginMessage(plugin, player, Lang.getWorldEditNotSelectionMessage());
 			return;
 		}
-		SBMetadata.removeAll(player);
 		ScriptFileManager fileManager = scriptFile.get(player);
 		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
 			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
@@ -300,27 +292,27 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 			fileManager.scriptWEPaste(player, BlockLocation.fromLocation(block.getLocation()), overwrite);
 		}
 		fileManager.save();
+		SBMetadata.remove(player, Metadata.SCRIPTFILE);
 		ScriptType scriptType = scriptFile.get(player).getScriptType();
-		Utils.sendPluginMessage(player, Messages.getWorldEditPasteMessage(scriptType));
-		Utils.sendPluginMessage(Messages.getConsoleWorldEditPasteMessage(scriptType, selection.getMinimumPoint(), selection.getMaximumPoint()));
+		Utils.sendPluginMessage(plugin, player, Lang.getWorldEditPasteMessage(scriptType));
+		Utils.sendPluginMessage(plugin, Lang.getConsoleWorldEditPasteMessage(scriptType, selection.getMinimumPoint(), selection.getMaximumPoint()));
 	}
 
 	private void scriptWERemove(Player player) {
 		if (!HookPlugins.hasWorldEdit()) {
-			Utils.sendPluginMessage(player, Messages.notWorldEditMessage);
+			Utils.sendPluginMessage(plugin, player, Lang.getNotWorldEditMessage());
 			return;
 		}
 		WorldEditSelection selectionAPI = HookPlugins.getWorldEditSelection();
 		Selection selection = selectionAPI.getSelection(player);
 		if (selection == null) {
-			Utils.sendPluginMessage(player, Messages.getWorldEditNotSelectionMessage());
+			Utils.sendPluginMessage(plugin, player, Lang.getWorldEditNotSelectionMessage());
 			return;
 		}
-		SBMetadata.removeAll(player);
-		boolean isInteract = false, isBreak = false, isWalk = false;
 		ScriptFileManager interact = new ScriptFileManager(plugin, null, ScriptType.INTERACT);
 		ScriptFileManager break_ = new ScriptFileManager(plugin, null, ScriptType.BREAK);
 		ScriptFileManager walk = new ScriptFileManager(plugin, null, ScriptType.WALK);
+		boolean isInteract = false, isBreak = false, isWalk = false;
 		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
 			BlockLocation location = BlockLocation.fromLocation(block.getLocation());
 			interact.setBlockLocation(location);
@@ -365,11 +357,11 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 			type.append(ScriptType.WALK.toString());
 		}
 		if (type.length() == 0) {
-			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
+			Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptFileCheckMessage());
 			return;
 		}
-		Utils.sendPluginMessage(player, Messages.getWorldEditRemoveMessage(type.toString()));
-		Utils.sendPluginMessage(Messages.getConsoleWorldEditRemoveMessage(type.toString(), selection.getMinimumPoint(), selection.getMaximumPoint()));
+		Utils.sendPluginMessage(plugin, player, Lang.getWorldEditRemoveMessage(type.toString()));
+		Utils.sendPluginMessage(plugin, Lang.getConsoleWorldEditRemoveMessage(type.toString(), selection.getMinimumPoint(), selection.getMaximumPoint()));
 	}
 
 	@Override

@@ -40,6 +40,6 @@ public class PlayerJoinQuitListener implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		mapManager.removeEvents(player.getUniqueId());
-		SBMetadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTFILE, Metadata.SCRIPTTEXT);
+		SBMetadata.remove(player, Metadata.PLAYERCLICK, Metadata.SCRIPTFILE, Metadata.SCRIPTTEXT);
 	}
 }

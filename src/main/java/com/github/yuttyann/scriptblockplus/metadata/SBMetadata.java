@@ -44,7 +44,12 @@ public class SBMetadata {
 		}
 	}
 
-	public static void removeAll(Player player, Metadata... metadatas) {
+	@Deprecated
+	public static void removeAll(Player player) {
+		remove(player, Metadata.PLAYERCLICK, Metadata.SCRIPTFILE, Metadata.SCRIPTTEXT);
+	}
+
+	public static void remove(Player player, Metadata... metadatas) {
 		for (Metadata metadata : metadatas) {
 			switch (metadata) {
 			case PLAYERCLICK:
@@ -58,6 +63,11 @@ public class SBMetadata {
 				break;
 			}
 		}
+	}
+
+	@Deprecated
+	public static void hasAll(Player player) {
+		has(player, Metadata.PLAYERCLICK, Metadata.SCRIPTFILE, Metadata.SCRIPTTEXT);
 	}
 
 	public static boolean has(Player player, Metadata... metadatas) {

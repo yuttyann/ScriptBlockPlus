@@ -1,5 +1,8 @@
 package com.github.yuttyann.scriptblockplus.file;
 
+import java.util.List;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -9,23 +12,38 @@ import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class Messages {
+public class Lang {
 
-	public static final String notVaultMessage = "&cVaultが導入されていないため、プラグインを無効化します。";
-	public static final String senderNoPlayerMessage = "§cコマンドはゲーム内から実行してください。";
-	public static final String notPermissionMessage = "§cパーミッションが無いため、実行できません。";
-	public static final String giveToolMessage = "§aScript Editorが配布されました。";
-	public static final String allFileReloadMessage = "§a全てのファイルの再読み込みが完了しました。";
-	public static final String notLatestPluginMessage = "§c最新のバージョンが存在しません。";
-	public static final String updateErrorMessage = "§cアップデートに失敗しました。";
-	public static final String notScriptBlockFileMessage = "§cScriptBlockのデータファイルが見つかりません。";
-	public static final String dataMigrStartMessage = "§7ScriptBlockのスクリプトを移行しています....";
-	public static final String dataMigrEndMessage = "§bスクリプトの移行が完了しました。";
-	public static final String notWorldEditMessage = "&cWorldEditが導入されていないため、実行に失敗しました。";
-
-	private static Messages instance;
-	private static YamlConfig messages;
+	private static Lang instance;
+	private static YamlConfig lang;
+	private List<String> scriptEditorLore;
+	private String toolCommandMessage;
+	private String reloadCommandMessage;
+	private String checkVerCommandMessage;
+	private String dataMigrCommandMessage;
+	private String createCommandMessage;
+	private String addCommandMessage;
+	private String removeCommandMessage;
+	private String viewCommandMessage;
+	private String worldEditPasteCommandMessage;
+	private String worldEditRemoveCommandMessage;
+	private String notVaultMessage;
+	private String senderNoPlayerMessage;
+	private String notPermissionMessage;
+	private String giveScriptEditorMessage;
+	private String allFileReloadMessage;
+	private String notLatestPluginMessage;
+	private String updateErrorMessage;
+	private String notScriptBlockFileMessage;
+	private String dataMigrStartMessage;
+	private String dataMigrEndMessage;
+	private String notWorldEditMessage;
+	private String updateDownloadStartMessage;
+	private List<String> updateDownloadEndMessages;
+	private List<String> updateCheckMessages;
+	private List<String> updateErrorMessages;
 	private String scriptCopyMessage;
 	private String scriptPasteMessage;
 	private String scriptCreateMessage;
@@ -57,38 +75,284 @@ public class Messages {
 	private String consoleErrorScriptExecMessage;
 	private boolean isConsoleLog;
 
-	public Messages() {
-		messages = Files.getMessages();
-		this.scriptCopyMessage = messages.getString("scriptCopyMessage");
-		this.scriptPasteMessage = messages.getString("scriptPasteMessage");
-		this.scriptCreateMessage = messages.getString("scriptCreateMessage");
-		this.scriptAddMessage = messages.getString("scriptAddMessage");
-		this.scriptRemoveMessage = messages.getString("scriptRemoveMessage");
-		this.worldEditNotSelectionMessage = messages.getString("worldEditNotSelectionMessage");
-		this.worldEditPasteMessage = messages.getString("worldEditPasteMessage");
-		this.worldEditRemoveMessage = messages.getString("worldEditRemoveMessage");
-		this.activeDelayMessage = messages.getString("activeDelayMessage");
-		this.activeCooldownMessage = messages.getString("activeCooldownMessage");
-		this.succEditDataMessage = messages.getString("succEditDataMessage");
-		this.errorEditDataMessage = messages.getString("errorEditDataMessage");
-		this.errorScriptCheckMessage = messages.getString("errorScriptCheckMessage");
-		this.errorScriptFileCheckMessage = messages.getString("errorScriptFileCheckMessage");
-		this.errorScriptExecMessage = messages.getString("errorScriptExecMessage");
-		this.errorGroupMessage = messages.getString("errorGroupMessage");
-		this.errorHandMessage = messages.getString("errorHandMessage");
-		this.errorCostMessage = messages.getString("errorCostMessage");
-		this.errorItemMessage = messages.getString("errorItemMessage");
-		this.consoleScriptCopyMessage = messages.getString("consoleScriptCopyMessage");
-		this.consoleScriptPasteMessage = messages.getString("consoleScriptPasteMessage");
-		this.consoleScriptCreateMessage = messages.getString("consoleScriptCreateMessage");
-		this.consoleScriptAddMessage = messages.getString("consoleScriptAddMessage");
-		this.consoleScriptRemoveMessage = messages.getString("consoleScriptRemoveMessage");
-		this.consoleScriptViewMessage = messages.getString("consoleScriptViewMessage");
-		this.consoleWorldEditPasteMessage = messages.getString("consoleWorldEditPasteMessage");
-		this.consoleWorldEditRemoveMessage = messages.getString("consoleWorldEditRemoveMessage");
-		this.consoleSuccScriptExecMessage = messages.getString("consoleSuccScriptExecMessage");
-		this.consoleErrorScriptExecMessage = messages.getString("consoleErrorScriptExecMessage");
+	public Lang() {
+		lang = Files.getLang();
+		this.scriptEditorLore = lang.getStringList("ScriptEditor");
+		this.toolCommandMessage = lang.getString("toolCommandMessage");
+		this.reloadCommandMessage = lang.getString("reloadCommandMessage");
+		this.checkVerCommandMessage = lang.getString("checkVerCommandMessage");
+		this.dataMigrCommandMessage = lang.getString("dataMigrCommandMessage");
+		this.createCommandMessage = lang.getString("createCommandMessage");
+		this.addCommandMessage = lang.getString("addCommandMessage");
+		this.removeCommandMessage = lang.getString("removeCommandMessage");
+		this.viewCommandMessage = lang.getString("viewCommandMessage");
+		this.worldEditPasteCommandMessage = lang.getString("worldEditPasteCommandMessage");
+		this.worldEditRemoveCommandMessage = lang.getString("worldEditRemoveCommandMessage");
+		this.notVaultMessage = lang.getString("notVaultMessage");
+		this.senderNoPlayerMessage = lang.getString("senderNoPlayerMessage");
+		this.notPermissionMessage = lang.getString("notPermissionMessage");
+		this.giveScriptEditorMessage = lang.getString("giveScriptEditorMessage");
+		this.allFileReloadMessage = lang.getString("allFileReloadMessage");
+		this.notLatestPluginMessage = lang.getString("notLatestPluginMessage");
+		this.updateErrorMessage = lang.getString("updateErrorMessage");
+		this.notScriptBlockFileMessage = lang.getString("notScriptBlockFileMessage");
+		this.dataMigrStartMessage = lang.getString("dataMigrStartMessage");
+		this.dataMigrEndMessage = lang.getString("dataMigrEndMessage");
+		this.notWorldEditMessage = lang.getString("notWorldEditMessage");
+		this.updateDownloadStartMessage = lang.getString("updateDownloadStartMessage");
+		this.updateDownloadEndMessages = lang.getStringList("updateDownloadEndMessages");
+		this.updateCheckMessages = lang.getStringList("updateCheckMessages");
+		this.updateErrorMessages = lang.getStringList("updateErrorMessages");
+		this.scriptCopyMessage = lang.getString("scriptCopyMessage");
+		this.scriptPasteMessage = lang.getString("scriptPasteMessage");
+		this.scriptCreateMessage = lang.getString("scriptCreateMessage");
+		this.scriptAddMessage = lang.getString("scriptAddMessage");
+		this.scriptRemoveMessage = lang.getString("scriptRemoveMessage");
+		this.worldEditNotSelectionMessage = lang.getString("worldEditNotSelectionMessage");
+		this.worldEditPasteMessage = lang.getString("worldEditPasteMessage");
+		this.worldEditRemoveMessage = lang.getString("worldEditRemoveMessage");
+		this.activeDelayMessage = lang.getString("activeDelayMessage");
+		this.activeCooldownMessage = lang.getString("activeCooldownMessage");
+		this.succEditDataMessage = lang.getString("succEditDataMessage");
+		this.errorEditDataMessage = lang.getString("errorEditDataMessage");
+		this.errorScriptCheckMessage = lang.getString("errorScriptCheckMessage");
+		this.errorScriptFileCheckMessage = lang.getString("errorScriptFileCheckMessage");
+		this.errorScriptExecMessage = lang.getString("errorScriptExecMessage");
+		this.errorGroupMessage = lang.getString("errorGroupMessage");
+		this.errorHandMessage = lang.getString("errorHandMessage");
+		this.errorCostMessage = lang.getString("errorCostMessage");
+		this.errorItemMessage = lang.getString("errorItemMessage");
+		this.consoleScriptCopyMessage = lang.getString("consoleScriptCopyMessage");
+		this.consoleScriptPasteMessage = lang.getString("consoleScriptPasteMessage");
+		this.consoleScriptCreateMessage = lang.getString("consoleScriptCreateMessage");
+		this.consoleScriptAddMessage = lang.getString("consoleScriptAddMessage");
+		this.consoleScriptRemoveMessage = lang.getString("consoleScriptRemoveMessage");
+		this.consoleScriptViewMessage = lang.getString("consoleScriptViewMessage");
+		this.consoleWorldEditPasteMessage = lang.getString("consoleWorldEditPasteMessage");
+		this.consoleWorldEditRemoveMessage = lang.getString("consoleWorldEditRemoveMessage");
+		this.consoleSuccScriptExecMessage = lang.getString("consoleSuccScriptExecMessage");
+		this.consoleErrorScriptExecMessage = lang.getString("consoleErrorScriptExecMessage");
 		this.isConsoleLog = Files.getConfig().getBoolean("ConsoleLog");
+	}
+
+	public static List<String> getScriptEditorLore() {
+		if (instance.scriptEditorLore == null) {
+			return null;
+		}
+		return replaceColorCode(instance.scriptEditorLore);
+	}
+
+	public static String getToolCommandMessage() {
+		if (instance.toolCommandMessage == null) {
+			return null;
+		}
+		return ChatColor.stripColor(instance.toolCommandMessage);
+	}
+
+	public static String getReloadCommandMessage() {
+		if (instance.reloadCommandMessage == null) {
+			return null;
+		}
+		return ChatColor.stripColor(instance.reloadCommandMessage);
+	}
+
+	public static String getCheckVerCommandMessage() {
+		if (instance.checkVerCommandMessage == null) {
+			return null;
+		}
+		return ChatColor.stripColor(instance.checkVerCommandMessage);
+	}
+
+	public static String getDataMigrCommandMessage() {
+		if (instance.dataMigrCommandMessage == null) {
+			return null;
+		}
+		return ChatColor.stripColor(instance.dataMigrCommandMessage);
+	}
+
+	public static String getCreateCommandMessage() {
+		if (instance.createCommandMessage == null) {
+			return null;
+		}
+		return ChatColor.stripColor(instance.createCommandMessage);
+	}
+
+	public static String getAddCommandMessage() {
+		if (instance.addCommandMessage == null) {
+			return null;
+		}
+		return ChatColor.stripColor(instance.addCommandMessage);
+	}
+
+	public static String getRemoveCommandMessage() {
+		if (instance.removeCommandMessage == null) {
+			return null;
+		}
+		return ChatColor.stripColor(instance.removeCommandMessage);
+	}
+
+	public static String getViewCommandMessage() {
+		if (instance.viewCommandMessage == null) {
+			return null;
+		}
+		return ChatColor.stripColor(instance.viewCommandMessage);
+	}
+
+	public static String getWorldEditPasteCommandMessage() {
+		if (instance.worldEditPasteCommandMessage == null) {
+			return null;
+		}
+		return ChatColor.stripColor(instance.worldEditPasteCommandMessage);
+	}
+
+	public static String getWorldEditRemoveCommandMessage() {
+		if (instance.worldEditRemoveCommandMessage == null) {
+			return null;
+		}
+		return ChatColor.stripColor(instance.worldEditRemoveCommandMessage);
+	}
+
+	public static String getNotVaultMessage() {
+		if (instance.notVaultMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.notVaultMessage);
+	}
+
+	public static String getSenderNoPlayerMessage() {
+		if (instance.senderNoPlayerMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.senderNoPlayerMessage);
+	}
+
+	public static String getNotPermissionMessage() {
+		if (instance.notPermissionMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.notPermissionMessage);
+	}
+
+	public static String getGiveScriptEditorMessage() {
+		if (instance.giveScriptEditorMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.giveScriptEditorMessage);
+	}
+
+	public static String getAllFileReloadMessage() {
+		if (instance.allFileReloadMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.allFileReloadMessage);
+	}
+
+	public static String getNotLatestPluginMessage() {
+		if (instance.notLatestPluginMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.notLatestPluginMessage);
+	}
+
+	public static String getUpdateErrorMessage() {
+		if (instance.updateErrorMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.updateErrorMessage);
+	}
+
+	public static String getNotScriptBlockFileMessage() {
+		if (instance.notScriptBlockFileMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.notScriptBlockFileMessage);
+	}
+
+	public static String getDataMigrStartMessage() {
+		if (instance.dataMigrStartMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.dataMigrStartMessage);
+	}
+
+	public static String getDataMigrEndMessage() {
+		if (instance.dataMigrEndMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.dataMigrEndMessage);
+	}
+
+	public static String getNotWorldEditMessage() {
+		if (instance.notWorldEditMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.notWorldEditMessage);
+	}
+
+	public static String getUpdateDownloadStartMessage() {
+		if (instance.updateDownloadStartMessage == null) {
+			return null;
+		}
+		return replaceColorCode(instance.updateDownloadStartMessage);
+	}
+
+	public static List<String> getUpdateDownloadEndMessages(String fileName, String filePath, String fileSize) {
+		if (instance.updateDownloadEndMessages == null) {
+			return null;
+		}
+		List<String> updateDownloadEndMessages = replaceColorCode(instance.updateDownloadEndMessages);
+		for (int i = 0; i < updateDownloadEndMessages.size(); i++) {
+			String message = updateDownloadEndMessages.get(i);
+			message = replace(message, "%filename%", fileName);
+			message = replace(message, "%filepath%", filePath);
+			message = replace(message, "%filesize%", fileSize);
+			updateDownloadEndMessages.set(i, message);
+		}
+		return updateDownloadEndMessages;
+	}
+
+	public static List<String> getUpdateCheckMessages(String pluginName, String latestVersion, String[] details) {
+		if (instance.updateCheckMessages == null) {
+			return null;
+		}
+		List<String> updateCheckMessages = replaceColorCode(instance.updateCheckMessages);
+		for (int i = 0; i < updateCheckMessages.size(); i++) {
+			String message = updateCheckMessages.get(i);
+			message = replace(message, "%pluginname%", pluginName);
+			message = replace(message, "%latestversion%", latestVersion);
+			if (message.contains("%details%")) {
+				StringBuilder builder = new StringBuilder();
+				String color = Utils.getStartColor(message).toString();
+				for (int k = 0, l = details.length; k < l; k++) {
+					builder.append(color);
+					if (details[k].startsWith("$")) {
+						builder.append("  - ").append(StringUtils.removeStart(details[k], "$"));
+					} else {
+						builder.append("・ ").append(details[k]);
+					}
+					if (k != (l - 1)) {
+						builder.append("\\n");
+					}
+				}
+				message = replace(message, "%details%", builder.toString());
+			}
+			updateCheckMessages.set(i, message);
+		}
+		return updateCheckMessages;
+	}
+
+	public static List<String> getUpdateErrorMessages(String pluginName, String latestVersion) {
+		if (instance.updateErrorMessages == null) {
+			return null;
+		}
+		List<String> updateErrorMessages = replaceColorCode(instance.updateErrorMessages);
+		for (int i = 0; i < updateErrorMessages.size(); i++) {
+			String message = updateErrorMessages.get(i);
+			message = replace(message, "%pluginname%", pluginName);
+			message = replace(message, "%latestversion%", latestVersion);
+			updateErrorMessages.set(i, message);
+		}
+		return updateErrorMessages;
 	}
 
 	public static String getScriptCopyMessage(ScriptType scriptType) {
@@ -217,7 +481,7 @@ public class Messages {
 		errorHandMessage = replace(errorHandMessage, "%id%", id + "");
 		errorHandMessage = replace(errorHandMessage, "%amount%", amount + "");
 		errorHandMessage = replace(errorHandMessage, "%damage%", damage + "");
-		errorHandMessage = replace(errorHandMessage, "%itemname%", itemName);
+		errorHandMessage = replace(errorHandMessage, "%itemname%", itemName != null ? itemName : material.toString());
 		return replaceColorCode(errorHandMessage);
 	}
 
@@ -240,7 +504,7 @@ public class Messages {
 		errorItemMessage = replace(errorItemMessage, "%id%", id + "");
 		errorItemMessage = replace(errorItemMessage, "%amount%", amount + "");
 		errorItemMessage = replace(errorItemMessage, "%damage%", damage + "");
-		errorItemMessage = replace(errorItemMessage, "%itemname%", itemName);
+		errorItemMessage = replace(errorItemMessage, "%itemname%", itemName != null ? itemName : material.toString());
 		return replaceColorCode(errorItemMessage);
 	}
 
@@ -374,11 +638,18 @@ public class Messages {
 		return replace(text, "&", "§");
 	}
 
+	private static List<String> replaceColorCode(List<String> list) {
+		for (int i = 0; i < list.size(); i++) {
+			list.set(i, replace(list.get(i), "&", "§"));
+		}
+		return list;
+	}
+
 	private static String replace(String text, String search, String replace) {
 		return StringUtils.replace(text, search, replace);
 	}
 
 	public static void reload() {
-		instance = new Messages();
+		instance = new Lang();
 	}
 }

@@ -39,7 +39,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 		if (jsonMap != null) {
 			String id = jsonMap.get("id").toString();
 			String name = jsonMap.get("name").toString();
-			uuidMap.put(name, Utils.fromString(id));
+			uuidMap.put(name, Utils.uuidFromString(id));
 		}
 		return uuidMap;
 	}

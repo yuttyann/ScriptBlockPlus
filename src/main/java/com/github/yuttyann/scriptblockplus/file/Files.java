@@ -6,21 +6,20 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 public class Files {
 
 	public static final String[] FILE_PATHS = {
-		"config.yml", "messages.yml", "scripts/interact.yml", "scripts/break.yml", "scripts/walk.yml",
+		"config.yml", "lang.yml", "scripts/interact.yml", "scripts/break.yml", "scripts/walk.yml", "scripts/cooldown.dat",
 		"plugins/ScriptBlock/BlocksData/interact_Scripts.yml", "plugins/ScriptBlock/BlocksData/walk_Scripts.yml",
-		"scripts/cooldown.dat"
 	};
 
 	private static Files instance;
 	private YamlConfig config;
-	private YamlConfig messages;
+	private YamlConfig lang;
 	private YamlConfig interact;
 	private YamlConfig break_;
 	private YamlConfig walk;
 
 	public Files(ScriptBlock plugin) {
 		this.config = YamlConfig.load(plugin, FILE_PATHS[0]);
-		this.messages = YamlConfig.load(plugin, FILE_PATHS[1]);
+		this.lang = YamlConfig.load(plugin, FILE_PATHS[1]);
 		this.interact = YamlConfig.load(plugin, FILE_PATHS[2], false);
 		this.break_ = YamlConfig.load(plugin, FILE_PATHS[3], false);
 		this.walk = YamlConfig.load(plugin, FILE_PATHS[4], false);
@@ -30,8 +29,8 @@ public class Files {
 		return instance.config;
 	}
 
-	public static YamlConfig getMessages() {
-		return instance.messages;
+	public static YamlConfig getLang() {
+		return instance.lang;
 	}
 
 	public static YamlConfig getInteract() {
@@ -60,6 +59,6 @@ public class Files {
 
 	public static void reload(ScriptBlock plugin) {
 		instance = new Files(plugin);
-		Messages.reload();
+		Lang.reload();
 	}
 }

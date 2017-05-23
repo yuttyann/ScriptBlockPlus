@@ -10,19 +10,23 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 public class CommandData {
 
 	private String message;
-	private List<String> permissions;
 	private boolean isHelp;
+	private List<String> permissions;
 
 	public CommandData() {
 		this(null, null, true);
 	}
 
-	public CommandData(boolean isHelp) {
-		this(null, null, isHelp);
+	public CommandData(String message) {
+		this(message, null, true);
 	}
 
 	public CommandData(Object permission) {
 		this(null, permission, true);
+	}
+
+	public CommandData(boolean isHelp) {
+		this(null, null, isHelp);
 	}
 
 	public CommandData(String message, boolean isHelp) {
@@ -74,16 +78,16 @@ public class CommandData {
 	}
 
 	public boolean hasPermission(CommandSender sender) {
-		boolean has = false;
 		if (isEmpty()) {
-			return !has;
+			return true;
 		}
 		for (String permission : permissions) {
-			if (!has && Permission.has(permission, sender)) {
-				has = true;
+			if (!Permission.has(permission, sender)) {
+				continue;
 			}
+			return true;
 		}
-		return has;
+		return false;
 	}
 
 	public boolean isHelp() {

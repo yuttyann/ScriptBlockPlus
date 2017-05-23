@@ -13,7 +13,7 @@ import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.command.help.CommandData;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.Messages;
+import com.github.yuttyann.scriptblockplus.file.Lang;
 import com.github.yuttyann.scriptblockplus.listener.BlockListener;
 import com.github.yuttyann.scriptblockplus.listener.InteractListener;
 import com.github.yuttyann.scriptblockplus.listener.PlayerJoinQuitListener;
@@ -37,7 +37,7 @@ public class ScriptBlock extends JavaPlugin {
 		instance = this;
 		Files.reload(this);
 		if (!HookPlugins.hasVault()) {
-			Utils.sendPluginMessage(Messages.notVaultMessage);
+			Utils.sendPluginMessage(this, Lang.getNotVaultMessage());
 			Utils.disablePlugin(this);
 			return;
 		}
@@ -49,7 +49,9 @@ public class ScriptBlock extends JavaPlugin {
 		try {
 			updater.load();
 			updater.check(null);
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			Utils.sendPluginMessage(this, Lang.getUpdateErrorMessage());
+		}
 
 		mapManager = new MapManager(this);
 		mapManager.loadAllScripts();

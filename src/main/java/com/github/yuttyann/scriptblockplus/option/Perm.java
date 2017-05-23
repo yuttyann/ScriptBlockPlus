@@ -46,6 +46,7 @@ public class Perm {
 			} else if (world == null && permission.playerHas(player, getNode())) {
 				return permission.playerRemove(player, getNode());
 			}
+			break;
 		}
 		return false;
 	}

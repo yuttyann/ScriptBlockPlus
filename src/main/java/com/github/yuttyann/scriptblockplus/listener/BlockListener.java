@@ -24,7 +24,7 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
-import com.github.yuttyann.scriptblockplus.file.Messages;
+import com.github.yuttyann.scriptblockplus.file.Lang;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
@@ -60,7 +60,7 @@ public class BlockListener implements Listener {
 				return;
 			}
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_BREAK_USE, player)) {
-				Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+				Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 				return;
 			}
 			new ScriptManager(plugin, location, ScriptType.BREAK).scriptExec(player);
@@ -72,7 +72,7 @@ public class BlockListener implements Listener {
 		Block block = event.getBlock();
 		BlockLocation location = BlockLocation.fromLocation(block.getLocation());
 		if (!scriptSetting(event, event.getAction(), block, location)) {
-			if (Utils.isCB19orLater() && (!isHand(event.getHand()))) {
+			if (Utils.isCB19orLater() && !isHand(event.getHand())) {
 				return;
 			}
 			Player player = event.getPlayer();
@@ -86,7 +86,7 @@ public class BlockListener implements Listener {
 					return;
 				}
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_INTERACT_USE, player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 					return;
 				}
 				MaterialData data = block.getState().getData();
@@ -102,7 +102,7 @@ public class BlockListener implements Listener {
 		Player player = event.getPlayer();
 		if (Utils.checkItem(event.getItem(), Material.BLAZE_ROD, "§dScript Editor")) {
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR, player)) {
-				Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+				Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 				return false;
 			}
 			switch (action) {
@@ -120,7 +120,7 @@ public class BlockListener implements Listener {
 				if (player.isSneaking()) {
 					ScriptFileManager fileManager = SBMetadata.getScriptFile().get(player);
 					if (fileManager == null) {
-						Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
+						Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptFileCheckMessage());
 						break;
 					}
 					fileManager.scriptPaste(player, location);
@@ -130,7 +130,7 @@ public class BlockListener implements Listener {
 				event.setCancelled(true);
 				return true;
 			default:
-				SBMetadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+				SBMetadata.remove(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
 				return false;
 			}
 		}

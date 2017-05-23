@@ -85,8 +85,7 @@ public class Cooldown {
 					remove(scriptType, fullCoords, uuid);
 					cancel();
 				} else {
-					put(scriptType, fullCoords, uuid, calcParams(params, second));
-					second--;
+					put(scriptType, fullCoords, uuid, calcParams(params, second--));
 				}
 			}
 		}.runTaskTimer(plugin, 0, 20);

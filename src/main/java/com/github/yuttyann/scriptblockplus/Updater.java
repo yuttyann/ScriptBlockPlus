@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.github.yuttyann.scriptblockplus.file.Files;
+import com.github.yuttyann.scriptblockplus.file.Lang;
 import com.github.yuttyann.scriptblockplus.file.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -27,9 +28,9 @@ public class Updater {
 	private Plugin plugin;
 	private String pluginName;
 	private String pluginVersion;
-	private String updateVersion;
-	private String download;
-	private String changeLog;
+	private String latestVersion;
+	private String downloadURL;
+	private String changeLogURL;
 	private String[] details;
 	private boolean isUpperVersion;
 	private boolean isEnable;
@@ -47,16 +48,16 @@ public class Updater {
 		return pluginVersion;
 	}
 
-	public String getUpdateVersion() {
-		return updateVersion;
+	public String getLatestVersion() {
+		return latestVersion;
 	}
 
 	public String getDownloadURL() {
-		return download;
+		return downloadURL;
 	}
 
 	public String getChangeLogURL() {
-		return changeLog;
+		return changeLogURL;
 	}
 
 	public String[] getDetails() {
@@ -75,8 +76,11 @@ public class Updater {
 		return isError;
 	}
 
-	public void debug() {
+	public void debug(boolean isError) {
 		isUpperVersion = true;
+		if (isError) {
+			this.isError = true;
+		}
 	}
 
 	public void load() throws Exception {
@@ -96,7 +100,7 @@ public class Updater {
 			if (!element.getNodeName().equals("update")) {
 				continue;
 			}
-			updateVersion = element.getAttribute("version");
+			latestVersion = element.getAttribute("version");
 			NodeList updateChildren = node.getChildNodes();
 			for (int j = 0, l2 = updateChildren.getLength(); j < l2; j++) {
 				Node updateNode = updateChildren.item(j);
@@ -104,10 +108,10 @@ public class Updater {
 					continue;
 				}
 				if (updateNode.getNodeName().equals("download")) {
-					download = ((Element) updateNode).getAttribute("url");
+					downloadURL = ((Element) updateNode).getAttribute("url");
 				}
 				if (updateNode.getNodeName().equals("changelog")) {
-					changeLog = ((Element) updateNode).getAttribute("url");
+					changeLogURL = ((Element) updateNode).getAttribute("url");
 				}
 				if (updateNode.getNodeName().equals("details")) {
 					NodeList detailsChildren = updateNode.getChildNodes();
@@ -124,7 +128,7 @@ public class Updater {
 				}
 			}
 		}
-		isUpperVersion = vInt(getUpdateVersion()) > vInt(getPluginVersion());
+		isUpperVersion = vInt(getLatestVersion()) > vInt(getPluginVersion());
 	}
 
 	public boolean check(Player player) {
@@ -140,7 +144,7 @@ public class Updater {
 			}
 			sendCheckMessage(player != null ? player : Bukkit.getConsoleSender());
 			if(config.getBoolean("AutoDownload")) {
-				Utils.sendPluginMessage("§6最新のプラグインをダウンロードしています...");
+				Utils.sendPluginMessage(plugin, Lang.getUpdateDownloadStartMessage());
 				File downloadFile = null;
 				try {
 					first = !changeLogFile.exists();
@@ -148,7 +152,7 @@ public class Updater {
 					if (!downloadFile.exists()) {
 						downloadFile.mkdir();
 					}
-					downloadFile = new File(data, "Downloads/" + getPluginName() + " v" + getUpdateVersion() + ".jar");
+					downloadFile = new File(data, "Downloads/" + getPluginName() + " v" + getLatestVersion() + ".jar");
 					FileUtils.fileDownload(getChangeLogURL(), changeLogFile);
 					FileUtils.fileDownload(getDownloadURL(), downloadFile);
 				} catch (IOException e) {
@@ -156,10 +160,11 @@ public class Updater {
 					sendErrorMessage();
 				} finally {
 					if (!isError()) {
-						String prefix = "§6[" + downloadFile.getName() + "]";
-						Utils.sendPluginMessage(prefix + " ダウンロードが終了しました。");
-						Utils.sendPluginMessage(prefix + " ファイルサイズ: " + getSize(downloadFile.length()));
-						Utils.sendPluginMessage(prefix + " ファイルパス: " + StringUtils.replace(downloadFile.getPath(), "\\", "/"));
+						String fileName = downloadFile.getName();
+						String filePath = StringUtils.replace(downloadFile.getPath(), "\\", "/");
+						for (String message : Lang.getUpdateDownloadEndMessages(fileName, filePath, getSize(downloadFile.length()))) {
+							Utils.sendPluginMessage(plugin, message);
+						}
 					}
 				}
 			}
@@ -195,27 +200,19 @@ public class Updater {
 		}
 	}
 
-	private void sendErrorMessage() {
-		if(!isError()) {
-			isError = true;
-			Utils.sendPluginMessage("§cプラグイン名: " + getPluginName());
-			Utils.sendPluginMessage("§cバージョン: v" + getUpdateVersion());
-			Utils.sendPluginMessage("§c取得ファイル: http://xml.yuttyann44581.net/uploads//" + getPluginName() + ".xml/");
-			Utils.sendPluginMessage("§c連絡用ページ: http://file.yuttyann44581.net/contact/");
-			Utils.sendPluginMessage("§c解決しない場合は、製作者に連絡してください。");
+	public void sendCheckMessage(CommandSender sender) {
+		if(isUpperVersion() && !isError() && sender.isOp()) {
+			for (String message : Lang.getUpdateCheckMessages(getPluginName(), getLatestVersion(), getDetails())) {
+				Utils.sendPluginMessage(plugin, message);
+			}
 		}
 	}
 
-	public void sendCheckMessage(CommandSender sender) {
-		if(isUpperVersion() && !isError() && sender.isOp()) {
-			Utils.sendPluginMessage(sender, "§b最新のバージョンが存在します。v" + getUpdateVersion() + "にアップデートしてください。");
-			Utils.sendPluginMessage(sender, "§bプラグイン名: " + getPluginName());
-			Utils.sendPluginMessage(sender, "§b☆アップデート内容☆");
-			for (String content : getDetails()) {
-				if (content == null) {
-					continue;
-				}
-				Utils.sendPluginMessage(sender, "§b- " + content);
+	private void sendErrorMessage() {
+		if(!isError()) {
+			isError = true;
+			for (String message : Lang.getUpdateErrorMessages(getPluginName(), getLatestVersion())) {
+				Utils.sendPluginMessage(plugin, message);
 			}
 		}
 	}

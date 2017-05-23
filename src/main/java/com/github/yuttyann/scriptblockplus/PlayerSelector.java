@@ -225,8 +225,7 @@ public class PlayerSelector {
 		return d1;
 	}
 
-	private static List<Player> a(final Location location, int i, int j, int k,
-			GameMode l, int i1, int j1, Map<String, Integer> map, String s, String s1, World world) {
+	private static List<Player> a(final Location location, int i, int j, int k, GameMode l, int i1, int j1, Map<String, Integer> map, String s, String s1, World world) {
 		List<Player> list = new ArrayList<Player>();
 		boolean flag = k < 0;
 		boolean flag1 = s != null && s.startsWith("!");

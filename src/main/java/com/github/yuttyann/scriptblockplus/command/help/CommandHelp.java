@@ -6,9 +6,9 @@ import java.util.Map;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class CommandHelp {
@@ -46,7 +46,7 @@ public class CommandHelp {
 		getCommandHelp().clear();
 	}
 
-	public static void sendHelpMessage(CommandSender sender, Command command, boolean isName) {
+	public static void sendHelpMessage(Plugin plugin, CommandSender sender, Command command, boolean isName) {
 		List<CommandData> temps = new ArrayList<CommandData>();
 		String commandName = command.getName();
 		for (CommandData data : getCommandHelp().get(commandName)) {
@@ -61,7 +61,7 @@ public class CommandHelp {
 		if (!isName && command.getAliases().size() > 0) {
 			commandName = command.getAliases().get(0).toLowerCase();
 		}
-		sender.sendMessage("§d==== " + PluginYaml.getName() + " Commands ====");
+		sender.sendMessage("§d==== " + plugin.getName() + " Commands ====");
 		for (CommandData data : temps) {
 			if (data.isHelp()) {
 				sender.sendMessage("§b/" + commandName + " " + data.getMessage());

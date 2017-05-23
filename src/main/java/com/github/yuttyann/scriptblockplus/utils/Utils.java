@@ -23,7 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.PluginYaml;
 
 public class Utils {
 
@@ -113,36 +112,37 @@ public class Utils {
 		return ChatColor.getByChar(Integer.toHexString(new Random().nextInt(16))).toString();
 	}
 
-	public static void sendPluginMessage(Object msg) {
-		sendPluginMessage(Bukkit.getConsoleSender(), msg);
+	public static void sendPluginMessage(Plugin plugin, Object msg) {
+		sendPluginMessage(plugin, Bukkit.getConsoleSender(), msg);
 	}
 
-	public static void sendPluginMessage(CommandSender sender, Object msg) {
+	public static void sendPluginMessage(Plugin plugin, CommandSender sender, Object msg) {
 		if (msg == null) {
 			return;
 		}
 		String message = msg.toString();
-		String prefix = "";
-		if (sender instanceof Player) {
-			for (ChatColor color : ChatColor.values()) {
-				if (!message.startsWith(color.toString())) {
-					continue;
-				}
-				prefix = color.toString();
-				break;
-			}
-		}
+		String prefix = getStartColor(message).toString();
 		if (Files.getConfig().getBoolean("MessagePrefix")) {
-			prefix += "[" + PluginYaml.getName() + "] ";
+			prefix += "[" + plugin.getName() + "] ";
 		}
 		if (message.contains("\\n")) {
-			String[] newLine = StringUtils.split(message, "\n");
+			String[] newLine = StringUtils.split(message, "\\n");
 			for(int i = 0, l = newLine.length; i < l; i++) {
 				sender.sendMessage(prefix + newLine[i]);
 			}
 		} else {
 			sender.sendMessage(prefix + message);
 		}
+	}
+
+	public static ChatColor getStartColor(String text) {
+		for (ChatColor color : ChatColor.values()) {
+			if (!text.startsWith(color.toString())) {
+				continue;
+			}
+			return color;
+		}
+		return ChatColor.WHITE;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -222,7 +222,7 @@ public class Utils {
 		} else if (uuid_or_name instanceof String) {
 			String str = uuid_or_name.toString();
 			if (isUUID(str)) {
-				uuid_or_name = fromString(str);
+				uuid_or_name = uuidFromString(str);
 				isUUID = true;
 			}
 		}
@@ -247,7 +247,7 @@ public class Utils {
 		} else if (uuid_or_name instanceof String) {
 			String str = uuid_or_name.toString();
 			if (isUUID(str)) {
-				uuid_or_name = fromString(str);
+				uuid_or_name = uuidFromString(str);
 				isUUID = true;
 			}
 		}
@@ -274,7 +274,7 @@ public class Utils {
 		return uuid.matches(REGEX_H) || uuid.matches(REGEX_NH);
 	}
 
-	public static UUID fromString(String uuid) {
+	public static UUID uuidFromString(String uuid) {
 		try {
 			if (uuid.matches(REGEX_NH)) {
 				return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));

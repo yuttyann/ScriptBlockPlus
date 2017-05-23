@@ -13,7 +13,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
-import com.github.yuttyann.scriptblockplus.file.Messages;
+import com.github.yuttyann.scriptblockplus.file.Lang;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -45,7 +45,7 @@ public class PlayerMoveListener implements Listener {
 				return;
 			}
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_WALK_USE, player)) {
-				Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+				Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 				return;
 			}
 			new ScriptManager(plugin, location, ScriptType.WALK).scriptExec(player);

@@ -11,7 +11,7 @@ import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.PlayerSelector;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
-import com.github.yuttyann.scriptblockplus.file.Messages;
+import com.github.yuttyann.scriptblockplus.file.Lang;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
 import com.github.yuttyann.scriptblockplus.option.Amount;
 import com.github.yuttyann.scriptblockplus.option.Cooldown;
@@ -44,7 +44,7 @@ public class ScriptManager extends ScriptReadManager {
 		UUID uuid = player.getUniqueId();
 		String fullCoords = location.getFullCoords();
 		if (!scriptData.checkPath()) {
-			Utils.sendPluginMessage(player, Messages.getErrorScriptFileCheckMessage());
+			Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptFileCheckMessage());
 			return;
 		}
 		String coords = location.getCoords();
@@ -52,43 +52,43 @@ public class ScriptManager extends ScriptReadManager {
 		for (int i = 0, s = scripts.size(); i < s; i++) {
 			init(false);
 			if (!readScript(scripts.get(i))) {
-				Utils.sendPluginMessage(player, Messages.getErrorScriptMessage(scriptType));
-				Utils.sendPluginMessage(Messages.getConsoleErrorScriptExecMessage(player, scriptType, location.getWorld(), coords));
+				Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptMessage(scriptType));
+				Utils.sendPluginMessage(plugin, Lang.getConsoleErrorScriptExecMessage(player, scriptType, location.getWorld(), coords));
 				return;
 			}
 			if (hasOption()) {
 				Delay delay = getDelay();
 				if (delay != null && delay.contains(scriptType, fullCoords, uuid)) {
-					Utils.sendPluginMessage(player, Messages.getActiveDelayMessage());
+					Utils.sendPluginMessage(plugin, player, Lang.getActiveDelayMessage());
 					return;
 				}
 				Cooldown cooldown = getCooldown();
 				if (cooldown != null && cooldown.contains(scriptType, fullCoords, uuid)) {
 					int[] params = cooldown.get(scriptType, fullCoords, uuid);
-					Utils.sendPluginMessage(player, Messages.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
+					Utils.sendPluginMessage(plugin, player, Lang.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
 					return;
 				}
 				Perm perm = getPerm();
 				if (perm != null && !perm.playerPerm(player)) {
-					Utils.sendPluginMessage(player, Messages.notPermissionMessage);
+					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
 					return;
 				}
 				Group group = getGroup();
 				if (group != null && !group.playerGroup(player)) {
-					Utils.sendPluginMessage(player, Messages.getErrorGroupMessage(group.getName()));
+					Utils.sendPluginMessage(plugin, player, Lang.getErrorGroupMessage(group.getName()));
 					return;
 				}
 				ItemHand itemHand = getItemHand();
 				if (itemHand != null) {
 					if (!itemHand.check(player)) {
-						Utils.sendPluginMessage(player, Messages.getErrorHandMessage(itemHand.getMaterial(), itemHand.getId(), itemHand.getAmount(), itemHand.getDurability(), itemHand.getItemName()));
+						Utils.sendPluginMessage(plugin, player, Lang.getErrorHandMessage(itemHand.getMaterial(), itemHand.getId(), itemHand.getAmount(), itemHand.getDurability(), itemHand.getItemName()));
 						return;
 					}
 				}
 				MoneyCost moneyCost = getMoneyCost();
 				if (moneyCost != null) {
 					if (!moneyCost.payment(player)) {
-						Utils.sendPluginMessage(player, Messages.getErrorCostMessage(moneyCost.getCost(), moneyCost.getResult()));
+						Utils.sendPluginMessage(plugin, player, Lang.getErrorCostMessage(moneyCost.getCost(), moneyCost.getResult()));
 						return;
 					}
 				}
@@ -98,7 +98,7 @@ public class ScriptManager extends ScriptReadManager {
 						if (moneyCost != null && moneyCost.isSuccess()) {
 							HookPlugins.getVaultEconomy().depositPlayer(player, moneyCost.getCost());
 						}
-						Utils.sendPluginMessage(player, Messages.getErrorItemMessage(itemCost.getMaterial(), itemCost.getId(), itemCost.getAmount(), itemCost.getDurability(), itemCost.getItemName()));
+						Utils.sendPluginMessage(plugin, player, Lang.getErrorItemMessage(itemCost.getMaterial(), itemCost.getId(), itemCost.getAmount(), itemCost.getDurability(), itemCost.getItemName()));
 						return;
 					}
 				}
@@ -123,7 +123,7 @@ public class ScriptManager extends ScriptReadManager {
 				commandExec(player, replace(player, getCommand(), false), isBypass());
 			}
 			if (i == (s - 1)) {
-				Utils.sendPluginMessage(Messages.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
+				Utils.sendPluginMessage(plugin, Lang.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
 			}
 		}
 	}
