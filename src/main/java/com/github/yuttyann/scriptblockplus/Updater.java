@@ -25,19 +25,19 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Updater {
 
-	private Plugin plugin;
 	private String pluginName;
 	private String pluginVersion;
 	private String latestVersion;
 	private String downloadURL;
 	private String changeLogURL;
-	private String[] details;
+	private List<String> details;
 	private boolean isUpperVersion;
 	private boolean isEnable;
 	private boolean isError;
 
 	public Updater(Plugin plugin) {
-		this.plugin = plugin;
+		this.pluginName = plugin.getName();
+		this.pluginVersion = plugin.getDescription().getVersion();
 	}
 
 	public String getPluginName() {
@@ -60,7 +60,7 @@ public class Updater {
 		return changeLogURL;
 	}
 
-	public String[] getDetails() {
+	public List<String> getDetails() {
 		return details;
 	}
 
@@ -86,8 +86,7 @@ public class Updater {
 	public void load() throws Exception {
 		isEnable = false;
 		isError = false;
-		pluginName = plugin.getName();
-		pluginVersion = plugin.getDescription().getVersion();
+		details = new ArrayList<String>();
 		Document document = FileUtils.getDocument(getPluginName());
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
@@ -115,15 +114,12 @@ public class Updater {
 				}
 				if (updateNode.getNodeName().equals("details")) {
 					NodeList detailsChildren = updateNode.getChildNodes();
-					for(int k = 0, n = 0; k < detailsChildren.getLength(); k++) {
+					for(int k = 0; k < detailsChildren.getLength(); k++) {
 						Node detailsNode = detailsChildren.item(k);
 						if (detailsNode.getNodeType() != Node.ELEMENT_NODE) {
 							continue;
 						}
-						if (n == 0) {
-							details = new String[detailsChildren.getLength()];
-						}
-						details[n++] = ((Element) detailsNode).getAttribute("info");
+						details.add(((Element) detailsNode).getAttribute("info"));
 					}
 				}
 			}

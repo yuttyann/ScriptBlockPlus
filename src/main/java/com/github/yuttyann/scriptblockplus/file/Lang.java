@@ -313,7 +313,7 @@ public class Lang {
 		return updateDownloadEndMessages;
 	}
 
-	public static List<String> getUpdateCheckMessages(String pluginName, String latestVersion, String[] details) {
+	public static List<String> getUpdateCheckMessages(String pluginName, String latestVersion, List<String> details) {
 		if (instance.updateCheckMessages == null) {
 			return null;
 		}
@@ -325,14 +325,14 @@ public class Lang {
 			if (message.contains("%details%")) {
 				StringBuilder builder = new StringBuilder();
 				String color = Utils.getStartColor(message).toString();
-				for (int k = 0; k < details.length; k++) {
+				for (int k = 0; k < details.size(); k++) {
 					builder.append(color);
-					if (details[k].startsWith("$")) {
-						builder.append("  - ").append(StringUtils.removeStart(details[k], "$"));
+					if (details.get(k).startsWith("$")) {
+						builder.append("  - ").append(StringUtils.removeStart(details.get(k), "$"));
 					} else {
-						builder.append("・").append(details[k]);
+						builder.append("・").append(details.get(k));
 					}
-					if (k != (details.length - 1)) {
+					if (k != (details.size() - 1)) {
 						builder.append("\\n");
 					}
 				}
