@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.PlayerSelector;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
@@ -27,14 +28,12 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptManager extends ScriptReadManager {
 
-	private final ScriptBlock plugin;
-	private final BlockLocation location;
+	private final Location location;
 	private final ScriptType scriptType;
 	private final ScriptData scriptData;
 
-	public ScriptManager(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
+	public ScriptManager(ScriptBlock plugin, Location location, ScriptType scriptType) {
 		super(plugin, location, scriptType);
-		this.plugin = plugin;
 		this.location = location;
 		this.scriptType = scriptType;
 		this.scriptData = new ScriptData(plugin, location, scriptType);
@@ -42,53 +41,53 @@ public class ScriptManager extends ScriptReadManager {
 
 	public void scriptExec(Player player) {
 		UUID uuid = player.getUniqueId();
-		String fullCoords = location.getFullCoords();
+		String fullCoords = BlockCoords.getFullCoords(location);
 		if (!scriptData.checkPath()) {
-			Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptFileCheckMessage());
+			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return;
 		}
-		String coords = location.getCoords();
+		String coords = BlockCoords.getCoords(location);
 		List<String> scripts = scriptData.getScripts();
-		for (int i = 0, s = scripts.size(); i < s; i++) {
-			init(false);
-			if (!readScript(scripts.get(i))) {
-				Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptMessage(scriptType));
-				Utils.sendPluginMessage(plugin, Lang.getConsoleErrorScriptExecMessage(player, scriptType, location.getWorld(), coords));
+		for (int i = 0; i < scripts.size(); i++) {
+			init();
+			if (!readScript(scripts.get(i).trim())) {
+				Utils.sendPluginMessage(player, Lang.getErrorScriptMessage(scriptType));
+				Utils.sendPluginMessage(Lang.getConsoleErrorScriptExecMessage(player, scriptType, location.getWorld(), coords));
 				return;
 			}
 			if (hasOption()) {
 				Delay delay = getDelay();
 				if (delay != null && delay.contains(scriptType, fullCoords, uuid)) {
-					Utils.sendPluginMessage(plugin, player, Lang.getActiveDelayMessage());
+					Utils.sendPluginMessage(player, Lang.getActiveDelayMessage());
 					return;
 				}
 				Cooldown cooldown = getCooldown();
 				if (cooldown != null && cooldown.contains(scriptType, fullCoords, uuid)) {
 					int[] params = cooldown.get(scriptType, fullCoords, uuid);
-					Utils.sendPluginMessage(plugin, player, Lang.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
+					Utils.sendPluginMessage(player, Lang.getActiveCooldownMessage((short) params[0], (byte) params[1], (byte) params[2]));
 					return;
 				}
 				Perm perm = getPerm();
-				if (perm != null && !perm.playerPerm(player)) {
-					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
+				if (perm != null && !perm.playerPermission(player)) {
+					Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
 					return;
 				}
 				Group group = getGroup();
 				if (group != null && !group.playerGroup(player)) {
-					Utils.sendPluginMessage(plugin, player, Lang.getErrorGroupMessage(group.getName()));
+					Utils.sendPluginMessage(player, Lang.getErrorGroupMessage(group.getName()));
 					return;
 				}
 				ItemHand itemHand = getItemHand();
 				if (itemHand != null) {
 					if (!itemHand.check(player)) {
-						Utils.sendPluginMessage(plugin, player, Lang.getErrorHandMessage(itemHand.getMaterial(), itemHand.getId(), itemHand.getAmount(), itemHand.getDurability(), itemHand.getItemName()));
+						Utils.sendPluginMessage(player, Lang.getErrorHandMessage(itemHand.getMaterial(), itemHand.getId(), itemHand.getAmount(), itemHand.getDurability(), itemHand.getItemName()));
 						return;
 					}
 				}
 				MoneyCost moneyCost = getMoneyCost();
 				if (moneyCost != null) {
 					if (!moneyCost.payment(player)) {
-						Utils.sendPluginMessage(plugin, player, Lang.getErrorCostMessage(moneyCost.getCost(), moneyCost.getResult()));
+						Utils.sendPluginMessage(player, Lang.getErrorCostMessage(moneyCost.getCost(), moneyCost.getResult()));
 						return;
 					}
 				}
@@ -98,7 +97,7 @@ public class ScriptManager extends ScriptReadManager {
 						if (moneyCost != null && moneyCost.isSuccess()) {
 							HookPlugins.getVaultEconomy().depositPlayer(player, moneyCost.getCost());
 						}
-						Utils.sendPluginMessage(plugin, player, Lang.getErrorItemMessage(itemCost.getMaterial(), itemCost.getId(), itemCost.getAmount(), itemCost.getDurability(), itemCost.getItemName()));
+						Utils.sendPluginMessage(player, Lang.getErrorItemMessage(itemCost.getMaterial(), itemCost.getId(), itemCost.getAmount(), itemCost.getDurability(), itemCost.getItemName()));
 						return;
 					}
 				}
@@ -115,15 +114,15 @@ public class ScriptManager extends ScriptReadManager {
 							scriptOptions(player2, uuid2, fullCoords2, readManager);
 							delay2.remove(scriptType, fullCoords2, uuid2);
 						}
-					}.runTaskLater(plugin, delay.getTick());
+					}.runTaskLater(ScriptBlock.getInstance(), delay.getTick());
 				} else {
 					scriptOptions(player, uuid, fullCoords, this);
 				}
 			} else {
 				commandExec(player, replace(player, getCommand(), false), isBypass());
 			}
-			if (i == (s - 1)) {
-				Utils.sendPluginMessage(plugin, Lang.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
+			if (i == (scripts.size() - 1)) {
+				Utils.sendPluginMessage(Lang.getConsoleSuccScriptExecMessage(player, scriptType, location.getWorld(), coords));
 			}
 		}
 	}
@@ -131,11 +130,11 @@ public class ScriptManager extends ScriptReadManager {
 	public void scriptOptions(Player player, UUID uuid, String fullCoords, ScriptReadManager readManager) {
 		Perm permADD = readManager.getPermADD();
 		if (permADD != null) {
-			permADD.playerPerm(player);
+			permADD.playerPermission(player);
 		}
 		Perm permREMOVE = readManager.getPermREMOVE();
 		if (permREMOVE != null) {
-			permREMOVE.playerPerm(player);
+			permREMOVE.playerPermission(player);
 		}
 		Group groupADD = readManager.getGroupADD();
 		if (groupADD != null) {
@@ -183,18 +182,18 @@ public class ScriptManager extends ScriptReadManager {
 
 	private void commandExec(Player player, String command, boolean isBypass) {
 		if (!isBypass || player.isOp()) {
-			dispatchCommand(player, command, location.getAllCenter());
+			dispatchCommand(player, command, BlockCoords.getAllCenter(location));
 		} else {
 			try {
 				player.setOp(true);
-				dispatchCommand(player, command, location.getAllCenter());
+				dispatchCommand(player, command, BlockCoords.getAllCenter(location));
 			} finally {
 				player.setOp(false);
 			}
 		}
 	}
 
-	private void dispatchCommand(Player player, String command, BlockLocation location) {
+	private void dispatchCommand(Player player, String command, Location location) {
 		if (command.startsWith("/")) {
 			command = command.substring(1);
 		}

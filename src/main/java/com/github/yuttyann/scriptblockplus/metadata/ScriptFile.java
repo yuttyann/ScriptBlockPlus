@@ -20,6 +20,11 @@ public class ScriptFile extends SimpleMetadata {
 		remove(player, getType(scriptType));
 	}
 
+	public boolean has(Player player, ScriptType scriptType) {
+		return has(player, getType(scriptType));
+	}
+
+	@Override
 	public void removeAll(Player player) {
 		for (ScriptType scriptType : ScriptType.values()) {
 			if (has(player, scriptType)) {
@@ -28,10 +33,7 @@ public class ScriptFile extends SimpleMetadata {
 		}
 	}
 
-	public boolean has(Player player, ScriptType scriptType) {
-		return has(player, getType(scriptType));
-	}
-
+	@Override
 	public boolean hasAll(Player player) {
 		for (ScriptType scriptType : ScriptType.values()) {
 			if (has(player, scriptType)) {

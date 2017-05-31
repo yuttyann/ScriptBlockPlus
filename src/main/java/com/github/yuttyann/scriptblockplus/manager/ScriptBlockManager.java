@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
@@ -19,29 +18,32 @@ public class ScriptBlockManager extends ScriptData implements ScriptBlockAPI {
 
 	private ScriptBlock plugin;
 	private MapManager mapManager;
-	private Map<ScriptType, List<BlockLocation>> timerTemps;
-	private Map<Boolean, Map<BlockLocation, ScriptType>> scriptTemps;
+	private Map<ScriptType, List<Location>> timerTemps;
+	private Map<Boolean, Map<Location, ScriptType>> scriptTemps;
 
 	public ScriptBlockManager(ScriptBlock plugin, Location location, ScriptType scriptType) {
-		super(plugin, BlockLocation.fromLocation(location), scriptType);
+		super(plugin, location, scriptType);
+		this.plugin = plugin;
 		this.mapManager = plugin.getMapManager();
-		this.timerTemps = new HashMap<ScriptType, List<BlockLocation>>();
-		this.scriptTemps = new HashMap<Boolean, Map<BlockLocation, ScriptType>>();
+		this.timerTemps = new HashMap<ScriptType, List<Location>>();
+		this.scriptTemps = new HashMap<Boolean, Map<Location, ScriptType>>();
 	}
 
 	@Override
 	public void scriptExec(Player player) {
-		new ScriptManager(plugin, super.getBlockLocation(), getScriptType()).scriptExec(player);
+		new ScriptManager(plugin, getLocation(), getScriptType()).scriptExec(player);
 	}
 
 	@Override
 	public void setLocation(Location location) {
-		super.setBlockLocation(BlockLocation.fromLocation(location));
+		timerTemps.clear();
+		scriptTemps.clear();
+		super.setLocation(location);
 	}
 
 	@Override
 	public Location getLocation() {
-		return super.getBlockLocation();
+		return super.getLocation();
 	}
 
 	@Override
@@ -57,16 +59,15 @@ public class ScriptBlockManager extends ScriptData implements ScriptBlockAPI {
 	@Override
 	public void save() {
 		super.save();
-		for (Entry<ScriptType, List<BlockLocation>> timerEntry : timerTemps.entrySet()) {
+		for (Entry<ScriptType, List<Location>> timerEntry : timerTemps.entrySet()) {
 			ScriptType scriptType = timerEntry.getKey();
-			for (BlockLocation blockLocation : timerEntry.getValue()) {
+			for (Location blockLocation : timerEntry.getValue()) {
 				mapManager.removeTimes(blockLocation, scriptType);
 			}
 		}
-		for (Entry<Boolean, Map<BlockLocation, ScriptType>> scriptEntry : scriptTemps.entrySet()) {
-			boolean isAdd = scriptEntry.getKey();
-			for (Entry<BlockLocation, ScriptType> scriptEntry2 : scriptEntry.getValue().entrySet()) {
-				if (isAdd) {
+		for (Entry<Boolean, Map<Location, ScriptType>> scriptEntry : scriptTemps.entrySet()) {
+			for (Entry<Location, ScriptType> scriptEntry2 : scriptEntry.getValue().entrySet()) {
+				if (scriptEntry.getKey()) {
 					mapManager.addLocation(scriptEntry2.getKey(), scriptEntry2.getValue());
 				} else {
 					mapManager.removeLocation(scriptEntry2.getKey(), scriptEntry2.getValue());
@@ -104,9 +105,8 @@ public class ScriptBlockManager extends ScriptData implements ScriptBlockAPI {
 
 	@Override
 	public void copyScripts(Location target, boolean overwrite) {
-		BlockLocation location = BlockLocation.fromLocation(target);
-		super.copyScripts(location, overwrite);
-		putScriptMap(true, location, getScriptType());
+		super.copyScripts(target, overwrite);
+		putScriptMap(true, target, getScriptType());
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class ScriptBlockManager extends ScriptData implements ScriptBlockAPI {
 	@Override
 	public void setScripts(List<String> scripts) {
 		super.setScripts(scripts);
-		putScriptMap(true, super.getBlockLocation(), getScriptType());
+		putScriptMap(true, super.getLocation(), getScriptType());
 	}
 
 	@Override
@@ -153,35 +153,35 @@ public class ScriptBlockManager extends ScriptData implements ScriptBlockAPI {
 	@Override
 	public void addScript(String script) {
 		super.addScript(script);
-		putTimerMap(super.getBlockLocation(), getScriptType());
+		putTimerMap(super.getLocation(), getScriptType());
 	}
 
 	@Override
 	public void addScript(int index, String script) {
 		super.addScript(index, script);
-		putTimerMap(super.getBlockLocation(), getScriptType());
+		putTimerMap(super.getLocation(), getScriptType());
 	}
 
 	@Override
 	public void removeScript(String script) {
 		super.removeScript(script);
 		if (super.getScripts().isEmpty()) {
-			putScriptMap(false, super.getBlockLocation(), getScriptType());
+			putScriptMap(false, super.getLocation(), getScriptType());
 		} else {
-			putTimerMap(super.getBlockLocation(), getScriptType());
+			putTimerMap(super.getLocation(), getScriptType());
 		}
 	}
 
 	@Override
 	public void clearScripts() {
 		super.clearScripts();
-		putScriptMap(false, super.getBlockLocation(), getScriptType());
+		putScriptMap(false, super.getLocation(), getScriptType());
 	}
 
 	@Override
 	public void remove() {
 		super.remove();
-		putScriptMap(false, super.getBlockLocation(), getScriptType());
+		putScriptMap(false, super.getLocation(), getScriptType());
 	}
 
 	@Override
@@ -189,19 +189,19 @@ public class ScriptBlockManager extends ScriptData implements ScriptBlockAPI {
 		super.reload();
 	}
 
-	private void putTimerMap(BlockLocation location, ScriptType scriptType) {
-		List<BlockLocation> value = timerTemps.get(scriptType);
+	private void putTimerMap(Location location, ScriptType scriptType) {
+		List<Location> value = timerTemps.get(scriptType);
 		if (value == null) {
-			value = new ArrayList<BlockLocation>();
+			value = new ArrayList<Location>();
 		}
 		value.add(location);
 		timerTemps.put(scriptType, value);
 	}
 
-	private void putScriptMap(boolean isAdd, BlockLocation location, ScriptType scriptType) {
-		Map<BlockLocation, ScriptType> value = scriptTemps.get(location);
+	private void putScriptMap(boolean isAdd, Location location, ScriptType scriptType) {
+		Map<Location, ScriptType> value = scriptTemps.get(location);
 		if (value == null) {
-			value = new HashMap<BlockLocation, ScriptType>();
+			value = new HashMap<Location, ScriptType>();
 		}
 		value.put(location, scriptType);
 		scriptTemps.put(isAdd, value);

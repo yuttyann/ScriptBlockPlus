@@ -3,42 +3,40 @@ package com.github.yuttyann.scriptblockplus.file;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptData {
 
 	private ScriptBlock plugin;
-	private MapManager mapManager;
-	private BlockLocation location;
+	private Location location;
 	private ScriptType scriptType;
 	private YamlConfig scriptFile;
 	private String scriptPath;
 
-	public ScriptData(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
+	public ScriptData(ScriptBlock plugin, Location location, ScriptType scriptType) {
 		this.plugin = plugin;
-		this.mapManager = plugin.getMapManager();
 		this.location = location;
 		this.scriptType = scriptType;
 		this.scriptFile = Files.getScriptFile(scriptType);
-		this.scriptPath = location != null ? (location.getWorld().getName() + "." + location.getCoords()) : null;
+		this.scriptPath = location != null ? (location.getWorld().getName() + "." + BlockCoords.getCoords(location)) : null;
 	}
 
-	public void setBlockLocation(BlockLocation location) {
+	public void setLocation(Location location) {
 		this.location = location;
-		this.scriptPath = location.getWorld().getName() + "." + location.getCoords();
+		this.scriptPath = location.getWorld().getName() + "." + BlockCoords.getCoords(location);
 	}
 
 	public YamlConfig getScriptFile() {
 		return scriptFile;
 	}
 
-	public BlockLocation getBlockLocation() {
+	public Location getLocation() {
 		return location;
 	}
 
@@ -102,9 +100,9 @@ public class ScriptData {
 		if (authors.size() > 0 && authors.contains(uuid)) {
 			authors.remove(uuid);
 			StringBuilder builder = new StringBuilder();
-			for (int i = 0, s = authors.size(); i < s; i++) {
+			for (int i = 0; i < authors.size(); i++) {
 				builder.append(authors.get(i));
-				if (i != (s - 1)) {
+				if (i != (authors.size() - 1)) {
 					builder.append(", ");
 				}
 			}
@@ -128,7 +126,7 @@ public class ScriptData {
 		scriptFile.set(scriptPath + ".Amount", getAmount() - amount);
 	}
 
-	public void copyScripts(BlockLocation target, boolean overwrite) {
+	public void copyScripts(Location target, boolean overwrite) {
 		ScriptData targetData = new ScriptData(plugin, target, scriptType);
 		if (location.equals(target) || !checkPath() || (targetData.checkPath() && overwrite)) {
 			return;
@@ -174,6 +172,6 @@ public class ScriptData {
 	}
 
 	public void reload() {
-		mapManager.loadScripts(scriptFile, scriptType);
+		plugin.getMapManager().loadScripts(scriptFile, scriptType);
 	}
 }

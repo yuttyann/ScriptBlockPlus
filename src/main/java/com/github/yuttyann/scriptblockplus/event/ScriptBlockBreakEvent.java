@@ -7,8 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
-
 public class ScriptBlockBreakEvent extends ScriptBlockEvent implements Cancellable {
 
 	private Player player;
@@ -17,7 +15,7 @@ public class ScriptBlockBreakEvent extends ScriptBlockEvent implements Cancellab
 	private Location location;
 	private boolean cancelled;
 
-	public ScriptBlockBreakEvent(Player player, Block block, ItemStack item, BlockLocation location) {
+	public ScriptBlockBreakEvent(Player player, Block block, ItemStack item, Location location) {
 		this.player = player;
 		this.block = block;
 		this.item = item;

@@ -4,103 +4,142 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Metadata;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Lang;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
-import com.github.yuttyann.scriptblockplus.metadata.SBMetadata;
 import com.github.yuttyann.scriptblockplus.metadata.ScriptFile;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class ScriptFileManager {
+public class ScriptFileManager extends ScriptData {
 
-	private ScriptBlock plugin;
 	private MapManager mapManager;
-	private BlockLocation location;
-	private ScriptType scriptType;
-	private ScriptData scriptData;
 	private List<String> scripts;
 
-	public ScriptFileManager(ScriptBlock plugin, BlockLocation location, ScriptType scriptType) {
-		this.plugin = plugin;
+	public ScriptFileManager(ScriptBlock plugin, Location location, ScriptType scriptType) {
+		super(plugin, location, scriptType);
 		this.mapManager = plugin.getMapManager();
-		this.location = location;
-		this.scriptType = scriptType;
-		this.scriptData = new ScriptData(plugin, location, scriptType);
-	}
-
-	public void setBlockLocation(BlockLocation location) {
-		this.location = location;
-		scriptData.setBlockLocation(location);
-	}
-
-	public ScriptType getScriptType() {
-		return scriptType;
-	}
-
-	public boolean checkPath() {
-		return scriptData.checkPath();
-	}
-
-	public void save() {
-		scriptData.save();
 	}
 
 	public void scriptCreate(Player player, String script) {
-		SBMetadata.remove(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
-		scriptData.setAuthor(player);
-		scriptData.setLastEdit();
-		scriptData.setScripts(Arrays.asList(script));
-		scriptData.save();
+		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+		setAuthor(player);
+		setLastEdit();
+		setScripts(Arrays.asList(script));
+		save();
+		Location location = getLocation();
+		ScriptType scriptType = getScriptType();
 		mapManager.addLocation(location, scriptType);
-		Utils.sendPluginMessage(plugin, player, Lang.getScriptCreateMessage(scriptType));
-		Utils.sendPluginMessage(plugin, Lang.getConsoleScriptCreateMessage(player, scriptType, location.getWorld(), location.getCoords()));
+		Utils.sendPluginMessage(player, Lang.getScriptCreateMessage(scriptType));
+		Utils.sendPluginMessage(Lang.getConsoleScriptCreateMessage(player, scriptType, getLocation().getWorld(), BlockCoords.getCoords(location)));
 	}
 
 	public void scriptAdd(Player player, String script) {
-		SBMetadata.remove(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
-		if (!scriptData.checkPath()) {
-			Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptFileCheckMessage());
+		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+		if (!checkPath()) {
+			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return;
 		}
-		scriptData.addAuthor(player);
-		scriptData.setLastEdit();
-		scriptData.addScript(script);
-		scriptData.save();
+		addAuthor(player);
+		setLastEdit();
+		addScript(script);
+		save();
+		Location location = getLocation();
+		ScriptType scriptType = getScriptType();
 		mapManager.removeTimes(location, scriptType);
-		Utils.sendPluginMessage(plugin, player, Lang.getScriptAddMessage(scriptType));
-		Utils.sendPluginMessage(plugin, Lang.getConsoleScriptAddMessage(player, scriptType, location.getWorld(), location.getCoords()));
+		Utils.sendPluginMessage(player, Lang.getScriptAddMessage(scriptType));
+		Utils.sendPluginMessage(Lang.getConsoleScriptAddMessage(player, scriptType, location.getWorld(), BlockCoords.getCoords(location)));
 	}
 
 	public void scriptRemove(Player player) {
-		SBMetadata.remove(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
-		if (!scriptData.checkPath()) {
-			Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptFileCheckMessage());
+		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+		if (!checkPath()) {
+			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return;
 		}
-		scriptData.remove();
-		scriptData.save();
+		remove();
+		save();
+		Location location = getLocation();
+		ScriptType scriptType = getScriptType();
 		mapManager.removeLocation(location, scriptType);
-		Utils.sendPluginMessage(plugin, player, Lang.getScriptRemoveMessage(scriptType));
-		Utils.sendPluginMessage(plugin, Lang.getConsoleScriptRemoveMessage(player, scriptType, location.getWorld(), location.getCoords()));
+		Utils.sendPluginMessage(player, Lang.getScriptRemoveMessage(scriptType));
+		Utils.sendPluginMessage(Lang.getConsoleScriptRemoveMessage(player, scriptType, location.getWorld(), BlockCoords.getCoords(location)));
 	}
 
 	public void scriptView(Player player) {
-		SBMetadata.remove(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
-		if (!scriptData.checkPath()) {
-			Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptFileCheckMessage());
+		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+		if (!checkPath()) {
+			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return;
 		}
-		List<String> scripts = scriptData.getScripts();
+		List<String> scripts = getScripts();
 		if (scripts.isEmpty()) {
 			return;
 		}
+		Utils.sendPluginMessage(player, "Author: " + getAuthors());
+		Utils.sendPluginMessage(player, "LastEdit: " + getLastEdit());
+		for (String script : scripts) {
+			Utils.sendPluginMessage(player, "- " + script);
+		}
+		Location location = getLocation();
+		Utils.sendPluginMessage(Lang.getConsoleScriptViewMessage(player, getScriptType(), location.getWorld(), BlockCoords.getCoords(location)));
+	}
+
+	public void scriptCopy(Player player) {
+		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+		if (!checkPath()) {
+			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
+			return;
+		}
+		scripts = getScripts();
+		Location location = getLocation();
+		ScriptType scriptType = getScriptType();
+		ScriptFile scriptFile = (ScriptFile) Metadata.SCRIPTFILE.toMetadata();
+		scriptFile.removeAll(player);
+		scriptFile.set(player, scriptType, this);
+		Utils.sendPluginMessage(player, Lang.getScriptCopyMessage(scriptType));
+		Utils.sendPluginMessage(Lang.getConsoleScriptCopyMessage(player, scriptType, location.getWorld(), BlockCoords.getCoords(location)));
+	}
+
+	public void scriptPaste(Player player, Location location) {
+		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+		setLocation(location);
+		setAuthor(player);
+		setLastEdit();
+		setScripts(new ArrayList<String>(scripts));
+		save();
+		ScriptType scriptType = getScriptType();
+		mapManager.addLocation(location, scriptType);
+		Utils.sendPluginMessage(player, Lang.getScriptPasteMessage(scriptType));
+		Utils.sendPluginMessage(Lang.getConsoleScriptPasteMessage(player, scriptType, location.getWorld(), BlockCoords.getCoords(location)));
+	}
+
+	//WorldEdit用に軽量化
+	public void scriptWERemove(Player player) {
+		remove();
+		mapManager.removeLocation(getLocation(), getScriptType());
+	}
+
+	//WorldEdit用に軽量化
+	public void scriptWEPaste(Player player, Location location, boolean overwrite) {
+		setLocation(location);
+		if (!overwrite && checkPath()) {
+			return;
+		}
+		setAuthor(player);
+		setLastEdit();
+		setScripts(new ArrayList<String>(scripts));
+		mapManager.addLocation(location, getScriptType());
+	}
+
+	private String getAuthors() {
 		StringBuilder builder = new StringBuilder();
-		List<String> authors = scriptData.getAuthors(true);
+		List<String> authors = getAuthors(true);
 		int size = authors.size();
 		if (size > 1) {
 			for (int i = 0; i < size; i++) {
@@ -121,55 +160,6 @@ public class ScriptFileManager {
 				builder.append("null");
 			}
 		}
-		Utils.sendPluginMessage(plugin, player, "Author: " + builder.toString());
-		Utils.sendPluginMessage(plugin, player, "LastEdit: " + scriptData.getLastEdit());
-		for (String script : scripts) {
-			Utils.sendPluginMessage(plugin, player, "- " + script);
-		}
-		Utils.sendPluginMessage(plugin, Lang.getConsoleScriptViewMessage(player, scriptType, location.getWorld(), location.getCoords()));
-	}
-
-	public void scriptCopy(Player player) {
-		SBMetadata.remove(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
-		if (!scriptData.checkPath()) {
-			Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptFileCheckMessage());
-			return;
-		}
-		scripts = scriptData.getScripts();
-		ScriptFile scriptFile = SBMetadata.getScriptFile();
-		scriptFile.removeAll(player);
-		scriptFile.set(player, scriptType, this);
-		Utils.sendPluginMessage(plugin, player, Lang.getScriptCopyMessage(scriptType));
-		Utils.sendPluginMessage(plugin, Lang.getConsoleScriptCopyMessage(player, scriptType, location.getWorld(), location.getCoords()));
-	}
-
-	public void scriptPaste(Player player, BlockLocation location) {
-		SBMetadata.remove(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
-		scriptData.setBlockLocation(location);
-		scriptData.setAuthor(player);
-		scriptData.setLastEdit();
-		scriptData.setScripts(new ArrayList<String>(scripts));
-		scriptData.save();
-		mapManager.addLocation(location, scriptType);
-		Utils.sendPluginMessage(plugin, player, Lang.getScriptPasteMessage(scriptType));
-		Utils.sendPluginMessage(plugin, Lang.getConsoleScriptPasteMessage(player, scriptType, location.getWorld(), location.getCoords()));
-	}
-
-	//WorldEdit用に軽量化
-	public void scriptWERemove(Player player) {
-		scriptData.remove();
-		mapManager.removeLocation(location, scriptType);
-	}
-
-	//WorldEdit用に軽量化
-	public void scriptWEPaste(Player player, BlockLocation location, boolean overwrite) {
-		scriptData.setBlockLocation(location);
-		if (!overwrite && scriptData.checkPath()) {
-			return;
-		}
-		scriptData.setAuthor(player);
-		scriptData.setLastEdit();
-		scriptData.setScripts(new ArrayList<String>(scripts));
-		mapManager.addLocation(location, scriptType);
+		return builder.toString();
 	}
 }

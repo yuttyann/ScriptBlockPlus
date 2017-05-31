@@ -39,9 +39,13 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 		if (jsonMap != null) {
 			String id = jsonMap.get("id").toString();
 			String name = jsonMap.get("name").toString();
-			uuidMap.put(name, Utils.uuidFromString(id));
+			uuidMap.put(name, fromString(id));
 		}
 		return uuidMap;
+	}
+
+	public static UUID fromString(String uuid) {
+		return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));
 	}
 
 	public static UUID getUniqueId(String name) throws Exception {

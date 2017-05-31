@@ -22,12 +22,12 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.Files;
 
 public class Utils {
 
-	private static final String REGEX_H = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
-	private static final String REGEX_NH = "[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}";
+	private static final String REGEX_UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
 
 	private static String serverVersion;
 	private static Boolean isWindows;
@@ -112,10 +112,20 @@ public class Utils {
 		return ChatColor.getByChar(Integer.toHexString(new Random().nextInt(16))).toString();
 	}
 
+	public static void sendPluginMessage(Object msg) {
+		sendPluginMessage(ScriptBlock.getInstance(), Bukkit.getConsoleSender(), msg);
+	}
+
+	public static void sendPluginMessage(CommandSender sender, Object msg) {
+		sendPluginMessage(ScriptBlock.getInstance(), sender, msg);
+	}
+
+	@Deprecated
 	public static void sendPluginMessage(Plugin plugin, Object msg) {
 		sendPluginMessage(plugin, Bukkit.getConsoleSender(), msg);
 	}
 
+	@Deprecated
 	public static void sendPluginMessage(Plugin plugin, CommandSender sender, Object msg) {
 		if (msg == null) {
 			return;
@@ -222,7 +232,7 @@ public class Utils {
 		} else if (uuid_or_name instanceof String) {
 			String str = uuid_or_name.toString();
 			if (isUUID(str)) {
-				uuid_or_name = uuidFromString(str);
+				uuid_or_name = UUID.fromString(str);
 				isUUID = true;
 			}
 		}
@@ -246,9 +256,8 @@ public class Utils {
 			isUUID = true;
 		} else if (uuid_or_name instanceof String) {
 			String str = uuid_or_name.toString();
-			if (isUUID(str)) {
-				uuid_or_name = uuidFromString(str);
-				isUUID = true;
+			if (isUUID = isUUID(str)) {
+				uuid_or_name = UUID.fromString(str);
 			}
 		}
 		Object value;
@@ -271,18 +280,7 @@ public class Utils {
 	}
 
 	public static boolean isUUID(String uuid) {
-		return uuid.matches(REGEX_H) || uuid.matches(REGEX_NH);
-	}
-
-	public static UUID uuidFromString(String uuid) {
-		try {
-			if (uuid.matches(REGEX_NH)) {
-				return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));
-			}
-			return UUID.fromString(uuid);
-		} catch (Exception e) {
-			return null;
-		}
+		return uuid.matches(REGEX_UUID);
 	}
 
 	@SuppressWarnings("unchecked")

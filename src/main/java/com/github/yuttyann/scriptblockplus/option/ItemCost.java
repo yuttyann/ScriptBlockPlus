@@ -17,10 +17,10 @@ public class ItemCost {
 	private String itemName;
 	private boolean isSuccess;
 
-	public ItemCost(int id, int amount, short damage, String itemName) {
-		this.id = id;
-		this.amount = amount;
-		this.damage = damage;
+	public ItemCost(String id, String amount, String damage, String itemName) {
+		this.id = Integer.parseInt(id);
+		this.amount = Integer.parseInt(amount);
+		this.damage = Short.parseShort(damage);
 		this.itemName = itemName != null ? StringUtils.replace(itemName, "&", "§") : itemName;
 	}
 
@@ -60,6 +60,7 @@ public class ItemCost {
 	}
 
 	public boolean payment(Player player) {
+		boolean isSuccess = false;
 		PlayerInventory inventory = player.getInventory();
 		ItemStack[] items = inventory.getContents().clone();
 		for (int i = 0, j = 0; i < items.length; i++) {
@@ -73,13 +74,13 @@ public class ItemCost {
 				items[i] = minusItem(item, result);
 			}
 			if (j >= getAmount()) {
+				isSuccess = true;
 				inventory.setContents(items);
 				Utils.updateInventory(player);
-				isSuccess = true;
 				break;
 			}
 		}
-		return isSuccess;
+		return this.isSuccess = isSuccess;
 	}
 
 	private ItemStack minusItem(ItemStack item, int amount) {

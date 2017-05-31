@@ -28,6 +28,7 @@ public class MoneyCost {
 	}
 
 	public boolean payment(Player player) {
+		boolean isSuccess = false;
 		VaultEconomy economy = HookPlugins.getVaultEconomy();
 		if (economy.has(player, getCost())) {
 			economy.withdrawPlayer(player, getCost());
@@ -35,6 +36,6 @@ public class MoneyCost {
 		} else {
 			result = getCost() - economy.getBalance(player);
 		}
-		return isSuccess;
+		return this.isSuccess = isSuccess;
 	}
 }

@@ -8,13 +8,15 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Lang {
+
+	public static final String ITEM_SCRIPTEDITOR = "§dScript Editor";
 
 	private static Lang instance;
 	private static YamlConfig lang;
@@ -585,8 +587,8 @@ public class Lang {
 			return null;
 		}
 		String world = min.getWorld().getName();
-		String minCoords = BlockLocation.fromLocation(min).getCoords();
-		String maxCoords = BlockLocation.fromLocation(max).getCoords();
+		String minCoords = BlockCoords.getCoords(min);
+		String maxCoords = BlockCoords.getCoords(max);
 		String consoleWorldEditPasteMessage = instance.consoleWorldEditPasteMessage;
 		consoleWorldEditPasteMessage = replace(consoleWorldEditPasteMessage, "%scripttype%", scriptType.toString());
 		consoleWorldEditPasteMessage = replace(consoleWorldEditPasteMessage, "%world%", world);
@@ -600,8 +602,8 @@ public class Lang {
 			return null;
 		}
 		String world = min.getWorld().getName();
-		String minCoords = BlockLocation.fromLocation(min).getCoords();
-		String maxCoords = BlockLocation.fromLocation(max).getCoords();
+		String minCoords = BlockCoords.getCoords(min);
+		String maxCoords = BlockCoords.getCoords(max);
 		String consoleWorldEditRemoveMessage = instance.consoleWorldEditRemoveMessage;
 		consoleWorldEditRemoveMessage = replace(consoleWorldEditRemoveMessage, "%scripttype%", scriptType.toString());
 		consoleWorldEditRemoveMessage = replace(consoleWorldEditRemoveMessage, "%world%", world);

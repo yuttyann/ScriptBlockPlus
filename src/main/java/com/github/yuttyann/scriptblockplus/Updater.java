@@ -91,7 +91,7 @@ public class Updater {
 		Document document = FileUtils.getDocument(getPluginName());
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
-		for(int i = 0, l = rootChildren.getLength(); i < l; i++) {
+		for(int i = 0; i < rootChildren.getLength(); i++) {
 			Node node = rootChildren.item(i);
 			if (node.getNodeType() != Node.ELEMENT_NODE) {
 				continue;
@@ -102,7 +102,7 @@ public class Updater {
 			}
 			latestVersion = element.getAttribute("version");
 			NodeList updateChildren = node.getChildNodes();
-			for (int j = 0, l2 = updateChildren.getLength(); j < l2; j++) {
+			for (int j = 0; j < updateChildren.getLength(); j++) {
 				Node updateNode = updateChildren.item(j);
 				if (updateNode.getNodeType() != Node.ELEMENT_NODE) {
 					continue;
@@ -115,13 +115,13 @@ public class Updater {
 				}
 				if (updateNode.getNodeName().equals("details")) {
 					NodeList detailsChildren = updateNode.getChildNodes();
-					for(int k = 0, n = 0, l3 = detailsChildren.getLength(); k < l3; k++) {
+					for(int k = 0, n = 0; k < detailsChildren.getLength(); k++) {
 						Node detailsNode = detailsChildren.item(k);
 						if (detailsNode.getNodeType() != Node.ELEMENT_NODE) {
 							continue;
 						}
 						if (n == 0) {
-							details = new String[l3];
+							details = new String[detailsChildren.getLength()];
 						}
 						details[n++] = ((Element) detailsNode).getAttribute("info");
 					}
@@ -144,7 +144,7 @@ public class Updater {
 			}
 			sendCheckMessage(player != null ? player : Bukkit.getConsoleSender());
 			if(config.getBoolean("AutoDownload")) {
-				Utils.sendPluginMessage(plugin, Lang.getUpdateDownloadStartMessage());
+				Utils.sendPluginMessage(Lang.getUpdateDownloadStartMessage());
 				File downloadFile = null;
 				try {
 					first = !changeLogFile.exists();
@@ -163,7 +163,7 @@ public class Updater {
 						String fileName = downloadFile.getName();
 						String filePath = StringUtils.replace(downloadFile.getPath(), "\\", "/");
 						for (String message : Lang.getUpdateDownloadEndMessages(fileName, filePath, getSize(downloadFile.length()))) {
-							Utils.sendPluginMessage(plugin, message);
+							Utils.sendPluginMessage(message);
 						}
 					}
 				}
@@ -203,7 +203,7 @@ public class Updater {
 	public void sendCheckMessage(CommandSender sender) {
 		if(isUpperVersion() && !isError() && sender.isOp()) {
 			for (String message : Lang.getUpdateCheckMessages(getPluginName(), getLatestVersion(), getDetails())) {
-				Utils.sendPluginMessage(plugin, message);
+				Utils.sendPluginMessage(message);
 			}
 		}
 	}
@@ -212,7 +212,7 @@ public class Updater {
 		if(!isError()) {
 			isError = true;
 			for (String message : Lang.getUpdateErrorMessages(getPluginName(), getLatestVersion())) {
-				Utils.sendPluginMessage(plugin, message);
+				Utils.sendPluginMessage(message);
 			}
 		}
 	}

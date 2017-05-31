@@ -19,6 +19,11 @@ public class ScriptText extends SimpleMetadata {
 		remove(player, clickType.toString());
 	}
 
+	public boolean has(Player player, ClickType clickType) {
+		return has(player, clickType.toString());
+	}
+
+	@Override
 	public void removeAll(Player player) {
 		for (ClickType clickType : ClickType.values()) {
 			if (has(player, clickType)) {
@@ -27,10 +32,7 @@ public class ScriptText extends SimpleMetadata {
 		}
 	}
 
-	public boolean has(Player player, ClickType clickType) {
-		return has(player, clickType.toString());
-	}
-
+	@Override
 	public boolean hasAll(Player player) {
 		for (ClickType clickType : ClickType.values()) {
 			if (has(player, clickType)) {

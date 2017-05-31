@@ -16,10 +16,10 @@ public class ItemHand {
 	private String itemName;
 	private boolean isSuccess;
 
-	public ItemHand(int id, int amount, short damage, String itemName) {
-		this.id = id;
-		this.amount = amount;
-		this.damage = damage;
+	public ItemHand(String id, String amount, String damage, String itemName) {
+		this.id = Integer.parseInt(id);
+		this.amount = Integer.parseInt(amount);
+		this.damage = Short.parseShort(damage);
 		this.itemName = itemName != null ? StringUtils.replace(itemName, "&", "§") : itemName;
 	}
 

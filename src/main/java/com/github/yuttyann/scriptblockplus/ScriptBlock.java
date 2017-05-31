@@ -37,7 +37,7 @@ public class ScriptBlock extends JavaPlugin {
 		instance = this;
 		Files.reload(this);
 		if (!HookPlugins.hasVault()) {
-			Utils.sendPluginMessage(this, Lang.getNotVaultMessage());
+			Utils.sendPluginMessage(Lang.getNotVaultMessage());
 			Utils.disablePlugin(this);
 			return;
 		}
@@ -50,7 +50,7 @@ public class ScriptBlock extends JavaPlugin {
 			updater.load();
 			updater.check(null);
 		} catch (Exception e) {
-			Utils.sendPluginMessage(this, Lang.getUpdateErrorMessage());
+			Utils.sendPluginMessage(Lang.getUpdateErrorMessage());
 		}
 
 		mapManager = new MapManager(this);

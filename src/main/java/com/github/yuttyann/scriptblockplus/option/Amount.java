@@ -1,22 +1,22 @@
 package com.github.yuttyann.scriptblockplus.option;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
+import org.bukkit.Location;
+
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.ScriptData;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
 
 public class Amount {
 
 	private int amount;
-	private MapManager mapManager;
-	private BlockLocation location;
+	private ScriptBlock plugin;
+	private Location location;
 	private ScriptType scriptType;
 	private ScriptData scriptData;
 
-	public Amount(ScriptBlock plugin, String amount, BlockLocation location, ScriptType scriptType) {
+	public Amount(ScriptBlock plugin, String amount, Location location, ScriptType scriptType) {
+		this.plugin = plugin;
 		this.amount = Integer.parseInt(amount);
-		this.mapManager = plugin.getMapManager();
 		this.location = location;
 		this.scriptType = scriptType;
 		this.scriptData = new ScriptData(plugin, location, scriptType);
@@ -38,6 +38,6 @@ public class Amount {
 	public void remove() {
 		scriptData.remove();
 		scriptData.save();
-		mapManager.removeLocation(location, scriptType);
+		plugin.getMapManager().removeLocation(location, scriptType);
 	}
 }

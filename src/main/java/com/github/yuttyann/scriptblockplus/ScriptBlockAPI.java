@@ -21,6 +21,8 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * スクリプトの座標を設定する。
+	 * <br>
+	 * ただし、別の座標に切り替える機能であり保存場所を変更するわけではないです。
 	 * @param location 座標
 	 */
 	public void setLocation(Location location);
@@ -130,6 +132,7 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * 指定した位置のスクリプトを上書きする。
+	 * @param index 位置
 	 * @param script スクリプト
 	 */
 	public void setScript(int index, String script);
@@ -142,6 +145,7 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * 指定した位置にスクリプトを追加する。
+	 * @param index 位置
 	 * @param script スクリプト
 	 */
 	public void addScript(int index, String script);

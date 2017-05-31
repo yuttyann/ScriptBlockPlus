@@ -10,7 +10,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
+import org.bukkit.Location;
+
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
@@ -97,20 +99,19 @@ public class MapManager {
 			cooldownScripts = (Map<ScriptType, Map<String, Map<UUID, int[]>>>) cooldownData;
 			for (ScriptType scriptType : cooldownScripts.keySet()) {
 				Map<String, Map<UUID, int[]>> cooldownMap = cooldownScripts.get(scriptType);
-				for (Entry<String, Map<UUID, int[]>> entry : cooldownMap.entrySet()) {
-					String fullCoords = entry.getKey();
-					for (Entry<UUID, int[]> entry2 : cooldownMap.get(fullCoords).entrySet()) {
-						int[] params = entry2.getValue();
+				for (String fullCoords : cooldownMap.keySet()) {
+					for (Entry<UUID, int[]> entry : cooldownMap.get(fullCoords).entrySet()) {
+						int[] params = entry.getValue();
 						Integer result = (params[0] * 3600) + (params[1] * 60) + params[2];
-						new Cooldown(plugin, result.toString()).run(scriptType, entry2.getKey(), fullCoords);
+						new Cooldown(plugin, result.toString()).run(scriptType, entry.getKey(), fullCoords);
 					}
 				}
 			}
 		}
 	}
 
-	public void addLocation(BlockLocation location, ScriptType scriptType) {
-		String fullCoords = location.getFullCoords();
+	public void addLocation(Location location, ScriptType scriptType) {
+		String fullCoords = BlockCoords.getFullCoords(location);
 		Set<String> locationSet = scriptLocation.get(scriptType);
 		if (locationSet == null) {
 			locationSet = new HashSet<String>();
@@ -122,8 +123,8 @@ public class MapManager {
 		removeTimes(location, scriptType);
 	}
 
-	public void removeLocation(BlockLocation location, ScriptType scriptType) {
-		String fullCoords = location.getFullCoords();
+	public void removeLocation(Location location, ScriptType scriptType) {
+		String fullCoords = BlockCoords.getFullCoords(location);
 		Set<String> locationSet = scriptLocation.get(scriptType);
 		if (locationSet == null) {
 			locationSet = new HashSet<String>();
@@ -135,16 +136,16 @@ public class MapManager {
 		removeTimes(location, scriptType);
 	}
 
-	public boolean containsLocation(BlockLocation location, ScriptType scriptType) {
+	public boolean containsLocation(Location location, ScriptType scriptType) {
 		Set<String> locationSet = scriptLocation.get(scriptType);
 		if (locationSet == null) {
 			locationSet = new HashSet<String>();
 		}
-		return locationSet.contains(location.getFullCoords());
+		return locationSet.contains(BlockCoords.getFullCoords(location));
 	}
 
-	public void removeTimes(BlockLocation location, ScriptType scriptType) {
-		String fullCoords = location.getFullCoords();
+	public void removeTimes(Location location, ScriptType scriptType) {
+		String fullCoords = BlockCoords.getFullCoords(location);
 		Map<String, List<UUID>> delayFullCoords = delayScripts.get(scriptType);
 		Map<String, Map<UUID, int[]>> cooldownFullCoords = cooldownScripts.get(scriptType);
 		if (delayFullCoords != null && delayFullCoords.containsKey(fullCoords)) {

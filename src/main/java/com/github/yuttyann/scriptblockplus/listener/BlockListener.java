@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -15,7 +16,6 @@ import org.bukkit.material.Lever;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.TrapDoor;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.Metadata;
@@ -29,7 +29,7 @@ import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.metadata.PlayerClick;
-import com.github.yuttyann.scriptblockplus.metadata.SBMetadata;
+import com.github.yuttyann.scriptblockplus.metadata.ScriptFile;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -47,12 +47,12 @@ public class BlockListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		ItemStack item = Utils.getItemInHand(player);
-		if (Utils.checkItem(item, Material.BLAZE_ROD, "§dScript Editor") && Permission.has(Permission.SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR, player)) {
+		if (Utils.checkItem(item, Material.BLAZE_ROD, Lang.ITEM_SCRIPTEDITOR) && Permission.has(Permission.SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR, player)) {
 			event.setCancelled(true);
 			return;
 		}
 		Block block = event.getBlock();
-		BlockLocation location = BlockLocation.fromLocation(block.getLocation());
+		Location location = block.getLocation();
 		if (mapManager.containsLocation(location, ScriptType.BREAK)) {
 			ScriptBlockBreakEvent breakEvent = new ScriptBlockBreakEvent(player, location.getBlock(), item, location);
 			Utils.callEvent(breakEvent);
@@ -60,7 +60,7 @@ public class BlockListener implements Listener {
 				return;
 			}
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_BREAK_USE, player)) {
-				Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
+				Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
 				return;
 			}
 			new ScriptManager(plugin, location, ScriptType.BREAK).scriptExec(player);
@@ -70,7 +70,7 @@ public class BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockInteract(BlockInteractEvent event) {
 		Block block = event.getBlock();
-		BlockLocation location = BlockLocation.fromLocation(block.getLocation());
+		Location location = block.getLocation();
 		if (!scriptSetting(event, event.getAction(), block, location)) {
 			if (Utils.isCB19orLater() && !isHand(event.getHand())) {
 				return;
@@ -86,7 +86,7 @@ public class BlockListener implements Listener {
 					return;
 				}
 				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_INTERACT_USE, player)) {
-					Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
+					Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
 					return;
 				}
 				MaterialData data = block.getState().getData();
@@ -98,11 +98,11 @@ public class BlockListener implements Listener {
 		}
 	}
 
-	private boolean scriptSetting(BlockInteractEvent event, Action action, Block block, BlockLocation location) {
+	private boolean scriptSetting(BlockInteractEvent event, Action action, Block block, Location location) {
 		Player player = event.getPlayer();
 		if (Utils.checkItem(event.getItem(), Material.BLAZE_ROD, "§dScript Editor")) {
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR, player)) {
-				Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
+				Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
 				return false;
 			}
 			switch (action) {
@@ -118,9 +118,10 @@ public class BlockListener implements Listener {
 				return true;
 			case RIGHT_CLICK_BLOCK:
 				if (player.isSneaking()) {
-					ScriptFileManager fileManager = SBMetadata.getScriptFile().get(player);
+					ScriptFile scriptFile = Metadata.getScriptFile();
+					ScriptFileManager fileManager = scriptFile.get(player);
 					if (fileManager == null) {
-						Utils.sendPluginMessage(plugin, player, Lang.getErrorScriptFileCheckMessage());
+						Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 						break;
 					}
 					fileManager.scriptPaste(player, location);
@@ -130,11 +131,11 @@ public class BlockListener implements Listener {
 				event.setCancelled(true);
 				return true;
 			default:
-				SBMetadata.remove(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+				Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
 				return false;
 			}
 		}
-		PlayerClick playerClick = SBMetadata.getPlayerClick();
+		PlayerClick playerClick = Metadata.getPlayerClick();
 		for (ClickType type : ClickType.values()) {
 			if (playerClick.has(player, type)) {
 				String[] split = StringUtils.split(type.name(), "_");
@@ -147,14 +148,14 @@ public class BlockListener implements Listener {
 		return false;
 	}
 
-	private boolean clickScript(Player player, String type, BlockLocation location, ClickType clickType, ScriptType scriptType) {
+	private boolean clickScript(Player player, String type, Location location, ClickType clickType, ScriptType scriptType) {
 		ScriptFileManager scriptFileManager = new ScriptFileManager(plugin, location, scriptType);
 		switch (type) {
 		case "CREATE":
-			scriptFileManager.scriptCreate(player, SBMetadata.getScriptText().get(player, clickType));
+			scriptFileManager.scriptCreate(player, Metadata.getScriptText().get(player, clickType));
 			return true;
 		case "ADD":
-			scriptFileManager.scriptAdd(player, SBMetadata.getScriptText().get(player, clickType));
+			scriptFileManager.scriptAdd(player, Metadata.getScriptText().get(player, clickType));
 			return true;
 		case "REMOVE":
 			scriptFileManager.scriptRemove(player);

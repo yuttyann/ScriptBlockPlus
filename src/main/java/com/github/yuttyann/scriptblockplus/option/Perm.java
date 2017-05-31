@@ -28,7 +28,7 @@ public class Perm {
 		return perm;
 	}
 
-	public boolean playerPerm(Player player) {
+	public boolean playerPermission(Player player) {
 		switch (permType) {
 		case CHECK:
 			if (world != null) {

@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.listener;
 
 import java.util.UUID;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,11 +10,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Metadata;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.metadata.SBMetadata;
 
 public class PlayerJoinQuitListener implements Listener {
 
@@ -30,8 +30,8 @@ public class PlayerJoinQuitListener implements Listener {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueId();
 		if (!mapManager.getOldLocation().containsKey(uuid)) {
-			BlockLocation location = BlockLocation.fromLocation(player.getLocation());
-			mapManager.getOldLocation().put(uuid, location.subtract(0.0D, 1.0D, 0.0D).getFullCoords());
+			Location location = player.getLocation().clone();
+			mapManager.getOldLocation().put(uuid, BlockCoords.getFullCoords(location.subtract(0.0D, 1.0D, 0.0D)));
 		}
 		plugin.getUpdater().sendCheckMessage(player);
 	}
@@ -40,6 +40,6 @@ public class PlayerJoinQuitListener implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		mapManager.removeEvents(player.getUniqueId());
-		SBMetadata.remove(player, Metadata.PLAYERCLICK, Metadata.SCRIPTFILE, Metadata.SCRIPTTEXT);
+		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTFILE, Metadata.SCRIPTTEXT);
 	}
 }

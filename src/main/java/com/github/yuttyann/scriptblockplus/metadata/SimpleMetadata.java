@@ -2,19 +2,24 @@ package com.github.yuttyann.scriptblockplus.metadata;
 
 import java.util.List;
 
+import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.NumberConversions;
 
-public class SimpleMetadata {
+public abstract class SimpleMetadata {
 
 	private Plugin plugin;
 
 	public SimpleMetadata(Plugin plugin) {
 		this.plugin = plugin;
 	}
+
+	public abstract void removeAll(Player player);
+
+	public abstract boolean hasAll(Player player);
 
 	public void set(Metadatable metadatable, String key, Object value) {
 		metadatable.setMetadata(key, new FixedMetadataValue(plugin, value));

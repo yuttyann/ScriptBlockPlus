@@ -45,14 +45,6 @@ public class FileUtils {
 		return detectCharset(file, Charset.forName(UTF8)) != null;
 	}
 
-	public static boolean isMS932(File file) {
-		return detectCharset(file, Charset.forName(MS932)) != null;
-	}
-
-	public static boolean isASCII(File file) {
-		return detectCharset(file, Charset.forName(ASCII)) != null;
-	}
-
 	public static void fileEncode(Plugin plugin, File file) {
 		if (!file.exists()) {
 			return;

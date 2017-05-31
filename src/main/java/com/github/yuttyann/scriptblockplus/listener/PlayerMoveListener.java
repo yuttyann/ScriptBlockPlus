@@ -2,13 +2,14 @@ package com.github.yuttyann.scriptblockplus.listener;
 
 import java.util.UUID;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import com.github.yuttyann.scriptblockplus.BlockLocation;
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
@@ -32,8 +33,8 @@ public class PlayerMoveListener implements Listener {
 	public void onPlayerMoveEvent(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueId();
-		BlockLocation location = BlockLocation.fromLocation(player.getLocation()).subtract(0.0D, 1.0D, 0.0D);
-		String fullCoords = location.getFullCoords();
+		Location location = player.getLocation().clone().subtract(0.0D, 1.0D, 0.0D);
+		String fullCoords = BlockCoords.getFullCoords(location);
 		if (mapManager.getOldLocation().containsKey(uuid) && mapManager.getOldLocation().get(uuid).equals(fullCoords)) {
 			return;
 		}
@@ -45,7 +46,7 @@ public class PlayerMoveListener implements Listener {
 				return;
 			}
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_WALK_USE, player)) {
-				Utils.sendPluginMessage(plugin, player, Lang.getNotPermissionMessage());
+				Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
 				return;
 			}
 			new ScriptManager(plugin, location, ScriptType.WALK).scriptExec(player);
