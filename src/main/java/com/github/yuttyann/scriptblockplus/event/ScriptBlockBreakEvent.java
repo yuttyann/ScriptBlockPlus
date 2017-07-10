@@ -9,25 +9,14 @@ import org.bukkit.inventory.ItemStack;
 
 public class ScriptBlockBreakEvent extends ScriptBlockEvent implements Cancellable {
 
-	private Player player;
-	private Block block;
 	private ItemStack item;
 	private Location location;
 	private boolean cancelled;
 
 	public ScriptBlockBreakEvent(Player player, Block block, ItemStack item, Location location) {
-		this.player = player;
-		this.block = block;
+		super(player, block);
 		this.item = item;
 		this.location = location;
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
-
-	public Block getBlock() {
-		return block;
 	}
 
 	public ItemStack getItem() {
@@ -61,6 +50,6 @@ public class ScriptBlockBreakEvent extends ScriptBlockEvent implements Cancellab
 	}
 
 	public void setCancelled(boolean cancel) {
-		this.cancelled = cancel;
+		cancelled = cancel;
 	}
 }

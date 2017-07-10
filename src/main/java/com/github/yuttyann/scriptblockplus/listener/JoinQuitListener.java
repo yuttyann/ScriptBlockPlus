@@ -15,12 +15,12 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Metadata;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 
-public class PlayerJoinQuitListener implements Listener {
+public class JoinQuitListener implements Listener {
 
 	private ScriptBlock plugin;
 	private MapManager mapManager;
 
-	public PlayerJoinQuitListener(ScriptBlock plugin) {
+	public JoinQuitListener(ScriptBlock plugin) {
 		this.plugin = plugin;
 		this.mapManager = plugin.getMapManager();
 	}
@@ -38,8 +38,6 @@ public class PlayerJoinQuitListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		mapManager.removeEvents(player.getUniqueId());
-		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTFILE, Metadata.SCRIPTTEXT);
+		Metadata.removeAll(event.getPlayer(), Metadata.PLAYERCLICK, Metadata.SCRIPTFILE, Metadata.SCRIPTTEXT);
 	}
 }

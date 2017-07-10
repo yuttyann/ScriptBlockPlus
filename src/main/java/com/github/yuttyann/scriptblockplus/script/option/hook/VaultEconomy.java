@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.option.hook;
+package com.github.yuttyann.scriptblockplus.script.option.hook;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -17,9 +17,6 @@ public class VaultEconomy {
 	}
 
 	protected static VaultEconomy setupEconomy() {
-		if (!HookPlugins.hasVault()) {
-			return null;
-		}
 		ServicesManager services = Bukkit.getServer().getServicesManager();
 		RegisteredServiceProvider<Economy> provider = services.getRegistration(Economy.class);
 		if (provider != null) {

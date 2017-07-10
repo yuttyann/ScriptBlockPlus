@@ -1,45 +1,57 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import com.github.yuttyann.scriptblockplus.script.exception.ScriptException;
 
 public class StringUtils {
 
-	public static String[] split(String text, String delimiter) {
-		return split(text, delimiter, 0);
+	public static List<String> getScripts(String script) throws ScriptException {
+		char[] chars = script.toCharArray();
+		if (chars[0] != '[' && chars[chars.length - 1] != ']') {
+			return Arrays.asList(script);
+		}
+		for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
+			if (chars[i] == '[') {
+				j++;
+			} else if (chars[i] == ']') {
+				k++;
+			}
+			if (i == (chars.length - 1) && j != k) {
+				throw new ScriptException("Failed to load the script.");
+			}
+		}
+		List<String> result = new ArrayList<String>();
+		for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
+			if (chars[i] == '[') {
+				if (j == 0) {
+					k = i;
+				}
+				j++;
+			} else if (chars[i] == ']') {
+				j--;
+				if (j == 0) {
+					result.add(script.substring(k + 1, i));
+				}
+			}
+		}
+		return result;
 	}
 
-	public static String[] split(String text, String delimiter, int limit) {
+	public static String[] split(String text, String delimiter) {
 		List<String> result = new ArrayList<String>();
-		int delimiterLength = delimiter.length();
-		if (limit == 0) {
-			limit = text.length();
-		}
-		if (limit > 0) {
-			int start = 0;
-			int end = 0;
-			for (int i = 1; i < limit; i++) {
-				end = text.indexOf(delimiter, start);
-				if (end == -1) {
-					break;
-				}
-				result.add(text.substring(start, end));
-				start = end + delimiterLength;
+		int start = 0, end = 0;
+		for (int i = 1; i < text.length(); i++) {
+			end = text.indexOf(delimiter, start);
+			if (end == -1) {
+				break;
 			}
-			result.add(text.substring(start));
-		} else {
-			int start = 0;
-			int end = text.length();
-			for (int i = -1; i > limit; i--) {
-				start = text.lastIndexOf(delimiter, end - 1);
-				if (start == -1) {
-					break;
-				}
-				result.add(text.substring(start + delimiterLength, end));
-				end = start;
-			}
-			result.add(text.substring(0, end));
+			result.add(text.substring(start, end));
+			start = end + delimiter.length();
 		}
+		result.add(text.substring(start));
 		return result.toArray(new String[result.size()]);
 	}
 

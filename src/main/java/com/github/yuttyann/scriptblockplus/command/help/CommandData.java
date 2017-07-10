@@ -82,10 +82,9 @@ public class CommandData {
 			return true;
 		}
 		for (String permission : permissions) {
-			if (!Permission.has(permission, sender)) {
-				continue;
+			if (Permission.has(permission, sender)) {
+				return true;
 			}
-			return true;
 		}
 		return false;
 	}

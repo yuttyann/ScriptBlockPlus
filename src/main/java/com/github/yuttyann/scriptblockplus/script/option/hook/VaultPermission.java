@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.option.hook;
+package com.github.yuttyann.scriptblockplus.script.option.hook;
 
 import net.milkbowl.vault.permission.Permission;
 
@@ -16,9 +16,6 @@ public class VaultPermission {
 	}
 
 	protected static VaultPermission setupPermission() {
-		if (!HookPlugins.hasVault()) {
-			return null;
-		}
 		ServicesManager services = Bukkit.getServer().getServicesManager();
 		RegisteredServiceProvider<Permission> provider = services.getRegistration(Permission.class);
 		if (provider != null) {

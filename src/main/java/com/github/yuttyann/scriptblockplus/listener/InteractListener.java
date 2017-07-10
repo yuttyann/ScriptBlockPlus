@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,19 +25,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class InteractListener implements Listener {
 
 	private ScriptBlock plugin;
-	private MapManager mapManager;
+	private List<UUID> interactEvents;
 
 	public InteractListener(ScriptBlock plugin) {
 		this.plugin = plugin;
-		this.mapManager = plugin.getMapManager();
+		this.interactEvents = new ArrayList<UUID>();
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -53,7 +54,7 @@ public class InteractListener implements Listener {
 			return;
 		}
 		Block block = blocks.get(1);
-		if (!isPlayerInRange(player, block.getLocation(), 5.22D) || mapManager.removeEvents(player.getUniqueId())) {
+		if (!isPlayerInRange(player, block.getLocation(), 5.22D) || removeInteractEvent(player.getUniqueId())) {
 			return;
 		}
 		Action action = Action.LEFT_CLICK_BLOCK;
@@ -76,11 +77,11 @@ public class InteractListener implements Listener {
 		}
 		if (isAdventure) {
 			final UUID uuid = player.getUniqueId();
-			mapManager.addEvents(uuid);
+			addInteractEvent(uuid);
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					mapManager.removeEvents(uuid);
+					removeInteractEvent(uuid);
 				}
 			}.runTaskLater(plugin, 5);
 		}
@@ -97,7 +98,7 @@ public class InteractListener implements Listener {
 		if (event.getNewGameMode() == GameMode.ADVENTURE) {
 			return;
 		}
-		mapManager.removeEvents(player.getUniqueId());
+		removeInteractEvent(player.getUniqueId());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -109,11 +110,17 @@ public class InteractListener implements Listener {
 		}
 	}
 
+	private boolean addInteractEvent(UUID uuid) {
+		return !interactEvents.contains(uuid) && interactEvents.add(uuid);
+	}
+
+	private boolean removeInteractEvent(UUID uuid) {
+		return interactEvents.contains(uuid) && interactEvents.remove(uuid);
+	}
+
 	private boolean isPlayerInRange(Player target, Location location, double radius) {
 		World world = location.getWorld();
-		location.setX(location.getBlockX() + 0.5D);
-		location.setY(location.getBlockY() + 0.5D);
-		location.setZ(location.getBlockZ() + 0.5D);
+		location = BlockCoords.getAllCenter(location);
 		int minX = floor((location.getX() - radius) / 16.0D);
 		int minZ = floor((location.getZ() - radius) / 16.0D);
 		int maxX = floor((location.getX() + radius) / 16.0D);
@@ -131,15 +138,11 @@ public class InteractListener implements Listener {
 					if (entityLocation.getWorld() != location.getWorld()) {
 						return false;
 					}
-					return entityLocation.distanceSquared(location) < square(radius);
+					return entityLocation.distanceSquared(location) < radius * radius;
 				}
 			}
 		}
 		return false;
-	}
-
-	private double square(double num) {
-		return num * num;
 	}
 
 	private int floor(double num) {

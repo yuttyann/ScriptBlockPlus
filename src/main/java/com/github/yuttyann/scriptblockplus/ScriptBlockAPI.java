@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
 /**
  * @author ゆっちゃん
@@ -17,7 +18,13 @@ public interface ScriptBlockAPI {
 	 * 設定されているスクリプトを実行する。
 	 * @param player プレイヤー
 	 */
-	public void scriptExec(Player player);
+	public boolean scriptRead(Player player);
+
+	/**
+	 * 指定した位置から設定されているスクリプトを実行する。
+	 * @param player プレイヤー
+	 */
+	public boolean scriptRead(int index, Player player);
 
 	/**
 	 * スクリプトの座標を設定する。
@@ -49,6 +56,33 @@ public interface ScriptBlockAPI {
 	 * スクリプトを保存する。
 	 */
 	public void save();
+
+	/**
+	 * オプションを追加する。
+	 * 追加するオプションクラスには"BaseOption"を継承してください。
+	 * @param option オプション
+	 */
+	public void addOption(BaseOption option);
+
+	/**
+	 * 指定した位置にオプションを追加する。
+	 * 追加するオプションクラスには"BaseOption"を継承してください。
+	 * @param index 位置
+	 * @param option オプション
+	 */
+	public void addOption(int index, BaseOption option);
+
+	/**
+	 * オプションを削除する。
+	 * @param option オプション
+	 */
+	public void removeOption(BaseOption option);
+
+	/**
+	 * 指定した位置のオプションを削除する。
+	 * @param index 位置
+	 */
+	public void removeOption(int index);
 
 	/**
 	 * スクリプトの作者を取得する。

@@ -605,7 +605,7 @@ public class Lang {
 		String minCoords = BlockCoords.getCoords(min);
 		String maxCoords = BlockCoords.getCoords(max);
 		String consoleWorldEditRemoveMessage = instance.consoleWorldEditRemoveMessage;
-		consoleWorldEditRemoveMessage = replace(consoleWorldEditRemoveMessage, "%scripttype%", scriptType.toString());
+		consoleWorldEditRemoveMessage = replace(consoleWorldEditRemoveMessage, "%scripttype%", scriptType);
 		consoleWorldEditRemoveMessage = replace(consoleWorldEditRemoveMessage, "%world%", world);
 		consoleWorldEditRemoveMessage = replace(consoleWorldEditRemoveMessage, "%mincoords%", minCoords);
 		consoleWorldEditRemoveMessage = replace(consoleWorldEditRemoveMessage, "%maxcoords%", maxCoords);

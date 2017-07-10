@@ -2,16 +2,14 @@ package com.github.yuttyann.scriptblockplus.utils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -22,12 +20,11 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import com.github.yuttyann.scriptblockplus.PlayerSelector;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.Files;
 
 public class Utils {
-
-	private static final String REGEX_UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
 
 	private static String serverVersion;
 	private static Boolean isWindows;
@@ -108,6 +105,10 @@ public class Utils {
 		return serverVersion;
 	}
 
+	public static int getTime(int field) {
+		return Calendar.getInstance().get(field);
+	}
+
 	public static String getRandomColor() {
 		return ChatColor.getByChar(Integer.toHexString(new Random().nextInt(16))).toString();
 	}
@@ -145,12 +146,28 @@ public class Utils {
 		}
 	}
 
+	public static void dispatchCommand(Player player, String command, Location location) {
+		if (command.startsWith("/")) {
+			command = command.substring(1);
+		}
+		String pattern = PlayerSelector.getCommandBlockPattern(command);
+		if (pattern != null) {
+			Player[] players = PlayerSelector.getPlayers(location, pattern);
+			if (players != null) {
+				for (Player p : players) {
+					Bukkit.dispatchCommand(player, StringUtils.replace(command, pattern, p.getName()));
+				}
+			}
+		} else {
+			Bukkit.dispatchCommand(player, command);
+		}
+	}
+
 	public static ChatColor getStartColor(String text) {
 		for (ChatColor color : ChatColor.values()) {
-			if (!text.startsWith(color.toString())) {
-				continue;
+			if (text.startsWith(color.toString())) {
+				return color;
 			}
-			return color;
 		}
 		return ChatColor.WHITE;
 	}
@@ -158,6 +175,14 @@ public class Utils {
 	@SuppressWarnings("deprecation")
 	public static void updateInventory(Player player) {
 		player.updateInventory();
+	}
+
+	@SuppressWarnings("deprecation")
+	public static String getId(String source) {
+		if (source.matches("\\A[-]?[0-9]+\\z")) {
+			return source;
+		}
+		return String.valueOf(Material.getMaterial(source.toUpperCase()).getId());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -232,12 +257,12 @@ public class Utils {
 		} else if (uuid_or_name instanceof String) {
 			String str = uuid_or_name.toString();
 			if (isUUID(str)) {
-				uuid_or_name = UUID.fromString(str);
 				isUUID = true;
+				uuid_or_name = UUID.fromString(str);
 			}
 		}
 		Object value;
-		for (Player player : getOnlinePlayers()) {
+		for (Player player : Bukkit.getOnlinePlayers()) {
 			if (isUUID) {
 				value = player.getUniqueId();
 			} else {
@@ -256,13 +281,14 @@ public class Utils {
 			isUUID = true;
 		} else if (uuid_or_name instanceof String) {
 			String str = uuid_or_name.toString();
-			if (isUUID = isUUID(str)) {
+			if (isUUID(str)) {
+				isUUID = true;
 				uuid_or_name = UUID.fromString(str);
 			}
 		}
 		Object value;
 		boolean isCB175orLater = isCB175orLater();
-		for (OfflinePlayer player : getOfflinePlayers()) {
+		for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
 			if (isUUID) {
 				if (isCB175orLater) {
 					value = player.getUniqueId();
@@ -280,19 +306,6 @@ public class Utils {
 	}
 
 	public static boolean isUUID(String uuid) {
-		return uuid.matches(REGEX_UUID);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static List<Player> getOnlinePlayers() {
-		Object players = Bukkit.getOnlinePlayers();
-		if (players instanceof Collection) {
-			return new ArrayList<Player>((Collection<? extends Player>) players);
-		}
-		return new ArrayList<Player>(Arrays.asList((Player[]) players));
-	}
-
-	public static List<OfflinePlayer> getOfflinePlayers() {
-		return new ArrayList<OfflinePlayer>(Arrays.asList(Bukkit.getOfflinePlayers()));
+		return uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}");
 	}
 }

@@ -14,13 +14,14 @@ import com.github.yuttyann.scriptblockplus.command.help.CommandData;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Lang;
-import com.github.yuttyann.scriptblockplus.listener.BlockListener;
 import com.github.yuttyann.scriptblockplus.listener.InteractListener;
-import com.github.yuttyann.scriptblockplus.listener.PlayerJoinQuitListener;
-import com.github.yuttyann.scriptblockplus.listener.PlayerMoveListener;
+import com.github.yuttyann.scriptblockplus.listener.JoinQuitListener;
+import com.github.yuttyann.scriptblockplus.listener.ScriptBreakListener;
+import com.github.yuttyann.scriptblockplus.listener.ScriptInteractListener;
+import com.github.yuttyann.scriptblockplus.listener.ScriptWalkListener;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptBlockManager;
-import com.github.yuttyann.scriptblockplus.option.hook.HookPlugins;
+import com.github.yuttyann.scriptblockplus.script.option.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptBlock extends JavaPlugin {
@@ -61,9 +62,10 @@ public class ScriptBlock extends JavaPlugin {
 		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 
 		getServer().getPluginManager().registerEvents(new InteractListener(this), this);
-		getServer().getPluginManager().registerEvents(new BlockListener(this), this);
-		getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
-		getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
+		getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
+		getServer().getPluginManager().registerEvents(new ScriptInteractListener(this), this);
+		getServer().getPluginManager().registerEvents(new ScriptBreakListener(this), this);
+		getServer().getPluginManager().registerEvents(new ScriptWalkListener(this), this);
 	}
 
 	@Override

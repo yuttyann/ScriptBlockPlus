@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.listener;
 
 import java.util.UUID;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,32 +14,28 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
 import com.github.yuttyann.scriptblockplus.file.Lang;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class PlayerMoveListener implements Listener {
+public class ScriptWalkListener extends ScriptManager implements Listener {
 
-	private ScriptBlock plugin;
-	private MapManager mapManager;
-
-	public PlayerMoveListener(ScriptBlock plugin) {
-		this.plugin = plugin;
-		this.mapManager = plugin.getMapManager();
+	public ScriptWalkListener(ScriptBlock plugin) {
+		super(plugin, ScriptType.WALK);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerMoveEvent(PlayerMoveEvent event) {
+	public void onPlayerMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueId();
-		Location location = player.getLocation().clone().subtract(0.0D, 1.0D, 0.0D);
-		String fullCoords = BlockCoords.getFullCoords(location);
+		BlockCoords blockCoords = new BlockCoords(player.getLocation().clone().subtract(0.0D, 1.0D, 0.0D));
+		String fullCoords = blockCoords.getFullCoords();
 		if (mapManager.getOldLocation().containsKey(uuid) && mapManager.getOldLocation().get(uuid).equals(fullCoords)) {
 			return;
 		}
 		mapManager.getOldLocation().put(uuid, fullCoords);
-		if (mapManager.containsLocation(location, ScriptType.WALK)) {
-			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(player, location.getBlock(), Utils.getItemInHand(player), location);
+		if (mapManager.containsLocation(blockCoords, scriptType)) {
+			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(player, blockCoords.getBlock(), Utils.getItemInHand(player), blockCoords);
 			Utils.callEvent(walkEvent);
 			if (walkEvent.isCancelled()) {
 				return;
@@ -49,7 +44,7 @@ public class PlayerMoveListener implements Listener {
 				Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
 				return;
 			}
-			new ScriptManager(plugin, location, ScriptType.WALK).scriptExec(player);
+			new ScriptRead(this, player, blockCoords).read(0);
 		}
 	}
 }

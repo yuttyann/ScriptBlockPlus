@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
-import com.github.yuttyann.scriptblockplus.manager.ScriptFileManager;
+import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 
 public class ScriptFile extends SimpleMetadata {
 
@@ -12,7 +12,7 @@ public class ScriptFile extends SimpleMetadata {
 		super(plugin);
 	}
 
-	public void set(Player player, ScriptType scriptType, ScriptFileManager value) {
+	public void set(Player player, ScriptType scriptType, ScriptEdit value) {
 		set(player, getType(scriptType), value);
 	}
 
@@ -43,11 +43,11 @@ public class ScriptFile extends SimpleMetadata {
 		return false;
 	}
 
-	public ScriptFileManager get(Player player) {
+	public ScriptEdit get(Player player) {
 		for (ScriptType scriptType : ScriptType.values()) {
 			Object value = get(player, getType(scriptType));
 			if (value != null) {
-				return (ScriptFileManager) value;
+				return (ScriptEdit) value;
 			}
 		}
 		return null;

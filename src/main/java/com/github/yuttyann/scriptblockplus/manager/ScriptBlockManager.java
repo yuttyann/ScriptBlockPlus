@@ -9,56 +9,65 @@ import java.util.Map.Entry;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
-import com.github.yuttyann.scriptblockplus.file.ScriptData;
+import com.github.yuttyann.scriptblockplus.script.ScriptData;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
-public class ScriptBlockManager extends ScriptData implements ScriptBlockAPI {
+public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI {
 
-	private ScriptBlock plugin;
-	private MapManager mapManager;
+	private ScriptData scriptData;
+	private BlockCoords blockCoords;
 	private Map<ScriptType, List<Location>> timerTemps;
 	private Map<Boolean, Map<Location, ScriptType>> scriptTemps;
 
 	public ScriptBlockManager(ScriptBlock plugin, Location location, ScriptType scriptType) {
-		super(plugin, location, scriptType);
-		this.plugin = plugin;
-		this.mapManager = plugin.getMapManager();
+		super(plugin, scriptType);
+		this.scriptData = new ScriptData(location, scriptType);
+		this.blockCoords = new BlockCoords(scriptData.getLocation());
 		this.timerTemps = new HashMap<ScriptType, List<Location>>();
 		this.scriptTemps = new HashMap<Boolean, Map<Location, ScriptType>>();
 	}
 
 	@Override
-	public void scriptExec(Player player) {
-		new ScriptManager(plugin, getLocation(), getScriptType()).scriptExec(player);
+	public boolean scriptRead(Player player) {
+		return new ScriptRead(this, player, blockCoords).read(0);
+	}
+
+	@Override
+	public boolean scriptRead(int index, Player player) {
+		return new ScriptRead(this, player, blockCoords).read(index);
 	}
 
 	@Override
 	public void setLocation(Location location) {
 		timerTemps.clear();
 		scriptTemps.clear();
-		super.setLocation(location);
+		scriptData.setLocation(location);
+		blockCoords = new BlockCoords(scriptData.getLocation());
 	}
 
 	@Override
 	public Location getLocation() {
-		return super.getLocation();
+		return scriptData.getLocation();
 	}
 
 	@Override
 	public ScriptType getScriptType() {
-		return super.getScriptType();
+		return scriptData.getScriptType();
 	}
 
 	@Override
 	public boolean checkPath() {
-		return super.checkPath();
+		return scriptData.checkPath();
 	}
 
 	@Override
 	public void save() {
-		super.save();
+		scriptData.save();
 		for (Entry<ScriptType, List<Location>> timerEntry : timerTemps.entrySet()) {
 			ScriptType scriptType = timerEntry.getKey();
 			for (Location blockLocation : timerEntry.getValue()) {
@@ -79,114 +88,134 @@ public class ScriptBlockManager extends ScriptData implements ScriptBlockAPI {
 	}
 
 	@Override
+	public void addOption(BaseOption option) {
+		getOptionManager().addOption(option);
+	}
+
+	@Override
+	public void addOption(int index, BaseOption option) {
+		getOptionManager().addOption(index, option);
+	}
+
+	@Override
+	public void removeOption(BaseOption option) {
+		getOptionManager().removeOption(option);
+	}
+
+	@Override
+	public void removeOption(int index) {
+		getOptionManager().removeOption(index);
+	}
+
+	@Override
 	public String getAuthor() {
-		return super.getAuthor();
+		return scriptData.getAuthor();
 	}
 
 	@Override
 	public List<String> getAuthors(boolean isName) {
-		return super.getAuthors(isName);
+		return scriptData.getAuthors(isName);
 	}
 
 	@Override
 	public String getLastEdit() {
-		return super.getLastEdit();
+		return scriptData.getLastEdit();
 	}
 
 	@Override
 	public int getAmount() {
-		return super.getAmount();
+		return scriptData.getAmount();
 	}
 
 	@Override
 	public List<String> getScripts() {
-		return super.getScripts();
+		return scriptData.getScripts();
 	}
 
 	@Override
 	public void copyScripts(Location target, boolean overwrite) {
-		super.copyScripts(target, overwrite);
+		scriptData.copyScripts(target, overwrite);
 		putScriptMap(true, target, getScriptType());
 	}
 
 	@Override
 	public void setAuthor(Player player) {
-		super.setAuthor(player);
+		scriptData.setAuthor(player);
 	}
 
 	@Override
 	public void addAuthor(Player player) {
-		super.addAuthor(player);
+		scriptData.addAuthor(player);
 	}
 
 	@Override
 	public void removeAuthor(Player player) {
-		super.removeAuthor(player);
+		scriptData.removeAuthor(player);
 	}
 
 	@Override
 	public void setLastEdit() {
-		super.setLastEdit();
+		scriptData.setLastEdit();
 	}
 
 	@Override
 	public void addAmount(int amount) {
-		super.addAmount(amount);
+		scriptData.addAmount(amount);
 	}
 
 	@Override
 	public void subtractAmount(int amount) {
-		super.subtractAmount(amount);
+		scriptData.subtractAmount(amount);
 	}
 
 	@Override
 	public void setScripts(List<String> scripts) {
-		super.setScripts(scripts);
-		putScriptMap(true, super.getLocation(), getScriptType());
+		scriptData.setScripts(scripts);
+		putScriptMap(true, scriptData.getLocation(), getScriptType());
 	}
 
 	@Override
 	public void setScript(int index, String script) {
-		super.setScript(index, script);
+		scriptData.setScript(index, script);
 	}
 
 	@Override
 	public void addScript(String script) {
-		super.addScript(script);
-		putTimerMap(super.getLocation(), getScriptType());
+		scriptData.addScript(script);
+		putTimerMap(scriptData.getLocation(), getScriptType());
 	}
 
 	@Override
 	public void addScript(int index, String script) {
-		super.addScript(index, script);
-		putTimerMap(super.getLocation(), getScriptType());
+		scriptData.addScript(index, script);
+		putTimerMap(scriptData.getLocation(), getScriptType());
 	}
 
 	@Override
 	public void removeScript(String script) {
-		super.removeScript(script);
-		if (super.getScripts().isEmpty()) {
-			putScriptMap(false, super.getLocation(), getScriptType());
+		scriptData.removeScript(script);
+		if (scriptData.getScripts().isEmpty()) {
+			putScriptMap(false, scriptData.getLocation(), getScriptType());
 		} else {
-			putTimerMap(super.getLocation(), getScriptType());
+			putTimerMap(scriptData.getLocation(), getScriptType());
 		}
 	}
 
 	@Override
 	public void clearScripts() {
-		super.clearScripts();
-		putScriptMap(false, super.getLocation(), getScriptType());
+		scriptData.clearScripts();
+		putScriptMap(false, scriptData.getLocation(), getScriptType());
 	}
 
 	@Override
 	public void remove() {
-		super.remove();
-		putScriptMap(false, super.getLocation(), getScriptType());
+		scriptData.remove();
+		putScriptMap(false, scriptData.getLocation(), getScriptType());
 	}
 
 	@Override
 	public void reload() {
-		super.reload();
+		scriptData.reload();
 	}
 
 	private void putTimerMap(Location location, ScriptType scriptType) {

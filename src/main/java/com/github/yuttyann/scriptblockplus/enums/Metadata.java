@@ -20,7 +20,7 @@ public enum Metadata {
 	}
 
 	public void set(Player player, String key, Object value) {
-		this.metadata.set(player, key, value);;
+		metadata.set(player, key, value);
 	}
 
 	public void removeAll(Player player) {

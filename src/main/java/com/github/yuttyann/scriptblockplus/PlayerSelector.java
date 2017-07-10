@@ -326,4 +326,14 @@ public class PlayerSelector {
 			return score;
 		}
 	}
+
+	public static String getCommandBlockPattern(String command) {
+		String[] arguments = command.split(" ");
+		for (int i = 1; i < arguments.length; i++) {
+			if (PlayerSelector.isPattern(arguments[i])) {
+				return arguments[i];
+			}
+		}
+		return null;
+	}
 }

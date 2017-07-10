@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.file;
+package com.github.yuttyann.scriptblockplus.script;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,18 +9,18 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.file.Files;
+import com.github.yuttyann.scriptblockplus.file.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptData {
 
-	private ScriptBlock plugin;
 	private Location location;
 	private ScriptType scriptType;
 	private YamlConfig scriptFile;
 	private String scriptPath;
 
-	public ScriptData(ScriptBlock plugin, Location location, ScriptType scriptType) {
-		this.plugin = plugin;
+	public ScriptData(Location location, ScriptType scriptType) {
 		this.location = location;
 		this.scriptType = scriptType;
 		this.scriptFile = Files.getScriptFile(scriptType);
@@ -32,16 +32,16 @@ public class ScriptData {
 		this.scriptPath = location.getWorld().getName() + "." + BlockCoords.getCoords(location);
 	}
 
-	public YamlConfig getScriptFile() {
-		return scriptFile;
-	}
-
 	public Location getLocation() {
 		return location;
 	}
 
 	public ScriptType getScriptType() {
 		return scriptType;
+	}
+
+	public YamlConfig getScriptFile() {
+		return scriptFile;
 	}
 
 	public boolean checkPath() {
@@ -127,7 +127,7 @@ public class ScriptData {
 	}
 
 	public void copyScripts(Location target, boolean overwrite) {
-		ScriptData targetData = new ScriptData(plugin, target, scriptType);
+		ScriptData targetData = new ScriptData(target, scriptType);
 		if (location.equals(target) || !checkPath() || (targetData.checkPath() && overwrite)) {
 			return;
 		}
@@ -172,6 +172,7 @@ public class ScriptData {
 	}
 
 	public void reload() {
+		ScriptBlock plugin = ScriptBlock.getInstance();
 		plugin.getMapManager().loadScripts(scriptFile, scriptType);
 	}
 }

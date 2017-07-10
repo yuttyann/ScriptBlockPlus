@@ -17,8 +17,6 @@ import com.github.yuttyann.scriptblockplus.utils.ReflectionUtils;
 public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable {
 
 	private PlayerInteractEvent event;
-	private Player player;
-	private Block block;
 	private ItemStack item;
 	private Action action;
 	private BlockFace blockFace;
@@ -27,22 +25,13 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 
 	public BlockInteractEvent(PlayerInteractEvent event, Player player, Block block,
 			ItemStack item, Action action, BlockFace blockFace, boolean isAnimation) {
+		super(player, block);
 		this.event = event;
-		this.player = player;
-		this.block = block;
 		this.item = item;
 		this.action = action;
 		this.blockFace = blockFace;
 		this.location = block.getLocation();
 		this.isAnimation = isAnimation;
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
-
-	public Block getBlock() {
-		return block;
 	}
 
 	public ItemStack getItem() {

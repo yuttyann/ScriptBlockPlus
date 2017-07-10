@@ -9,7 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.file.Lang;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class CommandHelp {
 
@@ -47,22 +49,22 @@ public class CommandHelp {
 	}
 
 	public static void sendHelpMessage(Plugin plugin, CommandSender sender, Command command, boolean isName) {
-		List<CommandData> temps = new ArrayList<CommandData>();
+		List<CommandData> commands = new ArrayList<CommandData>();
 		String commandName = command.getName();
 		for (CommandData data : getCommandHelp().get(commandName)) {
 			if (data.hasPermission(sender)) {
-				temps.add(data);
+				commands.add(data);
 			}
 		}
-		if (temps.isEmpty()) {
-			sender.sendMessage("Unknown command. Type \"/help\" for help.");
+		if (commands.isEmpty()) {
+			Utils.sendPluginMessage(sender, Lang.getNotPermissionMessage());
 			return;
 		}
 		if (!isName && command.getAliases().size() > 0) {
 			commandName = command.getAliases().get(0).toLowerCase();
 		}
 		sender.sendMessage("§d==== " + plugin.getName() + " Commands ====");
-		for (CommandData data : temps) {
+		for (CommandData data : commands) {
 			if (data.isHelp()) {
 				sender.sendMessage("§b/" + commandName + " " + data.getMessage());
 			} else {
