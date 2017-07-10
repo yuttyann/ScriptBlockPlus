@@ -29,10 +29,12 @@ public class ScriptEdit {
 		this.scriptData = new ScriptData(blockCoords, scriptType);
 		this.mapManager = ScriptBlock.getInstance().getMapManager();
 		this.blockCoords = new BlockCoords(location);
+		this.scripts = scriptData.getScripts();
 	}
 
 	public void setLocation(Location location) {
 		scriptData.setLocation(location);
+		scripts = scriptData.getScripts();
 	}
 
 	public ScriptType getScriptType() {
@@ -92,7 +94,6 @@ public class ScriptEdit {
 			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return;
 		}
-		List<String> scripts = scriptData.getScripts();
 		if (!scripts.isEmpty()) {
 			Utils.sendPluginMessage(player, "Author: " + getAuthors());
 			Utils.sendPluginMessage(player, "LastEdit: " + scriptData.getLastEdit());
@@ -109,7 +110,6 @@ public class ScriptEdit {
 			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return;
 		}
-		scripts = scriptData.getScripts();
 		ScriptFile scriptFile = Metadata.getScriptFile();
 		scriptFile.removeAll(player);
 		scriptFile.set(player, scriptType, this);
