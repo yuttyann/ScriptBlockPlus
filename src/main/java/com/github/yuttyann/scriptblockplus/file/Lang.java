@@ -410,7 +410,7 @@ public class Lang {
 		if (instance.worldEditRemoveMessage == null) {
 			return null;
 		}
-		return replaceColorCode(replace(instance.worldEditRemoveMessage, "%scripttype%", scriptType.toString()));
+		return replaceColorCode(replace(instance.worldEditRemoveMessage, "%scripttype%", scriptType));
 	}
 
 	public static String getActiveDelayMessage() {

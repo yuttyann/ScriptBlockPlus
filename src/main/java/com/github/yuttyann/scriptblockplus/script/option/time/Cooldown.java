@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import java.util.Calendar;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,26 +15,26 @@ public class Cooldown extends BaseOption {
 	}
 
 	public boolean inCooldown(String fullCoords) {
-		int[] params = getParams(fullCoords);
+		long[] params = getParams(fullCoords);
 		if (params != null) {
-			int currSecond = Utils.getTime(Calendar.SECOND);
-			if (params[2] > currSecond) {
-				int time = params[2] - currSecond;
+			long currTime = System.currentTimeMillis();
+			if (params[2] > currTime) {
+				int time = (int) ((params[2] - currTime) / 1000);
 				short hour = (short) (time / 3600);
 				byte minute = (byte) (time % 3600 / 60);
 				byte second = (byte) (time % 3600 % 60);
 				Utils.sendPluginMessage(player, Lang.getActiveCooldownMessage(hour, minute, second));
+				return true;
 			} else {
 				mapManager.removeCooldown(uuid, fullCoords, scriptType);
 			}
-			return true;
 		}
 		return false;
 	}
 
-	private int[] getParams(String fullCoords) {
-		Map<String, Map<UUID, int[]>> cooldownMap = mapManager.getCooldownScripts().get(scriptType);
-		Map<UUID, int[]> paramMap = cooldownMap != null ? cooldownMap.get(fullCoords) : null;
+	private long[] getParams(String fullCoords) {
+		Map<String, Map<UUID, long[]>> cooldownMap = mapManager.getCooldownScripts().get(scriptType);
+		Map<UUID, long[]> paramMap = cooldownMap != null ? cooldownMap.get(fullCoords) : null;
 		if (paramMap != null) {
 			return paramMap.get(uuid);
 		}
@@ -48,9 +47,9 @@ public class Cooldown extends BaseOption {
 		if (inCooldown(fullCoords)) {
 			return false;
 		}
-		int[] params = new int[4];
-		params[0] = Utils.getTime(Calendar.SECOND);
-		params[1] = Integer.parseInt(optionData);
+		long[] params = new long[4];
+		params[0] = System.currentTimeMillis();
+		params[1] = Integer.parseInt(optionData) * 1000;
 		params[2] = params[0] + params[1];
 		mapManager.putCooldown(uuid, fullCoords, scriptType, params);
 		return true;

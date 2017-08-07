@@ -39,7 +39,7 @@ public class ItemCost extends BaseOption {
 				if (j > amount) {
 					result = j - amount;
 				}
-				items[i] = minusItem(item, result);
+				items[i] = minus(item, result);
 			}
 			if (j >= amount) {
 				inventory.setContents(items);
@@ -54,7 +54,7 @@ public class ItemCost extends BaseOption {
 		return true;
 	}
 
-	private ItemStack minusItem(ItemStack item, int amount) {
+	private ItemStack minus(ItemStack item, int amount) {
 		if (amount > 0) {
 			item.setAmount(amount);
 		} else {

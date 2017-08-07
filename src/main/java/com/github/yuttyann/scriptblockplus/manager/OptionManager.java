@@ -30,9 +30,6 @@ public class OptionManager {
 	public OptionManager(ScriptManager scriptManager) {
 		this.scriptManager = scriptManager;
 		this.options = scriptManager.getMapManager().getOptions();
-		if (!hasOption()) {
-			registerOptions();
-		}
 	}
 
 	public void registerOptions() {

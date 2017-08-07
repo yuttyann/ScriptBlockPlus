@@ -38,6 +38,6 @@ public class JoinQuitListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		Metadata.removeAll(event.getPlayer(), Metadata.PLAYERCLICK, Metadata.SCRIPTFILE, Metadata.SCRIPTTEXT);
+		Metadata.removeAll(event.getPlayer(), Metadata.CLICKACTION, Metadata.SCRIPTFILE, Metadata.SCRIPTTEXT);
 	}
 }

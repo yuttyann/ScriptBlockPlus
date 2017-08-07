@@ -325,7 +325,7 @@ public class FileUtils {
 				}
 			}
 		}
-		return new ArrayList<String>();
+		return new ArrayList<String>(0);
 	}
 
 	public static List<String> getFileText(String url) {
@@ -369,7 +369,7 @@ public class FileUtils {
 				}
 			}
 		}
-		return new ArrayList<String>();
+		return new ArrayList<String>(0);
 	}
 
 	public static Charset detectCharset(File file, Charset charset) {
@@ -426,7 +426,7 @@ public class FileUtils {
 
 	private static void renameToEncode(Plugin plugin, File file, boolean isUTF8) {
 		File data = plugin.getDataFolder();
-		File temp = new File(data, "✉☜☽☃☀〠☁.yml");
+		File temp = new File(data, "✉☜☽☃☀〠☁");
 		fileEncode(file, temp, isUTF8);
 		file.delete();
 		temp.renameTo(file);

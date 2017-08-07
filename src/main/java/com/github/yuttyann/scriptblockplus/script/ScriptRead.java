@@ -28,8 +28,8 @@ public class ScriptRead extends ScriptManager {
 		super(scriptManager);
 		this.player = player;
 		this.uuid = player.getUniqueId();
-		this.scriptData = new ScriptData(blockCoords, scriptType);
 		this.blockCoords = blockCoords;
+		this.scriptData = new ScriptData(blockCoords, scriptType);
 	}
 
 	public Player getPlayer() {
@@ -70,6 +70,7 @@ public class ScriptRead extends ScriptManager {
 			Utils.sendPluginMessage(Lang.getConsoleErrorScriptExecMessage(player, scriptType, blockCoords.getWorld(), blockCoords.getCoords()));
 			return false;
 		}
+		Map<UUID, Double> moneyCosts = mapManager.getMoneyCosts();
 		for (int i = index; i < scripts.size(); i++) {
 			String script = scripts.get(i);
 			for (Option option : mapManager.getOptions()) {
@@ -78,15 +79,16 @@ public class ScriptRead extends ScriptManager {
 				}
 				optionData = getOptionData(script, option);
 				if (!option.callOption(this)) {
-					Map<UUID, Double> moneyCosts = mapManager.getMoneyCosts();
-					if (moneyCosts.containsKey(uuid)) {
+					Double cost = moneyCosts.get(uuid);
+					if (cost != null) {
 						moneyCosts.remove(uuid);
-						vaultEconomy.depositPlayer(player, moneyCosts.get(uuid));
+						vaultEconomy.depositPlayer(player, cost);
 					}
 					return false;
 				}
 			}
 		}
+		moneyCosts.remove(uuid);
 		Utils.sendPluginMessage(Lang.getConsoleSuccScriptExecMessage(player, scriptType, blockCoords.getWorld(), blockCoords.getCoords()));
 		return true;
 	}

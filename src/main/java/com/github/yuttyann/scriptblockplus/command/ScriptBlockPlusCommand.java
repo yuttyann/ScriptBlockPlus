@@ -31,10 +31,10 @@ import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.metadata.ScriptFile;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
-import com.github.yuttyann.scriptblockplus.script.exception.ScriptException;
+import com.github.yuttyann.scriptblockplus.script.ScriptException;
+import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
+import com.github.yuttyann.scriptblockplus.script.hook.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.script.option.hook.HookPlugins;
-import com.github.yuttyann.scriptblockplus.script.option.hook.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.sk89q.worldedit.bukkit.selections.Selection;
@@ -128,7 +128,7 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 					Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
 					return true;
 				}
-				Files.reload(plugin);
+				Files.reload();
 				mapManager.loadAllScripts();
 				Utils.sendPluginMessage(player, Lang.getAllFileReloadMessage());
 				return true;
@@ -164,7 +164,7 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 					Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
 					return true;
 				}
-				setClickMeta(player, ClickType.valueOf(args[0].toUpperCase() + "_" + args[1].toUpperCase()));
+				setClickMeta(player, ClickType.valueOf(args[1].toUpperCase()), ScriptType.valueOf(args[0].toUpperCase()));
 				return true;
 			}
 			if (equals(args[0], "worldedit") && equals(args[1], "remove")) {
@@ -198,7 +198,8 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 					Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
 					return true;
 				}
-				setClickMeta(player, args, ClickType.valueOf(args[0].toUpperCase() + "_" + args[1].toUpperCase()));
+				String script = StringUtils.createString(args, 2).trim();
+				setClickMeta(player, script, ClickType.valueOf(args[1].toUpperCase()), ScriptType.valueOf(args[0].toUpperCase()));
 				return true;
 			}
 		}
@@ -264,27 +265,28 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 		mapManager.loadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
 	}
 
-	private void setClickMeta(Player player, ClickType clickType) {
-		if (Metadata.hasAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT)) {
+	private void setClickMeta(Player player, ClickType clickType, ScriptType scriptType) {
+		if (Metadata.hasAll(player, Metadata.CLICKACTION, Metadata.SCRIPTTEXT)) {
 			Utils.sendPluginMessage(player, Lang.getErrorEditDataMessage());
 			return;
 		}
-		Metadata.getPlayerClick().set(player, clickType, true);
+		String clickData = clickType.create(scriptType);
+		Metadata.getClickAction().set(player, clickData, true);
 		Utils.sendPluginMessage(player, Lang.getSuccEditDataMessage(clickType));
 	}
 
-	private void setClickMeta(Player player, String[] args, ClickType clickType) {
-		if (Metadata.hasAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT)) {
+	private void setClickMeta(Player player, String script, ClickType clickType, ScriptType scriptType) {
+		if (Metadata.hasAll(player, Metadata.CLICKACTION, Metadata.SCRIPTTEXT)) {
 			Utils.sendPluginMessage(player, Lang.getErrorEditDataMessage());
 			return;
 		}
-		String script = StringUtils.createString(args, 2).trim();
 		if (!checkScript(script)) {
 			Utils.sendPluginMessage(player, Lang.getErrorScriptCheckMessage());
 			return;
 		}
-		Metadata.getPlayerClick().set(player, clickType, true);
-		Metadata.getScriptText().set(player, clickType, script);
+		String clickData = clickType.create(scriptType);
+		Metadata.getClickAction().set(player, clickData, true);
+		Metadata.getScriptText().set(player, clickData, script);
 		Utils.sendPluginMessage(player, Lang.getSuccEditDataMessage(clickType));
 	}
 
@@ -298,22 +300,22 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 			Utils.sendPluginMessage(player, Lang.getNotWorldEditMessage());
 			return;
 		}
-		WorldEditSelection selectionAPI = HookPlugins.getWorldEditSelection();
-		Selection selection = selectionAPI.getSelection(player);
+		WorldEditSelection weSelection = HookPlugins.getWorldEditSelection();
+		Selection selection = weSelection.getSelection(player);
 		if (selection == null) {
 			Utils.sendPluginMessage(player, Lang.getWorldEditNotSelectionMessage());
 			return;
 		}
-		ScriptEdit scriptEdit = scriptFile.get(player);
-		for (Block block : selectionAPI.getSelectionBlocks(selection)) {
+		ScriptEdit scriptEdit = scriptFile.getEdit(player);
+		for (Block block : weSelection.getBlocks(selection)) {
 			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
 				continue;
 			}
 			scriptEdit.wePaste(player, block.getLocation(), overwrite);
 		}
 		scriptEdit.save();
-		Metadata.SCRIPTFILE.removeAll(player);
-		ScriptType scriptType = scriptFile.get(player).getScriptType();
+		ScriptType scriptType = scriptFile.getEdit(player).getScriptType();
+		Metadata.removeAll(player, Metadata.SCRIPTFILE);
 		Utils.sendPluginMessage(player, Lang.getWorldEditPasteMessage(scriptType));
 		Utils.sendPluginMessage(Lang.getConsoleWorldEditPasteMessage(scriptType, selection.getMinimumPoint(), selection.getMaximumPoint()));
 	}
@@ -323,40 +325,37 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 			Utils.sendPluginMessage(player, Lang.getNotWorldEditMessage());
 			return;
 		}
-		WorldEditSelection selectionAPI = HookPlugins.getWorldEditSelection();
-		Selection selection = selectionAPI.getSelection(player);
+		WorldEditSelection weSelection = HookPlugins.getWorldEditSelection();
+		Selection selection = weSelection.getSelection(player);
 		if (selection == null) {
 			Utils.sendPluginMessage(player, Lang.getWorldEditNotSelectionMessage());
 			return;
 		}
-		int length = ScriptType.length();
-		boolean[] isSuccess = new boolean[length];
-		StringBuilder types = new StringBuilder();
-		List<Block> blocks = selectionAPI.getSelectionBlocks(selection);
-		for (int i = 0; i < length; i++) {
-			ScriptType scriptType = ScriptType.values()[i];
-			ScriptEdit scriptEdit = new ScriptEdit(null, scriptType);
+		ScriptType[] types = ScriptType.values();
+		boolean[] isSuccess = new boolean[types.length];
+		List<Block> blocks = weSelection.getBlocks(selection);
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < types.length; i++) {
+			ScriptEdit scriptEdit = new ScriptEdit(null, types[i]);
 			for (Block block : blocks) {
-				scriptEdit.setLocation(block.getLocation());
-				if (scriptEdit.checkPath()) {
-					scriptEdit.remove(player);
+				if (scriptEdit.weRemove(player, block.getLocation())) {
 					if (!isSuccess[i]) {
 						isSuccess[i] = true;
-						if (types.length() != 0) {
-							types.append(", ");
+						if (builder.length() != 0) {
+							builder.append(", ");
 						}
-						types.append(scriptType.toString());
-						Files.getScriptFile(scriptType).save();
+						builder.append(types[i].toString());
 					}
 				}
 			}
+			scriptEdit.save();
 		}
-		if (types.length() == 0) {
+		if (builder.length() == 0) {
 			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return;
 		}
-		Utils.sendPluginMessage(player, Lang.getWorldEditRemoveMessage(types.toString()));
-		Utils.sendPluginMessage(Lang.getConsoleWorldEditRemoveMessage(types.toString(), selection.getMinimumPoint(), selection.getMaximumPoint()));
+		Utils.sendPluginMessage(player, Lang.getWorldEditRemoveMessage(builder.toString()));
+		Utils.sendPluginMessage(Lang.getConsoleWorldEditRemoveMessage(builder.toString(), selection.getMinimumPoint(), selection.getMaximumPoint()));
 	}
 
 	@Override
@@ -492,11 +491,15 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 
 	private boolean checkScript(String scriptLine) {
 		try {
-			for (String script : StringUtils.getScripts(scriptLine)) {
+			List<String> scripts = StringUtils.getScripts(scriptLine);
+			for (int i = 0, r = 0; i < scripts.size(); i++) {
 				for (Option option : mapManager.getOptions()) {
-					if (!script.startsWith(option.getPrefix())) {
-						throw new ScriptException("It is an illegal script.");
+					if (scripts.get(i).startsWith(option.getPrefix())) {
+						r++;
 					}
+				}
+				if (i == (scripts.size() - 1) && r != scripts.size()) {
+					throw new ScriptException("It is an illegal script.");
 				}
 			}
 		} catch (Exception e) {

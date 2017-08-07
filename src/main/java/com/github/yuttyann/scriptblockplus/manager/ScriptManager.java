@@ -7,9 +7,9 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.YamlConfig;
-import com.github.yuttyann.scriptblockplus.script.option.hook.HookPlugins;
-import com.github.yuttyann.scriptblockplus.script.option.hook.VaultEconomy;
-import com.github.yuttyann.scriptblockplus.script.option.hook.VaultPermission;
+import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
+import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
 
 public class ScriptManager implements Listener {
 
@@ -39,6 +39,10 @@ public class ScriptManager implements Listener {
 		this.optionManager = new OptionManager(this);
 		this.vaultEconomy = HookPlugins.getVaultEconomy();
 		this.vaultPermission = HookPlugins.getVaultPermission();
+
+		if (!optionManager.hasOption()) {
+			optionManager.registerOptions();
+		}
 	}
 
 	public JavaPlugin getPlugin() {

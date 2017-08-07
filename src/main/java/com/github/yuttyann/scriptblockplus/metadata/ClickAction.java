@@ -5,13 +5,13 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 
-public class ScriptText extends SimpleMetadata {
+public class ClickAction extends SimpleMetadata {
 
-	public ScriptText(ScriptBlock plugin) {
+	public ClickAction(ScriptBlock plugin) {
 		super(plugin);
 	}
 
-	public void set(Player player, String key, String value) {
+	public void set(Player player, String key, boolean value) {
 		super.set(player, key, value);
 	}
 
@@ -34,7 +34,7 @@ public class ScriptText extends SimpleMetadata {
 		return false;
 	}
 
-	public String getScript(Player player, String key) {
-		return getString(player, key);
+	public boolean get(Player player, String clickData) {
+		return getBoolean(player, clickData);
 	}
 }

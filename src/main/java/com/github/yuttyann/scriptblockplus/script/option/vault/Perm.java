@@ -18,6 +18,7 @@ public class Perm extends BaseOption {
 		String world = array.length > 1 ? array[1] : null;
 		if (!vaultPermission.playerHas(world, player, array[0])) {
 			Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
+			return false;
 		}
 		return true;
 	}

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
@@ -21,7 +22,7 @@ import com.github.yuttyann.scriptblockplus.listener.ScriptInteractListener;
 import com.github.yuttyann.scriptblockplus.listener.ScriptWalkListener;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptBlockManager;
-import com.github.yuttyann.scriptblockplus.script.option.hook.HookPlugins;
+import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptBlock extends JavaPlugin {
@@ -35,8 +36,7 @@ public class ScriptBlock extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		instance = this;
-		Files.reload(this);
+		Files.reload();
 		if (!HookPlugins.hasVault()) {
 			Utils.sendPluginMessage(Lang.getNotVaultMessage());
 			Utils.disablePlugin(this);
@@ -61,11 +61,12 @@ public class ScriptBlock extends JavaPlugin {
 		commandHelp = new HashMap<String, List<CommandData>>();
 		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 
-		getServer().getPluginManager().registerEvents(new InteractListener(this), this);
-		getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
-		getServer().getPluginManager().registerEvents(new ScriptInteractListener(this), this);
-		getServer().getPluginManager().registerEvents(new ScriptBreakListener(this), this);
-		getServer().getPluginManager().registerEvents(new ScriptWalkListener(this), this);
+		PluginManager pluginManager = getServer().getPluginManager();
+		pluginManager.registerEvents(new InteractListener(this), this);
+		pluginManager.registerEvents(new JoinQuitListener(this), this);
+		pluginManager.registerEvents(new ScriptInteractListener(this), this);
+		pluginManager.registerEvents(new ScriptBreakListener(this), this);
+		pluginManager.registerEvents(new ScriptWalkListener(this), this);
 	}
 
 	@Override
@@ -83,14 +84,17 @@ public class ScriptBlock extends JavaPlugin {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		List<String> completeList = null;
 		if (command.getName().equals("scriptblockplus")) {
-			completeList = scriptBlockPlusCommand.onTabComplete(sender, command, label, args);
-		}
-		if (completeList != null) {
-			return completeList;
+			return scriptBlockPlusCommand.onTabComplete(sender, command, label, args);
 		}
 		return super.onTabComplete(sender, command, label, args);
+	}
+
+	public static ScriptBlock getInstance() {
+		if (instance == null) {
+			instance = (ScriptBlock) Utils.getPlugin("ScriptBlockPlus");
+		}
+		return instance;
 	}
 
 	public Map<String, List<CommandData>> getCommandHelp() {
@@ -99,10 +103,6 @@ public class ScriptBlock extends JavaPlugin {
 
 	public ScriptBlockAPI getAPI(Location location, ScriptType scriptType) {
 		return new ScriptBlockManager(this, location, scriptType);
-	}
-
-	public static ScriptBlock getInstance() {
-		return instance;
 	}
 
 	public Updater getUpdater() {

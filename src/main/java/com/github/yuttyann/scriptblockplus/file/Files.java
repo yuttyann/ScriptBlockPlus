@@ -17,7 +17,8 @@ public class Files {
 	private YamlConfig break_;
 	private YamlConfig walk;
 
-	public Files(ScriptBlock plugin) {
+	public Files() {
+		ScriptBlock plugin = ScriptBlock.getInstance();
 		this.config = YamlConfig.load(plugin, FILE_PATHS[0]);
 		this.lang = YamlConfig.load(plugin, FILE_PATHS[1]);
 		this.interact = YamlConfig.load(plugin, FILE_PATHS[2], false);
@@ -57,8 +58,8 @@ public class Files {
 		return null;
 	}
 
-	public static void reload(ScriptBlock plugin) {
-		instance = new Files(plugin);
+	public static void reload() {
+		instance = new Files();
 		Lang.reload();
 	}
 }

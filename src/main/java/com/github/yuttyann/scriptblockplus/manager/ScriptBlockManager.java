@@ -15,7 +15,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
-import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 
 public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI {
 
@@ -47,7 +47,7 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 		timerTemps.clear();
 		scriptTemps.clear();
 		scriptData.setLocation(location);
-		blockCoords = new BlockCoords(scriptData.getLocation());
+		blockCoords = new BlockCoords(location);
 	}
 
 	@Override
@@ -88,17 +88,17 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 	}
 
 	@Override
-	public void addOption(BaseOption option) {
+	public void addOption(Option option) {
 		getOptionManager().addOption(option);
 	}
 
 	@Override
-	public void addOption(int index, BaseOption option) {
+	public void addOption(int index, Option option) {
 		getOptionManager().addOption(index, option);
 	}
 
 	@Override
-	public void removeOption(BaseOption option) {
+	public void removeOption(Option option) {
 		getOptionManager().removeOption(option);
 	}
 

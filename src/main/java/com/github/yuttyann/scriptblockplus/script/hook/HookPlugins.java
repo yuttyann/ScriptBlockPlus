@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.script.option.hook;
+package com.github.yuttyann.scriptblockplus.script.hook;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 

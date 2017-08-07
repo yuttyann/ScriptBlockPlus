@@ -1,27 +1,31 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum ClickType {
-	INTERACT_CREATE("INTERACT_SCRIPTBLOCKPLUS_CREATECLICK"),
-	INTERACT_ADD("INTERACT_SCRIPTBLOCKPLUS_ADDCLICK"),
-	INTERACT_REMOVE("INTERACT_SCRIPTBLOCKPLUS_REMOVECLICK"),
-	INTERACT_VIEW("INTERACT_SCRIPTBLOCKPLUS_VIEWCLICK"),
-	BREAK_CREATE("BREAK_SCRIPTBLOCKPLUS_CREATECLICK"),
-	BREAK_ADD("BREAK_SCRIPTBLOCKPLUS_ADDCLICK"),
-	BREAK_REMOVE("BREAK_SCRIPTBLOCKPLUS_REMOVECLICK"),
-	BREAK_VIEW("BREAK_SCRIPTBLOCKPLUS_VIEWCLICK"),
-	WALK_CREATE("WALK_SCRIPTBLOCKPLUS_CREATECLICK"),
-	WALK_ADD("WALK_SCRIPTBLOCKPLUS_ADDCLICK"),
-	WALK_REMOVE("WALK_SCRIPTBLOCKPLUS_REMOVECLICK"),
-	WALK_VIEW("WALK_SCRIPTBLOCKPLUS_VIEWCLICK");
+	CREATE,
+	ADD,
+	REMOVE,
+	VIEW;
 
-	private String type;
+	private static final String[] TYPES;
 
-	private ClickType(String type) {
-		this.type = type;
+	static {
+		List<String> list = new ArrayList<String>();
+		for (ScriptType scriptType : ScriptType.values()) {
+			for (ClickType clickType : ClickType.values()) {
+				list.add(clickType.create(scriptType));
+			}
+		}
+		TYPES = list.toArray(new String[list.size()]);
 	}
 
-	@Override
-	public String toString() {
-		return type;
+	public String create(ScriptType scriptType) {
+		return scriptType.name() + "_" + name();
+	}
+
+	public static String[] types() {
+		return TYPES;
 	}
 }

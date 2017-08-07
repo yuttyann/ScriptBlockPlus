@@ -116,7 +116,7 @@ errorItemMessage: '&cアイテムを所持していません。[&r%itemname%&c(%
 
 # %cost%   : 必要な金額
 # %result% : 必要な残りの金額
-errorCostMessage: '&cお金が"%result%"円足りません。スクリプトの実行には"%cost%"円必要です。'
+errorCostMessage: '&cお金が"%result%円"足りません。スクリプトの実行には"%cost%円"必要です。'
 
 # %scripttype% : スクリプトの種類
 # %player%     : プレイヤーのID

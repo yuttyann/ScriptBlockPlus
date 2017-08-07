@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -24,7 +23,7 @@ import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.file.Lang;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
-import com.github.yuttyann.scriptblockplus.metadata.PlayerClick;
+import com.github.yuttyann.scriptblockplus.metadata.ClickAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -38,36 +37,37 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockInteract(BlockInteractEvent event) {
+		if (Utils.isCB19orLater() && !isHand(event.getHand())) {
+			return;
+		}
 		Block block = event.getBlock();
 		BlockCoords blockCoords = new BlockCoords(block.getLocation());
-		if (!setting(event, blockCoords)) {
-			if (Utils.isCB19orLater() && !isHand(event.getHand())) {
+		if (setting(event, blockCoords)) {
+			return;
+		}
+		Player player = event.getPlayer();
+		if (mapManager.containsLocation(blockCoords, scriptType)) {
+			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, event.getItem(), blockCoords);
+			Utils.callEvent(interactEvent);
+			if (interactEvent.isCancelled()) {
 				return;
 			}
-			Player player = event.getPlayer();
-			if (mapManager.containsLocation(blockCoords, scriptType)) {
-				ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, event.getItem(), blockCoords);
-				Utils.callEvent(interactEvent);
-				if (interactEvent.isCancelled()) {
-					return;
-				}
-				if (!interactEvent.getLeftClick() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
-					return;
-				}
-				if (!Permission.has(Permission.SCRIPTBLOCKPLUS_INTERACT_USE, player)) {
-					Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
-					return;
-				}
-				MaterialData data = block.getState().getData();
-				if (isPowered(data) || isOpen(data)) {
-					return;
-				}
-				new ScriptRead(this, player, blockCoords).read(0);
+			if (!interactEvent.getLeftClick() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
+				return;
 			}
+			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_INTERACT_USE, player)) {
+				Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
+				return;
+			}
+			MaterialData data = block.getState().getData();
+			if (isPowered(data) || isOpen(data)) {
+				return;
+			}
+			new ScriptRead(this, player, blockCoords).read(0);
 		}
 	}
 
-	private boolean setting(BlockInteractEvent event, Location location) {
+	private boolean setting(BlockInteractEvent event, BlockCoords blockCoords) {
 		Player player = event.getPlayer();
 		if (Utils.checkItem(event.getItem(), Material.BLAZE_ROD, Lang.ITEM_SCRIPTEDITOR)) {
 			if (!Permission.has(Permission.SCRIPTBLOCKPLUS_TOOL_SCRIPTEDITOR, player)) {
@@ -82,48 +82,46 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 				} else {
 					scriptType = ScriptType.INTERACT;
 				}
-				new ScriptEdit(location, scriptType).copy(player);
+				new ScriptEdit(blockCoords, scriptType).copy(player);
 				event.setCancelled(true);
 				return true;
 			case RIGHT_CLICK_BLOCK:
 				if (player.isSneaking()) {
-					ScriptEdit scriptEdit = Metadata.getScriptFile().get(player);
+					ScriptEdit scriptEdit = Metadata.getScriptFile().getEdit(player);
 					if (scriptEdit == null) {
 						Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 						break;
 					}
-					scriptEdit.paste(player, location);
+					scriptEdit.paste(player, blockCoords);
 				} else {
-					new ScriptEdit(location, ScriptType.BREAK).copy(player);
+					new ScriptEdit(blockCoords, ScriptType.BREAK).copy(player);
 				}
 				event.setCancelled(true);
 				return true;
 			default:
-				Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+				Metadata.removeAll(player, Metadata.CLICKACTION, Metadata.SCRIPTTEXT);
 				return false;
 			}
 		}
-		PlayerClick playerClick = Metadata.getPlayerClick();
-		for (ClickType type : ClickType.values()) {
-			if (playerClick.has(player, type)) {
-				String[] split = StringUtils.split(type.name(), "_");
-				if (click(player, split[1], location, type, ScriptType.getType(split[0]))) {
-					event.setCancelled(true);
-					return true;
-				}
+		ClickAction clickAction = Metadata.getClickAction();
+		for (String clickData : ClickType.types()) {
+			if (clickAction.has(player, clickData) && action(player, clickData, blockCoords)) {
+				event.setCancelled(true);
+				return true;
 			}
 		}
 		return false;
 	}
 
-	private boolean click(Player player, String type, Location location, ClickType clickType, ScriptType scriptType) {
-		ScriptEdit scriptEdit = new ScriptEdit(location, scriptType);
-		switch (type) {
+	private boolean action(Player player, String clickData, BlockCoords blockCoords) {
+		String[] array = StringUtils.split(clickData, "_");
+		ScriptEdit scriptEdit = new ScriptEdit(blockCoords, ScriptType.valueOf(array[0]));
+		switch (array[1]) {
 		case "CREATE":
-			scriptEdit.create(player, Metadata.getScriptText().get(player, clickType));
+			scriptEdit.create(player, Metadata.getScriptText().getScript(player, clickData));
 			return true;
 		case "ADD":
-			scriptEdit.add(player, Metadata.getScriptText().get(player, clickType));
+			scriptEdit.add(player, Metadata.getScriptText().getScript(player, clickData));
 			return true;
 		case "REMOVE":
 			scriptEdit.remove(player);

@@ -18,6 +18,7 @@ public class Group extends BaseOption {
 		String world = array.length > 1 ? array[1] : null;
 		if (!vaultPermission.playerInGroup(world, player, array[0])) {
 			Utils.sendPluginMessage(player, Lang.getErrorGroupMessage(array[0]));
+			return false;
 		}
 		return true;
 	}

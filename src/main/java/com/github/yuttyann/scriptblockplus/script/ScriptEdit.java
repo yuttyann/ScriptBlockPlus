@@ -24,16 +24,20 @@ public class ScriptEdit {
 	private BlockCoords blockCoords;
 	private List<String> scripts;
 
-	public ScriptEdit(Location location, ScriptType scriptType) {
+	public ScriptEdit(BlockCoords blockCoords, ScriptType scriptType) {
 		this.scriptType = scriptType;
 		this.scriptData = new ScriptData(blockCoords, scriptType);
 		this.mapManager = ScriptBlock.getInstance().getMapManager();
-		this.blockCoords = new BlockCoords(location);
+		this.blockCoords = blockCoords;
 		this.scripts = scriptData.getScripts();
 	}
 
 	public void setLocation(Location location) {
 		scriptData.setLocation(location);
+		blockCoords = new BlockCoords(location);
+	}
+
+	public void updateScripts() {
 		scripts = scriptData.getScripts();
 	}
 
@@ -50,7 +54,7 @@ public class ScriptEdit {
 	}
 
 	public void create(Player player, String script) {
-		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+		removeAll(player);
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
 		scriptData.setScripts(Arrays.asList(script));
@@ -61,7 +65,7 @@ public class ScriptEdit {
 	}
 
 	public void add(Player player, String script) {
-		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+		removeAll(player);
 		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return;
@@ -76,7 +80,7 @@ public class ScriptEdit {
 	}
 
 	public void remove(Player player) {
-		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+		removeAll(player);
 		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return;
@@ -89,23 +93,21 @@ public class ScriptEdit {
 	}
 
 	public void view(Player player) {
-		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
-		if (!scriptData.checkPath()) {
+		removeAll(player);
+		if (!scriptData.checkPath() || scripts.isEmpty()) {
 			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return;
 		}
-		if (!scripts.isEmpty()) {
-			Utils.sendPluginMessage(player, "Author: " + getAuthors());
-			Utils.sendPluginMessage(player, "LastEdit: " + scriptData.getLastEdit());
-			for (String script : scripts) {
-				Utils.sendPluginMessage(player, "- " + script);
-			}
-			Utils.sendPluginMessage(Lang.getConsoleScriptViewMessage(player, scriptType, blockCoords.getWorld(), blockCoords.getCoords()));
+		Utils.sendPluginMessage(player, "Author: " + getAuthors());
+		Utils.sendPluginMessage(player, "LastEdit: " + scriptData.getLastEdit());
+		for (String script : scripts) {
+			Utils.sendPluginMessage(player, "- " + script);
 		}
+		Utils.sendPluginMessage(Lang.getConsoleScriptViewMessage(player, scriptType, blockCoords.getWorld(), blockCoords.getCoords()));
 	}
 
 	public void copy(Player player) {
-		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
+		removeAll(player);
 		if (!scriptData.checkPath()) {
 			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return;
@@ -118,33 +120,39 @@ public class ScriptEdit {
 	}
 
 	public void paste(Player player, Location location) {
-		Metadata.removeAll(player, Metadata.PLAYERCLICK, Metadata.SCRIPTTEXT);
-		scriptData.setLocation(location);
+		removeAll(player);
+		setLocation(location);
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
 		scriptData.setScripts(new ArrayList<String>(scripts));
 		scriptData.save();
-		mapManager.addLocation(scriptData.getLocation(), scriptType);
+		mapManager.addLocation(blockCoords, scriptType);
 		Utils.sendPluginMessage(player, Lang.getScriptPasteMessage(scriptType));
 		Utils.sendPluginMessage(Lang.getConsoleScriptPasteMessage(player, scriptType, blockCoords.getWorld(), blockCoords.getCoords()));
 	}
 
 	//WorldEdit用に軽量化
-	public void weRemove(Player player) {
+	public boolean weRemove(Player player, Location location) {
+		setLocation(location);
+		if (!scriptData.checkPath()) {
+			return false;
+		}
 		scriptData.remove();
 		mapManager.removeLocation(blockCoords, scriptType);
+		return true;
 	}
 
 	//WorldEdit用に軽量化
-	public void wePaste(Player player, Location location, boolean overwrite) {
-		scriptData.setLocation(blockCoords.getLocation());
+	public boolean wePaste(Player player, Location location, boolean overwrite) {
+		setLocation(location);
 		if (!overwrite && scriptData.checkPath()) {
-			return;
+			return false;
 		}
 		scriptData.setAuthor(player);
 		scriptData.setLastEdit();
 		scriptData.setScripts(new ArrayList<String>(scripts));
-		mapManager.addLocation(scriptData.getLocation(), scriptType);
+		mapManager.addLocation(blockCoords, scriptType);
+		return true;
 	}
 
 	private String getAuthors() {
@@ -171,5 +179,9 @@ public class ScriptEdit {
 			}
 		}
 		return builder.toString();
+	}
+
+	private void removeAll(Player player) {
+		Metadata.removeAll(player, Metadata.CLICKACTION, Metadata.SCRIPTTEXT);
 	}
 }

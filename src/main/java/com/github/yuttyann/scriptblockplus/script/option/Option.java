@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.script.option;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 
+
 public abstract class Option {
 
 	private String name;
@@ -12,8 +13,6 @@ public abstract class Option {
 		this.prefix = prefix;
 	}
 
-	public abstract boolean callOption(ScriptRead scriptRead);
-
 	public String getName() {
 		return name;
 	}
@@ -21,4 +20,6 @@ public abstract class Option {
 	public String getPrefix() {
 		return prefix;
 	}
+
+	public abstract boolean callOption(ScriptRead scriptRead);
 }

@@ -37,25 +37,18 @@ public class BlockCoords extends Location {
 	}
 
 	public static String getCoords(Location location) {
-		return location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ();
+		return new BlockCoords(location).getCoords();
 	}
 
 	public static String getFullCoords(Location location) {
-		return location.getWorld().getName() + ", " + getCoords(location);
+		return new BlockCoords(location).getFullCoords();
 	}
 
 	public static Location getCenter(Location location) {
-		location = location.clone();
-		location.setX(location.getBlockX() + 0.5D);
-		location.setZ(location.getBlockZ() + 0.5D);
-		return location;
+		return new BlockCoords(location).getCenter();
 	}
 
 	public static Location getAllCenter(Location location) {
-		location = location.clone();
-		location.setX(location.getBlockX() + 0.5D);
-		location.setY(location.getBlockY() + 0.5D);
-		location.setZ(location.getBlockZ() + 0.5D);
-		return location;
+		return new BlockCoords(location).getAllCenter();
 	}
 }

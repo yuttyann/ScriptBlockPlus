@@ -38,8 +38,8 @@ public abstract class SimpleMetadata {
 	}
 
 	public Object get(Metadatable metadatable, String key, Object def) {
-		List<MetadataValue> values = metadatable.getMetadata(key);
-		for (MetadataValue value : values) {
+		List<MetadataValue> list = metadatable.getMetadata(key);
+		for (MetadataValue value : list) {
 			if (value.getOwningPlugin().getName().equals(plugin.getName())) {
 				return value.value();
 			}

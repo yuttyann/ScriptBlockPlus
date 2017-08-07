@@ -13,8 +13,8 @@ import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
-import com.github.yuttyann.scriptblockplus.script.option.hook.VaultEconomy;
-import com.github.yuttyann.scriptblockplus.script.option.hook.VaultPermission;
+import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 
@@ -33,7 +33,6 @@ public abstract class BaseOption extends Option {
 	protected BlockCoords blockCoords;
 	protected VaultEconomy vaultEconomy;
 	protected VaultPermission vaultPermission;
-
 	protected int scriptIndex;
 
 	protected BaseOption(ScriptManager scriptManager, String name, String prefix) {

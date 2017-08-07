@@ -13,12 +13,12 @@ import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class ScriptData {
+public class ScriptData implements Cloneable {
 
 	private Location location;
+	private String scriptPath;
 	private ScriptType scriptType;
 	private YamlConfig scriptFile;
-	private String scriptPath;
 
 	public ScriptData(Location location, ScriptType scriptType) {
 		this.location = location;
@@ -174,5 +174,14 @@ public class ScriptData {
 	public void reload() {
 		ScriptBlock plugin = ScriptBlock.getInstance();
 		plugin.getMapManager().loadScripts(scriptFile, scriptType);
+	}
+
+	@Override
+	public ScriptData clone() {
+		try {
+			return (ScriptData) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new Error(e);
+		}
 	}
 }

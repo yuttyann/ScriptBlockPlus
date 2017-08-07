@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.utils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -26,12 +25,12 @@ import com.github.yuttyann.scriptblockplus.file.Files;
 
 public class Utils {
 
-	private static String serverVersion;
 	private static Boolean isWindows;
 	private static Boolean isCB175orLaterCache;
 	private static Boolean isCB178orLaterCache;
 	private static Boolean isCB18orLaterCache;
 	private static Boolean isCB19orLaterCache;
+	private static String serverVersion;
 
 	public static boolean isWindows() {
 		if (isWindows == null) {
@@ -105,10 +104,6 @@ public class Utils {
 		return serverVersion;
 	}
 
-	public static int getTime(int field) {
-		return Calendar.getInstance().get(field);
-	}
-
 	public static String getRandomColor() {
 		return ChatColor.getByChar(Integer.toHexString(new Random().nextInt(16))).toString();
 	}
@@ -121,12 +116,6 @@ public class Utils {
 		sendPluginMessage(ScriptBlock.getInstance(), sender, msg);
 	}
 
-	@Deprecated
-	public static void sendPluginMessage(Plugin plugin, Object msg) {
-		sendPluginMessage(plugin, Bukkit.getConsoleSender(), msg);
-	}
-
-	@Deprecated
 	public static void sendPluginMessage(Plugin plugin, CommandSender sender, Object msg) {
 		if (msg == null) {
 			return;

@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.script.option.hook;
+package com.github.yuttyann.scriptblockplus.script.hook;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class WorldEditSelection {
 		return new WorldEditSelection(Utils.getPlugin("WorldEdit"));
 	}
 
-	public List<Block> getSelectionBlocks(Selection selection) {
+	public List<Block> getBlocks(Selection selection) {
 		List<Block> blocks = new ArrayList<Block>();
 		if (!(selection instanceof CuboidSelection)) {
 			return blocks;

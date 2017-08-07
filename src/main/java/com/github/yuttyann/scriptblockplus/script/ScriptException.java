@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.script.exception;
+package com.github.yuttyann.scriptblockplus.script;
 
 public class ScriptException extends Exception {
 

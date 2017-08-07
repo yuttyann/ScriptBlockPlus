@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,6 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.Lang;
@@ -32,7 +35,6 @@ public class Updater {
 	private String changeLogURL;
 	private List<String> details;
 	private boolean isUpperVersion;
-	private boolean isEnable;
 	private boolean isError;
 
 	public Updater(Plugin plugin) {
@@ -68,26 +70,29 @@ public class Updater {
 		return isUpperVersion;
 	}
 
-	public boolean isEnable() {
-		return isEnable;
-	}
-
 	public boolean isError() {
 		return isError;
 	}
 
-	public void debug(boolean isError) {
-		isUpperVersion = true;
-		if (isError) {
-			this.isError = true;
+	public void debug(boolean isUpperVersion, boolean isError) {
+		try {
+			load();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		this.isUpperVersion = isUpperVersion;
+		this.isError = isError;
+		check(null);
+	}
+
+	public void init() {
+		isError = false;
+		details = new ArrayList<String>();
 	}
 
 	public void load() throws Exception {
-		isEnable = false;
-		isError = false;
-		details = new ArrayList<String>();
-		Document document = FileUtils.getDocument(getPluginName());
+		init();
+		Document document = getDocument();
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
 		for(int i = 0; i < rootChildren.getLength(); i++) {
@@ -130,8 +135,6 @@ public class Updater {
 	public boolean check(Player player) {
 		YamlConfig config = Files.getConfig();
 		if(config.getBoolean("UpdateChecker") && isUpperVersion()) {
-			isEnable = true;
-			boolean first = false;
 			File data = config.getDataFolder();
 			File changeLogFile = new File(data, "更新履歴.txt");
 			List<String> changeLog = new ArrayList<String>();
@@ -139,6 +142,7 @@ public class Updater {
 				changeLog = FileUtils.getFileText(changeLogFile);
 			}
 			sendCheckMessage(player != null ? player : Bukkit.getConsoleSender());
+			boolean first = false;
 			if(config.getBoolean("AutoDownload")) {
 				Utils.sendPluginMessage(Lang.getUpdateDownloadStartMessage());
 				File downloadFile = null;
@@ -154,6 +158,7 @@ public class Updater {
 				} catch (IOException e) {
 					e.printStackTrace();
 					sendErrorMessage();
+					return false;
 				} finally {
 					if (!isError()) {
 						String fileName = downloadFile.getName();
@@ -219,5 +224,9 @@ public class Updater {
 
 	private List<String> fText(String url) {
 		return FileUtils.getFileText(url);
+	}
+
+	private Document getDocument() throws ParserConfigurationException, SAXException, IOException {
+		return FileUtils.getDocument(getPluginName());
 	}
 }

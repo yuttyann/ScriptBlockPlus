@@ -12,23 +12,24 @@ public class ScriptFile extends SimpleMetadata {
 		super(plugin);
 	}
 
-	public void set(Player player, ScriptType scriptType, ScriptEdit value) {
-		set(player, getType(scriptType), value);
+	public void set(Player player, ScriptType key, ScriptEdit value) {
+		set(player, key.create(), value);
 	}
 
-	public void remove(Player player, ScriptType scriptType) {
-		remove(player, getType(scriptType));
+	public void remove(Player player, ScriptType key) {
+		remove(player, key.create());
 	}
 
-	public boolean has(Player player, ScriptType scriptType) {
-		return has(player, getType(scriptType));
+	public boolean has(Player player, ScriptType key) {
+		return has(player, key.create());
 	}
 
 	@Override
 	public void removeAll(Player player) {
 		for (ScriptType scriptType : ScriptType.values()) {
-			if (has(player, scriptType)) {
-				remove(player, scriptType);
+			String key = scriptType.create();
+			if (has(player, key)) {
+				remove(player, key);
 			}
 		}
 	}
@@ -43,17 +44,13 @@ public class ScriptFile extends SimpleMetadata {
 		return false;
 	}
 
-	public ScriptEdit get(Player player) {
+	public ScriptEdit getEdit(Player player) {
 		for (ScriptType scriptType : ScriptType.values()) {
-			Object value = get(player, getType(scriptType));
+			Object value = get(player, scriptType.create());
 			if (value != null) {
 				return (ScriptEdit) value;
 			}
 		}
 		return null;
-	}
-
-	private String getType(ScriptType scriptType) {
-		return "SCRIPTBLOCKPLUS_" + scriptType.toString().toUpperCase();
 	}
 }
