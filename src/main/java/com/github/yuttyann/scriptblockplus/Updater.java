@@ -136,7 +136,7 @@ public class Updater {
 		YamlConfig config = Files.getConfig();
 		if(config.getBoolean("UpdateChecker") && isUpperVersion()) {
 			File data = config.getDataFolder();
-			File changeLogFile = new File(data, "更新履歴.txt");
+			File changeLogFile = new File(data, "ChangeLog.txt");
 			List<String> changeLog = new ArrayList<String>();
 			if (changeLogFile.exists()) {
 				changeLog = FileUtils.getFileText(changeLogFile);

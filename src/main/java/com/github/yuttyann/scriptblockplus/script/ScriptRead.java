@@ -65,7 +65,7 @@ public class ScriptRead extends ScriptManager {
 			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
 			return false;
 		}
-		if (!corrScripts(scriptData.getScripts())) {
+		if (!sort(scriptData.getScripts())) {
 			Utils.sendPluginMessage(player, Lang.getErrorScriptMessage(scriptType));
 			Utils.sendPluginMessage(Lang.getConsoleErrorScriptExecMessage(player, scriptType, blockCoords.getWorld(), blockCoords.getCoords()));
 			return false;
@@ -93,14 +93,22 @@ public class ScriptRead extends ScriptManager {
 		return true;
 	}
 
-	private boolean corrScripts(List<String> scripts) {
-		List<String> list = new ArrayList<String>();
+	private boolean sort(List<String> scripts) {
 		try {
-			for (String script : scripts) {
-				list.addAll(StringUtils.getScripts(script));
+			List<String> temp = new ArrayList<String>();
+			for (String scriptText : scripts) {
+				temp.addAll(StringUtils.getScripts(scriptText));
 			}
-			this.scripts = list;
-			return list.size() >= scripts.size();
+			List<String> result = new ArrayList<String>();
+			for (Option option : mapManager.getOptions()) {
+				for (String script : temp) {
+					if (script.startsWith(option.getPrefix())) {
+						result.add(script);
+					}
+				}
+			}
+			this.scripts = result;
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
