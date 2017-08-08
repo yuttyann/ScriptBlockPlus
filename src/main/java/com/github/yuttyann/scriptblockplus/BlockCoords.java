@@ -22,7 +22,6 @@ public class BlockCoords extends Location {
 
 	public Location getCenter() {
 		Location location = clone();
-		location = location.clone();
 		location.setX(location.getBlockX() + 0.5D);
 		location.setZ(location.getBlockZ() + 0.5D);
 		return location;
