@@ -15,7 +15,9 @@ import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.utils.ReflectionUtils;
 
 public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI {
 
@@ -27,7 +29,7 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 	public ScriptBlockManager(ScriptBlock plugin, Location location, ScriptType scriptType) {
 		super(plugin, scriptType);
 		this.scriptData = new ScriptData(location, scriptType);
-		this.blockCoords = new BlockCoords(scriptData.getLocation());
+		this.blockCoords = location != null ? new BlockCoords(location) : null;
 		this.timerTemps = new HashMap<ScriptType, List<Location>>();
 		this.scriptTemps = new HashMap<Boolean, Map<Location, ScriptType>>();
 	}
@@ -88,18 +90,36 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 	}
 
 	@Override
-	public void addOption(Option option) {
-		getOptionManager().addOption(option);
+	public void addOption(Class<? extends BaseOption> option) {
+		Option instance = null;
+		try {
+			instance = (Option) ReflectionUtils.newInstance(option, this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		getOptionManager().addOption(instance);
 	}
 
 	@Override
-	public void addOption(int index, Option option) {
-		getOptionManager().addOption(index, option);
+	public void addOption(int index, Class<? extends BaseOption> option) {
+		Option instance = null;
+		try {
+			instance = (Option) ReflectionUtils.newInstance(option, this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		getOptionManager().addOption(index, instance);
 	}
 
 	@Override
-	public void removeOption(Option option) {
-		getOptionManager().removeOption(option);
+	public void removeOption(Class<? extends BaseOption> option) {
+		Option instance = null;
+		try {
+			instance = (Option) ReflectionUtils.newInstance(option, this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		getOptionManager().removeOption(instance);
 	}
 
 	@Override

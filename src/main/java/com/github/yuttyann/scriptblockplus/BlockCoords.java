@@ -4,20 +4,21 @@ import org.bukkit.Location;
 
 public class BlockCoords extends Location {
 
+	public String coords;
+	public String fullCoords;
+
 	public BlockCoords(Location location) {
 		super(location.getWorld(), location.getX(), location.getY(), location.getZ());
-	}
-
-	public Location getLocation() {
-		return this;
+		this.coords = getBlockX() + ", " + getBlockY() + ", " + getBlockZ();
+		this.fullCoords = getWorld().getName() + ", " + coords;
 	}
 
 	public String getCoords() {
-		return getBlockX() + ", " + getBlockY() + ", " + getBlockZ();
+		return coords;
 	}
 
 	public String getFullCoords() {
-		return getWorld().getName() + ", " + getCoords();
+		return fullCoords;
 	}
 
 	public Location getCenter() {

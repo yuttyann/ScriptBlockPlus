@@ -54,8 +54,9 @@ public class Files {
 			return instance.break_;
 		case WALK:
 			return instance.walk;
+		default:
+			return null;
 		}
-		return null;
 	}
 
 	public static void reload() {

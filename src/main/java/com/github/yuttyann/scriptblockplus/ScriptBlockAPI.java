@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
 /**
  * @author ゆっちゃん
@@ -62,24 +62,24 @@ public interface ScriptBlockAPI {
 	 * オプションを追加する
 	 * <br>
 	 * 追加するオプションクラスには"BaseOption"を継承してください
-	 * @param option オプション
+	 * @param option オプションクラス
 	 */
-	public void addOption(Option option);
+	public void addOption(Class<? extends BaseOption> option);
 
 	/**
 	 * 指定した位置にオプションを追加する
 	 * <br>
 	 * 追加するオプションクラスには"BaseOption"を継承してください
 	 * @param index 位置
-	 * @param option オプション
+	 * @param option オプションクラス
 	 */
-	public void addOption(int index, Option option);
+	public void addOption(int index, Class<? extends BaseOption> option);
 
 	/**
 	 * オプションを削除する
-	 * @param option オプション
+	 * @param option オプションクラス
 	 */
-	public void removeOption(Option option);
+	public void removeOption(Class<? extends BaseOption> option);
 
 	/**
 	 * 指定した位置のオプションを削除する
