@@ -40,56 +40,6 @@ public final class ReflectionUtils {
 		return getMethod(instance.getClass(), methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
 	}
 
-	public static Object invokeMethod(Object instance, Class<?> clazz, String methodName, Object... arguments) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
-		return getMethod(clazz, methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
-	}
-
-	public enum PackageType {
-		MINECRAFT_SERVER("net.minecraft.server." + Utils.getServerVersion()),
-		CRAFTBUKKIT("org.bukkit.craftbukkit." + Utils.getServerVersion()),
-		CRAFTBUKKIT_BLOCK(CRAFTBUKKIT, "block"),
-		CRAFTBUKKIT_CHUNKIO(CRAFTBUKKIT, "chunkio"),
-		CRAFTBUKKIT_COMMAND(CRAFTBUKKIT, "command"),
-		CRAFTBUKKIT_CONVERSATIONS(CRAFTBUKKIT, "conversations"),
-		CRAFTBUKKIT_ENCHANTMENS(CRAFTBUKKIT, "enchantments"),
-		CRAFTBUKKIT_ENTITY(CRAFTBUKKIT, "entity"),
-		CRAFTBUKKIT_EVENT(CRAFTBUKKIT, "event"),
-		CRAFTBUKKIT_GENERATOR(CRAFTBUKKIT, "generator"),
-		CRAFTBUKKIT_HELP(CRAFTBUKKIT, "help"),
-		CRAFTBUKKIT_INVENTORY(CRAFTBUKKIT, "inventory"),
-		CRAFTBUKKIT_MAP(CRAFTBUKKIT, "map"),
-		CRAFTBUKKIT_METADATA(CRAFTBUKKIT, "metadata"),
-		CRAFTBUKKIT_POTION(CRAFTBUKKIT, "potion"),
-		CRAFTBUKKIT_PROJECTILES(CRAFTBUKKIT, "projectiles"),
-		CRAFTBUKKIT_SCHEDULER(CRAFTBUKKIT, "scheduler"),
-		CRAFTBUKKIT_SCOREBOARD(CRAFTBUKKIT, "scoreboard"),
-		CRAFTBUKKIT_UPDATER(CRAFTBUKKIT, "updater"),
-		CRAFTBUKKIT_UTIL(CRAFTBUKKIT, "util");
-
-		private final String path;
-
-		private PackageType(String path) {
-			this.path = path;
-		}
-
-		private PackageType(PackageType parent, String path) {
-			this(parent + "." + path);
-		}
-
-		public String getPath() {
-			return path;
-		}
-
-		public Class<?> getClass(String className) throws ClassNotFoundException {
-			return Class.forName(this + "." + className);
-		}
-
-		@Override
-		public String toString() {
-			return path;
-		}
-	}
-
 	public enum DataType {
 		BYTE(byte.class, Byte.class),
 		SHORT(short.class, Short.class),

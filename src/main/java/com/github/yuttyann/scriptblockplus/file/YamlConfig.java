@@ -79,7 +79,7 @@ public class YamlConfig {
 
 	public File getJarFile() {
 		try {
-			return (File) ReflectionUtils.invokeMethod((JavaPlugin) plugin, JavaPlugin.class, "getFile");
+			return (File) ReflectionUtils.invokeMethod((JavaPlugin) plugin, "getFile");
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
