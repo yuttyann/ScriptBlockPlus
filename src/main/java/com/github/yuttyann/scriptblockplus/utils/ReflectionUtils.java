@@ -40,6 +40,10 @@ public final class ReflectionUtils {
 		return getMethod(instance.getClass(), methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
 	}
 
+	public static Object invokeMethod(Object instance, Class<?> clazz, String methodName, Object... arguments) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+		return getMethod(clazz, methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
+	}
+
 	public enum DataType {
 		BYTE(byte.class, Byte.class),
 		SHORT(short.class, Short.class),

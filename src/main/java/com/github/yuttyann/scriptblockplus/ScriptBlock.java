@@ -51,6 +51,7 @@ public class ScriptBlock extends JavaPlugin {
 			updater.load();
 			updater.check(null);
 		} catch (Exception e) {
+			e.printStackTrace();
 			Utils.sendPluginMessage(Lang.getUpdateErrorMessage());
 		}
 

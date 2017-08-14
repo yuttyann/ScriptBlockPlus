@@ -55,11 +55,7 @@ public class CommandData {
 			permissions = new ArrayList<String>();
 		}
 		for (Object permission : args) {
-			permissions.add(
-				permission instanceof Permission
-				? ((Permission) permission).getNode()
-				: permission.toString()
-			);
+			permissions.add(permission instanceof Permission ? ((Permission) permission).getNode() : permission.toString());
 		}
 		return this;
 	}
@@ -78,7 +74,7 @@ public class CommandData {
 	}
 
 	public boolean hasPermission(CommandSender sender) {
-		if (isEmpty()) {
+		if (permissions == null || permissions.isEmpty()) {
 			return true;
 		}
 		for (String permission : permissions) {
@@ -95,9 +91,5 @@ public class CommandData {
 
 	public boolean hasMessage() {
 		return message != null;
-	}
-
-	public boolean isEmpty() {
-		return permissions == null || permissions.isEmpty();
 	}
 }

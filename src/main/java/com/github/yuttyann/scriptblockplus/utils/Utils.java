@@ -1,8 +1,6 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
@@ -17,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.PlayerSelector;
@@ -176,10 +175,11 @@ public class Utils {
 
 	@SuppressWarnings("deprecation")
 	public static ItemStack getItemInHand(Player player) {
+		PlayerInventory inventory = player.getInventory();
 		if(isCB19orLater()) {
-			return player.getInventory().getItemInMainHand();
+			return inventory.getItemInMainHand();
 		} else {
-			return player.getInventory().getItemInHand();
+			return inventory.getItemInHand();
 		}
 	}
 
@@ -205,91 +205,38 @@ public class Utils {
 		return world;
 	}
 
-	public static String getDateFormat(String format) {
-		return new SimpleDateFormat(format).format(new Date());
-	}
-
-	public static String getName(Object uuid) {
-		String name = null;
-		Object player = null;
-		if ((player = getOnlinePlayer(uuid)) != null) {
-			name = ((Player) player).getName();
-		} else if ((player = getOfflinePlayer(uuid)) != null) {
-			name = ((OfflinePlayer) player).getName();
-		}
-		return name;
-	}
-
-	public static UUID getUniqueId(String name) {
-		UUID uuid = null;
-		Object player = null;
-		if ((player = getOnlinePlayer(name)) != null) {
-			uuid = ((Player) player).getUniqueId();
-		} else if ((player = getOfflinePlayer(name)) != null) {
-			if (isCB175orLater()) {
-				uuid = ((OfflinePlayer) player).getUniqueId();
-			} else {
-				try {
-					uuid = UUIDFetcher.getUniqueId(name);
-				} catch (Exception e) {
-					e.printStackTrace();
+	public static String getName(UUID uuid) {
+		OfflinePlayer player = null;
+		try {
+			boolean isCB175orLater = isCB175orLater();
+			for (OfflinePlayer offline : Bukkit.getOfflinePlayers()) {
+				if (uuid.equals(isCB175orLater ? offline.getUniqueId() : getUniqueId(offline.getName()))) {
+					player = offline;
+					break;
 				}
 			}
-		}
-		return uuid;
-	}
-
-	public static Player getOnlinePlayer(Object uuid_or_name) {
-		boolean isUUID = false;
-		if (uuid_or_name instanceof UUID) {
-			isUUID = true;
-		} else if (uuid_or_name instanceof String) {
-			String str = uuid_or_name.toString();
-			if (isUUID(str)) {
-				isUUID = true;
-				uuid_or_name = UUID.fromString(str);
-			}
-		}
-		Object value;
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			if (isUUID) {
-				value = player.getUniqueId();
-			} else {
-				value = player.getName();
-			}
-			if (value.equals(uuid_or_name)) {
-				return player;
-			}
+			return player != null ? player.getName() : ProfileFetcher.getName(uuid);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public static OfflinePlayer getOfflinePlayer(Object uuid_or_name) {
-		boolean isUUID = false;
-		if (uuid_or_name instanceof UUID) {
-			isUUID = true;
-		} else if (uuid_or_name instanceof String) {
-			String str = uuid_or_name.toString();
-			if (isUUID(str)) {
-				isUUID = true;
-				uuid_or_name = UUID.fromString(str);
-			}
-		}
-		Object value;
-		boolean isCB175orLater = isCB175orLater();
-		for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-			if (isUUID) {
-				if (isCB175orLater) {
-					value = player.getUniqueId();
-				} else {
-					value = getUniqueId(player.getName());
+	public static UUID getUniqueId(String name) {
+		OfflinePlayer player = null;
+		try {
+			for (OfflinePlayer offline : Bukkit.getOfflinePlayers()) {
+				if (name.equals(offline.getName())) {
+					player = offline;
+					break;
 				}
-			} else {
-				value = player.getName();
 			}
-			if (value.equals(uuid_or_name)) {
-				return player;
+			if (player != null) {
+				return isCB175orLater() ? player.getUniqueId() : ProfileFetcher.getUniqueId(player.getName());
 			}
+			return ProfileFetcher.getUniqueId(name);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}

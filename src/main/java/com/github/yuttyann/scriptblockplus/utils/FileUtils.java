@@ -232,6 +232,9 @@ public class FileUtils {
 	}
 
 	public static void fileDownload(String url, File targetFile) throws IOException {
+		if ((url == null || url.length() == 0) || targetFile == null) {
+			return;
+		}
 		InputStream input = null;
 		FileOutputStream output = null;
 		try {
@@ -276,10 +279,10 @@ public class FileUtils {
 		}
 	}
 
-	public static Document getDocument(String name) throws ParserConfigurationException, SAXException, IOException {
+	public static Document getDocument(String url) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		URLConnection urlconn = new URL("http://xml.yuttyann44581.net/uploads//" + name + ".xml").openConnection();
+		URLConnection urlconn = new URL(url).openConnection();
 		HttpURLConnection httpconn = (HttpURLConnection) urlconn;
 		httpconn.setAllowUserInteraction(false);
 		httpconn.setInstanceFollowRedirects(true);

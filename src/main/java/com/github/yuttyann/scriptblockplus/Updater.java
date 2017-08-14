@@ -28,8 +28,8 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Updater {
 
-	private String pluginName;
-	private String pluginVersion;
+	private final String pluginName;
+	private final String pluginVersion;
 	private String latestVersion;
 	private String downloadURL;
 	private String changeLogURL;
@@ -129,12 +129,12 @@ public class Updater {
 				}
 			}
 		}
-		isUpperVersion = vInt(getLatestVersion()) > vInt(getPluginVersion());
+		isUpperVersion = vInt(latestVersion) > vInt(pluginVersion);
 	}
 
 	public boolean check(Player player) {
 		YamlConfig config = Files.getConfig();
-		if(config.getBoolean("UpdateChecker") && isUpperVersion()) {
+		if(config.getBoolean("UpdateChecker") && isUpperVersion) {
 			File data = config.getDataFolder();
 			File changeLogFile = new File(data, "ChangeLog.txt");
 			List<String> changeLog = new ArrayList<String>();
@@ -152,9 +152,9 @@ public class Updater {
 					if (!downloadFile.exists()) {
 						downloadFile.mkdir();
 					}
-					downloadFile = new File(data, "Downloads/" + getPluginName() + " v" + getLatestVersion() + ".jar");
-					FileUtils.fileDownload(getChangeLogURL(), changeLogFile);
-					FileUtils.fileDownload(getDownloadURL(), downloadFile);
+					downloadFile = new File(data, "Downloads/" + pluginName + " v" + latestVersion + ".jar");
+					FileUtils.fileDownload(changeLogURL, changeLogFile);
+					FileUtils.fileDownload(downloadURL, downloadFile);
 				} catch (IOException e) {
 					e.printStackTrace();
 					sendErrorMessage();
@@ -170,7 +170,7 @@ public class Updater {
 				}
 			}
 			if (config.getBoolean("OpenTextFile") && !isError()) {
-				if (!first && changeLog.equals(fText(getChangeLogURL()))) {
+				if (!first && changeLog.equals(fText(changeLogURL))) {
 					return true;
 				}
 				Desktop desktop = Desktop.getDesktop();
@@ -202,17 +202,17 @@ public class Updater {
 	}
 
 	public void sendCheckMessage(CommandSender sender) {
-		if(isUpperVersion() && !isError() && sender.isOp()) {
-			for (String message : Lang.getUpdateCheckMessages(getPluginName(), getLatestVersion(), getDetails())) {
-				Utils.sendPluginMessage(message);
+		if(isUpperVersion && !isError && sender.isOp()) {
+			for (String message : Lang.getUpdateCheckMessages(pluginName, latestVersion, details)) {
+				Utils.sendPluginMessage(sender, message);
 			}
 		}
 	}
 
 	private void sendErrorMessage() {
-		if(!isError()) {
+		if(!isError) {
 			isError = true;
-			for (String message : Lang.getUpdateErrorMessages(getPluginName(), getLatestVersion())) {
+			for (String message : Lang.getUpdateErrorMessages(pluginName, latestVersion)) {
 				Utils.sendPluginMessage(message);
 			}
 		}
@@ -227,6 +227,6 @@ public class Updater {
 	}
 
 	private Document getDocument() throws ParserConfigurationException, SAXException, IOException {
-		return FileUtils.getDocument(getPluginName());
+		return FileUtils.getDocument("http://xml.yuttyann44581.net/uploads/" + pluginName + ".xml");
 	}
 }

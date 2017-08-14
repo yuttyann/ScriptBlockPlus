@@ -336,6 +336,9 @@ public class ScriptBlockPlusCommand implements TabExecutor {
 		List<Block> blocks = weSelection.getBlocks(selection);
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < types.length; i++) {
+			if (!Files.getScriptFile(types[i]).exists()) {
+				continue;
+			}
 			ScriptEdit scriptEdit = new ScriptEdit(null, types[i]);
 			for (Block block : blocks) {
 				if (scriptEdit.weRemove(player, block.getLocation())) {

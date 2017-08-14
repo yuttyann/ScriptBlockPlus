@@ -8,63 +8,36 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-public class UUIDFetcher implements Callable<Map<String, UUID>> {
+public class ProfileFetcher {
 
-	private static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
+	private static final String PROFILE_NAME_URL = "https://api.mojang.com/users/profiles/minecraft/";
+	private static final String PROFILE_UUID_URL = "https://api.mojang.com/user/profiles/";
 
-	private Map<Object, Object> jsonMap;
+	private static final JSONParser JSON_PARSER = new JSONParser();
 
-	private UUIDFetcher(String name) {
-		try {
-			this.jsonMap = getJsonMap(getJsonString(PROFILE_URL + name));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	public static UUID getUniqueId(String name) throws Exception {
+		String url = PROFILE_NAME_URL + name;
+		JSONObject jsonObject = (JSONObject) JSON_PARSER.parse(getJsonString(url));
+		return fromString(jsonObject.get("id").toString());
 	}
 
-	@Override
-	public Map<String, UUID> call() throws Exception {
-		Map<String, UUID> uuidMap = new HashMap<String, UUID>();
-		if (jsonMap != null) {
-			String id = jsonMap.get("id").toString();
-			String name = jsonMap.get("name").toString();
-			uuidMap.put(name, fromString(id));
-		}
-		return uuidMap;
+	public static String getName(UUID uuid) throws Exception {
+		String url = PROFILE_UUID_URL + StringUtils.replace(uuid.toString(), "-", "") + "/names";
+		JSONArray jsonArray = (JSONArray) JSON_PARSER.parse(getJsonString(url));
+		return ((JSONObject) JSON_PARSER.parse(jsonArray.get(jsonArray.size() - 1).toString())).get("name").toString();
 	}
 
-	public static UUID fromString(String uuid) {
+	private static UUID fromString(String uuid) {
 		return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));
 	}
 
-	public static UUID getUniqueId(String name) throws Exception {
-		return new UUIDFetcher(name).call().get(name);
-	}
-
-	@SuppressWarnings("unchecked")
-	private Map<Object, Object> getJsonMap(String json) throws ParseException {
-		JSONParser jsonParser = new JSONParser();
-		JSONObject jsonObject = (JSONObject) jsonParser.parse(json);
-		Map<Object, Object> objectMap = new HashMap<Object, Object>();
-		Set<Entry<Object, Object>> entrySet = jsonObject.entrySet();
-		for(Entry<Object, Object> entry : entrySet) {
-			objectMap.put(entry.getKey(), entry.getValue());
-		}
-		return objectMap;
-	}
-
-	private String getJsonString(String url) {
+	private static String getJsonString(String url) {
 		InputStream input = null;
 		InputStreamReader inReader = null;
 		BufferedReader buReader = null;

@@ -45,6 +45,19 @@ public abstract class BaseOption extends Option {
 		this.vaultPermission = scriptManager.getVaultPermission();
 	}
 
+	protected void commandExec(Player player, String command, boolean isBypass) {
+		if (!isBypass || player.isOp()) {
+			Utils.dispatchCommand(player, command, blockCoords.getAllCenter());
+		} else {
+			try {
+				player.setOp(true);
+				Utils.dispatchCommand(player, command, blockCoords.getAllCenter());
+			} finally {
+				player.setOp(false);
+			}
+		}
+	}
+
 	@Override
 	public boolean callOption(ScriptRead scriptRead) {
 		this.scriptRead = scriptRead;
@@ -59,17 +72,4 @@ public abstract class BaseOption extends Option {
 	}
 
 	public abstract boolean isValid();
-
-	protected void commandExec(Player player, String command, boolean isBypass) {
-		if (!isBypass || player.isOp()) {
-			Utils.dispatchCommand(player, command, blockCoords.getAllCenter());
-		} else {
-			try {
-				player.setOp(true);
-				Utils.dispatchCommand(player, command, blockCoords.getAllCenter());
-			} finally {
-				player.setOp(false);
-			}
-		}
-	}
 }

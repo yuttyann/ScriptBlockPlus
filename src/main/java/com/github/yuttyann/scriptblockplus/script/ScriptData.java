@@ -1,7 +1,10 @@
 package com.github.yuttyann.scriptblockplus.script;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -58,10 +61,10 @@ public class ScriptData implements Cloneable {
 
 	public List<String> getAuthors(boolean isName) {
 		String[] authors = getAuthor().split(",");
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<String>(authors.length);
 		for (String author : authors) {
 			author = author.trim();
-			list.add(isName ? Utils.getName(author) : author);
+			list.add(isName ? Utils.getName(UUID.fromString(author)) : author);
 		}
 		return list;
 	}
@@ -111,7 +114,7 @@ public class ScriptData implements Cloneable {
 	}
 
 	public void setLastEdit() {
-		setLastEdit(Utils.getDateFormat("yyyy/MM/dd HH:mm:ss"));
+		setLastEdit(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
 	}
 
 	public void setLastEdit(String time) {

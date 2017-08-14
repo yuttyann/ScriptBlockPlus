@@ -99,7 +99,7 @@ public class ScriptRead extends ScriptManager {
 			for (String scriptText : scripts) {
 				temp.addAll(StringUtils.getScripts(scriptText));
 			}
-			List<String> result = new ArrayList<String>();
+			List<String> result = new ArrayList<String>(temp.size());
 			for (Option option : mapManager.getOptions()) {
 				for (String script : temp) {
 					if (script.startsWith(option.getPrefix())) {

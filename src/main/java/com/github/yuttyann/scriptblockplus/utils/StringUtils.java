@@ -74,25 +74,14 @@ public class StringUtils {
 	}
 
 	public static String createString(String[] args, int start) {
-		return createString(args, start, " ");
-	}
-
-	public static String createString(String[] args, int start, String glue) {
 		StringBuilder builder = new StringBuilder();
 		for (int i = start; i < args.length; i++) {
 			builder.append(args[i]);
 			if (i != (args.length - 1)) {
-				builder.append(glue);
+				builder.append(" ");
 			}
 		}
 		return builder.toString();
-	}
-
-	public static String startText(String text, String prefix, String nullCase) {
-		if (text.startsWith(prefix)) {
-			return text.substring(0, prefix.length());
-		}
-		return nullCase;
 	}
 
 	public static String removeStart(String text, String prefix) {

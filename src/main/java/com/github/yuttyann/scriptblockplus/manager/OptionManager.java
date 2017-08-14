@@ -61,7 +61,11 @@ public class OptionManager {
 	}
 
 	public void removeOption(Option option) {
-		options.remove(option);
+		for (int i = 0; i < options.size(); i++) {
+			if (options.get(i).equals(option)) {
+				options.remove(i);
+			}
+		}
 	}
 
 	public void removeOption(int index) {

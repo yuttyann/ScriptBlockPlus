@@ -1,7 +1,9 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import com.github.yuttyann.scriptblockplus.file.Lang;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
@@ -28,12 +30,17 @@ public class ItemHand extends BaseOption {
 		String itemName = array.length > 2 ? StringUtils.createString(array, 2) : null;
 		itemName = itemName != null ? StringUtils.replace(itemName, "&", "§") : itemName;
 
-		ItemStack item = Utils.getItemInHand(player);
-		if (!checkItem(item, itemName, id, amount, damage)) {
-			Utils.sendPluginMessage(player, Lang.getErrorHandMessage(getMaterial(id), id, amount, damage, itemName));
-			return false;
+		boolean success = false;
+		for (ItemStack item : getItems(player)) {
+			if (checkItem(item, itemName, id, amount, damage)) {
+				success = true;
+				break;
+			}
 		}
-		return true;
+		if (!success) {
+			Utils.sendPluginMessage(player, Lang.getErrorHandMessage(getMaterial(id), id, amount, damage, itemName));
+		}
+		return success;
 	}
 
 	private boolean checkItem(ItemStack item, String itemName, int id, int amount, short damage) {
@@ -42,6 +49,16 @@ public class ItemHand extends BaseOption {
 		}
 		String itemName_ = Utils.getItemName(item);
 		return itemName == null || (itemName_ != null && itemName_.equals(itemName));
+	}
+
+	@SuppressWarnings("deprecation")
+	private ItemStack[] getItems(Player player) {
+		PlayerInventory inventory = player.getInventory();
+		if(Utils.isCB19orLater()) {
+			return new ItemStack[]{inventory.getItemInMainHand(), inventory.getItemInOffHand()};
+		} else {
+			return new ItemStack[]{inventory.getItemInHand()};
+		}
 	}
 
 	@SuppressWarnings("deprecation")

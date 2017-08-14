@@ -69,7 +69,7 @@ updateCheckMessages:
 updateErrorMessages:
 - '&cプラグイン名: %pluginname%'
 - '&cバージョン: v%latestversion%'
-- '&c取得ファイル: http://xml.yuttyann44581.net/uploads//%pluginname%.xml/'
+- '&c取得ファイル: http://xml.yuttyann44581.net/uploads/%pluginname%.xml/'
 - '&c連絡用ページ: http://file.yuttyann44581.net/contact/'
 - '&c解決しない場合は、製作者に連絡してください。'
 
