@@ -126,7 +126,7 @@ public class Utils {
 		}
 		if (message.contains("\\n")) {
 			String[] newLine = StringUtils.split(message, "\\n");
-			for(int i = 0, l = newLine.length; i < l; i++) {
+			for(int i = 0; i < newLine.length; i++) {
 				sender.sendMessage(prefix + newLine[i]);
 			}
 		} else {
