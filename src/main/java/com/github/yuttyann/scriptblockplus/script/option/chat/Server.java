@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
@@ -16,13 +15,10 @@ public class Server extends BaseOption {
 
 	@Override
 	public boolean isValid() {
-		Bukkit.broadcastMessage(replace(player, optionData));
+		String message = optionData;
+		message = StringUtils.replace(message, "&rc", Utils.getRandomColor());
+		message = StringUtils.replace(message, "&", "§");
+		Bukkit.broadcastMessage(message);
 		return true;
-	}
-
-	private String replace(Player player, String text) {
-		text = StringUtils.replace(text, "&rc", Utils.getRandomColor());
-		text = StringUtils.replace(text, "&", "§");
-		return text;
 	}
 }
