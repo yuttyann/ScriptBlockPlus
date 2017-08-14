@@ -107,30 +107,24 @@ public class Utils {
 		return ChatColor.getByChar(Integer.toHexString(new Random().nextInt(16))).toString();
 	}
 
-	public static void sendPluginMessage(Object msg) {
-		sendPluginMessage(ScriptBlock.getInstance(), Bukkit.getConsoleSender(), msg);
+	public static void sendPluginMessage(String message) {
+		sendPluginMessage(ScriptBlock.getInstance(), Bukkit.getConsoleSender(), message);
 	}
 
-	public static void sendPluginMessage(CommandSender sender, Object msg) {
-		sendPluginMessage(ScriptBlock.getInstance(), sender, msg);
+	public static void sendPluginMessage(CommandSender sender, String message) {
+		sendPluginMessage(ScriptBlock.getInstance(), sender, message);
 	}
 
-	public static void sendPluginMessage(Plugin plugin, CommandSender sender, Object msg) {
-		if (msg == null) {
+	public static void sendPluginMessage(Plugin plugin, CommandSender sender, String message) {
+		if (message == null || message.length() == 0) {
 			return;
 		}
-		String message = msg.toString();
 		String prefix = getStartColor(message).toString();
 		if (Files.getConfig().getBoolean("MessagePrefix")) {
 			prefix += "[" + plugin.getName() + "] ";
 		}
-		if (message.contains("\\n")) {
-			String[] newLine = StringUtils.split(message, "\\n");
-			for(int i = 0; i < newLine.length; i++) {
-				sender.sendMessage(prefix + newLine[i]);
-			}
-		} else {
-			sender.sendMessage(prefix + message);
+		for(String line : StringUtils.split(message, "\\n")) {
+			sender.sendMessage(prefix + line);
 		}
 	}
 
