@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,39 +16,22 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.YamlConfig;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public class MapManager {
 
 	private ScriptBlock plugin;
-	private List<Option> options;
-	private Map<UUID, Double> moneyCosts;
-	private Map<UUID, String> oldLocation;
 	private Map<ScriptType, Set<String>> scriptLocation;
 	private Map<ScriptType, Map<String, List<UUID>>> delayScripts;
-	private Map<ScriptType, Map<String, Map<UUID, long[]>>> cooldownScripts;
+	private Map<ScriptType, Map<String, Map<UUID, Cooldown>>> cooldownScripts;
 
 	public MapManager(ScriptBlock plugin) {
 		this.plugin = plugin;
-		this.options = new ArrayList<Option>();
-		this.moneyCosts = new HashMap<UUID, Double>();
-		this.oldLocation = new HashMap<UUID, String>();
 		this.scriptLocation = new HashMap<ScriptType, Set<String>>();
-		this.delayScripts =  new HashMap<ScriptType, Map<String, List<UUID>>>();
-		this.cooldownScripts = new HashMap<ScriptType, Map<String, Map<UUID, long[]>>>();
-	}
-
-	public List<Option> getOptions() {
-		return options;
-	}
-
-	public Map<UUID, Double> getMoneyCosts() {
-		return moneyCosts;
-	}
-
-	public Map<UUID, String> getOldLocation() {
-		return oldLocation;
+		this.delayScripts = new HashMap<ScriptType, Map<String, List<UUID>>>();
+		this.cooldownScripts = new HashMap<ScriptType, Map<String, Map<UUID, Cooldown>>>();
 	}
 
 	public Map<ScriptType, Set<String>> getScriptLocation() {
@@ -60,45 +42,28 @@ public class MapManager {
 		return delayScripts;
 	}
 
-	public Map<ScriptType, Map<String, Map<UUID, long[]>>> getCooldownScripts() {
+	public Map<ScriptType, Map<String, Map<UUID, Cooldown>>> getCooldownScripts() {
 		return cooldownScripts;
 	}
 
 	public void loadAllScripts() {
 		try {
-			for (ScriptType scriptType : ScriptType.values()) {
-				loadScripts(Files.getScriptFile(scriptType), scriptType);
-			}
+			StreamUtils.forEach(ScriptType.values(), s -> loadScripts(Files.getScriptFile(s), s));
 		} catch (Exception e) {
 			scriptLocation.clear();
 		}
 	}
 
 	public void loadScripts(YamlConfig scriptFile, ScriptType scriptType) {
-		Set<String> locationSet = new HashSet<String>();
-		for (String world : scriptFile.getKeys(false)) {
-			for (String coords : scriptFile.getKeys(world, false)) {
-				locationSet.add(world + ", " + coords);
-			}
-		}
-		scriptLocation.put(scriptType, locationSet);
+		Set<String> set = new HashSet<String>();
+		scriptFile.getKeys().forEach(w -> scriptFile.getKeys(w).forEach(c -> set.add(w + ", " + c)));
+		scriptLocation.put(scriptType, set);
 	}
 
 	public void saveCooldown() {
 		if (cooldownScripts.size() > 0) {
-			File cooldownFile = new File(plugin.getDataFolder(), Files.FILE_PATHS[5]);
+			File cooldownFile = new File(plugin.getDataFolder(), "scripts/cooldown.dat");
 			try {
-				Map<String, Map<UUID, long[]>> cooldownMap;
-				for (ScriptType scriptType : cooldownScripts.keySet()) {
-					cooldownMap = cooldownScripts.get(scriptType);
-					for (String fullCoords : cooldownMap.keySet()) {
-						for (Entry<UUID, long[]> entry : cooldownMap.get(fullCoords).entrySet()) {
-							long[] params = entry.getValue();
-							params[3] = System.currentTimeMillis();
-							putCooldown(entry.getKey(), fullCoords, scriptType, params);
-						}
-					}
-				}
 				FileUtils.saveFile(cooldownFile, cooldownScripts);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -106,60 +71,47 @@ public class MapManager {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void loadCooldown() {
-		File cooldownFile = new File(plugin.getDataFolder(), Files.FILE_PATHS[5]);
+		File cooldownFile = new File(plugin.getDataFolder(), "scripts/cooldown.dat");
 		if (cooldownFile.exists()) {
-			Object cooldownData = null;
 			try {
-				cooldownData = FileUtils.loadFile(cooldownFile);
-				cooldownFile.delete();
+				cooldownScripts = FileUtils.loadFile(cooldownFile);
+				StreamUtils.mapForEach(ScriptType.values(),
+					s -> cooldownScripts.get(s).values(),
+						cm -> cm.forEach(m -> m.values().forEach(c -> c.start(0L, 20L))));
 			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			cooldownScripts = (Map<ScriptType, Map<String, Map<UUID, long[]>>>) cooldownData;
-			Map<String, Map<UUID, long[]>> cooldownMap;
-			for (ScriptType scriptType : cooldownScripts.keySet()) {
-				cooldownMap = cooldownScripts.get(scriptType);
-				for (String fullCoords : cooldownMap.keySet()) {
-					for (Entry<UUID, long[]> entry : cooldownMap.get(fullCoords).entrySet()) {
-						long[] params = entry.getValue();
-						if (params[3] > 0) {
-							params[2] += System.currentTimeMillis() - params[3];
-							params[3] = 0;
-							putCooldown(entry.getKey(), fullCoords, scriptType, params);
-						}
-					}
-				}
+				cooldownScripts = new HashMap<ScriptType, Map<String, Map<UUID, Cooldown>>>();
+			} finally {
+				cooldownFile.delete();
 			}
 		}
 	}
 
-	public void putCooldown(UUID uuid, String fullCoords, ScriptType scriptType, long[] params) {
-		Map<String, Map<UUID, long[]>> cooldownMap = cooldownScripts.get(scriptType);
+	public void putCooldown(ScriptType scriptType, String fullCoords, UUID uuid, Cooldown cooldown) {
+		Map<String, Map<UUID, Cooldown>> cooldownMap = cooldownScripts.get(scriptType);
 		if (cooldownMap == null) {
-			cooldownMap = new HashMap<String, Map<UUID, long[]>>();
+			cooldownMap = new HashMap<String, Map<UUID, Cooldown>>();
 		}
-		Map<UUID, long[]> paramMap = cooldownMap.get(fullCoords);
-		if (paramMap == null) {
-			paramMap = new HashMap<UUID, long[]>();
+		Map<UUID, Cooldown> cooldowns = cooldownMap.get(fullCoords);
+		if (cooldowns == null) {
+			cooldowns = new HashMap<UUID, Cooldown>();
 		}
-		paramMap.put(uuid, params);
-		cooldownMap.put(fullCoords, paramMap);
+		cooldowns.put(uuid, cooldown);
+		cooldownMap.put(fullCoords, cooldowns);
 		cooldownScripts.put(scriptType, cooldownMap);
 	}
 
-	public void removeCooldown(UUID uuid, String fullCoords, ScriptType scriptType) {
-		Map<String, Map<UUID, long[]>> cooldownMap = cooldownScripts.get(scriptType);
-		Map<UUID, long[]> params = cooldownMap != null ? cooldownMap.get(fullCoords) : null;
-		if (params != null && params.containsKey(uuid)) {
-			params.remove(uuid);
-			cooldownMap.put(fullCoords, params);
+	public void removeCooldown(ScriptType scriptType, String fullCoords, UUID uuid) {
+		Map<String, Map<UUID, Cooldown>> cooldownMap = cooldownScripts.get(scriptType);
+		Map<UUID, Cooldown> cooldowns = cooldownMap == null ? null : cooldownMap.get(fullCoords);
+		if (cooldowns != null && cooldowns.containsKey(uuid)) {
+			cooldowns.remove(uuid);
+			cooldownMap.put(fullCoords, cooldowns);
 			cooldownScripts.put(scriptType, cooldownMap);
 		}
 	}
 
-	public void putDelay(UUID uuid, String fullCoords, ScriptType scriptType) {
+	public void putDelay(ScriptType scriptType, String fullCoords, UUID uuid) {
 		Map<String, List<UUID>> delayMap = delayScripts.get(scriptType);
 		if (delayMap == null) {
 			delayMap = new HashMap<String, List<UUID>>();
@@ -172,63 +124,63 @@ public class MapManager {
 		delayScripts.put(scriptType, createDelayMap(fullCoords, uuids));
 	}
 
-	public void removeDelay(UUID uuid, String fullCoords, ScriptType scriptType) {
+	public void removeDelay(ScriptType scriptType, String fullCoords, UUID uuid) {
 		Map<String, List<UUID>> delayMap = delayScripts.get(scriptType);
-		List<UUID> uuids = delayMap != null ? delayMap.get(fullCoords) : null;
+		List<UUID> uuids = delayMap == null ? null : delayMap.get(fullCoords);
 		if (uuids != null) {
 			uuids.remove(uuid);
 			delayScripts.put(scriptType, createDelayMap(fullCoords, uuids));
 		}
 	}
 
-	public boolean containsDelay(UUID uuid, String fullCoords, ScriptType scriptType) {
+	public boolean containsDelay(ScriptType scriptType, String fullCoords, UUID uuid) {
 		Map<String, List<UUID>> delayMap = delayScripts.get(scriptType);
-		List<UUID> uuids = delayMap != null ? delayMap.get(fullCoords) : null;
+		List<UUID> uuids = delayMap == null ? null : delayMap.get(fullCoords);
 		return uuids != null && uuids.contains(uuid);
 	}
 
-	public void addLocation(Location location, ScriptType scriptType) {
+	public void addLocation(ScriptType scriptType, Location location) {
 		String fullCoords = BlockCoords.getFullCoords(location);
 		Set<String> locationSet = scriptLocation.get(scriptType);
 		if (locationSet != null && !locationSet.contains(fullCoords)) {
 			locationSet.add(fullCoords);
 			scriptLocation.put(scriptType, locationSet);
 		}
-		removeTimes(location, scriptType);
+		removeTimes(scriptType, location);
 	}
 
-	public void removeLocation(Location location, ScriptType scriptType) {
+	public void removeLocation(ScriptType scriptType, Location location) {
 		String fullCoords = BlockCoords.getFullCoords(location);
 		Set<String> locationSet = scriptLocation.get(scriptType);
 		if (locationSet != null && locationSet.contains(fullCoords)) {
 			locationSet.remove(fullCoords);
 			scriptLocation.put(scriptType, locationSet);
 		}
-		removeTimes(location, scriptType);
+		removeTimes(scriptType, location);
 	}
 
-	public boolean containsLocation(BlockCoords blockCoords, ScriptType scriptType) {
+	public boolean containsLocation(ScriptType scriptType, Location location) {
 		Set<String> locationSet = scriptLocation.get(scriptType);
-		return locationSet != null && locationSet.contains(blockCoords.getFullCoords());
+		return locationSet != null && locationSet.contains(BlockCoords.getFullCoords(location));
 	}
 
-	public void removeTimes(Location location, ScriptType scriptType) {
+	public void removeTimes(ScriptType scriptType, Location location) {
 		String fullCoords = BlockCoords.getFullCoords(location);
-		Map<String, List<UUID>> delayFullCoords = delayScripts.get(scriptType);
-		if (delayFullCoords != null && delayFullCoords.containsKey(fullCoords)) {
-			delayFullCoords.remove(fullCoords);
-			delayScripts.put(scriptType, delayFullCoords);
+		Map<String, List<UUID>> delayMap = delayScripts.get(scriptType);
+		if (delayMap != null && delayMap.containsKey(fullCoords)) {
+			delayMap.remove(fullCoords);
+			delayScripts.put(scriptType, delayMap);
 		}
-		Map<String, Map<UUID, long[]>> cooldownFullCoords = cooldownScripts.get(scriptType);
-		if (cooldownFullCoords != null && cooldownFullCoords.containsKey(fullCoords)) {
-			cooldownFullCoords.remove(fullCoords);
-			cooldownScripts.put(scriptType, cooldownFullCoords);
+		Map<String, Map<UUID, Cooldown>> cooldownMap = cooldownScripts.get(scriptType);
+		if (cooldownMap != null && cooldownMap.containsKey(fullCoords)) {
+			cooldownMap.remove(fullCoords);
+			cooldownScripts.put(scriptType, cooldownMap);
 		}
 	}
 
 	private Map<String, List<UUID>> createDelayMap(String fullCoords, List<UUID> uuids) {
-		Map<String, List<UUID>> value = new HashMap<String, List<UUID>>();
-		value.put(fullCoords, uuids);
-		return value;
+		Map<String, List<UUID>> map = new HashMap<String, List<UUID>>();
+		map.put(fullCoords, uuids);
+		return map;
 	}
 }

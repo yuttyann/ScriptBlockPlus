@@ -1,20 +1,21 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
+import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
 public class Amount extends BaseOption {
 
-	public Amount(ScriptManager scriptManager) {
-		super(scriptManager, "amount", "@amount:");
+	public Amount() {
+		super("amount", "@amount:");
 	}
 
 	@Override
 	public boolean isValid() {
+		ScriptData scriptData = getScriptData();
 		scriptData.addAmount(1);
-		if (scriptData.getAmount() >= Integer.parseInt(optionData)) {
+		if (scriptData.getAmount() >= Integer.parseInt(getOptionValue())) {
 			scriptData.remove();
-			mapManager.removeLocation(blockCoords, scriptType);
+			getMapManager().removeLocation(getScriptType(), getBlockCoords());
 		}
 		scriptData.save();
 		return true;

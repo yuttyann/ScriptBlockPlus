@@ -3,73 +3,201 @@ package com.github.yuttyann.scriptblockplus.script.option;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.command.BlockCommandSender;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.PlayerSelector;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
-import com.github.yuttyann.scriptblockplus.file.YamlConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
-
+import com.github.yuttyann.scriptblockplus.utils.ReflectionUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public abstract class BaseOption extends Option {
 
-	protected Plugin plugin;
-	protected Player player;
-	protected UUID uuid;
-	protected String optionData;
-	protected List<String> scripts;
-	protected ScriptType scriptType;
-	protected ScriptRead scriptRead;
-	protected YamlConfig scriptFile;
-	protected ScriptData scriptData;
-	protected MapManager mapManager;
-	protected BlockCoords blockCoords;
-	protected VaultEconomy vaultEconomy;
-	protected VaultPermission vaultPermission;
-	protected int scriptIndex;
+	private Plugin plugin;
+	private Player player;
+	private UUID uuid;
+	private String optionValue;
+	private List<String> scripts;
+	private ScriptType scriptType;
+	private ScriptRead scriptRead;
+	private ScriptData scriptData;
+	private MapManager mapManager;
+	private BlockCoords blockCoords;
+	private VaultEconomy vaultEconomy;
+	private VaultPermission vaultPermission;
+	private int scriptIndex;
 
-	protected BaseOption(ScriptManager scriptManager, String name, String prefix) {
+	protected BaseOption(String name, String prefix) {
 		super(name, prefix);
-		this.plugin = scriptManager.getPlugin();
-		this.scriptType = scriptManager.getScriptType();
-		this.scriptFile = scriptManager.getScriptFile();
-		this.mapManager = scriptManager.getMapManager();
-		this.vaultEconomy = scriptManager.getVaultEconomy();
-		this.vaultPermission = scriptManager.getVaultPermission();
 	}
 
-	protected void commandExec(Player player, String command, boolean isBypass) {
+	protected Plugin getPlugin() {
+		return plugin;
+	}
+
+	protected Player getPlayer() {
+		return player;
+	}
+
+	protected UUID getUniqueId() {
+		return uuid;
+	}
+
+	protected String getCoords() {
+		return blockCoords.getCoords();
+	}
+
+	protected String getFullCoords() {
+		return blockCoords.getFullCoords();
+	}
+
+	protected String getOptionValue() {
+		return optionValue;
+	}
+
+	protected List<String> getScripts() {
+		return scripts;
+	}
+
+	protected ScriptType getScriptType() {
+		return scriptType;
+	}
+
+	protected ScriptRead getScriptRead() {
+		return scriptRead;
+	}
+
+	protected ScriptData getScriptData() {
+		return scriptData;
+	}
+
+	protected MapManager getMapManager() {
+		return mapManager;
+	}
+
+	protected BlockCoords getBlockCoords() {
+		return blockCoords;
+	}
+
+	protected VaultEconomy getVaultEconomy() {
+		return vaultEconomy;
+	}
+
+	protected VaultPermission getVaultPermission() {
+		return vaultPermission;
+	}
+
+	protected int getScriptIndex() {
+		return scriptIndex;
+	}
+
+	public abstract boolean isValid();
+
+	@Override
+	@Deprecated
+	public final boolean callOption(ScriptRead scriptRead) {
+		this.scriptRead = scriptRead;
+		this.plugin = scriptRead.getPlugin();
+		this.player = scriptRead.getPlayer();
+		this.uuid = scriptRead.getUniqueId();
+		this.optionValue = scriptRead.getOptionValue();
+		this.scripts = scriptRead.getScripts();
+		this.scriptType = scriptRead.getScriptType();
+		this.scriptData = scriptRead.getScriptData();
+		this.mapManager = scriptRead.getMapManager();
+		this.blockCoords = scriptRead.getBlockCoords().clone();
+		this.vaultEconomy = scriptRead.getVaultEconomy();
+		this.vaultPermission = scriptRead.getVaultPermission();
+		this.scriptIndex = scriptRead.getScriptIndex();
+		return isValid();
+	}
+
+	protected <T extends BaseOption> T copy(T option) {
+		try {
+			BaseOption copy = (BaseOption) ReflectionUtils.newInstance(option.getClass());
+			copy.plugin = this.plugin;
+			copy.player = this.player;
+			copy.uuid = this.uuid;
+			copy.optionValue = this.optionValue;
+			copy.scripts = this.scripts;
+			copy.scriptType = this.scriptType;
+			copy.scriptRead = this.scriptRead;
+			copy.scriptData = this.scriptData;
+			copy.mapManager = this.mapManager;
+			copy.blockCoords = this.blockCoords;
+			copy.vaultEconomy = this.vaultEconomy;
+			copy.vaultPermission = this.vaultPermission;
+			copy.scriptIndex = this.scriptIndex;
+			@SuppressWarnings("unchecked")
+			T result = (T) copy;
+			return result;
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	protected final void commandExecute(Player player, String command, boolean isBypass) {
 		if (!isBypass || player.isOp()) {
-			Utils.dispatchCommand(player, command, blockCoords.getAllCenter());
+			dispatchCommand(player, command, blockCoords.getAllCenter());
 		} else {
 			try {
 				player.setOp(true);
-				Utils.dispatchCommand(player, command, blockCoords.getAllCenter());
+				dispatchCommand(player, command, blockCoords.getAllCenter());
 			} finally {
 				player.setOp(false);
 			}
 		}
 	}
 
-	@Override
-	public boolean callOption(ScriptRead scriptRead) {
-		this.scriptRead = scriptRead;
-		player = scriptRead.getPlayer();
-		uuid = scriptRead.getUUID();
-		optionData = scriptRead.getOptionData();
-		scripts = scriptRead.getScripts();
-		scriptData = scriptRead.getScriptData();
-		blockCoords = scriptRead.getBlockCoords();
-		scriptIndex = scriptRead.getScriptIndex();
-		return isValid();
+	protected final void dispatchCommand(CommandSender sender, String command, Location location) {
+		if (!isOnline(sender) || StringUtils.isEmpty(command)) {
+			return;
+		}
+		if (command.charAt(0) == '/') {
+			command = command.substring(1);
+		}
+		String pattern = getCommandBlockPattern(command);
+		if (pattern != null) {
+			if (location == null) {
+				if (sender instanceof Player) {
+					location = ((Player)sender).getLocation().clone();
+				} else if (sender instanceof BlockCommandSender) {
+					location = ((BlockCommandSender)sender).getBlock().getLocation().clone();
+				}
+			}
+			Player[] players = PlayerSelector.getPlayers(location, pattern);
+			if (players != null) {
+				for (Player p : players) {
+					Bukkit.dispatchCommand(sender, StringUtils.replace(command, pattern, p.getName()));
+				}
+			}
+		} else {
+			Bukkit.dispatchCommand(sender, command);
+		}
 	}
 
-	public abstract boolean isValid();
+	private String getCommandBlockPattern(String command) {
+		String[] array = StringUtils.split(command, " ");
+		for (int i = 1; i < array.length; i++) {
+			if (PlayerSelector.isPattern(array[i])) {
+				return array[i];
+			}
+		}
+		return null;
+	}
+
+	private boolean isOnline(CommandSender sender) {
+		return sender instanceof Player ? ((Player) sender).isOnline() : true;
+	}
 }

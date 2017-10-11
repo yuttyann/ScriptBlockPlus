@@ -1,47 +1,56 @@
 package com.github.yuttyann.scriptblockplus.script;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.file.Lang;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class ScriptRead extends ScriptManager {
+public final class ScriptRead extends ScriptManager {
+
+	public static interface EndProcess {
+
+		public void success(ScriptRead scriptRead);
+
+		public void failed(ScriptRead scriptRead);
+	}
 
 	private Player player;
 	private UUID uuid;
-	private String optionData;
+	private String optionValue;
 	private List<String> scripts;
 	private ScriptData scriptData;
 	private BlockCoords blockCoords;
 	private int scriptIndex;
 
-	public ScriptRead(ScriptManager scriptManager, Player player, BlockCoords blockCoords) {
+	public ScriptRead(ScriptManager scriptManager, Player player, Location location) {
 		super(scriptManager);
 		this.player = player;
 		this.uuid = player.getUniqueId();
-		this.blockCoords = blockCoords;
-		this.scriptData = new ScriptData(blockCoords, scriptType);
+		this.blockCoords = new BlockCoords(location);
+		this.scriptData = new ScriptData(blockCoords, scriptType, true);
 	}
 
 	public Player getPlayer() {
 		return player;
 	}
 
-	public UUID getUUID() {
+	public UUID getUniqueId() {
 		return uuid;
 	}
 
-	public String getOptionData() {
-		return optionData;
+	public String getOptionValue() {
+		return optionValue;
 	}
 
 	public List<String> getScripts() {
@@ -62,52 +71,40 @@ public class ScriptRead extends ScriptManager {
 
 	public boolean read(int index) {
 		if (!scriptData.checkPath()) {
-			Utils.sendPluginMessage(player, Lang.getErrorScriptFileCheckMessage());
+			Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 			return false;
 		}
-		if (!sort(scriptData.getScripts())) {
-			Utils.sendPluginMessage(player, Lang.getErrorScriptMessage(scriptType));
-			Utils.sendPluginMessage(Lang.getConsoleErrorScriptExecMessage(player, scriptType, blockCoords.getWorld(), blockCoords.getCoords()));
+		if (!sort(scriptData.getScripts(), optionManager.newInstances())) {
+			Utils.sendMessage(player, SBConfig.getErrorScriptMessage(scriptType));
+			Utils.sendMessage(SBConfig.getConsoleErrorScriptExecMessage(player, scriptType, blockCoords));
 			return false;
 		}
-		Map<UUID, Double> moneyCosts = mapManager.getMoneyCosts();
+		List<Option> options = optionManager.getOptions();
 		for (int i = index; i < scripts.size(); i++) {
 			String script = scripts.get(i);
-			for (Option option : mapManager.getOptions()) {
-				if (!script.startsWith(option.getPrefix())) {
+			for (Option option : options) {
+				if (!option.isOption(script)) {
 					continue;
 				}
-				optionData = getOptionData(script, option);
-				if (!option.callOption(this)) {
-					Double cost = moneyCosts.get(uuid);
-					if (cost != null) {
-						moneyCosts.remove(uuid);
-						vaultEconomy.depositPlayer(player, cost);
-					}
+				optionValue = option.getValue(script);
+				if (!optionManager.newInstance(option).callOption(this)) {
+					StreamUtils.forEach(endProcessManager.newInstances(), r -> r.failed(this));
 					return false;
 				}
 			}
 		}
-		moneyCosts.remove(uuid);
-		Utils.sendPluginMessage(Lang.getConsoleSuccScriptExecMessage(player, scriptType, blockCoords.getWorld(), blockCoords.getCoords()));
+		StreamUtils.forEach(endProcessManager.newInstances(), r -> r.success(this));
+		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(player, scriptType, blockCoords));
 		return true;
 	}
 
-	private boolean sort(List<String> scripts) {
+	private boolean sort(List<String> scripts, Option[] options) {
 		try {
-			List<String> temp = new ArrayList<String>();
-			for (String scriptText : scripts) {
-				temp.addAll(StringUtils.getScripts(scriptText));
-			}
-			List<String> result = new ArrayList<String>(temp.size());
-			for (Option option : mapManager.getOptions()) {
-				for (String script : temp) {
-					if (script.startsWith(option.getPrefix())) {
-						result.add(script);
-					}
-				}
-			}
-			this.scripts = result;
+			List<String> parse = new ArrayList<String>();
+			StreamUtils.mapForEach(scripts, this::getScripts, parse::addAll);
+			List<String> result = new ArrayList<String>(parse.size());
+			StreamUtils.forEach(options, o -> StreamUtils.filterForEach(parse, s -> o.isOption(s), result::add));
+			this.scripts = Collections.unmodifiableList(result);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -115,7 +112,12 @@ public class ScriptRead extends ScriptManager {
 		return false;
 	}
 
-	private String getOptionData(String script, Option option) {
-		return StringUtils.removeStart(script, option.getPrefix());
+	private List<String> getScripts(String scriptLine) {
+		try {
+			return StringUtils.getScripts(scriptLine);
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

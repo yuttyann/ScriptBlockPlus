@@ -21,8 +21,13 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
+/**
+ * うっちぃさんのソースコードからお借りしました。
+ * @author ucchy
+ */
 public class PlayerSelector {
 
 	private static final Pattern a = Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$");
@@ -115,13 +120,10 @@ public class PlayerSelector {
 	}
 
 	private static Map<String, Integer> a(Map<String, String> map) {
-		HashMap<String, Integer> hashmap = new HashMap<String, Integer>();
-		for (String s : map.keySet()) {
-			if (s.startsWith("score_") && s.length() > "score_".length()) {
-				String s1 = s.substring("score_".length());
-				hashmap.put(s1, Integer.valueOf(a(map.get(s), 1)));
-			}
-		}
+		HashMap<String, Integer> hashmap = new HashMap<String, Integer>(map.size());
+		StreamUtils.filterForEach(map.keySet(),
+			s -> s.startsWith("score_") && s.length() > "score_".length(),
+				s -> hashmap.put(s.substring("score_".length()), Integer.valueOf(a(map.get(s), 1))));
 		return hashmap;
 	}
 
@@ -255,8 +257,7 @@ public class PlayerSelector {
 						continue;
 					}
 				}
-				if (a(player, map) && (l == null || l == player.getGameMode())
-						&& (i1 <= 0 || player.getLevel() >= i1) && player.getLevel() <= j1) {
+				if (a(player, map) && (l == null || l == player.getGameMode()) && (i1 <= 0 || player.getLevel() >= i1) && player.getLevel() <= j1) {
 					list.add(player);
 				}
 			}
@@ -325,15 +326,5 @@ public class PlayerSelector {
 			Score score = objective.getScore(player);
 			return score;
 		}
-	}
-
-	public static String getCommandBlockPattern(String command) {
-		String[] arguments = command.split(" ");
-		for (int i = 1; i < arguments.length; i++) {
-			if (PlayerSelector.isPattern(arguments[i])) {
-				return arguments[i];
-			}
-		}
-		return null;
 	}
 }

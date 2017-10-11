@@ -1,37 +1,34 @@
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
-import java.util.Map;
-import java.util.UUID;
+import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.file.Lang;
-import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.script.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class MoneyCost extends BaseOption {
 
-	public MoneyCost(ScriptManager scriptManager) {
-		super(scriptManager, "moneycost", "$cost:");
+	public MoneyCost() {
+		super("moneycost", "$cost:");
 	}
 
 	@Override
 	public boolean isValid() {
-		double cost = Double.parseDouble(optionData);
+		VaultEconomy vaultEconomy = getVaultEconomy();
+		if (!vaultEconomy.isEnabled()) {
+			return false;
+		}
+		Player player = getPlayer();
+		double cost = Double.parseDouble(getOptionValue());
 		if (vaultEconomy.has(player, cost)) {
 			vaultEconomy.withdrawPlayer(player, cost);
-			putMoneyCosts(cost);
+			SBPlayer.get(player).setMoneyCost(cost, true);
 			return true;
 		}
 		double result = cost - vaultEconomy.getBalance(player);
-		Utils.sendPluginMessage(player, Lang.getErrorCostMessage(cost, result));
+		Utils.sendMessage(player, SBConfig.getErrorCostMessage(cost, result));
 		return false;
-	}
-
-	private void putMoneyCosts(double cost) {
-		Map<UUID, Double> moneyCosts = mapManager.getMoneyCosts();
-		if (moneyCosts.containsKey(uuid)) {
-			cost += moneyCosts.get(uuid);
-		}
-		moneyCosts.put(uuid, cost);
 	}
 }

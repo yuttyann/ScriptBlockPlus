@@ -6,43 +6,27 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class CommandData {
 
 	private String message;
-	private boolean isHelp;
-	private List<String> permissions;
+	private boolean isPrefix;
+	private List<Permission> permissions;
 
-	public CommandData() {
-		this(null, null, true);
+	public CommandData(String message, boolean isPrefix) {
+		this(message, isPrefix, (Permission[]) null);
 	}
 
-	public CommandData(String message) {
-		this(message, null, true);
+	public CommandData(String message, Permission... permission) {
+		this(message, true, permission);
 	}
 
-	public CommandData(Object permission) {
-		this(null, permission, true);
-	}
-
-	public CommandData(boolean isHelp) {
-		this(null, null, isHelp);
-	}
-
-	public CommandData(String message, boolean isHelp) {
-		this(message, null, isHelp);
-	}
-
-	public CommandData(String message, Object permission) {
-		this(message, permission, true);
-	}
-
-	public CommandData(String message, Object permission, boolean isHelp) {
+	public CommandData(String message, boolean isPrefix, Permission... permission) {
 		setMessage(message);
-		if (permission != null) {
-			addPermissions(permission);
-		}
-		setHelp(isHelp);
+		setIsPrefix(isPrefix);
+		addPermission(permission);
 	}
 
 	public CommandData setMessage(String message) {
@@ -50,18 +34,18 @@ public class CommandData {
 		return this;
 	}
 
-	public CommandData addPermissions(Object... args) {
-		if (permissions == null) {
-			permissions = new ArrayList<String>();
-		}
-		for (Object permission : args) {
-			permissions.add(permission instanceof Permission ? ((Permission) permission).getNode() : permission.toString());
-		}
+	public CommandData setIsPrefix(boolean isPrefix) {
+		this.isPrefix = isPrefix;
 		return this;
 	}
 
-	public CommandData setHelp(boolean isHelp) {
-		this.isHelp = isHelp;
+	public CommandData addPermission(Permission... permission) {
+		if (permission != null && permission.length > 0) {
+			if (permissions == null) {
+				permissions = new ArrayList<Permission>();
+			}
+			StreamUtils.forEach(permission, permissions::add);
+		}
 		return this;
 	}
 
@@ -69,27 +53,22 @@ public class CommandData {
 		return message;
 	}
 
-	public List<String> getPermissions() {
+	public boolean isPrefix() {
+		return isPrefix;
+	}
+
+	public List<Permission> getPermissions() {
 		return permissions;
 	}
 
+	public boolean hasMessage() {
+		return StringUtils.isNotEmpty(message);
+	}
+
 	public boolean hasPermission(CommandSender sender) {
-		if (permissions == null || permissions.isEmpty()) {
+		if (permissions == null || permissions.size() == 0) {
 			return true;
 		}
-		for (String permission : permissions) {
-			if (Permission.has(permission, sender)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean isHelp() {
-		return isHelp;
-	}
-
-	public boolean hasMessage() {
-		return message != null;
+		return StreamUtils.anyMatch(permissions, s -> s.has(sender));
 	}
 }

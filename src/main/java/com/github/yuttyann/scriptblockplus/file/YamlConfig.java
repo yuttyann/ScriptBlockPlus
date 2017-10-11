@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.file;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,112 +19,113 @@ import org.bukkit.configuration.file.FileConfigurationOptions;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
-import com.github.yuttyann.scriptblockplus.utils.ReflectionUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class YamlConfig {
 
 	private Plugin plugin;
-	private String fileName;
 	private File file;
+	private File jarFile;
 	private YamlConfiguration yaml;
+	private boolean isCopyFile;
 
-	protected YamlConfig(Plugin plugin, File file, boolean fileCreate) {
-		Validate.notNull(file, "File cannot be null");
+	protected YamlConfig(Plugin plugin, File file, boolean isCopyFile) {
 		this.plugin = plugin;
 		this.file = file;
-		this.fileName = file.getName();
-		if (fileCreate && !file.exists()) {
-			FileUtils.copyFileFromJar(getJarFile(), file, fileName);
-		}
-		try {
-			this.yaml = new YamlConfiguration();
-			this.yaml.load(file);
-		} catch (FileNotFoundException e) {
-		} catch (IOException | InvalidConfigurationException e) {
-			FileUtils.fileEncode(plugin, file);
-			this.yaml = YamlConfiguration.loadConfiguration(file);
-		}
-	}
-
-	public static YamlConfig load(Plugin plugin, String pathName) {
-		return load(plugin, pathName, true);
-	}
-
-	public static YamlConfig load(Plugin plugin, String pathName, boolean fileCreate) {
-		return load(plugin, new File(plugin.getDataFolder(), pathName), fileCreate);
+		this.isCopyFile = isCopyFile;
+		reload();
 	}
 
 	public static YamlConfig load(Plugin plugin, File file) {
 		return load(plugin, file, true);
 	}
 
-	public static YamlConfig load(Plugin plugin, File file, boolean fileCreate) {
-		return new YamlConfig(plugin, file, fileCreate);
+	public static YamlConfig load(Plugin plugin, File file, boolean isCopyFile) {
+		return new YamlConfig(plugin, file, isCopyFile);
 	}
 
-	public File getFile() {
-		return file;
+	public static YamlConfig load(Plugin plugin, String filePath) {
+		return load(plugin, filePath, true);
 	}
 
-	public boolean exists() {
-		return file.exists();
+	public static YamlConfig load(Plugin plugin, String filePath, boolean isCopyFile) {
+		return load(plugin, new File(plugin.getDataFolder(), filePath), isCopyFile);
 	}
 
 	public File getJarFile() {
-		try {
-			return (File) ReflectionUtils.invokeMethod((JavaPlugin) plugin, JavaPlugin.class, "getFile");
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+		if (jarFile == null) {
+			jarFile = FileUtils.getJarFile(plugin);
 		}
-		return null;
+		return jarFile;
 	}
 
 	public File getDataFolder() {
 		return plugin.getDataFolder();
 	}
 
-	public String getFileName() {
-		return fileName;
+	public File getFile() {
+		return file;
 	}
 
-	public YamlConfiguration getYamlConfiguration() {
-		return yaml;
+	public String getFileName() {
+		return file.getName();
+	}
+
+	public String getPath() {
+		return file.getPath();
+	}
+
+	public String getAbsolutePath() {
+		return file.getAbsolutePath();
+	}
+
+	public String getFolderPath() {
+		String path = StringUtils.removeStart(getPath(), getDataFolder().getPath());
+		return path.startsWith("\\") ? path.substring(1, path.length()) : path;
+	}
+
+	public boolean exists() {
+		return file.exists();
+	}
+
+	public long length() {
+		return file.length();
+	}
+
+	public void reload() {
+		Validate.notNull(file, "File cannot be null");
+		if (isCopyFile && !file.exists()) {
+			FileUtils.copyFileFromJar(getJarFile(), file, getFolderPath());
+		}
+		yaml = new YamlConfiguration();
+		try {
+			yaml.load(file);
+		} catch (FileNotFoundException e) {
+		} catch (IOException | InvalidConfigurationException e) {
+			FileUtils.fileEncode(file, !Utils.isCB19orLater());
+			yaml = YamlConfiguration.loadConfiguration(file);
+		}
 	}
 
 	public void save() {
 		try {
-			yaml.save(file);
+			save(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void save(File file) {
-		try {
-			yaml.save(file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void save(File file) throws IOException {
+		yaml.save(file);
 	}
 
-	public void save(String file) {
-		try {
-			yaml.save(file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void save(String filePath) throws IOException {
+		save(new File(filePath));
 	}
 
 	public void addDefault(String path, Object value) {
@@ -192,10 +192,6 @@ public class YamlConfig {
 		return yaml.getString(path, def);
 	}
 
-	public String saveToString() {
-		return yaml.saveToString();
-	}
-
 	public Object get(String path) {
 		return yaml.get(path);
 	}
@@ -259,8 +255,8 @@ public class YamlConfig {
 	}
 
 	public boolean isUUID(String path) {
-		Object val = get(path);
-		return Utils.isUUID(val.toString());
+		String val = getString(path);
+		return val != null && val.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}");
 	}
 
 	public boolean isColor(String path) {
@@ -346,8 +342,16 @@ public class YamlConfig {
 		return yaml.getLong(path, def);
 	}
 
+	public Set<String> getKeys() {
+		return yaml.getKeys(false);
+	}
+
 	public Set<String> getKeys(boolean deep) {
 		return yaml.getKeys(deep);
+	}
+
+	public Set<String> getKeys(String path) {
+		return yaml.getConfigurationSection(path).getKeys(false);
 	}
 
 	public Set<String> getKeys(String path, boolean deep) {
@@ -377,12 +381,12 @@ public class YamlConfig {
 	public List<UUID> getUUIDList(String path) {
 		List<?> list = getList(path);
 		if (list == null) {
-			return new ArrayList<UUID>(0);
+			return new ArrayList<UUID>();
 		}
 		List<UUID> result = new ArrayList<UUID>();
 		for (Object object : list) {
 			if (object instanceof String || isPrimitiveWrapper(object)) {
-				result.add(UUID.fromString(String.valueOf(object)));
+				result.add(UUID.fromString(object.toString()));
 			}
 		}
 		return result;
@@ -418,6 +422,11 @@ public class YamlConfig {
 
 	public List<Byte> getByteList(String path) {
 		return yaml.getByteList(path);
+	}
+
+	@Override
+	public String toString() {
+		return yaml.toString();
 	}
 
 	private Object getDefault(String path) {

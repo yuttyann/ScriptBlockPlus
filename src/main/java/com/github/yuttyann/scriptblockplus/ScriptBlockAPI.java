@@ -6,11 +6,12 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
 /**
- * @author ゆっちゃん
  * ScriptBlockPlus APIクラス
+ * @author ゆっちゃん
  */
 public interface ScriptBlockAPI {
 
@@ -30,7 +31,7 @@ public interface ScriptBlockAPI {
 	/**
 	 * スクリプトの座標を設定する
 	 * <br>
-	 * ただし、別の座標に切り替える機能であり保存場所を変更するわけではないです
+	 * ただし、別の座標に切り替える機能であり保存場所を変更するわけではない
 	 * @param location 座標
 	 */
 	public void setLocation(Location location);
@@ -61,7 +62,7 @@ public interface ScriptBlockAPI {
 	/**
 	 * オプションを追加する
 	 * <br>
-	 * 追加するオプションクラスには"BaseOption"を継承してください
+	 * 指定するオプションクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
 	 */
 	public void addOption(Class<? extends BaseOption> option);
@@ -69,7 +70,7 @@ public interface ScriptBlockAPI {
 	/**
 	 * 指定した位置にオプションを追加する
 	 * <br>
-	 * 追加するオプションクラスには"BaseOption"を継承してください
+	 * 指定するオプションクラスには"BaseOption"を継承してください
 	 * @param index 位置
 	 * @param option オプションクラス
 	 */
@@ -77,6 +78,8 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * オプションを削除する
+	 * <br>
+	 * 指定するオプションクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
 	 */
 	public void removeOption(Class<? extends BaseOption> option);
@@ -86,6 +89,55 @@ public interface ScriptBlockAPI {
 	 * @param index 位置
 	 */
 	public void removeOption(int index);
+
+	/**
+	 * オプションの位置を取得する
+	 * <br>
+	 * 指定するオプションクラスには"BaseOption"を継承してください
+	 * @param option オプションクラス
+	 * @return 位置
+	 */
+	public int indexOfOption(Class<? extends BaseOption> option);
+
+	/**
+	 * スクリプトの終了処理を追加する
+	 * <br>
+	 * 指定する終了処理クラスには"EndProcess"を実装してください
+	 * @param process 終了処理クラス
+	 */
+	public void addEndProcess(Class<? extends EndProcess> endProcess);
+
+	/**
+	 * 指定した位置にスクリプトの終了処理を追加する
+	 * <br>
+	 * 指定する終了処理クラスには"EndProcess"を実装してください
+	 * @param index 位置
+	 * @param process 終了処理クラス
+	 */
+	public void addEndProcess(int index, Class<? extends EndProcess> endProcess);
+
+	/**
+	 * スクリプトの終了処理を削除する
+	 * <br>
+	 * 指定する終了処理クラスには"EndProcess"を実装してください
+	 * @param process 終了処理クラス
+	 */
+	public void removeEndProcess(Class<? extends EndProcess> endProcess);
+
+	/**
+	 * 指定した位置のスクリプトの終了処理を削除する
+	 * @param index 位置
+	 */
+	public void removeEndProcess(int index);
+
+	/**
+	 * スクリプトの終了処理の位置を取得する
+	 * <br>
+	 * 指定する終了処理クラスには"EndProcess"を実装してください
+	 * @param process 終了処理クラス
+	 * @return 位置
+	 */
+	public int indexOfProcess(Class<? extends EndProcess> endProcess);
 
 	/**
 	 * スクリプトの作者を取得する
@@ -122,8 +174,9 @@ public interface ScriptBlockAPI {
 	 * スクリプトをコピーする
 	 * @param target 保存先
 	 * @param overwrite 上書きするか
+	 * @return コピーに成功したか
 	 */
-	public void copyScripts(Location target, boolean overwrite);
+	public boolean copyScripts(Location target, boolean overwrite);
 
 	/**
 	 * スクリプトの作者を設定する

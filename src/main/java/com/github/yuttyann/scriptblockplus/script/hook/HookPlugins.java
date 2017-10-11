@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.hook;
 
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.Bukkit;
 
 public class HookPlugins {
 
@@ -12,14 +12,14 @@ public class HookPlugins {
 
 	public static boolean hasVault() {
 		if (hasVault == null) {
-			hasVault = Utils.isPluginEnabled("Vault");
+			hasVault = Bukkit.getPluginManager().isPluginEnabled("Vault");
 		}
 		return hasVault;
 	}
 
 	public static boolean hasWorldEdit() {
 		if (hasWorldEdit == null) {
-			hasWorldEdit = Utils.isPluginEnabled("WorldEdit");
+			hasWorldEdit = Bukkit.getPluginManager().isPluginEnabled("WorldEdit");
 		}
 		return hasWorldEdit;
 	}

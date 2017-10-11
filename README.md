@@ -1,14 +1,14 @@
-# ScriptBlockPlus Java7ç‰ˆ Readmeã€€ã€ç¾åœ¨Java8ç‰ˆé–‹ç™ºä¸­ å¤‰æ›´ç‚¹ã‚‚å¤šæ•°ã‚ã‚‹ã‚ˆï¼ã€‘
-ã“ã®ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã¯yuttyann44581ã«ã‚ˆã£ã¦ä½œæˆã•ã‚Œã¦ã„ã¾ã™ã€‚
+# ScriptBlockPlus Java7”Å Readme@yŒ»İJava8”ÅŠJ”­’† •ÏX“_‚à‘½”‚ ‚é‚æIz
+‚±‚Ìƒvƒ‰ƒOƒCƒ“‚Íyuttyann44581‚É‚æ‚Á‚Äì¬‚³‚ê‚Ä‚¢‚Ü‚·B
 <br>
-ãƒ–ãƒ­ãƒƒã‚¯ã«ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’åŸ‹ã‚è¾¼ã‚€ã“ã¨ãŒå‡ºæ¥ã‚‹ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã§ã™ã€‚
+ƒuƒƒbƒN‚ÉƒXƒNƒŠƒvƒg‚ğ–„‚ß‚Ş‚±‚Æ‚ªo—ˆ‚éƒvƒ‰ƒOƒCƒ“‚Å‚·B
 <br>
-ãƒ©ã‚¤ã‚»ãƒ³ã‚¹: LGPLv3
+ƒ‰ƒCƒZƒ“ƒX: LGPLv3
 <br>
-ç´¹ä»‹ãƒšãƒ¼ã‚¸: http://forum.minecraftuser.jp/viewtopic.php?f=38&t=33171
+Ğ‰îƒy[ƒW: http://forum.minecraftuser.jp/viewtopic.php?f=38&t=33171
 <br>
-é…å¸ƒã‚µã‚¤ãƒˆ: http://file.yuttyann44581.net/
+”z•zƒTƒCƒg: http://file.yuttyann44581.net/
 <br>
-APIã€Eventã®ä½¿ã„æ–¹: https://github.com/yuttyann/ScriptBlockPlus/wiki/APIã¨Eventã®ä½¿ç”¨æ–¹æ³•
+APIAEvent‚Ìg‚¢•û: https://github.com/yuttyann/ScriptBlockPlus/wiki/API‚ÆEvent‚Ìg—p•û–@
 <br>
-(ã‚„ã‚‹æ°—ãŒå‡ºãŸã‚‰ã‚½ãƒ¼ã‚¹ã«ã‚³ãƒ¡ãƒ³ãƒˆä»˜ã‘ã‚‹ã€‚)
+(‚â‚é‹C‚ªo‚½‚çƒ\[ƒX‚ÉƒRƒƒ“ƒg•t‚¯‚éB)

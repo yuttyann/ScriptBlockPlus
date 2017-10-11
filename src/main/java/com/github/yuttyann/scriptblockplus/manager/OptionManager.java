@@ -1,5 +1,9 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -24,59 +28,120 @@ import com.github.yuttyann.scriptblockplus.script.option.vault.PermRemove;
 
 public class OptionManager {
 
-	private ScriptManager scriptManager;
-	private List<Option> options;
+	private final static Option[] EMPTY_OPTION_ARRAY = {};
+	private final static List<Constructor<? extends Option>> CONSTRUCTORS;
 
-	public OptionManager(ScriptManager scriptManager) {
-		this.scriptManager = scriptManager;
-		this.options = scriptManager.getMapManager().getOptions();
+	private List<Option> cacheList;
+
+	static {
+		CONSTRUCTORS = new LinkedList<Constructor<? extends Option>>();
 	}
 
-	public void registerOptions() {
-		addOption(new MoneyCost(scriptManager));
-		addOption(new ItemCost(scriptManager));
-		addOption(new ItemHand(scriptManager));
-		addOption(new Cooldown(scriptManager));
-		addOption(new Delay(scriptManager));
-		addOption(new Group(scriptManager));
-		addOption(new Perm(scriptManager));
-		addOption(new GroupAdd(scriptManager));
-		addOption(new GroupRemove(scriptManager));
-		addOption(new PermAdd(scriptManager));
-		addOption(new PermRemove(scriptManager));
-		addOption(new Amount(scriptManager));
-		addOption(new ToPlayer(scriptManager));
-		addOption(new Server(scriptManager));
-		addOption(new Say(scriptManager));
-		addOption(new Bypass(scriptManager));
-		addOption(new Command(scriptManager));
+	public void registerDefaultOptions() {
+		CONSTRUCTORS.clear();
+		add(MoneyCost.class);
+		add(ItemCost.class);
+		add(ItemHand.class);
+		add(Cooldown.class);
+		add(Delay.class);
+		add(Group.class);
+		add(Perm.class);
+		add(GroupAdd.class);
+		add(GroupRemove.class);
+		add(PermAdd.class);
+		add(PermRemove.class);
+		add(Amount.class);
+		add(ToPlayer.class);
+		add(Server.class);
+		add(Say.class);
+		add(Bypass.class);
+		add(Command.class);
 	}
 
-	public void addOption(Option option) {
-		options.add(option);
+	public void add(Class<? extends Option> option) {
+		CONSTRUCTORS.add(getConstructor(option));
 	}
 
-	public void addOption(int index, Option option) {
-		options.add(index, option);
+	public void add(int index, Class<? extends Option> option) {
+		CONSTRUCTORS.add(index, getConstructor(option));
 	}
 
-	public void removeOption(Option option) {
-		for (int i = 0; i < options.size(); i++) {
-			if (options.get(i).equals(option)) {
-				options.remove(i);
-			}
-		}
+	public void remove(Class<? extends Option> option) {
+		CONSTRUCTORS.remove(getConstructor(option));
 	}
 
-	public void removeOption(int index) {
-		options.remove(index);
+	public void remove(int index) {
+		CONSTRUCTORS.remove(index);
 	}
 
-	public boolean hasOption() {
-		return options.size() > 0;
+	public int indexOf(Class<? extends Option> option) {
+		return CONSTRUCTORS.indexOf(getConstructor(option));
+	}
+
+	public boolean isEmpty() {
+		return CONSTRUCTORS.isEmpty();
 	}
 
 	public List<Option> getOptions() {
-		return options;
+		if (cacheList == null) {
+			newInstances();
+		}
+		return Collections.unmodifiableList(cacheList);
+	}
+
+	public List<Constructor<? extends Option>> getConstructors() {
+		return CONSTRUCTORS;
+	}
+
+	public Option[] newInstances() {
+		return newInstances(new Option[CONSTRUCTORS.size()]);
+	}
+
+	public Option[] newInstances(Option[] options) {
+		clearCache();
+		Option[] instances = options;
+		try {
+			int i = 0;
+			for (Constructor<? extends Option> constructor : CONSTRUCTORS) {
+				cacheList.add(instances[i++] = constructor.newInstance());
+			}
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+			return EMPTY_OPTION_ARRAY;
+		}
+		return instances;
+	}
+
+	public Option newInstance(Option option) {
+		try {
+			for (Constructor<? extends Option> constructor : CONSTRUCTORS) {
+				if (option.getClass().equals(constructor.getDeclaringClass())) {
+					return constructor.newInstance();
+				}
+			}
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private <T extends Option> Constructor<T> getConstructor(Class<T> clazz) {
+		try {
+			Constructor<T> constructor = clazz.getDeclaredConstructor();
+			constructor.setAccessible(true);
+			return constructor;
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public List<Option> clearCache() {
+		if (cacheList == null) {
+			cacheList = new ArrayList<Option>(CONSTRUCTORS.size());
+		} else {
+			cacheList.clear();
+		}
+		return cacheList;
 	}
 }

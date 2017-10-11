@@ -1,9 +1,5 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import java.util.UUID;
-
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -12,32 +8,31 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.Metadata;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
+import com.github.yuttyann.scriptblockplus.script.SBPlayer;
 
 public class JoinQuitListener implements Listener {
 
 	private ScriptBlock plugin;
-	private MapManager mapManager;
 
 	public JoinQuitListener(ScriptBlock plugin) {
 		this.plugin = plugin;
-		this.mapManager = plugin.getMapManager();
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
-		UUID uuid = player.getUniqueId();
-		if (!mapManager.getOldLocation().containsKey(uuid)) {
-			Location location = player.getLocation().clone();
-			mapManager.getOldLocation().put(uuid, BlockCoords.getFullCoords(location.subtract(0.0D, 1.0D, 0.0D)));
+		SBPlayer sbPlayer = SBPlayer.get(event.getPlayer());
+		if (sbPlayer.getOldFullCoords() == null) {
+			BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation());
+			sbPlayer.setOldFullCoords(blockCoords.subtract(0.0D, 1.0D, 0.0D));
 		}
-		plugin.getUpdater().sendCheckMessage(player);
+		plugin.getUpdater().sendCheckMessage(sbPlayer.getPlayer());
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		Metadata.removeAll(event.getPlayer(), Metadata.CLICKACTION, Metadata.SCRIPTFILE, Metadata.SCRIPTTEXT);
+		SBPlayer sbPlayer = SBPlayer.get(event.getPlayer());
+		sbPlayer.setScript(null);
+		sbPlayer.setClickAction(null);
+		sbPlayer.setClipboard(null);
 	}
 }

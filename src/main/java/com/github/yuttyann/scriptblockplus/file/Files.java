@@ -3,27 +3,28 @@ package com.github.yuttyann.scriptblockplus.file;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 
-public class Files {
-
-	public static final String[] FILE_PATHS = {
-		"config.yml", "lang.yml", "scripts/interact.yml", "scripts/break.yml", "scripts/walk.yml", "scripts/cooldown.dat",
-		"plugins/ScriptBlock/BlocksData/interact_Scripts.yml", "plugins/ScriptBlock/BlocksData/walk_Scripts.yml",
-	};
+public class Files extends Lang {
 
 	private static Files instance;
+
 	private YamlConfig config;
 	private YamlConfig lang;
 	private YamlConfig interact;
 	private YamlConfig break_;
 	private YamlConfig walk;
 
-	public Files() {
-		ScriptBlock plugin = ScriptBlock.getInstance();
-		this.config = YamlConfig.load(plugin, FILE_PATHS[0]);
-		this.lang = YamlConfig.load(plugin, FILE_PATHS[1]);
-		this.interact = YamlConfig.load(plugin, FILE_PATHS[2], false);
-		this.break_ = YamlConfig.load(plugin, FILE_PATHS[3], false);
-		this.walk = YamlConfig.load(plugin, FILE_PATHS[4], false);
+	private Files() {
+		super(ScriptBlock.getInstance());
+		this.config = load("config_{lang}.yml", "config");
+		this.lang = load("lang_{lang}.yml", "lang");
+		this.interact = load("scripts/interact.yml", false);
+		this.break_ = load("scripts/break.yml", false);
+		this.walk = load("scripts/walk.yml", false);
+	}
+
+	public static void reload() {
+		instance = new Files();
+		SBConfig.reload();
 	}
 
 	public static YamlConfig getConfig() {
@@ -49,18 +50,17 @@ public class Files {
 	public static YamlConfig getScriptFile(ScriptType scriptType) {
 		switch (scriptType) {
 		case INTERACT:
-			return instance.interact;
+			return getInteract();
 		case BREAK:
-			return instance.break_;
+			return getBreak();
 		case WALK:
-			return instance.walk;
+			return getWalk();
 		default:
 			return null;
 		}
 	}
 
-	public static void reload() {
-		instance = new Files();
-		Lang.reload();
+	private final YamlConfig load(String filePath, boolean isCopyFile) {
+		return YamlConfig.load(plugin , filePath, isCopyFile);
 	}
 }

@@ -14,37 +14,52 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.YamlConfig;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class ScriptData implements Cloneable {
+public final class ScriptData implements Cloneable {
 
 	private Location location;
 	private String scriptPath;
-	private ScriptType scriptType;
 	private YamlConfig scriptFile;
+	private ScriptType scriptType;
+	private boolean isUnmodifiable;
+
+	private ScriptData() {}
 
 	public ScriptData(Location location, ScriptType scriptType) {
-		this.location = location;
+		this(location, scriptType, false);
+	}
+
+	public ScriptData(Location location, ScriptType scriptType, boolean isUnmodifiable) {
+		setLocation(location);
 		this.scriptType = scriptType;
 		this.scriptFile = Files.getScriptFile(scriptType);
-		this.scriptPath = location != null ? (location.getWorld().getName() + "." + BlockCoords.getCoords(location)) : null;
+		this.isUnmodifiable = isUnmodifiable;
 	}
 
 	public void setLocation(Location location) {
+		if (isUnmodifiable) {
+			throw new UnsupportedOperationException();
+		}
 		this.location = location;
-		this.scriptPath = location.getWorld().getName() + "." + BlockCoords.getCoords(location);
+		this.scriptPath = location == null ? null : createPath(location);
+	}
+
+	private String createPath(Location location) {
+		return location.getWorld().getName() + "." + BlockCoords.getCoords(location);
 	}
 
 	public Location getLocation() {
 		return location;
 	}
 
-	public ScriptType getScriptType() {
-		return scriptType;
-	}
-
 	public YamlConfig getScriptFile() {
 		return scriptFile;
+	}
+
+	public ScriptType getScriptType() {
+		return scriptType;
 	}
 
 	public boolean checkPath() {
@@ -60,12 +75,9 @@ public class ScriptData implements Cloneable {
 	}
 
 	public List<String> getAuthors(boolean isName) {
-		String[] authors = getAuthor().split(",");
+		String[] authors = getAuthor().split(", ");
 		List<String> list = new ArrayList<String>(authors.length);
-		for (String author : authors) {
-			author = author.trim();
-			list.add(isName ? Utils.getName(UUID.fromString(author)) : author);
-		}
+		StreamUtils.forEach(authors, s -> list.add(isName ? Utils.getName(UUID.fromString(s)) : s));
 		return list;
 	}
 
@@ -114,7 +126,8 @@ public class ScriptData implements Cloneable {
 	}
 
 	public void setLastEdit() {
-		setLastEdit(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		setLastEdit(format.format(new Date()));
 	}
 
 	public void setLastEdit(String time) {
@@ -126,18 +139,20 @@ public class ScriptData implements Cloneable {
 	}
 
 	public void subtractAmount(int amount) {
-		scriptFile.set(scriptPath + ".Amount", getAmount() - amount);
+		int result = getAmount() - amount;
+		scriptFile.set(scriptPath + ".Amount", result >= 0 ? result : 0);
 	}
 
-	public void copyScripts(Location target, boolean overwrite) {
+	public boolean copyScripts(Location target, boolean overwrite) {
 		ScriptData targetData = new ScriptData(target, scriptType);
-		if (location.equals(target) || !checkPath() || (targetData.checkPath() && overwrite)) {
-			return;
+		if (location.equals(target) || !checkPath() || (targetData.checkPath() && !overwrite)) {
+			return false;
 		}
 		targetData.setAuthor(getAuthor());
 		targetData.setLastEdit(getLastEdit());
 		targetData.setScripts(getScripts());
 		targetData.save();
+		return true;
 	}
 
 	public void setScripts(List<String> scripts) {
@@ -179,12 +194,13 @@ public class ScriptData implements Cloneable {
 		plugin.getMapManager().loadScripts(scriptFile, scriptType);
 	}
 
-	@Override
 	public ScriptData clone() {
-		try {
-			return (ScriptData) super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new Error(e);
-		}
+		ScriptData scriptData = new ScriptData();
+		scriptData.location = this.location;
+		scriptData.scriptPath = this.scriptPath;
+		scriptData.scriptFile = this.scriptFile;
+		scriptData.scriptType = this.scriptType;
+		scriptData.isUnmodifiable = this.isUnmodifiable;
+		return scriptData;
 	}
 }

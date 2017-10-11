@@ -1,7 +1,9 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
-import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import java.util.Objects;
 
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public abstract class Option {
 
@@ -9,20 +11,30 @@ public abstract class Option {
 	private final String prefix;
 
 	protected Option(String name, String prefix) {
-		this.name = name;
-		this.prefix = prefix;
+		this.name = Objects.requireNonNull(name);
+		this.prefix = Objects.requireNonNull(prefix);
 	}
 
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
 
-	public String getPrefix() {
+	public final String getPrefix() {
 		return prefix;
 	}
 
+	public final String getValue(String script) {
+		return StringUtils.removeStart(script, prefix);
+	}
+
+	public final boolean isOption(String script) {
+		return script != null && script.startsWith(prefix);
+	}
+
+	public abstract boolean callOption(ScriptRead scriptRead);
+
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (!(obj instanceof Option)) {
 			return false;
 		}
@@ -30,5 +42,13 @@ public abstract class Option {
 		return name.equals(option.getName()) && prefix.equals(option.getPrefix());
 	}
 
-	public abstract boolean callOption(ScriptRead scriptRead);
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, prefix);
+	}
+
+	@Override
+	public String toString() {
+		return "[name: " + name + ", prefix: " + prefix + "]";
+	}
 }

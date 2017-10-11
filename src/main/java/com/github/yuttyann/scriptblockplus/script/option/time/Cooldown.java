@@ -3,55 +3,60 @@ package com.github.yuttyann.scriptblockplus.script.option.time;
 import java.util.Map;
 import java.util.UUID;
 
-import com.github.yuttyann.scriptblockplus.file.Lang;
-import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
+import org.bukkit.Bukkit;
+
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class Cooldown extends BaseOption {
+public class Cooldown extends BaseOption implements Runnable {
 
-	public Cooldown(ScriptManager scriptManager) {
-		super(scriptManager, "cooldown", "@cooldown:");
-	}
+	private int second;
 
-	public boolean inCooldown(String fullCoords) {
-		long[] params = getParams(fullCoords);
-		if (params != null) {
-			long currTime = System.currentTimeMillis();
-			if (params[2] > currTime) {
-				int time = (int) ((params[2] - currTime) / 1000);
-				short hour = (short) (time / 3600);
-				byte minute = (byte) (time % 3600 / 60);
-				byte second = (byte) (time % 3600 % 60);
-				Utils.sendPluginMessage(player, Lang.getActiveCooldownMessage(hour, minute, second));
-				return true;
-			} else {
-				mapManager.removeCooldown(uuid, fullCoords, scriptType);
-			}
-		}
-		return false;
-	}
-
-	private long[] getParams(String fullCoords) {
-		Map<String, Map<UUID, long[]>> cooldownMap = mapManager.getCooldownScripts().get(scriptType);
-		Map<UUID, long[]> paramMap = cooldownMap != null ? cooldownMap.get(fullCoords) : null;
-		if (paramMap != null) {
-			return paramMap.get(uuid);
-		}
-		return null;
+	public Cooldown() {
+		super("cooldown", "@cooldown:");
 	}
 
 	@Override
 	public boolean isValid() {
-		String fullCoords = blockCoords.getFullCoords();
-		if (inCooldown(fullCoords)) {
+		if (inCooldown(getFullCoords())) {
 			return false;
 		}
-		long[] params = new long[4];
-		params[0] = System.currentTimeMillis();
-		params[1] = Integer.parseInt(optionData) * 1000;
-		params[2] = params[0] + params[1];
-		mapManager.putCooldown(uuid, fullCoords, scriptType, params);
+		start(0L, 20L);
 		return true;
+	}
+
+	@Override
+	public void run() {
+		if (--second <= 0) {
+			getMapManager().removeCooldown(getScriptType(), getFullCoords(), getUniqueId());
+			return;
+		}
+		System.out.println(second);
+	}
+
+	public final void start(long delay, long period) {
+		second = Integer.parseInt(getOptionValue());
+		getMapManager().putCooldown(getScriptType(), getFullCoords(), getUniqueId(), this);
+		Bukkit.getScheduler().runTaskTimer(getPlugin(), this, delay, period);
+	}
+
+	private boolean inCooldown(String fullCoords) {
+		int original = getSecond(fullCoords);
+		if (original > 0) {
+			short hour = (short) (original / 3600);
+			byte minute = (byte) (original % 3600 / 60);
+			byte second = (byte) (original % 3600 % 60);
+			Utils.sendMessage(getPlayer(), SBConfig.getActiveCooldownMessage(hour, minute, second));
+			return true;
+		}
+		return false;
+	}
+
+	private int getSecond(String fullCoords) {
+		Map<String, Map<UUID, Cooldown>> cooldownMap = getMapManager().getCooldownScripts().get(getScriptType());
+		Map<UUID, Cooldown> cooldowns = cooldownMap == null ? null : cooldownMap.get(fullCoords);
+		Cooldown cooldown = cooldowns == null ? null : cooldowns.get(getUniqueId());
+		return cooldown == null ? -1 : cooldown.second;
 	}
 }

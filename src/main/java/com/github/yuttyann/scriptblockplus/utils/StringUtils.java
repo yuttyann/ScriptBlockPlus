@@ -26,13 +26,11 @@ public class StringUtils {
 		List<String> result = new ArrayList<String>();
 		for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
 			if (chars[i] == '[') {
-				if (j == 0) {
+				if (j++ == 0) {
 					k = i;
 				}
-				j++;
 			} else if (chars[i] == ']') {
-				j--;
-				if (j == 0) {
+				if (--j == 0) {
 					result.add(script.substring(k + 1, i));
 				}
 			}
@@ -40,40 +38,72 @@ public class StringUtils {
 		return result;
 	}
 
-	public static String[] split(String text, String delimiter) {
-		List<String> result = new ArrayList<String>();
-		int start = 0, end = 0;
-		for (int i = 1; i < text.length(); i++) {
-			end = text.indexOf(delimiter, start);
-			if (end == -1) {
-				break;
-			}
-			result.add(text.substring(start, end));
-			start = end + delimiter.length();
+	public static String[] split(String source, String delimiter) {
+		return split(source, delimiter, 0);
+	}
+
+	public static String[] split(String source, String delimiter, int limit) {
+		if (isEmpty(source) || isEmpty(delimiter)) {
+			return null;
 		}
-		result.add(text.substring(start));
+		if (limit == 0) {
+			limit = source.length();
+		}
+		List<String> result = new ArrayList<String>(16);
+		int length = delimiter.length();
+		if (limit > 0) {
+			int start = 0;
+			int end = 0;
+			for (int i = 1; i < limit; i++) {
+				end = source.indexOf(delimiter, start);
+				if (end < 0) {
+					break;
+				}
+				result.add(source.substring(start, end));
+				start = end + length;
+			}
+			result.add(source.substring(start));
+		} else {
+			int start = 0;
+			int end = source.length();
+			for (int i = -1; i > limit; i--) {
+				start = source.lastIndexOf(delimiter, end - 1);
+				if (start < 0) {
+					break;
+				}
+				result.add(source.substring(start + length, end));
+				end = start;
+			}
+			result.add(source.substring(0, end));
+		}
 		return result.toArray(new String[result.size()]);
 	}
 
-	public static String replace(String text, String search, String replace) {
+	public static String replace(String source, String search, String replace) {
+		if (isEmpty(source) || isEmpty(search)) {
+			return null;
+		}
 		int start = 0;
-		int end = text.indexOf(search, start);
+		int end = source.indexOf(search, start);
 		if (end == -1) {
-			return text;
+			return source;
 		}
-		int searchLength = search.length();
-		StringBuilder builder = new StringBuilder(text.length());
+		int length = search.length();
+		StringBuilder builder = new StringBuilder(source.length());
 		while (end != -1) {
-			builder.append(text.substring(start, end));
-			builder.append(replace);
-			start = end + searchLength;
-			end = text.indexOf(search, start);
+			builder.append(source.substring(start, end));
+			builder.append(replace == null ? "" : replace);
+			start = end + length;
+			end = source.indexOf(search, start);
 		}
-		builder.append(text.substring(start));
+		builder.append(source.substring(start));
 		return builder.toString();
 	}
 
 	public static String createString(String[] args, int start) {
+		if (isEmpty(args)) {
+			return null;
+		}
 		StringBuilder builder = new StringBuilder();
 		for (int i = start; i < args.length; i++) {
 			builder.append(args[i]);
@@ -84,10 +114,26 @@ public class StringUtils {
 		return builder.toString();
 	}
 
-	public static String removeStart(String text, String prefix) {
-		if (text.startsWith(prefix)) {
-			return text.substring(prefix.length(), text.length());
+	public static String removeStart(String source, String prefix) {
+		if (isEmpty(source)) {
+			return null;
 		}
-		return text;
+		return source.startsWith(prefix) ? source.substring(prefix.length(), source.length()) : source;
+	}
+
+	public static boolean isNotEmpty(String source) {
+		return !isEmpty(source);
+	}
+
+	public static boolean isNotEmpty(String[] sources) {
+		return !isEmpty(sources);
+	}
+
+	public static boolean isEmpty(String source) {
+		return source == null || source.length() == 0;
+	}
+
+	public static boolean isEmpty(String[] sources) {
+		return StreamUtils.anyMatch(sources, StringUtils::isEmpty);
 	}
 }

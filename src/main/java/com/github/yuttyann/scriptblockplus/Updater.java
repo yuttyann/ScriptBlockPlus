@@ -1,18 +1,26 @@
 package com.github.yuttyann.scriptblockplus;
 
 import java.awt.Desktop;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,26 +28,32 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.Lang;
-import com.github.yuttyann.scriptblockplus.file.YamlConfig;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class Updater {
+public final class Updater {
 
+	private final Plugin plugin;
 	private final String pluginName;
 	private final String pluginVersion;
 	private String latestVersion;
 	private String downloadURL;
 	private String changeLogURL;
 	private List<String> details;
+	private int versionDiff;
+	private boolean isUpdateError;
 	private boolean isUpperVersion;
-	private boolean isError;
 
 	public Updater(Plugin plugin) {
+		this.plugin = plugin;
 		this.pluginName = plugin.getName();
 		this.pluginVersion = plugin.getDescription().getVersion();
+	}
+
+	public Plugin getPlugin() {
+		return plugin;
 	}
 
 	public String getPluginName() {
@@ -48,6 +62,10 @@ public class Updater {
 
 	public String getPluginVersion() {
 		return pluginVersion;
+	}
+
+	public String getJarName() {
+		return pluginName + " v" + latestVersion + ".jar";
 	}
 
 	public String getLatestVersion() {
@@ -66,12 +84,16 @@ public class Updater {
 		return details;
 	}
 
-	public boolean isUpperVersion() {
-		return isUpperVersion;
+	public int getVersionDiff() {
+		return versionDiff;
 	}
 
-	public boolean isError() {
-		return isError;
+	public boolean isUpdateError() {
+		return isUpdateError;
+	}
+
+	public boolean isUpperVersion() {
+		return isUpperVersion;
 	}
 
 	public void debug(boolean isUpperVersion, boolean isError) {
@@ -81,18 +103,24 @@ public class Updater {
 			e.printStackTrace();
 		}
 		this.isUpperVersion = isUpperVersion;
-		this.isError = isError;
-		check(null);
+		if (isError) {
+			sendErrorMessage();
+		}
+		execute(null);
 	}
 
 	public void init() {
-		isError = false;
-		details = new ArrayList<String>();
+		latestVersion = null;
+		downloadURL = null;
+		changeLogURL = null;
+		details = null;
+		isUpdateError = false;
+		isUpperVersion = false;
 	}
 
 	public void load() throws Exception {
 		init();
-		Document document = getDocument();
+		Document document = getDocument(pluginName);
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
 		for(int i = 0; i < rootChildren.getLength(); i++) {
@@ -101,10 +129,12 @@ public class Updater {
 				continue;
 			}
 			Element element = (Element) node;
-			if (!element.getNodeName().equals("update")) {
-				continue;
+			if (element.getNodeName().equals("update")) {
+				latestVersion = element.getAttribute("version");
+				if (element.hasAttribute("diff")) {
+					versionDiff = Integer.valueOf(element.getAttribute("diff"));
+				}
 			}
-			latestVersion = element.getAttribute("version");
 			NodeList updateChildren = node.getChildNodes();
 			for (int j = 0; j < updateChildren.getLength(); j++) {
 				Node updateNode = updateChildren.item(j);
@@ -124,58 +154,58 @@ public class Updater {
 						if (detailsNode.getNodeType() != Node.ELEMENT_NODE) {
 							continue;
 						}
+						if (details == null) {
+							details = new ArrayList<String>(detailsChildren.getLength());
+						}
 						details.add(((Element) detailsNode).getAttribute("info"));
 					}
 				}
 			}
 		}
-		isUpperVersion = vInt(latestVersion) > vInt(pluginVersion);
+		isUpperVersion = Utils.getVersionInt(latestVersion) > Utils.getVersionInt(pluginVersion);
 	}
 
-	public boolean check(Player player) {
-		YamlConfig config = Files.getConfig();
-		if(config.getBoolean("UpdateChecker") && isUpperVersion) {
-			File data = config.getDataFolder();
-			File changeLogFile = new File(data, "ChangeLog.txt");
-			List<String> changeLog = new ArrayList<String>();
-			if (changeLogFile.exists()) {
-				changeLog = FileUtils.getFileText(changeLogFile);
-			}
-			sendCheckMessage(player != null ? player : Bukkit.getConsoleSender());
-			boolean first = false;
-			if(config.getBoolean("AutoDownload")) {
-				Utils.sendPluginMessage(Lang.getUpdateDownloadStartMessage());
-				File downloadFile = null;
+	public boolean execute(CommandSender sender) {
+		if(SBConfig.isUpdateChecker() && isUpperVersion) {
+			sendCheckMessage(sender != null ? sender : Bukkit.getConsoleSender());
+			File dataFolder = Files.getConfig().getDataFolder();
+			File textFile = new File(dataFolder, "update/ChangeLog.txt");
+			boolean isNotExists = !textFile.exists();
+			List<String> contents = getContents(textFile);
+			if(SBConfig.isAutoDownload()) {
+				Utils.sendMessage(SBConfig.getUpdateDownloadStartMessage());
+				File jarFile = null;
 				try {
-					first = !changeLogFile.exists();
-					downloadFile = new File(data, "Downloads");
-					if (!downloadFile.exists()) {
-						downloadFile.mkdir();
+					jarFile = new File(dataFolder, "update/jar/" + getJarName());
+					FileUtils.fileDownload(changeLogURL, textFile);
+					FileUtils.fileDownload(downloadURL, jarFile);
+					int diff = SBConfig.isOverwritePlugin() ? getDiff() : -1;
+					System.out.println(diff + " <= " + versionDiff);
+					if (diff != -1 && diff > 0 && diff <= versionDiff) {
+						PluginManager pluginManager = Bukkit.getPluginManager();
+						try {
+							pluginManager.disablePlugin(plugin);
+							FileUtils.fileOverwrite(jarFile, FileUtils.getJarFile(plugin));
+						} finally {
+							pluginManager.enablePlugin(plugin);
+						}
 					}
-					downloadFile = new File(data, "Downloads/" + pluginName + " v" + latestVersion + ".jar");
-					FileUtils.fileDownload(changeLogURL, changeLogFile);
-					FileUtils.fileDownload(downloadURL, downloadFile);
 				} catch (IOException e) {
 					e.printStackTrace();
 					sendErrorMessage();
 					return false;
 				} finally {
-					if (!isError()) {
-						String fileName = downloadFile.getName();
-						String filePath = StringUtils.replace(downloadFile.getPath(), "\\", "/");
-						for (String message : Lang.getUpdateDownloadEndMessages(fileName, filePath, getSize(downloadFile.length()))) {
-							Utils.sendPluginMessage(message);
-						}
+					if (!isUpdateError && jarFile != null) {
+						String fileName = jarFile.getName();
+						String filePath = StringUtils.replace(jarFile.getPath(), "\\", "/");
+						Utils.sendMessage(SBConfig.getUpdateDownloadEndMessage(fileName, filePath, getSize(jarFile.length())));
 					}
 				}
 			}
-			if (config.getBoolean("OpenTextFile") && !isError()) {
-				if (!first && changeLog.equals(fText(changeLogURL))) {
-					return true;
-				}
+			if (SBConfig.isOpenTextFile() && !isUpdateError && (isNotExists || !arrayEquals(contents))) {
 				Desktop desktop = Desktop.getDesktop();
 				try {
-					desktop.open(changeLogFile);
+					desktop.open(textFile);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -185,48 +215,115 @@ public class Updater {
 		return false;
 	}
 
-	private String getSize(long size) {
-		if (1024 > size) {
-			return size + " Byte";
-		} else if (1024 * 1024 > size) {
-			double dsize = size / 1024;
-			BigDecimal decimal = new BigDecimal(dsize);
-			double value = decimal.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+	public String getSize(long length) {
+		if (1024 > length) {
+			return length + " Byte";
+		}
+		int round = BigDecimal.ROUND_HALF_UP;
+		if (1024 * 1024 > length) {
+			double size = length / 1024;
+			double value = new BigDecimal(size).setScale(1, round).doubleValue();
 			return value + " KB";
 		} else {
-			double dsize = size / 1024 / 1024;
-			BigDecimal decimal = new BigDecimal(dsize);
-			double value = decimal.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+			double size = length / 1024 / 1024;
+			double value = new BigDecimal(size).setScale(1, round).doubleValue();
 			return value + " MB";
 		}
 	}
 
 	public void sendCheckMessage(CommandSender sender) {
-		if(isUpperVersion && !isError && sender.isOp()) {
-			for (String message : Lang.getUpdateCheckMessages(pluginName, latestVersion, details)) {
-				Utils.sendPluginMessage(sender, message);
-			}
+		if(isUpperVersion && !isUpdateError && sender.isOp()) {
+			Utils.sendMessage(sender, SBConfig.getUpdateCheckMessages(pluginName, latestVersion, details));
 		}
 	}
 
-	private void sendErrorMessage() {
-		if(!isError) {
-			isError = true;
-			for (String message : Lang.getUpdateErrorMessages(pluginName, latestVersion)) {
-				Utils.sendPluginMessage(message);
-			}
+	public void sendErrorMessage() {
+		if(!isUpdateError && (isUpdateError = true)) {
+			Utils.sendMessage(SBConfig.getUpdateErrorMessage(pluginName, latestVersion));
 		}
 	}
 
-	private int vInt(String version) {
-		return Utils.getVersionInt(version);
+	private int getDiff() {
+		int source = Utils.getVersionInt(pluginVersion);
+		int target = Utils.getVersionInt(latestVersion);
+		return source < target ? target - source : 0;
 	}
 
-	private List<String> fText(String url) {
-		return FileUtils.getFileText(url);
+	private boolean arrayEquals(List<String> source) {
+		if (source == null || StringUtils.isEmpty(changeLogURL)) {
+			return false;
+		}
+		InputStream is = null;
+		BufferedReader reader = null;
+		List<String> result = new ArrayList<String>();
+		try {
+			is = new URL(changeLogURL).openStream();
+			reader = new BufferedReader(new InputStreamReader(is));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				result.add(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return source.equals(result);
 	}
 
-	private Document getDocument() throws ParserConfigurationException, SAXException, IOException {
-		return FileUtils.getDocument("http://xml.yuttyann44581.net/uploads/" + pluginName + ".xml");
+	private List<String> getContents(File file) {
+		if (file == null || !file.exists()) {
+			return new ArrayList<String>();
+		}
+		BufferedReader reader = null;
+		List<String> result = new ArrayList<String>();
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				result.add(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+
+	private Document getDocument(String pluginName) throws ParserConfigurationException, SAXException, IOException {
+		String url = "https://xml.yuttyann44581.net/uploads/" + pluginName + ".xml";
+		URLConnection urlconn = new URL(url).openConnection();
+		HttpURLConnection httpconn = (HttpURLConnection) urlconn;
+		httpconn.setAllowUserInteraction(false);
+		httpconn.setInstanceFollowRedirects(true);
+		httpconn.setRequestMethod("GET");
+		httpconn.connect();
+		int httpStatusCode = httpconn.getResponseCode();
+		if (httpStatusCode != HttpURLConnection.HTTP_OK) {
+			httpconn.disconnect();
+			return null;
+		}
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		return factory.newDocumentBuilder().parse(httpconn.getInputStream());
 	}
 }

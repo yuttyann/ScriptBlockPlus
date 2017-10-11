@@ -1,0 +1,126 @@
+﻿# ScriptBlockPlus v${project.version} Lang #
+
+# コメントアウトすることで、非表示にすることができます。
+
+## ===== コマンド説明文の設定 ===== ##
+
+toolCommandMessage: 'tool - 実行者にスクリプト編集ツールを配布します。'
+reloadCommandMessage: 'reload - 全てのファイルの再読み込みを行います。'
+checkVerCommandMessage: 'checkver - 最新のプラグインが存在するかチェックします。'
+dataMigrCommandMessage: 'datamigr - ScriptBlockのスクリプトをPlusに移行します。'
+createCommandMessage: '<scripttype> create <options> - ブロックにスクリプトを設定します。'
+addCommandMessage: '<scripttype> add <options> - ブロックにスクリプトを追加します。'
+removeCommandMessage: '<scripttype> remove - ブロックのスクリプトを削除します。'
+viewCommandMessage: '<scripttype> view - ブロックのスクリプトを表示します。'
+worldEditPasteCommandMessage: 'worldedit paste <pasteonair> [overwrite] - 選択範囲にスクリプトをペーストします。'
+worldEditRemoveCommandMessage: 'worldedit remove - 選択範囲のスクリプトを削除します。'
+
+# &  : カラーコード
+# \n : 改行
+
+## ===== アイテム説明文の設定 ===== ##
+
+scriptEditor:
+- '&aスクリプトをコピー、ペーストするツールです。'
+- '&6左クリック: &e種類"interact"のスクリプトをコピーします。'
+- '&6右クリック: &e種類"break"のスクリプトをコピーします。'
+- '&6シフトand左クリック: &e種類"walk"のスクリプトをコピーします。'
+- '&6シフトand右クリック: &eスクリプトをペーストします。'
+
+## ===== メッセージの設定 ===== ##
+
+notVaultMessage: '&cVaultが導入されていないため、プラグインを無効化します。'
+senderNoPlayerMessage: '&cコマンドはゲーム内から実行してください。'
+notPermissionMessage: '&cパーミッションが無いため、実行できません。'
+giveScriptEditorMessage: '&aScript Editorが配布されました。'
+allFileReloadMessage: '&a全てのファイルの再読み込みが完了しました。'
+notLatestPluginMessage: '&b現在のバージョンが最新です。'
+updateFailMessage: '&cアップデートに失敗しました。'
+notScriptBlockFileMessage: '&cScriptBlockのデータファイルが見つかりません。'
+dataMigrStartMessage: '&7ScriptBlockのスクリプトを移行しています....'
+dataMigrEndMessage: '&bスクリプトの移行が完了しました。'
+notWorldEditMessage: '&cWorldEditが導入されていないため、実行に失敗しました。'
+updateDownloadStartMessage: '&6最新のプラグインをダウンロードしています...'
+
+# %filename% : ファイル名
+# %filepath% : ファイルパス
+# %filesize% : ファイルサイズ
+
+updateDownloadEndMessage: '&6ダウンロードが終了しました。\nファイル名: %filename%\nファイルサイズ: %filesize%\nファイルパス: %filepath%'
+
+# %pluginname%    : プラグイン名
+# %latestversion% : 最新バージョン
+# %details%       : 更新内容(一部メッセージは固定です。)
+
+updateCheckMessage: '&b最新のバージョンを検出しました。\nv%latestversion%にアップデートしてください。\nプラグイン名: %pluginname%\n☆アップデート内容☆\n%details%'
+
+# %pluginname%    : プラグイン名
+# %latestversion% : 最新バージョン
+
+updateErrorMessage: '&cプラグイン名: %pluginname%\nバージョン: v%latestversion%\n取得ファイル: https://xml.yuttyann44581.net/uploads/%pluginname%.xml/\n連絡用ページ: http://file.yuttyann44581.net/contact/\n解決しない場合は、製作者に連絡してください。'
+
+# %scripttype% : スクリプトの種類
+scriptCopyMessage: '&a種類"%scripttype%"のスクリプトをコピーしました。'
+scriptPasteMessage: '&a種類"%scripttype%"のスクリプトをペーストしました。'
+scriptCreateMessage: '&a種類"%scripttype%"のスクリプトを作成しました。'
+scriptAddMessage: '&a種類"%scripttype%"のスクリプトを追加しました。'
+scriptRemoveMessage: '&c種類"%scripttype%"のスクリプトを削除しました。'
+
+worldEditNotSelectionMessage: '&cWorldEditで座標を選択してください。'
+
+# %scripttype% : スクリプトの種類
+worldEditPasteMessage: '&a種類"%scripttype%"のスクリプトをペーストしました。'
+worldEditRemoveMessage: '&c種類"%scripttype%"のスクリプトを削除しました。'
+
+activeDelayMessage: '&c遅延したスクリプトが実行されるまで、再度実行することはできません。'
+
+# %hour%   : 時
+# %minute% : 分
+# %second% : 秒
+activeCooldownMessage: '&cクールダウン中です。[%hour%時間%minute%分%second%秒]'
+
+# %clicktype% : クリックの種類
+succEditDataMessage: '&a種類"%clicktype%"のブロックのクリック設定を保存しました。'
+
+errorEditDataMessage: '&c既にブロックのクリック設定がされています。'
+errorScriptCheckMessage: '&c入力されたスクリプトが正しくありません。'
+errorScriptFileCheckMessage: '&cスクリプトが見つかりません。'
+
+# %scripttype% : スクリプトの種類
+errorScriptExecMessage: '&c種類"%scripttype%"のスクリプトの実行に失敗しました。'
+
+# %group% : グループ名
+errorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプトを実行することが出来ます。'
+
+# %material% : アイテムの種類
+# %id%       : アイテムのID
+# %amount%   : アイテムの個数
+# %damage%   : アイテムのダメージ値
+# %itemname% : アイテムの名前(アイテム名が無い場合は"アイテムの種類"と同じになります。)
+errorHandMessage: '&cアイテムを持っていません。[&r%itemname%&c(%id%:%damage%[%amount%])]'
+errorItemMessage: '&cアイテムを所持していません。[&r%itemname%&c(%id%:%damage%[%amount%])]'
+
+# %cost%   : 必要な金額
+# %result% : 足りない金額
+errorCostMessage: '&cお金が"%result%円"足りません。スクリプトの実行には"%cost%円"必要です。'
+
+# %scripttype% : スクリプトの種類
+# %player%     : プレイヤーのID
+# %world%      : ワールドの名前
+# %coords%     : 座標(x, y, z)
+consoleScriptCopyMessage: '&aスクリプトがコピーされました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
+consoleScriptPasteMessage: '&aスクリプトがペーストされました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
+consoleScriptCreateMessage: '&aスクリプトが作成されました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
+consoleScriptAddMessage: '&aスクリプトが追加されました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
+consoleScriptRemoveMessage: '&cスクリプトが削除されました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
+consoleScriptViewMessage: '&aスクリプトが表示されました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
+consoleSuccScriptExecMessage: '&aスクリプトが実行されました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
+consoleErrorScriptExecMessage: '&cスクリプトの実行に失敗しました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
+
+# %scripttype% : スクリプトの種類
+# %player%     : プレイヤーのID
+# %world%      : ワールドの名前
+# %mincoords%  : 最小座標(x, y, z)
+# %maxcoords%  : 最大座標(x, y, z)
+consoleWorldEditPasteMessage: '&aスクリプトがペーストされました。[種類"%scripttype%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
+consoleWorldEditRemoveMessage: '&cスクリプトが削除されました。[種類"%scripttype%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'

@@ -1,22 +1,24 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
-import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
+import org.bukkit.entity.Player;
+
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class Bypass extends BaseOption {
 
-	public Bypass(ScriptManager scriptManager) {
-		super(scriptManager, "bypass", "@bypass ");
+	public Bypass() {
+		super("bypass", "@bypass /");
 	}
 
 	@Override
 	public boolean isValid() {
+		Player player = getPlayer();
 		if (player.isOnline()) {
-			String command = optionData;
+			String command = getOptionValue();
 			command = StringUtils.replace(command, "<player>", player.getName());
 			command = StringUtils.replace(command, "<dplayer>", player.getDisplayName());
-			commandExec(player, command, true);
+			commandExecute(player, command, true);
 		}
 		return true;
 	}

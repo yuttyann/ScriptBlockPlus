@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,7 +15,7 @@ import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.command.help.CommandData;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.Lang;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.InteractListener;
 import com.github.yuttyann.scriptblockplus.listener.JoinQuitListener;
 import com.github.yuttyann.scriptblockplus.listener.ScriptBreakListener;
@@ -37,22 +38,24 @@ public class ScriptBlock extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		Files.reload();
+
+		PluginManager pluginManager = getServer().getPluginManager();
 		if (!HookPlugins.hasVault()) {
-			Utils.sendPluginMessage(Lang.getNotVaultMessage());
-			Utils.disablePlugin(this);
+			Utils.sendMessage(SBConfig.getNotVaultMessage());
+			pluginManager.disablePlugin(this);
 			return;
 		}
-		if (Utils.isPluginEnabled("ScriptBlock")) {
-			Utils.disablePlugin(Utils.getPlugin("ScriptBlock"));
+		if (pluginManager.isPluginEnabled("ScriptBlock")) {
+			pluginManager.disablePlugin(pluginManager.getPlugin("ScriptBlock"));
 		}
 
 		updater = new Updater(this);
 		try {
+			//updater.debug(false, false);
 			updater.load();
-			updater.check(null);
+			updater.execute(null);
 		} catch (Exception e) {
-			e.printStackTrace();
-			Utils.sendPluginMessage(Lang.getUpdateErrorMessage());
+			Utils.sendMessage(SBConfig.getUpdateFailMessage());
 		}
 
 		mapManager = new MapManager(this);
@@ -62,7 +65,6 @@ public class ScriptBlock extends JavaPlugin {
 		commandHelp = new HashMap<String, List<CommandData>>();
 		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 
-		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new InteractListener(this), this);
 		pluginManager.registerEvents(new JoinQuitListener(this), this);
 		pluginManager.registerEvents(new ScriptInteractListener(this), this);
@@ -70,14 +72,13 @@ public class ScriptBlock extends JavaPlugin {
 		pluginManager.registerEvents(new ScriptWalkListener(this), this);
 	}
 
-	@Override
 	public void onDisable() {
 		mapManager.saveCooldown();
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (command.getName().equals("scriptblockplus")) {
+		if (command.getName().equals(scriptBlockPlusCommand.getCommandName())) {
 			return scriptBlockPlusCommand.onCommand(sender, command, label, args);
 		}
 		return false;
@@ -85,7 +86,7 @@ public class ScriptBlock extends JavaPlugin {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		if (command.getName().equals("scriptblockplus")) {
+		if (command.getName().equals(scriptBlockPlusCommand.getCommandName())) {
 			return scriptBlockPlusCommand.onTabComplete(sender, command, label, args);
 		}
 		return super.onTabComplete(sender, command, label, args);
@@ -93,7 +94,7 @@ public class ScriptBlock extends JavaPlugin {
 
 	public static ScriptBlock getInstance() {
 		if (instance == null) {
-			instance = (ScriptBlock) Utils.getPlugin("ScriptBlockPlus");
+			instance = (ScriptBlock) Bukkit.getPluginManager().getPlugin("ScriptBlockPlus");
 		}
 		return instance;
 	}

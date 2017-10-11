@@ -1,23 +1,27 @@
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
-import com.github.yuttyann.scriptblockplus.file.Lang;
-import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Perm extends BaseOption {
 
-	public Perm(ScriptManager scriptManager) {
-		super(scriptManager, "", "@perm:");
+	public Perm() {
+		super("perm", "@perm:");
 	}
 
 	@Override
 	public boolean isValid() {
-		String[] array = StringUtils.split(optionData, "/");
+		VaultPermission vaultPermission = getVaultPermission();
+		if (!vaultPermission.isEnabled()) {
+			return false;
+		}
+		String[] array = StringUtils.split(getOptionValue(), "/");
 		String world = array.length > 1 ? array[1] : null;
-		if (!vaultPermission.playerHas(world, player, array[0])) {
-			Utils.sendPluginMessage(player, Lang.getNotPermissionMessage());
+		if (!vaultPermission.playerHas(world, getPlayer(), array[0])) {
+			Utils.sendMessage(getPlayer(), SBConfig.getNotPermissionMessage());
 			return false;
 		}
 		return true;

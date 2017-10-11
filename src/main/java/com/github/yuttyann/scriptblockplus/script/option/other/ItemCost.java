@@ -1,34 +1,33 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
+import java.util.Objects;
+
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import com.github.yuttyann.scriptblockplus.file.Lang;
-import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ItemCost extends BaseOption {
 
-	public ItemCost(ScriptManager scriptManager) {
-		super(scriptManager, "itemcost", "$item:");
+	public ItemCost() {
+		super("itemcost", "$item:");
 	}
 
 	@Override
 	public boolean isValid() {
-		String[] array = StringUtils.split(optionData, " ");
-		String[] array2 = StringUtils.split(array[0], ":");
-		short damage = 0;
-		if (array2.length > 1) {
-			damage = Short.parseShort(array2[1]);
-		}
-		int id = Integer.parseInt(Utils.getId(array2[0]));
+		String[] array = StringUtils.split(getOptionValue(), " ");
+		String[] itemData = StringUtils.split(array[0], ":");
+		short damage = itemData.length > 1 ? Short.parseShort(itemData[1]) : 0;
+		int id = Integer.parseInt(Utils.getId(itemData[0]));
 		int amount = Integer.parseInt(array[1]);
-		String itemName = array.length > 2 ? StringUtils.createString(array, 2) : null;
-		itemName = itemName != null ? StringUtils.replace(itemName, "&", "§") : itemName;
+		String itemName = StringUtils.replace(array.length > 2 ? StringUtils.createString(array, 2) : null, "&", "§");
 
+		Player player = getPlayer();
 		PlayerInventory inventory = player.getInventory();
 		ItemStack[] items = inventory.getContents().clone();
 		for (int i = 0, j = 0; i < items.length; i++) {
@@ -39,7 +38,7 @@ public class ItemCost extends BaseOption {
 				if (j > amount) {
 					result = j - amount;
 				}
-				items[i] = minus(item, result);
+				items[i] = consume(item, result);
 			}
 			if (j >= amount) {
 				inventory.setContents(items);
@@ -47,14 +46,14 @@ public class ItemCost extends BaseOption {
 				break;
 			}
 			if (i == (items.length - 1) && j < amount) {
-				Utils.sendPluginMessage(player, Lang.getErrorItemMessage(getMaterial(id), id, amount, damage, itemName));
+				Utils.sendMessage(player, SBConfig.getErrorItemMessage(Utils.getMaterial(id), id, amount, damage, itemName));
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private ItemStack minus(ItemStack item, int amount) {
+	private ItemStack consume(ItemStack item, int amount) {
 		if (amount > 0) {
 			item.setAmount(amount);
 		} else {
@@ -64,15 +63,9 @@ public class ItemCost extends BaseOption {
 	}
 
 	private boolean checkItem(ItemStack item, String itemName, int id, short damage) {
-		if (item == null || item.getType() != getMaterial(id) || item.getDurability() != damage) {
+		if (item == null || item.getType() != Utils.getMaterial(id) || item.getDurability() != damage) {
 			return false;
 		}
-		String itemName_ = Utils.getItemName(item);
-		return itemName == null || (itemName_ != null && itemName_.equals(itemName));
-	}
-
-	@SuppressWarnings("deprecation")
-	private Material getMaterial(int id) {
-		return Material.getMaterial(id);
+		return itemName == null || Objects.equals(Utils.getItemName(item, null), itemName);
 	}
 }

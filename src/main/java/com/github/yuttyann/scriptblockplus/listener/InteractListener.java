@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,11 +24,12 @@ import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.EquipmentSlot;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class InteractListener implements Listener {
@@ -49,26 +51,32 @@ public class InteractListener implements Listener {
 		List<Block> blocks = null;
 		try {
 			blocks = getLastTwoTargetBlocks(player, 5);
-		} catch (IllegalStateException e) {}
-		if (blocks == null || blocks.size() < 2) {
-			return;
+		} catch (IllegalStateException e) {
+			blocks = null;
+		} finally {
+			if (blocks == null || blocks.size() < 2) {
+				return;
+			}
 		}
 		Block block = blocks.get(1);
-		if (!isPlayerInRange(player, block.getLocation(), 5.22D) || removeInteractEvent(player.getUniqueId())) {
+		if (!isPlayerInRange(player, block.getLocation()) || removeInteractEvent(player.getUniqueId())) {
 			return;
 		}
 		Action action = Action.LEFT_CLICK_BLOCK;
 		BlockFace blockFace = block.getFace(blocks.get(0));
-		ItemStack item = Utils.getItemInHand(player);
-		BlockInteractEvent interactEvent = new BlockInteractEvent(
-			new PlayerInteractEvent(player, action, item, block, blockFace),
-			player, block, item, action, blockFace, true
-		);
-		Utils.callEvent(interactEvent);
+		PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, action, null, block, blockFace);
+		if (callInteractEvent(player, interactEvent, EquipmentSlot.HAND)
+				|| callInteractEvent(player, interactEvent, EquipmentSlot.OFF_HAND)) {
+			event.setCancelled(true);
+		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event) {
+		Block block = event.getClickedBlock();
+		if (block == null || block.getType() == Material.AIR) {
+			return;
+		}
 		Player player = event.getPlayer();
 		Action action = event.getAction();
 		boolean isAdventure = player.getGameMode() == GameMode.ADVENTURE;
@@ -76,37 +84,27 @@ public class InteractListener implements Listener {
 			return;
 		}
 		if (isAdventure) {
-			final UUID uuid = player.getUniqueId();
+			UUID uuid = player.getUniqueId();
 			addInteractEvent(uuid);
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					removeInteractEvent(uuid);
-				}
-			}.runTaskLater(plugin, 5);
+			Bukkit.getScheduler().runTaskLater(plugin, () -> removeInteractEvent(uuid), 5L);
 		}
-		BlockInteractEvent interactEvent = new BlockInteractEvent(
-			event, player, event.getClickedBlock(), event.getItem(),
-			action, event.getBlockFace(), false
-		);
-		Utils.callEvent(interactEvent);
+		Bukkit.getPluginManager().callEvent(new BlockInteractEvent(event, event.getItem(), null, true));
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
-		Player player = event.getPlayer();
-		if (event.getNewGameMode() == GameMode.ADVENTURE) {
-			return;
+		if (event.getNewGameMode() != GameMode.ADVENTURE) {
+			removeInteractEvent(event.getPlayer().getUniqueId());
 		}
-		removeInteractEvent(player.getUniqueId());
 	}
 
-	@SuppressWarnings("deprecation")
 	private List<Block> getLastTwoTargetBlocks(Player player, int distance) {
 		if (Utils.isCB18orLater()) {
 			return player.getLastTwoTargetBlocks((Set<Material>) null, distance);
 		} else {
-			return player.getLastTwoTargetBlocks((HashSet<Byte>) null, distance);
+			@SuppressWarnings("deprecation")
+			List<Block> blocks = player.getLastTwoTargetBlocks((HashSet<Byte>) null, distance);
+			return blocks;
 		}
 	}
 
@@ -118,9 +116,25 @@ public class InteractListener implements Listener {
 		return interactEvents.contains(uuid) && interactEvents.remove(uuid);
 	}
 
-	private boolean isPlayerInRange(Player target, Location location, double radius) {
-		World world = location.getWorld();
+	private boolean callInteractEvent(Player player, PlayerInteractEvent event, EquipmentSlot hand) {
+		if (hand == EquipmentSlot.OFF_HAND && Utils.isCB19orLater()) {
+			return false;
+		}
+		ItemStack item;
+		if (hand == EquipmentSlot.HAND) {
+			item = Utils.getItemInMainHand(player);
+		} else {
+			item = Utils.getItemInOffHand(player);
+		}
+		BlockInteractEvent blockInteractEvent = new BlockInteractEvent(event, item, hand, true);
+		Bukkit.getPluginManager().callEvent(blockInteractEvent);
+		return blockInteractEvent.isCancelled();
+	}
+
+	private boolean isPlayerInRange(Player target, Location location) {
 		location = BlockCoords.getAllCenter(location);
+		World world = location.getWorld();
+		double radius = SBConfig.getLeftArmLength();
 		int minX = floor((location.getX() - radius) / 16.0D);
 		int minZ = floor((location.getZ() - radius) / 16.0D);
 		int maxX = floor((location.getX() + radius) / 16.0D);

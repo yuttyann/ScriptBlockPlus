@@ -12,16 +12,17 @@ public enum ClickType {
 	private static final String[] TYPES;
 
 	static {
-		List<String> list = new ArrayList<String>();
-		for (ScriptType scriptType : ScriptType.values()) {
-			for (ClickType clickType : ClickType.values()) {
-				list.add(clickType.create(scriptType));
+		ScriptType[] values = ScriptType.values();
+		List<String> list = new ArrayList<String>(values().length * values.length);
+		for (ScriptType scriptType : values) {
+			for (ClickType clickType : values()) {
+				list.add(clickType.createKey(scriptType));
 			}
 		}
 		TYPES = list.toArray(new String[list.size()]);
 	}
 
-	public String create(ScriptType scriptType) {
+	public String createKey(ScriptType scriptType) {
 		return scriptType.name() + "_" + name();
 	}
 

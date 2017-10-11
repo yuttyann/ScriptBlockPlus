@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.command.help;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -9,71 +10,43 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.file.Lang;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class CommandHelp {
+public abstract class CommandHelp {
 
-	public List<CommandData> putCommands(String commandName, CommandData... args) {
-		List<CommandData> datas = new ArrayList<CommandData>();
-		String[] array = StringUtils.split(ScriptBlock.getInstance().getCommand(commandName).getUsage(), "/<command>");
-		for (int i = 0, j = 1; i < args.length; i++, j++) {
-			CommandData temp = args[i];
-			if (array.length > j && array[j].length() > 0) {
-				temp = temp.setMessage(array[j].trim());
-			}
-			datas.add(temp);
-		}
-		return getCommandHelp().put(commandName.toLowerCase(), datas);
-	}
-
-	public List<CommandData> put(String commandName, CommandData... args) {
-		List<CommandData> datas = new ArrayList<CommandData>();
-		for (CommandData data : args) {
-			datas.add(data);
-		}
-		return getCommandHelp().put(commandName.toLowerCase(), datas);
-	}
-
-	public List<CommandData> get(int index) {
-		return ScriptBlock.getInstance().getCommandHelp().get(index);
-	}
-
-	public List<CommandData> remove(String label) {
-		return getCommandHelp().remove(label);
-	}
-
-	public void clear() {
-		getCommandHelp().clear();
-	}
-
-	public static void sendHelpMessage(Plugin plugin, CommandSender sender, Command command, boolean isName) {
+	protected void put(String commandName, CommandData... args) {
 		List<CommandData> commands = new ArrayList<CommandData>();
+		Arrays.stream(args).forEach(commands::add);
+		getHelp().put(commandName.toLowerCase(), commands);
+	}
+
+	protected void sendHelpMessage(Plugin plugin, CommandSender sender, Command command, boolean isAliases) {
 		String commandName = command.getName();
-		for (CommandData data : getCommandHelp().get(commandName)) {
-			if (data.hasPermission(sender)) {
-				commands.add(data);
+		if (getHelp().containsKey(commandName)) {
+			List<CommandData> help = getHelp().get(commandName);
+			List<CommandData> commands = new ArrayList<CommandData>();
+			StreamUtils.filterForEach(help, c -> c.hasPermission(sender), commands::add);
+			if (commands.isEmpty()) {
+				Utils.sendMessage(sender, SBConfig.getNotPermissionMessage());
+				return;
 			}
-		}
-		if (commands.isEmpty()) {
-			Utils.sendPluginMessage(sender, Lang.getNotPermissionMessage());
-			return;
-		}
-		if (!isName && command.getAliases().size() > 0) {
-			commandName = command.getAliases().get(0).toLowerCase();
-		}
-		sender.sendMessage("§d==== " + plugin.getName() + " Commands ====");
-		for (CommandData data : commands) {
-			if (data.isHelp()) {
-				sender.sendMessage("§b/" + commandName + " " + data.getMessage());
-			} else {
-				sender.sendMessage(data.getMessage());
+			if (isAliases && command.getAliases().size() > 0) {
+				commandName = command.getAliases().get(0).toLowerCase();
 			}
+			sender.sendMessage("§d==== " + plugin.getName() + " Commands ====");
+			String prefix = "§b/" + commandName + " ";
+			StreamUtils.filterForEach(commands, c -> c.hasMessage(), c -> sender.sendMessage(helpText(c, prefix)));
 		}
 	}
 
-	private static Map<String, List<CommandData>> getCommandHelp() {
+	private String helpText(CommandData commandData, String prefix) {
+		String message = commandData.getMessage();
+		return commandData.isPrefix() ? prefix + message : message;
+	}
+
+	private Map<String, List<CommandData>> getHelp() {
 		return ScriptBlock.getInstance().getCommandHelp();
 	}
 }

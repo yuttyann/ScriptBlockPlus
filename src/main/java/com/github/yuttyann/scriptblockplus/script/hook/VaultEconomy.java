@@ -8,7 +8,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
 
-public class VaultEconomy {
+public final class VaultEconomy {
 
 	private Economy economy;
 
@@ -29,7 +29,11 @@ public class VaultEconomy {
 				return vault;
 			}
 		}
-		return null;
+		return new VaultEconomy(null);
+	}
+
+	public boolean isEnabled() {
+		return economy != null && economy.isEnabled();
 	}
 
 	public double getBalance(OfflinePlayer player) {

@@ -1,58 +1,61 @@
 package com.github.yuttyann.scriptblockplus.event;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+
 public class ScriptBlockWalkEvent extends ScriptBlockEvent implements Cancellable {
 
-	private ItemStack item;
-	private Location location;
+	private ItemStack mainHand;
+	private ItemStack offHand;
 	private boolean cancelled;
 
-	public ScriptBlockWalkEvent(Player player, Block block, ItemStack item, Location location) {
+	public ScriptBlockWalkEvent(Player player, Block block) {
 		super(player, block);
-		this.item = item;
-		this.location = location;
+		this.mainHand = Utils.getItemInMainHand(player);
+		this.offHand = Utils.getItemInOffHand(player);
 	}
 
-	public ItemStack getItem() {
-		return item;
+	public ItemStack getItemInMainHand() {
+		return mainHand;
 	}
 
-	public Material getMaterial() {
-		if (!hasItem()) {
+	public ItemStack getItemInOffHand() {
+		return offHand;
+	}
+
+	public ItemStack getItem(boolean isMainHand) {
+		return isMainHand ? mainHand : offHand;
+	}
+
+	public Material getMaterial(boolean isMainHand) {
+		if (!hasItem(isMainHand)) {
 			return Material.AIR;
 		}
-		return item.getType();
+		return getItem(isMainHand).getType();
 	}
 
-	public Location getLocation() {
-		return location;
+	public boolean hasItem(boolean isMainHand) {
+		return getItem(isMainHand) != null;
 	}
 
-	public boolean hasBlock() {
-		return block != null;
-	}
-
-	public boolean isBlockInHand() {
-		if (!hasItem()) {
+	public boolean isBlockInHand(boolean isMainHand) {
+		if (!hasItem(isMainHand)) {
 			return false;
 		}
-		return item.getType().isBlock();
+		return getItem(isMainHand).getType().isBlock();
 	}
 
-	public boolean hasItem() {
-		return item != null;
-	}
-
+	@Override
 	public boolean isCancelled() {
 		return cancelled;
 	}
 
+	@Override
 	public void setCancelled(boolean cancel) {
 		cancelled = cancel;
 	}

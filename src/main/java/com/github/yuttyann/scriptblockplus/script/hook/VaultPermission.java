@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
 
-public class VaultPermission {
+public final class VaultPermission {
 
 	private Permission permission;
 
@@ -28,7 +28,11 @@ public class VaultPermission {
 				return vault;
 			}
 		}
-		return null;
+		return new VaultPermission(null);
+	}
+
+	public boolean isEnabled() {
+		return permission != null && permission.isEnabled();
 	}
 
 	public String getPrimaryGroup(Player player) {
