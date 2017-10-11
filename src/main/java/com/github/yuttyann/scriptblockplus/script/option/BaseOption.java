@@ -18,7 +18,6 @@ import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
-import com.github.yuttyann.scriptblockplus.utils.ReflectionUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public abstract class BaseOption extends Option {
@@ -120,31 +119,6 @@ public abstract class BaseOption extends Option {
 		this.vaultPermission = scriptRead.getVaultPermission();
 		this.scriptIndex = scriptRead.getScriptIndex();
 		return isValid();
-	}
-
-	protected <T extends BaseOption> T copy(T option) {
-		try {
-			BaseOption copy = (BaseOption) ReflectionUtils.newInstance(option.getClass());
-			copy.plugin = this.plugin;
-			copy.player = this.player;
-			copy.uuid = this.uuid;
-			copy.optionValue = this.optionValue;
-			copy.scripts = this.scripts;
-			copy.scriptType = this.scriptType;
-			copy.scriptRead = this.scriptRead;
-			copy.scriptData = this.scriptData;
-			copy.mapManager = this.mapManager;
-			copy.blockCoords = this.blockCoords;
-			copy.vaultEconomy = this.vaultEconomy;
-			copy.vaultPermission = this.vaultPermission;
-			copy.scriptIndex = this.scriptIndex;
-			@SuppressWarnings("unchecked")
-			T result = (T) copy;
-			return result;
-		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	protected final void commandExecute(Player player, String command, boolean isBypass) {
