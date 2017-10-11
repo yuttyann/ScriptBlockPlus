@@ -8,7 +8,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 public class Command extends BaseOption {
 
 	public Command() {
-		super("command", "@command /");
+		super("command", "@command ");
 	}
 
 	@Override

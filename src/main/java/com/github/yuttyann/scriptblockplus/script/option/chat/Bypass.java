@@ -8,7 +8,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 public class Bypass extends BaseOption {
 
 	public Bypass() {
-		super("bypass", "@bypass /");
+		super("bypass", "@bypass ");
 	}
 
 	@Override

@@ -21,7 +21,7 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.YamlConfig;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager;
+import com.github.yuttyann.scriptblockplus.manager.constructor.OptionManager;
 import com.github.yuttyann.scriptblockplus.script.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;

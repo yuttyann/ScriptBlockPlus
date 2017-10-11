@@ -79,7 +79,7 @@ public final class ScriptRead extends ScriptManager {
 			Utils.sendMessage(SBConfig.getConsoleErrorScriptExecMessage(player, scriptType, blockCoords));
 			return false;
 		}
-		List<Option> options = optionManager.getOptions();
+		List<Option> options = optionManager.getCacheList();
 		for (int i = index; i < scripts.size(); i++) {
 			String script = scripts.get(i);
 			for (Option option : options) {

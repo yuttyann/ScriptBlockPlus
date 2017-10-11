@@ -5,6 +5,8 @@ import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.manager.constructor.EndProcessManager;
+import com.github.yuttyann.scriptblockplus.manager.constructor.OptionManager;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
@@ -38,10 +40,10 @@ public class ScriptManager implements Listener {
 		this.vaultEconomy = HookPlugins.getVaultEconomy();
 		this.vaultPermission = HookPlugins.getVaultPermission();
 		if (optionManager.isEmpty()) {
-			optionManager.registerDefaultOptions();
+			optionManager.registerDefaults();
 		}
 		if (endProcessManager.isEmpty()) {
-			endProcessManager.registerDefaultProcess();
+			endProcessManager.registerDefaults();
 		}
 	}
 

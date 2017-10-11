@@ -69,11 +69,7 @@ public class Utils {
 	public static String getServerVersion() {
 		if (serverVersion == null) {
 			String version = Bukkit.getBukkitVersion();
-			int index = version.indexOf("-");
-			if (index == -1) {
-				return serverVersion = null;
-			}
-			serverVersion = version.substring(0, index);
+			serverVersion = version.substring(0, version.indexOf("-"));
 		}
 		return serverVersion;
 	}
