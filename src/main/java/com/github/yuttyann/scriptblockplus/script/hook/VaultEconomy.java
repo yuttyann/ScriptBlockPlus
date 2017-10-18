@@ -21,11 +21,7 @@ public final class VaultEconomy {
 		RegisteredServiceProvider<Economy> provider = services.getRegistration(Economy.class);
 		if (provider != null) {
 			VaultEconomy vault = new VaultEconomy(provider.getProvider());
-			try {
-				if (vault.economy.isEnabled()) {
-					return vault;
-				}
-			} catch (Exception e) {
+			if (vault.isEnabled()) {
 				return vault;
 			}
 		}

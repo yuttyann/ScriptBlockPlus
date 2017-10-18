@@ -172,43 +172,6 @@ public class FileUtils {
 		}
 	}
 
-	public static void fileOverwrite(File sourceFile, File targetFile) {
-		if (!isExists(sourceFile) || sourceFile.equals(targetFile)) {
-			return;
-		}
-		InputStream is = null;
-		FileOutputStream fos = null;
-		try {
-			is = new FileInputStream(sourceFile);
-			fos = new FileOutputStream(targetFile);
-			byte[] bytes = new byte[4096];
-			int length;
-			while ((length = is.read(bytes)) != -1) {
-				fos.write(bytes, 0, length);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (fos != null) {
-				try {
-					fos.flush();
-					fos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
 	public static void fileDownload(String url, File file) throws IOException {
 		File parent = file.getParentFile();
 		if (!parent.exists()) {
@@ -254,7 +217,7 @@ public class FileUtils {
 		}
 	}
 
-	public static void saveFile(File file, Object value) throws Exception {
+	public static void saveFile(File file, Object value) {
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(file));
@@ -265,27 +228,36 @@ public class FileUtils {
 			e.printStackTrace();
 		} finally {
 			if (oos != null) {
-				oos.flush();
-				oos.close();
+				try {
+					oos.flush();
+					oos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 
-
-	public static <T> T loadFile(File file) throws Exception {
+	public static <T> T loadFile(File file) {
 		ObjectInputStream ois = null;
 		try {
 			ois = new ObjectInputStream(new FileInputStream(file));
 			@SuppressWarnings("unchecked")
-			T object = (T) ois.readObject();
-			return object;
+			T value = (T) ois.readObject();
+			return value;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		} finally {
 			if (ois != null) {
-				ois.close();
+				try {
+					ois.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return null;

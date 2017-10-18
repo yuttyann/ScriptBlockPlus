@@ -1,24 +1,22 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
-public class Command extends BaseOption {
+public class Console extends BaseOption {
 
-	public Command() {
-		super("command", "@command ", 0);
+	public Console() {
+		super("console", "@console ", 2);
 	}
 
 	@Override
 	public boolean isValid() {
-		Player player = getPlayer();
 		String command = getOptionValue();
-		command = StringUtils.replace(command, "<player>", player.getName());
 		command = StringUtils.replaceRandomColor(command, "&rc");
 		command = StringUtils.replace(command, "&", "§");
-		commandExecute(player, command, false);
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 		return true;
 	}
 }

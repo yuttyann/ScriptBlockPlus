@@ -15,8 +15,7 @@ viewCommandMessage: '<scripttype> view - ブロックのスクリプトを表示
 worldEditPasteCommandMessage: 'worldedit paste <pasteonair> [overwrite] - 選択範囲にスクリプトをペーストします。'
 worldEditRemoveCommandMessage: 'worldedit remove - 選択範囲のスクリプトを削除します。'
 
-# &  : カラーコード
-# \n : 改行
+# &(code) : カラーコード
 
 ## ===== アイテム説明文の設定 ===== ##
 
@@ -26,6 +25,8 @@ scriptEditor:
 - '&6右クリック: &e種類"break"のスクリプトをコピーします。'
 - '&6シフトand左クリック: &e種類"walk"のスクリプトをコピーします。'
 - '&6シフトand右クリック: &eスクリプトをペーストします。'
+
+# |~ : 改行
 
 ## ===== メッセージの設定 ===== ##
 
@@ -46,18 +47,18 @@ updateDownloadStartMessage: '&6最新のプラグインをダウンロードし�
 # %filepath% : ファイルパス
 # %filesize% : ファイルサイズ
 
-updateDownloadEndMessage: '&6ダウンロードが終了しました。\nファイル名: %filename%\nファイルサイズ: %filesize%\nファイルパス: %filepath%'
+updateDownloadEndMessage: '&6ダウンロードが終了しました。|~ファイル名: %filename%|~ファイルサイズ: %filesize%|~ファイルパス: %filepath%'
 
 # %pluginname%    : プラグイン名
 # %latestversion% : 最新バージョン
-# %details%       : 更新内容(一部メッセージは固定です。)
+# %details%       : 更新内容
 
-updateCheckMessage: '&b最新のバージョンを検出しました。\nv%latestversion%にアップデートしてください。\nプラグイン名: %pluginname%\n☆アップデート内容☆\n%details%'
+updateCheckMessage: '&b最新のバージョンを検出しました。|~v%latestversion%にアップデートしてください。|~プラグイン名: %pluginname%|~☆アップデート内容☆|~%details%'
 
 # %pluginname%    : プラグイン名
 # %latestversion% : 最新バージョン
 
-updateErrorMessage: '&cプラグイン名: %pluginname%\nバージョン: v%latestversion%\n取得ファイル: https://xml.yuttyann44581.net/uploads/%pluginname%.xml/\n連絡用ページ: http://file.yuttyann44581.net/contact/\n解決しない場合は、製作者に連絡してください。'
+updateErrorMessage: '&cプラグイン名: %pluginname%|~バージョン: v%latestversion%|~取得ファイル: https://xml.yuttyann44581.net/uploads/%pluginname%.xml|~連絡先: http://file.yuttyann44581.net/contact|~解決しない場合は、製作者に連絡してください。'
 
 # %scripttype% : スクリプトの種類
 scriptCopyMessage: '&a種類"%scripttype%"のスクリプトをコピーしました。'
@@ -71,6 +72,10 @@ worldEditNotSelectionMessage: '&cWorldEditで座標を選択してください�
 # %scripttype% : スクリプトの種類
 worldEditPasteMessage: '&a種類"%scripttype%"のスクリプトをペーストしました。'
 worldEditRemoveMessage: '&c種類"%scripttype%"のスクリプトを削除しました。'
+
+# %option% : オプション名
+# %cause%  : 発生原因
+optionFailedToExecuteMessage: '&cオプション"%option%"の実行に失敗しました。|~発生原因: %cause%'
 
 activeDelayMessage: '&c遅延したスクリプトが実行されるまで、再度実行することはできません。'
 
@@ -91,6 +96,13 @@ errorScriptExecMessage: '&c種類"%scripttype%"のスクリプトの実行に失
 
 # %group% : グループ名
 errorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプトを実行することが出来ます。'
+
+# %type%           : 判定の種類
+# %playerLevel%    : 所持レベル
+# %requiredLevel%  : 必要レベル
+errorUPLevelMessage: '&c所持レベルが必要レベル「%requiredLevel%」に達していません。'
+errorUNDERLevelMessage: '&c所持レベルが必要レベル「%requiredLevel%」を超えています。'
+errorEQUALLevelMessage: '&c所持レベルと必要レベル「%requiredLevel%」が同値ではありません。'
 
 # %material% : アイテムの種類
 # %id%       : アイテムのID

@@ -6,7 +6,7 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 public class Amount extends BaseOption {
 
 	public Amount() {
-		super("amount", "@amount:");
+		super("amount", "@amount:", 10);
 	}
 
 	@Override
@@ -15,7 +15,7 @@ public class Amount extends BaseOption {
 		scriptData.addAmount(1);
 		if (scriptData.getAmount() >= Integer.parseInt(getOptionValue())) {
 			scriptData.remove();
-			getMapManager().removeLocation(getScriptType(), getBlockCoords());
+			getMapManager().removeCoords(getScriptType(), getBlockCoords());
 		}
 		scriptData.save();
 		return true;

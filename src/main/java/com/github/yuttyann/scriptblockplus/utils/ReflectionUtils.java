@@ -31,7 +31,7 @@ public final class ReflectionUtils {
 		return field.get(instance);
 	}
 
-	private static Class<?>[] getClasses(Object[] objects) {
+	public static Class<?>[] getClasses(Object[] objects) {
 		int length = objects == null ? 0 : objects.length;
 		Class<?>[] types = new Class<?>[length];
 		for (int i = 0; i < length; i++) {

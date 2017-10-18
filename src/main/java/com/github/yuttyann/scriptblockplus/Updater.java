@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
@@ -20,7 +19,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -42,7 +40,6 @@ public final class Updater {
 	private String downloadURL;
 	private String changeLogURL;
 	private List<String> details;
-	private int versionDiff;
 	private boolean isUpdateError;
 	private boolean isUpperVersion;
 
@@ -82,10 +79,6 @@ public final class Updater {
 
 	public List<String> getDetails() {
 		return details;
-	}
-
-	public int getVersionDiff() {
-		return versionDiff;
 	}
 
 	public boolean isUpdateError() {
@@ -131,9 +124,6 @@ public final class Updater {
 			Element element = (Element) node;
 			if (element.getNodeName().equals("update")) {
 				latestVersion = element.getAttribute("version");
-				if (element.hasAttribute("diff")) {
-					versionDiff = Integer.valueOf(element.getAttribute("diff"));
-				}
 			}
 			NodeList updateChildren = node.getChildNodes();
 			for (int j = 0; j < updateChildren.getLength(); j++) {
@@ -170,39 +160,25 @@ public final class Updater {
 			sendCheckMessage(sender != null ? sender : Bukkit.getConsoleSender());
 			File dataFolder = Files.getConfig().getDataFolder();
 			File textFile = new File(dataFolder, "update/ChangeLog.txt");
-			boolean isNotExists = !textFile.exists();
-			List<String> contents = getContents(textFile);
+			boolean textEquals = !textFile.exists() || !textEquals(changeLogURL, textFile);
 			if(SBConfig.isAutoDownload()) {
-				Utils.sendMessage(SBConfig.getUpdateDownloadStartMessage());
-				File jarFile = null;
+				File jarFile = new File(dataFolder, "update/jar/" + getJarName());
 				try {
-					jarFile = new File(dataFolder, "update/jar/" + getJarName());
+					Utils.sendMessage(SBConfig.getUpdateDownloadStartMessage());
 					FileUtils.fileDownload(changeLogURL, textFile);
 					FileUtils.fileDownload(downloadURL, jarFile);
-					int diff = SBConfig.isOverwritePlugin() ? getDiff() : -1;
-					System.out.println(diff + " <= " + versionDiff);
-					if (diff != -1 && diff > 0 && diff <= versionDiff) {
-						PluginManager pluginManager = Bukkit.getPluginManager();
-						try {
-							pluginManager.disablePlugin(plugin);
-							FileUtils.fileOverwrite(jarFile, FileUtils.getJarFile(plugin));
-						} finally {
-							pluginManager.enablePlugin(plugin);
-						}
-					}
 				} catch (IOException e) {
-					e.printStackTrace();
 					sendErrorMessage();
 					return false;
 				} finally {
-					if (!isUpdateError && jarFile != null) {
+					if (!isUpdateError && jarFile.exists()) {
 						String fileName = jarFile.getName();
 						String filePath = StringUtils.replace(jarFile.getPath(), "\\", "/");
 						Utils.sendMessage(SBConfig.getUpdateDownloadEndMessage(fileName, filePath, getSize(jarFile.length())));
 					}
 				}
 			}
-			if (SBConfig.isOpenTextFile() && !isUpdateError && (isNotExists || !arrayEquals(contents))) {
+			if (SBConfig.isOpenTextFile() && !isUpdateError && textEquals) {
 				Desktop desktop = Desktop.getDesktop();
 				try {
 					desktop.open(textFile);
@@ -243,71 +219,38 @@ public final class Updater {
 		}
 	}
 
-	private int getDiff() {
-		int source = Utils.getVersionInt(pluginVersion);
-		int target = Utils.getVersionInt(latestVersion);
-		return source < target ? target - source : 0;
-	}
-
-	private boolean arrayEquals(List<String> source) {
-		if (source == null || StringUtils.isEmpty(changeLogURL)) {
+	private boolean textEquals(String url, File file) {
+		if (!file.exists()) {
 			return false;
 		}
-		InputStream is = null;
-		BufferedReader reader = null;
-		List<String> result = new ArrayList<String>();
+		BufferedReader reader1 = null, reader2 = null;
 		try {
-			is = new URL(changeLogURL).openStream();
-			reader = new BufferedReader(new InputStreamReader(is));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				result.add(line);
+			reader1 = new BufferedReader(new FileReader(file));
+			reader2 = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
+			while (reader1.ready() && reader2.ready()) {
+				if (!reader1.readLine().equals(reader2.readLine())) {
+					return false;
+				}
 			}
+			return !(reader1.ready() || reader2.ready());
 		} catch (IOException e) {
-			e.printStackTrace();
+			return false;
 		} finally {
-			if (reader != null) {
+			if (reader1 != null) {
 				try {
-					reader.close();
+					reader1.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-			if (is != null) {
+			if (reader2 != null) {
 				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return source.equals(result);
-	}
-
-	private List<String> getContents(File file) {
-		if (file == null || !file.exists()) {
-			return new ArrayList<String>();
-		}
-		BufferedReader reader = null;
-		List<String> result = new ArrayList<String>();
-		try {
-			reader = new BufferedReader(new FileReader(file));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				result.add(line);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
+					reader2.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		return result;
 	}
 
 	private Document getDocument(String pluginName) throws ParserConfigurationException, SAXException, IOException {

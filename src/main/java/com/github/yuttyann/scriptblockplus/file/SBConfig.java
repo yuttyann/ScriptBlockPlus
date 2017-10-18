@@ -6,11 +6,11 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class SBConfig {
@@ -58,6 +58,7 @@ public class SBConfig {
 	private String worldEditNotSelectionMessage;
 	private String worldEditPasteMessage;
 	private String worldEditRemoveMessage;
+	private String optionFailedToExecuteMessage;
 	private String activeDelayMessage;
 	private String activeCooldownMessage;
 	private String succEditDataMessage;
@@ -66,9 +67,12 @@ public class SBConfig {
 	private String errorScriptFileCheckMessage;
 	private String errorScriptExecMessage;
 	private String errorGroupMessage;
+	private String errorUPLevelMessage;
+	private String errorUNDERLevelMessage;
+	private String errorEQUALLevelMessage;
 	private String errorHandMessage;
-	private String errorCostMessage;
 	private String errorItemMessage;
+	private String errorCostMessage;
 	private String consoleScriptCopyMessage;
 	private String consoleScriptPasteMessage;
 	private String consoleScriptCreateMessage;
@@ -125,6 +129,7 @@ public class SBConfig {
 		this.worldEditNotSelectionMessage = yaml.getString("worldEditNotSelectionMessage");
 		this.worldEditPasteMessage = yaml.getString("worldEditPasteMessage");
 		this.worldEditRemoveMessage = yaml.getString("worldEditRemoveMessage");
+		this.optionFailedToExecuteMessage = yaml.getString("optionFailedToExecuteMessage");
 		this.activeDelayMessage = yaml.getString("activeDelayMessage");
 		this.activeCooldownMessage = yaml.getString("activeCooldownMessage");
 		this.succEditDataMessage = yaml.getString("succEditDataMessage");
@@ -133,9 +138,12 @@ public class SBConfig {
 		this.errorScriptFileCheckMessage = yaml.getString("errorScriptFileCheckMessage");
 		this.errorScriptExecMessage = yaml.getString("errorScriptExecMessage");
 		this.errorGroupMessage = yaml.getString("errorGroupMessage");
+		this.errorUPLevelMessage = yaml.getString("errorUPLevelMessage");
+		this.errorUNDERLevelMessage = yaml.getString("errorUNDERLevelMessage");
+		this.errorEQUALLevelMessage = yaml.getString("errorEQUALLevelMessage");
 		this.errorHandMessage = yaml.getString("errorHandMessage");
-		this.errorCostMessage = yaml.getString("errorCostMessage");
 		this.errorItemMessage = yaml.getString("errorItemMessage");
+		this.errorCostMessage = yaml.getString("errorCostMessage");
 		this.consoleScriptCopyMessage = yaml.getString("consoleScriptCopyMessage");
 		this.consoleScriptPasteMessage = yaml.getString("consoleScriptPasteMessage");
 		this.consoleScriptCreateMessage = yaml.getString("consoleScriptCreateMessage");
@@ -339,7 +347,7 @@ public class SBConfig {
 					builder.append("・").append(message);
 				}
 				if (i != (details.size() - 1)) {
-					builder.append("\\n");
+					builder.append("|~");
 				}
 			}
 			updateCheckMessage = replace(updateCheckMessage, "%details%", builder.toString());
@@ -413,6 +421,16 @@ public class SBConfig {
 		return replaceColorCode(replace(instance.worldEditRemoveMessage, "%scripttype%", scriptType));
 	}
 
+	public static String getOptionFailedToExecuteMessage(Option option, Throwable throwable) {
+		if (instance.optionFailedToExecuteMessage == null) {
+			return null;
+		}
+		String optionFailedToExecuteMessage = instance.optionFailedToExecuteMessage;
+		optionFailedToExecuteMessage = replace(optionFailedToExecuteMessage, "%option%", option.getClass().getSimpleName());
+		optionFailedToExecuteMessage = replace(optionFailedToExecuteMessage, "%cause%", throwable.getClass().getSimpleName());
+		return replaceColorCode(optionFailedToExecuteMessage);
+	}
+
 	public static String getActiveDelayMessage() {
 		if (instance.activeDelayMessage == null) {
 			return null;
@@ -474,6 +492,39 @@ public class SBConfig {
 		return replaceColorCode(replace(instance.errorGroupMessage, "%group%", group));
 	}
 
+	public static String getErrorUPLevelMessage(int playerLevel, int requiredLevel) {
+		if (instance.errorUPLevelMessage == null) {
+			return null;
+		}
+		String errorUPLevelMessage = instance.errorUPLevelMessage;
+		errorUPLevelMessage = replace(errorUPLevelMessage, "%type%", "UP");
+		errorUPLevelMessage = replace(errorUPLevelMessage, "%playerLevel%", playerLevel + "");
+		errorUPLevelMessage = replace(errorUPLevelMessage, "%requiredLevel%", requiredLevel + "");
+		return replaceColorCode(errorUPLevelMessage);
+	}
+
+	public static String getErrorUNDERLevelMessage(int playerLevel, int requiredLevel) {
+		if (instance.errorUNDERLevelMessage == null) {
+			return null;
+		}
+		String errorUNDERLevelMessage = instance.errorUNDERLevelMessage;
+		errorUNDERLevelMessage = replace(errorUNDERLevelMessage, "%type%", "UNDER");
+		errorUNDERLevelMessage = replace(errorUNDERLevelMessage, "%playerLevel%", playerLevel + "");
+		errorUNDERLevelMessage = replace(errorUNDERLevelMessage, "%requiredLevel%", requiredLevel + "");
+		return replaceColorCode(errorUNDERLevelMessage);
+	}
+
+	public static String getErrorEQUALLevelMessage(int playerLevel, int requiredLevel) {
+		if (instance.errorEQUALLevelMessage == null) {
+			return null;
+		}
+		String errorEQUALLevelMessage = instance.errorEQUALLevelMessage;
+		errorEQUALLevelMessage = replace(errorEQUALLevelMessage, "%type%", "EQUAL");
+		errorEQUALLevelMessage = replace(errorEQUALLevelMessage, "%playerLevel%", playerLevel + "");
+		errorEQUALLevelMessage = replace(errorEQUALLevelMessage, "%requiredLevel%", requiredLevel + "");
+		return replaceColorCode(errorEQUALLevelMessage);
+	}
+
 	public static String getErrorHandMessage(Material material, int id, int amount, short damage, String itemName) {
 		if (instance.errorHandMessage == null) {
 			return null;
@@ -485,16 +536,6 @@ public class SBConfig {
 		errorHandMessage = replace(errorHandMessage, "%damage%", damage + "");
 		errorHandMessage = replace(errorHandMessage, "%itemname%", itemName != null ? itemName : material.toString());
 		return replaceColorCode(errorHandMessage);
-	}
-
-	public static String getErrorCostMessage(double cost, double result) {
-		if (instance.errorCostMessage == null) {
-			return null;
-		}
-		String errorCostMessage = instance.errorCostMessage;
-		errorCostMessage = replace(errorCostMessage, "%cost%", cost + "");
-		errorCostMessage = replace(errorCostMessage, "%result%", result + "");
-		return replaceColorCode(errorCostMessage);
 	}
 
 	public static String getErrorItemMessage(Material material, int id, int amount, short damage, String itemName) {
@@ -510,72 +551,82 @@ public class SBConfig {
 		return replaceColorCode(errorItemMessage);
 	}
 
-	public static String getConsoleScriptCopyMessage(Player player, ScriptType scriptType, Location location) {
+	public static String getErrorCostMessage(double cost, double result) {
+		if (instance.errorCostMessage == null) {
+			return null;
+		}
+		String errorCostMessage = instance.errorCostMessage;
+		errorCostMessage = replace(errorCostMessage, "%cost%", cost + "");
+		errorCostMessage = replace(errorCostMessage, "%result%", result + "");
+		return replaceColorCode(errorCostMessage);
+	}
+
+	public static String getConsoleScriptCopyMessage(String name, ScriptType scriptType, Location location) {
 		if (instance.consoleScriptCopyMessage == null || !instance.consoleLog) {
 			return null;
 		}
 		String consoleScriptCopyMessage = instance.consoleScriptCopyMessage;
-		consoleScriptCopyMessage = replace(consoleScriptCopyMessage, "%player%", player.getName());
+		consoleScriptCopyMessage = replace(consoleScriptCopyMessage, "%player%", name);
 		consoleScriptCopyMessage = replace(consoleScriptCopyMessage, "%scripttype%", scriptType.getType());
 		consoleScriptCopyMessage = replace(consoleScriptCopyMessage, "%world%", location.getWorld().getName());
 		consoleScriptCopyMessage = replace(consoleScriptCopyMessage, "%coords%", BlockCoords.getCoords(location));
 		return replaceColorCode(consoleScriptCopyMessage);
 	}
 
-	public static String getConsoleScriptPasteMessage(Player player, ScriptType scriptType, Location location) {
+	public static String getConsoleScriptPasteMessage(String name, ScriptType scriptType, Location location) {
 		if (instance.consoleScriptPasteMessage == null || !instance.consoleLog) {
 			return null;
 		}
 		String consoleScriptPasteMessage = instance.consoleScriptPasteMessage;
-		consoleScriptPasteMessage = replace(consoleScriptPasteMessage, "%player%", player.getName());
+		consoleScriptPasteMessage = replace(consoleScriptPasteMessage, "%player%", name);
 		consoleScriptPasteMessage = replace(consoleScriptPasteMessage, "%scripttype%", scriptType.getType());
 		consoleScriptPasteMessage = replace(consoleScriptPasteMessage, "%world%", location.getWorld().getName());
 		consoleScriptPasteMessage = replace(consoleScriptPasteMessage, "%coords%", BlockCoords.getCoords(location));
 		return replaceColorCode(consoleScriptPasteMessage);
 	}
 
-	public static String getConsoleScriptCreateMessage(Player player, ScriptType scriptType, Location location) {
+	public static String getConsoleScriptCreateMessage(String name, ScriptType scriptType, Location location) {
 		if (instance.consoleScriptCreateMessage == null || !instance.consoleLog) {
 			return null;
 		}
 		String consoleScriptCreateMessage = instance.consoleScriptCreateMessage;
-		consoleScriptCreateMessage = replace(consoleScriptCreateMessage, "%player%", player.getName());
+		consoleScriptCreateMessage = replace(consoleScriptCreateMessage, "%player%", name);
 		consoleScriptCreateMessage = replace(consoleScriptCreateMessage, "%scripttype%", scriptType.getType());
 		consoleScriptCreateMessage = replace(consoleScriptCreateMessage, "%world%", location.getWorld().getName());
 		consoleScriptCreateMessage = replace(consoleScriptCreateMessage, "%coords%", BlockCoords.getCoords(location));
 		return replaceColorCode(consoleScriptCreateMessage);
 	}
 
-	public static String getConsoleScriptAddMessage(Player player, ScriptType scriptType, Location location) {
+	public static String getConsoleScriptAddMessage(String name, ScriptType scriptType, Location location) {
 		if (instance.consoleScriptAddMessage == null || !instance.consoleLog) {
 			return null;
 		}
 		String consoleScriptAddMessage = instance.consoleScriptAddMessage;
-		consoleScriptAddMessage = replace(consoleScriptAddMessage, "%player%", player.getName());
+		consoleScriptAddMessage = replace(consoleScriptAddMessage, "%player%", name);
 		consoleScriptAddMessage = replace(consoleScriptAddMessage, "%scripttype%", scriptType.getType());
 		consoleScriptAddMessage = replace(consoleScriptAddMessage, "%world%", location.getWorld().getName());
 		consoleScriptAddMessage = replace(consoleScriptAddMessage, "%coords%", BlockCoords.getCoords(location));
 		return replaceColorCode(consoleScriptAddMessage);
 	}
 
-	public static String getConsoleScriptRemoveMessage(Player player, ScriptType scriptType, Location location) {
+	public static String getConsoleScriptRemoveMessage(String name, ScriptType scriptType, Location location) {
 		if (instance.consoleScriptRemoveMessage == null || !instance.consoleLog) {
 			return null;
 		}
 		String consoleScriptRemoveMessage = instance.consoleScriptRemoveMessage;
-		consoleScriptRemoveMessage = replace(consoleScriptRemoveMessage, "%player%", player.getName());
+		consoleScriptRemoveMessage = replace(consoleScriptRemoveMessage, "%player%", name);
 		consoleScriptRemoveMessage = replace(consoleScriptRemoveMessage, "%scripttype%", scriptType.getType());
 		consoleScriptRemoveMessage = replace(consoleScriptRemoveMessage, "%world%", location.getWorld().getName());
 		consoleScriptRemoveMessage = replace(consoleScriptRemoveMessage, "%coords%", BlockCoords.getCoords(location));
 		return replaceColorCode(consoleScriptRemoveMessage);
 	}
 
-	public static String getConsoleScriptViewMessage(Player player, ScriptType scriptType, Location location) {
+	public static String getConsoleScriptViewMessage(String name, ScriptType scriptType, Location location) {
 		if (instance.consoleScriptViewMessage == null || !instance.consoleLog) {
 			return null;
 		}
 		String consoleScriptViewMessage = instance.consoleScriptViewMessage;
-		consoleScriptViewMessage = replace(consoleScriptViewMessage, "%player%", player.getName());
+		consoleScriptViewMessage = replace(consoleScriptViewMessage, "%player%", name);
 		consoleScriptViewMessage = replace(consoleScriptViewMessage, "%scripttype%", scriptType.getType());
 		consoleScriptViewMessage = replace(consoleScriptViewMessage, "%world%", location.getWorld().getName());
 		consoleScriptViewMessage = replace(consoleScriptViewMessage, "%coords%", BlockCoords.getCoords(location));
@@ -612,24 +663,24 @@ public class SBConfig {
 		return replaceColorCode(consoleWorldEditRemoveMessage);
 	}
 
-	public static String getConsoleSuccScriptExecMessage(Player player, ScriptType scriptType, Location location) {
+	public static String getConsoleSuccScriptExecMessage(String name, ScriptType scriptType, Location location) {
 		if (instance.consoleSuccScriptExecMessage == null || !instance.consoleLog) {
 			return null;
 		}
 		String consoleSuccScriptExecMessage = instance.consoleSuccScriptExecMessage;
-		consoleSuccScriptExecMessage = replace(consoleSuccScriptExecMessage, "%player%", player.getName());
+		consoleSuccScriptExecMessage = replace(consoleSuccScriptExecMessage, "%player%", name);
 		consoleSuccScriptExecMessage = replace(consoleSuccScriptExecMessage, "%scripttype%", scriptType.getType());
 		consoleSuccScriptExecMessage = replace(consoleSuccScriptExecMessage, "%world%", location.getWorld().getName());
 		consoleSuccScriptExecMessage = replace(consoleSuccScriptExecMessage, "%coords%", BlockCoords.getCoords(location));
 		return replaceColorCode(consoleSuccScriptExecMessage);
 	}
 
-	public static String getConsoleErrorScriptExecMessage(Player player, ScriptType scriptType, Location location) {
+	public static String getConsoleErrorScriptExecMessage(String name, ScriptType scriptType, Location location) {
 		if (instance.consoleErrorScriptExecMessage == null || !instance.consoleLog) {
 			return null;
 		}
 		String consoleErrorScriptExecMessage = instance.consoleErrorScriptExecMessage;
-		consoleErrorScriptExecMessage = replace(consoleErrorScriptExecMessage, "%player%", player.getName());
+		consoleErrorScriptExecMessage = replace(consoleErrorScriptExecMessage, "%player%", name);
 		consoleErrorScriptExecMessage = replace(consoleErrorScriptExecMessage, "%scripttype%", scriptType.getType());
 		consoleErrorScriptExecMessage = replace(consoleErrorScriptExecMessage, "%world%", location.getWorld().getName());
 		consoleErrorScriptExecMessage = replace(consoleErrorScriptExecMessage, "%coords%", BlockCoords.getCoords(location));

@@ -1,10 +1,12 @@
-package com.github.yuttyann.scriptblockplus.manager.constructor;
+package com.github.yuttyann.scriptblockplus.manager;
 
 import java.lang.reflect.Constructor;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.github.yuttyann.scriptblockplus.script.ScriptRead.EndProcess;
+import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
+import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
+import com.github.yuttyann.scriptblockplus.script.endprocess.ItemCostInit;
 import com.github.yuttyann.scriptblockplus.script.endprocess.MoneyCostInit;
 
 public class EndProcessManager extends SBConstructor<EndProcess> {
@@ -12,11 +14,13 @@ public class EndProcessManager extends SBConstructor<EndProcess> {
 	private final static List<Constructor<? extends EndProcess>> CONSTRUCTORS;
 
 	static {
-		CONSTRUCTORS = new LinkedList<Constructor<? extends EndProcess>>();
+		CONSTRUCTORS = new ArrayList<Constructor<? extends EndProcess>>();
 	}
 
+	@Override
 	public void registerDefaults() {
-		CONSTRUCTORS.clear();
+		getConstructors().clear();
+		add(ItemCostInit.class);
 		add(MoneyCostInit.class);
 	}
 

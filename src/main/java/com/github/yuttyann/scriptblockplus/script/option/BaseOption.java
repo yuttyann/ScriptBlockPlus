@@ -13,18 +13,21 @@ import org.bukkit.plugin.Plugin;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.PlayerSelector;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager;
+import com.github.yuttyann.scriptblockplus.script.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public abstract class BaseOption extends Option {
 
 	private Plugin plugin;
-	private Player player;
-	private UUID uuid;
+	private SBPlayer sbPlayer;
 	private String optionValue;
 	private List<String> scripts;
 	private ScriptType scriptType;
@@ -36,8 +39,12 @@ public abstract class BaseOption extends Option {
 	private VaultPermission vaultPermission;
 	private int scriptIndex;
 
-	protected BaseOption(String name, String prefix) {
-		super(name, prefix);
+	public BaseOption(String name, String prefix) {
+		this(name, prefix, new OptionManager().size() - 1);
+	}
+
+	public BaseOption(String name, String prefix, int index) {
+		super(name, prefix, index);
 	}
 
 	protected Plugin getPlugin() {
@@ -45,11 +52,15 @@ public abstract class BaseOption extends Option {
 	}
 
 	protected Player getPlayer() {
-		return player;
+		return sbPlayer.getPlayer();
 	}
 
 	protected UUID getUniqueId() {
-		return uuid;
+		return sbPlayer.getUniqueId();
+	}
+
+	protected SBPlayer getSBPlayer() {
+		return sbPlayer;
 	}
 
 	protected String getCoords() {
@@ -107,18 +118,22 @@ public abstract class BaseOption extends Option {
 	public final boolean callOption(ScriptRead scriptRead) {
 		this.scriptRead = scriptRead;
 		this.plugin = scriptRead.getPlugin();
-		this.player = scriptRead.getPlayer();
-		this.uuid = scriptRead.getUniqueId();
+		this.sbPlayer = scriptRead.getSBPlayer();
 		this.optionValue = scriptRead.getOptionValue();
 		this.scripts = scriptRead.getScripts();
 		this.scriptType = scriptRead.getScriptType();
 		this.scriptData = scriptRead.getScriptData();
 		this.mapManager = scriptRead.getMapManager();
-		this.blockCoords = scriptRead.getBlockCoords().clone();
+		this.blockCoords = scriptRead.getBlockCoords();
 		this.vaultEconomy = scriptRead.getVaultEconomy();
 		this.vaultPermission = scriptRead.getVaultPermission();
 		this.scriptIndex = scriptRead.getScriptIndex();
-		return isValid();
+		try {
+			return isValid();
+		} catch (Exception e) {
+			Utils.sendMessage(sbPlayer, SBConfig.getOptionFailedToExecuteMessage(this, e));
+		}
+		return false;
 	}
 
 	protected final void commandExecute(Player player, String command, boolean isBypass) {
@@ -145,9 +160,9 @@ public abstract class BaseOption extends Option {
 		if (pattern != null) {
 			if (location == null) {
 				if (sender instanceof Player) {
-					location = ((Player)sender).getLocation().clone();
+					location = ((Player) sender).getLocation().clone();
 				} else if (sender instanceof BlockCommandSender) {
-					location = ((BlockCommandSender)sender).getBlock().getLocation().clone();
+					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
 				}
 			}
 			Player[] players = PlayerSelector.getPlayers(location, pattern);

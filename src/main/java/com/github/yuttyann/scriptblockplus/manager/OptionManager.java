@@ -1,18 +1,21 @@
-package com.github.yuttyann.scriptblockplus.manager.constructor;
+package com.github.yuttyann.scriptblockplus.manager;
 
 import java.lang.reflect.Constructor;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.chat.Bypass;
 import com.github.yuttyann.scriptblockplus.script.option.chat.Command;
+import com.github.yuttyann.scriptblockplus.script.option.chat.Console;
 import com.github.yuttyann.scriptblockplus.script.option.chat.Say;
 import com.github.yuttyann.scriptblockplus.script.option.chat.Server;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ToPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.other.Amount;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemHand;
+import com.github.yuttyann.scriptblockplus.script.option.other.Level;
 import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
 import com.github.yuttyann.scriptblockplus.script.option.time.Delay;
 import com.github.yuttyann.scriptblockplus.script.option.vault.Group;
@@ -28,28 +31,32 @@ public class OptionManager extends SBConstructor<Option> {
 	private final static List<Constructor<? extends Option>> CONSTRUCTORS;
 
 	static {
-		CONSTRUCTORS = new LinkedList<Constructor<? extends Option>>();
+		CONSTRUCTORS = new ArrayList<Constructor<? extends Option>>();
 	}
 
+	@Override
 	public void registerDefaults() {
-		CONSTRUCTORS.clear();
-		add(MoneyCost.class);
-		add(ItemCost.class);
-		add(ItemHand.class);
+		getConstructors().clear();
 		add(Cooldown.class);
 		add(Delay.class);
+		add(ItemCost.class);
+		add(ItemHand.class);
+		add(MoneyCost.class);
+		add(Level.class);
 		add(Group.class);
 		add(Perm.class);
+		add(Amount.class);
+		add(Bypass.class);
+		add(Command.class);
+		add(Console.class);
+		add(Say.class);
+		add(Server.class);
+		add(ToPlayer.class);
 		add(GroupAdd.class);
 		add(GroupRemove.class);
 		add(PermAdd.class);
 		add(PermRemove.class);
-		add(Amount.class);
-		add(ToPlayer.class);
-		add(Server.class);
-		add(Say.class);
-		add(Bypass.class);
-		add(Command.class);
+
 	}
 
 	@Override

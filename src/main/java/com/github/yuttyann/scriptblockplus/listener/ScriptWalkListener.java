@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,19 +30,18 @@ public class ScriptWalkListener extends ScriptManager implements Listener {
 		if (blockCoords.getFullCoords().equals(sbPlayer.getOldFullCoords())) {
 			return;
 		}
-		sbPlayer.setOldFullCoords(blockCoords);
-		if (mapManager.containsLocation(scriptType, blockCoords)) {
-			Player player = sbPlayer.getPlayer();
-			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(player, blockCoords.getBlock());
+		sbPlayer.setOldFullCoords(blockCoords.getFullCoords());
+		if (mapManager.containsCoords(scriptType, blockCoords)) {
+			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(sbPlayer.getPlayer(), blockCoords.getBlock());
 			Bukkit.getPluginManager().callEvent(walkEvent);
 			if (walkEvent.isCancelled()) {
 				return;
 			}
-			if (!Permission.WALK_USE.has(player)) {
-				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
+			if (!Permission.WALK_USE.has(sbPlayer)) {
+				Utils.sendMessage(sbPlayer, SBConfig.getNotPermissionMessage());
 				return;
 			}
-			new ScriptRead(this, player, blockCoords).read(0);
+			new ScriptRead(this, sbPlayer.getUniqueId(), blockCoords).read(0);
 		}
 	}
 }

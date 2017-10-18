@@ -202,12 +202,12 @@ public class YamlConfig {
 
 	public UUID getUUID(String path) {
 		Object def = getDefault(path);
-		return getUUID(path, def != null ? UUID.fromString(def.toString()) : null);
+		return getUUID(path, def == null ? null : UUID.fromString(def.toString()));
 	}
 
 	public UUID getUUID(String path, UUID def) {
 		Object val = get(path, def);
-		return val != null ? UUID.fromString(val.toString()) : def;
+		return val == null ? def : UUID.fromString(val.toString());
 	}
 
 	public Color getColor(String path) {
@@ -383,9 +383,9 @@ public class YamlConfig {
 		if (list == null) {
 			return new ArrayList<UUID>();
 		}
-		List<UUID> result = new ArrayList<UUID>();
+		List<UUID> result = new ArrayList<UUID>(list.size());
 		for (Object object : list) {
-			if (object instanceof String || isPrimitiveWrapper(object)) {
+			if (object instanceof String) {
 				result.add(UUID.fromString(object.toString()));
 			}
 		}
@@ -434,12 +434,5 @@ public class YamlConfig {
 		Configuration root = getRoot();
 		Configuration defaults = (root != null ? root.getDefaults() : null);
 		return defaults != null ? defaults.get(MemorySection.createPath(yaml, path)) : null;
-	}
-
-	private boolean isPrimitiveWrapper(Object input) {
-		return input instanceof Integer || input instanceof Boolean
-				|| input instanceof Character || input instanceof Byte
-				|| input instanceof Short || input instanceof Double
-				|| input instanceof Long || input instanceof Float;
 	}
 }

@@ -12,9 +12,8 @@ public enum ClickType {
 	private static final String[] TYPES;
 
 	static {
-		ScriptType[] values = ScriptType.values();
-		List<String> list = new ArrayList<String>(values().length * values.length);
-		for (ScriptType scriptType : values) {
+		List<String> list = new ArrayList<String>();
+		for (ScriptType scriptType : ScriptType.values()) {
 			for (ClickType clickType : values()) {
 				list.add(clickType.createKey(scriptType));
 			}

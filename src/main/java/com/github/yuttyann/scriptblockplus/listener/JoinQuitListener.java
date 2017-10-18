@@ -23,7 +23,7 @@ public class JoinQuitListener implements Listener {
 		SBPlayer sbPlayer = SBPlayer.get(event.getPlayer());
 		if (sbPlayer.getOldFullCoords() == null) {
 			BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation());
-			sbPlayer.setOldFullCoords(blockCoords.subtract(0.0D, 1.0D, 0.0D));
+			sbPlayer.setOldFullCoords(blockCoords.subtract(0.0D, 1.0D, 0.0D).getFullCoords());
 		}
 		plugin.getUpdater().sendCheckMessage(sbPlayer.getPlayer());
 	}
@@ -31,7 +31,7 @@ public class JoinQuitListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		SBPlayer sbPlayer = SBPlayer.get(event.getPlayer());
-		sbPlayer.setScript(null);
+		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);
 		sbPlayer.setClipboard(null);
 	}

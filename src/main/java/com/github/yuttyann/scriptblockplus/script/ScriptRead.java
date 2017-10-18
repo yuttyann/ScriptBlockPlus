@@ -18,35 +18,22 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class ScriptRead extends ScriptManager {
 
-	public static interface EndProcess {
-
-		public void success(ScriptRead scriptRead);
-
-		public void failed(ScriptRead scriptRead);
-	}
-
-	private Player player;
-	private UUID uuid;
+	private SBPlayer sbPlayer;
 	private String optionValue;
 	private List<String> scripts;
 	private ScriptData scriptData;
 	private BlockCoords blockCoords;
 	private int scriptIndex;
 
-	public ScriptRead(ScriptManager scriptManager, Player player, Location location) {
+	public ScriptRead(ScriptManager scriptManager, UUID uuid, Location location) {
 		super(scriptManager);
-		this.player = player;
-		this.uuid = player.getUniqueId();
+		this.sbPlayer = SBPlayer.get(uuid);
+		this.scriptData = new ScriptData(location, scriptType, true);
 		this.blockCoords = new BlockCoords(location);
-		this.scriptData = new ScriptData(blockCoords, scriptType, true);
 	}
 
-	public Player getPlayer() {
-		return player;
-	}
-
-	public UUID getUniqueId() {
-		return uuid;
+	public SBPlayer getSBPlayer() {
+		return sbPlayer;
 	}
 
 	public String getOptionValue() {
@@ -62,7 +49,7 @@ public final class ScriptRead extends ScriptManager {
 	}
 
 	public BlockCoords getBlockCoords() {
-		return blockCoords;
+		return blockCoords.clone();
 	}
 
 	public int getScriptIndex() {
@@ -70,31 +57,38 @@ public final class ScriptRead extends ScriptManager {
 	}
 
 	public boolean read(int index) {
+		if (!sbPlayer.updatePlayer()) {
+			return false;
+		}
+		Player player = sbPlayer.getPlayer();
 		if (!scriptData.checkPath()) {
 			Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 			return false;
 		}
-		if (!sort(scriptData.getScripts(), optionManager.newInstances())) {
+		Option[] options = optionManager.newInstances();
+		if (!sort(scriptData.getScripts(), options)) {
 			Utils.sendMessage(player, SBConfig.getErrorScriptMessage(scriptType));
-			Utils.sendMessage(SBConfig.getConsoleErrorScriptExecMessage(player, scriptType, blockCoords));
+			Utils.sendMessage(SBConfig.getConsoleErrorScriptExecMessage(player.getName(), scriptType, blockCoords));
 			return false;
 		}
-		List<Option> options = optionManager.getCacheList();
-		for (int i = index; i < scripts.size(); i++) {
-			String script = scripts.get(i);
+		for (scriptIndex = index; scriptIndex < scripts.size(); scriptIndex++) {
+			String script = scripts.get(scriptIndex);
 			for (Option option : options) {
 				if (!option.isOption(script)) {
 					continue;
 				}
 				optionValue = option.getValue(script);
-				if (!optionManager.newInstance(option).callOption(this)) {
-					StreamUtils.forEach(endProcessManager.newInstances(), r -> r.failed(this));
+				Option instance = optionManager.newInstance(option);
+				if (!sbPlayer.updatePlayer() || !instance.callOption(this)) {
+					if (!instance.isFailedIgnore()) {
+						StreamUtils.forEach(endProcessManager.newInstances(), r -> r.failed(this));
+					}
 					return false;
 				}
 			}
 		}
 		StreamUtils.forEach(endProcessManager.newInstances(), r -> r.success(this));
-		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(player, scriptType, blockCoords));
+		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(player.getName(), scriptType, blockCoords));
 		return true;
 	}
 

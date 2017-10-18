@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.manager.constructor;
+package com.github.yuttyann.scriptblockplus.manager.auxiliary;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -8,17 +8,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * ScriptBlockPlus 独自コンストラクタ クラス
- * <br>
- * このクラスは主にコンストラクタを予め保存しておき使用したいときにインスタンスを生成するクラスです。
- * <br>
- * また、空のインスタンスを保存していますので getCashList で取得できます。
- * @author ゆっちゃん
- */
 public abstract class SBConstructor<T> {
 
 	private List<T> cacheList;
+
+	public abstract void registerDefaults();
+
+	public int size() {
+		return getConstructors().size();
+	}
+
+	public boolean isEmpty() {
+		return getConstructors().isEmpty();
+	}
+
+	public int indexOf(Class<? extends T> clazz) {
+		return getConstructors().indexOf(getConstructor(clazz));
+	}
 
 	public void add(Class<? extends T> clazz) {
 		getConstructors().add(getConstructor(clazz));
@@ -34,14 +40,6 @@ public abstract class SBConstructor<T> {
 
 	public void remove(int index) {
 		getConstructors().remove(index);
-	}
-
-	public int indexOf(Class<? extends T> clazz) {
-		return getConstructors().indexOf(getConstructor(clazz));
-	}
-
-	public boolean isEmpty() {
-		return getConstructors().isEmpty();
 	}
 
 	public final List<T> getCacheList() {
@@ -62,8 +60,8 @@ public abstract class SBConstructor<T> {
 			Type type = getClass().getGenericSuperclass();
 			String className = ((ParameterizedType) type).getActualTypeArguments()[0].getTypeName();
 			@SuppressWarnings("unchecked")
-			T[] t = (T[]) Array.newInstance(Class.forName(className), getConstructors().size());
-			return t;
+			T[] array = (T[]) Array.newInstance(Class.forName(className), getConstructors().size());
+			return array;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,9 +83,13 @@ public abstract class SBConstructor<T> {
 	}
 
 	public final T newInstance(T t) {
+		return newInstance(t.getClass());
+	}
+
+	public final T newInstance(Class<?> clazz) {
 		try {
 			for (Constructor<? extends T> constructor : getConstructors()) {
-				if (t.getClass() == constructor.getDeclaringClass()) {
+				if (clazz == constructor.getDeclaringClass()) {
 					return constructor.newInstance();
 				}
 			}
@@ -106,9 +108,9 @@ public abstract class SBConstructor<T> {
 		return cacheList;
 	}
 
-	private <R extends T> Constructor<R> getConstructor(Class<R> option) {
+	private <R extends T> Constructor<R> getConstructor(Class<R> clazz) {
 		try {
-			Constructor<R> constructor = option.getDeclaredConstructor();
+			Constructor<R> constructor = clazz.getDeclaredConstructor();
 			constructor.setAccessible(true);
 			return constructor;
 		} catch (ReflectiveOperationException e) {

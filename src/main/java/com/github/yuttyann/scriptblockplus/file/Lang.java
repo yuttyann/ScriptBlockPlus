@@ -11,11 +11,6 @@ import org.bukkit.plugin.Plugin;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
-/**
- * Jar内のフォルダから言語ファイルを読み込み指定した、ファイル名で生成するクラス
- * 文字列内の{lang}を国名コードに置き換える事もできる
- * @author ゆっちゃん
- */
 public abstract class Lang {
 
 	protected final Plugin plugin;

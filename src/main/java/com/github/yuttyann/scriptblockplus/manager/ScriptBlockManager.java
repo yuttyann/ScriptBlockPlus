@@ -7,9 +7,9 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
@@ -19,13 +19,12 @@ import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
-import com.github.yuttyann.scriptblockplus.script.ScriptRead.EndProcess;
+import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
 public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI {
 
 	private ScriptData scriptData;
-	private BlockCoords blockCoords;
 	private Map<ScriptType, List<Location>> timerTemps;
 	private Map<Boolean, Map<Location, ScriptType>> scriptTemps;
 
@@ -39,7 +38,7 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 	@Override
 	public boolean scriptRead(Player player) {
 		if (callEvent(player, scriptType)) {
-			return new ScriptRead(this, player, blockCoords).read(0);
+			return new ScriptRead(this, player.getUniqueId(), getLocation()).read(0);
 		}
 		return false;
 	}
@@ -47,7 +46,7 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 	@Override
 	public boolean scriptRead(int index, Player player) {
 		if (callEvent(player, scriptType)) {
-			return new ScriptRead(this, player, blockCoords).read(index);
+			return new ScriptRead(this, player.getUniqueId(), getLocation()).read(index);
 		}
 		return false;
 	}
@@ -61,7 +60,6 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 			scriptTemps.clear();
 		}
 		scriptData.setLocation(location);
-		blockCoords = location != null ? new BlockCoords(location) : null;
 	}
 
 	@Override
@@ -85,9 +83,9 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 		timerTemps.forEach((s, ll) -> ll.forEach(l -> mapManager.removeTimes(s, l)));
 		scriptTemps.forEach((b, m) -> m.forEach((l, s) -> {
 			if (b) {
-				mapManager.addLocation(s, l);
+				mapManager.addCoords(s, l);
 			} else {
-				mapManager.removeLocation(s, l);
+				mapManager.removeCoords(s, l);
 			}
 		}));
 		if (timerTemps.size() > 0) {
@@ -282,15 +280,16 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 
 	private boolean callEvent(Player player, ScriptType scriptType) {
 		ScriptBlockEvent event = null;
+		Block block = getLocation().getBlock();
 		switch (scriptType) {
 		case INTERACT:
-			event = new ScriptBlockInteractEvent(player, blockCoords.getBlock());
+			event = new ScriptBlockInteractEvent(player, block);
 			break;
 		case BREAK:
-			event = new ScriptBlockBreakEvent(player, blockCoords.getBlock());
+			event = new ScriptBlockBreakEvent(player, block);
 			break;
 		case WALK:
-			event = new ScriptBlockWalkEvent(player, blockCoords.getBlock());
+			event = new ScriptBlockWalkEvent(player, block);
 			break;
 		}
 		if (event != null) {

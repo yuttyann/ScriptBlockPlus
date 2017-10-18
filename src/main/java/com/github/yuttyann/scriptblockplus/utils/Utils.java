@@ -79,39 +79,28 @@ public class Utils {
 	}
 
 	public static void sendMessage(SBPlayer sbPlayer, String message) {
-		sendMessage(sbPlayer.getPlayer(), message);
+		if (!sbPlayer.updatePlayer()) {
+			return;
+		}
+		sendMessage((CommandSender) sbPlayer, message);
 	}
 
 	public static void sendMessage(CommandSender sender, String message) {
-		if (sender instanceof Player) {
-			sender = getPlayer(((Player) sender).getUniqueId());
-		}
 		if (sender == null || StringUtils.isEmpty(message)) {
 			return;
 		}
-		for (String line : StringUtils.split(message, "\\n")) {
-			sender.sendMessage(line);
+		String color = "";
+		for (String line : StringUtils.split(message, "|~")) {
+			sender.sendMessage(line = (color + line));
+			if (line.indexOf('§') != -1) {
+				color = StringUtils.getColors(line);
+			}
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	public static void updateInventory(Player player) {
 		player.updateInventory();
-	}
-
-	public static String getId(String source) {
-		if (source.matches("\\A[-]?[0-9]+\\z")) {
-			return source;
-		}
-		@SuppressWarnings("deprecation")
-		String id = String.valueOf(Material.getMaterial(source.toUpperCase()).getId());
-		return id;
-	}
-
-	public static Material getMaterial(int id) {
-		@SuppressWarnings("deprecation")
-		Material material = Material.getMaterial(id);
-		return material;
 	}
 
 	public static ItemStack getItemInMainHand(Player player) {
@@ -152,8 +141,6 @@ public class Utils {
 		World world = Bukkit.getWorld(name);
 		if (world == null) {
 			File file = new File(Bukkit.getWorldContainer(), name + "/level.dat");
-			System.out.println(file.exists() + ", " + file.getParentFile().isDirectory());
-			System.out.println(file.getPath() + ", " + file.getParentFile().getPath());
 			if (file.exists() && file.getParentFile().isDirectory()) {
 				world = Bukkit.createWorld(WorldCreator.name(name));
 			}
@@ -171,6 +158,24 @@ public class Utils {
 			}
 		}
 		return null;
+	}
+
+	public static OfflinePlayer getOfflinePlayer(UUID uuid) {
+		OfflinePlayer player = null;
+		if (Utils.isCB175orLater()) {
+			player = Bukkit.getOfflinePlayer(uuid);
+		} else {
+			String name = getName(uuid);
+			for (OfflinePlayer offline : Bukkit.getOfflinePlayers()) {
+				if (offline.getName().equals(name)) {
+					return player;
+				}
+			}
+		}
+		if (player == null || !player.hasPlayedBefore()) {
+			return null;
+		}
+		return player;
 	}
 
 	public static String getName(UUID uuid) {

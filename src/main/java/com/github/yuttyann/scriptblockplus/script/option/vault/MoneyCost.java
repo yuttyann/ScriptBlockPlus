@@ -11,20 +11,22 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class MoneyCost extends BaseOption {
 
 	public MoneyCost() {
-		super("moneycost", "$cost:");
+		super("moneycost", "$cost:", 18);
 	}
 
 	@Override
 	public boolean isValid() {
 		VaultEconomy vaultEconomy = getVaultEconomy();
 		if (!vaultEconomy.isEnabled()) {
-			return false;
+			throw new UnsupportedOperationException();
 		}
 		Player player = getPlayer();
 		double cost = Double.parseDouble(getOptionValue());
 		if (vaultEconomy.has(player, cost)) {
 			vaultEconomy.withdrawPlayer(player, cost);
-			SBPlayer.get(player).setMoneyCost(cost, true);
+			SBPlayer sbPlayer = SBPlayer.get(player);
+			Double value = sbPlayer.getData("MoneyCost");
+			sbPlayer.setData("MoneyCost", cost + (value == null ? 0.0D : value.doubleValue()));
 			return true;
 		}
 		double result = cost - vaultEconomy.getBalance(player);

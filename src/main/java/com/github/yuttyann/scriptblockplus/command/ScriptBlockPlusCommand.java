@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.command;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -21,7 +22,7 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.YamlConfig;
-import com.github.yuttyann.scriptblockplus.manager.constructor.OptionManager;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.script.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
@@ -101,7 +102,7 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 				Utils.sendMessage(sender, SBConfig.getAllFileReloadMessage());
 				return true;
 			} else if (equals(args[0], "checkver") && hasPermission(sender, Permission.COMMAND_CHECKVER, false)) {
-				Updater updater = getPlugin().getUpdater();
+				Updater updater = getUpdater();
 				try {
 					updater.load();
 					if (!updater.execute(sender)) {
@@ -208,7 +209,7 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 	}
 
 	private void setClickData(SBPlayer sbPlayer, ClickType clickType, ScriptType scriptType) {
-		if (sbPlayer.hasScript() || sbPlayer.hasClickAction()) {
+		if (sbPlayer.hasScriptLine() || sbPlayer.hasClickAction()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorEditDataMessage());
 			return;
 		}
@@ -217,7 +218,7 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 	}
 
 	private void setClickScriptData(SBPlayer sbPlayer, String script, ClickType clickType, ScriptType scriptType) {
-		if (sbPlayer.hasScript() || sbPlayer.hasClickAction()) {
+		if (sbPlayer.hasScriptLine() || sbPlayer.hasClickAction()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorEditDataMessage());
 			return;
 		}
@@ -225,7 +226,7 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptCheckMessage());
 			return;
 		}
-		sbPlayer.setScript(script);
+		sbPlayer.setScriptLine(script);
 		sbPlayer.setClickAction(clickType.createKey(scriptType));
 		Utils.sendMessage(sbPlayer, SBConfig.getSuccEditDataMessage(clickType));
 	}
@@ -300,7 +301,7 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 	public List<String> tabComplete(CommandSender sender, String label, String[] args, List<String> emptyList) {
 		if (args.length == 1) {
 			String prefix = args[0].toLowerCase();
-			String[] answer = {
+			String[] answers = {
 				permString(sender, Permission.COMMAND_TOOL, "tool"),
 				permString(sender, Permission.COMMAND_RELOAD, "reload"),
 				permString(sender, Permission.COMMAND_CHECKVER, "checkver"),
@@ -310,62 +311,65 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 				permString(sender, Permission.COMMAND_WALK, "walk"),
 				permString(sender, Permission.COMMAND_WORLDEDIT , "worldedit")
 			};
-			StreamUtils.filterForEach(answer, s -> s != null && s.startsWith(prefix), emptyList::add);
-		} else if (args.length == 2 /*&& equals(args[0], "tool", "checkver", "datamigr", "reload")*/ ) {
+			StreamUtils.filterForEach(answers, s -> s != null && s.startsWith(prefix), emptyList::add);
+		} else if (args.length == 2) {
 			if (equals(args[0], "worldedit")) {
 				if (Permission.COMMAND_WORLDEDIT.has(sender)) {
 					String prefix = args[1].toLowerCase();
-					String[] answer = new String[]{"paste", "remove"};
-					StreamUtils.filterForEach(answer, s -> s.startsWith(prefix), emptyList::add);
+					String[] answers = new String[]{"paste", "remove"};
+					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
 			} else if (equals(args[0], "interact", "break", "walk")) {
 				if (Permission.valueOf("COMMAND_" + args[0].toUpperCase()).has(sender)) {
 					String prefix = args[1].toLowerCase();
-					String[] answer = new String[]{"create", "add", "remove", "view"};
-					StreamUtils.filterForEach(answer, s -> s.startsWith(prefix), emptyList::add);
+					String[] answers = new String[]{"create", "add", "remove", "view"};
+					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
 			}
-		} else if (args.length == 3) {
-			if (equals(args[0], "worldedit") && equals(args[1], "paste")) {
+		} else if (args.length > 2) {
+			if (args.length == 3 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
 				if (Permission.COMMAND_WORLDEDIT.has(sender)) {
 					String prefix = args[2].toLowerCase();
-					String[] answer = new String[]{"true", "false"};
-					StreamUtils.filterForEach(answer, s -> s.startsWith(prefix), emptyList::add);
+					String[] answers = new String[]{"true", "false"};
+					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
-			} else if (equals(args[0], "interact", "break", "walk") && equals(args[1], "create", "add")) {
-				if (Permission.valueOf("COMMAND_" + args[0].toUpperCase()).has(sender)) {
-					String prefix = args[2].toLowerCase();
-					String[] answer = getOptionPrefixs();
-					StreamUtils.filterForEach(answer, s -> s.startsWith(prefix), s -> emptyList.add(s.trim()));
+			} else if (args.length == 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
+				if (Permission.COMMAND_WORLDEDIT.has(sender)) {
+					String prefix = args[3].toLowerCase();
+					String[] answers = new String[]{"true", "false"};
+					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
-			}
-		} else if (args.length == 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
-			if (Permission.COMMAND_WORLDEDIT.has(sender)) {
-				String prefix = args[3].toLowerCase();
-				String[] answer = new String[]{"true", "false"};
-				StreamUtils.filterForEach(answer, s -> s.startsWith(prefix), emptyList::add);
+			} else {
+				if (equals(args[0], "interact", "break", "walk") && equals(args[1], "create", "add")) {
+					if (Permission.valueOf("COMMAND_" + args[0].toUpperCase()).has(sender)) {
+						String prefix = args[args.length - 1].toLowerCase();
+						String[] answers = getOptionSyntaxs();
+						StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), s -> emptyList.add(s.trim()));
+					}
+				}
 			}
 		}
 		return emptyList;
 	}
 
-	private String[] getOptionPrefixs() {
-		Option[] options = new OptionManager().newInstances();
-		String[] prefixs = new String[options.length];
-		for (int i = 0; i < prefixs.length; i++) {
-			prefixs[i] = options[i].getPrefix();
+	private String[] getOptionSyntaxs() {
+		List<Option> options = Arrays.asList(new OptionManager().newInstances());
+		options.sort((o1, o2) -> o1.getIndex().compareTo(o2.getIndex()));
+		String[] syntaxs = new String[options.size()];
+		for (int i = 0; i < syntaxs.length; i++) {
+			syntaxs[i] = options.get(i).getSyntax();
 		}
-		return prefixs;
+		return syntaxs;
 	}
 
 	private boolean checkScript(String scriptLine) {
 		try {
 			List<String> scripts = StringUtils.getScripts(scriptLine);
-			int result = 0;
 			Option[] options = new OptionManager().newInstances();
-			for (int i = 0; i < scripts.size(); i++) {
+			int result = 0;
+			for (String script : scripts) {
 				for (Option option : options) {
-					if (scripts.get(i).startsWith(option.getPrefix())) {
+					if (option.isOption(script)) {
 						result++;
 					}
 				}

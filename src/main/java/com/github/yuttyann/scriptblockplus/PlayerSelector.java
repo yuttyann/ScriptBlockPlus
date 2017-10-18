@@ -24,10 +24,6 @@ import org.bukkit.scoreboard.Team;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-/**
- * うっちぃさんのソースコードからお借りしました。
- * @author ucchy
- */
 public class PlayerSelector {
 
 	private static final Pattern a = Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$");

@@ -8,18 +8,17 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 public class Bypass extends BaseOption {
 
 	public Bypass() {
-		super("bypass", "@bypass ");
+		super("bypass", "@bypass ", 1);
 	}
 
 	@Override
 	public boolean isValid() {
 		Player player = getPlayer();
-		if (player.isOnline()) {
-			String command = getOptionValue();
-			command = StringUtils.replace(command, "<player>", player.getName());
-			command = StringUtils.replace(command, "<dplayer>", player.getDisplayName());
-			commandExecute(player, command, true);
-		}
+		String command = getOptionValue();
+		command = StringUtils.replace(command, "<player>", player.getName());
+		command = StringUtils.replaceRandomColor(command, "&rc");
+		command = StringUtils.replace(command, "&", "§");
+		commandExecute(player, command, true);
 		return true;
 	}
 }

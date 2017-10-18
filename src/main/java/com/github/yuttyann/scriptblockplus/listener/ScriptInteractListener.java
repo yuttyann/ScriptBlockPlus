@@ -49,7 +49,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 			return;
 		}
 		Player player = event.getPlayer();
-		if (mapManager.containsLocation(scriptType, location)) {
+		if (mapManager.containsCoords(scriptType, location)) {
 			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block);
 			Bukkit.getPluginManager().callEvent(interactEvent);
 			if (interactEvent.isCancelled()) {
@@ -66,7 +66,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 			if (isPowered(data) || isOpen(data)) {
 				return;
 			}
-			new ScriptRead(this, player, location).read(0);
+			new ScriptRead(this, player.getUniqueId(), location).read(0);
 		}
 	}
 
@@ -97,7 +97,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 				}
 				return true;
 			default:
-				sbPlayer.setScript(null);
+				sbPlayer.setScriptLine(null);
 				sbPlayer.setClickAction(null);
 				return false;
 			}
@@ -109,21 +109,20 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 	}
 
 	private boolean clickAction(SBPlayer sbPlayer, Location location) {
-		Player player = sbPlayer.getPlayer();
 		String[] array = StringUtils.split(sbPlayer.getClickAction(), "_");
 		ScriptEdit scriptEdit = new ScriptEdit(location, ScriptType.valueOf(array[0]));
 		switch (array[1]) {
 		case "CREATE":
-			scriptEdit.create(player, sbPlayer.getScript());
+			scriptEdit.create(sbPlayer, sbPlayer.getScriptLine());
 			return true;
 		case "ADD":
-			scriptEdit.add(player, sbPlayer.getScript());
+			scriptEdit.add(sbPlayer, sbPlayer.getScriptLine());
 			return true;
 		case "REMOVE":
-			scriptEdit.remove(player);
+			scriptEdit.remove(sbPlayer);
 			return true;
 		case "VIEW":
-			scriptEdit.view(player);
+			scriptEdit.view(sbPlayer);
 			return true;
 		default:
 			return false;

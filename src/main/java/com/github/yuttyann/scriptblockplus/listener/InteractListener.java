@@ -65,8 +65,7 @@ public class InteractListener implements Listener {
 		Action action = Action.LEFT_CLICK_BLOCK;
 		BlockFace blockFace = block.getFace(blocks.get(0));
 		PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, action, null, block, blockFace);
-		if (callInteractEvent(player, interactEvent, EquipmentSlot.HAND)
-				|| callInteractEvent(player, interactEvent, EquipmentSlot.OFF_HAND)) {
+		if (callEvent(interactEvent, EquipmentSlot.HAND) || callEvent(interactEvent, EquipmentSlot.OFF_HAND)) {
 			event.setCancelled(true);
 		}
 	}
@@ -108,27 +107,27 @@ public class InteractListener implements Listener {
 		}
 	}
 
+	private boolean callEvent(PlayerInteractEvent event, EquipmentSlot hand) {
+		if (hand == EquipmentSlot.OFF_HAND && Utils.isCB19orLater()) {
+			return false;
+		}
+		ItemStack item;
+		if (hand == EquipmentSlot.HAND) {
+			item = Utils.getItemInMainHand(event.getPlayer());
+		} else {
+			item = Utils.getItemInOffHand(event.getPlayer());
+		}
+		BlockInteractEvent blockInteractEvent = new BlockInteractEvent(event, item, hand, true);
+		Bukkit.getPluginManager().callEvent(blockInteractEvent);
+		return blockInteractEvent.isCancelled();
+	}
+
 	private boolean addInteractEvent(UUID uuid) {
 		return !interactEvents.contains(uuid) && interactEvents.add(uuid);
 	}
 
 	private boolean removeInteractEvent(UUID uuid) {
 		return interactEvents.contains(uuid) && interactEvents.remove(uuid);
-	}
-
-	private boolean callInteractEvent(Player player, PlayerInteractEvent event, EquipmentSlot hand) {
-		if (hand == EquipmentSlot.OFF_HAND && Utils.isCB19orLater()) {
-			return false;
-		}
-		ItemStack item;
-		if (hand == EquipmentSlot.HAND) {
-			item = Utils.getItemInMainHand(player);
-		} else {
-			item = Utils.getItemInOffHand(player);
-		}
-		BlockInteractEvent blockInteractEvent = new BlockInteractEvent(event, item, hand, true);
-		Bukkit.getPluginManager().callEvent(blockInteractEvent);
-		return blockInteractEvent.isCancelled();
 	}
 
 	private boolean isPlayerInRange(Player target, Location location) {

@@ -36,7 +36,7 @@ public class ScriptBreakListener extends ScriptManager implements Listener {
 		}
 		Block block = event.getBlock();
 		Location location = block.getLocation();
-		if (mapManager.containsLocation(scriptType, location)) {
+		if (mapManager.containsCoords(scriptType, location)) {
 			ScriptBlockBreakEvent breakEvent = new ScriptBlockBreakEvent(player, block);
 			Bukkit.getPluginManager().callEvent(breakEvent);
 			if (breakEvent.isCancelled()) {
@@ -46,7 +46,7 @@ public class ScriptBreakListener extends ScriptManager implements Listener {
 				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
 				return;
 			}
-			new ScriptRead(this, player, location).read(0);
+			new ScriptRead(this, player.getUniqueId(), location).read(0);
 		}
 	}
 

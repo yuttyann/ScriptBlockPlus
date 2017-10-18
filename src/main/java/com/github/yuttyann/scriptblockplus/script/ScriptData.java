@@ -94,11 +94,11 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void setAuthor(Player player) {
-		scriptFile.set(scriptPath + ".Author", player.getUniqueId().toString());
+		setAuthor(player.getUniqueId().toString());
 	}
 
-	public void setAuthor(String uuids) {
-		scriptFile.set(scriptPath + ".Author", uuids);
+	public void setAuthor(String uuid) {
+		scriptFile.set(scriptPath + ".Author", uuid);
 	}
 
 	public void addAuthor(Player player) {
@@ -110,7 +110,10 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void removeAuthor(Player player) {
-		String uuid = player.getUniqueId().toString();
+		removeAuthor(player.getUniqueId().toString());
+	}
+
+	public void removeAuthor(String uuid) {
 		List<String> authors = getAuthors(false);
 		if (authors.size() > 0 && authors.contains(uuid)) {
 			authors.remove(uuid);

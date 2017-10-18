@@ -8,18 +8,15 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 public class Say extends BaseOption {
 
 	public Say() {
-		super("say", "@say ");
+		super("say", "@say ", 5);
 	}
 
 	@Override
 	public boolean isValid() {
 		Player player = getPlayer();
-		if (player.isOnline()) {
-			String message = getOptionValue();
-			message = StringUtils.replace(message, "<player>", player.getName());
-			message = StringUtils.replace(message, "<dplayer>", player.getDisplayName());
-			commandExecute(player, "say " + message, true);
-		}
+		String message = getOptionValue();
+		message = StringUtils.replace(message, "<player>", player.getName());
+		commandExecute(player, "say " + message, true);
 		return true;
 	}
 }

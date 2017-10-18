@@ -8,10 +8,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ProxiedCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.Updater;
 import com.github.yuttyann.scriptblockplus.command.help.CommandData;
-import com.github.yuttyann.scriptblockplus.command.help.CommandHelp;
+import com.github.yuttyann.scriptblockplus.command.help.CommandUsage;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -19,12 +21,11 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public abstract class BaseCommand extends CommandHelp implements TabExecutor {
+public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 
-	private final ScriptBlock plugin;
-	private final String commandName;
-	private final boolean isAliases;
-
+	private ScriptBlock plugin;
+	private String commandName;
+	private boolean isAliases;
 	private boolean isIgnoreHelp;
 
 	public BaseCommand(ScriptBlock plugin, String commandName, CommandData... args) {
@@ -35,11 +36,15 @@ public abstract class BaseCommand extends CommandHelp implements TabExecutor {
 		this.plugin = plugin;
 		this.commandName = commandName;
 		this.isAliases = isAliases;
-		put(commandName, args);
+		addUsage(args);
 	}
 
-	public ScriptBlock getPlugin() {
+	public Plugin getPlugin() {
 		return plugin;
+	}
+
+	public Updater getUpdater() {
+		return plugin.getUpdater();
 	}
 
 	public MapManager getMapManager() {
@@ -68,7 +73,7 @@ public abstract class BaseCommand extends CommandHelp implements TabExecutor {
 		}
 		try {
 			if (!runCommand(sender, label, args) && !isIgnoreHelp) {
-				sendHelpMessage(plugin, sender, command, isAliases);
+				sendUsageMessage(plugin, sender, command, isAliases);
 			}
 		} finally {
 			isIgnoreHelp = false;
@@ -78,7 +83,7 @@ public abstract class BaseCommand extends CommandHelp implements TabExecutor {
 
 	@Override
 	public final List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		return tabComplete(sender, label, args, new ArrayList<String>(16));
+		return tabComplete(sender, label, args, new ArrayList<String>());
 	}
 
 	protected abstract boolean runCommand(CommandSender sender, String label, String[] args);

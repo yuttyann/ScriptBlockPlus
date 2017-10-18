@@ -1,18 +1,16 @@
 package com.github.yuttyann.scriptblockplus;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.yuttyann.scriptblockplus.command.BaseCommand;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
-import com.github.yuttyann.scriptblockplus.command.help.CommandData;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
@@ -32,26 +30,26 @@ public class ScriptBlock extends JavaPlugin {
 
 	private Updater updater;
 	private MapManager mapManager;
-	private ScriptBlockPlusCommand scriptBlockPlusCommand;
-	private Map<String, List<CommandData>> commandHelp;
+	private BaseCommand scriptBlockPlusCommand;
 
 	@Override
 	public void onEnable() {
 		Files.reload();
 
-		PluginManager pluginManager = getServer().getPluginManager();
 		if (!HookPlugins.hasVault()) {
 			Utils.sendMessage(SBConfig.getNotVaultMessage());
-			pluginManager.disablePlugin(this);
+			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		if (pluginManager.isPluginEnabled("ScriptBlock")) {
-			pluginManager.disablePlugin(pluginManager.getPlugin("ScriptBlock"));
+
+		Plugin plugin = getServer().getPluginManager().getPlugin("ScriptBlock");
+		if (plugin != null) {
+			getServer().getPluginManager().disablePlugin(plugin);
 		}
 
 		updater = new Updater(this);
 		try {
-			//updater.debug(false, false);
+			// updater.debug(true, false);
 			updater.load();
 			updater.execute(null);
 		} catch (Exception e) {
@@ -62,16 +60,16 @@ public class ScriptBlock extends JavaPlugin {
 		mapManager.loadAllScripts();
 		mapManager.loadCooldown();
 
-		commandHelp = new HashMap<String, List<CommandData>>();
 		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 
-		pluginManager.registerEvents(new InteractListener(this), this);
-		pluginManager.registerEvents(new JoinQuitListener(this), this);
-		pluginManager.registerEvents(new ScriptInteractListener(this), this);
-		pluginManager.registerEvents(new ScriptBreakListener(this), this);
-		pluginManager.registerEvents(new ScriptWalkListener(this), this);
+		getServer().getPluginManager().registerEvents(new InteractListener(this), this);
+		getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
+		getServer().getPluginManager().registerEvents(new ScriptInteractListener(this), this);
+		getServer().getPluginManager().registerEvents(new ScriptBreakListener(this), this);
+		getServer().getPluginManager().registerEvents(new ScriptWalkListener(this), this);
 	}
 
+	@Override
 	public void onDisable() {
 		mapManager.saveCooldown();
 	}
@@ -86,21 +84,14 @@ public class ScriptBlock extends JavaPlugin {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+		List<String> completeList = null;
 		if (command.getName().equals(scriptBlockPlusCommand.getCommandName())) {
-			return scriptBlockPlusCommand.onTabComplete(sender, command, label, args);
+			completeList = scriptBlockPlusCommand.onTabComplete(sender, command, label, args);
+		}
+		if (completeList != null) {
+			return completeList;
 		}
 		return super.onTabComplete(sender, command, label, args);
-	}
-
-	public static ScriptBlock getInstance() {
-		if (instance == null) {
-			instance = (ScriptBlock) Bukkit.getPluginManager().getPlugin("ScriptBlockPlus");
-		}
-		return instance;
-	}
-
-	public Map<String, List<CommandData>> getCommandHelp() {
-		return commandHelp;
 	}
 
 	public ScriptBlockAPI getAPI(Location location, ScriptType scriptType) {
@@ -113,5 +104,12 @@ public class ScriptBlock extends JavaPlugin {
 
 	public MapManager getMapManager() {
 		return mapManager;
+	}
+
+	public static ScriptBlock getInstance() {
+		if (instance == null) {
+			instance = (ScriptBlock) Bukkit.getPluginManager().getPlugin("ScriptBlockPlus");
+		}
+		return instance;
 	}
 }

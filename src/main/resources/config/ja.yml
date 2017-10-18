@@ -10,20 +10,15 @@ UpdateChecker: true
 # 最新のプラグインをダウンロードするかどうか。
 AutoDownload: true
 
-# 更新した際にプラグインを上書きするかどうか。
-# 1.※上書きした場合も Downloads フォルダに保存されます。
-# 2.※バージョンの差異が、規定値以上の場合は、上書きを行いません。
-OverwritePlugin: false
-
 # ダウンロードした更新内容を、メモ帳で開くかどうか。
 OpenTextFile: true
 
 
 ## ===== コンソールの設定 ===== ##
 # [true -> 有効 | false -> 無効]
-# 言語ファイルの"console"が対象です。
+# 言語ファイルの console が対象です。
 # コンソールログを表示するかどうか。
-ConsoleLog: true
+ConsoleLog: false
 
 
 ## ===== 左クリックの設定 ===== ##

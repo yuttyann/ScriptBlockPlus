@@ -3,16 +3,19 @@ package com.github.yuttyann.scriptblockplus.script.hook;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
 
 public final class VaultPermission {
 
+	private String name;
 	private Permission permission;
 
 	private VaultPermission(Permission permission) {
 		this.permission = permission;
+		this.name = permission == null ? "NONE" : permission.getName();
 	}
 
 	protected static VaultPermission setupPermission() {
@@ -20,11 +23,7 @@ public final class VaultPermission {
 		RegisteredServiceProvider<Permission> provider = services.getRegistration(Permission.class);
 		if (provider != null) {
 			VaultPermission vault = new VaultPermission(provider.getProvider());
-			try {
-				if (vault.permission.isEnabled()) {
-					return vault;
-				}
-			} catch (Exception e) {
+			if (vault.isEnabled()) {
 				return vault;
 			}
 		}
@@ -89,5 +88,17 @@ public final class VaultPermission {
 
 	public boolean playerHas(String world, Player player, String permission) {
 		return this.permission.playerHas(world, player, permission);
+	}
+
+	public boolean has(CommandSender sender, String permission) {
+		return this.permission.has(sender, permission);
+	}
+
+	public boolean has(Player player, String permission) {
+		return this.permission.has(player, permission);
+	}
+
+	public boolean isSuperPerms() {
+		return "SuperPerms".equals(name);
 	}
 }
