@@ -24,9 +24,10 @@ import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
-import com.github.yuttyann.scriptblockplus.script.SBPlayer;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -72,11 +73,10 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 
 	private boolean action(Player player, Action action, ItemStack item, Location location) {
 		SBPlayer sbPlayer = SBPlayer.get(player);
-		if (checkItem(player)) {
-			if (!Permission.TOOL_SCRIPTEDITOR.has(player)) {
-				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
-				return false;
-			}
+		if (isWorldEditWand(player)) {
+			return true;
+		}
+		if (isScriptEditor(player) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			switch (action) {
 			case LEFT_CLICK_BLOCK:
 				ScriptType scriptType;
@@ -89,7 +89,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 				return true;
 			case RIGHT_CLICK_BLOCK:
 				if (player.isSneaking()) {
-					if (!sbPlayer.hasClipboard() || !sbPlayer.getClipboard().paste(sbPlayer, location, true, true)) {
+					if (!sbPlayer.hasClipboard() || !sbPlayer.getClipboard().paste(sbPlayer, location, true)) {
 						Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 					}
 				} else {
@@ -129,7 +129,15 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 		}
 	}
 
-	private boolean checkItem(Player player) {
+	private boolean isWorldEditWand(Player player) {
+		if (!HookPlugins.hasWorldEdit() || !Permission.has(player, "worldedit.selection.pos")) {
+			return false;
+		}
+		ItemStack item = Utils.getItemInMainHand(player);
+		return item != null && item.getType() == HookPlugins.getWorldEditSelection().getWandType();
+	}
+
+	private boolean isScriptEditor(Player player) {
 		ItemStack[] items = Utils.getHandItems(player);
 		return StreamUtils.anyMatch(items, i -> Utils.checkItem(i, Material.BLAZE_ROD, "§dScript Editor"));
 	}

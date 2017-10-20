@@ -65,7 +65,7 @@ public class InteractListener implements Listener {
 		Action action = Action.LEFT_CLICK_BLOCK;
 		BlockFace blockFace = block.getFace(blocks.get(0));
 		PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, action, null, block, blockFace);
-		if (callEvent(interactEvent, EquipmentSlot.HAND) || callEvent(interactEvent, EquipmentSlot.OFF_HAND)) {
+		if (callBlockEvent(interactEvent, EquipmentSlot.HAND) || callBlockEvent(interactEvent, EquipmentSlot.OFF_HAND)) {
 			event.setCancelled(true);
 		}
 	}
@@ -87,7 +87,11 @@ public class InteractListener implements Listener {
 			addInteractEvent(uuid);
 			Bukkit.getScheduler().runTaskLater(plugin, () -> removeInteractEvent(uuid), 5L);
 		}
-		Bukkit.getPluginManager().callEvent(new BlockInteractEvent(event, event.getItem(), null, true));
+		BlockInteractEvent interactEvent = new BlockInteractEvent(event, event.getItem(), null, true);
+		Bukkit.getPluginManager().callEvent(interactEvent);
+		if (interactEvent.isCancelled()) {
+			event.setCancelled(true);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -107,7 +111,7 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	private boolean callEvent(PlayerInteractEvent event, EquipmentSlot hand) {
+	private boolean callBlockEvent(PlayerInteractEvent event, EquipmentSlot hand) {
 		if (hand == EquipmentSlot.OFF_HAND && Utils.isCB19orLater()) {
 			return false;
 		}

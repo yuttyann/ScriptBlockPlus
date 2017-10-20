@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.yuttyann.scriptblockplus.command.BaseCommand;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
@@ -30,7 +29,7 @@ public class ScriptBlock extends JavaPlugin {
 
 	private Updater updater;
 	private MapManager mapManager;
-	private BaseCommand scriptBlockPlusCommand;
+	private ScriptBlockPlusCommand scriptBlockPlusCommand;
 
 	@Override
 	public void onEnable() {
@@ -49,11 +48,12 @@ public class ScriptBlock extends JavaPlugin {
 
 		updater = new Updater(this);
 		try {
-			// updater.debug(true, false);
+			// updater.debug(true, true);
+			updater.init();
 			updater.load();
 			updater.execute(null);
 		} catch (Exception e) {
-			Utils.sendMessage(SBConfig.getUpdateFailMessage());
+			Utils.sendMessage(SBConfig.getUpdateErrorMessage());
 		}
 
 		mapManager = new MapManager(this);
@@ -84,12 +84,8 @@ public class ScriptBlock extends JavaPlugin {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		List<String> completeList = null;
 		if (command.getName().equals(scriptBlockPlusCommand.getCommandName())) {
-			completeList = scriptBlockPlusCommand.onTabComplete(sender, command, label, args);
-		}
-		if (completeList != null) {
-			return completeList;
+			return scriptBlockPlusCommand.onTabComplete(sender, command, label, args);
 		}
 		return super.onTabComplete(sender, command, label, args);
 	}

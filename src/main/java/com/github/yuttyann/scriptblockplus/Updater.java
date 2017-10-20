@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +96,7 @@ public final class Updater {
 		}
 		this.isUpperVersion = isUpperVersion;
 		if (isError) {
-			sendErrorMessage();
+			sendErrorMessage(Bukkit.getConsoleSender());
 		}
 		execute(null);
 	}
@@ -112,7 +111,6 @@ public final class Updater {
 	}
 
 	public void load() throws Exception {
-		init();
 		Document document = getDocument(pluginName);
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
@@ -157,19 +155,21 @@ public final class Updater {
 
 	public boolean execute(CommandSender sender) {
 		if(SBConfig.isUpdateChecker() && isUpperVersion) {
-			sendCheckMessage(sender != null ? sender : Bukkit.getConsoleSender());
+			if (sender == null) {
+				sender = Bukkit.getConsoleSender();
+			}
+			sendCheckMessage(sender);
 			File dataFolder = Files.getConfig().getDataFolder();
-			File textFile = new File(dataFolder, "update/ChangeLog.txt");
-			boolean textEquals = !textFile.exists() || !textEquals(changeLogURL, textFile);
+			File logFile = new File(dataFolder, "update/ChangeLog.txt");
+			boolean logEquals = !logFile.exists() || !textEquals(changeLogURL, logFile);
 			if(SBConfig.isAutoDownload()) {
 				File jarFile = new File(dataFolder, "update/jar/" + getJarName());
 				try {
 					Utils.sendMessage(SBConfig.getUpdateDownloadStartMessage());
-					FileUtils.fileDownload(changeLogURL, textFile);
+					FileUtils.fileDownload(changeLogURL, logFile);
 					FileUtils.fileDownload(downloadURL, jarFile);
 				} catch (IOException e) {
-					sendErrorMessage();
-					return false;
+					sendErrorMessage(sender);
 				} finally {
 					if (!isUpdateError && jarFile.exists()) {
 						String fileName = jarFile.getName();
@@ -178,10 +178,10 @@ public final class Updater {
 					}
 				}
 			}
-			if (SBConfig.isOpenTextFile() && !isUpdateError && textEquals) {
+			if (SBConfig.isOpenChangeLog() && !isUpdateError && logEquals) {
 				Desktop desktop = Desktop.getDesktop();
 				try {
-					desktop.open(textFile);
+					desktop.open(logFile);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -213,9 +213,9 @@ public final class Updater {
 		}
 	}
 
-	public void sendErrorMessage() {
+	public void sendErrorMessage(CommandSender sender) {
 		if(!isUpdateError && (isUpdateError = true)) {
-			Utils.sendMessage(SBConfig.getUpdateErrorMessage(pluginName, latestVersion));
+			Utils.sendMessage(sender, SBConfig.getUpdateErrorMessage());
 		}
 	}
 
@@ -223,7 +223,8 @@ public final class Updater {
 		if (!file.exists()) {
 			return false;
 		}
-		BufferedReader reader1 = null, reader2 = null;
+		BufferedReader reader1 = null;
+		BufferedReader reader2 = null;
 		try {
 			reader1 = new BufferedReader(new FileReader(file));
 			reader2 = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
@@ -254,19 +255,18 @@ public final class Updater {
 	}
 
 	private Document getDocument(String pluginName) throws ParserConfigurationException, SAXException, IOException {
-		String url = "https://xml.yuttyann44581.net/uploads/" + pluginName + ".xml";
-		URLConnection urlconn = new URL(url).openConnection();
-		HttpURLConnection httpconn = (HttpURLConnection) urlconn;
-		httpconn.setAllowUserInteraction(false);
-		httpconn.setInstanceFollowRedirects(true);
-		httpconn.setRequestMethod("GET");
-		httpconn.connect();
-		int httpStatusCode = httpconn.getResponseCode();
+		URL url = new URL("https://xml.yuttyann44581.net/uploads/" + pluginName + ".xml");
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("GET");
+		connection.setAllowUserInteraction(false);
+		connection.setInstanceFollowRedirects(true);
+		connection.connect();
+		int httpStatusCode = connection.getResponseCode();
 		if (httpStatusCode != HttpURLConnection.HTTP_OK) {
-			httpconn.disconnect();
+			connection.disconnect();
 			return null;
 		}
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		return factory.newDocumentBuilder().parse(httpconn.getInputStream());
+		return factory.newDocumentBuilder().parse(connection.getInputStream());
 	}
 }

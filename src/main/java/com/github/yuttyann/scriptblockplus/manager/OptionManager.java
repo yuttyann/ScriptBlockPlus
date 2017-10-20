@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
+import com.github.yuttyann.scriptblockplus.manager.auxiliary.AbstractConstructor;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.chat.Bypass;
 import com.github.yuttyann.scriptblockplus.script.option.chat.Command;
@@ -26,7 +26,7 @@ import com.github.yuttyann.scriptblockplus.script.option.vault.Perm;
 import com.github.yuttyann.scriptblockplus.script.option.vault.PermAdd;
 import com.github.yuttyann.scriptblockplus.script.option.vault.PermRemove;
 
-public class OptionManager extends SBConstructor<Option> {
+public class OptionManager extends AbstractConstructor<Option> {
 
 	private final static List<Constructor<? extends Option>> CONSTRUCTORS;
 
@@ -56,7 +56,6 @@ public class OptionManager extends SBConstructor<Option> {
 		add(GroupRemove.class);
 		add(PermAdd.class);
 		add(PermRemove.class);
-
 	}
 
 	@Override

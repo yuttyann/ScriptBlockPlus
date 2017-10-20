@@ -10,7 +10,7 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 
 public final class SBMap<T> implements Serializable {
 
-	public class Storage<K, V> {
+	public final class Storage<K, V> {
 
 		private K key;
 		private V value;

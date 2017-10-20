@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.command.help;
+package com.github.yuttyann.scriptblockplus.command;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public abstract class CommandUsage {
 		StreamUtils.forEach(args, usages::add);
 	}
 
-	protected void sendUsageMessage(Plugin plugin, CommandSender sender, Command command, boolean isAliases) {
+	protected void sendUsage(Plugin plugin, CommandSender sender, Command command) {
 		if (usages == null || usages.isEmpty()) {
 			return;
 		}
@@ -31,7 +31,7 @@ public abstract class CommandUsage {
 			return;
 		}
 		String commandName = command.getName();
-		if (isAliases && command.getAliases().size() > 0) {
+		if (command.getAliases().size() > 0) {
 			commandName = command.getAliases().get(0).toLowerCase();
 		}
 		sender.sendMessage("§d==== " + plugin.getName() + " Commands ====");

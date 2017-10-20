@@ -11,7 +11,7 @@ UpdateChecker: true
 AutoDownload: true
 
 # ダウンロードした更新内容を、メモ帳で開くかどうか。
-OpenTextFile: true
+OpenChangeLog: true
 
 
 ## ===== コンソールの設定 ===== ##

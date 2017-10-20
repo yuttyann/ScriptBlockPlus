@@ -13,7 +13,7 @@ public class StringUtils {
 
 	public static List<String> getScripts(String scriptLine) throws ScriptException {
 		char[] chars = scriptLine.toCharArray();
-		if (chars[0] != '[' && chars[chars.length - 1] != ']') {
+		if (chars[0] != '[' || chars[chars.length - 1] != ']') {
 			return Arrays.asList(scriptLine);
 		}
 		for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
@@ -138,11 +138,11 @@ public class StringUtils {
 			if (chars[i] != '§' || (i + 1)  >= chars.length) {
 				continue;
 			}
-			if (ChatColor.getByChar(chars[i + 1]) != null) {
+			if (ChatColor.getByChar(Character.toLowerCase(chars[i + 1])) != null) {
 				builder.append(chars[i++]).append(chars[i]);
 			}
 		}
-		return builder.length() == 0 ? "" : builder.toString();
+		return builder.toString();
 	}
 
 	public static String createString(String[] args, int start) {

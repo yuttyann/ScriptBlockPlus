@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
-import com.github.yuttyann.scriptblockplus.script.SBPlayer;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -42,7 +42,7 @@ public class ItemCost extends BaseOption {
 				items[i] = consume(item, result);
 			}
 			if (j >= amount) {
-				SBPlayer.get(player).setData("ItemCost", inventory.getContents().clone());
+				SBPlayer.get(player).setData("ItemCost", copyItems(inventory.getContents()));
 				break;
 			}
 			if (i == (items.length - 1) && j < amount) {

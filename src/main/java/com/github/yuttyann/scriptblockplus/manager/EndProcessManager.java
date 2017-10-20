@@ -4,12 +4,12 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
+import com.github.yuttyann.scriptblockplus.manager.auxiliary.AbstractConstructor;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.endprocess.ItemCostInit;
 import com.github.yuttyann.scriptblockplus.script.endprocess.MoneyCostInit;
 
-public class EndProcessManager extends SBConstructor<EndProcess> {
+public class EndProcessManager extends AbstractConstructor<EndProcess> {
 
 	private final static List<Constructor<? extends EndProcess>> CONSTRUCTORS;
 

@@ -129,7 +129,7 @@ public interface ScriptBlockAPI {
 	 * @param process 終了処理クラス
 	 * @return 位置
 	 */
-	public int indexOfProcess(Class<? extends EndProcess> endProcess);
+	public int indexOfEndProcess(Class<? extends EndProcess> endProcess);
 
 	/**
 	 * スクリプトの作者を取得する

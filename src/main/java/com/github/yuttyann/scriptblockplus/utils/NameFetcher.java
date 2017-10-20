@@ -41,11 +41,11 @@ public class NameFetcher implements Callable<String> {
 	private Object getJson(String url) throws ParseException, IOException {
 		BufferedReader reader = null;
 		try {
-			HttpURLConnection httpconn = (HttpURLConnection) new URL(url).openConnection();
-			httpconn.setRequestMethod("GET");
-			httpconn.setInstanceFollowRedirects(false);
-			httpconn.connect();
-			reader = new BufferedReader(new InputStreamReader(httpconn.getInputStream()));
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			connection.setRequestMethod("GET");
+			connection.setInstanceFollowRedirects(false);
+			connection.connect();
+			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			StringBuilder builder = new StringBuilder();
 			String line;
 			while ((line = reader.readLine()) != null) {

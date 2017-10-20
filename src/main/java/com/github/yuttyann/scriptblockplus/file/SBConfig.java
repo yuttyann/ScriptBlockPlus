@@ -20,7 +20,7 @@ public class SBConfig {
 	private boolean updateChecker;
 	private boolean autoDownload;
 	private boolean overwritePlugin;
-	private boolean openTextFile;
+	private boolean openChangeLog;
 	private boolean consoleLog;
 	private boolean leftClick;
 	private double leftArmLength;
@@ -41,7 +41,6 @@ public class SBConfig {
 	private String giveScriptEditorMessage;
 	private String allFileReloadMessage;
 	private String notLatestPluginMessage;
-	private String updateFailMessage;
 	private String notScriptBlockFileMessage;
 	private String dataMigrStartMessage;
 	private String dataMigrEndMessage;
@@ -89,7 +88,7 @@ public class SBConfig {
 		this.updateChecker = yaml.getBoolean("UpdateChecker", true);
 		this.autoDownload = yaml.getBoolean("AutoDownload", true);
 		this.overwritePlugin = yaml.getBoolean("OverwritePlugin", false);
-		this.openTextFile = yaml.getBoolean("OpenTextFile", true);
+		this.openChangeLog = yaml.getBoolean("OpenChangeLog", true);
 		this.consoleLog = yaml.getBoolean("ConsoleLog", true);
 		this.leftClick = yaml.getBoolean("LeftClick", true);
 		this.leftArmLength = yaml.getDouble("LeftArmLength", 5.22D);
@@ -112,7 +111,7 @@ public class SBConfig {
 		this.giveScriptEditorMessage = yaml.getString("giveScriptEditorMessage");
 		this.allFileReloadMessage = yaml.getString("allFileReloadMessage");
 		this.notLatestPluginMessage = yaml.getString("notLatestPluginMessage");
-		this.updateFailMessage = yaml.getString("updateFailMessage");
+		this.updateErrorMessage = yaml.getString("updateErrorMessage");
 		this.notScriptBlockFileMessage = yaml.getString("notScriptBlockFileMessage");
 		this.dataMigrStartMessage = yaml.getString("dataMigrStartMessage");
 		this.dataMigrEndMessage = yaml.getString("dataMigrEndMessage");
@@ -120,7 +119,6 @@ public class SBConfig {
 		this.updateDownloadStartMessage = yaml.getString("updateDownloadStartMessage");
 		this.updateDownloadEndMessage = yaml.getString("updateDownloadEndMessage");
 		this.updateCheckMessage = yaml.getString("updateCheckMessage");
-		this.updateErrorMessage = yaml.getString("updateErrorMessage");
 		this.scriptCopyMessage = yaml.getString("scriptCopyMessage");
 		this.scriptPasteMessage = yaml.getString("scriptPasteMessage");
 		this.scriptCreateMessage = yaml.getString("scriptCreateMessage");
@@ -172,8 +170,8 @@ public class SBConfig {
 		return instance.overwritePlugin;
 	}
 
-	public static boolean isOpenTextFile() {
-		return instance.openTextFile;
+	public static boolean isOpenChangeLog() {
+		return instance.openChangeLog;
 	}
 
 	public static boolean isConsoleLog() {
@@ -277,13 +275,6 @@ public class SBConfig {
 		return replaceColorCode(instance.notLatestPluginMessage);
 	}
 
-	public static String getUpdateFailMessage() {
-		if (instance.updateFailMessage == null) {
-			return null;
-		}
-		return replaceColorCode(instance.updateFailMessage);
-	}
-
 	public static String getNotScriptBlockFileMessage() {
 		if (instance.notScriptBlockFileMessage == null) {
 			return null;
@@ -355,14 +346,11 @@ public class SBConfig {
 		return replaceColorCode(updateCheckMessage);
 	}
 
-	public static String getUpdateErrorMessage(String pluginName, String latestVersion) {
+	public static String getUpdateErrorMessage() {
 		if (instance.updateErrorMessage == null) {
 			return null;
 		}
-		String updateErrorMessage = instance.updateErrorMessage;
-		updateErrorMessage = replace(updateErrorMessage, "%pluginname%", pluginName);
-		updateErrorMessage = replace(updateErrorMessage, "%latestversion%", latestVersion);
-		return replaceColorCode(updateErrorMessage);
+		return replaceColorCode(instance.updateErrorMessage);
 	}
 
 	public static String getScriptCopyMessage(ScriptType scriptType) {

@@ -25,13 +25,13 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI {
 
 	private ScriptData scriptData;
-	private Map<ScriptType, List<Location>> timerTemps;
-	private Map<Boolean, Map<Location, ScriptType>> scriptTemps;
+	private Map<ScriptType, List<Location>> timers;
+	private Map<Boolean, Map<Location, ScriptType>> scripts;
 
 	public ScriptBlockManager(ScriptBlock plugin, Location location, ScriptType scriptType) {
 		super(plugin, scriptType);
-		this.timerTemps = new HashMap<ScriptType, List<Location>>();
-		this.scriptTemps = new HashMap<Boolean, Map<Location, ScriptType>>();
+		this.timers = new HashMap<ScriptType, List<Location>>();
+		this.scripts = new HashMap<Boolean, Map<Location, ScriptType>>();
 		setLocation(location);
 	}
 
@@ -53,11 +53,11 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 
 	@Override
 	public void setLocation(Location location) {
-		if (timerTemps.size() > 0) {
-			timerTemps.clear();
+		if (timers.size() > 0) {
+			timers.clear();
 		}
-		if (scriptTemps.size() > 0) {
-			scriptTemps.clear();
+		if (scripts.size() > 0) {
+			scripts.clear();
 		}
 		scriptData.setLocation(location);
 	}
@@ -80,19 +80,19 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 	@Override
 	public void save() {
 		scriptData.save();
-		timerTemps.forEach((s, ll) -> ll.forEach(l -> mapManager.removeTimes(s, l)));
-		scriptTemps.forEach((b, m) -> m.forEach((l, s) -> {
+		timers.forEach((s, ll) -> ll.forEach(l -> mapManager.removeTimes(s, l)));
+		scripts.forEach((b, m) -> m.forEach((l, s) -> {
 			if (b) {
 				mapManager.addCoords(s, l);
 			} else {
 				mapManager.removeCoords(s, l);
 			}
 		}));
-		if (timerTemps.size() > 0) {
-			timerTemps.clear();
+		if (timers.size() > 0) {
+			timers.clear();
 		}
-		if (scriptTemps.size() > 0) {
-			scriptTemps.clear();
+		if (scripts.size() > 0) {
+			scripts.clear();
 		}
 	}
 
@@ -142,7 +142,7 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 	}
 
 	@Override
-	public int indexOfProcess(Class<? extends EndProcess> endProcess) {
+	public int indexOfEndProcess(Class<? extends EndProcess> endProcess) {
 		return getEndProcessManager().indexOf(endProcess);
 	}
 
@@ -174,7 +174,7 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 	@Override
 	public boolean copyScripts(Location target, boolean overwrite) {
 		if (scriptData.copyScripts(target, overwrite)) {
-			putScriptMap(getScriptType(), target, true);
+			putScript(getScriptType(), target, true);
 			return true;
 		}
 		return false;
@@ -213,7 +213,7 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 	@Override
 	public void setScripts(List<String> scripts) {
 		scriptData.setScripts(scripts);
-		putScriptMap(getScriptType(), scriptData.getLocation(), true);
+		putScript(getScriptType(), scriptData.getLocation(), true);
 	}
 
 	@Override
@@ -224,35 +224,35 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 	@Override
 	public void addScript(String script) {
 		scriptData.addScript(script);
-		putTimerMap(getScriptType(), scriptData.getLocation());
+		putTimer(getScriptType(), scriptData.getLocation());
 	}
 
 	@Override
 	public void addScript(int index, String script) {
 		scriptData.addScript(index, script);
-		putTimerMap(getScriptType(), scriptData.getLocation());
+		putTimer(getScriptType(), scriptData.getLocation());
 	}
 
 	@Override
 	public void removeScript(String script) {
 		scriptData.removeScript(script);
 		if (scriptData.getScripts().isEmpty()) {
-			putScriptMap(getScriptType(), scriptData.getLocation(), false);
+			putScript(getScriptType(), scriptData.getLocation(), false);
 		} else {
-			putTimerMap(getScriptType(), scriptData.getLocation());
+			putTimer(getScriptType(), scriptData.getLocation());
 		}
 	}
 
 	@Override
 	public void clearScripts() {
 		scriptData.clearScripts();
-		putScriptMap(getScriptType(), scriptData.getLocation(), false);
+		putScript(getScriptType(), scriptData.getLocation(), false);
 	}
 
 	@Override
 	public void remove() {
 		scriptData.remove();
-		putScriptMap(getScriptType(), scriptData.getLocation(), false);
+		putScript(getScriptType(), scriptData.getLocation(), false);
 	}
 
 	@Override
@@ -260,22 +260,22 @@ public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI 
 		scriptData.reload();
 	}
 
-	private void putTimerMap(ScriptType scriptType, Location location) {
-		List<Location> value = timerTemps.get(scriptType);
+	private void putTimer(ScriptType scriptType, Location location) {
+		List<Location> value = timers.get(scriptType);
 		if (value == null) {
 			value = new ArrayList<Location>();
 		}
 		value.add(location);
-		timerTemps.put(scriptType, value);
+		timers.put(scriptType, value);
 	}
 
-	private void putScriptMap(ScriptType scriptType, Location location, boolean isAdd) {
-		Map<Location, ScriptType> value = scriptTemps.get(location);
+	private void putScript(ScriptType scriptType, Location location, boolean isAdd) {
+		Map<Location, ScriptType> value = scripts.get(location);
 		if (value == null) {
 			value = new HashMap<Location, ScriptType>();
 		}
 		value.put(location, scriptType);
-		scriptTemps.put(isAdd, value);
+		scripts.put(isAdd, value);
 	}
 
 	private boolean callEvent(Player player, ScriptType scriptType) {

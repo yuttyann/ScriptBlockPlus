@@ -16,22 +16,21 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfigurationOptions;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
+import com.github.yuttyann.scriptblockplus.file.config.UTF8YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class YamlConfig {
 
 	private Plugin plugin;
 	private File file;
 	private File jarFile;
-	private YamlConfiguration yaml;
+	private UTF8YamlConfig yaml;
 	private boolean isCopyFile;
 
 	protected YamlConfig(Plugin plugin, File file, boolean isCopyFile) {
@@ -102,13 +101,13 @@ public class YamlConfig {
 		if (isCopyFile && !file.exists()) {
 			FileUtils.copyFileFromJar(getJarFile(), file, getFolderPath());
 		}
-		yaml = new YamlConfiguration();
+		yaml = new UTF8YamlConfig();
 		try {
 			yaml.load(file);
 		} catch (FileNotFoundException e) {
 		} catch (IOException | InvalidConfigurationException e) {
-			FileUtils.fileEncode(file, !Utils.isCB19orLater());
-			yaml = YamlConfiguration.loadConfiguration(file);
+			FileUtils.fileEncode(file, null);
+			yaml = UTF8YamlConfig.loadConfiguration(file);
 		}
 	}
 

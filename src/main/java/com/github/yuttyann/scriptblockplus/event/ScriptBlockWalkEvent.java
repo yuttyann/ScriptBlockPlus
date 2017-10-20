@@ -29,6 +29,9 @@ public class ScriptBlockWalkEvent extends ScriptBlockEvent implements Cancellabl
 	}
 
 	public ItemStack getItem(boolean isMainHand) {
+		if (!isMainHand && !Utils.isCB19orLater()) {
+			isMainHand = true;
+		}
 		return isMainHand ? mainHand : offHand;
 	}
 

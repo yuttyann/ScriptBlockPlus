@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -51,5 +52,11 @@ public final class WorldEditSelection {
 
 	public WorldEdit getWorldEdit() {
 		return worldEdit.getWorldEdit();
+	}
+
+	public Material getWandType() {
+		@SuppressWarnings("deprecation")
+		Material material = Material.getMaterial(worldEdit.getConfig().getInt("wand-item"));
+		return material;
 	}
 }

@@ -1,13 +1,16 @@
 package com.github.yuttyann.scriptblockplus.command;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +18,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.Updater;
-import com.github.yuttyann.scriptblockplus.command.help.CommandData;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
@@ -23,10 +25,10 @@ import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.YamlConfig;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
-import com.github.yuttyann.scriptblockplus.script.SBPlayer;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.Clipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
-import com.github.yuttyann.scriptblockplus.script.ScriptEdit.Clipboard;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -35,10 +37,11 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class ScriptBlockPlusCommand extends BaseCommand {
+public class ScriptBlockPlusCommand extends AbstractCommand {
 
 	public ScriptBlockPlusCommand(ScriptBlock plugin) {
-		super(plugin, "scriptblockplus", true,
+		super(plugin,
+			"scriptblockplus",
 			new CommandData(
 				SBConfig.getToolCommandMessage(),
 				Permission.COMMAND_TOOL
@@ -91,66 +94,38 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 	}
 
 	@Override
-	public boolean runCommand(CommandSender sender, String label, String[] args) {
+	public boolean runCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length == 1) {
-			if (equals(args[0], "tool") && hasPermission(sender, Permission.COMMAND_TOOL)) {
-				giveScriptEditor((Player) sender);
-				return true;
-			} else if (equals(args[0], "reload") && hasPermission(sender, Permission.COMMAND_RELOAD, false)) {
-				Files.reload();
-				getMapManager().loadAllScripts();
-				Utils.sendMessage(sender, SBConfig.getAllFileReloadMessage());
-				return true;
-			} else if (equals(args[0], "checkver") && hasPermission(sender, Permission.COMMAND_CHECKVER, false)) {
-				Updater updater = getUpdater();
-				try {
-					updater.load();
-					if (!updater.execute(sender)) {
-						Utils.sendMessage(sender, SBConfig.getNotLatestPluginMessage());
-					}
-				} catch (Exception e) {
-					Utils.sendMessage(sender, SBConfig.getUpdateFailMessage());
-				}
-				return true;
-			} else if (equals(args[0], "datamigr") && hasPermission(sender, Permission.COMMAND_DATAMIGR)) {
-				sbDataMigr((Player) sender);
-				return true;
+			if (equals(args[0], "tool")) {
+				return doTool(sender, args);
+			} else if (equals(args[0], "reload")) {
+				return doReload(sender, args);
+			} else if (equals(args[0], "checkver")) {
+				return doCheckVer(sender, args);
+			} else if (equals(args[0], "datamigr")) {
+				return doDataMigr(sender, args);
 			}
 		} else if (args.length == 2) {
 			if (equals(args[0], "interact", "break", "walk") && equals(args[1], "remove", "view")) {
-				ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
-				if (hasPermission(sender, Permission.valueOf("COMMAND_" + scriptType.name()))) {
-					setClickData(SBPlayer.get(sender), ClickType.valueOf(args[1].toUpperCase()), scriptType);
-				}
-				return true;
-			} else if (equals(args[0], "worldedit")
-					&& equals(args[1], "remove") && hasPermission(sender, Permission.COMMAND_WORLDEDIT)) {
-				scriptWERemove((Player) sender);
-				return true;
+				return setClickData_RV(sender, args);
+			} else if (equals(args[0], "worldedit") && equals(args[1], "remove")) {
+				return doWorldEditRemove(sender, args);
 			}
-		} else if (args.length > 2) {
-			if (args.length == 3 && equals(args[0], "worldedit")
-					&& equals(args[1], "paste") && hasPermission(sender, Permission.COMMAND_WORLDEDIT)) {
-				scriptWEPaste(SBPlayer.get(sender), false, Boolean.parseBoolean(args[2]));
-				return true;
-			} else if (args.length == 4 && equals(args[0], "worldedit")
-					&& equals(args[1], "paste") && hasPermission(sender, Permission.COMMAND_WORLDEDIT)) {
-				scriptWEPaste(SBPlayer.get(sender), Boolean.parseBoolean(args[2]), Boolean.parseBoolean(args[3]));
-				return true;
+		} else if (args.length >= 3) {
+			if (args.length <= 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
+				return doWorldEditPaste(sender, args);
 			} else if (equals(args[0], "interact", "break", "walk") && equals(args[1], "create", "add")) {
-				ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
-				if (hasPermission(sender, Permission.valueOf("COMMAND_" + scriptType.name()))) {
-					ClickType clickType = ClickType.valueOf(args[1].toUpperCase());
-					String script = StringUtils.createString(args, 2).trim();
-					setClickScriptData(SBPlayer.get(sender), script, clickType, scriptType);
-				}
-				return true;
+				return setClickData_CA(sender, args);
 			}
 		}
 		return false;
 	}
 
-	private void giveScriptEditor(Player player) {
+	private boolean doTool(CommandSender sender, String[] args) {
+		if (!hasPermission(sender, Permission.COMMAND_TOOL)) {
+			return false;
+		}
+		Player player = (Player) sender;
 		ItemStack item = new ItemStack(Material.BLAZE_ROD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§dScript Editor");
@@ -159,32 +134,66 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 		player.getInventory().addItem(item);
 		Utils.updateInventory(player);
 		Utils.sendMessage(player, SBConfig.getGiveScriptEditorMessage());
+		return true;
 	}
 
-	private void sbDataMigr(Player player) {
+	private boolean doReload(CommandSender sender, String[] args) {
+		if (!hasPermission(sender, Permission.COMMAND_RELOAD, false)) {
+			return false;
+		}
+		Files.reload();
+		ScriptBlock.getInstance().getMapManager().loadAllScripts();
+		Utils.sendMessage(sender, SBConfig.getAllFileReloadMessage());
+		return true;
+	}
+
+	private boolean doCheckVer(CommandSender sender, String[] args) {
+		if (!hasPermission(sender, Permission.COMMAND_CHECKVER, false)) {
+			return false;
+		}
+		Updater updater = ScriptBlock.getInstance().getUpdater();
+		try {
+			updater.init();
+			updater.load();
+			if (!updater.execute(sender)) {
+				Utils.sendMessage(sender, SBConfig.getNotLatestPluginMessage());
+			}
+		} catch (Exception e) {
+			Utils.sendMessage(sender, SBConfig.getUpdateErrorMessage());
+		}
+		return true;
+	}
+
+	private boolean doDataMigr(CommandSender sender, String[] args) {
+		if (!hasPermission(sender, Permission.COMMAND_DATAMIGR)) {
+			return false;
+		}
 		String path = "plugins/ScriptBlock/BlocksData/";
 		File interactFile = new File(path + "interact_Scripts.yml");
 		File walkFile = new File(path + "walk_Scripts.yml");
-		boolean interactExists = interactFile.exists();
-		boolean walkExists = walkFile.exists();
-		if (!interactExists && !walkExists) {
+		Player player = (Player) sender;
+		if (!walkFile.exists() && !interactFile.exists()) {
 			Utils.sendMessage(player, SBConfig.getNotScriptBlockFileMessage());
-			return;
+		} else {
+			Utils.sendMessage(player, SBConfig.getDataMigrStartMessage());
+			String time = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+			YamlConfig scriptFile;
+			if (interactFile.exists()) {
+				scriptFile = YamlConfig.load(getPlugin(), interactFile, false);
+				saveScript(player, time, scriptFile, ScriptType.INTERACT);
+			}
+			if (walkFile.exists()) {
+				scriptFile = YamlConfig.load(getPlugin(), walkFile, false);
+				saveScript(player, time, scriptFile, ScriptType.WALK);
+			}
+			Utils.sendMessage(player, SBConfig.getDataMigrEndMessage());
 		}
-		Utils.sendMessage(player, SBConfig.getDataMigrStartMessage());
-		YamlConfig scriptFile;
-		if (interactExists) {
-			scriptFile = YamlConfig.load(getPlugin(), interactFile, false);
-			saveScript(player, scriptFile, ScriptType.INTERACT);
-		} else if (walkExists) {
-			scriptFile = YamlConfig.load(getPlugin(), walkFile, false);
-			saveScript(player, scriptFile, ScriptType.WALK);
-		}
-		Utils.sendMessage(player, SBConfig.getDataMigrEndMessage());
+		return true;
 	}
 
-	private void saveScript(Player player, YamlConfig scriptFile, ScriptType type) {
-		ScriptData scriptData = new ScriptData(null, type);
+	private void saveScript(Player player, String time, YamlConfig scriptFile, ScriptType scriptType) {
+		ScriptData scriptData = new ScriptData(null, scriptType);
+		String uuid = player.getUniqueId().toString();
 		for (String world : scriptFile.getKeys(false)) {
 			World tWorld = Utils.getWorld(world);
 			for (String coords : scriptFile.getKeys(world, false)) {
@@ -199,80 +208,70 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 					Integer.parseInt(array[1]),
 					Integer.parseInt(array[2]))
 				);
-				scriptData.setAuthor(player);
-				scriptData.setLastEdit();
+				scriptData.setAuthor(uuid);
+				scriptData.setLastEdit(time);
 				scriptData.setScripts(scripts);
 			}
 		}
 		scriptData.save();
-		getMapManager().loadScripts(scriptData.getScriptFile(), scriptData.getScriptType());
+		ScriptBlock.getInstance().getMapManager().loadScripts(scriptFile, scriptType);
 	}
 
-	private void setClickData(SBPlayer sbPlayer, ClickType clickType, ScriptType scriptType) {
+	private boolean setClickData_RV(CommandSender sender, String[] args) {
+		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
+		if (!hasPermission(sender, Permission.valueOf("COMMAND_" + scriptType.name()))) {
+			return false;
+		}
+		SBPlayer sbPlayer = SBPlayer.get(sender);
 		if (sbPlayer.hasScriptLine() || sbPlayer.hasClickAction()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorEditDataMessage());
-			return;
+			return true;
 		}
+		ClickType clickType = ClickType.valueOf(args[1].toUpperCase());
 		sbPlayer.setClickAction(clickType.createKey(scriptType));
 		Utils.sendMessage(sbPlayer, SBConfig.getSuccEditDataMessage(clickType));
+		return true;
 	}
 
-	private void setClickScriptData(SBPlayer sbPlayer, String script, ClickType clickType, ScriptType scriptType) {
+	private boolean setClickData_CA(CommandSender sender, String[] args) {
+		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
+		if (!hasPermission(sender, Permission.valueOf("COMMAND_" + scriptType.name()))) {
+			return false;
+		}
+		SBPlayer sbPlayer = SBPlayer.get(sender);
 		if (sbPlayer.hasScriptLine() || sbPlayer.hasClickAction()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorEditDataMessage());
-			return;
+			return true;
 		}
+		String script = StringUtils.createString(args, 2).trim();
 		if (!checkScript(script)) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptCheckMessage());
-			return;
+			return true;
 		}
 		sbPlayer.setScriptLine(script);
+		ClickType clickType = ClickType.valueOf(args[1].toUpperCase());
 		sbPlayer.setClickAction(clickType.createKey(scriptType));
 		Utils.sendMessage(sbPlayer, SBConfig.getSuccEditDataMessage(clickType));
+		return true;
 	}
 
-	private void scriptWEPaste(SBPlayer sbPlayer, boolean pasteonair, boolean overwrite) {
-		if (!sbPlayer.hasClipboard()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
-			return;
+	private boolean doWorldEditRemove(CommandSender sender, String[] args) {
+		if (!hasPermission(sender, Permission.COMMAND_WORLDEDIT)) {
+			return false;
 		}
-		if (!HookPlugins.hasWorldEdit()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getNotWorldEditMessage());
-			return;
-		}
-		WorldEditSelection weSelection = HookPlugins.getWorldEditSelection();
-		Selection selection = weSelection.getSelection(sbPlayer.getPlayer());
-		if (selection == null) {
-			Utils.sendMessage(sbPlayer, SBConfig.getWorldEditNotSelectionMessage());
-			return;
-		}
-		Clipboard clipboard = sbPlayer.getClipboard();
-		for (Block block : weSelection.getBlocks(selection)) {
-			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
-				continue;
-			}
-			clipboard.wePaste(sbPlayer, block.getLocation(), overwrite);
-		}
-		clipboard.save();
-		sbPlayer.setClipboard(null);
-		ScriptType scriptType = clipboard.getScriptType();
-		Utils.sendMessage(sbPlayer, SBConfig.getWorldEditPasteMessage(scriptType));
-		Utils.sendMessage(SBConfig.getConsoleWorldEditPasteMessage(scriptType, selection.getMinimumPoint(), selection.getMaximumPoint()));
-	}
-
-	private void scriptWERemove(Player player) {
+		Player player = (Player) sender;
 		if (!HookPlugins.hasWorldEdit()) {
 			Utils.sendMessage(player, SBConfig.getNotWorldEditMessage());
-			return;
+			return true;
 		}
 		WorldEditSelection weSelection = HookPlugins.getWorldEditSelection();
 		Selection selection = weSelection.getSelection(player);
 		if (selection == null) {
 			Utils.sendMessage(player, SBConfig.getWorldEditNotSelectionMessage());
-			return;
+			return true;
 		}
 		List<Block> blocks = weSelection.getBlocks(selection);
-		StringBuilder builder = new StringBuilder(ScriptType.values().length);
+		StringBuilder builder = new StringBuilder();
 		for (ScriptType scriptType : ScriptType.values()) {
 			if (!Files.getScriptFile(scriptType).exists()) {
 				continue;
@@ -292,13 +291,50 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 		if (builder.length() == 0) {
 			Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 		} else {
-			Utils.sendMessage(player, SBConfig.getWorldEditRemoveMessage(builder.toString()));
-			Utils.sendMessage(SBConfig.getConsoleWorldEditRemoveMessage(builder.toString(), selection.getMinimumPoint(), selection.getMaximumPoint()));
+			String types = builder.toString();
+			Utils.sendMessage(player, SBConfig.getWorldEditRemoveMessage(types));
+			Utils.sendMessage(SBConfig.getConsoleWorldEditRemoveMessage(types, selection.getMinimumPoint(), selection.getMaximumPoint()));
 		}
+		return true;
+	}
+
+	private boolean doWorldEditPaste(CommandSender sender, String[] args) {
+		if (!hasPermission(sender, Permission.COMMAND_WORLDEDIT)) {
+			return false;
+		}
+		boolean pasteonair = args.length > 2 ? Boolean.parseBoolean(args[2]) : false;
+		boolean overwrite = args.length > 3 ? Boolean.parseBoolean(args[3]) : false;
+		SBPlayer sbPlayer = SBPlayer.get(sender);
+		if (!sbPlayer.hasClipboard()) {
+			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
+			return true;
+		}
+		if (!HookPlugins.hasWorldEdit()) {
+			Utils.sendMessage(sbPlayer, SBConfig.getNotWorldEditMessage());
+			return true;
+		}
+		WorldEditSelection weSelection = HookPlugins.getWorldEditSelection();
+		Selection selection = weSelection.getSelection(sbPlayer.getPlayer());
+		if (selection == null) {
+			Utils.sendMessage(sbPlayer, SBConfig.getWorldEditNotSelectionMessage());
+			return true;
+		}
+		Clipboard clipboard = sbPlayer.getClipboard();
+		for (Block block : weSelection.getBlocks(selection)) {
+			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
+				continue;
+			}
+			clipboard.wePaste(sbPlayer, block.getLocation(), overwrite);
+		}
+		clipboard.save();
+		sbPlayer.setClipboard(null);
+		Utils.sendMessage(sbPlayer, SBConfig.getWorldEditPasteMessage(clipboard.getScriptType()));
+		Utils.sendMessage(SBConfig.getConsoleWorldEditPasteMessage(clipboard.getScriptType(), selection.getMinimumPoint(), selection.getMaximumPoint()));
+		return true;
 	}
 
 	@Override
-	public List<String> tabComplete(CommandSender sender, String label, String[] args, List<String> emptyList) {
+	public void tabComplete(CommandSender sender, Command command, String label, String[] args, List<String> emptyList) {
 		if (args.length == 1) {
 			String prefix = args[0].toLowerCase();
 			String[] answers = {
@@ -349,7 +385,10 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 				}
 			}
 		}
-		return emptyList;
+	}
+
+	private String permString(CommandSender sender, Permission permission, String source) {
+		return StringUtils.isNotEmpty(permission.getNode()) && permission.has(sender) ? source : null;
 	}
 
 	private String[] getOptionSyntaxs() {

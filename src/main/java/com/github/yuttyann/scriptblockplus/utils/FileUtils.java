@@ -12,11 +12,12 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -25,6 +26,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class FileUtils {
+
+	private static Method methodGetFile;
 
 	public static void copyFileFromJar(File jarFile, File targetFile, String sourceFilePath) {
 		if (!isExists(jarFile)  || isExists(targetFile) || StringUtils.isEmpty(sourceFilePath)) {
@@ -45,11 +48,7 @@ public class FileUtils {
 			is = jar.getInputStream(zipEntry);
 			fos = new FileOutputStream(targetFile);
 			reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-			if (Utils.isCB19orLater()) {
-				writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8"));
-			} else {
-				writer = new BufferedWriter(new OutputStreamWriter(fos));
-			}
+			writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8"));
 			boolean isFirst = true;
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -104,28 +103,22 @@ public class FileUtils {
 		}
 	}
 
-	public static void fileEncode(File file, boolean isUTF8) {
+	public static void fileEncode(File file, String charsetName) {
 		if (!isExists(file)) {
 			return;
 		}
-		InputStream is = null;
-		FileOutputStream fos = null;
 		BufferedReader reader = null;
 		BufferedWriter writer = null;
 		try {
-			is = new FileInputStream(file);
-			fos = new FileOutputStream(file);
-			String charsetName = isUTF8 ? "UTF-8" : Charset.defaultCharset().name();
-			reader = new BufferedReader(new InputStreamReader(is, charsetName));
-			if (Utils.isCB19orLater()) {
-				writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8"));
-			} else {
-				writer = new BufferedWriter(new OutputStreamWriter(fos));
+			if (charsetName == null) {
+				charsetName = Charset.defaultCharset().name();
 			}
-			List<String> contents = new ArrayList<String>();
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
+			List<String> contents = new LinkedList<String>();
 			while (reader.ready()) {
 				contents.add(reader.readLine());
 			}
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
 			boolean isFirst = true;
 			for (String line : contents) {
 				if (isFirst && !(isFirst = false)) {
@@ -154,21 +147,6 @@ public class FileUtils {
 					e.printStackTrace();
 				}
 			}
-			if (fos != null) {
-				try {
-					fos.flush();
-					fos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
@@ -180,24 +158,27 @@ public class FileUtils {
 		InputStream is = null;
 		FileOutputStream fos = null;
 		try {
-			URLConnection urlconn = new URL(url).openConnection();
-			HttpURLConnection httpconn = (HttpURLConnection) urlconn;
-			httpconn.setAllowUserInteraction(false);
-			httpconn.setInstanceFollowRedirects(true);
-			httpconn.setRequestMethod("GET");
-			httpconn.connect();
-			int httpStatusCode = httpconn.getResponseCode();
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			connection.setRequestMethod("GET");
+			connection.setAllowUserInteraction(false);
+			connection.setInstanceFollowRedirects(true);
+			connection.connect();
+			int httpStatusCode = connection.getResponseCode();
 			if (httpStatusCode != HttpURLConnection.HTTP_OK) {
-				httpconn.disconnect();
+				connection.disconnect();
 				return;
 			}
-			is = httpconn.getInputStream();
+			is = connection.getInputStream();
 			fos = new FileOutputStream(file);
 			byte[] bytes = new byte[4096];
 			int length;
 			while ((length = is.read(bytes)) != -1) {
 				fos.write(bytes, 0, length);
 			}
+		} catch (MalformedURLException e) {
+			throw e;
+		} catch (IOException e) {
+			throw e;
 		} finally {
 			if (fos != null) {
 				try {
@@ -265,7 +246,11 @@ public class FileUtils {
 
 	public static File getJarFile(Plugin plugin) {
 		try {
-			return (File) ReflectionUtils.invokeMethod(plugin, JavaPlugin.class, "getFile");
+			if (methodGetFile == null) {
+				methodGetFile = JavaPlugin.class.getDeclaredMethod("getFile");
+				methodGetFile.setAccessible(true);
+			}
+			return (File) methodGetFile.invoke(plugin);
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}

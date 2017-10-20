@@ -15,15 +15,23 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.github.yuttyann.scriptblockplus.script.SBPlayer;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 
 public class Utils {
 
+	private static String serverVersion;
 	private static Boolean isCB175orLaterCache;
 	private static Boolean isCB178orLaterCache;
 	private static Boolean isCB18orLaterCache;
 	private static Boolean isCB19orLaterCache;
-	private static String serverVersion;
+
+	public static String getServerVersion() {
+		if (serverVersion == null) {
+			String version = Bukkit.getBukkitVersion();
+			serverVersion = version.substring(0, version.indexOf("-"));
+		}
+		return serverVersion;
+	}
 
 	public static boolean isCB175orLater() {
 		if (isCB175orLaterCache == null) {
@@ -57,21 +65,13 @@ public class Utils {
 		return getVersionInt(source) >= getVersionInt(target);
 	}
 
-	public static int getVersionInt(String version) {
-		String[] array = StringUtils.split(version, ".");
+	public static int getVersionInt(String source) {
+		String[] array = StringUtils.split(source, ".");
 		int result = (Integer.parseInt(array[0]) * 100000) + (Integer.parseInt(array[1]) * 1000);
 		if (array.length == 3) {
 			result += Integer.parseInt(array[2]);
 		}
 		return result;
-	}
-
-	public static String getServerVersion() {
-		if (serverVersion == null) {
-			String version = Bukkit.getBukkitVersion();
-			serverVersion = version.substring(0, version.indexOf("-"));
-		}
-		return serverVersion;
 	}
 
 	public static void sendMessage(String message) {

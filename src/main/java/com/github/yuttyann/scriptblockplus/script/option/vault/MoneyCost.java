@@ -3,7 +3,7 @@ package com.github.yuttyann.scriptblockplus.script.option.vault;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
-import com.github.yuttyann.scriptblockplus.script.SBPlayer;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -25,7 +25,7 @@ public class MoneyCost extends BaseOption {
 		if (vaultEconomy.has(player, cost)) {
 			vaultEconomy.withdrawPlayer(player, cost);
 			SBPlayer sbPlayer = SBPlayer.get(player);
-			Double value = sbPlayer.getData("MoneyCost");
+			Double value = (Double) sbPlayer.getData("MoneyCost");
 			sbPlayer.setData("MoneyCost", cost + (value == null ? 0.0D : value.doubleValue()));
 			return true;
 		}

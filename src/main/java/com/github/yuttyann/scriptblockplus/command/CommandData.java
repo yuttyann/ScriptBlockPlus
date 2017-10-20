@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.command.help;
+package com.github.yuttyann.scriptblockplus.command;
 
 import java.util.ArrayList;
 import java.util.List;

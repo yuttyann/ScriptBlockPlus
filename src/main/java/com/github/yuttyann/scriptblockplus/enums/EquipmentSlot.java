@@ -9,7 +9,9 @@ public enum EquipmentSlot {
 		Class<?> clazz = null;
 		try {
 			clazz = Class.forName("org.bukkit.inventory.EquipmentSlot");
-		} catch (ClassNotFoundException e) {}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		BUKKIT_E_CLASS = clazz;
 	}
 

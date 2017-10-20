@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.endprocess;
 
-import com.github.yuttyann.scriptblockplus.script.SBPlayer;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 
@@ -11,7 +11,7 @@ public class MoneyCostInit implements EndProcess {
 		VaultEconomy economy = scriptRead.getVaultEconomy();
 		if (economy.isEnabled()) {
 			SBPlayer sbPlayer = scriptRead.getSBPlayer();
-			Double cost = sbPlayer.getData("MoneyCost");
+			Double cost = (Double) sbPlayer.getData("MoneyCost");
 			if (cost != null) {
 				sbPlayer.removeData("MoneyCost");
 				economy.depositPlayer(sbPlayer.getOfflinePlayer(), cost);

@@ -16,7 +16,7 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
-import com.github.yuttyann.scriptblockplus.script.SBPlayer;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
@@ -55,12 +55,12 @@ public abstract class BaseOption extends Option {
 		return sbPlayer.getPlayer();
 	}
 
-	protected UUID getUniqueId() {
-		return sbPlayer.getUniqueId();
-	}
-
 	protected SBPlayer getSBPlayer() {
 		return sbPlayer;
+	}
+
+	protected UUID getUniqueId() {
+		return sbPlayer.getUniqueId();
 	}
 
 	protected String getCoords() {

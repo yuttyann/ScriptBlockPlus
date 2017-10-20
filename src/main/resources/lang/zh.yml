@@ -36,7 +36,6 @@ notPermissionMessage: '&cパーミッションが無いため、実行できま�
 giveScriptEditorMessage: '&aScript Editorが配布されました。'
 allFileReloadMessage: '&a全てのファイルの再読み込みが完了しました。'
 notLatestPluginMessage: '&b現在のバージョンが最新です。'
-updateFailMessage: '&cアップデートに失敗しました。'
 notScriptBlockFileMessage: '&cScriptBlockのデータファイルが見つかりません。'
 dataMigrStartMessage: '&7ScriptBlockのスクリプトを移行しています....'
 dataMigrEndMessage: '&bスクリプトの移行が完了しました。'
@@ -55,10 +54,7 @@ updateDownloadEndMessage: '&6ダウンロードが終了しました。|~ファ�
 
 updateCheckMessage: '&b最新のバージョンを検出しました。|~v%latestversion%にアップデートしてください。|~プラグイン名: %pluginname%|~☆アップデート内容☆|~%details%'
 
-# %pluginname%    : プラグイン名
-# %latestversion% : 最新バージョン
-
-updateErrorMessage: '&cプラグイン名: %pluginname%|~バージョン: v%latestversion%|~取得ファイル: https://xml.yuttyann44581.net/uploads/%pluginname%.xml|~連絡先: http://file.yuttyann44581.net/contact|~解決しない場合は、製作者に連絡してください。'
+updateErrorMessage: '&cアップデートに失敗しました。'
 
 # %scripttype% : スクリプトの種類
 scriptCopyMessage: '&a種類"%scripttype%"のスクリプトをコピーしました。'

@@ -29,6 +29,9 @@ public class ScriptBlockBreakEvent extends ScriptBlockEvent implements Cancellab
 	}
 
 	public ItemStack getItem(boolean isMainHand) {
+		if (!isMainHand && !Utils.isCB19orLater()) {
+			isMainHand = true;
+		}
 		return isMainHand ? mainHand : offHand;
 	}
 

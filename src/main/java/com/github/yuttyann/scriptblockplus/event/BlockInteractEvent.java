@@ -10,12 +10,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.yuttyann.scriptblockplus.enums.EquipmentSlot;
-import com.github.yuttyann.scriptblockplus.utils.ReflectionUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable {
-
-	private final PlayerInteractEvent event;
 
 	private ItemStack item;
 	private Action action;
@@ -25,14 +22,12 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 	private boolean cancelled;
 
 	public BlockInteractEvent(PlayerInteractEvent event, ItemStack item, EquipmentSlot hand,  boolean isAnimation) {
-		this(event, event.getPlayer(), event.getClickedBlock(),
-				item, event.getAction(), event.getBlockFace(), hand, isAnimation);
+		this(event, event.getPlayer(), event.getClickedBlock(), item, event.getAction(), event.getBlockFace(), hand, isAnimation);
 	}
 
 	public BlockInteractEvent(PlayerInteractEvent event, Player player, Block block,
 			ItemStack item, Action action, BlockFace blockFace, EquipmentSlot hand, boolean isAnimation) {
 		super(player, block);
-		this.event = event;
 		this.item = item;
 		this.action = action;
 		this.blockFace = blockFace;
@@ -80,28 +75,18 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 
 	@Override
 	public boolean isCancelled() {
-		return event == null ? cancelled : (cancelled = event.isCancelled());
+		return cancelled;
 	}
 
 	@Override
 	public void setCancelled(boolean cancel) {
-		if (event == null) {
-			cancelled = cancel;
-		} else {
-			event.setCancelled(cancelled = cancel);
-		}
+		cancelled = cancel;
 	}
 
 	private EquipmentSlot fromHand(PlayerInteractEvent event) {
 		if (event == null || !Utils.isCB19orLater()) {
 			return EquipmentSlot.HAND;
 		}
-		Enum<?> original = null;
-		try {
-			original = (Enum<?>) ReflectionUtils.invokeMethod(event, PlayerInteractEvent.class, "getHand");
-		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
-		}
-		return EquipmentSlot.fromEnum(original);
+		return EquipmentSlot.fromEnum(event.getHand());
 	}
 }

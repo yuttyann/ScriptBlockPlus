@@ -193,8 +193,7 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void reload() {
-		ScriptBlock plugin = ScriptBlock.getInstance();
-		plugin.getMapManager().loadScripts(scriptFile, scriptType);
+		ScriptBlock.getInstance().getMapManager().loadScripts(scriptFile, scriptType);
 	}
 
 	public ScriptData clone() {
