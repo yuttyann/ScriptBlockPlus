@@ -9,7 +9,7 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
-public class CommandData {
+public final class CommandData {
 
 	private String message;
 	private boolean isPrefix;

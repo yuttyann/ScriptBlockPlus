@@ -20,7 +20,7 @@ public class NameFetcher implements Callable<String> {
 
 	private final String url;
 
-	public NameFetcher(UUID uuid) {
+	private NameFetcher(UUID uuid) {
 		this.url = PROFILE_URL + StringUtils.replace(uuid.toString(), "-", null);
 	}
 

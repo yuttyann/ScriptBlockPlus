@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.player;
 
-
 public abstract interface ObjectData {
 
 	public abstract void setData(String key, Object value);

@@ -17,7 +17,7 @@ import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public final class BasePlayer extends PlayerData implements SBPlayer {
+public class BasePlayer extends PlayerData implements SBPlayer {
 
 	static final Map<UUID, BasePlayer> players = new HashMap<UUID, BasePlayer>(32);
 
@@ -52,7 +52,7 @@ public final class BasePlayer extends PlayerData implements SBPlayer {
 
 	@Override
 	public void setPlayer(Player player) {
-		this.player = player;
+		this.player = (player == null || player.getUniqueId().equals(uuid) ? player : null);
 	}
 
 	@Override
