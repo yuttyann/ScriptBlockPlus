@@ -1,7 +1,7 @@
-# ScriptBlockPlus Java7版 Readme　【現在Java8版開発中 変更点も多数あるよ！】
+# ScriptBlockPlus Java8版 Readme
 このプラグインはyuttyann44581によって作成されています。
 <br>
-ブロックにスクリプトを埋め込むことが出来るプラグインです。
+ブロックにスクリプト(コマンドなど...)を埋め込むことが出来るプラグインです。
 <br>
 ライセンス: LGPLv3
 <br>
