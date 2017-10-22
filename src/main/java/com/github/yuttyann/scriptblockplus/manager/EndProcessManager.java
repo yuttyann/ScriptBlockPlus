@@ -9,7 +9,7 @@ import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.endprocess.ItemCostInit;
 import com.github.yuttyann.scriptblockplus.script.endprocess.MoneyCostInit;
 
-public class EndProcessManager extends AbstractConstructor<EndProcess> {
+public final class EndProcessManager extends AbstractConstructor<EndProcess> {
 
 	private final static List<Constructor<? extends EndProcess>> CONSTRUCTORS;
 

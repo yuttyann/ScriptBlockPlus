@@ -106,11 +106,11 @@ public abstract class AbstractConstructor<T> {
 		return null;
 	}
 
-	public void forEach(Consumer<? super T> action) {
+	public final void forEach(Consumer<? super T> action) {
 		StreamUtils.forEach(newInstances(), action);
 	}
 
-	public void forEachCache(Consumer<? super T> action) {
+	public final void forEachCache(Consumer<? super T> action) {
 		getCacheList().forEach(action);
 	}
 

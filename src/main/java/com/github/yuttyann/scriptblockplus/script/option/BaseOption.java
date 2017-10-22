@@ -20,9 +20,9 @@ public abstract class BaseOption extends Option {
 
 	private Plugin plugin;
 	private SBPlayer sbPlayer;
+	private String optionValue;
 	private BlockCoords blockCoords;
 	private MapManager mapManager;
-	private String optionValue;
 	private List<String> scripts;
 	private ScriptType scriptType;
 	private ScriptRead scriptRead;
@@ -53,6 +53,10 @@ public abstract class BaseOption extends Option {
 		return sbPlayer.getUniqueId();
 	}
 
+	protected String getOptionValue() {
+		return optionValue;
+	}
+
 	protected String getCoords() {
 		return blockCoords.getCoords();
 	}
@@ -67,10 +71,6 @@ public abstract class BaseOption extends Option {
 
 	protected MapManager getMapManager() {
 		return mapManager;
-	}
-
-	protected String getOptionValue() {
-		return optionValue;
 	}
 
 	protected List<String> getScripts() {
@@ -101,9 +101,9 @@ public abstract class BaseOption extends Option {
 		this.scriptRead = scriptRead;
 		this.plugin = scriptRead.getPlugin();
 		this.sbPlayer = scriptRead.getSBPlayer();
+		this.optionValue = scriptRead.getOptionValue();
 		this.blockCoords = scriptRead.getBlockCoords();
 		this.mapManager = scriptRead.getMapManager();
-		this.optionValue = scriptRead.getOptionValue();
 		this.scripts = scriptRead.getScripts();
 		this.scriptType = scriptRead.getScriptType();
 		this.scriptData = scriptRead.getScriptData();

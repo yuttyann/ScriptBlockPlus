@@ -22,7 +22,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
-public class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI {
+public final class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI {
 
 	private ScriptData scriptData;
 	private Map<ScriptType, List<Location>> timers;

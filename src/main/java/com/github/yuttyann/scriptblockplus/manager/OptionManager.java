@@ -26,7 +26,7 @@ import com.github.yuttyann.scriptblockplus.script.option.vault.Perm;
 import com.github.yuttyann.scriptblockplus.script.option.vault.PermAdd;
 import com.github.yuttyann.scriptblockplus.script.option.vault.PermRemove;
 
-public class OptionManager extends AbstractConstructor<Option> {
+public final class OptionManager extends AbstractConstructor<Option> {
 
 	private final static List<Constructor<? extends Option>> CONSTRUCTORS;
 

@@ -21,7 +21,7 @@ import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
-public class MapManager {
+public final class MapManager {
 
 	private ScriptBlock plugin;
 	private SBMap<List<UUID>> delayMap;
