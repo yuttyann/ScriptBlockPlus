@@ -5,16 +5,20 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.PlayerSelector;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 
 public class Utils {
@@ -95,6 +99,33 @@ public class Utils {
 			if (line.indexOf('§') != -1) {
 				color = StringUtils.getColors(line);
 			}
+		}
+	}
+
+	public static void dispatchCommand(CommandSender sender, String command, Location location) {
+		if (sender == null || StringUtils.isEmpty(command)) {
+			return;
+		}
+		if (command.charAt(0) == '/') {
+			command = command.substring(1);
+		}
+		String pattern = PlayerSelector.getCommandBlockPattern(command);
+		if (pattern != null) {
+			if (location == null) {
+				if (sender instanceof Player) {
+					location = BlockCoords.getAllCenter(((Player) sender).getLocation());
+				} else if (sender instanceof BlockCommandSender) {
+					location = BlockCoords.getAllCenter(((BlockCommandSender) sender).getBlock().getLocation());
+				}
+			}
+			Player[] players = PlayerSelector.getPlayers(location, pattern);
+			if (players != null) {
+				for (Player p : players) {
+					Bukkit.dispatchCommand(sender, StringUtils.replace(command, pattern, p.getName()));
+				}
+			}
+		} else {
+			Bukkit.dispatchCommand(sender, command);
 		}
 	}
 

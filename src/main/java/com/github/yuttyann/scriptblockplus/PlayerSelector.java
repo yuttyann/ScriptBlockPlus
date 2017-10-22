@@ -22,6 +22,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class PlayerSelector {
@@ -29,6 +30,16 @@ public class PlayerSelector {
 	private static final Pattern a = Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$");
 	private static final Pattern b = Pattern.compile("\\G([-!]?[\\w-]*)(?:$|,)");
 	private static final Pattern c = Pattern.compile("\\G(\\w+)=([-!]?[\\w-]*)(?:$|,)");
+
+	public static String getCommandBlockPattern(String command) {
+		String[] array = StringUtils.split(command, " ");
+		for (int i = 1; i < array.length; i++) {
+			if (isPattern(array[i])) {
+				return array[i];
+			}
+		}
+		return null;
+	}
 
 	public static Player[] getPlayers(Location location, String s) {
 		Matcher matcher = a.matcher(s);
