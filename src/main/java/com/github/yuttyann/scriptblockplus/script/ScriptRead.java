@@ -87,13 +87,13 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 				Option instance = optionManager.newInstance(option);
 				if (!sbPlayer.isOnline() || !instance.callOption(this)) {
 					if (!instance.isFailedIgnore()) {
-						endProcessManager.forEach(r -> r.failed(this));
+						endProcessManager.forEach(e -> e.failed(this));
 					}
 					return false;
 				}
 			}
 		}
-		endProcessManager.forEach(r -> r.success(this));
+		endProcessManager.forEach(e -> e.success(this));
 		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
 		return true;
 	}
