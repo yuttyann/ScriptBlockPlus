@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -16,7 +17,7 @@ public class MoneyCost extends BaseOption {
 
 	@Override
 	public boolean isValid() {
-		VaultEconomy vaultEconomy = getVaultEconomy();
+		VaultEconomy vaultEconomy = HookPlugins.getVaultEconomy();
 		if (!vaultEconomy.isEnabled()) {
 			throw new UnsupportedOperationException();
 		}

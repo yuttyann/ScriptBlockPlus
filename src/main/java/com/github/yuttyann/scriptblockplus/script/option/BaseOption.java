@@ -14,23 +14,19 @@ import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
-import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
-import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public abstract class BaseOption extends Option {
 
 	private Plugin plugin;
 	private SBPlayer sbPlayer;
+	private BlockCoords blockCoords;
+	private MapManager mapManager;
 	private String optionValue;
 	private List<String> scripts;
 	private ScriptType scriptType;
 	private ScriptRead scriptRead;
 	private ScriptData scriptData;
-	private MapManager mapManager;
-	private BlockCoords blockCoords;
-	private VaultEconomy vaultEconomy;
-	private VaultPermission vaultPermission;
 	private int scriptIndex;
 
 	public BaseOption(String name, String prefix) {
@@ -65,6 +61,14 @@ public abstract class BaseOption extends Option {
 		return blockCoords.getFullCoords();
 	}
 
+	protected BlockCoords getBlockCoords() {
+		return blockCoords;
+	}
+
+	protected MapManager getMapManager() {
+		return mapManager;
+	}
+
 	protected String getOptionValue() {
 		return optionValue;
 	}
@@ -85,22 +89,6 @@ public abstract class BaseOption extends Option {
 		return scriptData;
 	}
 
-	protected MapManager getMapManager() {
-		return mapManager;
-	}
-
-	protected BlockCoords getBlockCoords() {
-		return blockCoords;
-	}
-
-	protected VaultEconomy getVaultEconomy() {
-		return vaultEconomy;
-	}
-
-	protected VaultPermission getVaultPermission() {
-		return vaultPermission;
-	}
-
 	protected int getScriptIndex() {
 		return scriptIndex;
 	}
@@ -113,14 +101,12 @@ public abstract class BaseOption extends Option {
 		this.scriptRead = scriptRead;
 		this.plugin = scriptRead.getPlugin();
 		this.sbPlayer = scriptRead.getSBPlayer();
+		this.blockCoords = scriptRead.getBlockCoords();
+		this.mapManager = scriptRead.getMapManager();
 		this.optionValue = scriptRead.getOptionValue();
 		this.scripts = scriptRead.getScripts();
 		this.scriptType = scriptRead.getScriptType();
 		this.scriptData = scriptRead.getScriptData();
-		this.mapManager = scriptRead.getMapManager();
-		this.blockCoords = scriptRead.getBlockCoords();
-		this.vaultEconomy = scriptRead.getVaultEconomy();
-		this.vaultPermission = scriptRead.getVaultPermission();
 		this.scriptIndex = scriptRead.getScriptIndex();
 		try {
 			return isValid();

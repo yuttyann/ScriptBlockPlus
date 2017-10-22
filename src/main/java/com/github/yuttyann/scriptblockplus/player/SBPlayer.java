@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.script.Clipboard;
 
-public abstract interface SBPlayer extends ObjectData, CommandSender {
+public interface SBPlayer extends ObjectData, CommandSender {
 
 	public static SBPlayer get(Player player) {
 		return player == null ? null : get(player.getUniqueId());
@@ -27,39 +27,39 @@ public abstract interface SBPlayer extends ObjectData, CommandSender {
 		return player;
 	}
 
-	public abstract UUID getUniqueId();
+	public UUID getUniqueId();
 
-	public abstract Location getLocation();
+	public Location getLocation();
 
-	public abstract void setPlayer(Player player);
+	public void setPlayer(Player player);
 
-	public abstract Player getPlayer();
+	public Player getPlayer();
 
-	public abstract OfflinePlayer getOfflinePlayer();
+	public OfflinePlayer getOfflinePlayer();
 
-	public abstract boolean isOnline();
+	public boolean isOnline();
 
-	public abstract void setClipboard(Clipboard clipboard);
+	public void setClipboard(Clipboard clipboard);
 
-	public abstract Clipboard getClipboard();
+	public Clipboard getClipboard();
 
-	public abstract boolean hasClipboard();
+	public boolean hasClipboard();
 
-	public abstract void setScriptLine(String scriptLine);
+	public void setScriptLine(String scriptLine);
 
-	public abstract String getScriptLine();
+	public String getScriptLine();
 
-	public abstract boolean hasScriptLine();
+	public boolean hasScriptLine();
 
-	public abstract void setClickAction(String clickAction);
+	public void setClickAction(String clickAction);
 
-	public abstract String getClickAction();
+	public String getClickAction();
 
-	public abstract boolean hasClickAction();
+	public boolean hasClickAction();
 
-	public abstract void setOldFullCoords(String fullCoords);
+	public void setOldFullCoords(String fullCoords);
 
-	public abstract String getOldFullCoords();
+	public String getOldFullCoords();
 
-	public abstract boolean hasOldFullCoords();
+	public boolean hasOldFullCoords();
 }

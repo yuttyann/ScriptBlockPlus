@@ -56,7 +56,7 @@ public class MapManager {
 	}
 
 	public void loadScripts(YamlConfig scriptFile, ScriptType scriptType) {
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<String>(scriptCoords.size());
 		scriptFile.getKeys().forEach(w -> scriptFile.getKeys(w).forEach(c -> set.add(w + ", " + c)));
 		scriptCoords.put(scriptType, set);
 	}

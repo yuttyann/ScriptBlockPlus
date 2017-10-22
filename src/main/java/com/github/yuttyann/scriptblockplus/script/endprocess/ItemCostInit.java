@@ -3,19 +3,18 @@ package com.github.yuttyann.scriptblockplus.script.endprocess;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ItemCostInit implements EndProcess {
 
 	@Override
-	public void success(ScriptRead scriptRead) {
-		scriptRead.getSBPlayer().removeData("ItemCost");
+	public void success(SBRead sbRead) {
+		sbRead.getSBPlayer().removeData("ItemCost");
 	}
 
 	@Override
-	public void failed(ScriptRead scriptRead) {
-		SBPlayer sbPlayer = scriptRead.getSBPlayer();
+	public void failed(SBRead sbRead) {
+		SBPlayer sbPlayer = sbRead.getSBPlayer();
 		ItemStack[] items = (ItemStack[]) sbPlayer.getData("ItemCost");
 		sbPlayer.removeData("ItemCost");
 		if (items != null && sbPlayer.isOnline()) {

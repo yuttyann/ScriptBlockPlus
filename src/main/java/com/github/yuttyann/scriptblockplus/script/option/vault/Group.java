@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.script.option.vault;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -16,7 +17,7 @@ public class Group extends BaseOption {
 
 	@Override
 	public boolean isValid() {
-		VaultPermission vaultPermission = getVaultPermission();
+		VaultPermission vaultPermission = HookPlugins.getVaultPermission();
 		if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
 			throw new UnsupportedOperationException();
 		}

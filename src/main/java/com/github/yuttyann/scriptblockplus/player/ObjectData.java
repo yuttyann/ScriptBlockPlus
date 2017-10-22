@@ -1,14 +1,14 @@
 package com.github.yuttyann.scriptblockplus.player;
 
-public abstract interface ObjectData {
+public interface ObjectData {
 
-	public abstract void setData(String key, Object value);
+	public void setData(String key, Object value);
 
-	public abstract Object getData(String key);
+	public Object getData(String key);
 
-	public abstract Object removeData(String key);
+	public Object removeData(String key);
 
-	public abstract boolean hasData(String key);
+	public boolean hasData(String key);
 
-	public abstract void clearData();
+	public void clearData();
 }

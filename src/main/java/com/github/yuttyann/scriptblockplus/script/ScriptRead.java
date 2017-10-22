@@ -11,12 +11,13 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.endprocess.SBRead;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public final class ScriptRead extends ScriptManager {
+public final class ScriptRead extends ScriptManager implements SBRead {
 
 	private SBPlayer sbPlayer;
 	private String optionValue;
@@ -32,26 +33,32 @@ public final class ScriptRead extends ScriptManager {
 		this.blockCoords = new BlockCoords(location);
 	}
 
+	@Override
 	public SBPlayer getSBPlayer() {
 		return sbPlayer;
 	}
 
+	@Override
 	public String getOptionValue() {
 		return optionValue;
 	}
 
+	@Override
 	public List<String> getScripts() {
 		return scripts;
 	}
 
+	@Override
 	public ScriptData getScriptData() {
 		return scriptData;
 	}
 
+	@Override
 	public BlockCoords getBlockCoords() {
 		return blockCoords.clone();
 	}
 
+	@Override
 	public int getScriptIndex() {
 		return scriptIndex;
 	}
@@ -80,13 +87,13 @@ public final class ScriptRead extends ScriptManager {
 				Option instance = optionManager.newInstance(option);
 				if (!sbPlayer.isOnline() || !instance.callOption(this)) {
 					if (!instance.isFailedIgnore()) {
-						StreamUtils.forEach(endProcessManager.newInstances(), r -> r.failed(this));
+						endProcessManager.forEach(r -> r.failed(this));
 					}
 					return false;
 				}
 			}
 		}
-		StreamUtils.forEach(endProcessManager.newInstances(), r -> r.success(this));
+		endProcessManager.forEach(r -> r.success(this));
 		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
 		return true;
 	}

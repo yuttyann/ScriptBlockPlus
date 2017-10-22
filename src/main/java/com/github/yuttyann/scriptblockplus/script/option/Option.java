@@ -9,7 +9,7 @@ public abstract class Option {
 
 	private final String name;
 	private final String syntax;
-	private final Integer index;
+	private final int index;
 
 	protected Option(String name, String syntax, int index) {
 		this.name = Objects.requireNonNull(name);

@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Delay extends BaseOption implements Runnable {
@@ -36,7 +35,7 @@ public class Delay extends BaseOption implements Runnable {
 		if (getSBPlayer().isOnline()) {
 			getScriptRead().read(getScriptIndex() + 1);
 		} else {
-			StreamUtils.forEach(new EndProcessManager().newInstances(), r -> r.failed(getScriptRead()));
+			new EndProcessManager().forEach(r -> r.failed(getScriptRead()));
 		}
 	}
 }
