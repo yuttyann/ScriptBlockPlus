@@ -38,18 +38,20 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 
 	@Override
 	public boolean scriptRead(Player player) {
-		if (!callEvent(player, scriptType)) {
-			return new ScriptRead(this, player, getLocation()).read(0);
-		}
-		return false;
+		return scriptRead(player, 0);
 	}
 
 	@Override
-	public boolean scriptRead(int index, Player player) {
-		if (!callEvent(player, scriptType)) {
+	public boolean scriptRead(Player player, int index) {
+		try {
+			ScriptBlockEvent event = callEvent(player, scriptType);
+			if (event == null || event.isCancelled()) {
+				return false;
+			}
 			return new ScriptRead(this, player, getLocation()).read(index);
+		} catch (Exception e) {
+			return false;
 		}
-		return false;
 	}
 
 	@Override
@@ -279,7 +281,7 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 		scripts.put(isAdd, value);
 	}
 
-	private boolean callEvent(Player player, ScriptType scriptType) {
+	private ScriptBlockEvent callEvent(Player player, ScriptType scriptType) {
 		ScriptBlockEvent event = null;
 		Block block = getLocation().getBlock();
 		switch (scriptType) {
@@ -293,9 +295,9 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 			event = new ScriptBlockWalkEvent(player, block);
 			break;
 		default:
-			return false;
+			return null;
 		}
 		Bukkit.getPluginManager().callEvent(event);
-		return event.isCancelled();
+		return event;
 	}
 }
