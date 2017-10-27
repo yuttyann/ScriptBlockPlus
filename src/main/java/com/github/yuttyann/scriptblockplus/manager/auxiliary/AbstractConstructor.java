@@ -71,7 +71,7 @@ public abstract class AbstractConstructor<T> {
 	}
 
 	public T[] newInstances() {
-		return newInstances(getGenericArray());
+		return newInstances(newGenericArray());
 	}
 
 	public T[] newInstances(T[] array) {
@@ -88,7 +88,7 @@ public abstract class AbstractConstructor<T> {
 		return instances;
 	}
 
-	public T newInstance(T t) {
+	public <R extends T> T newInstance(R t) {
 		return newInstance(t.getClass());
 	}
 
@@ -123,7 +123,7 @@ public abstract class AbstractConstructor<T> {
 		cacheList = new ArrayList<T>(getConstructors().size());
 	}
 
-	private T[] getGenericArray() {
+	private T[] newGenericArray() {
 		try {
 			if (genericClass == null) {
 				Type type = getClass().getGenericSuperclass();
