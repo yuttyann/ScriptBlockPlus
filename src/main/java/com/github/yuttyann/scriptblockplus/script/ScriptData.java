@@ -63,7 +63,7 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public boolean checkPath() {
-		return scriptFile.contains(scriptPath);
+		return scriptPath != null && scriptFile.contains(scriptPath);
 	}
 
 	public void save() {

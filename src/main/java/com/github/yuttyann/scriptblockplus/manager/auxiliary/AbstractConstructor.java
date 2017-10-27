@@ -78,9 +78,10 @@ public abstract class AbstractConstructor<T> {
 		clearCacheList();
 		T[] instances = array;
 		try {
-			int i = 0;
+			int count = 0;
+			Object[] empty = ArrayUtils.EMPTY_OBJECT_ARRAY;
 			for (Constructor<? extends T> constructor : getConstructors()) {
-				cacheList.add(instances[i++] = constructor.newInstance(ArrayUtils.EMPTY_OBJECT_ARRAY));
+				cacheList.add(instances[count++] = constructor.newInstance(empty));
 			}
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
@@ -95,9 +96,10 @@ public abstract class AbstractConstructor<T> {
 	public T newInstance(Class<?> clazz) {
 		clearCacheInstance();
 		try {
+			Object[] empty = ArrayUtils.EMPTY_OBJECT_ARRAY;
 			for (Constructor<? extends T> constructor : getConstructors()) {
 				if (clazz == constructor.getDeclaringClass()) {
-					return cacheInstance = constructor.newInstance(ArrayUtils.EMPTY_OBJECT_ARRAY);
+					return cacheInstance = constructor.newInstance(empty);
 				}
 			}
 		} catch (ReflectiveOperationException e) {

@@ -18,6 +18,7 @@ public interface ScriptBlockAPI {
 	/**
 	 * スクリプトを実行する
 	 * @param player プレイヤー
+	 * @return 実行が成功したかどうか
 	 */
 	public boolean scriptRead(Player player);
 
@@ -25,6 +26,7 @@ public interface ScriptBlockAPI {
 	 * 指定した位置からスクリプトを実行する
 	 * @param index 位置
 	 * @param player プレイヤー
+	 * @return 実行が成功したかどうか
 	 */
 	public boolean scriptRead(int index, Player player);
 

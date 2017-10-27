@@ -30,6 +30,7 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 
 	public ScriptBlockManager(ScriptBlock plugin, Location location, ScriptType scriptType) {
 		super(plugin, scriptType);
+		this.scriptData = new ScriptData(location, scriptType);
 		this.timers = new HashMap<ScriptType, List<Location>>();
 		this.scripts = new HashMap<Boolean, Map<Location, ScriptType>>();
 		setLocation(location);
@@ -37,7 +38,7 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 
 	@Override
 	public boolean scriptRead(Player player) {
-		if (callEvent(player, scriptType)) {
+		if (!callEvent(player, scriptType)) {
 			return new ScriptRead(this, player, getLocation()).read(0);
 		}
 		return false;
@@ -45,7 +46,7 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 
 	@Override
 	public boolean scriptRead(int index, Player player) {
-		if (callEvent(player, scriptType)) {
+		if (!callEvent(player, scriptType)) {
 			return new ScriptRead(this, player, getLocation()).read(index);
 		}
 		return false;
@@ -291,11 +292,10 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 		case WALK:
 			event = new ScriptBlockWalkEvent(player, block);
 			break;
+		default:
+			return false;
 		}
-		if (event != null) {
-			Bukkit.getPluginManager().callEvent(event);
-			return event.isCancelled();
-		}
-		return false;
+		Bukkit.getPluginManager().callEvent(event);
+		return event.isCancelled();
 	}
 }
