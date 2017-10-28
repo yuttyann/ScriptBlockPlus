@@ -20,9 +20,11 @@ public final class Files {
 		SBConfig.reloadConfig();
 		files.put("lang", loadLang("lang_{lang}.yml", "lang"));
 		SBConfig.reloadLang();
-		files.put("interact", loadFile("scripts/interact.yml", false));
-		files.put("break", loadFile("scripts/break.yml", false));
-		files.put("walk", loadFile("scripts/walk.yml", false));
+
+		for (ScriptType scriptType : ScriptType.values()) {
+			String type = scriptType.getType();
+			files.put(type, loadFile("scripts/" + type + ".yml", false));
+		}
 	}
 
 	public static Map<String, YamlConfig> getFiles() {
@@ -37,29 +39,8 @@ public final class Files {
 		return files.get("lang");
 	}
 
-	public static YamlConfig getInteract() {
-		return files.get("interact");
-	}
-
-	public static YamlConfig getBreak() {
-		return files.get("break");
-	}
-
-	public static YamlConfig getWalk() {
-		return files.get("walk");
-	}
-
 	public static YamlConfig getScriptFile(ScriptType scriptType) {
-		switch (scriptType) {
-		case INTERACT:
-			return getInteract();
-		case BREAK:
-			return getBreak();
-		case WALK:
-			return getWalk();
-		default:
-			return null;
-		}
+		return files.get(scriptType.getType());
 	}
 
 	private static YamlConfig loadFile(String filePath, boolean isCopyFile) {
