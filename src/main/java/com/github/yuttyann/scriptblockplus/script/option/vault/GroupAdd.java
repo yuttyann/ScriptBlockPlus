@@ -23,9 +23,6 @@ public class GroupAdd extends BaseOption {
 		String world = array.length > 1 ? array[0] : null;
 		String group = array.length > 1 ? array[1] : array[0];
 		Player player = getPlayer();
-		if ("<world>".equals(world)) {
-			world = player.getWorld().getName();
-		}
 		if (!vaultPermission.playerInGroup(world, player, group)) {
 			vaultPermission.playerAddGroup(world, player, group);
 		}

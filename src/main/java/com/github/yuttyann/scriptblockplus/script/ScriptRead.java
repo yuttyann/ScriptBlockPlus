@@ -83,7 +83,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 				if (!option.isOption(script)) {
 					continue;
 				}
-				optionValue = option.getValue(script);
+				optionValue = textOption(option.getValue(script));
 				Option instance = optionManager.newInstance(option);
 				if (!sbPlayer.isOnline() || !instance.callOption(this)) {
 					if (!instance.isFailedIgnore()) {
@@ -96,6 +96,14 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 		endProcessManager.forEach(e -> e.success(this));
 		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
 		return true;
+	}
+
+	private String textOption(String value) {
+		if (value != null) {
+			value = StringUtils.replace(value, "<player>", sbPlayer.getName());
+			value = StringUtils.replace(value, "<world>", sbPlayer.getLocation().getWorld().getName());
+		}
+		return value;
 	}
 
 	private boolean sort(List<String> scripts, Option[] options) {

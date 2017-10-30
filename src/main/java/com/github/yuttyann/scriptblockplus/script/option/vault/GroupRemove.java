@@ -23,11 +23,8 @@ public class GroupRemove extends BaseOption {
 		String world = array.length > 1 ? array[0] : null;
 		String group = array.length > 1 ? array[1] : array[0];
 		Player player = getPlayer();
-		if ("<world>".equals(world)) {
-			world = player.getWorld().getName();
-		}
-		if (vaultPermission.playerInGroup(player, group)) {
-			vaultPermission.playerRemoveGroup(player,  group);
+		if (vaultPermission.playerInGroup(world, player, group)) {
+			vaultPermission.playerRemoveGroup(world, player,  group);
 		}
 		return true;
 	}
