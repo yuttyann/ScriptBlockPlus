@@ -31,8 +31,6 @@ public interface SBPlayer extends ObjectData, CommandSender {
 
 	public Location getLocation();
 
-	public void setPlayer(Player player);
-
 	public Player getPlayer();
 
 	public OfflinePlayer getOfflinePlayer();

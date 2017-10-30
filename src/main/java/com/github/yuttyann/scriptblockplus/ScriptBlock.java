@@ -21,6 +21,7 @@ import com.github.yuttyann.scriptblockplus.listener.ScriptInteractListener;
 import com.github.yuttyann.scriptblockplus.listener.ScriptWalkListener;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptBlockManager;
+import com.github.yuttyann.scriptblockplus.player.BasePlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -36,7 +37,7 @@ public class ScriptBlock extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			SBPlayer.get(player).setPlayer(player);
+			((BasePlayer) SBPlayer.get(player)).setPlayer(player);
 		}
 		Files.reload();
 

@@ -50,7 +50,6 @@ public class BasePlayer extends PlayerData implements SBPlayer {
 		return player == null ? null : player.getServer();
 	}
 
-	@Override
 	public void setPlayer(Player player) {
 		this.player = (player == null || player.getUniqueId().equals(uuid) ? player : null);
 	}
@@ -180,6 +179,6 @@ public class BasePlayer extends PlayerData implements SBPlayer {
 
 	@Override
 	public String toString() {
-		return "SBPlayer{uuid=" + getUniqueId() + ", name=" + getName() + "}";
+		return "BasePlayer{uuid=" + getUniqueId() + ", name=" + getName() + "}";
 	}
 }
