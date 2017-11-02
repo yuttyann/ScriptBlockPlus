@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ProxiedCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -46,8 +45,8 @@ public abstract class AbstractCommand extends CommandUsage implements TabExecuto
 
 	@Override
 	public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (Utils.isCB18orLater() && sender instanceof ProxiedCommandSender) {
-			CommandSender pxSender = ((ProxiedCommandSender) sender).getCallee();
+		if (Utils.isCB18orLater() && ProxiedCommandSender.checkClass(sender)) {
+			CommandSender pxSender = new ProxiedCommandSender(sender).getCallee();
 			if (pxSender instanceof Player) {
 				sender = pxSender;
 			}

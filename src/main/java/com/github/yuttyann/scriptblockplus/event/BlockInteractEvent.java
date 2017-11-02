@@ -1,5 +1,8 @@
 package com.github.yuttyann.scriptblockplus.event;
 
+import java.lang.reflect.Method;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,6 +16,8 @@ import com.github.yuttyann.scriptblockplus.enums.EquipmentSlot;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable {
+
+	private static Method methodGetHand;
 
 	private ItemStack item;
 	private Action action;
@@ -87,6 +92,14 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 		if (event == null || !Utils.isCB19orLater()) {
 			return EquipmentSlot.HAND;
 		}
-		return EquipmentSlot.fromEnum(event.getHand());
+		try {
+			if (methodGetHand == null) {
+				methodGetHand = PlayerInteractEvent.class.getDeclaredMethod("getHand");
+				methodGetHand.setAccessible(true);
+			}
+			return EquipmentSlot.fromEnum((Enum<?>) methodGetHand.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY));
+		} catch (ReflectiveOperationException e) {
+			return EquipmentSlot.NONE;
+		}
 	}
 }

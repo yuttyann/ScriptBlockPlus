@@ -34,7 +34,6 @@ final class UTF8Config extends YamlConfiguration {
 	private final Representer yamlRepresenter = new YamlRepresenter();
 	private final Yaml yaml = new Yaml(new YamlConstructor(), yamlRepresenter, yamlOptions);
 
-	@Override
 	public String saveToString() {
 		yamlOptions.setIndent(options().indent());
 		yamlOptions.setDefaultFlowStyle(FlowStyle.BLOCK);
@@ -47,7 +46,6 @@ final class UTF8Config extends YamlConfiguration {
 		return header + dump;
 	}
 
-	@Override
 	public void save(File file) throws IOException {
 		Validate.notNull(file, "File cannot be null");
 		Files.createParentDirs(file);
@@ -73,13 +71,11 @@ final class UTF8Config extends YamlConfiguration {
 		}
 	}
 
-	@Override
 	public void save(String file) throws IOException {
 		Validate.notNull(file, "File cannot be null");
 		save(new File(file));
 	}
 
-	@Override
 	public void load(File file) throws FileNotFoundException, IOException, InvalidConfigurationException {
 		Validate.notNull(file, "File cannot be null");
 		load(new BufferedReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8)));
@@ -91,7 +87,6 @@ final class UTF8Config extends YamlConfiguration {
 		load(new BufferedReader(new InputStreamReader(stream, Charsets.UTF_8)));
 	}
 
-	@Override
 	public void load(Reader reader) throws IOException, InvalidConfigurationException {
 		BufferedReader input = null;
 		try {
@@ -117,7 +112,6 @@ final class UTF8Config extends YamlConfiguration {
 		}
 	}
 
-	@Override
 	public void load(String file) throws FileNotFoundException, IOException, InvalidConfigurationException {
 		Validate.notNull(file, "File cannot be null");
 		load(new File(file));

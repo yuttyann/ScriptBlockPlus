@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
+
 public enum EquipmentSlot {
 	HAND, OFF_HAND, FEET, LEGS, CHEST, HEAD, NONE;
 
@@ -9,21 +10,19 @@ public enum EquipmentSlot {
 		Class<?> clazz = null;
 		try {
 			clazz = Class.forName("org.bukkit.inventory.EquipmentSlot");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		} catch (ClassNotFoundException e) {}
 		BUKKIT_E_CLASS = clazz;
 	}
 
 	public boolean equals(Enum<?> bukkitEquipmentSlot) {
-		if (!checkEClass(bukkitEquipmentSlot)) {
+		if (!checkClass(bukkitEquipmentSlot)) {
 			return false;
 		}
 		return name().equals(bukkitEquipmentSlot.name());
 	}
 
 	public static EquipmentSlot fromEnum(Enum<?> bukkitEquipmentSlot) {
-		if (!checkEClass(bukkitEquipmentSlot)) {
+		if (!checkClass(bukkitEquipmentSlot)) {
 			return NONE;
 		}
 		switch (bukkitEquipmentSlot.name()) {
@@ -44,7 +43,7 @@ public enum EquipmentSlot {
 		}
 	}
 
-	private static boolean checkEClass(Enum<?> bukkitEquipmentSlot) {
-		return bukkitEquipmentSlot != null && bukkitEquipmentSlot.getClass() == BUKKIT_E_CLASS;
+	private static boolean checkClass(Enum<?> bukkitEquipmentSlot) {
+		return BUKKIT_E_CLASS != null && bukkitEquipmentSlot != null && bukkitEquipmentSlot.getClass() == BUKKIT_E_CLASS;
 	}
 }
