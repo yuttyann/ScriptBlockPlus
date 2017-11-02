@@ -45,7 +45,7 @@ public abstract class AbstractCommand extends CommandUsage implements TabExecuto
 
 	@Override
 	public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (Utils.isCB18orLater() && ProxiedCommandSender.checkClass(sender)) {
+		if (Utils.isCB18orLater() && ProxiedCommandSender.isPCSClass(sender)) {
 			CommandSender pxSender = new ProxiedCommandSender(sender).getCallee();
 			if (pxSender instanceof Player) {
 				sender = pxSender;
