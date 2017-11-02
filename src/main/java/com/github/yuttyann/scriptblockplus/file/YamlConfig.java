@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.file;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,6 @@ import org.bukkit.util.Vector;
 import com.github.yuttyann.scriptblockplus.file.config.UTF8YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class YamlConfig {
 
@@ -107,7 +107,7 @@ public class YamlConfig {
 			yaml.load(file);
 		} catch (FileNotFoundException e) {
 		} catch (IOException | InvalidConfigurationException e) {
-			FileUtils.fileEncode(file, Utils.isCB19orLater() ? null : "UTF8");
+			FileUtils.fileEncode(file, Charset.defaultCharset());
 			yaml = UTF8YamlConfig.loadConfiguration(file);
 		}
 	}
@@ -124,8 +124,8 @@ public class YamlConfig {
 		yaml.save(file);
 	}
 
-	public void save(String filePath) throws IOException {
-		save(new File(filePath));
+	public void save(String file) throws IOException {
+		yaml.save(file);
 	}
 
 	public void addDefault(String path, Object value) {

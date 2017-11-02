@@ -25,6 +25,8 @@ import java.util.zip.ZipEntry;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.google.common.base.Charsets;
+
 public class FileUtils {
 
 	private static Method methodGetFile;
@@ -43,8 +45,8 @@ public class FileUtils {
 		try {
 			jar = new JarFile(jarFile);
 			ZipEntry zipEntry = jar.getEntry(sourceFilePath);
-			reader = new BufferedReader(new InputStreamReader(jar.getInputStream(zipEntry), "UTF-8"));
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8"));
+			reader = new BufferedReader(new InputStreamReader(jar.getInputStream(zipEntry), Charsets.UTF_8));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), Charsets.UTF_8));
 			boolean isFirst = true;
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -84,22 +86,19 @@ public class FileUtils {
 		}
 	}
 
-	public static void fileEncode(File file, String charsetName) {
+	public static void fileEncode(File file, Charset charset) {
 		if (!isExists(file)) {
 			return;
 		}
 		BufferedReader reader = null;
 		BufferedWriter writer = null;
 		try {
-			if (charsetName == null) {
-				charsetName = Charset.defaultCharset().name();
-			}
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
 			List<String> contents = new LinkedList<String>();
 			while (reader.ready()) {
 				contents.add(reader.readLine());
 			}
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8));
 			boolean isFirst = true;
 			for (String line : contents) {
 				if (isFirst && !(isFirst = false)) {
