@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.file;
+package com.github.yuttyann.scriptblockplus.file.yaml;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,7 +22,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
-import com.github.yuttyann.scriptblockplus.file.config.UTF8YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -31,7 +30,7 @@ public class YamlConfig {
 	private Plugin plugin;
 	private File file;
 	private File jarFile;
-	private UTF8YamlConfig yaml;
+	private UTF8Config yaml;
 	private boolean isCopyFile;
 
 	protected YamlConfig(Plugin plugin, File file, boolean isCopyFile) {
@@ -102,13 +101,13 @@ public class YamlConfig {
 		if (isCopyFile && !file.exists()) {
 			FileUtils.copyFileFromJar(getJarFile(), file, getFolderPath());
 		}
-		yaml = new UTF8YamlConfig();
+		yaml = new UTF8Config();
 		try {
 			yaml.load(file);
 		} catch (FileNotFoundException e) {
 		} catch (IOException | InvalidConfigurationException e) {
 			FileUtils.fileEncode(file, Charset.defaultCharset());
-			yaml = UTF8YamlConfig.loadConfiguration(file);
+			yaml = UTF8Config.loadConfiguration(file);
 		}
 	}
 

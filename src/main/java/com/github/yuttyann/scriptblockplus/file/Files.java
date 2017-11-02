@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 
 public final class Files {
 

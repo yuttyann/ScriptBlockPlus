@@ -8,6 +8,7 @@ import java.util.jar.JarFile;
 
 import org.bukkit.plugin.Plugin;
 
+import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 

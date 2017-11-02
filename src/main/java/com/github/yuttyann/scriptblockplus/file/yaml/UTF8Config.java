@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.file.config;
+package com.github.yuttyann.scriptblockplus.file.yaml;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -28,7 +28,7 @@ import org.yaml.snakeyaml.representer.Representer;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
-public class UTF8YamlConfig extends YamlConfiguration {
+final class UTF8Config extends YamlConfiguration {
 
 	private final DumperOptions yamlOptions = new DumperOptions();
 	private final Representer yamlRepresenter = new YamlRepresenter();
@@ -123,9 +123,9 @@ public class UTF8YamlConfig extends YamlConfiguration {
 		load(new File(file));
 	}
 
-	public static UTF8YamlConfig loadConfiguration(File file) {
+	public static UTF8Config loadConfiguration(File file) {
 		Validate.notNull(file, "File cannot be null");
-		UTF8YamlConfig config = new UTF8YamlConfig();
+		UTF8Config config = new UTF8Config();
 		try {
 			config.load(file);
 		} catch (FileNotFoundException ex) {
@@ -138,9 +138,9 @@ public class UTF8YamlConfig extends YamlConfiguration {
 	}
 
 	@Deprecated
-	public static UTF8YamlConfig loadConfiguration(InputStream stream) {
+	public static UTF8Config loadConfiguration(InputStream stream) {
 		Validate.notNull(stream, "Stream cannot be null");
-		UTF8YamlConfig config = new UTF8YamlConfig();
+		UTF8Config config = new UTF8Config();
 		try {
 			config.load(stream);
 		} catch (IOException ex) {
@@ -151,9 +151,9 @@ public class UTF8YamlConfig extends YamlConfiguration {
 		return config;
 	}
 
-	public static UTF8YamlConfig loadConfiguration(Reader reader) {
+	public static UTF8Config loadConfiguration(Reader reader) {
 		Validate.notNull(reader, "Stream cannot be null");
-		UTF8YamlConfig config = new UTF8YamlConfig();
+		UTF8Config config = new UTF8Config();
 		try {
 			config.load(reader);
 		} catch (IOException ex) {
