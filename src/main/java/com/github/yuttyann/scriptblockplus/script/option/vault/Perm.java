@@ -24,6 +24,7 @@ public class Perm extends BaseOption {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String world = array.length > 1 ? array[0] : null;
 		String permission = array.length > 1 ? array[1] : array[0];
+
 		Player player = getPlayer();
 		if (!has(vaultPermission, world, player, permission)) {
 			Utils.sendMessage(player, SBConfig.getNotPermissionMessage());

@@ -24,6 +24,7 @@ public class Group extends BaseOption {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String world = array.length > 1 ? array[0] : null;
 		String group = array.length > 1 ? array[1] : array[0];
+
 		Player player = getPlayer();
 		if (!vaultPermission.playerInGroup(world, player, group)) {
 			Utils.sendMessage(player, SBConfig.getErrorGroupMessage(getOptionValue()));

@@ -18,6 +18,7 @@ public final class Files {
 	public static void reload() {
 		files.put("config", loadFile("config.yml", true));
 		SBConfig.reloadConfig();
+
 		files.put("lang", loadLang("lang_{lang}.yml", "lang"));
 		SBConfig.reloadLang();
 

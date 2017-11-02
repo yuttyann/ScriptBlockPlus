@@ -22,6 +22,7 @@ public class PermAdd extends BaseOption {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String world = array.length > 1 ? array[0] : null;
 		String permission = array.length > 1 ? array[1] : array[0];
+
 		Player player = getPlayer();
 		if (!has(vaultPermission, world, player, permission)) {
 			vaultPermission.playerAdd(world, player, permission);

@@ -34,8 +34,6 @@ public class FileUtils {
 			return;
 		}
 		JarFile jar = null;
-		InputStream is = null;
-		FileOutputStream fos = null;
 		BufferedReader reader = null;
 		BufferedWriter writer = null;
 		File parent = targetFile.getParentFile();
@@ -45,10 +43,8 @@ public class FileUtils {
 		try {
 			jar = new JarFile(jarFile);
 			ZipEntry zipEntry = jar.getEntry(sourceFilePath);
-			is = jar.getInputStream(zipEntry);
-			fos = new FileOutputStream(targetFile);
-			reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-			writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8"));
+			reader = new BufferedReader(new InputStreamReader(jar.getInputStream(zipEntry), "UTF-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8"));
 			boolean isFirst = true;
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -74,21 +70,6 @@ public class FileUtils {
 			if (reader != null) {
 				try {
 					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (fos != null) {
-				try {
-					fos.flush();
-					fos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (is != null) {
-				try {
-					is.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

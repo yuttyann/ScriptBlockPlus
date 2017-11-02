@@ -119,10 +119,10 @@ public class PlayerSelector {
 			list = a(loc, i, j, 0, mode, k, l, map1, s2, s3, world);
 			Collections.shuffle(list);
 			list = list.subList(0, Math.min(i1, list.size()));
-			return list != null && !list.isEmpty() ? (Player[]) list.toArray(new Player[list.size()]) : new Player[0];
+			return list != null && !list.isEmpty() ? list.toArray(new Player[list.size()]) : new Player[0];
 		} else {
 			list = a(loc, i, j, i1, mode, k, l, map1, s2, s3, world);
-			return list != null && !list.isEmpty() ? (Player[]) list.toArray(new Player[list.size()]) : new Player[0];
+			return list != null && !list.isEmpty() ? list.toArray(new Player[list.size()]) : new Player[0];
 		}
 	}
 
