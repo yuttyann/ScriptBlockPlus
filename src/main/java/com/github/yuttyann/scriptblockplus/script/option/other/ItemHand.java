@@ -28,7 +28,8 @@ public class ItemHand extends BaseOption {
 		String itemName = StringUtils.replace(array.length > 2 ? StringUtils.createString(array, 2) : null, "&", "§");
 
 		Player player = getPlayer();
-		if (!StreamUtils.anyMatch(Utils.getHandItems(player), i -> checkItem(i, itemName, id, amount, damage))) {
+		ItemStack[] items = Utils.getHandItems(player);
+		if (!StreamUtils.anyMatch(items, i -> checkItem(i, itemName, id, amount, damage))) {
 			Utils.sendMessage(player, SBConfig.getErrorHandMessage(getMaterial(id), id, amount, damage, itemName));
 			return false;
 		}

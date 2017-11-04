@@ -28,7 +28,6 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -72,11 +71,11 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 	}
 
 	private boolean action(Player player, Action action, ItemStack item, Location location) {
-		SBPlayer sbPlayer = SBPlayer.get(player);
-		if (isWorldEditWand(player)) {
+		if (isWorldEditWand(player, item)) {
 			return true;
 		}
-		if (isScriptEditor(player) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
+		SBPlayer sbPlayer = SBPlayer.get(player);
+		if (isScriptEditor(player, item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			switch (action) {
 			case LEFT_CLICK_BLOCK:
 				ScriptType scriptType;
@@ -102,44 +101,36 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 				return false;
 			}
 		}
-		if (sbPlayer.hasClickAction() && clickAction(sbPlayer, location)) {
-			return true;
+		if (sbPlayer.hasClickAction()) {
+			String[] array = StringUtils.split(sbPlayer.getClickAction(), "_");
+			ScriptEdit scriptEdit = new ScriptEdit(location, ScriptType.valueOf(array[0]));
+			switch (array[1]) {
+			case "CREATE":
+				scriptEdit.create(sbPlayer, sbPlayer.getScriptLine());
+				return true;
+			case "ADD":
+				scriptEdit.add(sbPlayer, sbPlayer.getScriptLine());
+				return true;
+			case "REMOVE":
+				scriptEdit.remove(sbPlayer);
+				return true;
+			case "VIEW":
+				scriptEdit.view(sbPlayer);
+				return true;
+			}
 		}
 		return false;
 	}
 
-	private boolean clickAction(SBPlayer sbPlayer, Location location) {
-		String[] array = StringUtils.split(sbPlayer.getClickAction(), "_");
-		ScriptEdit scriptEdit = new ScriptEdit(location, ScriptType.valueOf(array[0]));
-		switch (array[1]) {
-		case "CREATE":
-			scriptEdit.create(sbPlayer, sbPlayer.getScriptLine());
-			return true;
-		case "ADD":
-			scriptEdit.add(sbPlayer, sbPlayer.getScriptLine());
-			return true;
-		case "REMOVE":
-			scriptEdit.remove(sbPlayer);
-			return true;
-		case "VIEW":
-			scriptEdit.view(sbPlayer);
-			return true;
-		default:
-			return false;
-		}
-	}
-
-	private boolean isWorldEditWand(Player player) {
+	private boolean isWorldEditWand(Player player, ItemStack item) {
 		if (!HookPlugins.hasWorldEdit() || !Permission.has(player, "worldedit.selection.pos")) {
 			return false;
 		}
-		ItemStack item = Utils.getItemInMainHand(player);
 		return item != null && item.getType() == HookPlugins.getWorldEditSelection().getWandType();
 	}
 
-	private boolean isScriptEditor(Player player) {
-		ItemStack[] items = Utils.getHandItems(player);
-		return StreamUtils.anyMatch(items, i -> Utils.checkItem(i, Material.BLAZE_ROD, "§dScript Editor"));
+	private boolean isScriptEditor(Player player, ItemStack item) {
+		return Utils.checkItem(item, Material.BLAZE_ROD, "§dScript Editor");
 	}
 
 	private boolean isPowered(MaterialData data) {

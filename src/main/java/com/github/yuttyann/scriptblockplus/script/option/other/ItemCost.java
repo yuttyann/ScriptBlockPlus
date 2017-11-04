@@ -31,24 +31,25 @@ public class ItemCost extends BaseOption {
 		Player player = getPlayer();
 		PlayerInventory inventory = player.getInventory();
 		ItemStack[] items = copyItems(inventory.getContents());
-		for (int i = 0, j = 0; i < items.length; i++) {
+		int allAmount = 0;
+		for (int i = 0; i < items.length; i++) {
 			ItemStack item = items[i];
 			if (checkItem(item, itemName, id, damage)) {
-				j += item.getAmount();
+				allAmount += item.getAmount();
 				int result = item.getAmount() - amount;
-				if (j > amount) {
-					result = j - amount;
+				if (allAmount > amount) {
+					result = allAmount - amount;
 				}
 				items[i] = consume(item, result);
 			}
-			if (j >= amount) {
+			if (allAmount >= amount) {
 				SBPlayer.get(player).setData("ItemCost", copyItems(inventory.getContents()));
 				break;
 			}
-			if (i == (items.length - 1) && j < amount) {
-				Utils.sendMessage(player, SBConfig.getErrorItemMessage(getMaterial(id), id, amount, damage, itemName));
-				return false;
-			}
+		}
+		if (allAmount < amount) {
+			Utils.sendMessage(player, SBConfig.getErrorItemMessage(getMaterial(id), id, amount, damage, itemName));
+			return false;
 		}
 		inventory.setContents(items);
 		Utils.updateInventory(player);

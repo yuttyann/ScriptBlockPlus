@@ -18,7 +18,6 @@ import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptBreakListener extends ScriptManager implements Listener {
@@ -30,7 +29,7 @@ public class ScriptBreakListener extends ScriptManager implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
-		if (checkItem(player) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
+		if (isScriptEditor(player) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			event.setCancelled(true);
 			return;
 		}
@@ -50,8 +49,8 @@ public class ScriptBreakListener extends ScriptManager implements Listener {
 		}
 	}
 
-	private boolean checkItem(Player player) {
-		ItemStack[] items = Utils.getHandItems(player);
-		return StreamUtils.anyMatch(items, i -> Utils.checkItem(i, Material.BLAZE_ROD, "§dScript Editor"));
+	private boolean isScriptEditor(Player player) {
+		ItemStack item = Utils.getItemInMainHand(player);
+		return Utils.checkItem(item, Material.BLAZE_ROD, "§dScript Editor");
 	}
 }
