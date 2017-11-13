@@ -44,7 +44,7 @@ public class Sound extends BaseOption {
 	public boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String[] sound = StringUtils.split(array[0], "-");
-		org.bukkit.Sound type = org.bukkit.Sound.valueOf(sound[0]);
+		org.bukkit.Sound type = org.bukkit.Sound.valueOf(sound[0].toUpperCase());
 		int volume = Integer.valueOf(sound[1]);
 		int pitch = Integer.valueOf(sound[2]);
 		long delay = sound.length > 3 ? Long.parseLong(sound[3]) : 0;
