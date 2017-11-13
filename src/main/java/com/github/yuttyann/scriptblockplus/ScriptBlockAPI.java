@@ -143,14 +143,14 @@ public interface ScriptBlockAPI {
 	 * @param varName 変数名
 	 * @param calculationValue 変数値取得クラス
 	 */
-	public void addCalculationValue(String varName, CalculationValue calculationValue);
+	public void addCalcVariable(String varName, CalculationValue calculationValue);
 
 	/**
 	 * オプション"@calc"の変数を削除する<br />
 	 * ただし、デフォルトの変数は削除できない
 	 * @param varName 変数名
 	 */
-	public void removeCalculationValue(String varName);
+	public void removeCalcVariable(String varName);
 
 	/**
 	 * スクリプトの作者を取得する
