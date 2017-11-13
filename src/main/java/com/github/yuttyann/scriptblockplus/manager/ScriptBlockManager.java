@@ -156,18 +156,18 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 	}
 
 	@Override
-	public void addCalcVariable(String varName, CalculationValue calculationValue) {
+	public void addCalcVariable(String variableName, CalculationValue calculationValue) {
 		try {
-			getValues().put(varName, calculationValue);
+			getValues().put(variableName, calculationValue);
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void removeCalcVariable(String varName) {
+	public void removeCalcVariable(String variableName) {
 		try {
-			getValues().remove(varName);
+			getValues().remove(variableName);
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
