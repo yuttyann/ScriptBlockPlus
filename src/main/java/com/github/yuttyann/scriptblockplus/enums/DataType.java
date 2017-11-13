@@ -14,6 +14,7 @@ public enum DataType {
 	BOOLEAN(boolean.class, Boolean.class);
 
 	private static final Map<Class<?>, DataType> CLASS_MAP = new HashMap<Class<?>, DataType>();
+
 	private final Class<?> primitive;
 	private final Class<?> reference;
 
