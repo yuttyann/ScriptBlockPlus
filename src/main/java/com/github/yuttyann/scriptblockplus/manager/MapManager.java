@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +21,6 @@ import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
 import com.github.yuttyann.scriptblockplus.script.option.time.OldCooldown;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public final class MapManager {
 
@@ -72,10 +71,10 @@ public final class MapManager {
 	public void saveCooldown() {
 		if (cooldownMap.size() > 0) {
 			File cooldownFile = new File(plugin.getDataFolder(), "scripts/cooldown.dat");
-			SBMap<Map<UUID, Map<String, Object>>> map = SBMap.newSBMap();
+			SBMap<Map<UUID, Map<String, Object>>> map = new SBMap<Map<UUID, Map<String, Object>>>();
 			try {
 				cooldownMap.forEach((s, m) -> {
-					Map<UUID, Map<String, Object>> value = Maps.newHashMap();
+					Map<UUID, Map<String, Object>> value = new HashMap<UUID, Map<String, Object>>();
 					m.forEach((u, c) -> {
 						value.put(u, c.serialize());
 					});
@@ -96,7 +95,7 @@ public final class MapManager {
 	public void saveOldCooldown() {
 		if (oldCooldownMap.size() > 0) {
 			File oldCooldownFile = new File(plugin.getDataFolder(), "scripts/oldcooldown.dat");
-			Map<String, Map<String, Object>> map = Maps.newHashMap();
+			Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
 			try {
 				oldCooldownMap.forEach((s, m) -> map.put(s, m.serialize()));
 			} catch (Exception e) {
@@ -140,7 +139,7 @@ public final class MapManager {
 	public void putDelay(ScriptType scriptType, String fullCoords, UUID uuid) {
 		List<UUID> uuids = delayMap.get(scriptType, fullCoords);
 		if (uuids == null) {
-			uuids = Lists.newArrayList();
+			uuids = new ArrayList<UUID>();
 		}
 		uuids.add(uuid);
 		delayMap.put(scriptType, fullCoords, uuids);
@@ -162,7 +161,7 @@ public final class MapManager {
 	public void putCooldown(ScriptType scriptType, String fullCoords, UUID uuid, Cooldown cooldown) {
 		Map<UUID, Cooldown> cooldowns = cooldownMap.get(scriptType, fullCoords);
 		if (cooldowns == null) {
-			cooldowns = Maps.newHashMap();
+			cooldowns = new HashMap<UUID, Cooldown>();
 		}
 		cooldowns.put(uuid, cooldown);
 		cooldownMap.put(scriptType, fullCoords, cooldowns);
