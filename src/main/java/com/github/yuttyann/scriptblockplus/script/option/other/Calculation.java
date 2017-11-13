@@ -34,6 +34,7 @@ public class Calculation extends BaseOption {
 		double value1 = parse(array[0]);
 		double value2 = parse(array[2]);
 		String operator = array[1];
+
 		if (result(value1, value2, operator)) {
 			return true;
 		}
@@ -49,7 +50,6 @@ public class Calculation extends BaseOption {
 	@SuppressWarnings("deprecation")
 	private double parse(String source) {
 		Player player = getPlayer();
-		source = StringUtils.replace(source, "%player_exp%", String.valueOf(player.getExp()));
 		source = StringUtils.replace(source, "%player_level%", String.valueOf(player.getLevel()));
 		source = StringUtils.replace(source, "%player_health%", String.valueOf(player.getHealth()));
 		source = StringUtils.replace(source, "%player_maxhealth%", String.valueOf(player.getMaxHealth()));
@@ -60,13 +60,11 @@ public class Calculation extends BaseOption {
 		source = StringUtils.replace(source, "%player_x%", String.valueOf(player.getLocation().getX()));
 		source = StringUtils.replace(source, "%player_y%", String.valueOf(player.getLocation().getY()));
 		source = StringUtils.replace(source, "%player_z%", String.valueOf(player.getLocation().getZ()));
-
 		for (Entry<String, CalculationValue> entry : VALUES.entrySet()) {
 			String key = entry.getKey();
 			CalculationValue value = entry.getValue();
 			source = StringUtils.replace(source, key, String.valueOf(value.getValue(this)));
 		}
-
 		return Double.parseDouble(source);
 	}
 

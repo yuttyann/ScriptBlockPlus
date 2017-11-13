@@ -16,12 +16,18 @@ public class ActionBar extends BaseOption {
 
 	static {
 		Class<?> iChatBaseComponentClass = null;
+		Class<?> byteOrChatMessageTypeClass = null;
 		try {
 			iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
+			if (Utils.isCB112orLater()) {
+				byteOrChatMessageTypeClass = PackageType.NMS.getClass("ChatMessageType");
+			} else {
+				byteOrChatMessageTypeClass = byte.class;
+			}
 		} catch (IllegalArgumentException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		PACKET_PARAMS = new Class<?>[]{iChatBaseComponentClass, byte.class};
+		PACKET_PARAMS = new Class<?>[]{iChatBaseComponentClass, byteOrChatMessageTypeClass};
 	}
 
 	public ActionBar() {

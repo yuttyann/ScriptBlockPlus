@@ -226,11 +226,11 @@ public class Utils {
 			if (isCB175orLater()) {
 				OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 				if (player == null || !player.hasPlayedBefore()) {
-					return NameFetcher.getName(uuid);
+					return ProfileFetcher.getName(uuid);
 				}
 				return player.getName();
 			}
-			return NameFetcher.getName(uuid);
+			return ProfileFetcher.getName(uuid);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -245,12 +245,8 @@ public class Utils {
 			return player.getUniqueId();
 		}
 		try {
-			Object[] emptyObject = ArrayUtils.EMPTY_OBJECT_ARRAY;
-			Class<?>[] emptyClass = ArrayUtils.EMPTY_CLASS_ARRAY;
-			Object nbt = player.getClass().getMethod("getData", emptyClass).invoke(player, emptyObject);
-			Method getLong = nbt.getClass().getMethod("getLong", String.class);
-			return new UUID((long) getLong.invoke(nbt, "UUIDMost"), (long) getLong.invoke(nbt, "UUIDLast"));
-		} catch (ReflectiveOperationException e) {
+			return ProfileFetcher.getUniqueId(player.getName());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
