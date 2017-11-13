@@ -43,14 +43,6 @@ public final class SBMap<T> implements Serializable {
 		}
 	}
 
-	public static <T> SBMap<T> newSBMap() {
-		return new SBMap<T>();
-	}
-
-	public static <T> SBMap<T> newSBMap(int initialCapacity) {
-		return new SBMap<T>(initialCapacity);
-	}
-
 	public int size() {
 		return storageMap.size();
 	}

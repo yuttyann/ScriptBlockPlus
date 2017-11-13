@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -18,7 +19,6 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.enums.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import com.google.common.collect.Maps;
 
 public final class PlayerSelector {
 
@@ -62,7 +62,7 @@ public final class PlayerSelector {
 	}
 
 	protected static void load() throws ReflectiveOperationException {
-		Map<String, Object> map = Maps.newHashMap();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Pattern", Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$"));
 
 		Class<?> nmsEntityClass = PackageType.NMS.getClass("Entity");
