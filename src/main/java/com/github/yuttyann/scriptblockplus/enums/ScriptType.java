@@ -5,13 +5,18 @@ public enum ScriptType {
 	BREAK("break"),
 	WALK("walk");
 
-	private String type;
+	private final String type;
 
 	private ScriptType(String type) {
 		this.type = type;
 	}
 
 	public String getType() {
+		return type;
+	}
+
+	@Override
+	public String toString() {
 		return type;
 	}
 }

@@ -10,11 +10,11 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 public class GroupRemove extends BaseOption {
 
 	public GroupRemove() {
-		super("group_remove", "@groupREMOVE:", 16);
+		super("group_remove", "@groupREMOVE:");
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean isValid() throws Exception {
 		VaultPermission vaultPermission = HookPlugins.getVaultPermission();
 		if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
 			throw new UnsupportedOperationException();

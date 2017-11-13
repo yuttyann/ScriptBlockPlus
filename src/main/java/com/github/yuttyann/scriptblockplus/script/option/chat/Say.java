@@ -5,11 +5,11 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 public class Say extends BaseOption {
 
 	public Say() {
-		super("say", "@say ", 5);
+		super("say", "@say ");
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean isValid() throws Exception {
 		commandExecute(getPlayer(), "say " + getOptionValue(), true);
 		return true;
 	}

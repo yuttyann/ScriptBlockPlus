@@ -8,14 +8,12 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 public class Server extends BaseOption {
 
 	private Server() {
-		super("server", "@server ", 4);
+		super("server", "@server ");
 	}
 
 	@Override
-	public boolean isValid() {
-		String message = getOptionValue();
-		message = StringUtils.replaceRandomColor(message, "&rc");
-		message = StringUtils.replace(message, "&", "§");
+	public boolean isValid() throws Exception {
+		String message = StringUtils.replaceColorCode(getOptionValue(), true);
 		Bukkit.broadcastMessage(message);
 		return true;
 	}

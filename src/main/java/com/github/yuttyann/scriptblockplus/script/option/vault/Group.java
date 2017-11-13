@@ -12,11 +12,11 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class Group extends BaseOption {
 
 	public Group() {
-		super("group", "@group:", 14);
+		super("group", "@group:");
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean isValid() throws Exception {
 		VaultPermission vaultPermission = HookPlugins.getVaultPermission();
 		if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
 			throw new UnsupportedOperationException();

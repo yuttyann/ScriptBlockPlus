@@ -6,14 +6,12 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 public class Bypass extends BaseOption {
 
 	public Bypass() {
-		super("bypass", "@bypass ", 1);
+		super("bypass", "@bypass ");
 	}
 
 	@Override
-	public boolean isValid() {
-		String command = getOptionValue();
-		command = StringUtils.replaceRandomColor(command, "&rc");
-		command = StringUtils.replace(command, "&", "§");
+	public boolean isValid() throws Exception {
+		String command = StringUtils.replaceColorCode(getOptionValue(), true);
 		commandExecute(getPlayer(), command, true);
 		return true;
 	}

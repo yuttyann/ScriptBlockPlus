@@ -18,13 +18,18 @@ public enum Permission {
 	WALK_USE("scriptblockplus.walk.use"),
 	TOOL_SCRIPTEDITOR("scriptblockplus.tool.scripteditor");
 
-	private String node;
+	private final String node;
 
 	private Permission(String node) {
 		this.node = node;
 	}
 
 	public String getNode() {
+		return node;
+	}
+
+	@Override
+	public String toString() {
 		return node;
 	}
 

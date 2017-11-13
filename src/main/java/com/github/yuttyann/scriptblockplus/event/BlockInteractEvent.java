@@ -17,7 +17,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable {
 
-	private static Method methodGetHand;
+	private static Method method_Hand;
 
 	private ItemStack item;
 	private Action action;
@@ -30,8 +30,7 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 		this(event, event.getPlayer(), event.getClickedBlock(), item, event.getAction(), event.getBlockFace(), hand, isAnimation);
 	}
 
-	public BlockInteractEvent(PlayerInteractEvent event, Player player, Block block,
-			ItemStack item, Action action, BlockFace blockFace, EquipmentSlot hand, boolean isAnimation) {
+	public BlockInteractEvent(PlayerInteractEvent event, Player player, Block block, ItemStack item, Action action, BlockFace blockFace, EquipmentSlot hand, boolean isAnimation) {
 		super(player, block);
 		this.item = item;
 		this.action = action;
@@ -93,11 +92,11 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 			return EquipmentSlot.HAND;
 		}
 		try {
-			if (methodGetHand == null) {
-				methodGetHand = PlayerInteractEvent.class.getDeclaredMethod("getHand");
-				methodGetHand.setAccessible(true);
+			if (method_Hand == null) {
+				method_Hand = PlayerInteractEvent.class.getDeclaredMethod("getHand");
+				method_Hand.setAccessible(true);
 			}
-			return EquipmentSlot.fromEnum((Enum<?>) methodGetHand.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY));
+			return EquipmentSlot.fromEnum((Enum<?>) method_Hand.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY));
 		} catch (ReflectiveOperationException e) {
 			return EquipmentSlot.NONE;
 		}

@@ -42,7 +42,7 @@ public final class Files {
 	}
 
 	public static YamlConfig getScriptFile(ScriptType scriptType) {
-		return files.get(scriptType.getType());
+		return scriptType == null ? null : files.get(scriptType.getType());
 	}
 
 	private static YamlConfig loadFile(String filePath, boolean isCopyFile) {

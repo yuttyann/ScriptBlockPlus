@@ -14,14 +14,14 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public abstract class AbstractCommand extends CommandUsage implements TabExecutor {
+public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 
 	private Plugin plugin;
 	private String commandName;
 	private boolean isAliases;
 	private boolean isIgnoreUsage;
 
-	public AbstractCommand(Plugin plugin, String commandName, boolean isAliases) {
+	public BaseCommand(Plugin plugin, String commandName, boolean isAliases) {
 		this.plugin = plugin;
 		this.commandName = commandName;
 		this.isAliases = isAliases;

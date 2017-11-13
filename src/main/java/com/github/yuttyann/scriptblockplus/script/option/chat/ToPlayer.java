@@ -7,14 +7,12 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class ToPlayer extends BaseOption {
 
 	public ToPlayer() {
-		super("toplayer", "@player ", 3);
+		super("toplayer", "@player ");
 	}
 
 	@Override
-	public boolean isValid() {
-		String message = getOptionValue();
-		message = StringUtils.replaceRandomColor(message, "&rc");
-		message = StringUtils.replace(message, "&", "§");
+	public boolean isValid() throws Exception {
+		String message = StringUtils.replaceColorCode(getOptionValue(), true);
 		Utils.sendMessage(getPlayer(), message);
 		return true;
 	}

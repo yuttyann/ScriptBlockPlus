@@ -10,11 +10,11 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 public class PermRemove extends BaseOption {
 
 	public PermRemove() {
-		super("perm_remove", "@permREMOVE:", 13);
+		super("perm_remove", "@permREMOVE:");
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean isValid() throws Exception {
 		VaultPermission vaultPermission = HookPlugins.getVaultPermission();
 		if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
 			throw new UnsupportedOperationException();

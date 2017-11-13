@@ -103,16 +103,14 @@ public class BlockCoords extends Location implements Cloneable {
 	}
 
 	public String getCoords() {
-		if (coords == null || isModified) {
-			isModified = false;
+		if (coords == null || (isModified && !(isModified = false))) {
 			coords = getCoords(this);
 		}
 		return coords;
 	}
 
 	public String getFullCoords() {
-		if (fullCoords == null || isModified) {
-			isModified = false;
+		if (fullCoords == null || (isModified && !(isModified = false))) {
 			fullCoords = getFullCoords(this);
 		}
 		return fullCoords;

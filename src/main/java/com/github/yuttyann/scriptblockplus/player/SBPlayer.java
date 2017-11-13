@@ -19,10 +19,10 @@ public interface SBPlayer extends ObjectData, CommandSender {
 		if (uuid == null) {
 			return null;
 		}
-		BasePlayer player = BasePlayer.players.get(uuid);
+		BaseSBPlayer player = BaseSBPlayer.players.get(uuid);
 		if (player == null) {
-			player = new BasePlayer(uuid);
-			BasePlayer.players.put(uuid, player);
+			player = new BaseSBPlayer(uuid);
+			BaseSBPlayer.players.put(uuid, player);
 		}
 		return player;
 	}

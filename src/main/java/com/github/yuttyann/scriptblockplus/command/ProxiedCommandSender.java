@@ -18,8 +18,8 @@ final class ProxiedCommandSender {
 		BUKKIT_PCS_CLASS = clazz;
 	}
 
-	private static Method methodGetCaller;
-	private static Method methodGetCallee;
+	private static Method method_Caller;
+	private static Method method_Callee;
 
 	private CommandSender sender;
 
@@ -30,10 +30,10 @@ final class ProxiedCommandSender {
 	public CommandSender getCaller() {
 		if (BUKKIT_PCS_CLASS != null) {
 			try {
-				if (methodGetCaller == null) {
-					methodGetCaller = BUKKIT_PCS_CLASS.getMethod("getCaller");
+				if (method_Caller == null) {
+					method_Caller = BUKKIT_PCS_CLASS.getMethod("getCaller");
 				}
-				return (CommandSender) methodGetCaller.invoke(sender, ArrayUtils.EMPTY_OBJECT_ARRAY);
+				return (CommandSender) method_Caller.invoke(sender, ArrayUtils.EMPTY_OBJECT_ARRAY);
 			} catch (ReflectiveOperationException e) {}
 		}
 		return null;
@@ -42,10 +42,10 @@ final class ProxiedCommandSender {
 	public CommandSender getCallee() {
 		if (BUKKIT_PCS_CLASS != null) {
 			try {
-				if (methodGetCallee == null) {
-					methodGetCallee = BUKKIT_PCS_CLASS.getMethod("getCallee");
+				if (method_Callee == null) {
+					method_Callee = BUKKIT_PCS_CLASS.getMethod("getCallee");
 				}
-				return (CommandSender) methodGetCallee.invoke(sender, ArrayUtils.EMPTY_OBJECT_ARRAY);
+				return (CommandSender) method_Callee.invoke(sender, ArrayUtils.EMPTY_OBJECT_ARRAY);
 			} catch (ReflectiveOperationException e) {}
 		}
 		return null;

@@ -15,7 +15,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class ItemHand extends BaseOption {
 
 	public ItemHand() {
-		super("itemhand", "@hand:", 6);
+		super("itemhand", "@hand:");
 	}
 
 	@Override
@@ -25,7 +25,8 @@ public class ItemHand extends BaseOption {
 		short damage = itemData.length > 1 ? Short.parseShort(itemData[1]) : 0;
 		int id = Integer.parseInt(getId(itemData[0]));
 		int amount = Integer.parseInt(array[1]);
-		String itemName = StringUtils.replace(array.length > 2 ? StringUtils.createString(array, 2) : null, "&", "§");
+		String create = array.length > 2 ? StringUtils.createString(array, 2) : null;
+		String itemName = StringUtils.replaceColorCode(create, false);
 
 		Player player = getPlayer();
 		ItemStack[] items = Utils.getHandItems(player);

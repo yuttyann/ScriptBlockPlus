@@ -12,12 +12,17 @@ import com.github.yuttyann.scriptblockplus.script.option.chat.Console;
 import com.github.yuttyann.scriptblockplus.script.option.chat.Say;
 import com.github.yuttyann.scriptblockplus.script.option.chat.Server;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ToPlayer;
+import com.github.yuttyann.scriptblockplus.script.option.nms.ActionBar;
+import com.github.yuttyann.scriptblockplus.script.option.nms.Title;
 import com.github.yuttyann.scriptblockplus.script.option.other.Amount;
+import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
+import com.github.yuttyann.scriptblockplus.script.option.other.Execute;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemHand;
-import com.github.yuttyann.scriptblockplus.script.option.other.Level;
+import com.github.yuttyann.scriptblockplus.script.option.other.Sound;
 import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
 import com.github.yuttyann.scriptblockplus.script.option.time.Delay;
+import com.github.yuttyann.scriptblockplus.script.option.time.OldCooldown;
 import com.github.yuttyann.scriptblockplus.script.option.vault.Group;
 import com.github.yuttyann.scriptblockplus.script.option.vault.GroupAdd;
 import com.github.yuttyann.scriptblockplus.script.option.vault.GroupRemove;
@@ -25,37 +30,108 @@ import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
 import com.github.yuttyann.scriptblockplus.script.option.vault.Perm;
 import com.github.yuttyann.scriptblockplus.script.option.vault.PermAdd;
 import com.github.yuttyann.scriptblockplus.script.option.vault.PermRemove;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public final class OptionManager extends AbstractConstructor<Option> {
 
+	private final static List<Link> OPTIONS;
 	private final static List<Constructor<? extends Option>> CONSTRUCTORS;
 
 	static {
+		OPTIONS = new ArrayList<Link>();
 		CONSTRUCTORS = new ArrayList<Constructor<? extends Option>>();
+	}
+
+	private static boolean isModified;
+
+	static class Link {
+
+		private Integer sort;
+		private Class<? extends Option> option;
+
+		public Link(int sort, Class<? extends Option> option) {
+			this.sort = sort;
+			this.option = option;
+		}
 	}
 
 	@Override
 	public void registerDefaults() {
 		getConstructors().clear();
-		add(Cooldown.class);
-		add(Delay.class);
-		add(ItemCost.class);
-		add(ItemHand.class);
-		add(MoneyCost.class);
-		add(Level.class);
-		add(Group.class);
-		add(Perm.class);
-		add(Amount.class);
-		add(Bypass.class);
-		add(Command.class);
-		add(Console.class);
-		add(Say.class);
-		add(Server.class);
-		add(ToPlayer.class);
-		add(GroupAdd.class);
-		add(GroupRemove.class);
-		add(PermAdd.class);
-		add(PermRemove.class);
+		add(new Link(9, OldCooldown.class));
+		add(new Link(8, Cooldown.class));
+		add(new Link(7, Delay.class));
+		add(new Link(22, ItemCost.class));
+		add(new Link(6, ItemHand.class));
+		add(new Link(23, MoneyCost.class));
+		add(new Link(10, Calculation.class));
+		add(new Link(16, Group.class));
+		add(new Link(19, Perm.class));
+		add(new Link(15, Amount.class));
+		add(new Link(1, Bypass.class));
+		add(new Link(0, Command.class));
+		add(new Link(2, Console.class));
+		add(new Link(3, Say.class));
+		add(new Link(4, Server.class));
+		add(new Link(5, ToPlayer.class));
+		add(new Link(14, Sound.class));
+		add(new Link(12, Title.class));
+		add(new Link(13, ActionBar.class));
+		add(new Link(11, Execute.class));
+		add(new Link(17, GroupAdd.class));
+		add(new Link(18, GroupRemove.class));
+		add(new Link(20, PermAdd.class));
+		add(new Link(21, PermRemove.class));
+	}
+
+	@Deprecated
+	public boolean add(Class<? extends Option> option) {
+		return super.add(option);
+	}
+
+	@Deprecated
+	public boolean add(int index, Class<? extends Option> option) {
+		return super.add(option);
+	}
+
+	public boolean add(Link optionData) {
+		return add(-1, optionData);
+	}
+
+	public boolean add(int index, Link optionData) {
+		Class<? extends Option> option = optionData.option;
+		boolean add = index >= 0 ? add(index, option) : add(option);
+		if (add && (isModified = true)) {
+			if (optionData.sort == -1) {
+				optionData.sort = OPTIONS.size() - 1;
+				optionData.sort = optionData.sort < 0 ? 0 : optionData.sort;
+			}
+			OPTIONS.add(optionData);
+		}
+		return add;
+	}
+
+	@Override
+	public boolean remove(Class<? extends Option> option) {
+		boolean remove = super.remove(option);
+		if (remove && (isModified = true)) {
+			for (int i = 0; i < OPTIONS.size(); i++) {
+				if (option == OPTIONS.get(i).option) {
+					OPTIONS.remove(i);
+					break;
+				}
+			}
+		}
+		return remove;
+	}
+
+	@Override
+	public boolean remove(int index) {
+		if (index > getConstructors().size()) {
+			return false;
+		}
+		Constructor<? extends Option> constructor = getConstructors().get(index);
+		return constructor != null && remove(constructor.getDeclaringClass());
 	}
 
 	@Override
@@ -66,5 +142,15 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	@Override
 	public Option[] newInstances() {
 		return newInstances(new Option[getConstructors().size()]);
+	}
+
+	public Option[] newSortOptions() {
+		if (isModified && !(isModified = false)) {
+			OPTIONS.sort((o1, o2) -> o1.sort.compareTo(o2.sort));
+		}
+		Option[] options = newInstances();
+		List<Option> result = new ArrayList<Option>(options.length);
+		OPTIONS.forEach(l -> StreamUtils.filterForEach(options, o -> l.option == o.getClass(), result::add));
+		return result.size() > 0 ? result.toArray(new Option[result.size()]) : new Option[0];
 	}
 }

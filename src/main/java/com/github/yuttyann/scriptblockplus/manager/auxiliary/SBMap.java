@@ -32,7 +32,23 @@ public final class SBMap<T> implements Serializable {
 	private Map<ScriptType, Map<String, T>> storageMap;
 
 	public SBMap() {
-		this.storageMap = new HashMap<ScriptType, Map<String, T>>();
+		this(0);
+	}
+
+	public SBMap(int initialCapacity) {
+		if (initialCapacity > 0) {
+			this.storageMap = new HashMap<ScriptType, Map<String, T>>(initialCapacity);
+		} else {
+			this.storageMap = new HashMap<ScriptType, Map<String, T>>();
+		}
+	}
+
+	public static <T> SBMap<T> newSBMap() {
+		return new SBMap<T>();
+	}
+
+	public static <T> SBMap<T> newSBMap(int initialCapacity) {
+		return new SBMap<T>(initialCapacity);
 	}
 
 	public int size() {

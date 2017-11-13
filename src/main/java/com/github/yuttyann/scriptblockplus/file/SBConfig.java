@@ -38,7 +38,8 @@ public final class SBConfig {
 		datas.put("autoDownload", yaml.getBoolean("autoDownload", true));
 		datas.put("openChangeLog", yaml.getBoolean("openChangeLog", true));
 		datas.put("language", yaml.getString("language", "en"));
-		datas.put("consoleLog", yaml.getBoolean("consoleLog", true));
+		datas.put("consoleLog", yaml.getBoolean("consoleLog", false));
+		datas.put("sortScripts", yaml.getBoolean("sortScripts", true));
 		datas.put("leftClick", yaml.getBoolean("leftClick", true));
 		datas.put("leftArmLength", yaml.getDouble("leftArmLength", 5.22D));
 	}
@@ -130,6 +131,10 @@ public final class SBConfig {
 
 	public static boolean isConsoleLog() {
 		return getBoolean("consoleLog");
+	}
+
+	public static boolean isSortScripts() {
+		return getBoolean("sortScripts");
 	}
 
 	public static boolean isLeftClick() {
@@ -336,30 +341,6 @@ public final class SBConfig {
 
 	public static String getErrorGroupMessage(String group) {
 		return replaceColorCode(replace(getString("errorGroupMessage"), "%group%", group));
-	}
-
-	public static String getErrorUPLevelMessage(int playerLevel, int requiredLevel) {
-		String message = getString("errorUPLevelMessage");
-		message = replace(message, "%type%", "UP");
-		message = replace(message, "%playerLevel%", playerLevel + "");
-		message = replace(message, "%requiredLevel%", requiredLevel + "");
-		return replaceColorCode(message);
-	}
-
-	public static String getErrorUNDERLevelMessage(int playerLevel, int requiredLevel) {
-		String message = getString("errorUNDERLevelMessage");
-		message = replace(message, "%type%", "UNDER");
-		message = replace(message, "%playerLevel%", playerLevel + "");
-		message = replace(message, "%requiredLevel%", requiredLevel + "");
-		return replaceColorCode(message);
-	}
-
-	public static String getErrorEQUALLevelMessage(int playerLevel, int requiredLevel) {
-		String message = getString("errorEQUALLevelMessage");
-		message = replace(message, "%type%", "EQUAL");
-		message = replace(message, "%playerLevel%", playerLevel + "");
-		message = replace(message, "%requiredLevel%", requiredLevel + "");
-		return replaceColorCode(message);
 	}
 
 	public static String getErrorHandMessage(Material material, int id, int amount, short damage, String itemName) {

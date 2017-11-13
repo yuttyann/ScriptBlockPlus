@@ -17,14 +17,14 @@ import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class BasePlayer extends PlayerData implements SBPlayer {
+public class BaseSBPlayer extends PlayerData implements SBPlayer {
 
-	static final Map<UUID, BasePlayer> players = new HashMap<UUID, BasePlayer>(32);
+	static final Map<UUID, BaseSBPlayer> players = new HashMap<UUID, BaseSBPlayer>(32);
 
 	private final UUID uuid;
 	private Player player;
 
-	BasePlayer(UUID uuid) {
+	BaseSBPlayer(UUID uuid) {
 		this.uuid = Objects.requireNonNull(uuid);
 	}
 
@@ -174,11 +174,11 @@ public class BasePlayer extends PlayerData implements SBPlayer {
 		if (this == obj) {
 			return true;
 		}
-		return obj instanceof BasePlayer && uuid.equals(((BasePlayer) obj).uuid);
+		return obj instanceof BaseSBPlayer && uuid.equals(((BaseSBPlayer) obj).uuid);
 	}
 
 	@Override
 	public String toString() {
-		return "BasePlayer{uuid=" + getUniqueId() + ", name=" + getName() + "}";
+		return "BaseSBPlayer{uuid=" + getUniqueId() + ", name=" + getName() + "}";
 	}
 }

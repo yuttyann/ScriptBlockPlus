@@ -46,13 +46,11 @@ updateDownloadStartMessage: '&6最新のプラグインをダウンロードし�
 # %filename% : ファイル名
 # %filepath% : ファイルパス
 # %filesize% : ファイルサイズ
-
 updateDownloadEndMessage: '&6ダウンロードが終了しました。|~ファイル名: %filename%|~ファイルサイズ: %filesize%|~ファイルパス: %filepath%'
 
 # %pluginname%    : プラグイン名
 # %latestversion% : 最新バージョン
 # %details%       : 更新内容
-
 updateCheckMessage: '&b最新のバージョンを検出しました。|~v%latestversion%にアップデートしてください。|~プラグイン名: %pluginname%|~☆アップデート内容☆|~%details%'
 
 updateErrorMessage: '&cアップデートに失敗しました。'
@@ -93,13 +91,6 @@ errorScriptExecMessage: '&c種類"%scripttype%"のスクリプトの実行に失
 
 # %group% : グループ名
 errorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプトを実行することが出来ます。'
-
-# %type%           : 判定の種類
-# %playerLevel%    : 所持レベル
-# %requiredLevel%  : 必要レベル
-errorUPLevelMessage: '&c所持レベルが必要レベル「%requiredLevel%」に達していません。'
-errorUNDERLevelMessage: '&c所持レベルが必要レベル「%requiredLevel%」を超えています。'
-errorEQUALLevelMessage: '&c所持レベルと必要レベル「%requiredLevel%」が同値ではありません。'
 
 # %material% : アイテムの種類
 # %id%       : アイテムのID

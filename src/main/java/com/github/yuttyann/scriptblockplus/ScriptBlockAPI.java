@@ -3,11 +3,13 @@ package com.github.yuttyann.scriptblockplus;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.other.Calculation.CalculationValue;
 
 /**
  * ScriptBlockPlus APIクラス
@@ -28,7 +30,7 @@ public interface ScriptBlockAPI {
 	 * @param player プレイヤー
 	 * @return 実行が成功したかどうか
 	 */
-	public boolean scriptRead(Player player, int index);
+	public boolean scriptRead(int index, Player player);
 
 	/**
 	 * スクリプトの座標を設定する<br />
@@ -63,18 +65,20 @@ public interface ScriptBlockAPI {
 	/**
 	 * オプションを追加する<br />
 	 * 指定するオプションクラスには"BaseOption"を継承してください
+	 * @param sort 並び順（-1 を指定すると最後尾に追加されます。）
 	 * @param option オプションクラス
 	 */
-	public void addOption(Class<? extends BaseOption> option);
+	public void addOption(int sort, Class<? extends BaseOption> option);
 
 	/**
 	 * 指定した位置にオプションを追加する
 	 * <br>
 	 * 指定するオプションクラスには"BaseOption"を継承してください
 	 * @param index 位置
+	 * @param sort 並び順（-1 を指定すると最後尾に追加されます。）
 	 * @param option オプションクラス
 	 */
-	public void addOption(int index, Class<? extends BaseOption> option);
+	public void addOption(int index, int sort, Class<? extends BaseOption> option);
 
 	/**
 	 * オプションを削除する<br />
@@ -134,6 +138,21 @@ public interface ScriptBlockAPI {
 	public int indexOfEndProcess(Class<? extends EndProcess> endProcess);
 
 	/**
+	 * オプション"@calc"に変数を追加する<br />
+	 * 指定する終了処理クラスには"CalculationValue"を実装してください
+	 * @param varName 変数名
+	 * @param calculationValue 変数値取得クラス
+	 */
+	public void addCalculationValue(String varName, CalculationValue calculationValue);
+
+	/**
+	 * オプション"@calc"の変数を削除する<br />
+	 * ただし、デフォルトの変数は削除できない
+	 * @param varName 変数名
+	 */
+	public void removeCalculationValue(String varName);
+
+	/**
 	 * スクリプトの作者を取得する
 	 * @return 作者
 	 */
@@ -176,20 +195,20 @@ public interface ScriptBlockAPI {
 	 * スクリプトの作者を設定する
 	 * @param player 作者
 	 */
-	public void setAuthor(Player player);
+	public void setAuthor(OfflinePlayer player);
 
 	/**
 	 * スクリプトの作者を追加する<br />
 	 * 同じ作者は追加されません
 	 * @param player 作者
 	 */
-	public void addAuthor(Player player);
+	public void addAuthor(OfflinePlayer player);
 
 	/**
 	 * スクリプトの作者を削除する
 	 * @param player 作者
 	 */
-	public void removeAuthor(Player player);
+	public void removeAuthor(OfflinePlayer player);
 
 	/**
 	 * スクリプトの編集時刻を現在の時刻に設定する

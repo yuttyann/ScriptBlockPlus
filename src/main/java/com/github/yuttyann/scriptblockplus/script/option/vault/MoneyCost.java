@@ -12,11 +12,11 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class MoneyCost extends BaseOption {
 
 	public MoneyCost() {
-		super("moneycost", "$cost:", 18);
+		super("moneycost", "$cost:");
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean isValid() throws Exception {
 		VaultEconomy vaultEconomy = HookPlugins.getVaultEconomy();
 		if (!vaultEconomy.isEnabled()) {
 			throw new UnsupportedOperationException();

@@ -30,31 +30,45 @@ public abstract class AbstractConstructor<T> {
 	}
 
 	public int indexOf(Class<? extends T> clazz) {
-		return getConstructors().indexOf(getConstructor(clazz));
-	}
-
-	public void add(Class<? extends T> clazz) {
-		Constructor<? extends T> constructor = getConstructor(clazz);
-		if (getConstructors().contains(constructor)) {
-			return;
+		List<Constructor<? extends T>> constructors = getConstructors();
+		for (int i = 0; i < constructors.size(); i++) {
+			if (clazz == constructors.get(i).getClass()) {
+				return i;
+			}
 		}
-		getConstructors().add(constructor);
+		return -1;
 	}
 
-	public void add(int index, Class<? extends T> clazz) {
-		Constructor<? extends T> constructor = getConstructor(clazz);
-		if (getConstructors().contains(constructor)) {
-			return;
+	public boolean add(Class<? extends T> clazz) {
+		if (indexOf(clazz) >= 0) {
+			return false;
 		}
-		getConstructors().add(index, constructor);
+		getConstructors().add(getConstructor(clazz));
+		return true;
 	}
 
-	public void remove(Class<? extends T> clazz) {
+	public boolean add(int index, Class<? extends T> clazz) {
+		if (index > getConstructors().size() || indexOf(clazz) >= 0) {
+			return false;
+		}
+		getConstructors().add(index, getConstructor(clazz));
+		return true;
+	}
+
+	public boolean remove(Class<? extends T> clazz) {
+		if (indexOf(clazz) == -1) {
+			return false;
+		}
 		getConstructors().remove(getConstructor(clazz));
+		return true;
 	}
 
-	public void remove(int index) {
+	public boolean remove(int index) {
+		if (index > getConstructors().size()) {
+			return false;
+		}
 		getConstructors().remove(index);
+		return true;
 	}
 
 	public abstract List<Constructor<? extends T>> getConstructors();
@@ -68,6 +82,14 @@ public abstract class AbstractConstructor<T> {
 			newInstances();
 		}
 		return Collections.unmodifiableList(cacheList);
+	}
+
+	@Deprecated
+	public final List<T> _getCacheList() {
+		if (cacheList == null || cacheList.isEmpty()) {
+			newInstances();
+		}
+		return cacheList;
 	}
 
 	public T[] newInstances() {

@@ -2,31 +2,37 @@ package com.github.yuttyann.scriptblockplus.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.ChatColor;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptException;
 
 public class StringUtils {
 
+	private static final Random RANDOM = new Random();
+
 	public static List<String> getScripts(String scriptLine) throws ScriptException {
 		char[] chars = scriptLine.toCharArray();
 		if (chars[0] != '[' || chars[chars.length - 1] != ']') {
 			return Arrays.asList(scriptLine);
 		}
-		for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
+		int start = 0;
+		int end = 0;
+		for (int i = 0; i < chars.length; i++) {
 			if (chars[i] == '[') {
-				j++;
+				start++;
 			} else if (chars[i] == ']') {
-				k++;
-			}
-			if (i == (chars.length - 1) && j != k) {
-				throw new ScriptException("Failed to load the script.");
+				end++;
 			}
 		}
-		List<String> result = new ArrayList<String>();
+		if (start != end) {
+			throw new ScriptException("Failed to load the script.");
+		}
+		List<String> result = new ArrayList<String>(start);
 		for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
 			if (chars[i] == '[') {
 				if (j++ == 0) {
@@ -52,7 +58,7 @@ public class StringUtils {
 		if (limit == 0) {
 			limit = source.length();
 		}
-		List<String> result = new ArrayList<String>(16);
+		List<String> result = new LinkedList<String>();
 		int length = delimiter.length();
 		if (limit > 0) {
 			int start = 0;
@@ -82,6 +88,13 @@ public class StringUtils {
 		return result.toArray(new String[result.size()]);
 	}
 
+	public static String replace(String source, char search, char replace) {
+		if (isEmpty(source)) {
+			return source;
+		}
+		return source.replace(search, replace);
+	}
+
 	public static String replace(String source, String search, String replace) {
 		if (isEmpty(source) || isEmpty(search)) {
 			return source;
@@ -94,16 +107,25 @@ public class StringUtils {
 		if (replace == null) {
 			replace = "";
 		}
-		StringBuilder builder = new StringBuilder(source.length());
 		int searchLength = search.length();
+		int replaceLength = source.length() - replace.length();
+		replaceLength = (replaceLength < 0 ? 0 : replaceLength);
+		StrBuilder builder = new StrBuilder(source.length() + replaceLength);
 		while (end != -1) {
-			builder.append(source.substring(start, end));
-			builder.append(replace);
+			builder.append(source.substring(start, end)).append(replace);
 			start = end + searchLength;
 			end = source.indexOf(search, start);
 		}
 		builder.append(source.substring(start));
 		return builder.toString();
+	}
+
+	public static String replaceColorCode(String source, boolean randomColor) {
+		if (randomColor) {
+			source = replaceRandomColor(source, "&rc");
+		}
+		source = ChatColor.translateAlternateColorCodes('&', source);
+		return source;
 	}
 
 	public static String replaceRandomColor(String source, String search) {
@@ -115,12 +137,11 @@ public class StringUtils {
 		if (end == -1) {
 			return source;
 		}
-		Random random = new Random();
-		StringBuilder builder = new StringBuilder(source.length());
 		int searchLength = search.length();
+		StrBuilder builder = new StrBuilder(source.length() * 2);
 		while (end != -1) {
 			builder.append(source.substring(start, end));
-			builder.append(ChatColor.getByChar(Integer.toHexString(random.nextInt(16))).toString());
+			builder.append(ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16))).toString());
 			start = end + searchLength;
 			end = source.indexOf(search, start);
 		}
@@ -149,7 +170,7 @@ public class StringUtils {
 		if (isEmpty(args)) {
 			return null;
 		}
-		StringBuilder builder = new StringBuilder();
+		StrBuilder builder = new StrBuilder();
 		for (int i = start; i < args.length; i++) {
 			builder.append(args[i]);
 			if (i != (args.length - 1)) {

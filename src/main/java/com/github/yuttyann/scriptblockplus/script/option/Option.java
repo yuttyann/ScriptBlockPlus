@@ -9,12 +9,10 @@ public abstract class Option {
 
 	private final String name;
 	private final String syntax;
-	private final int index;
 
-	protected Option(String name, String syntax, int index) {
+	protected Option(String name, String syntax) {
 		this.name = Objects.requireNonNull(name);
 		this.syntax = Objects.requireNonNull(syntax);
-		this.index = index;
 	}
 
 	public final String getName() {
@@ -23,10 +21,6 @@ public abstract class Option {
 
 	public final String getSyntax() {
 		return syntax;
-	}
-
-	public final Integer getIndex() {
-		return index;
 	}
 
 	public final String getValue(String script) {

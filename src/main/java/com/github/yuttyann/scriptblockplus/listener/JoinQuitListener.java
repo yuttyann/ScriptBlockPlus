@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.player.BasePlayer;
+import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 
 public class JoinQuitListener implements Listener {
@@ -22,7 +22,7 @@ public class JoinQuitListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		SBPlayer sbPlayer = SBPlayer.get(event.getPlayer());
-		((BasePlayer) sbPlayer).setPlayer(event.getPlayer());
+		((BaseSBPlayer) sbPlayer).setPlayer(event.getPlayer());
 		if (sbPlayer.getOldFullCoords() == null) {
 			BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation());
 			sbPlayer.setOldFullCoords(blockCoords.subtract(0.0D, 1.0D, 0.0D).getFullCoords());
@@ -33,7 +33,7 @@ public class JoinQuitListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		SBPlayer sbPlayer = SBPlayer.get(event.getPlayer());
-		((BasePlayer) sbPlayer).setPlayer(null);
+		((BaseSBPlayer) sbPlayer).setPlayer(null);
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);
 		sbPlayer.setClipboard(null);

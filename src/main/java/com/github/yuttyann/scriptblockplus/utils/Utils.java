@@ -1,33 +1,38 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
 import java.io.File;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.PlayerSelector;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 
 public class Utils {
 
 	private static String serverVersion;
 	private static Boolean isCB175orLaterCache;
 	private static Boolean isCB178orLaterCache;
+	private static Boolean isCB1710orLaterCache;
 	private static Boolean isCB18orLaterCache;
 	private static Boolean isCB19orLaterCache;
+	private static Boolean isCB110orLaterCache;
+	private static Boolean isCB112orLaterCache;
 
 	public static String getServerVersion() {
 		if (serverVersion == null) {
@@ -51,6 +56,13 @@ public class Utils {
 		return isCB178orLaterCache;
 	}
 
+	public static boolean isCB1710orLater() {
+		if (isCB1710orLaterCache == null) {
+			isCB1710orLaterCache = isUpperVersion(getServerVersion(), "1.7.10");
+		}
+		return isCB1710orLaterCache;
+	}
+
 	public static boolean isCB18orLater() {
 		if (isCB18orLaterCache == null) {
 			isCB18orLaterCache = isUpperVersion(getServerVersion(), "1.8");
@@ -63,6 +75,20 @@ public class Utils {
 			isCB19orLaterCache = isUpperVersion(getServerVersion(), "1.9");
 		}
 		return isCB19orLaterCache;
+	}
+
+	public static boolean isCB110orLater() {
+		if (isCB110orLaterCache == null) {
+			isCB110orLaterCache = isUpperVersion(getServerVersion(), "1.10");
+		}
+		return isCB110orLaterCache;
+	}
+
+	public static boolean isCB112orLater() {
+		if (isCB112orLaterCache == null) {
+			isCB112orLaterCache = isUpperVersion(getServerVersion(), "1.12");
+		}
+		return isCB112orLaterCache;
 	}
 
 	public static boolean isUpperVersion(String source, String target) {
@@ -80,13 +106,6 @@ public class Utils {
 
 	public static void sendMessage(String message) {
 		sendMessage(Bukkit.getConsoleSender(), message);
-	}
-
-	public static void sendMessage(SBPlayer sbPlayer, String message) {
-		if (!sbPlayer.isOnline()) {
-			return;
-		}
-		sendMessage((CommandSender) sbPlayer, message);
 	}
 
 	public static void sendMessage(CommandSender sender, String message) {
@@ -111,14 +130,7 @@ public class Utils {
 		}
 		String pattern = PlayerSelector.getCommandBlockPattern(command);
 		if (pattern != null) {
-			if (location == null) {
-				if (sender instanceof Player) {
-					location = BlockCoords.getAllCenter(((Player) sender).getLocation());
-				} else if (sender instanceof BlockCommandSender) {
-					location = BlockCoords.getAllCenter(((BlockCommandSender) sender).getBlock().getLocation());
-				}
-			}
-			Player[] players = PlayerSelector.getPlayers(location, pattern);
+			List<Player> players = PlayerSelector.getPlayers(location, pattern);
 			if (players != null) {
 				for (Player p : players) {
 					Bukkit.dispatchCommand(sender, StringUtils.replace(command, pattern, p.getName()));
@@ -183,7 +195,7 @@ public class Utils {
 		if (Utils.isCB175orLater()) {
 			return Bukkit.getPlayer(uuid);
 		}
-		for (Player player : Bukkit.getOnlinePlayers()) {
+		for (Player player : getOnlinePlayers()) {
 			if (player.getUniqueId().equals(uuid)) {
 				return player;
 			}
@@ -211,16 +223,60 @@ public class Utils {
 
 	public static String getName(UUID uuid) {
 		try {
-			if (!isCB175orLater()) {
-				return NameFetcher.getName(uuid);
+			if (isCB175orLater()) {
+				OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+				if (player == null || !player.hasPlayedBefore()) {
+					return NameFetcher.getName(uuid);
+				}
+				return player.getName();
 			}
-			OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-			if (player == null || !player.hasPlayedBefore()) {
-				return NameFetcher.getName(uuid);
-			}
-			return player.getName();
+			return NameFetcher.getName(uuid);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static UUID getUniqueId(OfflinePlayer player) {
+		if (player == null || !player.hasPlayedBefore()) {
+			return null;
+		}
+		if (isCB175orLater()) {
+			return player.getUniqueId();
+		}
+		try {
+			Object[] emptyObject = ArrayUtils.EMPTY_OBJECT_ARRAY;
+			Class<?>[] emptyClass = ArrayUtils.EMPTY_CLASS_ARRAY;
+			Object nbt = player.getClass().getMethod("getData", emptyClass).invoke(player, emptyObject);
+			Method getLong = nbt.getClass().getMethod("getLong", String.class);
+			return new UUID((long) getLong.invoke(nbt, "UUIDMost"), (long) getLong.invoke(nbt, "UUIDLast"));
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static List<Player> getOnlinePlayers() {
+		try {
+			Object[] emptyObject = ArrayUtils.EMPTY_OBJECT_ARRAY;
+			Class<?>[] emptyClass = ArrayUtils.EMPTY_CLASS_ARRAY;
+			Method method = Bukkit.class.getMethod("getOnlinePlayers", emptyClass);
+			if (Bukkit.class.getMethod("getOnlinePlayers", emptyClass).getReturnType() == Collection.class) {
+				Collection<?> temp = ((Collection<?>) method.invoke(null, emptyObject));
+				@SuppressWarnings("unchecked")
+				Collection<? extends Player> players = (Collection<? extends Player>) temp;
+				return new ArrayList<Player>(players);
+			} else {
+				Player[] temp = ((Player[]) method.invoke(null, emptyObject));
+				List<Player> players = new ArrayList<Player>(temp.length);
+				for (Player player : temp) {
+					players.add(player);
+				}
+				return players;
+			}
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<Player>();
 	}
 }

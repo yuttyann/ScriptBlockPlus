@@ -43,9 +43,7 @@ dataMigrEndMessage: '&bMigrating completed.'
 notWorldEditMessage: '&cWorldEdit not found!'
 updateDownloadStartMessage: '&6Start downloading the latest ScriptBlockPlus...'
 
-
 updateDownloadEndMessage: '&6Download completed!|File name: %filename%|~File size: %filesize%|~File path: %filepath%'
-
 
 updateCheckMessage: '&bNew version available!|~v%latestversion% the latest ver.|~Name: %pluginname%|~☆Change log☆|~%details%'
 
@@ -68,29 +66,21 @@ activeDelayMessage: '&cThis scriptblock is in delay, you cant use it now.'
 
 activeCooldownMessage: '&cThis scriptblock is in cooldown [%hour%h %minute%m %second%s ]'
 
-
 succEditDataMessage: '&aScriptblock type "%clicktype%" selected, please click a block to add it on.'
 
 errorEditDataMessage: '&cInvaild setting.'
 errorScriptCheckMessage: '&cInvaild script.'
 errorScriptFileCheckMessage: '&cNo script file.'
 
-
 errorScriptExecMessage: '&cFail to execute script from "%scripttype%" type scriptblock.'
 
 # %group% : Permission group name
 errorGroupMessage: '&cOnly players in group "%group%" can interact with this scriptblock.'
 
-
-errorUPLevelMessage: '&cYour level must be more than「%requiredLevel%」'
-errorUNDERLevelMessage: '&cYour level must be less than「%requiredLevel%」'
-errorEQUALLevelMessage: '&cYour level must equal to「%requiredLevel%」'
-
 errorHandMessage: '&cThe items you hold in hand is not vaild, you must hold at least "%material%(%id%:%damage%)" with amount "%amount%x"'
 errorItemMessage: '&cThe items in your inventory is not vaild, you must keep in your inventory at least "%material%(%id%:%damage%)" with amount "%amount%x"'
 
 errorCostMessage: '&cYou need money "%cost%" to do this.'
-
 
 consoleScriptCopyMessage: '&aCreator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" has been copied.'
 consoleScriptPasteMessage: '&aCreator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" has been pasted.'
@@ -100,7 +90,6 @@ consoleScriptRemoveMessage: '&cOperator"%player%"、Type"%scripttype%"、Locatio
 consoleScriptViewMessage: '&aOperator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" has been viewed.'
 consoleSuccScriptExecMessage: '&aOperator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" executed successfully.'
 consoleErrorScriptExecMessage: '&cOperator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" fail to execute.'
-
 
 consoleWorldEditPasteMessage: '&aType"%scripttype%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been pasted.'
 consoleWorldEditRemoveMessage: '&cType"%scripttype%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been removed.'

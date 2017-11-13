@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.script;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Location;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
@@ -118,7 +119,7 @@ public final class ScriptEdit {
 	}
 
 	private String getAuthors() {
-		StringBuilder builder = new StringBuilder();
+		StrBuilder builder = new StrBuilder();
 		List<String> authors = scriptData.getAuthors(true);
 		if (authors.size() > 1) {
 			builder.append("[");

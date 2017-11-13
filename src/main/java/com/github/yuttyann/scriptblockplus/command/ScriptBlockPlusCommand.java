@@ -37,7 +37,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class ScriptBlockPlusCommand extends AbstractCommand {
+public class ScriptBlockPlusCommand extends BaseCommand {
 
 	private static final Permission[] SCRIPT_PERMISSIONS = {
 		Permission.COMMAND_INTERACT,
@@ -175,6 +175,12 @@ public class ScriptBlockPlusCommand extends AbstractCommand {
 				if (scripts.size() > 0 && scripts.get(0).startsWith("Author:")) {
 					scripts.remove(0);
 				}
+				for (int i = 0; i < scripts.size(); i++) {
+					String script = scripts.get(i);
+					if (script.indexOf("@cooldown:") >= 0) {
+						scripts.set(i, StringUtils.replace(script, "@cooldown:", "@oldcooldown:"));
+					}
+				}
 				String[] array = StringUtils.split(coords, ",");
 				scriptData.setLocation(new Location(
 					tWorld,
@@ -298,7 +304,7 @@ public class ScriptBlockPlusCommand extends AbstractCommand {
 			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
 				continue;
 			}
-			clipboard.wePaste(sbPlayer, block.getLocation(), overwrite);
+			clipboard.wePaste(block.getLocation(), overwrite, false);
 		}
 		clipboard.save();
 		sbPlayer.setClipboard(null);
@@ -366,8 +372,7 @@ public class ScriptBlockPlusCommand extends AbstractCommand {
 	}
 
 	private String[] getOptionSyntaxs() {
-		List<Option> options = Arrays.asList(new OptionManager().newInstances());
-		options.sort((o1, o2) -> o1.getIndex().compareTo(o2.getIndex()));
+		List<Option> options = Arrays.asList(new OptionManager().newSortOptions());
 		String[] syntaxs = new String[options.size()];
 		for (int i = 0; i < syntaxs.length; i++) {
 			syntaxs[i] = options.get(i).getSyntax();

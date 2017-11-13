@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -19,6 +18,7 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.enums.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.google.common.collect.Maps;
 
 public final class PlayerSelector {
 
@@ -27,7 +27,7 @@ public final class PlayerSelector {
 
 	private static Map<String, Object> map = null;
 
-	static final class TileEntityCommand {
+	static class TileEntityCommand {
 
 		private static Object newInstance() throws ReflectiveOperationException {
 			return ((Class<?>) map.get("Class_TileEntityCommand")).newInstance();
@@ -46,8 +46,8 @@ public final class PlayerSelector {
 			Object setLocation = map.get("TileEntityCommand_setLocation");
 			if (setLocation instanceof Method) {
 				Method setBlockPosition = (Method) setLocation;
-				Constructor<?> constructor = ((Constructor<?>) map.get("Constructor_BlockPosition"));
-				setBlockPosition.invoke(titleEntityCommand, constructor.newInstance(x, y, z));
+				Constructor<?> blockPosition = ((Constructor<?>) map.get("Constructor_BlockPosition"));
+				setBlockPosition.invoke(titleEntityCommand, blockPosition.newInstance(x, y, z));
 			} else {
 				Field[] xyz = (Field[]) setLocation;
 				xyz[0].set(titleEntityCommand, x);
@@ -57,61 +57,55 @@ public final class PlayerSelector {
 		}
 
 		private static Object getCommandBlock(Object titleEntityCommand) throws ReflectiveOperationException {
-			Method getCommandBlock = (Method) map.get("TileEntityCommand_getCommandBlock");
-			return getCommandBlock.invoke(titleEntityCommand, OBJECT_ARRAY);
+			return ((Method) map.get("TileEntityCommand_getCommandBlock")).invoke(titleEntityCommand, OBJECT_ARRAY);
 		}
 	}
 
 	protected static void load() throws ReflectiveOperationException {
-		map = new HashMap<String, Object>();
+		Map<String, Object> map = Maps.newHashMap();
 		map.put("Pattern", Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$"));
 
-		Class<?> nmsEntity = PackageType.MINECRAFT_SERVER.getClass("Entity");
-		if (Utils.isCB18orLater()) {
-			map.put("Class_NMSEntity", nmsEntity);
-		}
-		map.put("NMSEntity_getBukkitEntity", nmsEntity.getMethod("getBukkitEntity", CLASS_ARRAY));
+		Class<?> nmsEntityClass = PackageType.NMS.getClass("Entity");
+		map.put("NMSEntity_getBukkitEntity", nmsEntityClass.getMethod("getBukkitEntity", CLASS_ARRAY));
 
-		Class<?> iCommandListener = PackageType.MINECRAFT_SERVER.getClass("ICommandListener");
-		Class<?> playerSelector = PackageType.MINECRAFT_SERVER.getClass("PlayerSelector");
+		Class<?> playerSelectorClass = PackageType.NMS.getClass("PlayerSelector");
+		Class<?> iCommandListenerClass = PackageType.NMS.getClass("ICommandListener");
 		Method getPlayers;
 		if (Utils.isCB18orLater()) {
-			getPlayers = playerSelector.getMethod("getPlayers", iCommandListener, String.class, Class.class);
+			getPlayers = playerSelectorClass.getMethod("getPlayers", iCommandListenerClass, String.class, Class.class);
 		} else {
-			getPlayers = playerSelector.getMethod("getPlayers", iCommandListener, String.class);
+			getPlayers = playerSelectorClass.getMethod("getPlayers", iCommandListenerClass, String.class);
 		}
 		map.put("PlayerSelector_getPlayers", getPlayers);
 
-		Class<?> tileEntityCommand = PackageType.MINECRAFT_SERVER.getClass("TileEntityCommand");
-		Class<?> craftWorld = PackageType.CRAFTBUKKIT.getClass("CraftWorld");
-		Class<?> world = PackageType.MINECRAFT_SERVER.getClass("World");
-		map.put("Class_TileEntityCommand", tileEntityCommand);
-		map.put("CraftWorld_getHandle", craftWorld.getMethod("getHandle", CLASS_ARRAY));
-		map.put("TileEntityCommand_setWorld", tileEntityCommand.getMethod("a", world));
+		Class<?> tileEntityCommandClass = PackageType.NMS.getClass("TileEntityCommand");
+		Class<?> craftWorldClass = PackageType.CB.getClass("CraftWorld");
+		Class<?> worldClass = PackageType.NMS.getClass("World");
+		map.put("Class_TileEntityCommand", tileEntityCommandClass);
+		map.put("CraftWorld_getHandle", craftWorldClass.getMethod("getHandle", CLASS_ARRAY));
+		map.put("TileEntityCommand_setWorld", tileEntityCommandClass.getMethod("a", worldClass));
 
+		String methodName;
 		Object setLocation;
 		if (Utils.isCB18orLater()) {
-			Class<?> blockPosition = PackageType.MINECRAFT_SERVER.getClass("BlockPosition");
-			String methodName = Utils.isCB110orLater() ? "setPosition" : "a";
-			setLocation = tileEntityCommand.getMethod(methodName, blockPosition);
-			map.put("Constructor_BlockPosition", blockPosition.getConstructor(int.class, int.class, int.class));
+			Class<?> blockPositionClass = PackageType.NMS.getClass("BlockPosition");
+			methodName = Utils.isCB110orLater() ? "setPosition" : "a";
+			setLocation = tileEntityCommandClass.getMethod(methodName, blockPositionClass);
+			map.put("Constructor_BlockPosition", blockPositionClass.getConstructor(int.class, int.class, int.class));
 		} else {
 			Field[] xyz = new Field[] {
-				tileEntityCommand.getField("x"),
-				tileEntityCommand.getField("y"),
-				tileEntityCommand.getField("z")
+				tileEntityCommandClass.getField("x"),
+				tileEntityCommandClass.getField("y"),
+				tileEntityCommandClass.getField("z")
 			};
 			setLocation = xyz;
 		}
 		map.put("TileEntityCommand_setLocation", setLocation);
 
-		Method getCommandBlock;
-		if (Utils.isCB1710orLater()) {
-			getCommandBlock = tileEntityCommand.getMethod("getCommandBlock", CLASS_ARRAY);
-		} else {
-			getCommandBlock = tileEntityCommand.getMethod("a", CLASS_ARRAY);
-		}
-		map.put("TileEntityCommand_getCommandBlock", getCommandBlock);
+		methodName = Utils.isCB1710orLater() ? "getCommandBlock" : "a";
+		map.put("TileEntityCommand_getCommandBlock", tileEntityCommandClass.getMethod(methodName, CLASS_ARRAY));
+
+		PlayerSelector.map = map;
 	}
 
 	public static String getCommandBlockPattern(String command) {
@@ -137,12 +131,11 @@ public final class PlayerSelector {
 		return isPattern(s, (String) null);
 	}
 
-	public static Player[] getPlayers(Location location, String s) {
+	public static List<Player> getPlayers(Location location, String s) {
 		try {
 			Object iCommandListener = getBlockCommandListener(location);
 			if (iCommandListener != null) {
-				List<Player> players = getPlayers(iCommandListener, s);
-				return players.size() > 0 ? players.toArray(new Player[players.size()]) : new Player[0];
+				return getPlayers(iCommandListener, s);
 			}
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
@@ -154,8 +147,8 @@ public final class PlayerSelector {
 		Method getPlayers = (Method) map.get("PlayerSelector_getPlayers");
 		List<Player> players;
 		if (Utils.isCB18orLater()) {;
-			Class<?> class_NMSEntity = (Class<?>) map.get("Class_NMSEntity");
-			List<?> entities = (List<?>) getPlayers.invoke(null, iCommandListener, s, class_NMSEntity);
+			Class<?> nmsEntityClass = PackageType.NMS.getClass("Entity");
+			List<?> entities = (List<?>) getPlayers.invoke(null, iCommandListener, s, nmsEntityClass);
 			players = new ArrayList<Player>(entities.size());
 			for (Object nmsEntity : entities) {
 				Entity entity = (Entity) getBukkitEntity(nmsEntity);
@@ -174,9 +167,7 @@ public final class PlayerSelector {
 	}
 
 	private static Object getBukkitEntity(Object nmsEntity) throws ReflectiveOperationException {
-		Method getBukkitEntity = (Method) map.get("NMSEntity_getBukkitEntity");
-		Object entity = getBukkitEntity.invoke(nmsEntity, OBJECT_ARRAY);
-		return Utils.isCB18orLater() ? (Entity) entity : (Player) entity;
+		return ((Method) map.get("NMSEntity_getBukkitEntity")).invoke(nmsEntity, OBJECT_ARRAY);
 	}
 
 	private static Object getBlockCommandListener(Location location) throws ReflectiveOperationException {

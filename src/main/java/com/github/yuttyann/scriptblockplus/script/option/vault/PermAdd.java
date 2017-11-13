@@ -10,11 +10,11 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 public class PermAdd extends BaseOption {
 
 	public PermAdd() {
-		super("perm_add", "@permADD:", 12);
+		super("perm_add", "@permADD:");
 	}
 
 	@Override
-	public boolean isValid() {
+	public boolean isValid() throws Exception {
 		VaultPermission vaultPermission = HookPlugins.getVaultPermission();
 		if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
 			throw new UnsupportedOperationException();

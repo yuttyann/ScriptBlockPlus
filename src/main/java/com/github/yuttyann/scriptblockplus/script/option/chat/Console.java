@@ -8,14 +8,12 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 public class Console extends BaseOption {
 
 	public Console() {
-		super("console", "@console ", 2);
+		super("console", "@console ");
 	}
 
 	@Override
-	public boolean isValid() {
-		String command = getOptionValue();
-		command = StringUtils.replaceRandomColor(command, "&rc");
-		command = StringUtils.replace(command, "&", "§");
+	public boolean isValid() throws Exception {
+		String command = StringUtils.replaceColorCode(getOptionValue(), true);
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 		return true;
 	}

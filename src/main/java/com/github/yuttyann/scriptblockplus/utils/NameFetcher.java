@@ -6,39 +6,46 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class NameFetcher implements Callable<String> {
+public class NameFetcher {
 
 	private static final String PROFILE_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 	private static final JSONParser JSON_PARSER = new JSONParser();
 
+	private static Map<UUID, String> cacheMap = new HashMap<UUID, String>();
+
 	private final String url;
 
 	private NameFetcher(UUID uuid) {
-		this.url = PROFILE_URL + StringUtils.replace(uuid.toString(), "-", null);
+		this.url = PROFILE_URL + StringUtils.replace(uuid.toString(), '-', '\0');
 	}
 
-	public static String getName(UUID uuid) throws Exception {
-		return new NameFetcher(uuid).call();
+	public void init() {
+		cacheMap = new HashMap<UUID, String>();
 	}
 
-	@Override
-	public String call() throws Exception {
-		JSONObject json = (JSONObject) getJson(url);
-		String cause = (String) json.get("cause");
-		if (cause != null && cause.length() > 0) {
-			throw new IllegalStateException((String) json.get("errorMessage"));
+	public static String getName(UUID uuid) throws ParseException, IOException {
+		String name = cacheMap.get(uuid);
+		if (name == null) {
+			JSONObject json = (JSONObject) getJson(new NameFetcher(uuid).url);
+			String cause = (String) json.get("cause");
+			if (cause != null && cause.length() > 0) {
+				throw new IllegalStateException((String) json.get("errorMessage"));
+			}
+			name = (String) json.get("name");
+			cacheMap.put(uuid, name);
 		}
-		return (String) json.get("name");
+		return name;
 	}
 
-	private Object getJson(String url) throws ParseException, IOException {
+	private static Object getJson(String url) throws ParseException, IOException {
 		BufferedReader reader = null;
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();

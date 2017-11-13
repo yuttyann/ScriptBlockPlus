@@ -6,8 +6,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
@@ -15,6 +16,7 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class ScriptData implements Cloneable {
@@ -75,7 +77,7 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public List<String> getAuthors(boolean isName) {
-		String[] authors = getAuthor().split(", ");
+		String[] authors = StringUtils.split(getAuthor(), ", ");
 		List<String> list = new ArrayList<String>(authors.length);
 		StreamUtils.forEach(authors, s -> list.add(isName ? Utils.getName(UUID.fromString(s)) : s));
 		return list;
@@ -93,34 +95,35 @@ public final class ScriptData implements Cloneable {
 		return scriptFile.getStringList(scriptPath + ".Scripts");
 	}
 
-	public void setAuthor(Player player) {
-		setAuthor(player.getUniqueId().toString());
+	public void setAuthor(OfflinePlayer player) {
+		setAuthor(Utils.getUniqueId(player).toString());
 	}
 
 	public void setAuthor(String uuid) {
 		scriptFile.set(scriptPath + ".Author", uuid);
 	}
 
-	public void addAuthor(Player player) {
-		addAuthor(player.getUniqueId().toString());
+	public void addAuthor(OfflinePlayer player) {
+		addAuthor(Utils.getUniqueId(player).toString());
 	}
 
 	public void addAuthor(String uuid) {
 		List<String> authors = getAuthors(false);
-		if (authors.size() > 0 && !authors.contains(uuid)) {
-			scriptFile.set(scriptPath + ".Author", getAuthor() + ", " + uuid);
+		if (!authors.contains(uuid)) {
+			String value = authors.size() > 0 ? getAuthor() + ", " + uuid : uuid;
+			scriptFile.set(scriptPath + ".Author", value);
 		}
 	}
 
-	public void removeAuthor(Player player) {
-		removeAuthor(player.getUniqueId().toString());
+	public void removeAuthor(OfflinePlayer player) {
+		removeAuthor(Utils.getUniqueId(player).toString());
 	}
 
 	public void removeAuthor(String uuid) {
 		List<String> authors = getAuthors(false);
 		if (authors.size() > 0 && authors.contains(uuid)) {
 			authors.remove(uuid);
-			StringBuilder builder = new StringBuilder();
+			StrBuilder builder = new StrBuilder();
 			for (int i = 0; i < authors.size(); i++) {
 				builder.append(authors.get(i));
 				if (i != (authors.size() - 1)) {
@@ -132,8 +135,7 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void setLastEdit() {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		setLastEdit(format.format(new Date()));
+		setLastEdit(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
 	}
 
 	public void setLastEdit(String time) {

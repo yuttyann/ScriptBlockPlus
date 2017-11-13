@@ -108,10 +108,15 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 
 	private boolean sort(List<String> scripts, Option[] options) {
 		try {
+
 			List<String> parse = new ArrayList<String>();
+			List<String> result = parse;
 			StreamUtils.mapForEach(scripts, this::getScripts, parse::addAll);
-			List<String> result = new ArrayList<String>(parse.size());
-			StreamUtils.forEach(options, o -> StreamUtils.filterForEach(parse, s -> o.isOption(s), result::add));
+			if (SBConfig.isSortScripts()) {
+				result = new ArrayList<String>(parse.size());
+				List<String> list = result;
+				StreamUtils.forEach(options, o -> StreamUtils.filterForEach(parse, s -> o.isOption(s), list::add));
+			}
 			this.scripts = Collections.unmodifiableList(result);
 			return true;
 		} catch (Exception e) {

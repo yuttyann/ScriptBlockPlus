@@ -1,12 +1,15 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -17,10 +20,13 @@ import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager.Link;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
+import com.github.yuttyann.scriptblockplus.script.option.other.Calculation.CalculationValue;
 
 public final class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI {
 
@@ -38,11 +44,11 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 
 	@Override
 	public boolean scriptRead(Player player) {
-		return scriptRead(player, 0);
+		return scriptRead(0, player);
 	}
 
 	@Override
-	public boolean scriptRead(Player player, int index) {
+	public boolean scriptRead(int index, Player player) {
 		try {
 			ScriptBlockEvent event = callEvent(player, scriptType);
 			if (event == null || event.isCancelled()) {
@@ -100,13 +106,13 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 	}
 
 	@Override
-	public void addOption(Class<? extends BaseOption> option) {
-		getOptionManager().add(option);
+	public void addOption(int sort, Class<? extends BaseOption> option) {
+		getOptionManager().add(new Link(sort, option));
 	}
 
 	@Override
-	public void addOption(int index, Class<? extends BaseOption> option) {
-		getOptionManager().add(index, option);
+	public void addOption(int index, int sort, Class<? extends BaseOption> option) {
+		getOptionManager().add(index, new Link(sort, option));
 	}
 
 	@Override
@@ -150,6 +156,24 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 	}
 
 	@Override
+	public void addCalculationValue(String varName, CalculationValue calculationValue) {
+		try {
+			getValues().put(varName, calculationValue);
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void removeCalculationValue(String varName) {
+		try {
+			getValues().remove(varName);
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
 	public String getAuthor() {
 		return scriptData.getAuthor();
 	}
@@ -184,17 +208,17 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 	}
 
 	@Override
-	public void setAuthor(Player player) {
+	public void setAuthor(OfflinePlayer player) {
 		scriptData.setAuthor(player);
 	}
 
 	@Override
-	public void addAuthor(Player player) {
+	public void addAuthor(OfflinePlayer player) {
 		scriptData.addAuthor(player);
 	}
 
 	@Override
-	public void removeAuthor(Player player) {
+	public void removeAuthor(OfflinePlayer player) {
 		scriptData.removeAuthor(player);
 	}
 
@@ -263,22 +287,11 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 		scriptData.reload();
 	}
 
-	private void putTimer(ScriptType scriptType, Location location) {
-		List<Location> value = timers.get(scriptType);
-		if (value == null) {
-			value = new ArrayList<Location>();
-		}
-		value.add(location);
-		timers.put(scriptType, value);
-	}
-
-	private void putScript(ScriptType scriptType, Location location, boolean isAdd) {
-		Map<Location, ScriptType> value = scripts.get(location);
-		if (value == null) {
-			value = new HashMap<Location, ScriptType>();
-		}
-		value.put(location, scriptType);
-		scripts.put(isAdd, value);
+	@SuppressWarnings("unchecked")
+	private Map<String, CalculationValue> getValues() throws ReflectiveOperationException {
+		Method getValues = Calculation.class.getDeclaredMethod("getValues", ArrayUtils.EMPTY_CLASS_ARRAY);
+		getValues.setAccessible(true);
+		return (Map<String, CalculationValue>) getValues.invoke(null, ArrayUtils.EMPTY_OBJECT_ARRAY);
 	}
 
 	private ScriptBlockEvent callEvent(Player player, ScriptType scriptType) {
@@ -299,5 +312,28 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 		}
 		Bukkit.getPluginManager().callEvent(event);
 		return event;
+	}
+
+	private void putTimer(ScriptType scriptType, Location location) {
+		List<Location> value = timers.get(scriptType);
+		if (value == null) {
+			value = new ArrayList<Location>();
+		}
+		value.add(location);
+		timers.put(scriptType, value);
+	}
+
+	private void putScript(ScriptType scriptType, Location location, boolean isAdd) {
+		Map<Location, ScriptType> value = scripts.get(location);
+		if (value == null) {
+			value = new HashMap<Location, ScriptType>();
+		}
+		value.put(location, scriptType);
+		scripts.put(isAdd, value);
+	}
+
+	@Override
+	public String toString() {
+		return "";
 	}
 }

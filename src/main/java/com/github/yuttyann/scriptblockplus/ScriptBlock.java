@@ -21,7 +21,7 @@ import com.github.yuttyann.scriptblockplus.listener.ScriptInteractListener;
 import com.github.yuttyann.scriptblockplus.listener.ScriptWalkListener;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.manager.ScriptBlockManager;
-import com.github.yuttyann.scriptblockplus.player.BasePlayer;
+import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -36,10 +36,15 @@ public class ScriptBlock extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			((BasePlayer) SBPlayer.get(player)).setPlayer(player);
+		for (Player player : Utils.getOnlinePlayers()) {
+			((BaseSBPlayer) SBPlayer.get(player)).setPlayer(player);
 		}
 		Files.reload();
+		try {
+			PlayerSelector.load();
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
 
 		if (!HookPlugins.hasVault()) {
 			Utils.sendMessage(SBConfig.getNotVaultMessage());
@@ -65,6 +70,7 @@ public class ScriptBlock extends JavaPlugin {
 		mapManager = new MapManager(this);
 		mapManager.loadAllScripts();
 		mapManager.loadCooldown();
+		mapManager.loadOldCooldown();
 
 		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 
@@ -78,6 +84,7 @@ public class ScriptBlock extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		mapManager.saveCooldown();
+		mapManager.saveOldCooldown();
 	}
 
 	@Override

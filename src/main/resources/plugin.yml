@@ -3,7 +3,7 @@ main: com.github.yuttyann.scriptblockplus.ScriptBlock
 version: ${project.version}
 description: ${project.description}
 author: yuttyann44581
-website: http://forum.minecraftuser.jp/viewtopic.php?f=38&t=33171
+website: https://github.com/yuttyann/ScriptBlockPlus
 softdepend: [Vault, ScriptBlock, WorldEdit, PermissionsEx, iConomy, Jecon]
 
 commands:

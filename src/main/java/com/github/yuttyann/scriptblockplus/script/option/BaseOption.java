@@ -10,7 +10,6 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -29,55 +28,51 @@ public abstract class BaseOption extends Option {
 	private ScriptData scriptData;
 	private int scriptIndex;
 
-	public BaseOption(String name, String prefix) {
-		this(name, prefix, new OptionManager().size() - 1);
+	public BaseOption(String name, String syntax) {
+		super(name, syntax);
 	}
 
-	public BaseOption(String name, String prefix, int index) {
-		super(name, prefix, index);
-	}
-
-	protected Plugin getPlugin() {
+	public Plugin getPlugin() {
 		return plugin;
 	}
 
-	protected Player getPlayer() {
+	public Player getPlayer() {
 		return sbPlayer.getPlayer();
 	}
 
-	protected SBPlayer getSBPlayer() {
+	public SBPlayer getSBPlayer() {
 		return sbPlayer;
 	}
 
-	protected UUID getUniqueId() {
+	public UUID getUniqueId() {
 		return sbPlayer.getUniqueId();
 	}
 
-	protected String getOptionValue() {
+	public String getOptionValue() {
 		return optionValue;
 	}
 
-	protected String getCoords() {
+	public String getCoords() {
 		return blockCoords.getCoords();
 	}
 
-	protected String getFullCoords() {
+	public String getFullCoords() {
 		return blockCoords.getFullCoords();
 	}
 
-	protected BlockCoords getBlockCoords() {
+	public BlockCoords getBlockCoords() {
 		return blockCoords;
 	}
 
-	protected MapManager getMapManager() {
+	public MapManager getMapManager() {
 		return mapManager;
 	}
 
-	protected List<String> getScripts() {
+	public List<String> getScripts() {
 		return scripts;
 	}
 
-	protected ScriptType getScriptType() {
+	public ScriptType getScriptType() {
 		return scriptType;
 	}
 
@@ -85,15 +80,15 @@ public abstract class BaseOption extends Option {
 		return scriptRead;
 	}
 
-	protected ScriptData getScriptData() {
+	public ScriptData getScriptData() {
 		return scriptData;
 	}
 
-	protected int getScriptIndex() {
+	public int getScriptIndex() {
 		return scriptIndex;
 	}
 
-	public abstract boolean isValid();
+	public abstract boolean isValid() throws Exception;
 
 	@Override
 	@Deprecated
@@ -111,6 +106,7 @@ public abstract class BaseOption extends Option {
 		try {
 			return isValid();
 		} catch (Exception e) {
+			e.printStackTrace();
 			Utils.sendMessage(sbPlayer, SBConfig.getOptionFailedToExecuteMessage(this, e));
 		}
 		return false;
@@ -118,11 +114,11 @@ public abstract class BaseOption extends Option {
 
 	protected final void commandExecute(Player player, String command, boolean isBypass) {
 		if (!isBypass || player.isOp()) {
-			Utils.dispatchCommand(player, command, blockCoords.getAllCenter());
+			Utils.dispatchCommand(player, command, getBlockCoords());
 		} else {
 			try {
 				player.setOp(true);
-				Utils.dispatchCommand(player, command, blockCoords.getAllCenter());
+				Utils.dispatchCommand(player, command, getBlockCoords());
 			} finally {
 				player.setOp(false);
 			}

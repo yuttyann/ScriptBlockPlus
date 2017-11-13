@@ -88,7 +88,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 				return true;
 			case RIGHT_CLICK_BLOCK:
 				if (player.isSneaking()) {
-					if (!sbPlayer.hasClipboard() || !sbPlayer.getClipboard().paste(sbPlayer, location, true)) {
+					if (!sbPlayer.hasClipboard() || !sbPlayer.getClipboard().paste(location, true)) {
 						Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 					}
 				} else {
