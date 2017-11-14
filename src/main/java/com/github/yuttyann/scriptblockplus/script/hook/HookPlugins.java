@@ -39,7 +39,7 @@ public class HookPlugins {
 	}
 
 	public static WorldEditSelection getWorldEditSelection() {
-		if (worldEditSelection == null) {
+		if (hasWorldEdit() && worldEditSelection == null) {
 			worldEditSelection = WorldEditSelection.setupWorldEditAPI();
 		}
 		return worldEditSelection;

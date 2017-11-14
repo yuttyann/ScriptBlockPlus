@@ -34,22 +34,22 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public final class OptionManager extends AbstractConstructor<Option> {
 
-	private final static List<Link> OPTIONS;
+	private final static List<Holder> OPTIONS;
 	private final static List<Constructor<? extends Option>> CONSTRUCTORS;
 
 	static {
-		OPTIONS = new ArrayList<Link>();
+		OPTIONS = new ArrayList<Holder>();
 		CONSTRUCTORS = new ArrayList<Constructor<? extends Option>>();
 	}
 
 	private static boolean isModified;
 
-	static class Link {
+	static class Holder {
 
 		private Integer sort;
 		private Class<? extends Option> option;
 
-		public Link(int sort, Class<? extends Option> option) {
+		public Holder(int sort, Class<? extends Option> option) {
 			this.sort = sort;
 			this.option = option;
 		}
@@ -58,30 +58,30 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	@Override
 	public void registerDefaults() {
 		getConstructors().clear();
-		add(new Link(9, OldCooldown.class));
-		add(new Link(8, Cooldown.class));
-		add(new Link(7, Delay.class));
-		add(new Link(22, ItemCost.class));
-		add(new Link(6, ItemHand.class));
-		add(new Link(23, MoneyCost.class));
-		add(new Link(10, Calculation.class));
-		add(new Link(16, Group.class));
-		add(new Link(19, Perm.class));
-		add(new Link(15, Amount.class));
-		add(new Link(1, Bypass.class));
-		add(new Link(0, Command.class));
-		add(new Link(2, Console.class));
-		add(new Link(3, Say.class));
-		add(new Link(4, Server.class));
-		add(new Link(5, ToPlayer.class));
-		add(new Link(14, Sound.class));
-		add(new Link(12, Title.class));
-		add(new Link(13, ActionBar.class));
-		add(new Link(11, Execute.class));
-		add(new Link(17, GroupAdd.class));
-		add(new Link(18, GroupRemove.class));
-		add(new Link(20, PermAdd.class));
-		add(new Link(21, PermRemove.class));
+		add(new Holder(9, OldCooldown.class));
+		add(new Holder(8, Cooldown.class));
+		add(new Holder(7, Delay.class));
+		add(new Holder(22, ItemCost.class));
+		add(new Holder(6, ItemHand.class));
+		add(new Holder(23, MoneyCost.class));
+		add(new Holder(10, Calculation.class));
+		add(new Holder(16, Group.class));
+		add(new Holder(19, Perm.class));
+		add(new Holder(15, Amount.class));
+		add(new Holder(1, Bypass.class));
+		add(new Holder(0, Command.class));
+		add(new Holder(2, Console.class));
+		add(new Holder(3, Say.class));
+		add(new Holder(4, Server.class));
+		add(new Holder(5, ToPlayer.class));
+		add(new Holder(14, Sound.class));
+		add(new Holder(12, Title.class));
+		add(new Holder(13, ActionBar.class));
+		add(new Holder(11, Execute.class));
+		add(new Holder(17, GroupAdd.class));
+		add(new Holder(18, GroupRemove.class));
+		add(new Holder(20, PermAdd.class));
+		add(new Holder(21, PermRemove.class));
 	}
 
 	@Deprecated
@@ -94,11 +94,11 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		return super.add(option);
 	}
 
-	public boolean add(Link optionData) {
+	public boolean add(Holder optionData) {
 		return add(-1, optionData);
 	}
 
-	public boolean add(int index, Link optionData) {
+	public boolean add(int index, Holder optionData) {
 		Class<? extends Option> option = optionData.option;
 		boolean add = index >= 0 ? add(index, option) : add(option);
 		if (add && (isModified = true)) {

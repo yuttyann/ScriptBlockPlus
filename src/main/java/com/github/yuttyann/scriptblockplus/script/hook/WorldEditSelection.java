@@ -24,7 +24,7 @@ public final class WorldEditSelection {
 		this.worldEdit = (WorldEditPlugin) plugin;
 	}
 
-	protected static WorldEditSelection setupWorldEditAPI() {
+	static WorldEditSelection setupWorldEditAPI() {
 		return new WorldEditSelection(Bukkit.getPluginManager().getPlugin("WorldEdit"));
 	}
 

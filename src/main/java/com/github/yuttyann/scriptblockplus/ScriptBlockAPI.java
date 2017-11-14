@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.other.Calculation.CalculationValue;
 
 /**
  * ScriptBlockPlus APIクラス
@@ -64,38 +63,38 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * オプションを追加する<br />
-	 * 指定するオプションクラスには"BaseOption"を継承してください
-	 * @param sort 並び順（-1 を指定すると最後尾に追加されます。）
+	 * 指定するクラスには"BaseOption"を継承してください
+	 * @param sortIndex 並び順 ※表示時の並び順です。（-1 を指定すると最後尾に追加されます。）
 	 * @param option オプションクラス
 	 */
-	public void addOption(int sort, Class<? extends BaseOption> option);
+	public void addOption(int sortIndex, Class<? extends BaseOption> option);
 
 	/**
 	 * 指定した位置にオプションを追加する
 	 * <br>
-	 * 指定するオプションクラスには"BaseOption"を継承してください
-	 * @param index 位置
-	 * @param sort 並び順（-1 を指定すると最後尾に追加されます。）
+	 * 指定するクラスには"BaseOption"を継承してください
+	 * @param scriptIndex 位置
+	 * @param sortIndex 並び順 ※表示時の並び順です。（-1 を指定すると最後尾に追加されます。）
 	 * @param option オプションクラス
 	 */
-	public void addOption(int index, int sort, Class<? extends BaseOption> option);
+	public void addOption(int scriptIndex, int sortIndex, Class<? extends BaseOption> option);
 
 	/**
 	 * オプションを削除する<br />
-	 * 指定するオプションクラスには"BaseOption"を継承してください
+	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
 	 */
 	public void removeOption(Class<? extends BaseOption> option);
 
 	/**
 	 * 指定した位置のオプションを削除する
-	 * @param index 位置
+	 * @param scriptIndex 位置
 	 */
-	public void removeOption(int index);
+	public void removeOption(int scriptIndex);
 
 	/**
 	 * オプションの位置を取得する<br />
-	 * 指定するオプションクラスには"BaseOption"を継承してください
+	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
 	 * @return 位置
 	 */
@@ -103,14 +102,14 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * スクリプトの終了処理を追加する<br />
-	 * 指定する終了処理クラスには"EndProcess"を実装してください
+	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param process 終了処理クラス
 	 */
 	public void addEndProcess(Class<? extends EndProcess> endProcess);
 
 	/**
 	 * 指定した位置にスクリプトの終了処理を追加する<br />
-	 * 指定する終了処理クラスには"EndProcess"を実装してください
+	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param index 位置
 	 * @param process 終了処理クラス
 	 */
@@ -118,7 +117,7 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * スクリプトの終了処理を削除する<br />
-	 * 指定する終了処理クラスには"EndProcess"を実装してください
+	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param process 終了処理クラス
 	 */
 	public void removeEndProcess(Class<? extends EndProcess> endProcess);
@@ -131,26 +130,11 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * スクリプトの終了処理の位置を取得する<br />
-	 * 指定する終了処理クラスには"EndProcess"を実装してください
+	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param process 終了処理クラス
 	 * @return 位置
 	 */
 	public int indexOfEndProcess(Class<? extends EndProcess> endProcess);
-
-	/**
-	 * オプション"@calc"に変数を追加する<br />
-	 * 指定する終了処理クラスには"CalculationValue"を実装してください
-	 * @param varName 変数名
-	 * @param calculationValue 変数値取得クラス
-	 */
-	public void addCalcVariable(String variableName, CalculationValue calculationValue);
-
-	/**
-	 * オプション"@calc"の変数を削除する<br />
-	 * ただし、デフォルトの変数は削除できない
-	 * @param varName 変数名
-	 */
-	public void removeCalcVariable(String variableName);
 
 	/**
 	 * スクリプトの作者を取得する

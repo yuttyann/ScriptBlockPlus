@@ -43,7 +43,7 @@ public class ScriptBlock extends JavaPlugin {
 		try {
 			PlayerSelector.load();
 		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
+			getServer().getPluginManager().disablePlugin(this);
 		}
 
 		if (!HookPlugins.hasVault()) {

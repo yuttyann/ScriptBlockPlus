@@ -16,7 +16,7 @@ public final class VaultEconomy {
 		this.economy = economy;
 	}
 
-	protected static VaultEconomy setupEconomy() {
+	static VaultEconomy setupEconomy() {
 		ServicesManager services = Bukkit.getServicesManager();
 		RegisteredServiceProvider<Economy> provider = services.getRegistration(Economy.class);
 		if (provider != null) {

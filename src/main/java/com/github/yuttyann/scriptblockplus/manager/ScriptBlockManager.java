@@ -1,12 +1,10 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -20,13 +18,11 @@ import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.Link;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager.Holder;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
-import com.github.yuttyann.scriptblockplus.script.option.other.Calculation.CalculationValue;
 
 public final class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI {
 
@@ -106,13 +102,13 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 	}
 
 	@Override
-	public void addOption(int sort, Class<? extends BaseOption> option) {
-		getOptionManager().add(new Link(sort, option));
+	public void addOption(int sortIndex, Class<? extends BaseOption> option) {
+		getOptionManager().add(new Holder(sortIndex, option));
 	}
 
 	@Override
-	public void addOption(int index, int sort, Class<? extends BaseOption> option) {
-		getOptionManager().add(index, new Link(sort, option));
+	public void addOption(int scriptIndex, int sortIndex, Class<? extends BaseOption> option) {
+		getOptionManager().add(scriptIndex, new Holder(sortIndex, option));
 	}
 
 	@Override
@@ -121,8 +117,8 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 	}
 
 	@Override
-	public void removeOption(int index) {
-		getOptionManager().remove(index);
+	public void removeOption(int scriptIndex) {
+		getOptionManager().remove(scriptIndex);
 	}
 
 	@Override
@@ -153,24 +149,6 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 	@Override
 	public int indexOfEndProcess(Class<? extends EndProcess> endProcess) {
 		return getEndProcessManager().indexOf(endProcess);
-	}
-
-	@Override
-	public void addCalcVariable(String variableName, CalculationValue calculationValue) {
-		try {
-			getValues().put(variableName, calculationValue);
-		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void removeCalcVariable(String variableName) {
-		try {
-			getValues().remove(variableName);
-		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -287,13 +265,6 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 		scriptData.reload();
 	}
 
-	@SuppressWarnings("unchecked")
-	private Map<String, CalculationValue> getValues() throws ReflectiveOperationException {
-		Method getValues = Calculation.class.getDeclaredMethod("getValues", ArrayUtils.EMPTY_CLASS_ARRAY);
-		getValues.setAccessible(true);
-		return (Map<String, CalculationValue>) getValues.invoke(null, ArrayUtils.EMPTY_OBJECT_ARRAY);
-	}
-
 	private ScriptBlockEvent callEvent(Player player, ScriptType scriptType) {
 		ScriptBlockEvent event = null;
 		Block block = getLocation().getBlock();
@@ -330,10 +301,5 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 		}
 		value.put(location, scriptType);
 		scripts.put(isAdd, value);
-	}
-
-	@Override
-	public String toString() {
-		return "";
 	}
 }

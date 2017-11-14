@@ -18,7 +18,7 @@ public final class VaultPermission {
 		this.name = permission == null ? "None" : permission.getName();
 	}
 
-	protected static VaultPermission setupPermission() {
+	static VaultPermission setupPermission() {
 		ServicesManager services = Bukkit.getServicesManager();
 		RegisteredServiceProvider<Permission> provider = services.getRegistration(Permission.class);
 		if (provider != null) {
