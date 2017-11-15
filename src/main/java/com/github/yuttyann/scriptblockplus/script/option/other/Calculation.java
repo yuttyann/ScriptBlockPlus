@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
@@ -43,11 +45,15 @@ public class Calculation extends BaseOption {
 				return (int) handle.getClass().getField("ping").get(handle);
 			}
 			Player player = baseOption.getPlayer();
+			if (variable.startsWith("%server_online_") && variable.charAt(variable.length() - 1) == '%') {
+				variable = variable.substring(0, variable.length() - 1);
+				return Utils.getWorld(variable).getPlayers().size();
+			}
 			if (variable.startsWith("%objective_score_") && variable.charAt(variable.length() - 1) == '%') {
 				variable = variable.substring(0, variable.length() - 1);
-				ScoreboardManager manager = Bukkit.getScoreboardManager();
-				Scoreboard board = manager.getMainScoreboard();
-				return (int) board.getObjective(variable).getScore(player).getScore();
+				ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+				Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
+				return (int) getScore(scoreboard.getObjective(variable), player).getScore();
 			}
 			switch (variable) {
 			case "%server_online%":
@@ -140,6 +146,16 @@ public class Calculation extends BaseOption {
 				}
 			}
 			return count;
+		}
+
+		private Score getScore(Objective objective, Player player) {
+			if (Utils.isCB178orLater()) {
+				return objective.getScore(player.getName());
+			} else {
+				@SuppressWarnings("deprecation")
+				Score score = objective.getScore(player);
+				return score;
+			}
 		}
 	}
 
