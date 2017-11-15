@@ -18,14 +18,21 @@ public class Title extends BaseOption {
 	static{
 		Class<?> titleActionClass = null;
 		Class<?> iChatBaseComponentClass = null;
-		try {
-			titleActionClass = PackageType.NMS.getClass("PacketPlayOutTitle$EnumTitleAction");
-			iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		if (Utils.isCB18orLater()) {
+			try {
+				if (Utils.isCB183orLater()) {
+					titleActionClass = PackageType.NMS.getClass("PacketPlayOutTitle$EnumTitleAction");
+				} else {
+					titleActionClass = PackageType.NMS.getClass("EnumTitleAction");
+				}
+				iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
+			} catch (ClassNotFoundException e) {}
+			TITLE_PARAMS = new Class<?>[]{titleActionClass, iChatBaseComponentClass};
+			TIMES_PARAMS = new Class<?>[]{titleActionClass, iChatBaseComponentClass, int.class, int.class, int.class};
+		} else {
+			TITLE_PARAMS = null;
+			TIMES_PARAMS = null;
 		}
-		TITLE_PARAMS = new Class<?>[]{titleActionClass, iChatBaseComponentClass};
-		TIMES_PARAMS = new Class<?>[]{titleActionClass, iChatBaseComponentClass, int.class, int.class, int.class};
 	}
 
 	public Title() {
@@ -56,15 +63,26 @@ public class Title extends BaseOption {
 	}
 
 	private void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
-		Class<?> titleActionClass = PackageType.NMS.getClass("PacketPlayOutTitle$EnumTitleAction");
+		Class<?> titleActionClass;
+		if (Utils.isCB183orLater()) {
+			titleActionClass = PackageType.NMS.getClass("PacketPlayOutTitle$EnumTitleAction");
+		} else {
+			titleActionClass = PackageType.NMS.getClass("EnumTitleAction");
+		}
 		if (title != null || subtitle != null) {
 			setTime(titleActionClass, player, fadeIn, stay, fadeOut);
 		}
 		Constructor<?> packetConstructor = PackageType.NMS.getConstructor("PacketPlayOutTitle", TITLE_PARAMS);
+		String chatSerializer;
+		if (Utils.isCB183orLater()) {
+			chatSerializer = "IChatBaseComponent$ChatSerializer";
+		} else {
+			chatSerializer = "ChatSerializer";
+		}
 		if (title != null) {
 			title = StringUtils.replaceColorCode(title, true);
 			Object enumTITLE = NMSHelper.getEnumField(titleActionClass, "TITLE");
-			Method a = PackageType.NMS.getMethod("IChatBaseComponent$ChatSerializer", "a", NMSHelper.STRING_PARAM);
+			Method a = PackageType.NMS.getMethod(chatSerializer, "a", NMSHelper.STRING_PARAM);
 			Object component = a.invoke(null, "{\"text\": \"" + title + "\"}");
 			Object packetPlayOutTitle = packetConstructor.newInstance(enumTITLE, component);
 			NMSHelper.sendPacket(player, packetPlayOutTitle);
@@ -72,7 +90,7 @@ public class Title extends BaseOption {
 		if (subtitle != null) {
 			subtitle = StringUtils.replaceColorCode(subtitle, true);
 			Object enumSUBTITLE = NMSHelper.getEnumField(titleActionClass, "SUBTITLE");
-			Method a = PackageType.NMS.getMethod("IChatBaseComponent$ChatSerializer", "a", NMSHelper.STRING_PARAM);
+			Method a = PackageType.NMS.getMethod(chatSerializer, "a", NMSHelper.STRING_PARAM);
 			Object component = a.invoke(null, "{\"text\": \"" + subtitle + "\"}");
 			Object packetPlayOutTitle = packetConstructor.newInstance(enumSUBTITLE, component);
 			NMSHelper.sendPacket(player, packetPlayOutTitle);

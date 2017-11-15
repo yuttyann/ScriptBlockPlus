@@ -6,6 +6,7 @@ public class HookPlugins {
 
 	private static Boolean hasVault;
 	private static Boolean hasWorldEdit;
+	private static Boolean hasPlaceholderAPI;
 	private static VaultEconomy vaultEconomy;
 	private static VaultPermission vaultPermission;
 	private static WorldEditSelection worldEditSelection;
@@ -22,6 +23,13 @@ public class HookPlugins {
 			hasWorldEdit = Bukkit.getPluginManager().isPluginEnabled("WorldEdit");
 		}
 		return hasWorldEdit;
+	}
+
+	public static boolean hasPlaceholderAPI() {
+		if (hasPlaceholderAPI == null) {
+			hasPlaceholderAPI = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+		}
+		return hasPlaceholderAPI;
 	}
 
 	public static VaultEconomy getVaultEconomy() {

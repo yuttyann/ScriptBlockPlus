@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.file;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
@@ -52,7 +53,7 @@ public final class Files {
 	private static YamlConfig loadLang(String filePath, String dirPath) {
 		String language = SBConfig.getLanguage();
 		if ("default".equalsIgnoreCase(language)) {
-			language = System.getProperty("user.language");
+			language = Locale.getDefault().getLanguage();
 		}
 		return new Lang(ScriptBlock.getInstance(), language).load(filePath, dirPath);
 	}

@@ -6,15 +6,7 @@ import com.github.yuttyann.scriptblockplus.enums.PackageType;
 
 class NMSHelper {
 
-	static final Class<?>[] BYTE_PARAM = {Byte.class};
-	static final Class<?>[] SHORT_PARAM = {Short.class};
-	static final Class<?>[] INTEGER_PARAM = {Integer.class};
-	static final Class<?>[] LONG_PARAM = {Long.class};
-	static final Class<?>[] FLOAT_PARAM = {Float.class};
-	static final Class<?>[] DOUBLE_PARAM = {Double.class};
-	static final Class<?>[] BOOLEAN_PARAM = {Boolean.class};
 	static final Class<?>[] STRING_PARAM = {String.class};
-	static final Class<?>[] CHARACTER_PARAM = {Character.class};
 
 	public static void sendPacket(Player player, Object packet) {
 		try {
@@ -22,7 +14,7 @@ class NMSHelper {
 			Object connection = handle.getClass().getField("playerConnection").get(handle);
 			Class<?> nmsPacketClass = PackageType.NMS.getClass("Packet");
 			connection.getClass().getMethod("sendPacket", nmsPacketClass).invoke(connection, packet);
-		} catch (Exception e) {
+		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
 	}

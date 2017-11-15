@@ -34,14 +34,15 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public final class OptionManager extends AbstractConstructor<Option> {
 
-	private final static List<Holder> OPTIONS;
+	private final static List<Holder> OPTION_HOLDERS;
 	private final static List<Constructor<? extends Option>> CONSTRUCTORS;
 
 	static {
-		OPTIONS = new ArrayList<Holder>();
+		OPTION_HOLDERS = new ArrayList<Holder>();
 		CONSTRUCTORS = new ArrayList<Constructor<? extends Option>>();
 	}
 
+	private static Option[] options;
 	private static boolean isModified;
 
 	static class Holder {
@@ -103,10 +104,10 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		boolean add = index >= 0 ? add(index, option) : add(option);
 		if (add && (isModified = true)) {
 			if (optionData.sort == -1) {
-				optionData.sort = OPTIONS.size() - 1;
+				optionData.sort = OPTION_HOLDERS.size() - 1;
 				optionData.sort = optionData.sort < 0 ? 0 : optionData.sort;
 			}
-			OPTIONS.add(optionData);
+			OPTION_HOLDERS.add(optionData);
 		}
 		return add;
 	}
@@ -115,9 +116,9 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	public boolean remove(Class<? extends Option> option) {
 		boolean remove = super.remove(option);
 		if (remove && (isModified = true)) {
-			for (int i = 0; i < OPTIONS.size(); i++) {
-				if (option == OPTIONS.get(i).option) {
-					OPTIONS.remove(i);
+			for (int i = 0; i < OPTION_HOLDERS.size(); i++) {
+				if (option == OPTION_HOLDERS.get(i).option) {
+					OPTION_HOLDERS.remove(i);
 					break;
 				}
 			}
@@ -145,12 +146,25 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	}
 
 	public Option[] newSortOptions() {
-		if (isModified && !(isModified = false)) {
-			OPTIONS.sort((o1, o2) -> o1.sort.compareTo(o2.sort));
+		if (isModified) {
+			update();
 		}
 		Option[] options = newInstances();
 		List<Option> result = new ArrayList<Option>(options.length);
-		OPTIONS.forEach(l -> StreamUtils.filterForEach(options, o -> l.option == o.getClass(), result::add));
+		OPTION_HOLDERS.forEach(l -> StreamUtils.filterForEach(options, o -> l.option == o.getClass(), result::add));
 		return result.size() > 0 ? result.toArray(new Option[result.size()]) : new Option[0];
+	}
+
+	public Option[] getOptions() {
+		if (options == null || isModified) {
+			update();
+		}
+		return options;
+	}
+
+	private void update() {
+		isModified = false;
+		options = newInstances();
+		OPTION_HOLDERS.sort((o1, o2) -> o1.sort.compareTo(o2.sort));
 	}
 }

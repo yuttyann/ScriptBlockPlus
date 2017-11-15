@@ -33,13 +33,6 @@ public class StreamUtils {
 		}
 	}
 
-	public static <T, R> void mapForEach(T[] array, Function<T, R> mapper, Consumer<R> action) {
-		Objects.requireNonNull(array);
-		for (T t : array) {
-			action.accept(mapper.apply(t));
-		}
-	}
-
 	public static <T, R> void mapForEach(Collection<T> collection, Function<T, R> mapper, Consumer<R> action) {
 		Objects.requireNonNull(collection);
 		for (T t : collection) {
@@ -65,15 +58,5 @@ public class StreamUtils {
 			}
 		}
 		return false;
-	}
-
-	public static <T> T filterOrElse(T[] array, Predicate<T> predicate, T other) {
-		Objects.requireNonNull(array);
-		for (T t : array) {
-			if (predicate.test(t)) {
-				return t == null ? other : t;
-			}
-		}
-		return other;
 	}
 }

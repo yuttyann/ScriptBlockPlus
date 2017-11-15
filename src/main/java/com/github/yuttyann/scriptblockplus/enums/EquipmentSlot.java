@@ -15,14 +15,14 @@ public enum EquipmentSlot {
 	}
 
 	public boolean equals(Enum<?> bukkitEquipmentSlot) {
-		if (!isESClass(bukkitEquipmentSlot)) {
+		if (!isBukkitEquipmentSlot(bukkitEquipmentSlot)) {
 			return false;
 		}
 		return name().equals(bukkitEquipmentSlot.name());
 	}
 
 	public static EquipmentSlot fromEnum(Enum<?> bukkitEquipmentSlot) {
-		if (!isESClass(bukkitEquipmentSlot)) {
+		if (!isBukkitEquipmentSlot(bukkitEquipmentSlot)) {
 			return NONE;
 		}
 		switch (bukkitEquipmentSlot.name()) {
@@ -43,7 +43,7 @@ public enum EquipmentSlot {
 		}
 	}
 
-	private static boolean isESClass(Enum<?> bukkitEquipmentSlot) {
+	private static boolean isBukkitEquipmentSlot(Enum<?> bukkitEquipmentSlot) {
 		return BUKKIT_ES_CLASS != null && bukkitEquipmentSlot != null && bukkitEquipmentSlot.getClass() == BUKKIT_ES_CLASS;
 	}
 }

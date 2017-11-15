@@ -30,6 +30,7 @@ public class Utils {
 	private static Boolean isCB178orLaterCache;
 	private static Boolean isCB1710orLaterCache;
 	private static Boolean isCB18orLaterCache;
+	private static Boolean isCB183orLaterCache;
 	private static Boolean isCB19orLaterCache;
 	private static Boolean isCB110orLaterCache;
 	private static Boolean isCB112orLaterCache;
@@ -68,6 +69,13 @@ public class Utils {
 			isCB18orLaterCache = isUpperVersion(getServerVersion(), "1.8");
 		}
 		return isCB18orLaterCache;
+	}
+
+	public static boolean isCB183orLater() {
+		if (isCB183orLaterCache == null) {
+			isCB183orLaterCache = isUpperVersion(getServerVersion(), "1.8.3");
+		}
+		return isCB183orLaterCache;
 	}
 
 	public static boolean isCB19orLater() {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ProxiedCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -45,10 +46,10 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 
 	@Override
 	public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (Utils.isCB18orLater() && ProxiedCommandSender.isPCSClass(sender)) {
-			CommandSender pxSender = new ProxiedCommandSender(sender).getCallee();
-			if (pxSender instanceof Player) {
-				sender = pxSender;
+		if (Utils.isCB183orLater() && sender instanceof ProxiedCommandSender) {
+			CommandSender proxiedCommandSender = ((ProxiedCommandSender) sender).getCallee();
+			if (proxiedCommandSender instanceof Player) {
+				sender = proxiedCommandSender;
 			}
 		}
 		try {

@@ -42,7 +42,7 @@ public class ProfileFetcher {
 	public static String getName(UUID uuid) throws Exception {
 		String name = NAME_CACHE_MAP.get(uuid);
 		if (name == null) {
-			String url = PROFILE_UUID_URL + StringUtils.replace(uuid.toString(), '-', '\0');
+			String url = PROFILE_UUID_URL + StringUtils.replace(uuid.toString(), "-", "");
 			JSONObject json = (JSONObject) getJson(url);
 			String errorMessage = (String) json.get("errorMessage");
 			if (StringUtils.isNotEmpty(errorMessage)) {
