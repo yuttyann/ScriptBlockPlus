@@ -20,12 +20,12 @@ public class Execute extends BaseOption {
 	@Override
 	public boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
-		String[] coords = StringUtils.split(array[1], "-");
+		String[] coords = StringUtils.split(array[1], ",");
 		ScriptType scriptType = ScriptType.valueOf(array[0].toUpperCase());
-		World world = Utils.getWorld(coords[0]);
-		double x = Integer.parseInt(coords[1]);
-		double y = Integer.parseInt(coords[2]);
-		double z = Integer.parseInt(coords[3]);
+		World world = Utils.getWorld(coords[0].trim());
+		double x = Integer.parseInt(coords[1].trim());
+		double y = Integer.parseInt(coords[2].trim());
+		double z = Integer.parseInt(coords[3].trim());
 		Location location = new Location(world, x, y, z);
 
 		ScriptBlockAPI scriptBlockAPI = ScriptBlock.getInstance().getAPI(location, scriptType);
