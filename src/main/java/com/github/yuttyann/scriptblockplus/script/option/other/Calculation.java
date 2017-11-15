@@ -19,7 +19,7 @@ public class Calculation extends BaseOption {
 
 	public interface CalculationValue {
 
-		public double getValue(BaseOption baseOption, String name) throws Exception;
+		public double getValue(BaseOption baseOption, String variable) throws Exception;
 	}
 
 	static class DefaultVariable implements CalculationValue {
