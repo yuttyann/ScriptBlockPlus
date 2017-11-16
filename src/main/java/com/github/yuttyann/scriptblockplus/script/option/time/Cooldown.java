@@ -18,6 +18,10 @@ public class Cooldown extends BaseOption {
 
 	private Task task;
 
+	public Cooldown() {
+		super("cooldown", "@cooldown:");
+	}
+
 	private class Task extends BukkitRunnable {
 
 		private int second = -1;
@@ -26,7 +30,7 @@ public class Cooldown extends BaseOption {
 		private MapManager mapManager;
 		private ScriptType scriptType;
 
-		public Task(Cooldown cooldown, int second) {
+		private Task(Cooldown cooldown, int second) {
 			this.second = second;
 			if (cooldown != null) {
 				this.uuid = cooldown.getUniqueId();
@@ -48,10 +52,6 @@ public class Cooldown extends BaseOption {
 				cancel();
 			}
 		}
-	}
-
-	public Cooldown() {
-		super("cooldown", "@cooldown:");
 	}
 
 	@Override

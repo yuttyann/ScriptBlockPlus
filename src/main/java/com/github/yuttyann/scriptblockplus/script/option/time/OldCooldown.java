@@ -15,13 +15,17 @@ public class OldCooldown extends BaseOption {
 
 	private Task task;
 
+	public OldCooldown() {
+		super("oldcooldown", "@oldcooldown:");
+	}
+
 	private class Task extends BukkitRunnable {
 
 		private int second = -1;
 		private String fullCoords;
 		private MapManager mapManager;
 
-		public Task(OldCooldown cooldown, int second) {
+		private Task(OldCooldown cooldown, int second) {
 			this.second = second;
 			if (cooldown != null) {
 				this.fullCoords = cooldown.getFullCoords();
@@ -41,10 +45,6 @@ public class OldCooldown extends BaseOption {
 				cancel();
 			}
 		}
-	}
-
-	public OldCooldown() {
-		super("oldcooldown", "@oldcooldown:");
 	}
 
 	@Override

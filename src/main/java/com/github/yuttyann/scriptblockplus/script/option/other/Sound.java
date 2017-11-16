@@ -20,7 +20,7 @@ public class Sound extends BaseOption {
 		private int pitch;
 		private boolean isWorld;
 
-		public Task(org.bukkit.Sound soundType, int volume, int pitch, boolean isWorld) {
+		private Task(org.bukkit.Sound soundType, int volume, int pitch, boolean isWorld) {
 			this.soundType = soundType;
 			this.volume = volume;
 			this.pitch = pitch;

@@ -8,7 +8,7 @@ class NMSHelper {
 
 	static final Class<?>[] STRING_PARAM = {String.class};
 
-	public static void sendPacket(Player player, Object packet) {
+	static void sendPacket(Player player, Object packet) {
 		try {
 			Object handle = player.getClass().getMethod("getHandle").invoke(player);
 			Object connection = handle.getClass().getField("playerConnection").get(handle);
@@ -19,7 +19,7 @@ class NMSHelper {
 		}
 	}
 
-	public static Object getEnumField(Class<?> clazz, String name) {
+	static Object getEnumField(Class<?> clazz, String name) {
 		for (Object field : clazz.getEnumConstants()) {
 			if (name.equals(String.valueOf(field))) {
 				return field;
