@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -138,6 +139,13 @@ public class Utils {
 		}
 		String pattern = PlayerSelector.getCommandBlockPattern(command);
 		if (pattern != null) {
+			if (location == null) {
+				if (sender instanceof Player) {
+					location = ((Player) sender).getLocation().clone();
+				} else if (sender instanceof BlockCommandSender) {
+					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
+				}
+			}
 			List<Player> players = PlayerSelector.getPlayers(location, pattern);
 			if (players != null) {
 				for (Player p : players) {

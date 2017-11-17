@@ -132,6 +132,9 @@ public final class PlayerSelector {
 	}
 
 	public static List<Player> getPlayers(Location location, String s) {
+		if (location == null || StringUtils.isEmpty(s)) {
+			return null;
+		}
 		try {
 			Object iCommandListener = getBlockCommandListener(location);
 			if (iCommandListener != null) {
