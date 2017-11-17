@@ -61,7 +61,7 @@ public final class PlayerSelector {
 		}
 	}
 
-	protected static void load() throws ReflectiveOperationException {
+	static void load() throws ReflectiveOperationException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("Pattern", Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$"));
 
