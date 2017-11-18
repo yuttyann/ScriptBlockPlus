@@ -50,7 +50,7 @@ public class Title extends BaseOption {
 		int fadeOut = 10;
 		if (array.length == 3) {
 			String[] times = StringUtils.split(array[2], "-");
-			if (times.length == 3) {
+			if (times != null && times.length == 3) {
 				fadeIn = Integer.parseInt(times[0]);
 				stay = Integer.parseInt(times[1]);
 				fadeOut = Integer.parseInt(times[2]);
@@ -62,7 +62,7 @@ public class Title extends BaseOption {
 
 	private void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
 		Class<?> enumTitleActionClass = PackageType.NMS.getClass(NMSHelper.getEnumTitleActionName());
-		if (StringUtils.isNotEmpty(title) || StringUtils.isNotEmpty(subtitle)) {
+		if (title != null || subtitle != null) {
 			setTime(enumTitleActionClass, player, fadeIn, stay, fadeOut);
 		}
 		Constructor<?> packetConstructor = PackageType.NMS.getConstructor("PacketPlayOutTitle", TITLE_PARAMS);
