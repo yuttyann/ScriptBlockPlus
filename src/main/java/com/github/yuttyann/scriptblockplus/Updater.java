@@ -88,11 +88,12 @@ public final class Updater {
 		return isUpperVersion;
 	}
 
-	public void debug(boolean isUpperVersion, boolean isError) {
+	public void debug(boolean isUpperVersion, boolean isError) throws Exception {
 		try {
+			init();
 			load();
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 		this.isUpperVersion = isUpperVersion;
 		if (isError) {
