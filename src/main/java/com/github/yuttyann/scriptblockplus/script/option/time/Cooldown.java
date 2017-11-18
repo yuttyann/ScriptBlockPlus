@@ -31,7 +31,7 @@ public class Cooldown extends BaseOption {
 		private ScriptType scriptType;
 
 		private Task(Cooldown cooldown, int second) {
-			this.second = second;
+			this.second = second + 1;
 			if (cooldown != null) {
 				this.uuid = cooldown.getUniqueId();
 				this.fullCoords = cooldown.getFullCoords();
@@ -86,8 +86,7 @@ public class Cooldown extends BaseOption {
 	}
 
 	public void deserialize(Plugin plugin, MapManager mapManager, Map<String, Object> map) {
-		task = new Task(null, 0);
-		task.second = (int) map.get("second");
+		task = new Task(null, (int) map.get("second"));
 		task.uuid = (UUID) map.get("uuid");
 		task.fullCoords = (String) map.get("fullcoords");
 		task.scriptType = (ScriptType) map.get("scripttype");

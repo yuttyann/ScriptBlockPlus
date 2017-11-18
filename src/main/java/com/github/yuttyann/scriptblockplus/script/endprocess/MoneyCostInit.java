@@ -14,7 +14,7 @@ public class MoneyCostInit implements EndProcess {
 			Double cost = (Double) sbPlayer.getData("MoneyCost");
 			if (cost != null) {
 				sbPlayer.removeData("MoneyCost");
-				economy.depositPlayer(sbPlayer.getOfflinePlayer(), cost);
+				economy.withdrawPlayer(sbPlayer.getOfflinePlayer(), cost);
 			}
 		}
 	}

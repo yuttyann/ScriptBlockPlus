@@ -35,7 +35,7 @@ public final class Lang {
 	private File getFile(String filePath, String dirPath) {
 		String path = dirPath + "/" + language + ".yml";
 		String lang = isExists(jarFile, path) ? language : "en";
-		filePath = StringUtils.replace(filePath, "{lang}", lang);
+		filePath = StringUtils.replace(filePath, "{code}", lang);
 		File file = new File(plugin.getDataFolder(), filePath);
 		if (!file.exists()) {
 			if (!lang.equals(language)) {

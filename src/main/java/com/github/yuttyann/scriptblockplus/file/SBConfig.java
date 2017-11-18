@@ -20,10 +20,6 @@ public final class SBConfig {
 
 	private static final Map<String, Object> datas = new HashMap<String, Object>();
 
-	private SBConfig() {
-		throw new AssertionError();
-	}
-
 	public static void reload() {
 		reloadConfig();
 		reloadLang();

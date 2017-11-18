@@ -10,16 +10,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 public class ProfileFetcher {
 
 	private static final String PROFILE_NAME_URL = "https://api.mojang.com/users/profiles/minecraft/";
 	private static final String PROFILE_UUID_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
-	private static final JSONParser JSON_PARSER = new JSONParser();
+	private static final Gson GSON = new Gson();
 
 	private static final Map<String, UUID> UUID_CACHE_MAP = new HashMap<String, UUID>();
 	private static final Map<UUID, String> NAME_CACHE_MAP = new HashMap<UUID, String>();
@@ -28,12 +28,12 @@ public class ProfileFetcher {
 		UUID uuid = UUID_CACHE_MAP.get(name);
 		if (uuid == null) {
 			String url = PROFILE_NAME_URL + name;
-			JSONObject json = (JSONObject) getJson(url);
-			String errorMessage = (String) json.get("errorMessage");
+			JsonObject json = getJsonObject(url);
+			String errorMessage = json.get("errorMessage").getAsString();
 			if (StringUtils.isNotEmpty(errorMessage)) {
 				throw new IllegalStateException(errorMessage);
 			}
-			uuid = fromString(json.get("id").toString());
+			uuid = fromString(json.get("id").getAsString());
 			UUID_CACHE_MAP.put(name, uuid);
 		}
 		return uuid;
@@ -43,12 +43,12 @@ public class ProfileFetcher {
 		String name = NAME_CACHE_MAP.get(uuid);
 		if (name == null) {
 			String url = PROFILE_UUID_URL + StringUtils.replace(uuid.toString(), "-", "");
-			JSONObject json = (JSONObject) getJson(url);
-			String errorMessage = (String) json.get("errorMessage");
+			JsonObject json = getJsonObject(url);
+			String errorMessage = json.get("errorMessage").getAsString();
 			if (StringUtils.isNotEmpty(errorMessage)) {
 				throw new IllegalStateException(errorMessage);
 			}
-			name = (String) json.get("name");
+			name = json.get("name").getAsString();
 			NAME_CACHE_MAP.put(uuid, name);
 		}
 		return name;
@@ -58,21 +58,27 @@ public class ProfileFetcher {
 		return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));
 	}
 
-	private static Object getJson(String url) throws ParseException, IOException {
+	public static JsonObject getJsonObject(String url) throws JsonSyntaxException, ProtocolException, IOException {
 		BufferedReader reader = null;
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 			connection.setRequestMethod("GET");
-			connection.setInstanceFollowRedirects(false);
+			connection.setAllowUserInteraction(false);
+			connection.setInstanceFollowRedirects(true);
 			connection.connect();
+			int httpStatusCode = connection.getResponseCode();
+			if (httpStatusCode != HttpURLConnection.HTTP_OK) {
+				connection.disconnect();
+				return null;
+			}
 			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			StringBuilder builder = new StringBuilder();
 			String line;
 			while ((line = reader.readLine()) != null) {
 				builder.append(line);
 			}
-			return builder.length() == 0 ? null : JSON_PARSER.parse(builder.toString());
-		} catch (ParseException e) {
+			return GSON.fromJson(builder.toString(), JsonObject.class);
+		} catch (JsonSyntaxException e) {
 			throw e;
 		} catch (ProtocolException e) {
 			throw e;

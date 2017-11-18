@@ -121,11 +121,13 @@ public class StringUtils {
 	}
 
 	public static String replaceColorCode(String source, boolean randomColor) {
+		if (isEmpty(source)) {
+			return null;
+		}
 		if (randomColor) {
 			source = replaceRandomColor(source, "&rc");
 		}
-		source = ChatColor.translateAlternateColorCodes('&', source);
-		return source;
+		return ChatColor.translateAlternateColorCodes('&', source);
 	}
 
 	public static String replaceRandomColor(String source, String search) {

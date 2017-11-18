@@ -8,20 +8,20 @@ import java.util.Map;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
+import com.github.yuttyann.scriptblockplus.utils.ProfileFetcher;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public final class Files {
 
 	private static final Map<String, YamlConfig> files = new HashMap<String, YamlConfig>();
 
-	private Files() {
-		throw new AssertionError();
-	}
+	private static String defaultLanguage;
 
 	public static void reload() {
 		files.put("config", loadFile("config.yml", true));
 		SBConfig.reloadConfig();
 
-		files.put("lang", loadLang("lang_{lang}.yml", "lang"));
+		files.put("lang", loadLang("lang_{code}.yml", "lang"));
 		SBConfig.reloadLang();
 
 		for (ScriptType scriptType : ScriptType.values()) {
@@ -53,8 +53,21 @@ public final class Files {
 	private static YamlConfig loadLang(String filePath, String dirPath) {
 		String language = SBConfig.getLanguage();
 		if ("default".equalsIgnoreCase(language)) {
-			language = Locale.getDefault().getLanguage();
+			if (defaultLanguage == null) {
+				defaultLanguage = getDefaultLanguage();
+			}
+			language = defaultLanguage;
 		}
 		return new Lang(ScriptBlock.getInstance(), language).load(filePath, dirPath);
+	}
+
+	private static String getDefaultLanguage() {
+		try {
+			String url = "http://api.yuttyann44581.net/json-language/";
+			String code =  ProfileFetcher.getJsonObject(url).get("code").getAsString();
+			return StringUtils.split(code, "-")[0];
+		} catch (Exception e) {
+			return Locale.getDefault().getLanguage();
+		}
 	}
 }
