@@ -53,7 +53,6 @@ public class Calculation extends BaseOption {
 				result = getValue(getPlayer(), source);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			result = 0.0D;
 		}
 		return result;
@@ -73,6 +72,9 @@ public class Calculation extends BaseOption {
 		if (variable.startsWith("%player_ping_") && variable.charAt(variable.length() - 1) == '%') {
 			variable = variable.substring(0, variable.length() - 1);
 			Player target = Bukkit.getPlayer(StringUtils.split(variable, "%player_ping_")[1]);
+			if (target == null) {
+				return 0.0D;
+			}
 			Object handle = target.getClass().getMethod("getHandle").invoke(target);
 			return (int) handle.getClass().getField("ping").get(handle);
 		}
@@ -85,7 +87,11 @@ public class Calculation extends BaseOption {
 			String objectName = StringUtils.split(variable, "%objective_score_")[1];
 			ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
 			Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
-			return (int) getScore(scoreboard.getObjective(objectName), player).getScore();
+			Objective objective = scoreboard.getObjective(objectName);
+			if (objective == null) {
+				return 0.0D;
+			}
+			return getScore(objective, player).getScore();
 		}
 		switch (variable) {
 		case "%server_online%":

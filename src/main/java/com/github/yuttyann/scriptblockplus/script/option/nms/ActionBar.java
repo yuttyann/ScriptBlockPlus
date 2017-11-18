@@ -25,7 +25,9 @@ public class ActionBar extends BaseOption {
 				} else {
 					byteOrChatMessageTypeClass = byte.class;
 				}
-			} catch (ClassNotFoundException e) {}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 			PACKET_PARAMS = new Class<?>[]{iChatBaseComponentClass, byteOrChatMessageTypeClass};
 		} else {
 			PACKET_PARAMS = null;
@@ -86,12 +88,7 @@ public class ActionBar extends BaseOption {
 	}
 
 	private void sendActionBar(Player player, String message) throws ReflectiveOperationException {
-		String chatSerializer;
-		if (Utils.isCB183orLater()) {
-			chatSerializer = "IChatBaseComponent$ChatSerializer";
-		} else {
-			chatSerializer = "ChatSerializer";
-		}
+		String chatSerializer = NMSHelper.getChatSerializerName();
 		Method a = PackageType.NMS.getMethod(false, chatSerializer, "a", NMSHelper.STRING_PARAM);
 		Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
 		NMSHelper.sendPacket(player, newPacketPlayOutChat(component));
