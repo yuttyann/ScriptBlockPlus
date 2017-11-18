@@ -19,7 +19,7 @@ public class ItemHand extends BaseOption {
 	}
 
 	@Override
-	public boolean isValid() throws Exception {
+	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), " ");
 		String[] itemData = StringUtils.split(array[0], ":");
 		short damage = itemData.length > 1 ? Short.parseShort(itemData[1]) : 0;

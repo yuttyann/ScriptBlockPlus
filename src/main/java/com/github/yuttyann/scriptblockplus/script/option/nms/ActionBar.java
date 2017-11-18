@@ -71,7 +71,7 @@ public class ActionBar extends BaseOption {
 	}
 
 	@Override
-	public boolean isValid() throws Exception {
+	protected boolean isValid() throws Exception {
 		if (!Utils.isCB18orLater()) {
 			throw new UnsupportedOperationException();
 		}

@@ -32,47 +32,47 @@ public abstract class BaseOption extends Option {
 		super(name, syntax);
 	}
 
-	public Plugin getPlugin() {
+	protected Plugin getPlugin() {
 		return plugin;
 	}
 
-	public Player getPlayer() {
+	protected Player getPlayer() {
 		return sbPlayer.getPlayer();
 	}
 
-	public SBPlayer getSBPlayer() {
+	protected SBPlayer getSBPlayer() {
 		return sbPlayer;
 	}
 
-	public UUID getUniqueId() {
+	protected UUID getUniqueId() {
 		return sbPlayer.getUniqueId();
 	}
 
-	public String getOptionValue() {
+	protected String getOptionValue() {
 		return optionValue;
 	}
 
-	public String getCoords() {
+	protected String getCoords() {
 		return blockCoords.getCoords();
 	}
 
-	public String getFullCoords() {
+	protected String getFullCoords() {
 		return blockCoords.getFullCoords();
 	}
 
-	public BlockCoords getBlockCoords() {
+	protected BlockCoords getBlockCoords() {
 		return blockCoords;
 	}
 
-	public MapManager getMapManager() {
+	protected MapManager getMapManager() {
 		return mapManager;
 	}
 
-	public List<String> getScripts() {
+	protected List<String> getScripts() {
 		return scripts;
 	}
 
-	public ScriptType getScriptType() {
+	protected ScriptType getScriptType() {
 		return scriptType;
 	}
 
@@ -80,15 +80,15 @@ public abstract class BaseOption extends Option {
 		return scriptRead;
 	}
 
-	public ScriptData getScriptData() {
+	protected ScriptData getScriptData() {
 		return scriptData;
 	}
 
-	public int getScriptIndex() {
+	protected int getScriptIndex() {
 		return scriptIndex;
 	}
 
-	public abstract boolean isValid() throws Exception;
+	protected abstract boolean isValid() throws Exception;
 
 	@Override
 	@Deprecated

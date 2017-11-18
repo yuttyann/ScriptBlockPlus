@@ -22,7 +22,7 @@ public class Calculation extends BaseOption {
 	}
 
 	@Override
-	public boolean isValid() throws Exception {
+	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), " ");
 		double value1 = parse(array[0]);
 		double value2 = parse(array[2]);

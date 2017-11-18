@@ -41,7 +41,7 @@ public class Sound extends BaseOption {
 	}
 
 	@Override
-	public boolean isValid() throws Exception {
+	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String[] sound = StringUtils.split(array[0], "-");
 		org.bukkit.Sound soundType = org.bukkit.Sound.valueOf(sound[0].toUpperCase());

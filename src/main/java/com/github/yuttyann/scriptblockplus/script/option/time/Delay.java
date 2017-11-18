@@ -17,7 +17,7 @@ public class Delay extends BaseOption implements Runnable {
 	}
 
 	@Override
-	public boolean isValid() throws Exception {
+	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		unsafe = array.length > 1 ? Boolean.valueOf(array[1]) : false;
 		if (containsDelay()) {

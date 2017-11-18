@@ -12,7 +12,7 @@ public class Server extends BaseOption {
 	}
 
 	@Override
-	public boolean isValid() throws Exception {
+	protected boolean isValid() throws Exception {
 		String message = StringUtils.replaceColorCode(getOptionValue(), true);
 		Bukkit.broadcastMessage(message);
 		return true;

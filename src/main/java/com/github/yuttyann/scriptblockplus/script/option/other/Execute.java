@@ -18,7 +18,7 @@ public class Execute extends BaseOption {
 	}
 
 	@Override
-	public boolean isValid() throws Exception {
+	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String[] coords = StringUtils.split(array[1], ",");
 		ScriptType scriptType = ScriptType.valueOf(array[0].toUpperCase());

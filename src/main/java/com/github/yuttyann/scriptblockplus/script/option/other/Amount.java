@@ -10,7 +10,7 @@ public class Amount extends BaseOption {
 	}
 
 	@Override
-	public boolean isValid() throws Exception {
+	protected boolean isValid() throws Exception {
 		ScriptData scriptData = getScriptData();
 		scriptData.addAmount(1);
 		if (scriptData.getAmount() >= Integer.parseInt(getOptionValue())) {

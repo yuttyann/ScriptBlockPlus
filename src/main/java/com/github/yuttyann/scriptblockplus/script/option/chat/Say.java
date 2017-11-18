@@ -9,7 +9,7 @@ public class Say extends BaseOption {
 	}
 
 	@Override
-	public boolean isValid() throws Exception {
+	protected boolean isValid() throws Exception {
 		commandExecute(getPlayer(), "say " + getOptionValue(), true);
 		return true;
 	}

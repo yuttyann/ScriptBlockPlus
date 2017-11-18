@@ -55,7 +55,7 @@ public class Cooldown extends BaseOption {
 	}
 
 	@Override
-	public boolean isValid() throws Exception {
+	protected boolean isValid() throws Exception {
 		int original = getSecond();
 		if (original > 0) {
 			short hour = (short) (original / 3600);

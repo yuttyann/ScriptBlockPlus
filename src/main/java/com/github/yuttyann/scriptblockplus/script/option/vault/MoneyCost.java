@@ -16,7 +16,7 @@ public class MoneyCost extends BaseOption {
 	}
 
 	@Override
-	public boolean isValid() throws Exception {
+	protected boolean isValid() throws Exception {
 		VaultEconomy vaultEconomy = HookPlugins.getVaultEconomy();
 		if (!vaultEconomy.isEnabled()) {
 			throw new UnsupportedOperationException();
