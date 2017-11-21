@@ -99,7 +99,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 	}
 
 	private String textOption(String value) {
-		if (value != null) {
+		if (StringUtils.isNotEmpty(value)) {
 			value = StringUtils.replace(value, "<player>", sbPlayer.getName());
 			value = StringUtils.replace(value, "<world>", sbPlayer.getLocation().getWorld().getName());
 		}
@@ -108,21 +108,19 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 
 	private boolean sort(List<String> scripts, Option[] options) {
 		try {
-
 			List<String> parse = new ArrayList<String>();
 			List<String> result = parse;
 			StreamUtils.mapForEach(scripts, this::getScripts, parse::addAll);
 			if (SBConfig.isSortScripts()) {
-				result = new ArrayList<String>(parse.size());
-				List<String> list = result;
+				List<String> list = (result = new ArrayList<String>(parse.size()));
 				StreamUtils.forEach(options, o -> StreamUtils.filterForEach(parse, s -> o.isOption(s), list::add));
 			}
 			this.scripts = Collections.unmodifiableList(result);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 
 	private List<String> getScripts(String scriptLine) {
@@ -130,7 +128,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 			return StringUtils.getScripts(scriptLine);
 		} catch (ScriptException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 }

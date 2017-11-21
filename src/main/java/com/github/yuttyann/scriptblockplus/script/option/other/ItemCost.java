@@ -69,7 +69,7 @@ public class ItemCost extends BaseOption {
 		if (amount > 0) {
 			item.setAmount(amount);
 		} else {
-			item = new ItemStack(Material.AIR);
+			item.setType(Material.AIR);
 		}
 		return item;
 	}

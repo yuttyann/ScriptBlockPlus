@@ -122,11 +122,11 @@ final class UTF8Config extends YamlConfiguration {
 		UTF8Config config = new UTF8Config();
 		try {
 			config.load(file);
-		} catch (FileNotFoundException ex) {
-		} catch (IOException ex) {
-			Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
-		} catch (InvalidConfigurationException ex) {
-			Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file , ex);
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+			Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, e);
+		} catch (InvalidConfigurationException e) {
+			Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file , e);
 		}
 		return config;
 	}
@@ -137,10 +137,10 @@ final class UTF8Config extends YamlConfiguration {
 		UTF8Config config = new UTF8Config();
 		try {
 			config.load(stream);
-		} catch (IOException ex) {
-			Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
-		} catch (InvalidConfigurationException ex) {
-			Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
+		} catch (IOException e) {
+			Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", e);
+		} catch (InvalidConfigurationException e) {
+			Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", e);
 		}
 		return config;
 	}
@@ -150,10 +150,10 @@ final class UTF8Config extends YamlConfiguration {
 		UTF8Config config = new UTF8Config();
 		try {
 			config.load(reader);
-		} catch (IOException ex) {
-			Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
-		} catch (InvalidConfigurationException ex) {
-			Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
+		} catch (IOException e) {
+			Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", e);
+		} catch (InvalidConfigurationException e) {
+			Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", e);
 		}
 		return config;
 	}
