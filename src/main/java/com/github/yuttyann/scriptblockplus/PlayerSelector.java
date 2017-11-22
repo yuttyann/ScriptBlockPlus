@@ -149,7 +149,7 @@ public final class PlayerSelector {
 	private static List<Player> getPlayers(Object iCommandListener, String s) throws ReflectiveOperationException {
 		Method getPlayers = (Method) map.get("PlayerSelector_getPlayers");
 		List<Player> players;
-		if (Utils.isCB18orLater()) {;
+		if (Utils.isCB18orLater()) {
 			Class<?> nmsEntityClass = PackageType.NMS.getClass("Entity");
 			List<?> entities = (List<?>) getPlayers.invoke(null, iCommandListener, s, nmsEntityClass);
 			players = new ArrayList<Player>(entities.size());
