@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
-
-public enum EquipmentSlot {
+public enum EquipSlot {
 	HAND, OFF_HAND, FEET, LEGS, CHEST, HEAD, NONE;
 
 	private static final Class<?> BUKKIT_ES_CLASS;
@@ -21,7 +20,7 @@ public enum EquipmentSlot {
 		return name().equals(bukkitEquipmentSlot.name());
 	}
 
-	public static EquipmentSlot fromEnum(Enum<?> bukkitEquipmentSlot) {
+	public static EquipSlot fromEnum(Enum<?> bukkitEquipmentSlot) {
 		if (!isBukkitEquipmentSlot(bukkitEquipmentSlot)) {
 			return NONE;
 		}

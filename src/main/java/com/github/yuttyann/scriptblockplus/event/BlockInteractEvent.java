@@ -12,7 +12,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.github.yuttyann.scriptblockplus.enums.EquipmentSlot;
+import com.github.yuttyann.scriptblockplus.enums.EquipSlot;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable {
@@ -22,15 +22,19 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 	private ItemStack item;
 	private Action action;
 	private BlockFace blockFace;
-	private EquipmentSlot hand;
+	private EquipSlot hand;
 	private boolean isAnimation;
 	private boolean cancelled;
 
-	public BlockInteractEvent(PlayerInteractEvent event, ItemStack item, EquipmentSlot hand,  boolean isAnimation) {
+	public BlockInteractEvent(PlayerInteractEvent event, EquipSlot hand,  boolean isAnimation) {
+		this(event, event.getItem(), hand, isAnimation);
+	}
+
+	public BlockInteractEvent(PlayerInteractEvent event, ItemStack item, EquipSlot hand,  boolean isAnimation) {
 		this(event, event.getPlayer(), event.getClickedBlock(), item, event.getAction(), event.getBlockFace(), hand, isAnimation);
 	}
 
-	public BlockInteractEvent(PlayerInteractEvent event, Player player, Block block, ItemStack item, Action action, BlockFace blockFace, EquipmentSlot hand, boolean isAnimation) {
+	public BlockInteractEvent(PlayerInteractEvent event, Player player, Block block, ItemStack item, Action action, BlockFace blockFace, EquipSlot hand, boolean isAnimation) {
 		super(player, block);
 		this.item = item;
 		this.action = action;
@@ -58,7 +62,7 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 		return blockFace;
 	}
 
-	public EquipmentSlot getHand() {
+	public EquipSlot getHand() {
 		return hand;
 	}
 
@@ -87,17 +91,17 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 		cancelled = cancel;
 	}
 
-	private EquipmentSlot fromHand(PlayerInteractEvent event) {
+	private EquipSlot fromHand(PlayerInteractEvent event) {
 		if (event == null || !Utils.isCB19orLater()) {
-			return EquipmentSlot.HAND;
+			return EquipSlot.HAND;
 		}
 		try {
 			if (method_Hand == null) {
-				method_Hand = PlayerInteractEvent.class.getMethod("getHand");
+				method_Hand = event.getClass().getMethod("getHand");
 			}
-			return EquipmentSlot.fromEnum((Enum<?>) method_Hand.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY));
+			return EquipSlot.fromEnum((Enum<?>) method_Hand.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY));
 		} catch (ReflectiveOperationException e) {
-			return EquipmentSlot.NONE;
+			return EquipSlot.NONE;
 		}
 	}
 }

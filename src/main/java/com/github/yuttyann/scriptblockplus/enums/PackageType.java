@@ -62,6 +62,14 @@ public enum PackageType {
 		return getConstructor(declared, className, DataType.getPrimitive(arguments)).newInstance(arguments);
 	}
 
+	public Object invokeMethod(Object instance, String className, String methodName, Object... arguments) throws ReflectiveOperationException {
+		return getMethod(false, className, methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
+	}
+
+	public Object invokeMethod(boolean declared, Object instance, String className, String methodName, Object... arguments) throws ReflectiveOperationException {
+		return getMethod(declared, className, methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
+	}
+
 	public Method getMethod(String className, String methodName, Class<?>... parameterTypes) throws ReflectiveOperationException {
 		return getMethod(false, className, methodName, parameterTypes);
 	}
@@ -135,16 +143,15 @@ public enum PackageType {
 		if (notEmptyMethod) {
 			builder.append(methodName).append('[');
 		}
-		int i = 0;
-		while (true) {
+		for (int i = 0; i < objects.length; i++) {
 			Class<?> clazz = objects[i];
 			builder.append(clazz == null ? "null" : clazz.getName());
 			if (i == lastLength) {
 				return builder.append(']').toString();
 			}
 			builder.append(',').append(' ');
-			i++;
 		}
+		return builder.toString();
 	}
 
 	private static String getPackageName() {

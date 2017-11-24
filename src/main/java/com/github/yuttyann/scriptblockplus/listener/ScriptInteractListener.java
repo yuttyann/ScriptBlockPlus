@@ -17,7 +17,7 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.material.TrapDoor;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.EquipmentSlot;
+import com.github.yuttyann.scriptblockplus.enums.EquipSlot;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
@@ -39,7 +39,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockInteract(BlockInteractEvent event) {
-		if (event.getHand() != EquipmentSlot.HAND) {
+		if (event.getHand() != EquipSlot.HAND) {
 			return;
 		}
 		Block block = event.getBlock();

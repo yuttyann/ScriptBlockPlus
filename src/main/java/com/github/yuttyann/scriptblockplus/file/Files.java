@@ -64,7 +64,7 @@ public final class Files {
 	private static String getDefaultLanguage() {
 		try {
 			String url = "http://api.yuttyann44581.net/json-language/";
-			String code =  ProfileFetcher.getJsonObject(url).get("code").getAsString();
+			String code =  (String) ProfileFetcher.getJsonObject(url).get("code");
 			return StringUtils.split(code, "-")[0];
 		} catch (Exception e) {
 			return Locale.getDefault().getLanguage();

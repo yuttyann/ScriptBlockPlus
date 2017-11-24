@@ -37,7 +37,6 @@ public final class SBConfig {
 		datas.put("consoleLog", yaml.getBoolean("consoleLog", false));
 		datas.put("sortScripts", yaml.getBoolean("sortScripts", true));
 		datas.put("leftClick", yaml.getBoolean("leftClick", true));
-		datas.put("leftArmLength", yaml.getDouble("leftArmLength", 5.22D));
 	}
 
 	public static void reloadLang() {
@@ -135,10 +134,6 @@ public final class SBConfig {
 
 	public static boolean isLeftClick() {
 		return getBoolean("leftClick");
-	}
-
-	public static double getLeftArmLength() {
-		return getDouble("leftArmLength");
 	}
 
 	public static List<String> getScriptEditorLore() {
@@ -504,10 +499,6 @@ public final class SBConfig {
 
 	private static Boolean getBoolean(String key) {
 		return (boolean) datas.get(key);
-	}
-
-	private static double getDouble(String key) {
-		return (double) datas.get(key);
 	}
 
 	private static String replaceColorCode(String text) {
