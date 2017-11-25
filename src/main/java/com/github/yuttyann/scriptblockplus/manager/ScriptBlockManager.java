@@ -281,7 +281,9 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 		default:
 			return null;
 		}
-		Bukkit.getPluginManager().callEvent(event);
+		if (event != null) {
+			Bukkit.getPluginManager().callEvent(event);
+		}
 		return event;
 	}
 

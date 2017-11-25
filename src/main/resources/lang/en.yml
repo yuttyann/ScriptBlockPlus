@@ -27,7 +27,7 @@ scriptEditor:
 - '&6Shift+Leftclick: &ecopy "walk" type scriptblock'
 - '&6Shift+Rightclick: &epaste the script to a new block'
 
-# |~ : change the line
+# |~, \n : change the line
 
 ## ===== MESSAGES ===== ##
 

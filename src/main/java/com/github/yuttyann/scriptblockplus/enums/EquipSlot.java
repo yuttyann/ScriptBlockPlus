@@ -43,6 +43,9 @@ public enum EquipSlot {
 	}
 
 	private static boolean isBukkitEquipmentSlot(Enum<?> bukkitEquipmentSlot) {
-		return BUKKIT_ES_CLASS != null && bukkitEquipmentSlot != null && bukkitEquipmentSlot.getClass() == BUKKIT_ES_CLASS;
+		if (BUKKIT_ES_CLASS == null || bukkitEquipmentSlot == null) {
+			return false;
+		}
+		return bukkitEquipmentSlot.getClass() == BUKKIT_ES_CLASS;
 	}
 }

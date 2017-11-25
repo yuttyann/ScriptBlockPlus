@@ -5,11 +5,11 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.enums.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-class NMSHelper {
+public class NMSHelper {
 
-	static final Class<?>[] STRING_PARAM = {String.class};
+	public static final Class<?>[] STRING_PARAM = {String.class};
 
-	static void sendPacket(Player player, Object packet) {
+	public static void sendPacket(Player player, Object packet) {
 		try {
 			Object handle = player.getClass().getMethod("getHandle").invoke(player);
 			Object connection = handle.getClass().getField("playerConnection").get(handle);
@@ -20,7 +20,7 @@ class NMSHelper {
 		}
 	}
 
-	static String getChatSerializerName() {
+	public static String getChatSerializerName() {
 		String chatSerializer;
 		if (Utils.isCB183orLater()) {
 			chatSerializer = "IChatBaseComponent$ChatSerializer";
@@ -30,7 +30,7 @@ class NMSHelper {
 		return chatSerializer;
 	}
 
-	static String getEnumTitleActionName() {
+	public static String getEnumTitleActionName() {
 		String enumTitleAction;
 		if (Utils.isCB183orLater()) {
 			enumTitleAction = "PacketPlayOutTitle$EnumTitleAction";
@@ -40,7 +40,7 @@ class NMSHelper {
 		return enumTitleAction;
 	}
 
-	static Object getEnumField(Class<?> clazz, String name) {
+	public static Object getEnumField(Class<?> clazz, String name) {
 		for (Object field : clazz.getEnumConstants()) {
 			if (String.valueOf(field).equals(name)) {
 				return field;

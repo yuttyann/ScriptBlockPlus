@@ -11,6 +11,8 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class MoneyCost extends BaseOption {
 
+	public static final String KEY_COST = "Option_MoneyCost";
+
 	public MoneyCost() {
 		super("moneycost", "$cost:");
 	}
@@ -26,8 +28,8 @@ public class MoneyCost extends BaseOption {
 		if (vaultEconomy.has(player, cost)) {
 			vaultEconomy.withdrawPlayer(player, cost);
 			SBPlayer sbPlayer = SBPlayer.get(player);
-			Double value = (Double) sbPlayer.getData("MoneyCost");
-			sbPlayer.setData("MoneyCost", cost + (value == null ? 0.0D : value.doubleValue()));
+			Double value = (Double) sbPlayer.getData(KEY_COST);
+			sbPlayer.setData(KEY_COST, cost + (value == null ? 0.0D : value.doubleValue()));
 			return true;
 		}
 		double result = cost - vaultEconomy.getBalance(player);

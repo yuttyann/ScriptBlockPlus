@@ -31,12 +31,14 @@ public class Calculation extends BaseOption {
 		if (result(value1, value2, operator)) {
 			return true;
 		}
-		String message = StringUtils.createString(array, 3);
-		message = StringUtils.replaceColorCode(message, true);
-		message = StringUtils.replace(message, "%value1%", String.valueOf(value1));
-		message = StringUtils.replace(message, "%value2%", String.valueOf(value2));
-		message = StringUtils.replace(message, "%operator%", operator);
-		Utils.sendMessage(getPlayer(), message);
+		if (array.length > 3) {
+			String message = StringUtils.createString(array, 3);
+			message = StringUtils.replaceColorCode(message, true);
+			message = StringUtils.replace(message, "%value1%", String.valueOf(value1));
+			message = StringUtils.replace(message, "%value2%", String.valueOf(value2));
+			message = StringUtils.replace(message, "%operator%", operator);
+			Utils.sendMessage(getPlayer(), message);
+		}
 		return false;
 	}
 

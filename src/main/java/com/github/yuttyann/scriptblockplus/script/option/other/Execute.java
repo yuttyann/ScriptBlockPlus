@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
@@ -28,12 +29,13 @@ public class Execute extends BaseOption {
 		double z = Integer.parseInt(coords[3].trim());
 		Location location = new Location(world, x, y, z);
 
+		Player player = getPlayer();
 		ScriptBlockAPI scriptBlockAPI = ScriptBlock.getInstance().getAPI(location, scriptType);
 		if (!scriptBlockAPI.checkPath()) {
-			Utils.sendMessage(getSBPlayer(), SBConfig.getErrorScriptFileCheckMessage());
+			Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 			return false;
 		}
-		scriptBlockAPI.scriptRead(getPlayer());
+		scriptBlockAPI.scriptRead(player);
 		return true;
 	}
 }

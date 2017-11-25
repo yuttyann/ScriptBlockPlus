@@ -62,13 +62,12 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		add(new Holder(9, OldCooldown.class));
 		add(new Holder(8, Cooldown.class));
 		add(new Holder(7, Delay.class));
+		add(new Holder(10, Calculation.class));
 		add(new Holder(22, ItemCost.class));
 		add(new Holder(6, ItemHand.class));
 		add(new Holder(23, MoneyCost.class));
-		add(new Holder(10, Calculation.class));
 		add(new Holder(16, Group.class));
 		add(new Holder(19, Perm.class));
-		add(new Holder(15, Amount.class));
 		add(new Holder(1, Bypass.class));
 		add(new Holder(0, Command.class));
 		add(new Holder(2, Console.class));
@@ -78,11 +77,12 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		add(new Holder(14, Sound.class));
 		add(new Holder(12, Title.class));
 		add(new Holder(13, ActionBar.class));
-		add(new Holder(11, Execute.class));
 		add(new Holder(17, GroupAdd.class));
 		add(new Holder(18, GroupRemove.class));
 		add(new Holder(20, PermAdd.class));
 		add(new Holder(21, PermRemove.class));
+		add(new Holder(11, Execute.class));
+		add(new Holder(15, Amount.class));
 	}
 
 	@Deprecated

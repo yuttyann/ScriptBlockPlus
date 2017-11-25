@@ -203,7 +203,7 @@ public final class ScriptData implements Cloneable {
 
 	public ScriptData clone() {
 		ScriptData scriptData = new ScriptData();
-		scriptData.location = this.location;
+		scriptData.location = this.location.clone();
 		scriptData.scriptPath = this.scriptPath;
 		scriptData.scriptFile = this.scriptFile;
 		scriptData.scriptType = this.scriptType;

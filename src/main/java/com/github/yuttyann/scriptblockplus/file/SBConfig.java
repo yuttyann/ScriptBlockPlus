@@ -18,7 +18,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public final class SBConfig {
 
-	private static final Map<String, Object> datas = new HashMap<String, Object>();
+	private static final Map<String, Object> DATAS = new HashMap<String, Object>();
 
 	public static void reload() {
 		reloadConfig();
@@ -30,13 +30,13 @@ public final class SBConfig {
 		if (yaml == null) {
 			throw new NullPointerException();
 		}
-		datas.put("updateChecker", yaml.getBoolean("updateChecker", true));
-		datas.put("autoDownload", yaml.getBoolean("autoDownload", true));
-		datas.put("openChangeLog", yaml.getBoolean("openChangeLog", true));
-		datas.put("language", yaml.getString("language", "en"));
-		datas.put("consoleLog", yaml.getBoolean("consoleLog", false));
-		datas.put("sortScripts", yaml.getBoolean("sortScripts", true));
-		datas.put("leftClick", yaml.getBoolean("leftClick", true));
+		DATAS.put("updateChecker", yaml.getBoolean("updateChecker", true));
+		DATAS.put("autoDownload", yaml.getBoolean("autoDownload", true));
+		DATAS.put("openChangeLog", yaml.getBoolean("openChangeLog", true));
+		DATAS.put("language", yaml.getString("language", "en"));
+		DATAS.put("consoleLog", yaml.getBoolean("consoleLog", false));
+		DATAS.put("sortScripts", yaml.getBoolean("sortScripts", true));
+		DATAS.put("leftClick", yaml.getBoolean("leftClick", true));
 	}
 
 	public static void reloadLang() {
@@ -44,68 +44,68 @@ public final class SBConfig {
 		if (yaml == null) {
 			throw new NullPointerException();
 		}
-		datas.put("scriptEditorLore", yaml.getStringList("scriptEditor"));
-		datas.put("toolCommandMessage", yaml.getString("toolCommandMessage"));
-		datas.put("reloadCommandMessage", yaml.getString("reloadCommandMessage"));
-		datas.put("checkVerCommandMessage", yaml.getString("checkVerCommandMessage"));
-		datas.put("dataMigrCommandMessage", yaml.getString("dataMigrCommandMessage"));
-		datas.put("createCommandMessage", yaml.getString("createCommandMessage"));
-		datas.put("addCommandMessage", yaml.getString("addCommandMessage"));
-		datas.put("removeCommandMessage", yaml.getString("removeCommandMessage"));
-		datas.put("viewCommandMessage", yaml.getString("viewCommandMessage"));
-		datas.put("worldEditPasteCommandMessage", yaml.getString("worldEditPasteCommandMessage"));
-		datas.put("worldEditRemoveCommandMessage", yaml.getString("worldEditRemoveCommandMessage"));
-		datas.put("notVaultMessage", yaml.getString("notVaultMessage"));
-		datas.put("senderNoPlayerMessage", yaml.getString("senderNoPlayerMessage"));
-		datas.put("notPermissionMessage", yaml.getString("notPermissionMessage"));
-		datas.put("giveScriptEditorMessage", yaml.getString("giveScriptEditorMessage"));
-		datas.put("allFileReloadMessage", yaml.getString("allFileReloadMessage"));
-		datas.put("notLatestPluginMessage", yaml.getString("notLatestPluginMessage"));
-		datas.put("updateErrorMessage", yaml.getString("updateErrorMessage"));
-		datas.put("notScriptBlockFileMessage", yaml.getString("notScriptBlockFileMessage"));
-		datas.put("dataMigrStartMessage", yaml.getString("dataMigrStartMessage"));
-		datas.put("dataMigrEndMessage", yaml.getString("dataMigrEndMessage"));
-		datas.put("notWorldEditMessage", yaml.getString("notWorldEditMessage"));
-		datas.put("updateDownloadStartMessage", yaml.getString("updateDownloadStartMessage"));
-		datas.put("updateDownloadEndMessage", yaml.getString("updateDownloadEndMessage"));
-		datas.put("updateCheckMessage", yaml.getString("updateCheckMessage"));
-		datas.put("scriptCopyMessage", yaml.getString("scriptCopyMessage"));
-		datas.put("scriptPasteMessage", yaml.getString("scriptPasteMessage"));
-		datas.put("scriptCreateMessage", yaml.getString("scriptCreateMessage"));
-		datas.put("scriptAddMessage", yaml.getString("scriptAddMessage"));
-		datas.put("scriptRemoveMessage", yaml.getString("scriptRemoveMessage"));
-		datas.put("worldEditNotSelectionMessage", yaml.getString("worldEditNotSelectionMessage"));
-		datas.put("worldEditPasteMessage", yaml.getString("worldEditPasteMessage"));
-		datas.put("worldEditRemoveMessage", yaml.getString("worldEditRemoveMessage"));
-		datas.put("optionFailedToExecuteMessage", yaml.getString("optionFailedToExecuteMessage"));
-		datas.put("activeDelayMessage", yaml.getString("activeDelayMessage"));
-		datas.put("activeCooldownMessage", yaml.getString("activeCooldownMessage"));
-		datas.put("succEditDataMessage", yaml.getString("succEditDataMessage"));
-		datas.put("errorEditDataMessage", yaml.getString("errorEditDataMessage"));
-		datas.put("errorScriptCheckMessage", yaml.getString("errorScriptCheckMessage"));
-		datas.put("errorScriptFileCheckMessage", yaml.getString("errorScriptFileCheckMessage"));
-		datas.put("errorScriptExecMessage", yaml.getString("errorScriptExecMessage"));
-		datas.put("errorGroupMessage", yaml.getString("errorGroupMessage"));
-		datas.put("errorUPLevelMessage", yaml.getString("errorUPLevelMessage"));
-		datas.put("errorUNDERLevelMessage", yaml.getString("errorUNDERLevelMessage"));
-		datas.put("errorEQUALLevelMessage", yaml.getString("errorEQUALLevelMessage"));
-		datas.put("errorHandMessage", yaml.getString("errorHandMessage"));
-		datas.put("errorItemMessage", yaml.getString("errorItemMessage"));
-		datas.put("errorCostMessage", yaml.getString("errorCostMessage"));
-		datas.put("consoleScriptCopyMessage", yaml.getString("consoleScriptCopyMessage"));
-		datas.put("consoleScriptPasteMessage", yaml.getString("consoleScriptPasteMessage"));
-		datas.put("consoleScriptCreateMessage", yaml.getString("consoleScriptCreateMessage"));
-		datas.put("consoleScriptAddMessage", yaml.getString("consoleScriptAddMessage"));
-		datas.put("consoleScriptRemoveMessage", yaml.getString("consoleScriptRemoveMessage"));
-		datas.put("consoleScriptViewMessage", yaml.getString("consoleScriptViewMessage"));
-		datas.put("consoleWorldEditPasteMessage", yaml.getString("consoleWorldEditPasteMessage"));
-		datas.put("consoleWorldEditRemoveMessage", yaml.getString("consoleWorldEditRemoveMessage"));
-		datas.put("consoleSuccScriptExecMessage", yaml.getString("consoleSuccScriptExecMessage"));
-		datas.put("consoleErrorScriptExecMessage", yaml.getString("consoleErrorScriptExecMessage"));
+		DATAS.put("scriptEditorLore", yaml.getStringList("scriptEditor"));
+		DATAS.put("toolCommandMessage", yaml.getString("toolCommandMessage"));
+		DATAS.put("reloadCommandMessage", yaml.getString("reloadCommandMessage"));
+		DATAS.put("checkVerCommandMessage", yaml.getString("checkVerCommandMessage"));
+		DATAS.put("dataMigrCommandMessage", yaml.getString("dataMigrCommandMessage"));
+		DATAS.put("createCommandMessage", yaml.getString("createCommandMessage"));
+		DATAS.put("addCommandMessage", yaml.getString("addCommandMessage"));
+		DATAS.put("removeCommandMessage", yaml.getString("removeCommandMessage"));
+		DATAS.put("viewCommandMessage", yaml.getString("viewCommandMessage"));
+		DATAS.put("worldEditPasteCommandMessage", yaml.getString("worldEditPasteCommandMessage"));
+		DATAS.put("worldEditRemoveCommandMessage", yaml.getString("worldEditRemoveCommandMessage"));
+		DATAS.put("notVaultMessage", yaml.getString("notVaultMessage"));
+		DATAS.put("senderNoPlayerMessage", yaml.getString("senderNoPlayerMessage"));
+		DATAS.put("notPermissionMessage", yaml.getString("notPermissionMessage"));
+		DATAS.put("giveScriptEditorMessage", yaml.getString("giveScriptEditorMessage"));
+		DATAS.put("allFileReloadMessage", yaml.getString("allFileReloadMessage"));
+		DATAS.put("notLatestPluginMessage", yaml.getString("notLatestPluginMessage"));
+		DATAS.put("updateErrorMessage", yaml.getString("updateErrorMessage"));
+		DATAS.put("notScriptBlockFileMessage", yaml.getString("notScriptBlockFileMessage"));
+		DATAS.put("dataMigrStartMessage", yaml.getString("dataMigrStartMessage"));
+		DATAS.put("dataMigrEndMessage", yaml.getString("dataMigrEndMessage"));
+		DATAS.put("notWorldEditMessage", yaml.getString("notWorldEditMessage"));
+		DATAS.put("updateDownloadStartMessage", yaml.getString("updateDownloadStartMessage"));
+		DATAS.put("updateDownloadEndMessage", yaml.getString("updateDownloadEndMessage"));
+		DATAS.put("updateCheckMessage", yaml.getString("updateCheckMessage"));
+		DATAS.put("scriptCopyMessage", yaml.getString("scriptCopyMessage"));
+		DATAS.put("scriptPasteMessage", yaml.getString("scriptPasteMessage"));
+		DATAS.put("scriptCreateMessage", yaml.getString("scriptCreateMessage"));
+		DATAS.put("scriptAddMessage", yaml.getString("scriptAddMessage"));
+		DATAS.put("scriptRemoveMessage", yaml.getString("scriptRemoveMessage"));
+		DATAS.put("worldEditNotSelectionMessage", yaml.getString("worldEditNotSelectionMessage"));
+		DATAS.put("worldEditPasteMessage", yaml.getString("worldEditPasteMessage"));
+		DATAS.put("worldEditRemoveMessage", yaml.getString("worldEditRemoveMessage"));
+		DATAS.put("optionFailedToExecuteMessage", yaml.getString("optionFailedToExecuteMessage"));
+		DATAS.put("activeDelayMessage", yaml.getString("activeDelayMessage"));
+		DATAS.put("activeCooldownMessage", yaml.getString("activeCooldownMessage"));
+		DATAS.put("succEditDataMessage", yaml.getString("succEditDataMessage"));
+		DATAS.put("errorEditDataMessage", yaml.getString("errorEditDataMessage"));
+		DATAS.put("errorScriptCheckMessage", yaml.getString("errorScriptCheckMessage"));
+		DATAS.put("errorScriptFileCheckMessage", yaml.getString("errorScriptFileCheckMessage"));
+		DATAS.put("errorScriptExecMessage", yaml.getString("errorScriptExecMessage"));
+		DATAS.put("errorGroupMessage", yaml.getString("errorGroupMessage"));
+		DATAS.put("errorUPLevelMessage", yaml.getString("errorUPLevelMessage"));
+		DATAS.put("errorUNDERLevelMessage", yaml.getString("errorUNDERLevelMessage"));
+		DATAS.put("errorEQUALLevelMessage", yaml.getString("errorEQUALLevelMessage"));
+		DATAS.put("errorHandMessage", yaml.getString("errorHandMessage"));
+		DATAS.put("errorItemMessage", yaml.getString("errorItemMessage"));
+		DATAS.put("errorCostMessage", yaml.getString("errorCostMessage"));
+		DATAS.put("consoleScriptCopyMessage", yaml.getString("consoleScriptCopyMessage"));
+		DATAS.put("consoleScriptPasteMessage", yaml.getString("consoleScriptPasteMessage"));
+		DATAS.put("consoleScriptCreateMessage", yaml.getString("consoleScriptCreateMessage"));
+		DATAS.put("consoleScriptAddMessage", yaml.getString("consoleScriptAddMessage"));
+		DATAS.put("consoleScriptRemoveMessage", yaml.getString("consoleScriptRemoveMessage"));
+		DATAS.put("consoleScriptViewMessage", yaml.getString("consoleScriptViewMessage"));
+		DATAS.put("consoleWorldEditPasteMessage", yaml.getString("consoleWorldEditPasteMessage"));
+		DATAS.put("consoleWorldEditRemoveMessage", yaml.getString("consoleWorldEditRemoveMessage"));
+		DATAS.put("consoleSuccScriptExecMessage", yaml.getString("consoleSuccScriptExecMessage"));
+		DATAS.put("consoleErrorScriptExecMessage", yaml.getString("consoleErrorScriptExecMessage"));
 	}
 
 	public static Map<String, Object> getDatas() {
-		return Collections.unmodifiableMap(datas);
+		return Collections.unmodifiableMap(DATAS);
 	}
 
 	public static boolean isUpdateChecker() {
@@ -489,20 +489,20 @@ public final class SBConfig {
 
 	private static List<String> getStringList(String key) {
 		@SuppressWarnings("unchecked")
-		List<String> list = (List<String>) datas.get(key);
+		List<String> list = (List<String>) DATAS.get(key);
 		return list;
 	}
 
 	private static String getString(String key) {
-		return (String) datas.get(key);
+		return (String) DATAS.get(key);
 	}
 
 	private static Boolean getBoolean(String key) {
-		return (boolean) datas.get(key);
+		return (boolean) DATAS.get(key);
 	}
 
-	private static String replaceColorCode(String text) {
-		return replace(text, "&", "§");
+	private static String replaceColorCode(String source) {
+		return StringUtils.replaceColorCode(source, false);
 	}
 
 	private static List<String> replaceColorCode(List<String> list) {

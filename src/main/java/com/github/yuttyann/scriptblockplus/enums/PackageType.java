@@ -110,17 +110,17 @@ public enum PackageType {
 		if (StringUtils.isEmpty(className)) {
 			throw new IllegalArgumentException();
 		}
-		String path = this + "." + className;
-		Class<?> clazz = CLASS_CACHE_MAP.get(path);
+		String key = this + "." + className;
+		Class<?> clazz = CLASS_CACHE_MAP.get(key);
 		if (clazz == null) {
-			clazz = Class.forName(path);
-			CLASS_CACHE_MAP.put(path, clazz);
+			clazz = Class.forName(key);
+			CLASS_CACHE_MAP.put(key, clazz);
 		}
 		return clazz;
 	}
 
 	private String createKey(String className, String methodName, Class<?>[] objects) {
-		if (className == null) {
+		if (StringUtils.isEmpty(className)) {
 			return "null";
 		}
 		if (objects == null || objects.length == 0 || (objects.length == 1 && objects[0] == null)) {

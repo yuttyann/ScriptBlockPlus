@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.listener.interact;
+package com.github.yuttyann.scriptblockplus.listener.nms;
 
 import java.lang.reflect.Method;
 
@@ -26,13 +26,18 @@ public final class NMSWorld {
 		return world;
 	}
 
-	public MovingPosition rayTrace(Vec3D start, Vec3D end, boolean flag) throws ReflectiveOperationException {
-		Object nmsStart = start.toNMSVec3D();
-		Object nmsEnd = end.toNMSVec3D();
-		Object rayTrace = PackageType.NMS.invokeMethod(world, "World", "rayTrace", nmsStart, nmsEnd, flag);
-		if (rayTrace == null) {
-			return null;
+	public MovingPosition rayTrace(Vec3D start, Vec3D end, boolean flag) {
+		try {
+			Object nmsStart = start.toNMSVec3D();
+			Object nmsEnd = end.toNMSVec3D();
+			Object rayTrace = PackageType.NMS.invokeMethod(world, "World", "rayTrace", nmsStart, nmsEnd, flag);
+			if (rayTrace == null) {
+				return null;
+			}
+			return new MovingPosition(rayTrace);
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
 		}
-		return new MovingPosition(rayTrace);
+		return null;
 	}
 }

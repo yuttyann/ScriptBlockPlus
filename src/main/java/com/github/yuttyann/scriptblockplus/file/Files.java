@@ -13,37 +13,37 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public final class Files {
 
-	private static final Map<String, YamlConfig> files = new HashMap<String, YamlConfig>();
+	private static final Map<String, YamlConfig> FILES = new HashMap<String, YamlConfig>();
 
 	private static String defaultLanguage;
 
 	public static void reload() {
-		files.put("config", loadFile("config.yml", true));
+		FILES.put("config", loadFile("config.yml", true));
 		SBConfig.reloadConfig();
 
-		files.put("lang", loadLang("lang_{code}.yml", "lang"));
+		FILES.put("lang", loadLang("lang_{code}.yml", "lang"));
 		SBConfig.reloadLang();
 
 		for (ScriptType scriptType : ScriptType.values()) {
 			String type = scriptType.getType();
-			files.put(type, loadFile("scripts/" + type + ".yml", false));
+			FILES.put(type, loadFile("scripts/" + type + ".yml", false));
 		}
 	}
 
 	public static Map<String, YamlConfig> getFiles() {
-		return Collections.unmodifiableMap(files);
+		return Collections.unmodifiableMap(FILES);
 	}
 
 	public static YamlConfig getConfig() {
-		return files.get("config");
+		return FILES.get("config");
 	}
 
 	public static YamlConfig getLang() {
-		return files.get("lang");
+		return FILES.get("lang");
 	}
 
 	public static YamlConfig getScriptFile(ScriptType scriptType) {
-		return scriptType == null ? null : files.get(scriptType.getType());
+		return scriptType == null ? null : FILES.get(scriptType.getType());
 	}
 
 	private static YamlConfig loadFile(String filePath, boolean isCopyFile) {
@@ -63,7 +63,7 @@ public final class Files {
 
 	private static String getDefaultLanguage() {
 		try {
-			String url = "http://api.yuttyann44581.net/json-language/";
+			String url = "https://api.yuttyann44581.net/json-language/";
 			String code =  (String) ProfileFetcher.getJsonObject(url).get("code");
 			return StringUtils.split(code, "-")[0];
 		} catch (Exception e) {

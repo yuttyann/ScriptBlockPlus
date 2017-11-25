@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.listener.interact;
+package com.github.yuttyann.scriptblockplus.listener.nms;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,17 +13,17 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class MovingPosition {
 
-	private static class BlockPos {
+	private static Method a;
 
-		private static Method a;
+	private static Object getX;
+	private static Object getY;
+	private static Object getZ;
 
-		private static Object getX;
-		private static Object getY;
-		private static Object getZ;
+	private class BlockPos {
 
-		public final int x;
-		public final int y;
-		public final int z;
+		private final int x;
+		private final int y;
+		private final int z;
 
 		private BlockPos(Object rayTrace) throws ReflectiveOperationException {
 			if (Utils.isCB18orLater()) {
@@ -64,10 +64,10 @@ public final class MovingPosition {
 	private static Field direction;
 
 	private final BlockPos blockPos;
-	private final Vec3D position;
+	private final Vec3D vec3d;
 	private final BlockFace blockFace;
 
-	public MovingPosition(Object rayTrace) throws ReflectiveOperationException {
+	MovingPosition(Object rayTrace) throws ReflectiveOperationException {
 		if (pos == null) {
 			pos = rayTrace.getClass().getField("pos");
 		}
@@ -75,12 +75,12 @@ public final class MovingPosition {
 			direction = rayTrace.getClass().getField(Utils.isCB18orLater() ? "direction" : "face");
 		}
 		this.blockPos = new BlockPos(rayTrace);
-		this.position = Vec3D.fromNMSVec3D(pos.get(rayTrace));
+		this.vec3d = Vec3D.fromNMSVec3D(pos.get(rayTrace));
 		this.blockFace = (BlockFace) PackageType.CB_BLOCK.invokeMethod(null, "CraftBlock", "notchToBlockFace", direction.get(rayTrace));
 	}
 
 	public Vec3D getPosition() {
-		return position == null ? Vec3D.a : position;
+		return vec3d == null ? Vec3D.a : vec3d;
 	}
 
 	public Block getBlock(World world) {
