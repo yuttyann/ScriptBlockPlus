@@ -15,6 +15,8 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ItemCost extends BaseOption {
 
+	public static final String KEY_ITEM = "Option_ItemCost";
+
 	public ItemCost() {
 		super("itemcost", "$item:");
 	}
@@ -44,7 +46,7 @@ public class ItemCost extends BaseOption {
 				items[i] = consume(item, result);
 			}
 			if (allAmount >= amount) {
-				SBPlayer.get(player).setData("ItemCost", copyItems(inventory.getContents()));
+				SBPlayer.get(player).setData(KEY_ITEM, copyItems(inventory.getContents()));
 				break;
 			}
 		}
