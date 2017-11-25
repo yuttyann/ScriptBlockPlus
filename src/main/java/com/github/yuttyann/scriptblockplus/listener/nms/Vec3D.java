@@ -203,7 +203,7 @@ public class Vec3D {
 	public static Object newNMSVec3D(double x, double y, double z) {
 		Object vec3D = null;
 		try {
-			if (Utils.isCB1710orLater()) {
+			if (Utils.isCB18orLater()) {
 				vec3D = PackageType.NMS.newInstance("Vec3D", x, y, z);
 			} else {
 				vec3D = PackageType.NMS.invokeMethod(null, "Vec3D", "a", x, y, z);
