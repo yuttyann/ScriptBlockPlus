@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +34,7 @@ public enum PackageType {
 	CB_UPDATER(CB, "updater"),
 	CB_UTIL(CB, "util");
 
+	private static final Map<String, Field> FIELD_CACHE_MAP = new HashMap<String, Field>();
 	private static final Map<String, Method> METHOD_CACHE_MAP = new HashMap<String, Method>();
 	private static final Map<String, Class<?>> CLASS_CACHE_MAP = new HashMap<String, Class<?>>();
 	private static final Map<String, Constructor<?>> CONSTRUCTOR_CACHE_MAP = new HashMap<String, Constructor<?>>();
@@ -51,22 +53,47 @@ public enum PackageType {
 		return path;
 	}
 
-	public Object newInstance(String className, Object... arguments) throws ReflectiveOperationException {
-		return newInstance(false, className, arguments);
+	public void setFieldValue(String className, String fieldName, Object instance, Object value) throws ReflectiveOperationException {
+		getField(false, className, fieldName).set(instance, value);
 	}
 
-	public Object newInstance(boolean declared, String className, Object... arguments) throws ReflectiveOperationException {
-		if (arguments == ArrayUtils.EMPTY_OBJECT_ARRAY) {
-			return getClass(className).newInstance();
+	public void setFieldValue(boolean declared, String className, String fieldName, Object instance, Object value) throws ReflectiveOperationException {
+		if (StringUtils.isEmpty(className)) {
+			className = instance.getClass().getSimpleName();
 		}
-		return getConstructor(declared, className, DataType.getPrimitive(arguments)).newInstance(arguments);
+		getField(declared, className, fieldName).set(instance, value);
+	}
+
+	public Field getField(String className, String fieldName) throws ReflectiveOperationException {
+		return getField(false, className, fieldName);
+	}
+
+	public Field getField(boolean declared, String className, String fieldName) throws ReflectiveOperationException {
+		String key = createKey(className, fieldName);
+		Field field = FIELD_CACHE_MAP.get(key);
+		if (field == null) {
+			if (declared) {
+				field = getClass(className).getDeclaredField(fieldName);
+				field.setAccessible(true);
+			} else {
+				field = getClass(className).getField(fieldName);
+			}
+			FIELD_CACHE_MAP.put(key, field);
+		}
+		return field;
 	}
 
 	public Object invokeMethod(Object instance, String className, String methodName, Object... arguments) throws ReflectiveOperationException {
-		return getMethod(false, className, methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
+		return invokeMethod(false, instance, className, methodName, arguments);
 	}
 
 	public Object invokeMethod(boolean declared, Object instance, String className, String methodName, Object... arguments) throws ReflectiveOperationException {
+		if (StringUtils.isEmpty(className)) {
+			className = instance.getClass().getSimpleName();
+		}
+		if (arguments == null) {
+			arguments = ArrayUtils.EMPTY_OBJECT_ARRAY;
+		}
 		return getMethod(declared, className, methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
 	}
 
@@ -75,6 +102,9 @@ public enum PackageType {
 	}
 
 	public Method getMethod(boolean declared, String className, String methodName, Class<?>... parameterTypes) throws ReflectiveOperationException {
+		if (parameterTypes == null) {
+			parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
+		}
 		String key = createKey(className, methodName, parameterTypes);
 		Method method = METHOD_CACHE_MAP.get(key);
 		if (method == null) {
@@ -84,8 +114,20 @@ public enum PackageType {
 			} else {
 				method = getClass(className).getMethod(methodName, parameterTypes);
 			}
+			METHOD_CACHE_MAP.put(key, method);
 		}
 		return method;
+	}
+
+	public Object newInstance(String className, Object... arguments) throws ReflectiveOperationException {
+		return newInstance(false, className, arguments);
+	}
+
+	public Object newInstance(boolean declared, String className, Object... arguments) throws ReflectiveOperationException {
+		if (arguments == null || arguments.length == 0) {
+			return getClass(className).newInstance();
+		}
+		return getConstructor(declared, className, DataType.getPrimitive(arguments)).newInstance(arguments);
 	}
 
 	public Constructor<?> getConstructor(String className, Class<?>... parameterTypes) throws ReflectiveOperationException {
@@ -93,6 +135,9 @@ public enum PackageType {
 	}
 
 	public Constructor<?> getConstructor(boolean declared, String className, Class<?>... parameterTypes) throws ReflectiveOperationException {
+		if (parameterTypes == null) {
+			parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
+		}
 		String key = createKey(className, null, parameterTypes);
 		Constructor<?> constructor = CONSTRUCTOR_CACHE_MAP.get(key);
 		if (constructor == null) {
@@ -102,6 +147,7 @@ public enum PackageType {
 			} else {
 				constructor = getClass(className).getConstructor(parameterTypes);
 			}
+			CONSTRUCTOR_CACHE_MAP.put(key, constructor);
 		}
 		return constructor;
 	}
@@ -119,29 +165,33 @@ public enum PackageType {
 		return clazz;
 	}
 
-	private String createKey(String className, String methodName, Class<?>[] objects) {
+	private String createKey(String className, String name) {
+		return createKey(className, name, null);
+	}
+
+	private String createKey(String className, String name, Class<?>[] objects) {
 		if (StringUtils.isEmpty(className)) {
 			return "null";
 		}
-		if (objects == null || objects.length == 0 || (objects.length == 1 && objects[0] == null)) {
+		if (objects == null || objects.length == 0) {
 			objects = ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
 		int lastLength = objects.length - 1;
 		if (lastLength == -1) {
-			if (methodName != null) {
-				return this + "." + className + "-" + methodName + "[]";
+			if (name != null) {
+				return this + "." + className + "=" + name + "[]";
 			}
 			return this + "." + className;
 		}
-		boolean notEmptyMethod = StringUtils.isNotEmpty(methodName);
+		boolean notEmptyMethod = StringUtils.isNotEmpty(name);
 		int length = objects.length + className.length();
 		if (notEmptyMethod) {
-			length += methodName.length();
+			length += name.length();
 		}
 		StrBuilder builder = new StrBuilder(length);
-		builder.append(this).append('.').append(className).append(notEmptyMethod ? '-' : '[');
+		builder.append(this).append('.').append(className).append(notEmptyMethod ? '=' : '[');
 		if (notEmptyMethod) {
-			builder.append(methodName).append('[');
+			builder.append(name).append('[');
 		}
 		for (int i = 0; i < objects.length; i++) {
 			Class<?> clazz = objects[i];

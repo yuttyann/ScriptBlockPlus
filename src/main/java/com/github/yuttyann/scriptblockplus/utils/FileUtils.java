@@ -12,40 +12,54 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.base.Charsets;
 
 public class FileUtils {
 
-	private static Method methodGetFile;
+	public static InputStream getResource(Plugin plugin, String filePath) {
+		if (plugin == null || StringUtils.isEmpty(filePath)) {
+			return null;
+		}
+		try {
+			URL url = plugin.getClass().getClassLoader().getResource(filePath);
+			if (url == null) {
+				return null;
+			}
+			URLConnection connection = url.openConnection();
+			connection.setUseCaches(false);
+			return connection.getInputStream();
+		} catch (IOException e) {
+			return null;
+		}
+	}
 
-	public static void copyFileFromJar(File jarFile, File targetFile, String sourceFilePath) {
-		if (!isExists(jarFile)  || isExists(targetFile) || StringUtils.isEmpty(sourceFilePath)) {
+	public static void copyFileFromPlugin(Plugin plugin, File targetFile, String sourceFilePath) {
+		if (isExists(targetFile) || StringUtils.isEmpty(sourceFilePath)) {
 			return;
 		}
-		JarFile jar = null;
-		BufferedReader reader = null;
-		BufferedWriter writer = null;
 		File parent = targetFile.getParentFile();
 		if (!parent.exists()) {
 			parent.mkdirs();
 		}
+		InputStream is = null;
+		BufferedReader reader = null;
+		BufferedWriter writer = null;
 		try {
-			jar = new JarFile(jarFile);
-			ZipEntry zipEntry = jar.getEntry(sourceFilePath);
-			reader = new BufferedReader(new InputStreamReader(jar.getInputStream(zipEntry), Charsets.UTF_8));
+			is = getResource(plugin, sourceFilePath);
+			if (is == null) {
+				return;
+			}
+			reader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), Charsets.UTF_8));
 			boolean isFirst = true;
 			String line;
@@ -76,9 +90,9 @@ public class FileUtils {
 					e.printStackTrace();
 				}
 			}
-			if (jar != null) {
+			if (is != null) {
 				try {
-					jar.close();
+					is.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -89,6 +103,9 @@ public class FileUtils {
 	public static void fileEncode(File file, Charset charset) {
 		if (!isExists(file)) {
 			return;
+		}
+		if (charset == null) {
+			charset = Charset.defaultCharset();
 		}
 		BufferedReader reader = null;
 		BufferedWriter writer = null;
@@ -224,17 +241,8 @@ public class FileUtils {
 		return null;
 	}
 
-	public static File getJarFile(Plugin plugin) {
-		try {
-			if (methodGetFile == null) {
-				methodGetFile = JavaPlugin.class.getDeclaredMethod("getFile");
-				methodGetFile.setAccessible(true);
-			}
-			return (File) methodGetFile.invoke(plugin);
-		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public static boolean isExists(File file) {
+		return file != null && file.exists();
 	}
 
 	private static String removeBom(String source) {
@@ -242,9 +250,5 @@ public class FileUtils {
 			return source.substring(1);
 		}
 		return source;
-	}
-
-	private static boolean isExists(File file) {
-		return file != null && file.exists();
 	}
 }

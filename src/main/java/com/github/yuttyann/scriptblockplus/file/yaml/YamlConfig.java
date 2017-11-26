@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.file.yaml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +26,8 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class YamlConfig {
 
-	private Plugin plugin;
-	private File file;
-	private File jarFile;
+	private final Plugin plugin;
+	private final File file;
 	private UTF8Config yaml;
 	private boolean isCopyFile;
 
@@ -56,64 +54,66 @@ public class YamlConfig {
 		return load(plugin, new File(plugin.getDataFolder(), filePath), isCopyFile);
 	}
 
-	public File getJarFile() {
-		if (jarFile == null) {
-			jarFile = FileUtils.getJarFile(plugin);
-		}
-		return jarFile;
+	public final YamlConfig setIsCopyFile(boolean isCopyFile) {
+		this.isCopyFile = isCopyFile;
+		return this;
 	}
 
-	public File getDataFolder() {
+	public final Plugin getPlugin() {
+		return plugin;
+	}
+
+	public final File getDataFolder() {
 		return plugin.getDataFolder();
 	}
 
-	public File getFile() {
+	public final File getFile() {
 		return file;
 	}
 
-	public String getFileName() {
+	public final String getFileName() {
 		return file.getName();
 	}
 
-	public String getPath() {
+	public final String getPath() {
 		return file.getPath();
 	}
 
-	public String getAbsolutePath() {
+	public final String getAbsolutePath() {
 		return file.getAbsolutePath();
 	}
 
-	public String getFolderPath() {
+	public final String getFolderPath() {
 		String path = StringUtils.removeStart(getPath(), getDataFolder().getPath());
 		return path.startsWith("\\") ? path.substring(1, path.length()) : path;
 	}
 
-	public boolean exists() {
+	public final boolean exists() {
 		return file.exists();
 	}
 
-	public long length() {
+	public final long length() {
 		return file.length();
 	}
 
-	public void reload() {
+	public final void reload() {
 		Validate.notNull(file, "File cannot be null");
 		if (isCopyFile && !file.exists()) {
-			FileUtils.copyFileFromJar(getJarFile(), file, getFolderPath());
+			FileUtils.copyFileFromPlugin(plugin, file, getFolderPath());
 		}
 		yaml = new UTF8Config();
 		try {
 			yaml.load(file);
 		} catch (FileNotFoundException e) {
 		} catch (IOException | InvalidConfigurationException e) {
-			FileUtils.fileEncode(file, Charset.defaultCharset());
+			FileUtils.fileEncode(file, null);
 			yaml = UTF8Config.loadConfiguration(file);
 		}
 	}
 
 	public void save() {
 		try {
-			save(file);
+			yaml.save(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -3,6 +3,8 @@ package com.github.yuttyann.scriptblockplus.enums;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
+
 public enum DataType {
 	BYTE(byte.class, Byte.class),
 	SHORT(short.class, Short.class),
@@ -53,6 +55,9 @@ public enum DataType {
 	}
 
 	public static Class<?>[] getPrimitive(Class<?>[] classes) {
+		if (classes == null || classes.length == 0) {
+			return ArrayUtils.EMPTY_CLASS_ARRAY;
+		}
 		int length = classes == null ? 0 : classes.length;
 		Class<?>[] types = new Class<?>[length];
 		for (int index = 0; index < length; index++) {
@@ -62,6 +67,9 @@ public enum DataType {
 	}
 
 	public static Class<?>[] getReference(Class<?>[] classes) {
+		if (classes == null || classes.length == 0) {
+			return ArrayUtils.EMPTY_CLASS_ARRAY;
+		}
 		int length = classes == null ? 0 : classes.length;
 		Class<?>[] types = new Class<?>[length];
 		for (int index = 0; index < length; index++) {
@@ -71,6 +79,9 @@ public enum DataType {
 	}
 
 	public static Class<?>[] getPrimitive(Object[] objects) {
+		if (objects == null || objects.length == 0) {
+			return ArrayUtils.EMPTY_CLASS_ARRAY;
+		}
 		int length = objects == null ? 0 : objects.length;
 		Class<?>[] types = new Class<?>[length];
 		for (int index = 0; index < length; index++) {
@@ -80,6 +91,9 @@ public enum DataType {
 	}
 
 	public static Class<?>[] getReference(Object[] objects) {
+		if (objects == null || objects.length == 0) {
+			return ArrayUtils.EMPTY_CLASS_ARRAY;
+		}
 		int length = objects == null ? 0 : objects.length;
 		Class<?>[] types = new Class<?>[length];
 		for (int index = 0; index < length; index++) {

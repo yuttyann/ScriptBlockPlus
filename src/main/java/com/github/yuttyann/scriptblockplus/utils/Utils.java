@@ -274,13 +274,13 @@ public class Utils {
 			Object[] emptyObject = ArrayUtils.EMPTY_OBJECT_ARRAY;
 			Class<?>[] emptyClass = ArrayUtils.EMPTY_CLASS_ARRAY;
 			Method method = Bukkit.class.getMethod("getOnlinePlayers", emptyClass);
-			if (Bukkit.class.getMethod("getOnlinePlayers", emptyClass).getReturnType() == Collection.class) {
+			if (method.getReturnType() == Collection.class) {
 				Collection<?> temp = ((Collection<?>) method.invoke(null, emptyObject));
 				@SuppressWarnings("unchecked")
 				Collection<? extends Player> players = (Collection<? extends Player>) temp;
 				return new ArrayList<Player>(players);
 			} else {
-				Player[] temp = ((Player[]) method.invoke(null, emptyObject));
+				Player[] temp = (Player[]) method.invoke(null, emptyObject);
 				List<Player> players = new ArrayList<Player>(temp.length);
 				for (Player player : temp) {
 					players.add(player);

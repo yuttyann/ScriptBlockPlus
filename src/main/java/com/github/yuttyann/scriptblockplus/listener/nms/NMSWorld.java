@@ -1,8 +1,5 @@
 package com.github.yuttyann.scriptblockplus.listener.nms;
 
-import java.lang.reflect.Method;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.World;
 
 import com.github.yuttyann.scriptblockplus.enums.PackageType;
@@ -14,8 +11,7 @@ public final class NMSWorld {
 	public NMSWorld(World world) {
 		Object nmsWorld = null;
 		try {
-			nmsWorld = PackageType.CB.getMethod("CraftWorld", "getHandle", ArrayUtils.EMPTY_CLASS_ARRAY);
-			nmsWorld = ((Method) nmsWorld).invoke(world, ArrayUtils.EMPTY_OBJECT_ARRAY);
+			nmsWorld = PackageType.CB.invokeMethod(world, null, "getHandle", (Object[]) null);
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
@@ -30,7 +26,7 @@ public final class NMSWorld {
 		try {
 			Object nmsStart = start.toNMSVec3D();
 			Object nmsEnd = end.toNMSVec3D();
-			Object rayTrace = PackageType.NMS.invokeMethod(world, "World", "rayTrace", nmsStart, nmsEnd, flag);
+			Object rayTrace = PackageType.NMS.invokeMethod(world, null, "rayTrace", nmsStart, nmsEnd, flag);
 			if (rayTrace == null) {
 				return null;
 			}

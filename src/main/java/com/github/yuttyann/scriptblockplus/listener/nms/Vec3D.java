@@ -1,7 +1,5 @@
 package com.github.yuttyann.scriptblockplus.listener.nms;
 
-import java.lang.reflect.Field;
-
 import javax.annotation.Nullable;
 
 import org.bukkit.util.Vector;
@@ -12,10 +10,6 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class Vec3D {
 
 	public static final Vec3D a = new Vec3D(0.0D, 0.0D, 0.0D);
-
-	private static Field field_X;
-	private static Field field_Y;
-	private static Field field_Z;
 
 	public final double x;
 	public final double y;
@@ -184,16 +178,10 @@ public class Vec3D {
 	}
 
 	public static Vec3D fromNMSVec3D(Object nmsVec3D) throws ReflectiveOperationException {
-		if (field_X == null) {
-			field_X = nmsVec3D.getClass().getField(Utils.isCB19orLater() ? "x" : Utils.isCB175orLater() ? "a" : "c");
-		}
-		if (field_Y == null) {
-			field_Y = nmsVec3D.getClass().getField(Utils.isCB19orLater() ? "y" : Utils.isCB175orLater() ? "b" : "d");
-		}
-		if (field_Z == null) {
-			field_Z = nmsVec3D.getClass().getField(Utils.isCB19orLater() ? "z" : Utils.isCB175orLater() ? "c" : "e");
-		}
-		return new Vec3D(field_X.getDouble(nmsVec3D), field_Y.getDouble(nmsVec3D), field_Z.getDouble(nmsVec3D));
+		double x = PackageType.NMS.getField("Vec3D", getFieldName("x", "a", "c")).getDouble(nmsVec3D);
+		double y = PackageType.NMS.getField("Vec3D", getFieldName("y", "b", "d")).getDouble(nmsVec3D);
+		double z = PackageType.NMS.getField("Vec3D", getFieldName("z", "c", "e")).getDouble(nmsVec3D);
+		return new Vec3D(x, y, z);
 	}
 
 	public static Object newNMSVec3D(Vector vector) {
@@ -212,5 +200,9 @@ public class Vec3D {
 			e.printStackTrace();
 		}
 		return vec3D;
+	}
+
+	private static String getFieldName(String _19orLater, String _175orLater, String def) {
+		return Utils.isCB19orLater() ? _19orLater : Utils.isCB175orLater() ? _175orLater : def;
 	}
 }

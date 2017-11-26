@@ -1,9 +1,7 @@
 package com.github.yuttyann.scriptblockplus.listener.nms;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,12 +11,6 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class MovingPosition {
 
-	private static Method a;
-
-	private static Object getX;
-	private static Object getY;
-	private static Object getZ;
-
 	private class BlockPos {
 
 		private final int x;
@@ -27,56 +19,29 @@ public final class MovingPosition {
 
 		private BlockPos(Object rayTrace) throws ReflectiveOperationException {
 			if (Utils.isCB18orLater()) {
-				if (a == null) {
-					a = rayTrace.getClass().getMethod("a", ArrayUtils.EMPTY_CLASS_ARRAY);
-				}
-				Object blockPosition = a.invoke(rayTrace, ArrayUtils.EMPTY_OBJECT_ARRAY);
-				if (getX == null) {
-					getX = blockPosition.getClass().getMethod("getX", ArrayUtils.EMPTY_CLASS_ARRAY);
-				}
-				if (getY == null) {
-					getY = blockPosition.getClass().getMethod("getY", ArrayUtils.EMPTY_CLASS_ARRAY);
-				}
-				if (getZ == null) {
-					getZ = blockPosition.getClass().getMethod("getZ", ArrayUtils.EMPTY_CLASS_ARRAY);
-				}
-				this.x = (int) ((Method) getX).invoke(blockPosition, ArrayUtils.EMPTY_OBJECT_ARRAY);
-				this.y = (int) ((Method) getY).invoke(blockPosition, ArrayUtils.EMPTY_OBJECT_ARRAY);
-				this.z = (int) ((Method) getZ).invoke(blockPosition, ArrayUtils.EMPTY_OBJECT_ARRAY);
+				Object[] nullArray = (Object[]) null;
+				Object blockPosition = PackageType.NMS.invokeMethod(rayTrace, null, "a", nullArray);
+				this.x = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getX", nullArray);
+				this.y = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getY", nullArray);
+				this.z = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getZ", nullArray);
 			} else {
-				if (getX == null) {
-					getX = rayTrace.getClass().getField("b");
-				}
-				if (getY == null) {
-					getY = rayTrace.getClass().getField("c");
-				}
-				if (getZ == null) {
-					getZ = rayTrace.getClass().getField("d");
-				}
-				this.x = ((Field) getX).getInt(rayTrace);
-				this.y = ((Field) getX).getInt(rayTrace);
-				this.z = ((Field) getX).getInt(rayTrace);
+				this.x = getMOPField("b").getInt(rayTrace);
+				this.y = getMOPField("c").getInt(rayTrace);
+				this.z = getMOPField("d").getInt(rayTrace);
 			}
 		}
 	}
-
-	private static Field pos;
-	private static Field direction;
 
 	private final BlockPos blockPos;
 	private final Vec3D vec3d;
 	private final BlockFace blockFace;
 
 	MovingPosition(Object rayTrace) throws ReflectiveOperationException {
-		if (pos == null) {
-			pos = rayTrace.getClass().getField("pos");
-		}
-		if (direction == null) {
-			direction = rayTrace.getClass().getField(Utils.isCB18orLater() ? "direction" : "face");
-		}
 		this.blockPos = new BlockPos(rayTrace);
-		this.vec3d = Vec3D.fromNMSVec3D(pos.get(rayTrace));
-		this.blockFace = (BlockFace) PackageType.CB_BLOCK.invokeMethod(null, "CraftBlock", "notchToBlockFace", direction.get(rayTrace));
+		this.vec3d = Vec3D.fromNMSVec3D(getMOPField("pos").get(rayTrace));
+
+		Object face = getMOPField(Utils.isCB18orLater() ? "direction" : "face").get(rayTrace);
+		this.blockFace = (BlockFace) PackageType.CB_BLOCK.invokeMethod(null, "CraftBlock", "notchToBlockFace", face);
 	}
 
 	public Vec3D getPosition() {
@@ -89,5 +54,9 @@ public final class MovingPosition {
 
 	public BlockFace getFace() {
 		return blockFace;
+	}
+
+	private Field getMOPField(String fieldName) throws ReflectiveOperationException {
+		return PackageType.NMS.getField("MovingObjectPosition", fieldName);
 	}
 }

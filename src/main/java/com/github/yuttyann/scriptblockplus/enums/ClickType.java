@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public enum ClickType {
@@ -12,7 +12,7 @@ public enum ClickType {
 	private static final String[] TYPES;
 
 	static {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new LinkedList<String>();
 		for (ScriptType scriptType : ScriptType.values()) {
 			for (ClickType clickType : values()) {
 				list.add(clickType.createKey(scriptType));
