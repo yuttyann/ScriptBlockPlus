@@ -54,6 +54,14 @@ public final class OptionManager extends AbstractConstructor<Option> {
 			this.sort = sort;
 			this.option = option;
 		}
+
+		public boolean equals(Option option) {
+			return option != null && this.option == option.getClass();
+		}
+
+		public boolean equals(Class<? extends Option> option) {
+			return option != null && this.option == option;
+		}
 	}
 
 	@Override
@@ -86,13 +94,15 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	}
 
 	@Deprecated
+	@Override
 	public boolean add(Class<? extends Option> option) {
-		return super.add(option);
+		throw new UnsupportedOperationException();
 	}
 
 	@Deprecated
+	@Override
 	public boolean add(int index, Class<? extends Option> option) {
-		return super.add(option);
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean add(Holder optionData) {
@@ -101,7 +111,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 
 	public boolean add(int index, Holder optionData) {
 		Class<? extends Option> option = optionData.option;
-		boolean add = index >= 0 ? add(index, option) : add(option);
+		boolean add = index >= 0 ? super.add(index, option) : super.add(option);
 		if (add && (isModified = true)) {
 			if (optionData.sort == -1) {
 				optionData.sort = OPTION_HOLDERS.size() - 1;
@@ -117,7 +127,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		boolean remove = super.remove(option);
 		if (remove && (isModified = true)) {
 			for (int i = 0; i < OPTION_HOLDERS.size(); i++) {
-				if (option == OPTION_HOLDERS.get(i).option) {
+				if (OPTION_HOLDERS.get(i).equals(option)) {
 					OPTION_HOLDERS.remove(i);
 					break;
 				}
@@ -132,7 +142,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 			return false;
 		}
 		Constructor<? extends Option> constructor = getConstructors().get(index);
-		return constructor != null && remove(constructor.getDeclaringClass());
+		return constructor != null && getConstructors().remove(constructor);
 	}
 
 	@Override
@@ -151,7 +161,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		}
 		Option[] options = newInstances();
 		List<Option> result = new ArrayList<Option>(options.length);
-		OPTION_HOLDERS.forEach(l -> StreamUtils.filterForEach(options, o -> l.option == o.getClass(), result::add));
+		OPTION_HOLDERS.forEach(l -> StreamUtils.filterForEach(options, o -> l.equals(o), result::add));
 		return result.size() > 0 ? result.toArray(new Option[result.size()]) : new Option[0];
 	}
 
