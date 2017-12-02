@@ -47,10 +47,10 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 
 	public ScriptBlockPlusCommand(ScriptBlock plugin) {
 		super(plugin, "scriptblockplus", true);
-		setUsage(getCommandDatas());
+		setUsage(createCommandDatas());
 	}
 
-	private static CommandData[] getCommandDatas() {
+	private static CommandData[] createCommandDatas() {
 		CommandData[] commands = {
 			new CommandData(SBConfig.getToolCommandMessage(), Permission.COMMAND_TOOL),
 			new CommandData(SBConfig.getReloadCommandMessage(), Permission.COMMAND_RELOAD),
@@ -115,7 +115,7 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 			return false;
 		}
 		Files.reload();
-		setUsage(getCommandDatas());
+		setUsage(createCommandDatas());
 		ScriptBlock.getInstance().getMapManager().loadAllScripts();
 		Utils.sendMessage(sender, SBConfig.getAllFileReloadMessage());
 		return true;

@@ -78,7 +78,7 @@ public class Calculation extends BaseOption {
 				return 0.0D;
 			}
 			Object handle = target.getClass().getMethod("getHandle").invoke(target);
-			return (int) handle.getClass().getField("ping").get(handle);
+			return handle.getClass().getField("ping").getInt(handle);
 		}
 		if (variable.startsWith("%server_online_") && variable.charAt(variable.length() - 1) == '%') {
 			variable = variable.substring(0, variable.length() - 1);

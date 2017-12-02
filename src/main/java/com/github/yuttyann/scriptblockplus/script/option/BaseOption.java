@@ -114,11 +114,11 @@ public abstract class BaseOption extends Option {
 
 	protected final void commandExecute(Player player, String command, boolean isBypass) {
 		if (!isBypass || player.isOp()) {
-			Utils.dispatchCommand(player, command, blockCoords);
+			Utils.dispatchCommand(player, blockCoords, command);
 		} else {
 			try {
 				player.setOp(true);
-				Utils.dispatchCommand(player, command, blockCoords);
+				Utils.dispatchCommand(player, blockCoords, command);
 			} finally {
 				player.setOp(false);
 			}

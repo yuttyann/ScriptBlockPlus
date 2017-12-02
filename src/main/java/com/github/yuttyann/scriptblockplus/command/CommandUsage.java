@@ -20,6 +20,13 @@ public abstract class CommandUsage {
 		StreamUtils.forEach(args, usages::add);
 	}
 
+	public void addUsage(CommandData... args) {
+		if (usages == null) {
+			return;
+		}
+		StreamUtils.forEach(args, usages::add);
+	}
+
 	protected void sendUsage(Plugin plugin, CommandSender sender, Command command, boolean isAliases) {
 		if (usages == null || usages.isEmpty()) {
 			return;

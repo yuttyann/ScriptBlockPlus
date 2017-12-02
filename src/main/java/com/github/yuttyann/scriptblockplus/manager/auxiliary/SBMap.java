@@ -10,12 +10,12 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 
 public final class SBMap<T> implements Serializable {
 
-	public final class Storage<K, V> {
+	public final class Link<K, V> {
 
 		private K key;
 		private V value;
 
-		public Storage(K key, V value) {
+		private Link(K key, V value) {
 			this.key = key;
 			this.value = value;
 		}
@@ -95,8 +95,8 @@ public final class SBMap<T> implements Serializable {
 		return map == null ? false : map.containsKey(fullCoords);
 	}
 
-	public void forEach(BiConsumer<Storage<ScriptType, String>, T> action) {
-		Storage<ScriptType, String> storage = new Storage<ScriptType, String>(null, null);
+	public void forEach(BiConsumer<Link<ScriptType, String>, T> action) {
+		Link<ScriptType, String> storage = new Link<ScriptType, String>(null, null);
 		for (Entry<ScriptType, Map<String, T>> entry1 : storageMap.entrySet()) {
 			for (Entry<String, T> entry2 : entry1.getValue().entrySet()) {
 				storage.key = entry1.getKey();

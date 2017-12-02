@@ -22,14 +22,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.github.yuttyann.scriptblockplus.PlayerSelector;
+import com.github.yuttyann.scriptblockplus.commandblock.FakeCommandBlock;
 
 public class Utils {
 
 	private static String serverVersion;
 	private static Boolean isCB175orLaterCache;
 	private static Boolean isCB178orLaterCache;
-	private static Boolean isCB1710orLaterCache;
 	private static Boolean isCB18orLaterCache;
 	private static Boolean isCB183orLaterCache;
 	private static Boolean isCB19orLaterCache;
@@ -56,13 +55,6 @@ public class Utils {
 			isCB178orLaterCache = isUpperVersion(getServerVersion(), "1.7.8");
 		}
 		return isCB178orLaterCache;
-	}
-
-	public static boolean isCB1710orLater() {
-		if (isCB1710orLaterCache == null) {
-			isCB1710orLaterCache = isUpperVersion(getServerVersion(), "1.7.10");
-		}
-		return isCB1710orLaterCache;
 	}
 
 	public static boolean isCB18orLater() {
@@ -131,29 +123,29 @@ public class Utils {
 		}
 	}
 
-	public static void dispatchCommand(CommandSender sender, String command, Location location) {
-		if (sender == null || StringUtils.isEmpty(command)) {
-			return;
+	public static void dispatchCommand(CommandSender sender, Location location, String command) {
+		if (sender == null) {
+			throw new IllegalArgumentException("Sender cannot be null");
 		}
-		if (command.charAt(0) == '/') {
-			command = command.substring(1);
+		if (StringUtils.isEmpty(command)) {
+			String reason = command == null ? "null" : "empty";
+			throw new IllegalArgumentException("Command cannot be " + reason);
 		}
-		String pattern = PlayerSelector.getCommandBlockPattern(command);
-		if (pattern != null) {
+		if (FakeCommandBlock.isCommandPattern(command)) {
 			if (location == null) {
 				if (sender instanceof Player) {
 					location = ((Player) sender).getLocation().clone();
 				} else if (sender instanceof BlockCommandSender) {
 					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
+				} else if (location == null) {
+					throw new IllegalArgumentException("Location cannot be null");
 				}
 			}
-			List<Player> players = PlayerSelector.getPlayers(location, pattern);
-			if (players != null) {
-				for (Player p : players) {
-					Bukkit.dispatchCommand(sender, StringUtils.replace(command, pattern, p.getName()));
-				}
-			}
+			FakeCommandBlock.getListener().executeCommand(sender, location, command);
 		} else {
+			if (command.charAt(0) == '/') {
+				command = command.substring(1);
+			}
 			Bukkit.dispatchCommand(sender, command);
 		}
 	}

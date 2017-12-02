@@ -28,6 +28,7 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
+import com.github.yuttyann.scriptblockplus.script.option.other.ClickAction;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -66,8 +67,13 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 			if (isPowered(data) || isOpen(data)) {
 				return;
 			}
+			setAction(player, event.getAction());
 			new ScriptRead(this, player, location).read(0);
 		}
+	}
+
+	private void setAction(Player player, Action action) {
+		SBPlayer.get(player).setData(ClickAction.KEY_INTERACTACTION, action);
 	}
 
 	private boolean action(Player player, Action action, ItemStack item, Location location) {

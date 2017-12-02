@@ -29,6 +29,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class ScriptBlock extends JavaPlugin {
 
 	private static ScriptBlock instance;
+	private static ScriptBlockAPI scriptBlockAPI;
 
 	private Updater updater;
 	private MapManager mapManager;
@@ -40,11 +41,6 @@ public class ScriptBlock extends JavaPlugin {
 			((BaseSBPlayer) SBPlayer.get(player)).setPlayer(player);
 		}
 		Files.reload();
-		try {
-			PlayerSelector.load();
-		} catch (ReflectiveOperationException e) {
-			getServer().getPluginManager().disablePlugin(this);
-		}
 
 		if (!HookPlugins.hasVault()) {
 			Utils.sendMessage(SBConfig.getNotVaultMessage());
@@ -101,6 +97,13 @@ public class ScriptBlock extends JavaPlugin {
 			return scriptBlockPlusCommand.onTabComplete(sender, command, label, args);
 		}
 		return super.onTabComplete(sender, command, label, args);
+	}
+
+	public ScriptBlockAPI getAPI() {
+		if (scriptBlockAPI == null) {
+			scriptBlockAPI = getAPI(null, null);
+		}
+		return scriptBlockAPI = ((ScriptBlockManager) scriptBlockAPI).empty();
 	}
 
 	public ScriptBlockAPI getAPI(Location location, ScriptType scriptType) {

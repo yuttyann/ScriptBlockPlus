@@ -23,6 +23,10 @@ public abstract class Option {
 		return syntax;
 	}
 
+	public final String getPermissionNode() {
+		return "scriptblockplus.option." + name;
+	}
+
 	public final String getValue(String script) {
 		return StringUtils.removeStart(script, syntax);
 	}

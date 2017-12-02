@@ -18,7 +18,6 @@ import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.Holder;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
@@ -36,6 +35,13 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 		this.timers = new HashMap<ScriptType, List<Location>>();
 		this.scripts = new HashMap<Boolean, Map<Location, ScriptType>>();
 		setLocation(location);
+	}
+
+	public ScriptBlockManager empty() {
+		if (timers.size() > 0 || scripts.size() > 0 || getLocation() != null || getScriptType() != null) {
+			return new ScriptBlockManager(ScriptBlock.getInstance(), null, null);
+		}
+		return this;
 	}
 
 	@Override
@@ -103,12 +109,12 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 
 	@Override
 	public void addOption(int sortIndex, Class<? extends BaseOption> option) {
-		getOptionManager().add(new Holder(sortIndex, option));
+		getOptionManager().add(-1, sortIndex, option);
 	}
 
 	@Override
 	public void addOption(int scriptIndex, int sortIndex, Class<? extends BaseOption> option) {
-		getOptionManager().add(scriptIndex, new Holder(sortIndex, option));
+		getOptionManager().add(scriptIndex, sortIndex, option);
 	}
 
 	@Override

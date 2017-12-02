@@ -13,8 +13,8 @@ import org.bukkit.Bukkit;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public enum PackageType {
-	NMS("net.minecraft.server." + getPackageName()),
-	CB("org.bukkit.craftbukkit." + getPackageName()),
+	NMS("net.minecraft.server." + getName()),
+	CB("org.bukkit.craftbukkit." + getName()),
 	CB_BLOCK(CB, "block"),
 	CB_CHUNKIO(CB, "chunkio"),
 	CB_COMMAND(CB, "command"),
@@ -38,6 +38,8 @@ public enum PackageType {
 	private static final Map<String, Method> METHOD_CACHE_MAP = new HashMap<String, Method>();
 	private static final Map<String, Class<?>> CLASS_CACHE_MAP = new HashMap<String, Class<?>>();
 	private static final Map<String, Constructor<?>> CONSTRUCTOR_CACHE_MAP = new HashMap<String, Constructor<?>>();
+
+	private static String packageName;
 
 	private final String path;
 
@@ -69,7 +71,7 @@ public enum PackageType {
 	}
 
 	public Field getField(boolean declared, String className, String fieldName) throws ReflectiveOperationException {
-		String key = createKey(className, fieldName);
+		String key = createKey(className, fieldName, null);
 		Field field = FIELD_CACHE_MAP.get(key);
 		if (field == null) {
 			if (declared) {
@@ -165,10 +167,6 @@ public enum PackageType {
 		return clazz;
 	}
 
-	private String createKey(String className, String name) {
-		return createKey(className, name, null);
-	}
-
 	private String createKey(String className, String name, Class<?>[] objects) {
 		if (StringUtils.isEmpty(className)) {
 			return "null";
@@ -183,14 +181,14 @@ public enum PackageType {
 			}
 			return this + "." + className;
 		}
-		boolean notEmptyMethod = StringUtils.isNotEmpty(name);
+		boolean notEmptyName = StringUtils.isNotEmpty(name);
 		int length = objects.length + className.length();
-		if (notEmptyMethod) {
+		if (notEmptyName) {
 			length += name.length();
 		}
 		StrBuilder builder = new StrBuilder(length);
-		builder.append(this).append('.').append(className).append(notEmptyMethod ? '=' : '[');
-		if (notEmptyMethod) {
+		builder.append(this).append('.').append(className).append(notEmptyName ? '=' : '[');
+		if (notEmptyName) {
 			builder.append(name).append('[');
 		}
 		for (int i = 0; i < objects.length; i++) {
@@ -204,9 +202,12 @@ public enum PackageType {
 		return builder.toString();
 	}
 
-	private static String getPackageName() {
-		String version = Bukkit.getServer().getClass().getPackage().getName();
-		return version.substring(version.lastIndexOf('.') + 1);
+	public static String getName() {
+		if (packageName == null) {
+			String version = Bukkit.getServer().getClass().getPackage().getName();
+			packageName = version.substring(version.lastIndexOf('.') + 1);
+		}
+		return packageName;
 	}
 
 	@Override

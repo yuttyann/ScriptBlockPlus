@@ -6,7 +6,7 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class ItemCostInit implements EndProcess {
+public class EndItemCost implements EndProcess {
 
 	@Override
 	public void success(SBRead sbRead) {

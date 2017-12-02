@@ -48,43 +48,18 @@ public class StringUtils {
 	}
 
 	public static String[] split(String source, String delimiter) {
-		return split(source, delimiter, 0);
-	}
-
-	public static String[] split(String source, String delimiter, int limit) {
 		if (isEmpty(source) || isEmpty(delimiter)) {
 			return null;
 		}
-		if (limit == 0) {
-			limit = source.length();
-		}
+		int start = 0;
+		int end = source.indexOf(delimiter, start);
 		List<String> result = new LinkedList<String>();
-		int length = delimiter.length();
-		if (limit > 0) {
-			int start = 0;
-			int end = 0;
-			for (int i = 1; i < limit; i++) {
-				end = source.indexOf(delimiter, start);
-				if (end < 0) {
-					break;
-				}
-				result.add(source.substring(start, end));
-				start = end + length;
-			}
-			result.add(source.substring(start));
-		} else {
-			int start = 0;
-			int end = source.length();
-			for (int i = -1; i > limit; i--) {
-				start = source.lastIndexOf(delimiter, end - 1);
-				if (start < 0) {
-					break;
-				}
-				result.add(source.substring(start + length, end));
-				end = start;
-			}
-			result.add(source.substring(0, end));
+		while (end != -1) {
+			result.add(source.substring(start, end));
+			start = end + delimiter.length();
+			end = source.indexOf(delimiter, start);
 		}
+		result.add(source.substring(start));
 		return result.toArray(new String[result.size()]);
 	}
 

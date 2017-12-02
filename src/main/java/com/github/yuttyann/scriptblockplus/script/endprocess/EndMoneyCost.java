@@ -5,7 +5,7 @@ import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
 
-public class MoneyCostInit implements EndProcess {
+public class EndMoneyCost implements EndProcess {
 
 	@Override
 	public void success(SBRead sbRead) {
