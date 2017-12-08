@@ -10,7 +10,11 @@ public class EndItemCost implements EndProcess {
 
 	@Override
 	public void success(SBRead sbRead) {
-		sbRead.getSBPlayer().removeData(ItemCost.KEY_ITEM);
+		SBPlayer sbPlayer = sbRead.getSBPlayer();
+		sbPlayer.removeData(ItemCost.KEY_ITEM);
+		if (sbPlayer.isOnline()) {
+			Utils.updateInventory(sbPlayer.getPlayer());
+		}
 	}
 
 	@Override

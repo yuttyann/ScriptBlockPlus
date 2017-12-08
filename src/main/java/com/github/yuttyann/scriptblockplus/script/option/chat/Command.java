@@ -12,7 +12,7 @@ public class Command extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		String command = StringUtils.replaceColorCode(getOptionValue(), true);
-		commandExecute(getPlayer(), command, false);
+		executeCommand(getPlayer(), command, false);
 		return true;
 	}
 }

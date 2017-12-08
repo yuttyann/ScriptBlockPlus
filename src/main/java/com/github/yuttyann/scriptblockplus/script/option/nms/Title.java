@@ -70,7 +70,7 @@ public class Title extends BaseOption {
 		if (title != null) {
 			title = StringUtils.replaceColorCode(title, true);
 			Object enumTITLE = NMSHelper.getEnumField(enumTitleActionClass, "TITLE");
-			Method a = PackageType.NMS.getMethod(chatSerializer, "a", NMSHelper.STRING_PARAM);
+			Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
 			Object component = a.invoke(null, "{\"text\": \"" + title + "\"}");
 			Object packetPlayOutTitle = packetConstructor.newInstance(enumTITLE, component);
 			NMSHelper.sendPacket(player, packetPlayOutTitle);
@@ -78,7 +78,7 @@ public class Title extends BaseOption {
 		if (subtitle != null) {
 			subtitle = StringUtils.replaceColorCode(subtitle, true);
 			Object enumSUBTITLE = NMSHelper.getEnumField(enumTitleActionClass, "SUBTITLE");
-			Method a = PackageType.NMS.getMethod(chatSerializer, "a", NMSHelper.STRING_PARAM);
+			Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
 			Object component = a.invoke(null, "{\"text\": \"" + subtitle + "\"}");
 			Object packetPlayOutTitle = packetConstructor.newInstance(enumSUBTITLE, component);
 			NMSHelper.sendPacket(player, packetPlayOutTitle);

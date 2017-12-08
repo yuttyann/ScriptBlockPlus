@@ -89,7 +89,7 @@ public class ActionBar extends BaseOption {
 
 	private void sendActionBar(Player player, String message) throws ReflectiveOperationException {
 		String chatSerializer = NMSHelper.getChatSerializerName();
-		Method a = PackageType.NMS.getMethod(false, chatSerializer, "a", NMSHelper.STRING_PARAM);
+		Method a = PackageType.NMS.getMethod(false, chatSerializer, "a", String.class);
 		Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
 		NMSHelper.sendPacket(player, newPacketPlayOutChat(component));
 	}

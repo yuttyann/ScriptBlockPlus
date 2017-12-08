@@ -112,7 +112,7 @@ public abstract class BaseOption extends Option {
 		return false;
 	}
 
-	protected final void commandExecute(Player player, String command, boolean isBypass) {
+	protected final void executeCommand(Player player, String command, boolean isBypass) {
 		if (!isBypass || player.isOp()) {
 			Utils.dispatchCommand(player, blockCoords, command);
 		} else {

@@ -73,7 +73,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 	}
 
 	private void setAction(Player player, Action action) {
-		SBPlayer.get(player).setData(ClickAction.KEY_INTERACTACTION, action);
+		SBPlayer.get(player).setData(ClickAction.KEY_ACTION, action);
 	}
 
 	private boolean action(Player player, Action action, ItemStack item, Location location) {

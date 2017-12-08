@@ -47,16 +47,14 @@ public class Calculation extends BaseOption {
 			return Double.parseDouble(source);
 		} catch (NumberFormatException e) {}
 
-		double result;
+		double result = 0.0D;
 		try {
 			if (HookPlugins.hasPlaceholderAPI()) {
 				result = Double.parseDouble(PlaceholderAPI.setPlaceholders(getPlayer(), source));
 			} else {
 				result = getValue(getPlayer(), source);
 			}
-		} catch (Exception e) {
-			result = 0.0D;
-		}
+		} catch (Exception e) {}
 		return result;
 	}
 

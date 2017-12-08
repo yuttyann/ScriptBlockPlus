@@ -7,6 +7,8 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public abstract class Option {
 
+	private static final String BASE_NODE = "scriptblockplus.option.";
+
 	private final String name;
 	private final String syntax;
 
@@ -24,7 +26,7 @@ public abstract class Option {
 	}
 
 	public final String getPermissionNode() {
-		return "scriptblockplus.option." + name;
+		return BASE_NODE + name;
 	}
 
 	public final String getValue(String script) {

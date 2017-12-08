@@ -12,7 +12,7 @@ public class Bypass extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		String command = StringUtils.replaceColorCode(getOptionValue(), true);
-		commandExecute(getPlayer(), command, true);
+		executeCommand(getPlayer(), command, true);
 		return true;
 	}
 }

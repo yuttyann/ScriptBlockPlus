@@ -12,6 +12,6 @@ public class EndClickAction implements EndProcess {
 
 	@Override
 	public void failed(SBRead sbRead) {
-		sbRead.getSBPlayer().removeData(ClickAction.KEY_INTERACTACTION);
+		sbRead.getSBPlayer().removeData(ClickAction.KEY_ACTION);
 	}
 }

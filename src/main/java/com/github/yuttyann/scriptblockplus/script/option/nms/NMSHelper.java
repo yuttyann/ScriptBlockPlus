@@ -7,8 +7,6 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class NMSHelper {
 
-	public static final Class<?>[] STRING_PARAM = {String.class};
-
 	public static void sendPacket(Player player, Object packet) {
 		try {
 			Object handle = player.getClass().getMethod("getHandle").invoke(player);

@@ -1,5 +1,7 @@
 package com.github.yuttyann.scriptblockplus.commandblock;
 
+import java.lang.reflect.Method;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -9,20 +11,25 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 final class Ref_Vx_x_Rx implements CommandBlockListener {
 
+	private static final Class<?>[] PARAMS_EXECUTECOMMAND = {
+		getClass(PackageType.NMS, "ICommandListener"), CommandSender.class, String.class
+	};
+
 	private static final String CLASS_NAME_1 = "CommandBlockListenerAbstract";
 	private static final String CLASS_NAME_2 = "TileEntityCommand";
 
 	@Override
 	public void executeCommand(CommandSender sender, Location location, String command) {
 		try {
-			Object commandListener = getCommandListener(sender, location);
-			PackageType.NMS.invokeMethod(null, CLASS_NAME_1, "executeCommand", commandListener, sender, command);
+			Object iCommandListener = getICommandListener(sender, location);
+			Method executeCommand = PackageType.NMS.getMethod(CLASS_NAME_1, "executeCommand", PARAMS_EXECUTECOMMAND);
+			executeCommand.invoke(null, iCommandListener, sender, command);
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private Object getCommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {
+	private Object getICommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {
 		Object titleEntityCommand = newTileEntityCommand();
 		setWorld(titleEntityCommand, location.getWorld());
 		setLocation(titleEntityCommand, location);
@@ -42,8 +49,9 @@ final class Ref_Vx_x_Rx implements CommandBlockListener {
 	}
 
 	private void setWorld(Object titleEntityCommand, World world) throws ReflectiveOperationException {
-		Object nmsWorld = PackageType.NMS.invokeMethod(world, "CraftWorld", "getHandle", (Object[]) null);
-		PackageType.NMS.invokeMethod(titleEntityCommand, CLASS_NAME_2, "a", nmsWorld);
+		Object nmsWorld = PackageType.CB.invokeMethod(world, "CraftWorld", "getHandle", (Object[]) null);
+		Class<?> nmsWorldClass = PackageType.NMS.getClass("World");
+		PackageType.NMS.getMethod(CLASS_NAME_2, "a", nmsWorldClass).invoke(titleEntityCommand, nmsWorld);
 	}
 
 	private void setLocation(Object titleEntityCommand, Location location) throws ReflectiveOperationException {
@@ -57,5 +65,14 @@ final class Ref_Vx_x_Rx implements CommandBlockListener {
 
 	private Object getCommandBlock(Object titleEntityCommand) throws ReflectiveOperationException {
 		return PackageType.NMS.invokeMethod(titleEntityCommand, CLASS_NAME_2, "getCommandBlock", (Object[]) null);
+	}
+
+	private static Class<?> getClass(PackageType packageType, String className) {
+		try {
+			return packageType.getClass(className);
+		} catch (IllegalArgumentException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
