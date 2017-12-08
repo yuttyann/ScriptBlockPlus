@@ -16,7 +16,7 @@ public class EndItemCost implements EndProcess {
 	@Override
 	public void failed(SBRead sbRead) {
 		SBPlayer sbPlayer = sbRead.getSBPlayer();
-		ItemStack[] items = (ItemStack[]) sbPlayer.getData(ItemCost.KEY_ITEM);
+		ItemStack[] items = sbPlayer.getData(ItemCost.KEY_ITEM, null);
 		sbPlayer.removeData(ItemCost.KEY_ITEM);
 		if (items != null && sbPlayer.isOnline()) {
 			sbPlayer.getPlayer().getInventory().setContents(items);

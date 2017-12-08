@@ -91,15 +91,15 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		getConstructors().clear();
 		add(-1, 0, ClickAction.class);
 		add(-1, 0, BlockType.class);
+		add(-1, 16, Group.class);
+		add(-1, 19, Perm.class);
 		add(-1, 9, OldCooldown.class);
 		add(-1, 8, Cooldown.class);
 		add(-1, 7, Delay.class);
 		add(-1, 10, Calculation.class);
-		add(-1, 22, ItemCost.class);
 		add(-1, 6, ItemHand.class);
+		add(-1, 22, ItemCost.class);
 		add(-1, 23, MoneyCost.class);
-		add(-1, 16, Group.class);
-		add(-1, 19, Perm.class);
 		add(-1, 1, Bypass.class);
 		add(-1, 0, Command.class);
 		add(-1, 2, Console.class);

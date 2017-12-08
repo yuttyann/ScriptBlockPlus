@@ -15,19 +15,19 @@ public abstract class CommandUsage {
 
 	private List<CommandData> usages;
 
-	public void setUsage(CommandData... args) {
+	public final void setUsage(CommandData... args) {
 		usages = new ArrayList<CommandData>(args.length);
 		StreamUtils.forEach(args, usages::add);
 	}
 
-	public void addUsage(CommandData... args) {
+	public final void addUsage(CommandData... args) {
 		if (usages == null) {
 			return;
 		}
 		StreamUtils.forEach(args, usages::add);
 	}
 
-	protected void sendUsage(Plugin plugin, CommandSender sender, Command command, boolean isAliases) {
+	protected final void sendUsage(Plugin plugin, CommandSender sender, Command command, boolean isAliases) {
 		if (usages == null || usages.isEmpty()) {
 			return;
 		}

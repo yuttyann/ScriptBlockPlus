@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ProxiedCommandSender;
@@ -18,35 +19,34 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 
 	private Plugin plugin;
-	private String commandName;
-	private boolean isAliases;
 	private boolean isIgnoreUsage;
 
-	public BaseCommand(Plugin plugin, String commandName, boolean isAliases) {
+	public BaseCommand(Plugin plugin) {
 		this.plugin = plugin;
-		this.commandName = commandName;
-		this.isAliases = isAliases;
 	}
 
-	public Plugin getPlugin() {
+	public final Plugin getPlugin() {
 		return plugin;
 	}
 
-	public String getCommandName() {
-		return commandName;
-	}
+	public abstract String getCommandName();
 
-	public boolean isAliases() {
-		return isAliases;
-	}
+	public abstract boolean isAliases();
 
-	public boolean isIgnoreUsage() {
+	public final boolean isIgnoreUsage() {
 		return isIgnoreUsage;
 	}
 
 	@Override
 	public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (Utils.isCB183orLater() && sender instanceof ProxiedCommandSender) {
+		if (sender instanceof BlockCommandSender) {
+			String senderName = ((BlockCommandSender) sender).getName();
+			System.out.println(sender.getClass().getSimpleName() + " : " + senderName);
+			Player player = Utils.getPlayer(senderName);
+			if (player != null) {
+				sender = player;
+			}
+		} else if (Utils.isCB183orLater() && sender instanceof ProxiedCommandSender) {
 			CommandSender proxiedCommandSender = ((ProxiedCommandSender) sender).getCallee();
 			if (proxiedCommandSender instanceof Player) {
 				sender = proxiedCommandSender;
@@ -54,7 +54,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 		}
 		try {
 			if (!runCommand(sender, command, label, args) && !isIgnoreUsage) {
-				sendUsage(plugin, sender, command, isAliases);
+				sendUsage(plugin, sender, command, isAliases());
 			}
 		} finally {
 			isIgnoreUsage = false;

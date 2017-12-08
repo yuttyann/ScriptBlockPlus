@@ -29,8 +29,22 @@ public abstract class PlayerData implements ObjectData {
 	}
 
 	@Override
+	public <T> T getData(String key, Class<T> classOfT) {
+		@SuppressWarnings("unchecked")
+		T value = classOfT == null ? (T) getData(key) : classOfT.cast(getData(key));
+		return value;
+	}
+
+	@Override
 	public Object removeData(String key) {
 		return objectData.remove(key);
+	}
+
+	@Override
+	public <T> T removeData(String key, Class<T> classOfT) {
+		@SuppressWarnings("unchecked")
+		T value = classOfT == null ? (T) removeData(key) : classOfT.cast(removeData(key));
+		return value;
 	}
 
 	@Override
@@ -48,7 +62,7 @@ public abstract class PlayerData implements ObjectData {
 	}
 
 	public Clipboard getClipboard() {
-		return (Clipboard) getData(KEY_CLIPBOARD);
+		return getData(KEY_CLIPBOARD, null);
 	}
 
 	public boolean hasClipboard() {
@@ -60,7 +74,7 @@ public abstract class PlayerData implements ObjectData {
 	}
 
 	public String getScriptLine() {
-		return (String) getData(KEY_SCRIPTLINE);
+		return getData(KEY_SCRIPTLINE, null);
 	}
 
 	public boolean hasScriptLine() {
@@ -72,7 +86,7 @@ public abstract class PlayerData implements ObjectData {
 	}
 
 	public String getClickAction() {
-		return (String) getData(KEY_CLICKACTION);
+		return getData(KEY_CLICKACTION, null);
 	}
 
 	public boolean hasClickAction() {
@@ -84,7 +98,7 @@ public abstract class PlayerData implements ObjectData {
 	}
 
 	public String getOldFullCoords() {
-		return (String) getData(KEY_OLDFULLCOORDS);
+		return getData(KEY_OLDFULLCOORDS, null);
 	}
 
 	public boolean hasOldFullCoords() {

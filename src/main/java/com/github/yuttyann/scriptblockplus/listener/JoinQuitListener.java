@@ -20,7 +20,7 @@ public class JoinQuitListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerJoin(PlayerJoinEvent event) {
+	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		SBPlayer sbPlayer = SBPlayer.get(event.getPlayer());
 		((BaseSBPlayer) sbPlayer).setPlayer(event.getPlayer());
 		if (sbPlayer.getOldFullCoords() == null) {

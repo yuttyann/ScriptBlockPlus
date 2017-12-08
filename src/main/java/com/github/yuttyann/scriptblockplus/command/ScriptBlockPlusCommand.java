@@ -37,7 +37,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class ScriptBlockPlusCommand extends BaseCommand {
+public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	private static final Permission[] SCRIPT_PERMISSIONS = {
 		Permission.COMMAND_INTERACT,
@@ -46,8 +46,18 @@ public class ScriptBlockPlusCommand extends BaseCommand {
 	};
 
 	public ScriptBlockPlusCommand(ScriptBlock plugin) {
-		super(plugin, "scriptblockplus", true);
+		super(plugin);
 		setUsage(createCommandDatas());
+	}
+
+	@Override
+	public String getCommandName() {
+		return "scriptblockplus";
+	}
+
+	@Override
+	public boolean isAliases() {
+		return true;
 	}
 
 	private static CommandData[] createCommandDatas() {

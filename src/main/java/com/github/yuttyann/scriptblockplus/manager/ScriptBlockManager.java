@@ -37,13 +37,6 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 		setLocation(location);
 	}
 
-	public ScriptBlockManager empty() {
-		if (timers.size() > 0 || scripts.size() > 0 || getLocation() != null || getScriptType() != null) {
-			return new ScriptBlockManager(ScriptBlock.getInstance(), null, null);
-		}
-		return this;
-	}
-
 	@Override
 	public boolean scriptRead(Player player) {
 		return scriptRead(0, player);

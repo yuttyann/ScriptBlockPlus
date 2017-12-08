@@ -12,13 +12,13 @@ public class ClickAction extends BaseOption {
 	public static final String KEY_INTERACTACTION = "Option_ClickAction";
 
 	public ClickAction() {
-		super("clickaction", "@clickaction");
+		super("clickaction", "@clickaction:");
 	}
 
 	@Override
 	protected boolean isValid() throws Exception {
 		SBPlayer sbPlayer = getSBPlayer();
-		Action action1 = (Action) sbPlayer.getData(KEY_INTERACTACTION);
+		Action action1 = sbPlayer.getData(KEY_INTERACTACTION, null);
 		if (action1 == null || getScriptType() != ScriptType.INTERACT) {
 			return false;
 		}

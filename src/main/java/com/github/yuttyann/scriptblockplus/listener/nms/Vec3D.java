@@ -202,7 +202,7 @@ public class Vec3D {
 		return vec3D;
 	}
 
-	private static String getFieldName(String _19orLater, String _175orLater, String def) {
-		return Utils.isCB19orLater() ? _19orLater : Utils.isCB175orLater() ? _175orLater : def;
+	private static String getFieldName(String _19orLater, String _175orLater, String other) {
+		return Utils.isCB19orLater() ? _19orLater : Utils.isCB175orLater() ? _175orLater : other;
 	}
 }

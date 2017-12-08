@@ -37,7 +37,7 @@ public class InteractListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerAnimation(PlayerAnimationEvent event) {
+	public void onPlayerAnimationEvent(PlayerAnimationEvent event) {
 		Player player = event.getPlayer();
 		if (event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
 			return;
@@ -77,7 +77,7 @@ public class InteractListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerInteract(PlayerInteractEvent event) {
+	public void onPlayerInteractEvent(PlayerInteractEvent event) {
 		Action action = event.getAction();
 		if (action == Action.PHYSICAL || event.getClickedBlock() == null) {
 			return;
@@ -102,7 +102,7 @@ public class InteractListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
+	public void onPlayerGameModeChangeEvent(PlayerGameModeChangeEvent event) {
 		if (event.getNewGameMode() != GameMode.ADVENTURE) {
 			SBPlayer.get(event.getPlayer()).setData(KEY_FLAG, false);
 		}

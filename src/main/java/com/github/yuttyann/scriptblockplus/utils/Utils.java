@@ -200,6 +200,11 @@ public class Utils {
 		return world;
 	}
 
+	@SuppressWarnings("deprecation")
+	public static Player getPlayer(String name) {
+		return Bukkit.getPlayer(name);
+	}
+
 	public static Player getPlayer(UUID uuid) {
 		if (Utils.isCB175orLater()) {
 			return Bukkit.getPlayer(uuid);

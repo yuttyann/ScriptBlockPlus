@@ -28,7 +28,7 @@ public class MoneyCost extends BaseOption {
 		if (vaultEconomy.has(player, cost)) {
 			vaultEconomy.withdrawPlayer(player, cost);
 			SBPlayer sbPlayer = SBPlayer.get(player);
-			Double value = (Double) sbPlayer.getData(KEY_COST);
+			Double value = sbPlayer.getData(KEY_COST, null);
 			sbPlayer.setData(KEY_COST, cost + (value == null ? 0.0D : value.doubleValue()));
 			return true;
 		}

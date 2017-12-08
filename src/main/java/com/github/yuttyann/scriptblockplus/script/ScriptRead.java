@@ -87,19 +87,19 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 				Option instance = optionManager.newInstance(option);
 				if (!sbPlayer.isOnline() || !instance.callOption(this)) {
 					if (!instance.isFailedIgnore()) {
-						endProcessManager.forEach(e -> e.failed(this));
+						endProcessManager.forEach(e -> e.failed(this), true);
 					}
 					return false;
 				}
 			}
 		}
-		endProcessManager.forEach(e -> e.success(this));
+		endProcessManager.forEach(e -> e.success(this), true);
 		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
 		return true;
 	}
 
 	private String textOption(String value) {
-		if (StringUtils.isNotEmpty(value)) {
+		if (sbPlayer.isOnline() && StringUtils.isNotEmpty(value)) {
 			value = StringUtils.replace(value, "<player>", sbPlayer.getName());
 			value = StringUtils.replace(value, "<world>", sbPlayer.getLocation().getWorld().getName());
 		}
@@ -128,7 +128,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 			return StringUtils.getScripts(scriptLine);
 		} catch (ScriptException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 }

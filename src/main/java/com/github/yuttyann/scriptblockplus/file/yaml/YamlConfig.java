@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
@@ -25,6 +26,8 @@ import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class YamlConfig {
+
+	private static final Pattern UUID_PATTERN = Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}");
 
 	private final Plugin plugin;
 	private final File file;
@@ -255,7 +258,7 @@ public class YamlConfig {
 
 	public boolean isUUID(String path) {
 		String val = getString(path);
-		return val != null && val.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}");
+		return val != null && UUID_PATTERN.matcher(val).matches();
 	}
 
 	public boolean isColor(String path) {

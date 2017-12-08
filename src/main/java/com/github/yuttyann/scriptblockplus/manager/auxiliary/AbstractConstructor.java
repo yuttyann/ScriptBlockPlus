@@ -78,14 +78,11 @@ public abstract class AbstractConstructor<T> {
 	}
 
 	public final List<T> getCacheList() {
-		if (cacheList == null || cacheList.isEmpty()) {
-			newInstances();
-		}
-		return Collections.unmodifiableList(cacheList);
+		return Collections.unmodifiableList(getLinkCacheList());
 	}
 
 	@Deprecated
-	public final List<T> _getCacheList() {
+	public final List<T> getLinkCacheList() {
 		if (cacheList == null || cacheList.isEmpty()) {
 			newInstances();
 		}
@@ -130,12 +127,12 @@ public abstract class AbstractConstructor<T> {
 		return null;
 	}
 
-	public final void forEach(Consumer<? super T> action) {
-		StreamUtils.forEach(newInstances(), action);
-	}
-
-	public final void forEachCache(Consumer<? super T> action) {
-		getCacheList().forEach(action);
+	public final void forEach(Consumer<? super T> action, boolean cache) {
+		if (cache) {
+			getLinkCacheList().forEach(action);
+		} else {
+			StreamUtils.forEach(newInstances(), action);
+		}
 	}
 
 	protected final void clearCacheInstance() {

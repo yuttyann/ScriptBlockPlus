@@ -27,7 +27,7 @@ public class ScriptBreakListener extends ScriptManager implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onBlockBreak(BlockBreakEvent event) {
+	public void onBlockBreakEvent(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		if (isScriptEditor(player) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			event.setCancelled(true);

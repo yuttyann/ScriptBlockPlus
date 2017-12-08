@@ -39,7 +39,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onBlockInteract(BlockInteractEvent event) {
+	public void onBlockInteractEvent(BlockInteractEvent event) {
 		if (event.getHand() != EquipSlot.HAND) {
 			return;
 		}

@@ -28,12 +28,12 @@ public final class Lang {
 
 	private File getFile(String filePath, String dirPath) {
 		String path = dirPath + "/" + language + ".yml";
-		String lang = isExists(path) ? language : "en";
-		filePath = StringUtils.replace(filePath, "{code}", lang);
+		String code = isExists(path) ? language : "en";
+		filePath = StringUtils.replace(filePath, "{code}", code);
 		File file = new File(plugin.getDataFolder(), filePath);
 		if (!file.exists()) {
-			if (!lang.equals(language)) {
-				path = dirPath + "/" + lang + ".yml";
+			if (!code.equals(language)) {
+				path = dirPath + "/" + code + ".yml";
 			}
 			FileUtils.copyFileFromPlugin(plugin, file, path);
 		}

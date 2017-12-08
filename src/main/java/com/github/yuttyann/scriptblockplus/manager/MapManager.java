@@ -140,16 +140,15 @@ public final class MapManager {
 		List<UUID> uuids = delayMap.get(scriptType, fullCoords);
 		if (uuids == null) {
 			uuids = new ArrayList<UUID>();
+			delayMap.put(scriptType, fullCoords, uuids);
 		}
 		uuids.add(uuid);
-		delayMap.put(scriptType, fullCoords, uuids);
 	}
 
 	public void removeDelay(ScriptType scriptType, String fullCoords, UUID uuid) {
 		List<UUID> uuids = delayMap.get(scriptType, fullCoords);
 		if (uuids != null) {
 			uuids.remove(uuid);
-			delayMap.put(scriptType, fullCoords, uuids);
 		}
 	}
 
@@ -162,16 +161,15 @@ public final class MapManager {
 		Map<UUID, Cooldown> cooldowns = cooldownMap.get(scriptType, fullCoords);
 		if (cooldowns == null) {
 			cooldowns = new HashMap<UUID, Cooldown>();
+			cooldownMap.put(scriptType, fullCoords, cooldowns);
 		}
 		cooldowns.put(uuid, cooldown);
-		cooldownMap.put(scriptType, fullCoords, cooldowns);
 	}
 
 	public void removeCooldown(ScriptType scriptType, String fullCoords, UUID uuid) {
 		Map<UUID, Cooldown> cooldowns = cooldownMap.get(scriptType, fullCoords);
 		if (cooldowns != null && cooldowns.containsKey(uuid)) {
 			cooldowns.remove(uuid);
-			cooldownMap.put(scriptType, fullCoords, cooldowns);
 		}
 	}
 
@@ -180,7 +178,6 @@ public final class MapManager {
 		Set<String> set = scriptCoords.get(scriptType);
 		if (set != null && !set.contains(fullCoords)) {
 			set.add(fullCoords);
-			scriptCoords.put(scriptType, set);
 		}
 		removeTimes(scriptType, fullCoords);
 	}
@@ -190,7 +187,6 @@ public final class MapManager {
 		Set<String> set = scriptCoords.get(scriptType);
 		if (set != null && set.contains(fullCoords)) {
 			set.remove(fullCoords);
-			scriptCoords.put(scriptType, set);
 		}
 		removeTimes(scriptType, fullCoords);
 	}

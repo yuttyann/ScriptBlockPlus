@@ -24,7 +24,7 @@ public class ScriptWalkListener extends ScriptManager implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerMove(PlayerMoveEvent event) {
+	public void onPlayerMoveEvent(PlayerMoveEvent event) {
 		SBPlayer sbPlayer = SBPlayer.get(event.getPlayer());
 		BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation()).subtract(0.0D, 1.0D, 0.0D);
 		if (blockCoords.getFullCoords().equals(sbPlayer.getOldFullCoords())) {

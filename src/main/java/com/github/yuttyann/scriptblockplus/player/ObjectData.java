@@ -6,7 +6,11 @@ public interface ObjectData {
 
 	public Object getData(String key);
 
+	public <T> T getData(String key, Class<T> classOfT);
+
 	public Object removeData(String key);
+
+	public <T> T removeData(String key, Class<T> classOfT);
 
 	public boolean hasData(String key);
 
