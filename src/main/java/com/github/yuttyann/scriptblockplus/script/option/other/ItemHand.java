@@ -45,7 +45,7 @@ public class ItemHand extends BaseOption {
 	}
 
 	private String getId(String source) {
-		if (source.matches("^[0-9]*$")) {
+		if (source.matches("\\A[-]?[0-9]+\\z")) {
 			return source;
 		}
 		@SuppressWarnings("deprecation")

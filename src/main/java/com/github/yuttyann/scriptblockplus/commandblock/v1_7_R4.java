@@ -26,7 +26,7 @@ import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.google.common.base.Joiner;
 
-final class v1_7_R4 implements CommandListener {
+final class v1_7_R4 implements CommandBlockListener {
 
 	private class TileEntityCommand extends TileEntity {
 
