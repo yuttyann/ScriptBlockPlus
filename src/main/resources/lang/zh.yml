@@ -1,0 +1,126 @@
+﻿# ScriptBlockPlus v${project.version} Lang #
+# MCBBS PCD小组 秋风残叶 搬运并汉化 请支持原作者 yuttyann44581
+# 本配置源语言为日本语，可能存在翻译不准确的地方
+
+
+## ===== 帮助页 ===== ##
+
+toolCommandMessage: 'tool - 获得脚本编辑工具'
+reloadCommandMessage: 'reload - 重载插件'
+checkVerCommandMessage: 'checkver - 查询最新版本'
+dataMigrCommandMessage: 'datamigr - 将ScriptBlock的旧数据转移至ScriptBlockPlus'
+createCommandMessage: '<交互方式> create <脚本内容> - 创建脚本方块'
+addCommandMessage: '<交互方式> add <脚本内容> - 添加脚本方块'
+removeCommandMessage: '<交互方式> remove - 移除脚本方块'
+viewCommandMessage: '<交互方式> view - 查看方块的脚本'
+worldEditPasteCommandMessage: 'worldedit paste <pasteonair> [overwrite] - 粘贴WorldEdit选区内的脚本方块'
+worldEditRemoveCommandMessage: 'worldedit remove - 移除WorldEdit选区内的脚本方块'
+
+# &(code) : 可以使用彩色代码
+
+## ===== 脚本编辑器物品设定 ===== ##
+
+scriptEditor:
+- '&a这是一个可以复制并粘贴脚本的工具'
+- '&6左键点击: &e复制"interact"类型的脚本'
+- '&6右键点击: &e复制"break"类型的脚本'
+- '&6Shift+左键点击: &e复制"walk"类型的脚本'
+- '&6Shift+右键点击: &e粘贴该脚本'
+
+# |~, \n : 改行
+
+## ===== 消息设定 ===== ##
+
+notVaultMessage: '&cVault经济插件前置未找到'
+senderNoPlayerMessage: '&c控制台不能这么做'
+notPermissionMessage: '&c你没有权限'
+giveScriptEditorMessage: '&a获得脚本编辑工具'
+allFileReloadMessage: '&a插件成功重载，汉化 by 秋风残叶'
+notLatestPluginMessage: '&c已是最新版本'
+notScriptBlockFileMessage: '&cScriptBlock无数据或者数据损坏'
+dataMigrStartMessage: '&7开始从ScriptBlock转移数据....'
+dataMigrEndMessage: '&b数据转移完毕'
+notWorldEditMessage: '&cWorldEdit插件未安装或者版本过低'
+updateDownloadStartMessage: '&6开始下载最新版本ScriptBlockPlus...如果发生卡顿 请不要启用自动更新'
+
+# %filename% : 文件名
+# %filepath% : 文件路径
+# %filesize% : 文件大小
+updateDownloadEndMessage: '&6新更新下载完成|~文件名: %filename%|~文件大小: %filesize%|~文件路径: %filepath%'
+
+# %pluginname%    : 插件名
+# %latestversion% : 最新版本
+# %details%       : 更新内容
+updateCheckMessage: '&b新版本插件可用|~v%latestversion% 最新版本|~插件名: %pluginname%|~☆更新内容☆|~%details%'
+
+updateErrorMessage: '&c查询更新失败，可能是国内网络导致的，建议去这个中文搬运帖查看更新http://www.mcbbs.net/thread-691900-1-1.html'
+
+# %scripttype% : 脚本种类
+scriptCopyMessage: '&a复制一个种类是"%scripttype%"的脚本'
+scriptPasteMessage: '&a粘贴一个种类是"%scripttype%"的脚本'
+scriptCreateMessage: '&a创建一个种类是"%scripttype%"的脚本'
+scriptAddMessage: '&a添加一个种类是"%scripttype%"的脚本'
+scriptRemoveMessage: '&c删除一个种类是"%scripttype%"的脚本'
+
+worldEditNotSelectionMessage: '&cWorldEdit坐标未选择'
+
+# %scripttype% : 脚本种类
+worldEditPasteMessage: '&a脚本种类"%scripttype%"已通过WorldEdit进行粘贴'
+worldEditRemoveMessage: '&c脚本种类"%scripttype%"已通过WorldEdit移除'
+
+# %option% : 脚本名称
+# %cause%  : 错误发生原因
+optionFailedToExecuteMessage: '&c脚本"%option%"执行失败|~可能的原因: %cause%'
+
+activeDelayMessage: '&c该脚本在延迟中 你暂时不能使用'
+
+# %hour%   : 时
+# %minute% : 分
+# %second% : 秒
+activeCooldownMessage: '&c脚本还在冷却中 [%hour%时%minute%分%second%秒]'
+
+# %clicktype% : 点击种类
+succEditDataMessage: '&a脚本种类"%clicktype%"的设定已选定。请点击需要生效的方块'
+
+errorEditDataMessage: '&c设定出现错误'
+errorScriptCheckMessage: '&c脚本输入错误！'
+errorScriptFileCheckMessage: '&c无脚本'
+
+# %scripttype% : 脚本种类
+errorScriptExecMessage: '&c脚本种类"%scripttype%"执行失败'
+
+# %group% : 权限组名
+errorGroupMessage: '&c只有属于权限组"%group%"的玩家才可以运行该脚本'
+
+# %material% : 物品种类
+# %id%       : 物品ID
+# %amount%   : 物品的数量
+# %damage%   : 物品的子ID
+# %itemname% : 物品的名称
+errorHandMessage: '&c您的手持物品不满足条件，所需物品必须满足"%material%(%id%:%damage%)"以及数量"%amount%个"'
+errorItemMessage: '&c您的背包内物品不满足条件，所需物品必须满足"%material%(%id%:%damage%)"以及数量"%amount%个"'
+
+# %cost%   : 需要支付的金额
+# %result% : 至少应该剩余的金钱
+errorCostMessage: '&c你的金钱至少应该有"%result%"，执行这个脚本需要花费金钱"%cost%"'
+
+# %scripttype% : 脚本种类
+# %player%     : 玩家ID
+# %world%      : 世界名
+# %coords%     : 坐标(x, y, z)
+consoleScriptCopyMessage: '&a创建者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本已被复制'
+consoleScriptPasteMessage: '&a创建者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本已被粘贴'
+consoleScriptCreateMessage: '&a创建者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本已被创建'
+consoleScriptAddMessage: '&a更新者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本已被添加'
+consoleScriptRemoveMessage: '&c删除者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本已被删除'
+consoleScriptViewMessage: '&a执行者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本正在被预览'
+consoleSuccScriptExecMessage: '&a执行者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本被触发了'
+consoleErrorScriptExecMessage: '&c执行者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本触发失败'
+
+# %scripttype% : 脚本种类
+# %player%     : 玩家ID
+# %world%      : 世界名
+# %mincoords%  : 最小位置(x, y, z)
+# %maxcoords%  : 最大位置(x, y, z)
+consoleWorldEditPasteMessage: '&a脚本种类"%scripttype%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已完成粘贴'
+consoleWorldEditRemoveMessage: '&c脚本种类"%scripttype%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已被删除'

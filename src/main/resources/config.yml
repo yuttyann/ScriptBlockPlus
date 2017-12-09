@@ -1,0 +1,36 @@
+﻿# ScriptBlockPlus v${project.version} Config #
+
+## ===== 自動アップデートの設定 ===== ##
+# [true -> 有効 | false -> 無効]
+# メッセージはOPにしか表示されません。
+
+# 最新バージョンを確認するかどうか。
+updateChecker: true
+
+# 最新のプラグインをダウンロードするかどうか。
+autoDownload: true
+
+# ダウンロードした更新内容を、メモ帳で開くかどうか。
+openChangeLog: true
+
+## ===== 言語の設定 ===== ##
+# 使用する言語を設定してください。
+# 初期 -> [default(自動), en(英語), ja(日本語), zh(中国語)]
+language: default
+
+## ===== コンソールの設定 ===== ##
+# [true -> 有効 | false -> 無効]
+# 言語ファイルの console が対象です。
+# コンソールログを表示するかどうか。
+consoleLog: false
+
+## ===== 並び替えの設定 ===== ##
+# [true -> 有効 | false -> 無効]
+# スクリプトを並び替えるかどうか。
+# ※スクリプトの仕様を理解している人以外 無効 は「非推奨」です。
+sortScripts: true
+
+## ===== 左クリックの設定 ===== ##
+# [true -> 有効 | false -> 無効]
+# 左クリックでもスクリプトを実行するかどうか。
+leftClick: true
