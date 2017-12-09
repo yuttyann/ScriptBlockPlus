@@ -9,9 +9,9 @@ import org.bukkit.command.CommandSender;
 import com.github.yuttyann.scriptblockplus.enums.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-final class Ref_Vx_x_Rx implements CommandBlockListener {
+final class Ref_Vx_x_Rx implements CommandListener {
 
-	private static final Class<?>[] PARAMS_EXECUTECOMMAND = {
+	private static final Class<?>[] PARAMS_EXECUTE_COMMAND = {
 		getClass(PackageType.NMS, "ICommandListener"), CommandSender.class, String.class
 	};
 
@@ -22,7 +22,7 @@ final class Ref_Vx_x_Rx implements CommandBlockListener {
 	public void executeCommand(CommandSender sender, Location location, String command) {
 		try {
 			Object iCommandListener = getICommandListener(sender, location);
-			Method executeCommand = PackageType.NMS.getMethod(CLASS_NAME_1, "executeCommand", PARAMS_EXECUTECOMMAND);
+			Method executeCommand = PackageType.NMS.getMethod(CLASS_NAME_1, "executeCommand", PARAMS_EXECUTE_COMMAND);
 			executeCommand.invoke(null, iCommandListener, sender, command);
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();

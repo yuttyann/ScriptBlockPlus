@@ -10,29 +10,33 @@ public final class FakeCommandBlock {
 
 	private static final Pattern COMMAND_PATTERN = Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$");
 
-	private static final CommandBlockListener LISTENER;
+	private static final CommandListener COMMAND_LISTENER;
 
 	static {
-		CommandBlockListener listener = null;
+		CommandListener listener = null;
 		if (Utils.isCB18orLater()) {
 			listener = new Ref_Vx_x_Rx();
 		} else {
-			String packageName = PackageType.getName();
-			if (packageName.equals("v1_7_R1")) {
+			switch (PackageType.getName()) {
+			case "v1_7_R1":
 				listener = new v1_7_R1();
-			} else if (packageName.equals("v1_7_R2")) {
+				break;
+			case "v1_7_R2":
 				listener = new v1_7_R2();
-			} else if (packageName.equals("v1_7_R3")) {
+				break;
+			case "v1_7_R3":
 				listener = new v1_7_R3();
-			} else if (packageName.equals("v1_7_R4")) {
+				break;
+			case "v1_7_R4":
 				listener = new v1_7_R4();
+				break;
 			}
 		}
-		LISTENER = listener;
+		COMMAND_LISTENER = listener;
 	}
 
-	public static CommandBlockListener getListener() {
-		return LISTENER;
+	public static CommandListener getListener() {
+		return COMMAND_LISTENER;
 	}
 
 	public static boolean isCommandPattern(String command) {
