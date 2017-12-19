@@ -84,12 +84,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 		if (isScriptEditor(player, item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			switch (action) {
 			case LEFT_CLICK_BLOCK:
-				ScriptType scriptType;
-				if (player.isSneaking()) {
-					scriptType = ScriptType.WALK;
-				} else {
-					scriptType = ScriptType.INTERACT;
-				}
+				ScriptType scriptType = player.isSneaking() ? ScriptType.WALK : ScriptType.INTERACT;
 				new ScriptEdit(location, scriptType).copy(sbPlayer);
 				return true;
 			case RIGHT_CLICK_BLOCK:

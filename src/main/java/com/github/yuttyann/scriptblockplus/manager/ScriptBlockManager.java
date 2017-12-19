@@ -8,7 +8,6 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
@@ -23,15 +22,16 @@ import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
-public final class ScriptBlockManager extends ScriptManager implements ScriptBlockAPI {
+public final class ScriptBlockManager implements ScriptBlockAPI {
 
 	private ScriptData scriptData;
+	private ScriptManager scriptManager;
 	private Map<ScriptType, List<Location>> timers;
 	private Map<Boolean, Map<Location, ScriptType>> scripts;
 
 	public ScriptBlockManager(ScriptBlock plugin, Location location, ScriptType scriptType) {
-		super(plugin, scriptType);
 		this.scriptData = new ScriptData(location, scriptType);
+		this.scriptManager = new ScriptManager(plugin, scriptType);
 		this.timers = new HashMap<ScriptType, List<Location>>();
 		this.scripts = new HashMap<Boolean, Map<Location, ScriptType>>();
 		setLocation(location);
@@ -45,11 +45,14 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 	@Override
 	public boolean scriptRead(int index, Player player) {
 		try {
-			ScriptBlockEvent event = callEvent(player, scriptType);
+			if (getScriptType() == null || getLocation() == null) {
+				return false;
+			}
+			ScriptBlockEvent event = callEvent(player, getScriptType());
 			if (event == null || event.isCancelled()) {
 				return false;
 			}
-			return new ScriptRead(this, player, getLocation()).read(index);
+			return new ScriptRead(scriptManager, player, getLocation()).read(index);
 		} catch (Exception e) {
 			return false;
 		}
@@ -84,14 +87,8 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 	@Override
 	public void save() {
 		scriptData.save();
-		timers.forEach((s, ll) -> ll.forEach(l -> mapManager.removeTimes(s, l)));
-		scripts.forEach((b, m) -> m.forEach((l, s) -> {
-			if (b) {
-				mapManager.addCoords(s, l);
-			} else {
-				mapManager.removeCoords(s, l);
-			}
-		}));
+		timers.forEach((s, ll) -> ll.forEach(l -> scriptManager.getMapManager().removeTimes(s, l)));
+		scripts.forEach((b, m) -> m.forEach((l, s) -> scriptManager.getMapManager().setCoords(s, l, b)));
 		if (timers.size() > 0) {
 			timers.clear();
 		}
@@ -102,52 +99,52 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 
 	@Override
 	public void addOption(int sortIndex, Class<? extends BaseOption> option) {
-		getOptionManager().add(-1, sortIndex, option);
+		scriptManager.getOptionManager().add(-1, sortIndex, option);
 	}
 
 	@Override
 	public void addOption(int scriptIndex, int sortIndex, Class<? extends BaseOption> option) {
-		getOptionManager().add(scriptIndex, sortIndex, option);
+		scriptManager.getOptionManager().add(scriptIndex, sortIndex, option);
 	}
 
 	@Override
 	public void removeOption(Class<? extends BaseOption> option) {
-		getOptionManager().remove(option);
+		scriptManager.getOptionManager().remove(option);
 	}
 
 	@Override
 	public void removeOption(int scriptIndex) {
-		getOptionManager().remove(scriptIndex);
+		scriptManager.getOptionManager().remove(scriptIndex);
 	}
 
 	@Override
 	public int indexOfOption(Class<? extends BaseOption> option) {
-		return getOptionManager().indexOf(option);
+		return scriptManager.getOptionManager().indexOf(option);
 	}
 
 	@Override
 	public void addEndProcess(Class<? extends EndProcess> endProcess) {
-		getEndProcessManager().add(endProcess);
+		scriptManager.getEndProcessManager().add(endProcess);
 	}
 
 	@Override
 	public void addEndProcess(int index, Class<? extends EndProcess> endProcess) {
-		getEndProcessManager().add(index, endProcess);
+		scriptManager.getEndProcessManager().add(index, endProcess);
 	}
 
 	@Override
 	public void removeEndProcess(Class<? extends EndProcess> endProcess) {
-		getEndProcessManager().remove(endProcess);
+		scriptManager.getEndProcessManager().remove(endProcess);
 	}
 
 	@Override
 	public void removeEndProcess(int index) {
-		getEndProcessManager().remove(index);
+		scriptManager.getEndProcessManager().remove(index);
 	}
 
 	@Override
 	public int indexOfEndProcess(Class<? extends EndProcess> endProcess) {
-		return getEndProcessManager().indexOf(endProcess);
+		return scriptManager.getEndProcessManager().indexOf(endProcess);
 	}
 
 	@Override
@@ -266,16 +263,15 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 
 	private ScriptBlockEvent callEvent(Player player, ScriptType scriptType) {
 		ScriptBlockEvent event = null;
-		Block block = getLocation().getBlock();
 		switch (scriptType) {
 		case INTERACT:
-			event = new ScriptBlockInteractEvent(player, block);
+			event = new ScriptBlockInteractEvent(player, getLocation().getBlock());
 			break;
 		case BREAK:
-			event = new ScriptBlockBreakEvent(player, block);
+			event = new ScriptBlockBreakEvent(player, getLocation().getBlock());
 			break;
 		case WALK:
-			event = new ScriptBlockWalkEvent(player, block);
+			event = new ScriptBlockWalkEvent(player, getLocation().getBlock());
 			break;
 		default:
 			return null;
@@ -290,17 +286,17 @@ public final class ScriptBlockManager extends ScriptManager implements ScriptBlo
 		List<Location> value = timers.get(scriptType);
 		if (value == null) {
 			value = new ArrayList<Location>();
+			timers.put(scriptType, value);
 		}
 		value.add(location);
-		timers.put(scriptType, value);
 	}
 
 	private void putScript(ScriptType scriptType, Location location, boolean isAdd) {
 		Map<Location, ScriptType> value = scripts.get(location);
 		if (value == null) {
 			value = new HashMap<Location, ScriptType>();
+			scripts.put(isAdd, value);
 		}
 		value.put(location, scriptType);
-		scripts.put(isAdd, value);
 	}
 }

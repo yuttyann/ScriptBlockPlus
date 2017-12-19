@@ -258,7 +258,7 @@ public class YamlConfig {
 
 	public boolean isUUID(String path) {
 		String val = getString(path);
-		return val != null && UUID_PATTERN.matcher(val).matches();
+		return val == null ? false : UUID_PATTERN.matcher(val).matches();
 	}
 
 	public boolean isColor(String path) {

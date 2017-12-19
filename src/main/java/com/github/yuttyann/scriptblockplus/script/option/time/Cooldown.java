@@ -69,13 +69,6 @@ public class Cooldown extends BaseOption {
 		return true;
 	}
 
-	private int getSecond() {
-		SBMap<Map<UUID, Cooldown>> cooldownMap = getMapManager().getCooldownMap();
-		Map<UUID, Cooldown> cooldowns = cooldownMap.get(getScriptType(), getFullCoords());
-		Cooldown cooldown = cooldowns == null ? null : cooldowns.get(getUniqueId());
-		return cooldown == null ? -1 : cooldown.task.second;
-	}
-
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("second", task.second);
@@ -91,5 +84,12 @@ public class Cooldown extends BaseOption {
 		task.fullCoords = (String) map.get("fullcoords");
 		task.scriptType = (ScriptType) map.get("scripttype");
 		task.runTaskTimer(plugin, mapManager);
+	}
+
+	private int getSecond() {
+		SBMap<Map<UUID, Cooldown>> cooldownMap = getMapManager().getCooldownMap();
+		Map<UUID, Cooldown> cooldowns = cooldownMap.get(getScriptType(), getFullCoords());
+		Cooldown cooldown = cooldowns == null ? null : cooldowns.get(getUniqueId());
+		return cooldown == null ? -1 : cooldown.task.second;
 	}
 }

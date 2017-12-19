@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public enum ClickType {
@@ -9,23 +10,23 @@ public enum ClickType {
 	REMOVE,
 	VIEW;
 
-	private static final String[] TYPES;
+	private static final List<String> TYPES;
 
 	static {
-		List<String> list = new LinkedList<String>();
+		List<String> list = new ArrayList<String>();
 		for (ScriptType scriptType : ScriptType.values()) {
-			for (ClickType clickType : values()) {
+			for (ClickType clickType : ClickType.values()) {
 				list.add(clickType.createKey(scriptType));
 			}
 		}
-		TYPES = list.toArray(new String[list.size()]);
+		TYPES = Collections.unmodifiableList(list);
 	}
 
 	public String createKey(ScriptType scriptType) {
 		return scriptType.name() + "_" + name();
 	}
 
-	public static String[] types() {
+	public static List<String> types() {
 		return TYPES;
 	}
 }

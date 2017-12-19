@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.enums.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -61,27 +61,31 @@ public class Title extends BaseOption {
 	}
 
 	private void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
-		Class<?> enumTitleActionClass = PackageType.NMS.getClass(NMSHelper.getEnumTitleActionName());
-		if (title != null || subtitle != null) {
-			setTime(enumTitleActionClass, player, fadeIn, stay, fadeOut);
-		}
-		Constructor<?> packetConstructor = PackageType.NMS.getConstructor("PacketPlayOutTitle", TITLE_PARAMS);
-		String chatSerializer = NMSHelper.getChatSerializerName();
-		if (title != null) {
-			title = StringUtils.replaceColorCode(title, true);
-			Object enumTITLE = NMSHelper.getEnumField(enumTitleActionClass, "TITLE");
-			Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
-			Object component = a.invoke(null, "{\"text\": \"" + title + "\"}");
-			Object packetPlayOutTitle = packetConstructor.newInstance(enumTITLE, component);
-			NMSHelper.sendPacket(player, packetPlayOutTitle);
-		}
-		if (subtitle != null) {
-			subtitle = StringUtils.replaceColorCode(subtitle, true);
-			Object enumSUBTITLE = NMSHelper.getEnumField(enumTitleActionClass, "SUBTITLE");
-			Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
-			Object component = a.invoke(null, "{\"text\": \"" + subtitle + "\"}");
-			Object packetPlayOutTitle = packetConstructor.newInstance(enumSUBTITLE, component);
-			NMSHelper.sendPacket(player, packetPlayOutTitle);
+		if (Utils.isCB112orLater()) {
+			player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+		} else {
+			Class<?> enumTitleActionClass = PackageType.NMS.getClass(NMSHelper.getEnumTitleActionName());
+			if (title != null || subtitle != null) {
+				setTime(enumTitleActionClass, player, fadeIn, stay, fadeOut);
+			}
+			Constructor<?> packetConstructor = PackageType.NMS.getConstructor("PacketPlayOutTitle", TITLE_PARAMS);
+			String chatSerializer = NMSHelper.getChatSerializerName();
+			if (title != null) {
+				title = StringUtils.replaceColorCode(title, true);
+				Object enumTITLE = NMSHelper.getEnumField(enumTitleActionClass, "TITLE");
+				Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
+				Object component = a.invoke(null, "{\"text\": \"" + title + "\"}");
+				Object packetPlayOutTitle = packetConstructor.newInstance(enumTITLE, component);
+				NMSHelper.sendPacket(player, packetPlayOutTitle);
+			}
+			if (subtitle != null) {
+				subtitle = StringUtils.replaceColorCode(subtitle, true);
+				Object enumSUBTITLE = NMSHelper.getEnumField(enumTitleActionClass, "SUBTITLE");
+				Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
+				Object component = a.invoke(null, "{\"text\": \"" + subtitle + "\"}");
+				Object packetPlayOutTitle = packetConstructor.newInstance(enumSUBTITLE, component);
+				NMSHelper.sendPacket(player, packetPlayOutTitle);
+			}
 		}
 	}
 

@@ -10,6 +10,8 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -19,13 +21,47 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BaseSBPlayer extends PlayerData implements SBPlayer {
 
-	static final Map<UUID, BaseSBPlayer> players = new HashMap<UUID, BaseSBPlayer>(32);
+	static final Map<UUID, SBPlayer> players = new HashMap<UUID, SBPlayer>(32);
 
 	private final UUID uuid;
 	private Player player;
 
 	BaseSBPlayer(UUID uuid) {
 		this.uuid = Objects.requireNonNull(uuid);
+	}
+
+	public void setPlayer(Player player) {
+		this.player = (player != null && player.getUniqueId().equals(uuid) ? player : null);
+	}
+
+	@Override
+	public Server getServer() {
+		return player == null ? null : player.getServer();
+	}
+
+	@Override
+	public Player getPlayer() {
+		return player;
+	}
+
+	@Override
+	public OfflinePlayer getOfflinePlayer() {
+		return player == null ? Utils.getOfflinePlayer(uuid) : player;
+	}
+
+	@Override
+	public PlayerInventory getInventory() {
+		return player == null ? null : player.getInventory();
+	}
+
+	@Override
+	public ItemStack getItemInMainHand() {
+		return player == null ? null : Utils.getItemInMainHand(player);
+	}
+
+	@Override
+	public ItemStack getItemInOffHand() {
+		return player == null ? null : Utils.getItemInOffHand(player);
 	}
 
 	@Override
@@ -40,37 +76,12 @@ public class BaseSBPlayer extends PlayerData implements SBPlayer {
 
 	@Override
 	public Location getLocation() {
-		Player player = getPlayer();
 		return player == null ? null : player.getLocation();
 	}
 
 	@Override
-	public Server getServer() {
-		Player player = getPlayer();
-		return player == null ? null : player.getServer();
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player != null && player.getUniqueId().equals(uuid) ? player : null;
-	}
-
-	@Override
-	public Player getPlayer() {
-		return player;
-	}
-
-	@Override
-	public OfflinePlayer getOfflinePlayer() {
-		OfflinePlayer player = getPlayer();
-		if (player == null) {
-			player = Utils.getOfflinePlayer(uuid);
-		}
-		return player;
-	}
-
-	@Override
 	public boolean isOnline() {
-		return getPlayer() != null;
+		return player != null;
 	}
 
 	@Override
@@ -85,88 +96,67 @@ public class BaseSBPlayer extends PlayerData implements SBPlayer {
 
 	@Override
 	public void sendMessage(String message) {
-		Player player = getPlayer();
-		if (player != null) {
-			player.sendMessage(message);
-		}
+		if (isOnline()) player.sendMessage(message);
 	}
 
 	@Override
 	public void sendMessage(String[] messages) {
-		Player player = getPlayer();
-		if (player != null) {
-			player.sendMessage(messages);
-		}
+		if (isOnline()) player.sendMessage(messages);
 	}
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin) {
-		Player player = getPlayer();
 		return player == null ? null : player.addAttachment(plugin);
 	}
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin, int value) {
-		Player player = getPlayer();
 		return player == null ? null : player.addAttachment(plugin, value);
 	}
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin, String permission, boolean value) {
-		Player player = getPlayer();
 		return player == null ? null : player.addAttachment(plugin, permission, value);
 	}
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin, String permission, boolean value, int ticks) {
-		Player player = getPlayer();
 		return player == null ? null : player.addAttachment(plugin, permission, value, ticks);
 	}
 
 	@Override
 	public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-		Player player = getPlayer();
 		return player == null ? null : player.getEffectivePermissions();
 	}
 
 	@Override
 	public boolean hasPermission(String permission) {
-		Player player = getPlayer();
 		return player == null ? false : player.hasPermission(permission);
 	}
 
 	@Override
 	public boolean hasPermission(Permission permission) {
-		Player player = getPlayer();
 		return player == null ? false : player.hasPermission(permission);
 	}
 
 	@Override
 	public boolean isPermissionSet(String permission) {
-		Player player = getPlayer();
 		return player == null ? false : player.isPermissionSet(permission);
 	}
 
 	@Override
 	public boolean isPermissionSet(Permission permission) {
-		Player player = getPlayer();
 		return player == null ? false : player.isPermissionSet(permission);
 	}
 
 	@Override
 	public void recalculatePermissions() {
-		Player player = getPlayer();
-		if (player != null) {
-			player.recalculatePermissions();
-		}
+		if (isOnline()) player.recalculatePermissions();
 	}
 
 	@Override
 	public void removeAttachment(PermissionAttachment attachment) {
-		Player player = getPlayer();
-		if (player != null) {
-			player.removeAttachment(attachment);
-		}
+		if (isOnline()) player.removeAttachment(attachment);
 	}
 
 	@Override

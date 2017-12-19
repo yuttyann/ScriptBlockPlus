@@ -2,7 +2,7 @@ package com.github.yuttyann.scriptblockplus.script.option.nms;
 
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.enums.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class NMSHelper {

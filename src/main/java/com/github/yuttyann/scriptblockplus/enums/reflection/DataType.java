@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.enums;
+package com.github.yuttyann.scriptblockplus.enums.reflection;
 
 import java.util.HashMap;
 import java.util.Map;

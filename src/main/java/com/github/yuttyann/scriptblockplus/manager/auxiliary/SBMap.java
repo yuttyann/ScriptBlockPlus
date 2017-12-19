@@ -68,13 +68,13 @@ public final class SBMap<T> implements Serializable {
 		return storageMap.put(key, value);
 	}
 
-	public Map<String, T> put(ScriptType scriptType, String fullCoords, T value) {
+	public T put(ScriptType scriptType, String fullCoords, T value) {
 		Map<String, T> map = get(scriptType);
 		if (map == null) {
 			map = new HashMap<String, T>();
+			storageMap.put(scriptType, map);
 		}
-		map.put(fullCoords, value);
-		return storageMap.put(scriptType, map);
+		return map.put(fullCoords, value);
 	}
 
 	public Map<String, T> remove(ScriptType scriptType) {

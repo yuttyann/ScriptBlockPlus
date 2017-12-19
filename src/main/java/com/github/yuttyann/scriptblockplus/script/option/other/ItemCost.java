@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -39,14 +38,10 @@ public class ItemCost extends BaseOption {
 			ItemStack item = items[i];
 			if (checkItem(item, itemName, id, damage)) {
 				allAmount += item.getAmount();
-				int result = item.getAmount() - amount;
-				if (allAmount > amount) {
-					result = allAmount - amount;
-				}
-				items[i] = consume(item, result);
+				items[i] = consume(item, allAmount > amount ? allAmount - amount : item.getAmount() - amount);
 			}
 			if (allAmount >= amount) {
-				SBPlayer.get(player).setData(KEY_ITEM, copyItems(inventory.getContents()));
+				getSBPlayer().setData(KEY_ITEM, copyItems(inventory.getContents()));
 				break;
 			}
 		}

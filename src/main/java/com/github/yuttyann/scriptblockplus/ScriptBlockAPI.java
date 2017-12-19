@@ -11,7 +11,7 @@ import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
 /**
- * ScriptBlockPlus APIクラス
+ * ScriptBlockPlus APIインターフェース
  * @author yuttyann44581
  */
 public interface ScriptBlockAPI {

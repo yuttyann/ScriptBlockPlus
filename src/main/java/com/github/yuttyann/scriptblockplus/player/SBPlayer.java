@@ -6,6 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import com.github.yuttyann.scriptblockplus.script.Clipboard;
 
@@ -19,7 +21,7 @@ public interface SBPlayer extends ObjectData, CommandSender {
 		if (uuid == null) {
 			return null;
 		}
-		BaseSBPlayer player = BaseSBPlayer.players.get(uuid);
+		SBPlayer player = BaseSBPlayer.players.get(uuid);
 		if (player == null) {
 			player = new BaseSBPlayer(uuid);
 			BaseSBPlayer.players.put(uuid, player);
@@ -27,13 +29,19 @@ public interface SBPlayer extends ObjectData, CommandSender {
 		return player;
 	}
 
-	public UUID getUniqueId();
-
-	public Location getLocation();
-
 	public Player getPlayer();
 
 	public OfflinePlayer getOfflinePlayer();
+
+	public PlayerInventory getInventory();
+
+	public ItemStack getItemInMainHand();
+
+	public ItemStack getItemInOffHand();
+
+	public UUID getUniqueId();
+
+	public Location getLocation();
 
 	public boolean isOnline();
 

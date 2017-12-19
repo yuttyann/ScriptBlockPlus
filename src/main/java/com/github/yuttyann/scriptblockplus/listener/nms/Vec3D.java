@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import org.bukkit.util.Vector;
 
-import com.github.yuttyann.scriptblockplus.enums.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Vec3D {

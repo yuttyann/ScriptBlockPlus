@@ -62,11 +62,6 @@ public class OldCooldown extends BaseOption {
 		return true;
 	}
 
-	private int getSecond() {
-		OldCooldown cooldownMap = getMapManager().getOldCooldownMap().get(getFullCoords());
-		return cooldownMap == null ? -1 : cooldownMap.task.second;
-	}
-
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("second", task.second);
@@ -78,5 +73,10 @@ public class OldCooldown extends BaseOption {
 		task = new Task(null, (int) map.get("second"));
 		task.fullCoords = (String) map.get("fullcoords");
 		task.runTaskTimer(plugin, mapManager);
+	}
+
+	private int getSecond() {
+		OldCooldown cooldownMap = getMapManager().getOldCooldownMap().get(getFullCoords());
+		return cooldownMap == null ? -1 : cooldownMap.task.second;
 	}
 }

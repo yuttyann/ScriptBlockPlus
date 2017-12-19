@@ -79,8 +79,8 @@ final class v1_7_R3 implements CommandListener {
 	}
 
 	@Override
-	public void executeCommand(CommandSender sender, Location location, String command) {
-		executeCommand(getICommandListener(sender, location), sender, command);
+	public boolean executeCommand(CommandSender sender, Location location, String command) {
+		return executeCommand(getICommandListener(sender, location), sender, command) > 0;
 	}
 
 	private ICommandListener getICommandListener(CommandSender sender, Location location) {

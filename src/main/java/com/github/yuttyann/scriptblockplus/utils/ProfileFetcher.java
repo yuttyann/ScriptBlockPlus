@@ -72,13 +72,8 @@ public class ProfileFetcher {
 				return null;
 			}
 			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			StringBuilder builder = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				builder.append(line);
-			}
-			String jsonText = builder.toString();
-			return StringUtils.isNotEmpty(jsonText) ? (JSONObject) JSON_PARSER.parse(jsonText) : null;
+			String line = reader.readLine();
+			return StringUtils.isNotEmpty(line) ? (JSONObject) JSON_PARSER.parse(line) : null;
 		} catch (ParseException e) {
 			throw e;
 		} catch (ProtocolException e) {

@@ -99,7 +99,7 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 			if (method_Hand == null) {
 				method_Hand = event.getClass().getMethod("getHand");
 			}
-			return EquipSlot.fromEnum((Enum<?>) method_Hand.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY));
+			return EquipSlot.fromEquipmentSlot((Enum<?>) method_Hand.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY));
 		} catch (ReflectiveOperationException e) {
 			return EquipSlot.NONE;
 		}

@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ProxiedCommandSender;
@@ -39,14 +38,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 
 	@Override
 	public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (sender instanceof BlockCommandSender) {
-			String senderName = ((BlockCommandSender) sender).getName();
-			System.out.println(sender.getClass().getSimpleName() + " : " + senderName);
-			Player player = Utils.getPlayer(senderName);
-			if (player != null) {
-				sender = player;
-			}
-		} else if (Utils.isCB183orLater() && sender instanceof ProxiedCommandSender) {
+		if (Utils.isCB183orLater() && sender instanceof ProxiedCommandSender) {
 			CommandSender proxiedCommandSender = ((ProxiedCommandSender) sender).getCallee();
 			if (proxiedCommandSender instanceof Player) {
 				sender = proxiedCommandSender;

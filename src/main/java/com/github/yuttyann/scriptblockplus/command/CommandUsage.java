@@ -15,6 +15,10 @@ public abstract class CommandUsage {
 
 	private List<CommandData> usages;
 
+	protected final List<CommandData> getUsages() {
+		return usages;
+	}
+
 	public final void setUsage(CommandData... args) {
 		usages = new ArrayList<CommandData>(args.length);
 		StreamUtils.forEach(args, usages::add);
@@ -47,7 +51,6 @@ public abstract class CommandUsage {
 	}
 
 	private String text(CommandData commandData, String prefix) {
-		String message = commandData.getMessage();
-		return commandData.isPrefix() ? prefix + message : message;
+		return commandData.isPrefix() ? prefix + commandData.getMessage() : commandData.getMessage();
 	}
 }

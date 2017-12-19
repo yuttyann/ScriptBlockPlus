@@ -2,7 +2,7 @@ package com.github.yuttyann.scriptblockplus.listener.nms;
 
 import org.bukkit.World;
 
-import com.github.yuttyann.scriptblockplus.enums.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 
 public final class NMSWorld {
 

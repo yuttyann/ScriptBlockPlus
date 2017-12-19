@@ -90,9 +90,6 @@ public final class MapManager {
 				}
 			}
 		}
-	}
-
-	public void saveOldCooldown() {
 		if (oldCooldownMap.size() > 0) {
 			File oldCooldownFile = new File(plugin.getDataFolder(), "scripts/oldcooldown.dat");
 			Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
@@ -120,9 +117,6 @@ public final class MapManager {
 				cooldownFile.delete();
 			}
 		}
-	}
-
-	public void loadOldCooldown() {
 		File oldCooldownFile = new File(plugin.getDataFolder(), "scripts/oldcooldown.dat");
 		if (oldCooldownFile.exists()) {
 			try {
@@ -170,6 +164,14 @@ public final class MapManager {
 		Map<UUID, Cooldown> cooldowns = cooldownMap.get(scriptType, fullCoords);
 		if (cooldowns != null && cooldowns.containsKey(uuid)) {
 			cooldowns.remove(uuid);
+		}
+	}
+
+	public void setCoords(ScriptType scriptType, Location location, boolean isAdd) {
+		if (isAdd) {
+			addCoords(scriptType, location);
+		} else {
+			removeCoords(scriptType, location);
 		}
 	}
 

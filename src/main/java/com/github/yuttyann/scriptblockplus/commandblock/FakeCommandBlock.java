@@ -2,7 +2,7 @@ package com.github.yuttyann.scriptblockplus.commandblock;
 
 import java.util.regex.Pattern;
 
-import com.github.yuttyann.scriptblockplus.enums.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -17,7 +17,7 @@ public final class FakeCommandBlock {
 		if (Utils.isCB18orLater()) {
 			listener = new Ref_Vx_x_Rx();
 		} else {
-			switch (PackageType.getName()) {
+			switch (PackageType.getVersionName()) {
 			case "v1_7_R1":
 				listener = new v1_7_R1();
 				break;

@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.enums;
+package com.github.yuttyann.scriptblockplus.enums.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -13,8 +13,8 @@ import org.bukkit.Bukkit;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public enum PackageType {
-	NMS("net.minecraft.server." + getName()),
-	CB("org.bukkit.craftbukkit." + getName()),
+	NMS("net.minecraft.server." + getVersionName()),
+	CB("org.bukkit.craftbukkit." + getVersionName()),
 	CB_BLOCK(CB, "block"),
 	CB_CHUNKIO(CB, "chunkio"),
 	CB_COMMAND(CB, "command"),
@@ -202,7 +202,7 @@ public enum PackageType {
 		return builder.toString();
 	}
 
-	public static String getName() {
+	public static String getVersionName() {
 		if (packageName == null) {
 			String version = Bukkit.getServer().getClass().getPackage().getName();
 			packageName = version.substring(version.lastIndexOf('.') + 1);

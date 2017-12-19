@@ -20,7 +20,7 @@ public enum EquipSlot {
 		return name().equals(bukkitEquipmentSlot.name());
 	}
 
-	public static EquipSlot fromEnum(Enum<?> bukkitEquipmentSlot) {
+	public static EquipSlot fromEquipmentSlot(Enum<?> bukkitEquipmentSlot) {
 		if (!isBukkitEquipmentSlot(bukkitEquipmentSlot)) {
 			return NONE;
 		}

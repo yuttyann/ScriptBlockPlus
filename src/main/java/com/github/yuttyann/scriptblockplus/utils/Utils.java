@@ -18,6 +18,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -123,7 +124,7 @@ public class Utils {
 		}
 	}
 
-	public static void dispatchCommand(CommandSender sender, Location location, String command) {
+	public static boolean dispatchCommand(CommandSender sender, Location location, String command) {
 		if (sender == null) {
 			throw new IllegalArgumentException("Sender cannot be null");
 		}
@@ -137,16 +138,15 @@ public class Utils {
 					location = ((Player) sender).getLocation().clone();
 				} else if (sender instanceof BlockCommandSender) {
 					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
-				} else if (location == null) {
-					throw new IllegalArgumentException("Location cannot be null");
+				} else if (sender instanceof CommandMinecart) {
+					location = ((CommandMinecart) sender).getLocation().clone();
+				} else {
+					throw new IllegalArgumentException("Location is an invalid value");
 				}
 			}
-			FakeCommandBlock.getListener().executeCommand(sender, location, command);
+			return FakeCommandBlock.getListener().executeCommand(sender, location, command);
 		} else {
-			if (command.charAt(0) == '/') {
-				command = command.substring(1);
-			}
-			Bukkit.dispatchCommand(sender, command);
+			return Bukkit.dispatchCommand(sender, command.charAt(0) == '/' ? command.substring(1) : command);
 		}
 	}
 
@@ -182,18 +182,18 @@ public class Utils {
 			return def;
 		}
 		ItemMeta meta = item.getItemMeta();
-		return meta != null && meta.hasDisplayName() ? meta.getDisplayName() : def;
+		return meta == null ? def : meta.hasDisplayName() ? meta.getDisplayName() : def;
 	}
 
 	public static boolean checkItem(ItemStack item, Material material, String itemName) {
-		return item != null && item.getType() == material && Objects.equals(getItemName(item, null), itemName);
+		return item == null ? false : item.getType() == material && Objects.equals(getItemName(item, null), itemName);
 	}
 
 	public static World getWorld(String name) {
 		World world = Bukkit.getWorld(name);
 		if (world == null) {
 			File file = new File(Bukkit.getWorldContainer(), name + "/level.dat");
-			if (file.exists() && file.getParentFile().isDirectory()) {
+			if (file.exists()) {
 				world = Bukkit.createWorld(WorldCreator.name(name));
 			}
 		}
@@ -268,16 +268,14 @@ public class Utils {
 
 	public static List<Player> getOnlinePlayers() {
 		try {
-			Object[] emptyObject = ArrayUtils.EMPTY_OBJECT_ARRAY;
-			Class<?>[] emptyClass = ArrayUtils.EMPTY_CLASS_ARRAY;
-			Method method = Bukkit.class.getMethod("getOnlinePlayers", emptyClass);
+			Method method = Bukkit.class.getMethod("getOnlinePlayers", ArrayUtils.EMPTY_CLASS_ARRAY);
 			if (method.getReturnType() == Collection.class) {
-				Collection<?> temp = ((Collection<?>) method.invoke(null, emptyObject));
+				Collection<?> temp = ((Collection<?>) method.invoke(null, ArrayUtils.EMPTY_OBJECT_ARRAY));
 				@SuppressWarnings("unchecked")
 				Collection<? extends Player> players = (Collection<? extends Player>) temp;
 				return new ArrayList<Player>(players);
 			} else {
-				Player[] temp = (Player[]) method.invoke(null, emptyObject);
+				Player[] temp = (Player[]) method.invoke(null, ArrayUtils.EMPTY_OBJECT_ARRAY);
 				List<Player> players = new ArrayList<Player>(temp.length);
 				for (Player player : temp) {
 					players.add(player);

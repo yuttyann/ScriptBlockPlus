@@ -32,7 +32,7 @@ public abstract class AbstractConstructor<T> {
 	public int indexOf(Class<? extends T> clazz) {
 		List<Constructor<? extends T>> constructors = getConstructors();
 		for (int i = 0; i < constructors.size(); i++) {
-			if (clazz == constructors.get(i).getClass()) {
+			if (clazz == constructors.get(i).getDeclaringClass()) {
 				return i;
 			}
 		}

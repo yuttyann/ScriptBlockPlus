@@ -47,7 +47,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	public ScriptBlockPlusCommand(ScriptBlock plugin) {
 		super(plugin);
-		setUsage(createCommandDatas());
+		updateUsage();
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private static CommandData[] createCommandDatas() {
+	private void updateUsage() {
 		CommandData[] commands = {
 			new CommandData(SBConfig.getToolCommandMessage(), Permission.COMMAND_TOOL),
 			new CommandData(SBConfig.getReloadCommandMessage(), Permission.COMMAND_RELOAD),
@@ -73,7 +73,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			new CommandData(SBConfig.getWorldEditPasteCommandMessage(), Permission.COMMAND_WORLDEDIT),
 			new CommandData(SBConfig.getWorldEditRemoveCommandMessage(), Permission.COMMAND_WORLDEDIT)
 		};
-		return commands;
+		setUsage(commands);
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return false;
 		}
 		Files.reload();
-		setUsage(createCommandDatas());
+		;
 		ScriptBlock.getInstance().getMapManager().loadAllScripts();
 		Utils.sendMessage(sender, SBConfig.getAllFileReloadMessage());
 		return true;

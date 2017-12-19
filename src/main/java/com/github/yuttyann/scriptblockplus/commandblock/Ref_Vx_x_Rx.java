@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
-import com.github.yuttyann.scriptblockplus.enums.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 final class Ref_Vx_x_Rx implements CommandListener {
@@ -19,14 +19,15 @@ final class Ref_Vx_x_Rx implements CommandListener {
 	private static final String CLASS_NAME_2 = "TileEntityCommand";
 
 	@Override
-	public void executeCommand(CommandSender sender, Location location, String command) {
+	public boolean executeCommand(CommandSender sender, Location location, String command) {
 		try {
 			Object iCommandListener = getICommandListener(sender, location);
 			Method executeCommand = PackageType.NMS.getMethod(CLASS_NAME_1, "executeCommand", PARAMS_EXECUTE_COMMAND);
-			executeCommand.invoke(null, iCommandListener, sender, command);
+			return int.class.cast(executeCommand.invoke(null, iCommandListener, sender, command)).intValue() > 0;
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 
 	private Object getICommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {

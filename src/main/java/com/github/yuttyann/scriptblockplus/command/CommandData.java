@@ -12,7 +12,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 public final class CommandData {
 
 	private String message;
-	private boolean isPrefix;
+	private boolean prefix;
 	private List<Permission> permissions;
 
 	public CommandData(String message, boolean isPrefix) {
@@ -35,7 +35,7 @@ public final class CommandData {
 	}
 
 	public CommandData setIsPrefix(boolean isPrefix) {
-		this.isPrefix = isPrefix;
+		this.prefix = isPrefix;
 		return this;
 	}
 
@@ -54,7 +54,7 @@ public final class CommandData {
 	}
 
 	public boolean isPrefix() {
-		return isPrefix;
+		return prefix;
 	}
 
 	public List<Permission> getPermissions() {

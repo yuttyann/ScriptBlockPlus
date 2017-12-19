@@ -65,7 +65,6 @@ public class ScriptBlock extends JavaPlugin {
 		mapManager = new MapManager(this);
 		mapManager.loadAllScripts();
 		mapManager.loadCooldown();
-		mapManager.loadOldCooldown();
 
 		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 
@@ -79,7 +78,6 @@ public class ScriptBlock extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		mapManager.saveCooldown();
-		mapManager.saveOldCooldown();
 	}
 
 	@Override
