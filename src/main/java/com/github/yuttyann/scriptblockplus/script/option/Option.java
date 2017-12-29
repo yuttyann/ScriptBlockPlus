@@ -59,8 +59,8 @@ public abstract class Option {
 	}
 
 	/**
-	 * スクリプトが正常なオプションかどうか
-	 * @return スクリプトが構文と一致するかどうか
+	 * スクリプトがオプションなのかどうかチェックします
+	 * @return スクリプトがオプションと一致するかどうか
 	 */
 	public final boolean isOption(String script) {
 		return script != null && script.startsWith(syntax);

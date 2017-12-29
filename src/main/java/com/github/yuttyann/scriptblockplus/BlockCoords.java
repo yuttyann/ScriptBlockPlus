@@ -1,16 +1,14 @@
 package com.github.yuttyann.scriptblockplus;
 
-import java.util.Arrays;
-
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
 public class BlockCoords extends Location implements Cloneable {
 
-	private String coords, fullCoords;
-	private BlockCoords center, allCenter;
-	private boolean[] isModified = new boolean[4];
+	private String coords;
+	private String fullCoords;
+	private boolean isModified1, isModified2;
 
 	public BlockCoords(Location location) {
 		super(location.getWorld(), location.getX(), location.getY(), location.getZ());
@@ -105,30 +103,28 @@ public class BlockCoords extends Location implements Cloneable {
 	}
 
 	public String getCoords() {
-		return coords == null || isModified(0) ? coords = getCoords(this) : coords;
+		return coords == null || isModified(false) ? coords = getCoords(this) : coords;
 	}
 
 	public String getFullCoords() {
-		return fullCoords == null || isModified(1) ? fullCoords = getFullCoords(this) : fullCoords;
+		return fullCoords == null || isModified(true) ? fullCoords = getFullCoords(this) : fullCoords;
 	}
 
 	public BlockCoords getCenter() {
-		return center == null || isModified(2) ? center = getCenter(this) : center;
+		return getCenter(this);
 	}
 
 	public BlockCoords getAllCenter() {
-		return allCenter == null || isModified(3) ? allCenter = getAllCenter(this) : allCenter;
+		return getAllCenter(this);
 	}
 
 	private void setModified(boolean flag) {
-		Arrays.fill(isModified, flag);
+		isModified1 = true;
+		isModified2 = true;
 	}
 
-	private boolean isModified(int id) {
-		if (id < 0 || id >= isModified.length) {
-			return false;
-		}
-		return isModified[id] && !(isModified[id] = false);
+	private boolean isModified(boolean isFull) {
+		return isFull ? isModified2 && !(isModified2 = false) : isModified1 && !(isModified1 = false);
 	}
 
 	@Override

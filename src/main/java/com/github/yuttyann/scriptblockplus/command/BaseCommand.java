@@ -69,8 +69,8 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 		return hasPermission(sender, permission, true);
 	}
 
-	protected final boolean hasPermission(CommandSender sender, Permission permission, boolean checkPlayer) {
-		if (checkPlayer && !checkPlayer(sender)) {
+	protected final boolean hasPermission(CommandSender sender, Permission permission, boolean isPlayer) {
+		if (isPlayer && !isPlayer(sender)) {
 			return false;
 		}
 		boolean has = permission.has(sender);
@@ -81,13 +81,13 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 		return has;
 	}
 
-	protected final boolean checkPlayer(CommandSender sender) {
-		if (!(sender instanceof Player)) {
-			Utils.sendMessage(SBConfig.getSenderNoPlayerMessage());
-			isIgnoreUsage = true;
-			return false;
+	protected final boolean isPlayer(CommandSender sender) {
+		if (sender instanceof Player) {
+			return true;
 		}
-		return true;
+		Utils.sendMessage(SBConfig.getSenderNoPlayerMessage());
+		isIgnoreUsage = true;
+		return false;
 	}
 
 	protected final boolean equals(String source, String another) {
