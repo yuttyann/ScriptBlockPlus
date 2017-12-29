@@ -6,8 +6,7 @@ import org.bukkit.util.Vector;
 
 public class BlockCoords extends Location implements Cloneable {
 
-	private String coords;
-	private String fullCoords;
+	private String coords, fullCoords;
 	private boolean isModified1, isModified2;
 
 	public BlockCoords(Location location) {
