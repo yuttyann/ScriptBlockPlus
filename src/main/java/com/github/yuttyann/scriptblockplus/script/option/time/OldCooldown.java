@@ -41,7 +41,7 @@ public class OldCooldown extends BaseOption {
 		@Override
 		public void run() {
 			if (--second <= 0) {
-				mapManager.getOldCooldownMap().put(fullCoords, OldCooldown.this);
+				mapManager.getOldCooldownMap().remove(fullCoords);
 				cancel();
 			}
 		}

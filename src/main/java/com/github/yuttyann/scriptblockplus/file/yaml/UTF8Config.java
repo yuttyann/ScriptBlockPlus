@@ -26,7 +26,6 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
 import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 
 final class UTF8Config extends YamlConfiguration {
 
@@ -48,7 +47,10 @@ final class UTF8Config extends YamlConfiguration {
 
 	public void save(File file) throws IOException {
 		Validate.notNull(file, "File cannot be null");
-		Files.createParentDirs(file);
+		File parent = file.getParentFile();
+		if (!parent.exists()) {
+			parent.mkdirs();
+		}
 		BufferedWriter writer = null;
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8));

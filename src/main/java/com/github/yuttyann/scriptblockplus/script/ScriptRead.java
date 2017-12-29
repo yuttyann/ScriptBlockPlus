@@ -71,7 +71,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return false;
 		}
-		Option[] options = optionManager.getTempOptions();
+		Option[] options = optionManager.getOptions();
 		if (!sort(scriptData.getScripts(), options)) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptMessage(scriptType));
 			Utils.sendMessage(SBConfig.getConsoleErrorScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));

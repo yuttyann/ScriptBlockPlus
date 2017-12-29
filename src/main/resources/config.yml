@@ -30,7 +30,9 @@ consoleLog: false
 # ※スクリプトの仕様を理解している人以外 無効 は「非推奨」です。
 sortScripts: true
 
-## ===== 左クリックの設定 ===== ##
+## ===== クリックの設定 ===== ##
 # [true -> 有効 | false -> 無効]
-# 左クリックでもスクリプトを実行するかどうか。
-leftClick: true
+# クリックでスクリプトを実行するかどうか。
+clickActions:
+  interactLeft: true
+  interactRight: true

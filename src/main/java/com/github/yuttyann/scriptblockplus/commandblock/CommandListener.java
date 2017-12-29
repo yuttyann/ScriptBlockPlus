@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 /**
- * 擬似コマンドブロック インターフェース
+ * コマンド実行 インターフェース
  * @author yuttyann44581
  */
 public interface CommandListener {

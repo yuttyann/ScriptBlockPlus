@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -29,12 +28,12 @@ public class Sound extends BaseOption {
 
 		@Override
 		public void run() {
-			BlockCoords blockCoords = getBlockCoords();
+			Location location = getLocation();
 			if (isWorld) {
-				blockCoords.getWorld().playSound(blockCoords, soundType, volume, pitch);
+				location.getWorld().playSound(location, soundType, volume, pitch);
 			} else {
 				if (getSBPlayer().isOnline()) {
-					getPlayer().playSound(blockCoords, soundType, volume, pitch);
+					getPlayer().playSound(location, soundType, volume, pitch);
 				}
 			}
 		}
@@ -53,7 +52,7 @@ public class Sound extends BaseOption {
 		if (delay > 0) {
 			new Task(soundType, volume, pitch, isWorld).runTaskLater(getPlugin(), delay);
 		} else {
-			Location location = getBlockCoords();
+			Location location = getLocation();
 			if (isWorld) {
 				location.getWorld().playSound(location, soundType, volume, pitch);
 			} else {

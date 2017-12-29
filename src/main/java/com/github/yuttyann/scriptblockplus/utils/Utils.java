@@ -129,8 +129,7 @@ public class Utils {
 			throw new IllegalArgumentException("Sender cannot be null");
 		}
 		if (StringUtils.isEmpty(command)) {
-			String reason = command == null ? "null" : "empty";
-			throw new IllegalArgumentException("Command cannot be " + reason);
+			throw new IllegalArgumentException("Command cannot be " + command == null ? "null" : "empty");
 		}
 		if (FakeCommandBlock.isCommandPattern(command)) {
 			if (location == null) {

@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class FakeCommandBlock {
 
@@ -14,23 +13,21 @@ public final class FakeCommandBlock {
 
 	static {
 		CommandListener listener = null;
-		if (Utils.isCB18orLater()) {
+		switch (PackageType.getVersionName()) {
+		case "v1_7_R1":
+			listener = new v1_7_R1();
+			break;
+		case "v1_7_R2":
+			listener = new v1_7_R2();
+			break;
+		case "v1_7_R3":
+			listener = new v1_7_R3();
+			break;
+		case "v1_7_R4":
+			listener = new v1_7_R4();
+			break;
+		default:
 			listener = new Ref_Vx_x_Rx();
-		} else {
-			switch (PackageType.getVersionName()) {
-			case "v1_7_R1":
-				listener = new v1_7_R1();
-				break;
-			case "v1_7_R2":
-				listener = new v1_7_R2();
-				break;
-			case "v1_7_R3":
-				listener = new v1_7_R3();
-				break;
-			case "v1_7_R4":
-				listener = new v1_7_R4();
-				break;
-			}
 		}
 		COMMAND_LISTENER = listener;
 	}

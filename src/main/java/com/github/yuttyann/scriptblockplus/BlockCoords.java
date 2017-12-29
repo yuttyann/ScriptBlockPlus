@@ -1,14 +1,16 @@
 package com.github.yuttyann.scriptblockplus;
 
+import java.util.Arrays;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
 public class BlockCoords extends Location implements Cloneable {
 
-	private String coords;
-	private String fullCoords;
-	private boolean isModified;
+	private String coords, fullCoords;
+	private BlockCoords center, allCenter;
+	private boolean[] isModified = new boolean[4];
 
 	public BlockCoords(Location location) {
 		super(location.getWorld(), location.getX(), location.getY(), location.getZ());
@@ -16,119 +18,125 @@ public class BlockCoords extends Location implements Cloneable {
 
 	@Override
 	public void setWorld(World world) {
-		isModified = true;
+		setModified(true);
 		super.setWorld(world);
 	}
 
 	@Override
 	public void setX(double x) {
-		isModified = true;
+		setModified(true);
 		super.setX(x);
 	}
 
 	@Override
 	public void setY(double y) {
-		isModified = true;
+		setModified(true);
 		super.setY(y);
 	}
 
 	@Override
 	public void setZ(double z) {
-		isModified = true;
+		setModified(true);
 		super.setZ(z);
 	}
 
 	@Override
 	public void setYaw(float yaw) {
-		isModified = true;
+		setModified(true);
 		super.setYaw(yaw);
 	}
 
 	@Override
 	public void setPitch(float pitch) {
-		isModified = true;
+		setModified(true);
 		super.setPitch(pitch);
 	}
 
 	@Override
 	public BlockCoords setDirection(Vector vector) {
-		isModified = true;
+		setModified(true);
 		return (BlockCoords) super.setDirection(vector);
 	}
 
 	@Override
 	public BlockCoords add(Location vec) {
-		isModified = true;
+		setModified(true);
 		return (BlockCoords) super.add(vec);
 	}
 
 	@Override
 	public BlockCoords add(Vector vec) {
-		isModified = true;
+		setModified(true);
 		return (BlockCoords) super.add(vec);
 	}
 
 	@Override
 	public BlockCoords add(double x, double y, double z) {
-		isModified = true;
+		setModified(true);
 		return (BlockCoords) super.add(x, y, z);
 	}
 
 	@Override
 	public BlockCoords subtract(Location vec) {
-		isModified = true;
+		setModified(true);
 		return (BlockCoords) super.subtract(vec);
 	}
 
 	@Override
 	public BlockCoords subtract(Vector vec) {
-		isModified = true;
+		setModified(true);
 		return (BlockCoords) super.subtract(vec);
 	}
 
 	@Override
 	public BlockCoords subtract(double x, double y, double z) {
-		isModified = true;
+		setModified(true);
 		return (BlockCoords) super.subtract(x, y, z);
 	}
 
 	public BlockCoords multiply(double m) {
-		isModified = true;
+		setModified(true);
 		return (BlockCoords) super.multiply(m);
 	}
 
 	public BlockCoords zero() {
-		isModified = true;
+		setModified(true);
 		return (BlockCoords) super.zero();
 	}
 
 	public String getCoords() {
-		if (coords == null || (isModified && !(isModified = false))) {
-			coords = getCoords(this);
-		}
-		return coords;
+		return coords == null || isModified(0) ? coords = getCoords(this) : coords;
 	}
 
 	public String getFullCoords() {
-		if (fullCoords == null || (isModified && !(isModified = false))) {
-			fullCoords = getFullCoords(this);
-		}
-		return fullCoords;
+		return fullCoords == null || isModified(1) ? fullCoords = getFullCoords(this) : fullCoords;
 	}
 
 	public BlockCoords getCenter() {
-		return getCenter(this);
+		return center == null || isModified(2) ? center = getCenter(this) : center;
 	}
 
 	public BlockCoords getAllCenter() {
-		return getAllCenter(this);
+		return allCenter == null || isModified(3) ? allCenter = getAllCenter(this) : allCenter;
 	}
 
+	private void setModified(boolean flag) {
+		Arrays.fill(isModified, flag);
+	}
+
+	private boolean isModified(int id) {
+		if (id < 0 || id >= isModified.length) {
+			return false;
+		}
+		return isModified[id] && !(isModified[id] = false);
+	}
+
+	@Override
 	public BlockCoords clone() {
 		BlockCoords blockCoords = new BlockCoords(this);
 		blockCoords.coords = this.coords;
 		blockCoords.fullCoords = this.fullCoords;
-		blockCoords.isModified = this.isModified;
+		blockCoords.setModified(true);
 		return blockCoords;
 	}
 

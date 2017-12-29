@@ -44,19 +44,21 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 			return;
 		}
 		Block block = event.getBlock();
+		Action action = event.getAction();
 		Location location = block.getLocation();
-		if (action(event.getPlayer(), event.getAction(), event.getItem(), location)) {
+		if (action(event.getPlayer(), action, event.getItem(), location)) {
 			event.setCancelled(true);
 			return;
 		}
 		Player player = event.getPlayer();
 		if (mapManager.containsCoords(scriptType, location)) {
-			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block);
+			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, event.getAction());
 			Bukkit.getPluginManager().callEvent(interactEvent);
 			if (interactEvent.isCancelled()) {
 				return;
 			}
-			if (!interactEvent.isLeftClick() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
+			if ((action == Action.LEFT_CLICK_BLOCK && !SBConfig.isLeftClick())
+					|| (action == Action.RIGHT_CLICK_BLOCK && !SBConfig.isRightClick())) {
 				return;
 			}
 			if (!Permission.INTERACT_USE.has(player)) {

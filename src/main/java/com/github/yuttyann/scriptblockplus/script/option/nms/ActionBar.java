@@ -97,8 +97,7 @@ public class ActionBar extends BaseOption {
 	private Object newPacketPlayOutChat(Object component) throws ReflectiveOperationException {
 		Object type = (byte) 2;
 		if (Utils.isCB112orLater()) {
-			Class<?> chatMessageTypeClass = PackageType.NMS.getClass("ChatMessageType");
-			type = NMSHelper.getEnumField(chatMessageTypeClass, "GAME_INFO");
+			type = NMSHelper.getEnumField(PackageType.NMS.getClass("ChatMessageType"), "GAME_INFO");
 		}
 		return PackageType.NMS.getConstructor("PacketPlayOutChat", PACKET_PARAMS).newInstance(component, type);
 	}

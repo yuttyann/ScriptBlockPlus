@@ -44,7 +44,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		CONSTRUCTORS = new ArrayList<Constructor<? extends Option>>();
 	}
 
-	private static Option[] tempOptions;
+	private static Option[] options;
 	private static boolean isModified;
 
 	final class OptionHolder {
@@ -137,11 +137,11 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		return result.size() > 0 ? result.toArray(new Option[result.size()]) : new Option[0];
 	}
 
-	public Option[] getTempOptions() {
-		if (tempOptions == null || isModified) {
+	public Option[] getOptions() {
+		if (options == null || isModified) {
 			update();
 		}
-		return tempOptions;
+		return options;
 	}
 
 	@Deprecated
@@ -188,7 +188,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 
 	private void update() {
 		isModified = false;
-		tempOptions = newInstances();
+		options = newInstances();
 		OPTIONHOLDERS.sort((o1, o2) -> o1.compareTo(o2));
 	}
 }

@@ -15,7 +15,7 @@ public class Amount extends BaseOption {
 		scriptData.addAmount(1);
 		if (scriptData.getAmount() >= Integer.parseInt(getOptionValue())) {
 			scriptData.remove();
-			getMapManager().removeCoords(getScriptType(), getBlockCoords());
+			getMapManager().removeCoords(getScriptType(), getLocation());
 		}
 		scriptData.save();
 		return true;

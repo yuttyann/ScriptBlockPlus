@@ -3,21 +3,27 @@ package com.github.yuttyann.scriptblockplus.event;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptBlockInteractEvent extends ScriptBlockEvent {
 
 	private ItemStack mainHand;
 	private ItemStack offHand;
+	private boolean isLeftClick;
 	private boolean cancelled;
 
 	public ScriptBlockInteractEvent(Player player, Block block) {
+		this(player, block, Action.RIGHT_CLICK_BLOCK);
+	}
+
+	public ScriptBlockInteractEvent(Player player, Block block, Action action) {
 		super(player, block);
 		this.mainHand = Utils.getItemInMainHand(player);
 		this.offHand = Utils.getItemInOffHand(player);
+		this.isLeftClick = action.name().startsWith("LEFT_CLICK_");
 	}
 
 	public ItemStack getItemInMainHand() {
@@ -54,7 +60,11 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent {
 	}
 
 	public boolean isLeftClick() {
-		return SBConfig.isLeftClick();
+		return isLeftClick;
+	}
+
+	public boolean isRightClick() {
+		return !isLeftClick;
 	}
 
 	@Override

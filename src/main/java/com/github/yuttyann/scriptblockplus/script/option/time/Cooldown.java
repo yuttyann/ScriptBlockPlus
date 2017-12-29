@@ -48,7 +48,7 @@ public class Cooldown extends BaseOption {
 		@Override
 		public void run() {
 			if (--second <= 0) {
-				mapManager.putCooldown(scriptType, fullCoords, uuid, Cooldown.this);
+				mapManager.removeCooldown(scriptType, fullCoords, uuid);
 				cancel();
 			}
 		}

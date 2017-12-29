@@ -1,7 +1,5 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
-import org.bukkit.Bukkit;
-
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -14,7 +12,7 @@ public class Console extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		String command = StringUtils.replaceColorCode(getOptionValue(), true);
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+		executeConsoleCommand(command);
 		return true;
 	}
 }

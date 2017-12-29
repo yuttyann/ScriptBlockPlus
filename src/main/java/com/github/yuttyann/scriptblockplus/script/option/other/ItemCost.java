@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,6 +16,8 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class ItemCost extends BaseOption {
 
 	public static final String KEY_ITEM = "Option_ItemCost";
+
+	private static final Pattern NUMBER_PATTERN = Pattern.compile("^[0-9]*$");
 
 	public ItemCost() {
 		super("itemcost", "$item:");
@@ -38,7 +41,7 @@ public class ItemCost extends BaseOption {
 			ItemStack item = items[i];
 			if (checkItem(item, itemName, id, damage)) {
 				allAmount += item.getAmount();
-				items[i] = consume(item, allAmount > amount ? allAmount - amount : item.getAmount() - amount);
+				items[i] = setAmount(item, allAmount > amount ? allAmount - amount : item.getAmount() - amount);
 			}
 			if (allAmount >= amount) {
 				getSBPlayer().setData(KEY_ITEM, copyItems(inventory.getContents()));
@@ -50,7 +53,6 @@ public class ItemCost extends BaseOption {
 			return false;
 		}
 		inventory.setContents(items);
-		Utils.updateInventory(player);
 		return true;
 	}
 
@@ -62,11 +64,11 @@ public class ItemCost extends BaseOption {
 		return copy;
 	}
 
-	private ItemStack consume(ItemStack item, int amount) {
+	private ItemStack setAmount(ItemStack item, int amount) {
 		if (amount > 0) {
 			item.setAmount(amount);
 		} else {
-			item.setType(Material.AIR);
+			item = new ItemStack(Material.AIR);
 		}
 		return item;
 	}
@@ -79,7 +81,7 @@ public class ItemCost extends BaseOption {
 	}
 
 	private String getId(String source) {
-		if (source.matches("^[0-9]*$")) {
+		if (NUMBER_PATTERN.matcher(source).matches()) {
 			return source;
 		}
 		@SuppressWarnings("deprecation")

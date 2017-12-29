@@ -90,7 +90,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			}
 		} else if (args.length == 2) {
 			if (equals(args[0], "interact", "break", "walk") && equals(args[1], "remove", "view")) {
-				return setClickData_RV(sender, args);
+				return setClickDataA(sender, args);
 			} else if (equals(args[0], "worldedit") && equals(args[1], "remove")) {
 				return doWorldEditRemove(sender, args);
 			}
@@ -98,7 +98,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			if (args.length <= 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
 				return doWorldEditPaste(sender, args);
 			} else if (equals(args[0], "interact", "break", "walk") && equals(args[1], "create", "add")) {
-				return setClickData_CA(sender, args);
+				return setClickDataB(sender, args);
 			}
 		}
 		return false;
@@ -125,7 +125,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return false;
 		}
 		Files.reload();
-		;
+		updateUsage();
 		ScriptBlock.getInstance().getMapManager().loadAllScripts();
 		Utils.sendMessage(sender, SBConfig.getAllFileReloadMessage());
 		return true;
@@ -207,7 +207,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		ScriptBlock.getInstance().getMapManager().loadScripts(scriptFile, scriptType);
 	}
 
-	private boolean setClickData_RV(CommandSender sender, String[] args) {
+	private boolean setClickDataA(CommandSender sender, String[] args) {
 		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
 		if (!hasPermission(sender, Permission.valueOf("COMMAND_" + scriptType.name()))) {
 			return false;
@@ -223,7 +223,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private boolean setClickData_CA(CommandSender sender, String[] args) {
+	private boolean setClickDataB(CommandSender sender, String[] args) {
 		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
 		if (!hasPermission(sender, Permission.valueOf("COMMAND_" + scriptType.name()))) {
 			return false;
@@ -292,8 +292,6 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!hasPermission(sender, Permission.COMMAND_WORLDEDIT)) {
 			return false;
 		}
-		boolean pasteonair = args.length > 2 ? Boolean.parseBoolean(args[2]) : false;
-		boolean overwrite = args.length > 3 ? Boolean.parseBoolean(args[3]) : false;
 		SBPlayer sbPlayer = SBPlayer.get((Player) sender);
 		if (!sbPlayer.hasClipboard()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
@@ -309,6 +307,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			Utils.sendMessage(sbPlayer, SBConfig.getWorldEditNotSelectionMessage());
 			return true;
 		}
+		boolean pasteonair = args.length > 2 ? Boolean.parseBoolean(args[2]) : false;
+		boolean overwrite = args.length > 3 ? Boolean.parseBoolean(args[3]) : false;
 		Clipboard clipboard = sbPlayer.getClipboard();
 		for (Block block : weSelection.getBlocks(selection)) {
 			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {

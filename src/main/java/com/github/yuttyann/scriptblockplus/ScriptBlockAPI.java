@@ -32,7 +32,7 @@ public interface ScriptBlockAPI {
 	public boolean scriptRead(int index, Player player);
 
 	/**
-	 * スクリプトの座標を設定する<br />
+	 * スクリプトの座標を設定する</br>
 	 * ただし、別の座標に切り替える機能であり保存場所を変更するわけではない
 	 * @param location 座標
 	 */
@@ -62,7 +62,7 @@ public interface ScriptBlockAPI {
 	public void save();
 
 	/**
-	 * オプションを追加する<br />
+	 * オプションを追加する</br>
 	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param sortIndex 並び順 ※表示時の並び順です。（-1 を指定すると最後尾に追加されます。）
 	 * @param option オプションクラス
@@ -80,7 +80,7 @@ public interface ScriptBlockAPI {
 	public void addOption(int scriptIndex, int sortIndex, Class<? extends BaseOption> option);
 
 	/**
-	 * オプションを削除する<br />
+	 * オプションを削除する</br>
 	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
 	 */
@@ -93,7 +93,7 @@ public interface ScriptBlockAPI {
 	public void removeOption(int scriptIndex);
 
 	/**
-	 * オプションの位置を取得する<br />
+	 * オプションの位置を取得する</br>
 	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
 	 * @return 位置
@@ -101,14 +101,14 @@ public interface ScriptBlockAPI {
 	public int indexOfOption(Class<? extends BaseOption> option);
 
 	/**
-	 * スクリプトの終了処理を追加する<br />
+	 * スクリプトの終了処理を追加する</br>
 	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param process 終了処理クラス
 	 */
 	public void addEndProcess(Class<? extends EndProcess> endProcess);
 
 	/**
-	 * 指定した位置にスクリプトの終了処理を追加する<br />
+	 * 指定した位置にスクリプトの終了処理を追加する</br>
 	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param index 位置
 	 * @param process 終了処理クラス
@@ -116,7 +116,7 @@ public interface ScriptBlockAPI {
 	public void addEndProcess(int index, Class<? extends EndProcess> endProcess);
 
 	/**
-	 * スクリプトの終了処理を削除する<br />
+	 * スクリプトの終了処理を削除する</br>
 	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param process 終了処理クラス
 	 */
@@ -129,7 +129,7 @@ public interface ScriptBlockAPI {
 	public void removeEndProcess(int index);
 
 	/**
-	 * スクリプトの終了処理の位置を取得する<br />
+	 * スクリプトの終了処理の位置を取得する</br>
 	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param process 終了処理クラス
 	 * @return 位置
@@ -182,7 +182,7 @@ public interface ScriptBlockAPI {
 	public void setAuthor(OfflinePlayer player);
 
 	/**
-	 * スクリプトの作者を追加する<br />
+	 * スクリプトの作者を追加する</br>
 	 * 同じ作者は追加されません
 	 * @param player 作者
 	 */

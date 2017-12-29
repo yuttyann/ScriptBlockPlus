@@ -13,16 +13,7 @@ public class BlockType extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), ",");
-		String blockType = getBlockCoords().getBlock().getType().name();
-		if (StreamUtils.anyMatch(array, s -> blockType.equalsIgnoreCase(s))) {
-			return true;
-		}
-		array = StringUtils.split(getOptionValue(), " ");
-		if (array.length > 1) {
-			String message = StringUtils.createString(array, 1);
-			message = StringUtils.replaceColorCode(message, true);
-			getPlayer().sendMessage(message);
-		}
-		return false;
+		String blockType = getLocation().getBlock().getType().name();
+		return StreamUtils.anyMatch(array, s -> blockType.equalsIgnoreCase(s));
 	}
 }
