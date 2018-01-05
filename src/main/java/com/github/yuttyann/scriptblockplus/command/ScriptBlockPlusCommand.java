@@ -372,7 +372,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	}
 
 	private String[] getOptionSyntaxs() {
-		List<Option> options = Arrays.asList(new OptionManager().getOptions());
+		List<Option> options = new OptionManager().getOptions();
 		String[] syntaxs = new String[options.size()];
 		for (int i = 0; i < syntaxs.length; i++) {
 			syntaxs[i] = options.get(i).getSyntax();
@@ -383,9 +383,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	private boolean checkScript(String scriptLine) {
 		try {
-			List<String> scripts = StringUtils.getScripts(scriptLine);
-			Option[] options = new OptionManager().getOptions();
-			for (String script : scripts) {
+			List<Option> options = new OptionManager().getOptions();
+			for (String script : StringUtils.getScripts(scriptLine)) {
 				for (Option option : options) {
 					if (!option.isOption(script)) {
 						return false;

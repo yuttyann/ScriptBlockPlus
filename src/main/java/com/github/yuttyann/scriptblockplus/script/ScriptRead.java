@@ -70,7 +70,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return false;
 		}
-		Option[] options = optionManager.getOptions();
+		List<Option> options = optionManager.getOptions();
 		if (!sort(scriptData.getScripts(), options)) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptMessage(scriptType));
 			Utils.sendMessage(SBConfig.getConsoleErrorScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
@@ -105,14 +105,14 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 		return value;
 	}
 
-	private boolean sort(List<String> scripts, Option[] options) {
+	private boolean sort(List<String> scripts, List<Option> options) {
 		try {
 			List<String> parse = new ArrayList<String>();
 			List<String> result = parse;
 			StreamUtils.mapForEach(scripts, this::getScripts, parse::addAll);
 			if (SBConfig.isSortScripts()) {
 				List<String> list = (result = new ArrayList<String>(parse.size()));
-				StreamUtils.forEach(options, o -> StreamUtils.filterForEach(parse, s -> o.isOption(s), list::add));
+				options.forEach(o -> StreamUtils.filterForEach(parse, s -> o.isOption(s), list::add));
 			}
 			this.scripts = Collections.unmodifiableList(result);
 			return true;

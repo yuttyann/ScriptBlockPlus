@@ -2,6 +2,8 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.AbstractConstructor;
@@ -41,7 +43,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		CONSTRUCTORS = new ArrayList<Constructor<? extends Option>>();
 	}
 
-	private static Option[] options;
+	private static List<Option> options;
 	private static boolean isModified;
 
 	@Override
@@ -85,15 +87,31 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		return newInstances(new Option[getConstructors().size()]);
 	}
 
-	public Option[] getOptions() {
-		if (options == null || isModified) {
-			update();
+	public List<Option> getOptions() {
+		if (options == null || (isModified && !(isModified = false))) {
+			options = Collections.unmodifiableList(Arrays.asList(newInstances()));
 		}
 		return options;
 	}
 
-	private void update() {
-		isModified = false;
-		options = newInstances();
+	public boolean add(Class<? extends Option> clazz) {
+		isModified = true;
+		return super.add(clazz);
 	}
+
+	public boolean add(int index, Class<? extends Option> clazz) {
+		isModified = true;
+		return super.add(index, clazz);
+	}
+
+	public boolean remove(Class<? extends Option> clazz) {
+		isModified = true;
+		return super.remove(clazz);
+	}
+
+	public boolean remove(int index) {
+		isModified = true;
+		return super.remove(index);
+	}
+
 }
