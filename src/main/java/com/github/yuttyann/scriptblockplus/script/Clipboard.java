@@ -43,6 +43,9 @@ public final class Clipboard {
 	public boolean copy(SBPlayer sbPlayer) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);
+		if (this.sbPlayer != null) {
+			return false;
+		}
 		if (scriptData == null || !scriptData.checkPath()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return false;

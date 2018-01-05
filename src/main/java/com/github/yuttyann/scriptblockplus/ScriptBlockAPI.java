@@ -64,20 +64,18 @@ public interface ScriptBlockAPI {
 	/**
 	 * オプションを追加する</br>
 	 * 指定するクラスには"BaseOption"を継承してください
-	 * @param sortIndex 並び順 ※表示時の並び順です。（-1 を指定すると最後尾に追加されます。）
 	 * @param option オプションクラス
 	 */
-	public void addOption(int sortIndex, Class<? extends BaseOption> option);
+	public void addOption(Class<? extends BaseOption> option);
 
 	/**
 	 * 指定した位置にオプションを追加する
 	 * <br>
 	 * 指定するクラスには"BaseOption"を継承してください
-	 * @param scriptIndex 位置
-	 * @param sortIndex 並び順 ※表示時の並び順です。（-1 を指定すると最後尾に追加されます。）
+	 * @param index 位置
 	 * @param option オプションクラス
 	 */
-	public void addOption(int scriptIndex, int sortIndex, Class<? extends BaseOption> option);
+	public void addOption(int index, Class<? extends BaseOption> option);
 
 	/**
 	 * オプションを削除する</br>

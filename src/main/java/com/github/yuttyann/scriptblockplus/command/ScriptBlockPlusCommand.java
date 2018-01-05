@@ -17,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.Updater;
 import com.github.yuttyann.scriptblockplus.enums.ClickType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
@@ -135,16 +134,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!hasPermission(sender, Permission.COMMAND_CHECKVER, false)) {
 			return false;
 		}
-		Updater updater = ScriptBlock.getInstance().getUpdater();
-		try {
-			updater.init();
-			updater.load();
-			if (!updater.execute(sender)) {
-				Utils.sendMessage(sender, SBConfig.getNotLatestPluginMessage());
-			}
-		} catch (Exception e) {
-			Utils.sendMessage(sender, SBConfig.getUpdateErrorMessage());
-		}
+		ScriptBlock.getInstance().checkUpdate(sender, true);
 		return true;
 	}
 
@@ -187,7 +177,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 				}
 				for (int i = 0; i < scripts.size(); i++) {
 					String script = scripts.get(i);
-					if (script.indexOf("@cooldown:") >= 0) {
+					if (script.contains("@cooldown:")) {
 						scripts.set(i, StringUtils.replace(script, "@cooldown:", "@oldcooldown:"));
 					}
 				}
@@ -328,14 +318,14 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (args.length == 1) {
 			String prefix = args[0].toLowerCase();
 			String[] answers = {
-				permString(sender, Permission.COMMAND_TOOL, "tool"),
-				permString(sender, Permission.COMMAND_RELOAD, "reload"),
-				permString(sender, Permission.COMMAND_CHECKVER, "checkver"),
-				permString(sender, Permission.COMMAND_DATAMIGR, "datamigr"),
-				permString(sender, Permission.COMMAND_INTERACT, "interact"),
-				permString(sender, Permission.COMMAND_BREAK, "break"),
-				permString(sender, Permission.COMMAND_WALK, "walk"),
-				permString(sender, Permission.COMMAND_WORLDEDIT , "worldedit")
+				hasPermission(sender, Permission.COMMAND_TOOL, "tool"),
+				hasPermission(sender, Permission.COMMAND_RELOAD, "reload"),
+				hasPermission(sender, Permission.COMMAND_CHECKVER, "checkver"),
+				hasPermission(sender, Permission.COMMAND_DATAMIGR, "datamigr"),
+				hasPermission(sender, Permission.COMMAND_INTERACT, "interact"),
+				hasPermission(sender, Permission.COMMAND_BREAK, "break"),
+				hasPermission(sender, Permission.COMMAND_WALK, "walk"),
+				hasPermission(sender, Permission.COMMAND_WORLDEDIT , "worldedit")
 			};
 			StreamUtils.filterForEach(answers, s -> s != null && s.startsWith(prefix), emptyList::add);
 		} else if (args.length == 2) {
@@ -377,33 +367,30 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 	}
 
-	private String permString(CommandSender sender, Permission permission, String source) {
+	private String hasPermission(CommandSender sender, Permission permission, String source) {
 		return StringUtils.isNotEmpty(permission.getNode()) && permission.has(sender) ? source : null;
 	}
 
 	private String[] getOptionSyntaxs() {
-		List<Option> options = Arrays.asList(new OptionManager().newSortOptions());
+		List<Option> options = Arrays.asList(new OptionManager().getOptions());
 		String[] syntaxs = new String[options.size()];
 		for (int i = 0; i < syntaxs.length; i++) {
 			syntaxs[i] = options.get(i).getSyntax();
 		}
+		Arrays.sort(syntaxs);
 		return syntaxs;
 	}
 
 	private boolean checkScript(String scriptLine) {
 		try {
 			List<String> scripts = StringUtils.getScripts(scriptLine);
-			Option[] options = new OptionManager().newInstances();
-			int result = 0;
+			Option[] options = new OptionManager().getOptions();
 			for (String script : scripts) {
 				for (Option option : options) {
-					if (option.isOption(script)) {
-						result++;
+					if (!option.isOption(script)) {
+						return false;
 					}
 				}
-			}
-			if (result != scripts.size()) {
-				return false;
 			}
 		} catch (Exception e) {
 			return false;

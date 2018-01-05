@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.script.endprocess;
+package com.github.yuttyann.scriptblockplus.script;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import org.bukkit.plugin.Plugin;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.ScriptData;
 
 public interface SBRead {
 

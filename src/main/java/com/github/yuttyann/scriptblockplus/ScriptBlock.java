@@ -53,14 +53,7 @@ public class ScriptBlock extends JavaPlugin {
 		}
 
 		updater = new Updater(this);
-		try {
-			// updater.debug(true, true);
-			updater.init();
-			updater.load();
-			updater.execute(null);
-		} catch (Exception e) {
-			Utils.sendMessage(SBConfig.getUpdateErrorMessage());
-		}
+		checkUpdate(null, false); // 非同期で実行
 
 		mapManager = new MapManager(this);
 		mapManager.loadAllScripts();
@@ -68,8 +61,8 @@ public class ScriptBlock extends JavaPlugin {
 
 		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 
+		getServer().getPluginManager().registerEvents(new InteractListener(), this);
 		getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
-		getServer().getPluginManager().registerEvents(new InteractListener(this), this);
 		getServer().getPluginManager().registerEvents(new ScriptInteractListener(this), this);
 		getServer().getPluginManager().registerEvents(new ScriptBreakListener(this), this);
 		getServer().getPluginManager().registerEvents(new ScriptWalkListener(this), this);
@@ -96,16 +89,27 @@ public class ScriptBlock extends JavaPlugin {
 		return super.onTabComplete(sender, command, label, args);
 	}
 
+	public void checkUpdate(CommandSender sender, boolean latestMessage) {
+		new Thread(() -> {
+			try {
+				// updater.debug(true, true);
+				updater.init();
+				updater.load();
+				if (!updater.execute(sender) && latestMessage) {
+					Utils.sendMessage(sender, SBConfig.getNotLatestPluginMessage());
+				}
+			} catch (Exception e) {
+				Utils.sendMessage(SBConfig.getUpdateErrorMessage());
+			}
+		}).start();
+	}
+
 	public ScriptBlockAPI getAPI() {
 		return getAPI(null, null);
 	}
 
 	public ScriptBlockAPI getAPI(Location location, ScriptType scriptType) {
 		return new ScriptBlockManager(this, location, scriptType);
-	}
-
-	public Updater getUpdater() {
-		return updater;
 	}
 
 	public MapManager getMapManager() {

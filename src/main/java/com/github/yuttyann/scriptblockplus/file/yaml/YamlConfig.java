@@ -436,7 +436,7 @@ public class YamlConfig {
 	private Object getDefault(String path) {
 		Validate.notNull(path, "Path cannot be null");
 		Configuration root = getRoot();
-		Configuration defaults = (root != null ? root.getDefaults() : null);
-		return defaults != null ? defaults.get(MemorySection.createPath(yaml, path)) : null;
+		Configuration defaults = root == null ? null : root.getDefaults();
+		return defaults == null ? null : defaults.get(MemorySection.createPath(yaml, path));
 	}
 }

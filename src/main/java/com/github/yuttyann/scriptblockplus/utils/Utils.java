@@ -118,7 +118,7 @@ public class Utils {
 		message = StringUtils.replace(message, "\\n", "|~");
 		for (String line : StringUtils.split(message, "|~")) {
 			sender.sendMessage(line = (color + line));
-			if (line.indexOf('§') != -1) {
+			if (line.indexOf('§') > -1) {
 				color = StringUtils.getColors(line);
 			}
 		}

@@ -11,7 +11,6 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.endprocess.SBRead;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -126,7 +125,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 	private List<String> getScripts(String scriptLine) {
 		try {
 			return StringUtils.getScripts(scriptLine);
-		} catch (ScriptException e) {
+		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 		return null;

@@ -19,7 +19,7 @@ import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class BaseSBPlayer extends PlayerData implements SBPlayer {
+public final class BaseSBPlayer extends PlayerData implements SBPlayer {
 
 	static final Map<UUID, SBPlayer> players = new HashMap<UUID, SBPlayer>(32);
 

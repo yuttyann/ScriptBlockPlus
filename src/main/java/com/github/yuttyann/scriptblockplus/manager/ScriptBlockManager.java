@@ -98,13 +98,13 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 	}
 
 	@Override
-	public void addOption(int sortIndex, Class<? extends BaseOption> option) {
-		scriptManager.getOptionManager().add(-1, sortIndex, option);
+	public void addOption(Class<? extends BaseOption> option) {
+		scriptManager.getOptionManager().add(option);
 	}
 
 	@Override
-	public void addOption(int scriptIndex, int sortIndex, Class<? extends BaseOption> option) {
-		scriptManager.getOptionManager().add(scriptIndex, sortIndex, option);
+	public void addOption(int index, Class<? extends BaseOption> option) {
+		scriptManager.getOptionManager().add(index, option);
 	}
 
 	@Override

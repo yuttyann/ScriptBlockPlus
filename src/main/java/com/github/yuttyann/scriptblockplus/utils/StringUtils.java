@@ -9,13 +9,11 @@ import java.util.Random;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.ChatColor;
 
-import com.github.yuttyann.scriptblockplus.script.ScriptException;
-
 public class StringUtils {
 
 	private static final Random RANDOM = new Random();
 
-	public static List<String> getScripts(String scriptLine) throws ScriptException {
+	public static List<String> getScripts(String scriptLine) throws IllegalArgumentException {
 		char[] chars = scriptLine.toCharArray();
 		if (chars[0] != '[' || chars[chars.length - 1] != ']') {
 			return Arrays.asList(scriptLine);
@@ -30,18 +28,14 @@ public class StringUtils {
 			}
 		}
 		if (start != end) {
-			throw new ScriptException("Failed to load the script.");
+			throw new IllegalArgumentException("Failed to load the script.");
 		}
 		List<String> result = new ArrayList<String>(start);
 		for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
-			if (chars[i] == '[') {
-				if (j++ == 0) {
-					k = i;
-				}
-			} else if (chars[i] == ']') {
-				if (--j == 0) {
-					result.add(scriptLine.substring(k + 1, i));
-				}
+			if (chars[i] == '[' && j++ == 0) {
+				k = i;
+			} else if (chars[i] == ']' && --j == 0) {
+				result.add(scriptLine.substring(k + 1, i));
 			}
 		}
 		return result;

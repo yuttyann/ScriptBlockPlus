@@ -51,7 +51,7 @@ public abstract class Option {
 	}
 
 	/**
-	 * スクリプトからオプションの値を返す
+	 * スクリプトからオプションの値を取得
 	 * @return 値
 	 */
 	public final String getValue(String script) {
@@ -60,7 +60,7 @@ public abstract class Option {
 
 	/**
 	 * スクリプトがオプションなのかどうかチェックします
-	 * @return スクリプトがオプションと一致するかどうか
+	 * @return オプションなのかどうか
 	 */
 	public final boolean isOption(String script) {
 		return script != null && script.startsWith(syntax);

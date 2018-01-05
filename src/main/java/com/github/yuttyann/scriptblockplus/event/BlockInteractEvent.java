@@ -17,7 +17,17 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable {
 
-	private static Method method_Hand;
+	private static final Method GET_HAND_METHOD;
+
+	static {
+		Method method = null;
+		if (Utils.isCB19orLater()) {
+			try {
+				method = PlayerInteractEvent.class.getMethod("getHand");
+			} catch (ReflectiveOperationException e) {}
+		}
+		GET_HAND_METHOD = method;
+	}
 
 	private ItemStack item;
 	private Action action;
@@ -96,12 +106,9 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 			return EquipSlot.HAND;
 		}
 		try {
-			if (method_Hand == null) {
-				method_Hand = event.getClass().getMethod("getHand");
-			}
-			return EquipSlot.fromEquipmentSlot((Enum<?>) method_Hand.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY));
+			return EquipSlot.fromEquipmentSlot((Enum<?>) GET_HAND_METHOD.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY));
 		} catch (ReflectiveOperationException e) {
-			return EquipSlot.NONE;
+			return EquipSlot.HAND;
 		}
 	}
 }

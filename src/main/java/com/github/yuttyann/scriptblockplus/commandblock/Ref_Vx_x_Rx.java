@@ -23,7 +23,7 @@ final class Ref_Vx_x_Rx implements CommandListener {
 		try {
 			Object iCommandListener = getICommandListener(sender, location);
 			Method executeCommand = PackageType.NMS.getMethod(CLASS_NAME_1, "executeCommand", PARAMS_EXECUTE_COMMAND);
-			return int.class.cast(executeCommand.invoke(null, iCommandListener, sender, command)).intValue() > 0;
+			return Integer.class.cast(executeCommand.invoke(null, iCommandListener, sender, command)) > 0;
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}

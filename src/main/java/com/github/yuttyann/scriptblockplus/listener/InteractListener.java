@@ -16,7 +16,6 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.EquipSlot;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.listener.nms.MathHelper;
@@ -28,13 +27,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class InteractListener implements Listener {
 
-	private static final String KEY_FLAG = "InteractFlag";
-
-	private ScriptBlock plugin;
-
-	public InteractListener(ScriptBlock plugin) {
-		this.plugin = plugin;
-	}
+	private static final String KEY_FLAG = "Key_InteractFlag";
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerAnimationEvent(PlayerAnimationEvent event) {
@@ -43,7 +36,7 @@ public class InteractListener implements Listener {
 			return;
 		}
 		SBPlayer sbPlayer = SBPlayer.get(player);
-		if (sbPlayer.hasData(KEY_FLAG) ? (boolean) sbPlayer.getData(KEY_FLAG) : false) {
+		if (sbPlayer.hasData(KEY_FLAG) ? sbPlayer.getData(KEY_FLAG, Boolean.class) : false) {
 			sbPlayer.setData(KEY_FLAG, false);
 			return;
 		}
@@ -83,15 +76,15 @@ public class InteractListener implements Listener {
 			return;
 		}
 		Player player = event.getPlayer();
-		boolean isAdventure = player.getGameMode() == GameMode.ADVENTURE;
-		if (isAdventure && action.name().startsWith("LEFT_CLICK_")) {
-			return;
-		}
-		if (isAdventure && action == Action.RIGHT_CLICK_BLOCK) {
-			SBPlayer sbPlayer = SBPlayer.get(player);
-			if (sbPlayer.hasData(KEY_FLAG) ? !(boolean) sbPlayer.getData(KEY_FLAG) : true) {
-				sbPlayer.setData(KEY_FLAG, true);
-				Bukkit.getScheduler().runTaskLater(plugin, () -> sbPlayer.setData(KEY_FLAG, false), 5L);
+		if (player.getGameMode() == GameMode.ADVENTURE) {
+			if (action.name().startsWith("LEFT_CLICK_")) {
+				return;
+			}
+			if (action == Action.RIGHT_CLICK_BLOCK) {
+				SBPlayer sbPlayer = SBPlayer.get(player);
+				if (sbPlayer.hasData(KEY_FLAG) ? !sbPlayer.getData(KEY_FLAG, Boolean.class) : true) {
+					sbPlayer.setData(KEY_FLAG, true);
+				}
 			}
 		}
 		BlockInteractEvent interactEvent = new BlockInteractEvent(event, null, false);

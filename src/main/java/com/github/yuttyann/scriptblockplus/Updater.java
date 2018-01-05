@@ -155,7 +155,7 @@ public final class Updater {
 	}
 
 	public boolean execute(CommandSender sender) {
-		if(SBConfig.isUpdateChecker() && isUpperVersion) {
+		if(SBConfig.isUpdateChecker() && isUpperVersion()) {
 			if (sender == null) {
 				sender = Bukkit.getConsoleSender();
 			}

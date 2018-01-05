@@ -27,7 +27,9 @@ public class JoinQuitListener implements Listener {
 			BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation());
 			sbPlayer.setOldFullCoords(blockCoords.subtract(0.0D, 1.0D, 0.0D).getFullCoords());
 		}
-		plugin.getUpdater().sendCheckMessage(sbPlayer);
+		if (sbPlayer.isOp()) {
+			plugin.checkUpdate(sbPlayer, false);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)

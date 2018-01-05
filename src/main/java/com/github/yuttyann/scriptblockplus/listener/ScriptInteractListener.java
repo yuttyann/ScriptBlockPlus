@@ -61,12 +61,12 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 					|| (action == Action.RIGHT_CLICK_BLOCK && !SBConfig.isRightClick())) {
 				return;
 			}
-			if (!Permission.INTERACT_USE.has(player)) {
-				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
-				return;
-			}
 			MaterialData data = block.getState().getData();
 			if (isPowered(data) || isOpen(data)) {
+				return;
+			}
+			if (!Permission.INTERACT_USE.has(player)) {
+				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
 				return;
 			}
 			setAction(player, event.getAction());
@@ -75,7 +75,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 	}
 
 	private void setAction(Player player, Action action) {
-		SBPlayer.get(player).setData(ClickAction.KEY_ACTION, action);
+		SBPlayer.get(player).setData(ClickAction.KEY_CLICK_ACTION, action);
 	}
 
 	private boolean action(Player player, Action action, ItemStack item, Location location) {
