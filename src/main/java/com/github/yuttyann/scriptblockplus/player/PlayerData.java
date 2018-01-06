@@ -62,7 +62,7 @@ public abstract class PlayerData implements ObjectData {
 	}
 
 	public Clipboard getClipboard() {
-		return getData(KEY_CLIPBOARD, null);
+		return getData(KEY_CLIPBOARD, Clipboard.class);
 	}
 
 	public boolean hasClipboard() {
@@ -74,7 +74,7 @@ public abstract class PlayerData implements ObjectData {
 	}
 
 	public String getScriptLine() {
-		return getData(KEY_SCRIPTLINE, null);
+		return getData(KEY_SCRIPTLINE, String.class);
 	}
 
 	public boolean hasScriptLine() {
@@ -86,7 +86,7 @@ public abstract class PlayerData implements ObjectData {
 	}
 
 	public String getClickAction() {
-		return getData(KEY_CLICKACTION, null);
+		return getData(KEY_CLICKACTION, String.class);
 	}
 
 	public boolean hasClickAction() {
@@ -98,7 +98,7 @@ public abstract class PlayerData implements ObjectData {
 	}
 
 	public String getOldFullCoords() {
-		return getData(KEY_OLDFULLCOORDS, null);
+		return getData(KEY_OLDFULLCOORDS, String.class);
 	}
 
 	public boolean hasOldFullCoords() {
