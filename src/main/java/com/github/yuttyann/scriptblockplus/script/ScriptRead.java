@@ -29,7 +29,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 		super(scriptManager);
 		this.sbPlayer = SBPlayer.fromPlayer(player);
 		this.scriptData = new ScriptData(location, scriptType, true);
-		this.blockCoords = new BlockCoords(location);
+		this.blockCoords = new BlockCoords(location).unmodifiable();
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 
 	@Override
 	public BlockCoords getBlockCoords() {
-		return blockCoords.clone();
+		return blockCoords;
 	}
 
 	@Override

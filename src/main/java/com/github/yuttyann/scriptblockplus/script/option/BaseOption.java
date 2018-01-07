@@ -100,8 +100,9 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * 座標を取得する
-	 * @return スクリプト座標
+	 * 座標を取得する</br>
+	 * ※座標変更不可
+	 * @return スクリプトの座標
 	 */
 	protected Location getLocation() {
 		return blockCoords;
@@ -200,7 +201,7 @@ public abstract class BaseOption extends Option {
 	 * @return 実行が成功したかどうか
 	 */
 	protected final boolean executeCommand(Player player, String command, boolean isBypass) {
-		Location location = blockCoords.clone();
+		Location location = new BlockCoords(blockCoords);
 		if (!isBypass || player.isOp()) {
 			return Utils.dispatchCommand(player, location, command);
 		} else {

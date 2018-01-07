@@ -109,12 +109,12 @@ public class BlockCoords extends Location implements Cloneable {
 		return fullCoords == null || isModified(true) ? fullCoords = getFullCoords(this) : fullCoords;
 	}
 
-	public BlockCoords getCenter() {
-		return getCenter(this);
+	public static String getCoords(Location location) {
+		return location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ();
 	}
 
-	public BlockCoords getAllCenter() {
-		return getAllCenter(this);
+	public static String getFullCoords(Location location) {
+		return location.getWorld().getName() + ", " + getCoords(location);
 	}
 
 	private void setModified(boolean flag) {
@@ -131,30 +131,104 @@ public class BlockCoords extends Location implements Cloneable {
 		BlockCoords blockCoords = new BlockCoords(this);
 		blockCoords.coords = this.coords;
 		blockCoords.fullCoords = this.fullCoords;
-		blockCoords.setModified(true);
+		blockCoords.isModified1 = this.isModified1;
+		blockCoords.isModified2 = this.isModified2;
 		return blockCoords;
 	}
 
-	public static String getCoords(Location location) {
-		return location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ();
-	}
-
-	public static String getFullCoords(Location location) {
-		return location.getWorld().getName() + ", " + getCoords(location);
-	}
-
-	public static BlockCoords getCenter(Location location) {
-		BlockCoords blockCoords = new BlockCoords(location);
-		blockCoords.setX(blockCoords.getBlockX() + 0.5D);
-		blockCoords.setZ(blockCoords.getBlockZ() + 0.5D);
+	public BlockCoords unmodifiable() {
+		BlockCoords blockCoords = new UnmodifiableBlockCoords(this);
+		blockCoords.coords = this.coords;
+		blockCoords.fullCoords = this.fullCoords;
+		blockCoords.isModified1 = this.isModified1;
+		blockCoords.isModified2 = this.isModified2;
 		return blockCoords;
 	}
 
-	public static BlockCoords getAllCenter(Location location) {
-		BlockCoords blockCoords = new BlockCoords(location);
-		blockCoords.setX(blockCoords.getBlockX() + 0.5D);
-		blockCoords.setY(blockCoords.getBlockY() + 0.5D);
-		blockCoords.setZ(blockCoords.getBlockZ() + 0.5D);
-		return blockCoords;
+	private class UnmodifiableBlockCoords extends BlockCoords {
+
+		public UnmodifiableBlockCoords(BlockCoords blockCoords) {
+			super(blockCoords);
+		}
+
+		@Override
+		public void setWorld(World world) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setX(double x) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setY(double y) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setZ(double z) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setYaw(float yaw) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setPitch(float pitch) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public BlockCoords setDirection(Vector vector) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public BlockCoords add(Location vec) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public BlockCoords add(Vector vec) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public BlockCoords add(double x, double y, double z) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public BlockCoords subtract(Location vec) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public BlockCoords subtract(Vector vec) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public BlockCoords subtract(double x, double y, double z) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public BlockCoords multiply(double m) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public BlockCoords zero() {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public BlockCoords clone() {
+			return unmodifiable();
+		}
 	}
 }
