@@ -202,7 +202,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!hasPermission(sender, Permission.valueOf("COMMAND_" + scriptType.name()))) {
 			return false;
 		}
-		SBPlayer sbPlayer = SBPlayer.get((Player) sender);
+		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
 		if (sbPlayer.hasScriptLine() || sbPlayer.hasClickAction()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorEditDataMessage());
 			return true;
@@ -218,7 +218,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!hasPermission(sender, Permission.valueOf("COMMAND_" + scriptType.name()))) {
 			return false;
 		}
-		SBPlayer sbPlayer = SBPlayer.get((Player) sender);
+		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
 		if (sbPlayer.hasScriptLine() || sbPlayer.hasClickAction()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorEditDataMessage());
 			return true;
@@ -282,7 +282,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!hasPermission(sender, Permission.COMMAND_WORLDEDIT)) {
 			return false;
 		}
-		SBPlayer sbPlayer = SBPlayer.get((Player) sender);
+		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
 		if (!sbPlayer.hasClipboard()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return true;

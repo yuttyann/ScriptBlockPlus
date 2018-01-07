@@ -69,20 +69,16 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
 				return;
 			}
-			setAction(player, event.getAction());
+			SBPlayer.fromPlayer(player).setData(ClickAction.KEY_CLICK_ACTION, action);
 			new ScriptRead(this, player, location).read(0);
 		}
-	}
-
-	private void setAction(Player player, Action action) {
-		SBPlayer.get(player).setData(ClickAction.KEY_CLICK_ACTION, action);
 	}
 
 	private boolean action(Player player, Action action, ItemStack item, Location location) {
 		if (isWorldEditWand(player, item)) {
 			return true;
 		}
-		SBPlayer sbPlayer = SBPlayer.get(player);
+		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
 		if (isScriptEditor(player, item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			switch (action) {
 			case LEFT_CLICK_BLOCK:

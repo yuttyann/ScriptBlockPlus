@@ -13,20 +13,12 @@ import com.github.yuttyann.scriptblockplus.script.Clipboard;
 
 public interface SBPlayer extends ObjectData, CommandSender {
 
-	public static SBPlayer get(Player player) {
-		return player == null ? null : get(player.getUniqueId());
+	public static SBPlayer fromPlayer(Player player) {
+		return player == null ? null : fromUUID(player.getUniqueId());
 	}
 
-	public static SBPlayer get(UUID uuid) {
-		if (uuid == null) {
-			return null;
-		}
-		SBPlayer player = BaseSBPlayer.players.get(uuid);
-		if (player == null) {
-			player = new BaseSBPlayer(uuid);
-			BaseSBPlayer.players.put(uuid, player);
-		}
-		return player;
+	public static SBPlayer fromUUID(UUID uuid) {
+		return uuid == null ? null : BaseSBPlayer.getSBPlayer(uuid);
 	}
 
 	public Player getPlayer();

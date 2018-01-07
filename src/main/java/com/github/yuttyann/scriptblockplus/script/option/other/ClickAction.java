@@ -3,12 +3,13 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 import org.bukkit.event.block.Action;
 
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
 public class ClickAction extends BaseOption {
 
-	public static final String KEY_CLICK_ACTION = "Option_ClickAction";
+	public static final String KEY_CLICK_ACTION = PlayerData.createRandomId("ClickAction");
 
 	public ClickAction() {
 		super("clickaction", "@clickaction:");

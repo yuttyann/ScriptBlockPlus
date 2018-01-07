@@ -43,7 +43,7 @@ public class StringUtils {
 
 	public static String[] split(String source, String delimiter) {
 		if (isEmpty(source) || isEmpty(delimiter)) {
-			return null;
+			return new String[]{source};
 		}
 		int start = 0;
 		int end = source.indexOf(delimiter, start);

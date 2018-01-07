@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,9 +22,10 @@ public class JoinQuitListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
-		SBPlayer sbPlayer = SBPlayer.get(event.getPlayer());
-		((BaseSBPlayer) sbPlayer).setPlayer(event.getPlayer());
-		if (sbPlayer.getOldFullCoords() == null) {
+		Player player = event.getPlayer();
+		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
+		((BaseSBPlayer) sbPlayer).setPlayer(player);
+		if (!sbPlayer.hasOldFullCoords()) {
 			BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation());
 			sbPlayer.setOldFullCoords(blockCoords.subtract(0.0D, 1.0D, 0.0D).getFullCoords());
 		}
@@ -34,7 +36,7 @@ public class JoinQuitListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		SBPlayer sbPlayer = SBPlayer.get(event.getPlayer());
+		SBPlayer sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
 		((BaseSBPlayer) sbPlayer).setPlayer(null);
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);

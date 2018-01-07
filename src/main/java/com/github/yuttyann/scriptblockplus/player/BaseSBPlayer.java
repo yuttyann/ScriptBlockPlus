@@ -19,15 +19,24 @@ import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public final class BaseSBPlayer extends PlayerData implements SBPlayer {
+public final class BaseSBPlayer extends PlayerData {
 
-	static final Map<UUID, SBPlayer> players = new HashMap<UUID, SBPlayer>(32);
+	private static final Map<UUID, SBPlayer> PLAYERS = new HashMap<UUID, SBPlayer>(32);
 
 	private final UUID uuid;
 	private Player player;
 
-	BaseSBPlayer(UUID uuid) {
+	private BaseSBPlayer(UUID uuid) {
 		this.uuid = Objects.requireNonNull(uuid);
+	}
+
+	protected static SBPlayer getSBPlayer(UUID uuid) {
+		SBPlayer sbPlayer = PLAYERS.get(uuid);
+		if (sbPlayer == null) {
+			sbPlayer = new BaseSBPlayer(uuid);
+			PLAYERS.put(uuid, sbPlayer);
+		}
+		return sbPlayer;
 	}
 
 	public void setPlayer(Player player) {

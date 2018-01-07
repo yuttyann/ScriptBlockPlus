@@ -37,7 +37,7 @@ public class ScriptBlock extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		for (Player player : Utils.getOnlinePlayers()) {
-			((BaseSBPlayer) SBPlayer.get(player)).setPlayer(player);
+			((BaseSBPlayer) SBPlayer.fromPlayer(player)).setPlayer(player);
 		}
 		Files.reload();
 

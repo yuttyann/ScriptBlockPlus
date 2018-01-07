@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.script.option.vault;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
@@ -11,7 +12,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class MoneyCost extends BaseOption {
 
-	public static final String KEY_COST = "Option_MoneyCost";
+	public static final String KEY_COST = PlayerData.createRandomId("MoneyCost");
 
 	public MoneyCost() {
 		super("moneycost", "$cost:");

@@ -22,12 +22,13 @@ import com.github.yuttyann.scriptblockplus.listener.nms.MathHelper;
 import com.github.yuttyann.scriptblockplus.listener.nms.MovingPosition;
 import com.github.yuttyann.scriptblockplus.listener.nms.NMSWorld;
 import com.github.yuttyann.scriptblockplus.listener.nms.Vec3D;
+import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class InteractListener implements Listener {
 
-	private static final String KEY_FLAG = "Key_InteractFlag";
+	private static final String KEY_FLAG = PlayerData.createRandomId("InteractFlag");
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerAnimationEvent(PlayerAnimationEvent event) {
@@ -35,7 +36,7 @@ public class InteractListener implements Listener {
 		if (event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
 			return;
 		}
-		SBPlayer sbPlayer = SBPlayer.get(player);
+		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
 		if (sbPlayer.hasData(KEY_FLAG) ? sbPlayer.getData(KEY_FLAG, Boolean.class) : false) {
 			sbPlayer.setData(KEY_FLAG, false);
 			return;
@@ -81,7 +82,7 @@ public class InteractListener implements Listener {
 				return;
 			}
 			if (action == Action.RIGHT_CLICK_BLOCK) {
-				SBPlayer sbPlayer = SBPlayer.get(player);
+				SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
 				if (sbPlayer.hasData(KEY_FLAG) ? !sbPlayer.getData(KEY_FLAG, Boolean.class) : true) {
 					sbPlayer.setData(KEY_FLAG, true);
 				}
@@ -97,7 +98,7 @@ public class InteractListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerGameModeChangeEvent(PlayerGameModeChangeEvent event) {
 		if (event.getNewGameMode() != GameMode.ADVENTURE) {
-			SBPlayer.get(event.getPlayer()).setData(KEY_FLAG, false);
+			SBPlayer.fromPlayer(event.getPlayer()).setData(KEY_FLAG, false);
 		}
 	}
 }

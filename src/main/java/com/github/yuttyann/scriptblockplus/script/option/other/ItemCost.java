@@ -9,13 +9,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ItemCost extends BaseOption {
 
-	public static final String KEY_ITEM = "Option_ItemCost";
+	public static final String KEY_ITEM = PlayerData.createRandomId("ItemCost");
 
 	private static final Pattern NUMBER_PATTERN = Pattern.compile("^[0-9]*$");
 
