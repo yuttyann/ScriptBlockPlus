@@ -28,8 +28,11 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 	public ScriptRead(ScriptManager scriptManager, Player player, Location location) {
 		super(scriptManager);
 		this.sbPlayer = SBPlayer.fromPlayer(player);
-		this.scriptData = new ScriptData(location, scriptType, true);
-		this.blockCoords = new BlockCoords(location).unmodifiable();
+		this.scriptData = new ScriptData(blockCoords, scriptType, true);
+		if (!(location instanceof BlockCoords)) {
+			location = new BlockCoords(location);
+		}
+		this.blockCoords = ((BlockCoords) location).unmodifiable(); // 編集不可に設定
 	}
 
 	@Override

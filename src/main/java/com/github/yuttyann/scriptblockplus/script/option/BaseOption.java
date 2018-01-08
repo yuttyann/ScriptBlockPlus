@@ -190,7 +190,7 @@ public abstract class BaseOption extends Option {
 	 * @return 実行が成功したかどうか
 	 */
 	protected final boolean executeConsoleCommand(String command) {
-		return Utils.dispatchCommand(Bukkit.getConsoleSender(), blockCoords.clone(), command);
+		return Utils.dispatchCommand(Bukkit.getConsoleSender(), new BlockCoords(blockCoords), command);
 	}
 
 	/**

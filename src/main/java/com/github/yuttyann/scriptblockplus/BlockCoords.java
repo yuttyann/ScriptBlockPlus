@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-public class BlockCoords extends Location implements Cloneable {
+public class BlockCoords extends Location {
 
 	private String coords, fullCoords;
 	private boolean isModified1, isModified2;
@@ -138,10 +138,8 @@ public class BlockCoords extends Location implements Cloneable {
 
 	public BlockCoords unmodifiable() {
 		BlockCoords blockCoords = new UnmodifiableBlockCoords(this);
-		blockCoords.coords = this.coords;
-		blockCoords.fullCoords = this.fullCoords;
-		blockCoords.isModified1 = this.isModified1;
-		blockCoords.isModified2 = this.isModified2;
+		blockCoords.coords = getCoords();
+		blockCoords.fullCoords = getFullCoords();
 		return blockCoords;
 	}
 
