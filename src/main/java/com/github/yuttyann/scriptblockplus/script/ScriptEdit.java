@@ -31,10 +31,6 @@ public final class ScriptEdit {
 		scriptData.setLocation(location);
 	}
 
-	public void updateScripts() {
-		scripts = scriptData.getScripts();
-	}
-
 	public ScriptType getScriptType() {
 		return scriptType;
 	}
