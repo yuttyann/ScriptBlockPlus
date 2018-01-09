@@ -257,7 +257,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 				continue;
 			}
 			boolean isFirst = true;
-			ScriptEdit scriptEdit = new ScriptEdit(null, scriptType);
+			ScriptEdit scriptEdit = new ScriptEdit(scriptType);
 			for (Block block : blocks) {
 				if (scriptEdit.weRemove(block.getLocation()) && isFirst && !(isFirst = false)) {
 					if (builder.length() != 0) {

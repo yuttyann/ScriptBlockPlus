@@ -20,9 +20,9 @@ public final class ScriptEdit {
 	private MapManager mapManager;
 	private List<String> scripts;
 
-	public ScriptEdit(Location location, ScriptType scriptType) {
+	public ScriptEdit(ScriptType scriptType) {
 		this.scriptType = scriptType;
-		this.scriptData = new ScriptData(location, scriptType);
+		this.scriptData = new ScriptData(null, scriptType);
 		this.mapManager = ScriptBlock.getInstance().getMapManager();
 		this.scripts = scriptData.getScripts();
 	}
@@ -43,10 +43,10 @@ public final class ScriptEdit {
 		scriptData.save();
 	}
 
-	public void create(SBPlayer sbPlayer, String script) {
+	public void create(SBPlayer sbPlayer, Location location, String script) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);
-		scriptData.setAuthor(sbPlayer.getUniqueId().toString());
+		scriptData.setAuthor(sbPlayer.getUniqueId());
 		scriptData.setLastEdit();
 		scriptData.setScripts(Arrays.asList(script));
 		scriptData.save();
@@ -55,14 +55,14 @@ public final class ScriptEdit {
 		Utils.sendMessage(SBConfig.getConsoleScriptCreateMessage(sbPlayer.getName(), scriptType, scriptData.getLocation()));
 	}
 
-	public void add(SBPlayer sbPlayer, String script) {
+	public void add(SBPlayer sbPlayer, Location location, String script) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);
 		if (!scriptData.checkPath()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return;
 		}
-		scriptData.addAuthor(sbPlayer.getUniqueId().toString());
+		scriptData.addAuthor(sbPlayer.getUniqueId());
 		scriptData.setLastEdit();
 		scriptData.addScript(script);
 		scriptData.save();
@@ -71,7 +71,7 @@ public final class ScriptEdit {
 		Utils.sendMessage(SBConfig.getConsoleScriptAddMessage(sbPlayer.getName(), scriptType, scriptData.getLocation()));
 	}
 
-	public void remove(SBPlayer sbPlayer) {
+	public void remove(SBPlayer sbPlayer, Location location) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);
 		if (!scriptData.checkPath()) {
@@ -85,7 +85,7 @@ public final class ScriptEdit {
 		Utils.sendMessage(SBConfig.getConsoleScriptRemoveMessage(sbPlayer.getName(), scriptType, scriptData.getLocation()));
 	}
 
-	public void view(SBPlayer sbPlayer) {
+	public void view(SBPlayer sbPlayer, Location location) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);
 		if (!scriptData.checkPath() || scripts.isEmpty()) {

@@ -83,7 +83,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 			switch (action) {
 			case LEFT_CLICK_BLOCK:
 				ScriptType scriptType = player.isSneaking() ? ScriptType.WALK : ScriptType.INTERACT;
-				new ScriptEdit(location, scriptType).copy(sbPlayer);
+				new ScriptEdit(scriptType).copy(sbPlayer);
 				return true;
 			case RIGHT_CLICK_BLOCK:
 				if (player.isSneaking()) {
@@ -91,7 +91,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 						Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 					}
 				} else {
-					new ScriptEdit(location, ScriptType.BREAK).copy(sbPlayer);
+					new ScriptEdit(ScriptType.BREAK).copy(sbPlayer);
 				}
 				return true;
 			default:
@@ -102,19 +102,19 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 		}
 		if (sbPlayer.hasClickAction()) {
 			String[] array = StringUtils.split(sbPlayer.getClickAction(), "_");
-			ScriptEdit scriptEdit = new ScriptEdit(location, ScriptType.valueOf(array[0]));
+			ScriptEdit scriptEdit = new ScriptEdit(ScriptType.valueOf(array[0]));
 			switch (array[1]) {
 			case "CREATE":
-				scriptEdit.create(sbPlayer, sbPlayer.getScriptLine());
+				scriptEdit.create(sbPlayer, location, sbPlayer.getScriptLine());
 				return true;
 			case "ADD":
-				scriptEdit.add(sbPlayer, sbPlayer.getScriptLine());
+				scriptEdit.add(sbPlayer, location, sbPlayer.getScriptLine());
 				return true;
 			case "REMOVE":
-				scriptEdit.remove(sbPlayer);
+				scriptEdit.remove(sbPlayer, location);
 				return true;
 			case "VIEW":
-				scriptEdit.view(sbPlayer);
+				scriptEdit.view(sbPlayer, location);
 				return true;
 			}
 		}

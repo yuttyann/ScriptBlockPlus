@@ -96,21 +96,26 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void setAuthor(OfflinePlayer player) {
-		setAuthor(Utils.getUniqueId(player).toString());
+		setAuthor(Utils.getUniqueId(player));
 	}
 
-	public void setAuthor(String uuid) {
-		scriptFile.set(scriptPath + ".Author", uuid);
+	public void setAuthor(UUID uuid) {
+		scriptFile.set(scriptPath + ".Author", uuid.toString());
+	}
+
+	public void setAuthor(String author) {
+		scriptFile.set(scriptPath + ".Author", author);
 	}
 
 	public void addAuthor(OfflinePlayer player) {
-		addAuthor(Utils.getUniqueId(player).toString());
+		addAuthor(Utils.getUniqueId(player));
 	}
 
-	public void addAuthor(String uuid) {
+	public void addAuthor(UUID uuid) {
 		List<String> authors = getAuthors(false);
-		if (!authors.contains(uuid)) {
-			String value = authors.size() > 0 ? getAuthor() + ", " + uuid : uuid;
+		String uuid_toString = uuid.toString();
+		if (!authors.contains(uuid_toString)) {
+			String value = authors.size() > 0 ? getAuthor() + ", " + uuid_toString : uuid_toString;
 			scriptFile.set(scriptPath + ".Author", value);
 		}
 	}

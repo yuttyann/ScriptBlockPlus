@@ -171,7 +171,7 @@ public enum PackageType {
 		if (StringUtils.isEmpty(className)) {
 			return "null";
 		}
-		if (objects == null || objects.length == 0) {
+		if (objects == null) {
 			objects = ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
 		int lastLength = objects.length - 1;
