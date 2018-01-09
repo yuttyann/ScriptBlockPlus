@@ -18,6 +18,7 @@ import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.google.common.base.Objects;
 
 public final class ScriptData implements Cloneable {
 
@@ -25,7 +26,7 @@ public final class ScriptData implements Cloneable {
 	private String scriptPath;
 	private YamlConfig scriptFile;
 	private ScriptType scriptType;
-	private boolean isUnmodifiable;
+	private boolean isUnmodifiableLocation;
 
 	private ScriptData() {}
 
@@ -33,19 +34,21 @@ public final class ScriptData implements Cloneable {
 		this(location, scriptType, false);
 	}
 
-	public ScriptData(Location location, ScriptType scriptType, boolean isUnmodifiable) {
+	public ScriptData(Location location, ScriptType scriptType, boolean isUnmodifiableLocation) {
 		setLocation(location);
 		this.scriptType = scriptType;
 		this.scriptFile = Files.getScriptFile(scriptType);
-		this.isUnmodifiable = isUnmodifiable;
+		this.isUnmodifiableLocation = isUnmodifiableLocation;
 	}
 
 	public void setLocation(Location location) {
-		if (isUnmodifiable) {
+		if (isUnmodifiableLocation) {
 			throw new UnsupportedOperationException();
 		}
-		this.location = location;
-		this.scriptPath = location == null ? null : createPath(location);
+		if (!Objects.equal(this.location, location)) {
+			this.location = location;
+			this.scriptPath = location == null ? null : createPath(location);
+		}
 	}
 
 	private String createPath(Location location) {
@@ -212,7 +215,7 @@ public final class ScriptData implements Cloneable {
 		scriptData.scriptPath = this.scriptPath;
 		scriptData.scriptFile = this.scriptFile;
 		scriptData.scriptType = this.scriptType;
-		scriptData.isUnmodifiable = this.isUnmodifiable;
+		scriptData.isUnmodifiableLocation = this.isUnmodifiableLocation;
 		return scriptData;
 	}
 }
