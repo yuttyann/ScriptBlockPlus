@@ -18,7 +18,7 @@ public class ItemCost extends BaseOption {
 
 	public static final String KEY_ITEM = PlayerData.createRandomId("ItemCost");
 
-	private static final Pattern NUMBER_PATTERN = Pattern.compile("^[0-9]*$");
+	private static final Pattern INTEGER_PATTERN = Pattern.compile("/^[+]?([1-9]\\d*)$/");
 
 	public ItemCost() {
 		super("itemcost", "$item:");
@@ -81,8 +81,8 @@ public class ItemCost extends BaseOption {
 		return itemName == null || Objects.equals(Utils.getItemName(item, null), itemName);
 	}
 
-	private String getId(String source) {
-		if (NUMBER_PATTERN.matcher(source).matches()) {
+	static String getId(String source) {
+		if (INTEGER_PATTERN.matcher(source).matches()) {
 			return source;
 		}
 		@SuppressWarnings("deprecation")

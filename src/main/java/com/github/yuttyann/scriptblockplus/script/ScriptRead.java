@@ -32,7 +32,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 		if (!(location instanceof BlockCoords)) {
 			location = new BlockCoords(location);
 		}
-		this.blockCoords = ((BlockCoords) location).unmodifiable(); // 編集不可に設定
+		this.blockCoords = ((BlockCoords) location).unmodifiable(); // 変更不可に設定
 	}
 
 	@Override

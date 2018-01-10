@@ -52,7 +52,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 		}
 		Player player = event.getPlayer();
 		if (mapManager.containsCoords(scriptType, location)) {
-			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, event.getAction());
+			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, action);
 			Bukkit.getPluginManager().callEvent(interactEvent);
 			if (interactEvent.isCancelled()) {
 				return;

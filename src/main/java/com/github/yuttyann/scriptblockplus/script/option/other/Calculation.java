@@ -1,5 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
+import java.util.regex.Pattern;
+
 import me.clip.placeholderapi.PlaceholderAPI;
 
 import org.bukkit.Bukkit;
@@ -16,6 +18,8 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Calculation extends BaseOption {
+
+	private static final Pattern REALNUMBER_PATTERN = Pattern.compile("^[+-]?([1-9]\\d*|0)(\\.\\d+)?$");
 
 	public Calculation() {
 		super("calculation", "@calc:");
@@ -43,9 +47,9 @@ public class Calculation extends BaseOption {
 	}
 
 	private double parse(String source) throws Exception {
-		try {
+		if (REALNUMBER_PATTERN.matcher(source).matches()) {
 			return Double.parseDouble(source);
-		} catch (NumberFormatException e) {}
+		}
 
 		double result = 0.0D;
 		try {

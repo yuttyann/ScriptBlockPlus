@@ -23,7 +23,7 @@ public class ItemHand extends BaseOption {
 		String[] array = StringUtils.split(getOptionValue(), " ");
 		String[] itemData = StringUtils.split(array[0], ":");
 		short damage = itemData.length > 1 ? Short.parseShort(itemData[1]) : 0;
-		int id = Integer.parseInt(getId(itemData[0]));
+		int id = Integer.parseInt(ItemCost.getId(itemData[0]));
 		int amount = Integer.parseInt(array[1]);
 		String create = array.length > 2 ? StringUtils.createString(array, 2) : null;
 		String itemName = StringUtils.replaceColorCode(create, false);
@@ -42,15 +42,6 @@ public class ItemHand extends BaseOption {
 			return false;
 		}
 		return itemName == null || Objects.equals(Utils.getItemName(item, null), itemName);
-	}
-
-	private String getId(String source) {
-		if (source.matches("^[0-9]*$")) {
-			return source;
-		}
-		@SuppressWarnings("deprecation")
-		String id = String.valueOf(Material.getMaterial(source.toUpperCase()).getId());
-		return id;
 	}
 
 	private Material getMaterial(int id) {

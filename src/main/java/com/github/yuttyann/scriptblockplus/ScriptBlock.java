@@ -53,7 +53,7 @@ public class ScriptBlock extends JavaPlugin {
 		}
 
 		updater = new Updater(this);
-		checkUpdate(null, false); // 非同期で実行
+		checkUpdate(null, false); // 非同期
 
 		mapManager = new MapManager(this);
 		mapManager.loadAllScripts();
