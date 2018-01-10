@@ -64,7 +64,7 @@ public class Calculation extends BaseOption {
 
 	@SuppressWarnings("deprecation")
 	private double getValue(Player player, String variable) throws Exception {
-		if (variable.startsWith("%player_others_in_range_") && variable.charAt(variable.length() - 1) == '%') {
+		if (variable.startsWith("%player_others_in_range_") && variable.endsWith("%")) {
 			variable = variable.substring(0, variable.length() - 1);
 			String distance = StringUtils.split(variable, "%player_others_in_range_")[1];
 			int i = 10;
@@ -73,7 +73,7 @@ public class Calculation extends BaseOption {
 			} catch (NumberFormatException e) {}
 			return getNearbyOthers(player, i);
 		}
-		if (variable.startsWith("%player_ping_") && variable.charAt(variable.length() - 1) == '%') {
+		if (variable.startsWith("%player_ping_") && variable.endsWith("%")) {
 			variable = variable.substring(0, variable.length() - 1);
 			Player target = Bukkit.getPlayer(StringUtils.split(variable, "%player_ping_")[1]);
 			if (target == null) {
@@ -82,11 +82,11 @@ public class Calculation extends BaseOption {
 			Object handle = target.getClass().getMethod("getHandle").invoke(target);
 			return handle.getClass().getField("ping").getInt(handle);
 		}
-		if (variable.startsWith("%server_online_") && variable.charAt(variable.length() - 1) == '%') {
+		if (variable.startsWith("%server_online_") && variable.endsWith("%")) {
 			variable = variable.substring(0, variable.length() - 1);
 			return Utils.getWorld(StringUtils.split(variable, "%server_online_")[1]).getPlayers().size();
 		}
-		if (variable.startsWith("%objective_score_") && variable.charAt(variable.length() - 1) == '%') {
+		if (variable.startsWith("%objective_score_") && variable.endsWith("%")) {
 			variable = variable.substring(0, variable.length() - 1);
 			String objectName = StringUtils.split(variable, "%objective_score_")[1];
 			ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
