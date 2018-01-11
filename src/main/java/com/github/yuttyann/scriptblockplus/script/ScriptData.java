@@ -18,7 +18,6 @@ import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import com.google.common.base.Objects;
 
 public final class ScriptData implements Cloneable {
 
@@ -45,10 +44,8 @@ public final class ScriptData implements Cloneable {
 		if (isUnmodifiableLocation) {
 			throw new UnsupportedOperationException();
 		}
-		if (!Objects.equal(this.location, location)) {
-			this.location = location;
-			this.scriptPath = location == null ? null : createPath(location);
-		}
+		this.location = location;
+		this.scriptPath = location == null ? null : createPath(location);
 	}
 
 	private String createPath(Location location) {

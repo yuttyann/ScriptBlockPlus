@@ -383,13 +383,18 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	private boolean checkScript(String scriptLine) {
 		try {
+			int successCount = 0;
 			List<Option> options = new OptionManager().getOptions();
-			for (String script : StringUtils.getScripts(scriptLine)) {
+			List<String> scripts = StringUtils.getScripts(scriptLine);
+			for (String script : scripts) {
 				for (Option option : options) {
-					if (!option.isOption(script)) {
-						return false;
+					if (option.isOption(script)) {
+						successCount++;
 					}
 				}
+			}
+			if (successCount == 0 || successCount != scripts.size()) {
+				return false;
 			}
 		} catch (Exception e) {
 			return false;

@@ -40,7 +40,7 @@ public final class BaseSBPlayer extends PlayerData {
 	}
 
 	public void setPlayer(Player player) {
-		this.player = (player != null && player.getUniqueId().equals(uuid) ? player : null);
+		this.player = player != null && player.getUniqueId().equals(uuid) ? player : null;
 	}
 
 	@Override
@@ -105,12 +105,16 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public void sendMessage(String message) {
-		if (isOnline()) player.sendMessage(message);
+		if (isOnline()) {
+			player.sendMessage(message);
+		}
 	}
 
 	@Override
 	public void sendMessage(String[] messages) {
-		if (isOnline()) player.sendMessage(messages);
+		if (isOnline()) {
+			player.sendMessage(messages);
+		}
 	}
 
 	@Override
@@ -160,12 +164,16 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public void recalculatePermissions() {
-		if (isOnline()) player.recalculatePermissions();
+		if (isOnline()) {
+			player.recalculatePermissions();
+		}
 	}
 
 	@Override
 	public void removeAttachment(PermissionAttachment attachment) {
-		if (isOnline()) player.removeAttachment(attachment);
+		if (isOnline()) {
+			player.removeAttachment(attachment);
+		}
 	}
 
 	@Override

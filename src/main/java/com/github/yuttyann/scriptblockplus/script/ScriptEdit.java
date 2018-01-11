@@ -24,11 +24,14 @@ public final class ScriptEdit {
 		this.scriptType = scriptType;
 		this.scriptData = new ScriptData(null, scriptType);
 		this.mapManager = ScriptBlock.getInstance().getMapManager();
-		this.scripts = scriptData.getScripts();
 	}
 
 	public void setLocation(Location location) {
-		scriptData.setLocation(location);
+		Location oldLocation = scriptData.getLocation();
+		if (oldLocation == null || !oldLocation.equals(location)) {
+			scriptData.setLocation(location);
+			scripts = scriptData.getScripts();
+		}
 	}
 
 	public ScriptType getScriptType() {
@@ -46,6 +49,7 @@ public final class ScriptEdit {
 	public void create(SBPlayer sbPlayer, Location location, String script) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);
+		setLocation(location);
 		scriptData.setAuthor(sbPlayer.getUniqueId());
 		scriptData.setLastEdit();
 		scriptData.setScripts(Arrays.asList(script));
@@ -58,6 +62,7 @@ public final class ScriptEdit {
 	public void add(SBPlayer sbPlayer, Location location, String script) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);
+		setLocation(location);
 		if (!scriptData.checkPath()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return;
@@ -74,6 +79,7 @@ public final class ScriptEdit {
 	public void remove(SBPlayer sbPlayer, Location location) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);
+		setLocation(location);
 		if (!scriptData.checkPath()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return;
@@ -88,6 +94,7 @@ public final class ScriptEdit {
 	public void view(SBPlayer sbPlayer, Location location) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setClickAction(null);
+		setLocation(location);
 		if (!scriptData.checkPath() || scripts.isEmpty()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return;
