@@ -93,7 +93,6 @@ public class ScriptBlock extends JavaPlugin {
 		new Thread(() -> {
 			try {
 				// updater.debug(true, true);
-				updater.init();
 				updater.load();
 				if (!updater.execute(sender) && latestMessage) {
 					Utils.sendMessage(sender, SBConfig.getNotLatestPluginMessage());

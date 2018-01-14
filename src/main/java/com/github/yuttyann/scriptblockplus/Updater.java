@@ -91,7 +91,6 @@ public final class Updater {
 
 	public void debug(boolean isUpperVersion, boolean isError) throws Exception {
 		try {
-			init();
 			load();
 		} catch (Exception e) {
 			throw e;
@@ -103,6 +102,7 @@ public final class Updater {
 		execute(null);
 	}
 
+	@Deprecated
 	public void init() {
 		latestVersion = null;
 		downloadURL = null;
@@ -113,6 +113,7 @@ public final class Updater {
 	}
 
 	public void load() throws Exception {
+		init();
 		Document document = getDocument(pluginName);
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
@@ -139,7 +140,9 @@ public final class Updater {
 				}
 				if (updateNode.getNodeName().equals("details")) {
 					NodeList detailsChildren = updateNode.getChildNodes();
-					details = new ArrayList<String>(detailsChildren.getLength());
+					if (details == null) {
+						details = new ArrayList<String>(detailsChildren.getLength());
+					}
 					for(int k = 0; k < detailsChildren.getLength(); k++) {
 						Node detailsNode = detailsChildren.item(k);
 						if (detailsNode.getNodeType() != Node.ELEMENT_NODE) {
