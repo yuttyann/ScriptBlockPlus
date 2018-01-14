@@ -28,7 +28,7 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
-import com.github.yuttyann.scriptblockplus.script.option.other.ClickAction;
+import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -69,7 +69,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
 				return;
 			}
-			SBPlayer.fromPlayer(player).setData(ClickAction.KEY_CLICK_ACTION, action);
+			SBPlayer.fromPlayer(player).setData(ScriptAction.KEY_CLICK_ACTION, action);
 			new ScriptRead(this, player, location).read(0);
 		}
 	}
@@ -83,7 +83,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 			switch (action) {
 			case LEFT_CLICK_BLOCK:
 				ScriptType scriptType = player.isSneaking() ? ScriptType.WALK : ScriptType.INTERACT;
-				new ScriptEdit(scriptType).copy(sbPlayer);
+				new ScriptEdit(scriptType).copy(sbPlayer, location);
 				return true;
 			case RIGHT_CLICK_BLOCK:
 				if (player.isSneaking()) {
@@ -91,7 +91,7 @@ public class ScriptInteractListener extends ScriptManager implements Listener {
 						Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 					}
 				} else {
-					new ScriptEdit(ScriptType.BREAK).copy(sbPlayer);
+					new ScriptEdit(ScriptType.BREAK).copy(sbPlayer, location);
 				}
 				return true;
 			default:

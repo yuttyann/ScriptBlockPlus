@@ -60,13 +60,16 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 
 	@Override
 	public void setLocation(Location location) {
-		if (timers.size() > 0) {
-			timers.clear();
+		Location oldLocation = scriptData.getLocation();
+		if (oldLocation == null || !oldLocation.equals(location)) {
+			if (timers.size() > 0) {
+				timers.clear();
+			}
+			if (scripts.size() > 0) {
+				scripts.clear();
+			}
+			scriptData.setLocation(location);
 		}
-		if (scripts.size() > 0) {
-			scripts.clear();
-		}
-		scriptData.setLocation(location);
 	}
 
 	@Override

@@ -4,13 +4,20 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+
 public class BlockCoords extends Location {
 
 	private String coords, fullCoords;
 	private boolean isModified1, isModified2;
 
 	public BlockCoords(Location location) {
-		super(location.getWorld(), location.getX(), location.getY(), location.getZ());
+		this(location.getWorld(), location.getX(), location.getY(), location.getZ());
+	}
+
+	public BlockCoords(World world, double x, double y, double z) {
+		super(world, x, y, z);
 	}
 
 	@Override
@@ -109,6 +116,15 @@ public class BlockCoords extends Location {
 		return fullCoords == null || isModified(true) ? fullCoords = getFullCoords(this) : fullCoords;
 	}
 
+	private void setModified(boolean flag) {
+		isModified1 = true;
+		isModified2 = true;
+	}
+
+	private boolean isModified(boolean isFull) {
+		return isFull ? isModified2 && !(isModified2 = false) : isModified1 && !(isModified1 = false);
+	}
+
 	public static String getCoords(Location location) {
 		return location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ();
 	}
@@ -117,13 +133,16 @@ public class BlockCoords extends Location {
 		return location.getWorld().getName() + ", " + getCoords(location);
 	}
 
-	private void setModified(boolean flag) {
-		isModified1 = true;
-		isModified2 = true;
-	}
-
-	private boolean isModified(boolean isFull) {
-		return isFull ? isModified2 && !(isModified2 = false) : isModified1 && !(isModified1 = false);
+	public static BlockCoords fromString(String fullCoords) {
+		String[] array = StringUtils.split(fullCoords, ", ");
+		if (array.length != 4) {
+			throw new IllegalArgumentException();
+		}
+		World world = Utils.getWorld(array[0]);
+		double x = Double.parseDouble(array[1]);
+		double y = Double.parseDouble(array[2]);
+		double z = Double.parseDouble(array[3]);
+		return new BlockCoords(world, x, y, z);
 	}
 
 	@Override

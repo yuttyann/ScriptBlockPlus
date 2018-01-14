@@ -18,7 +18,7 @@ public class ItemCost extends BaseOption {
 
 	public static final String KEY_ITEM = PlayerData.createRandomId("ItemCost");
 
-	private static final Pattern INTEGER_PATTERN = Pattern.compile("/^[+]?([1-9]\\d*)$/");
+	private static final Pattern INTEGER_PATTERN = Pattern.compile("^[+]?([1-9]\\d*)$");
 
 	public ItemCost() {
 		super("itemcost", "$item:");

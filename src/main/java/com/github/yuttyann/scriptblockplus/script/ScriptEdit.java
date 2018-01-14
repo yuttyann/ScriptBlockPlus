@@ -107,7 +107,8 @@ public final class ScriptEdit {
 		Utils.sendMessage(SBConfig.getConsoleScriptViewMessage(sbPlayer.getName(), scriptType, scriptData.getLocation()));
 	}
 
-	public boolean copy(SBPlayer sbPlayer) {
+	public boolean copy(SBPlayer sbPlayer, Location location) {
+		setLocation(location);
 		return new Clipboard(scriptData).copy(sbPlayer);
 	}
 

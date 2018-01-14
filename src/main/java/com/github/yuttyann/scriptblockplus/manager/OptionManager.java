@@ -19,10 +19,10 @@ import com.github.yuttyann.scriptblockplus.script.option.nms.Title;
 import com.github.yuttyann.scriptblockplus.script.option.other.Amount;
 import com.github.yuttyann.scriptblockplus.script.option.other.BlockType;
 import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
-import com.github.yuttyann.scriptblockplus.script.option.other.ClickAction;
 import com.github.yuttyann.scriptblockplus.script.option.other.Execute;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemHand;
+import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
 import com.github.yuttyann.scriptblockplus.script.option.other.Sound;
 import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
 import com.github.yuttyann.scriptblockplus.script.option.time.Delay;
@@ -49,7 +49,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	@Override
 	public void registerDefaults() {
 		getConstructors().clear();
-		add(ClickAction.class);
+		add(ScriptAction.class);
 		add(BlockType.class);
 		add(Group.class);
 		add(Perm.class);

@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.endprocess;
 
 import com.github.yuttyann.scriptblockplus.script.SBRead;
-import com.github.yuttyann.scriptblockplus.script.option.other.ClickAction;
+import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
 
 public class EndClickAction implements EndProcess {
 
@@ -12,6 +12,6 @@ public class EndClickAction implements EndProcess {
 
 	@Override
 	public void failed(SBRead sbRead) {
-		sbRead.getSBPlayer().removeData(ClickAction.KEY_CLICK_ACTION);
+		sbRead.getSBPlayer().removeData(ScriptAction.KEY_CLICK_ACTION);
 	}
 }

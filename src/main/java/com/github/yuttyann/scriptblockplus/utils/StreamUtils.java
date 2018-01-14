@@ -40,6 +40,19 @@ public class StreamUtils {
 		}
 	}
 
+	public static <T> boolean allMatch(T[] array, Predicate<T> predicate) {
+		Objects.requireNonNull(array);
+		if (array.length == 0) {
+			return false;
+		}
+		for (T t : array) {
+			if (!predicate.test(t)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public static <T> boolean anyMatch(T[] array, Predicate<T> predicate) {
 		Objects.requireNonNull(array);
 		for (T t : array) {

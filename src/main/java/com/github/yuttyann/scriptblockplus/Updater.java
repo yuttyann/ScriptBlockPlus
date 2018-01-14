@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -77,7 +78,7 @@ public final class Updater {
 	}
 
 	public List<String> getDetails() {
-		return details;
+		return Collections.unmodifiableList(details);
 	}
 
 	public boolean isUpdateError() {
@@ -138,13 +139,11 @@ public final class Updater {
 				}
 				if (updateNode.getNodeName().equals("details")) {
 					NodeList detailsChildren = updateNode.getChildNodes();
+					details = new ArrayList<String>(detailsChildren.getLength());
 					for(int k = 0; k < detailsChildren.getLength(); k++) {
 						Node detailsNode = detailsChildren.item(k);
 						if (detailsNode.getNodeType() != Node.ELEMENT_NODE) {
 							continue;
-						}
-						if (details == null) {
-							details = new ArrayList<String>(detailsChildren.getLength());
 						}
 						details.add(((Element) detailsNode).getAttribute("info"));
 					}
@@ -155,7 +154,7 @@ public final class Updater {
 	}
 
 	public boolean execute(CommandSender sender) {
-		if(SBConfig.isUpdateChecker() && isUpperVersion()) {
+		if(SBConfig.isUpdateChecker() && isUpperVersion) {
 			if (sender == null) {
 				sender = Bukkit.getConsoleSender();
 			}
@@ -192,32 +191,33 @@ public final class Updater {
 		return false;
 	}
 
-	public String getSize(long length) {
-		if (1024 > length) {
-			return length + " Byte";
-		}
-		int round = BigDecimal.ROUND_HALF_UP;
-		if (1024 * 1024 > length) {
-			double size = length / 1024;
-			double value = new BigDecimal(size).setScale(1, round).doubleValue();
-			return value + " KB";
-		} else {
-			double size = length / 1024 / 1024;
-			double value = new BigDecimal(size).setScale(1, round).doubleValue();
-			return value + " MB";
-		}
-	}
-
 	public void sendCheckMessage(CommandSender sender) {
 		if(isUpperVersion && !isUpdateError && sender.isOp()) {
 			Utils.sendMessage(sender, SBConfig.getUpdateCheckMessages(pluginName, latestVersion, details));
 		}
 	}
 
-	public void sendErrorMessage(CommandSender sender) {
+	private void sendErrorMessage(CommandSender sender) {
 		if(!isUpdateError && (isUpdateError = true)) {
 			Utils.sendMessage(sender, SBConfig.getUpdateErrorMessage());
 		}
+	}
+
+	private String getSize(long length) {
+		if (1024 > length) {
+			return length + " Byte";
+		}
+		double size;
+		String unit;
+		if (1024 * 1024 > length) {
+			size = length / 1024;
+			unit = " KB";
+		} else {
+			size = length / 1024 / 1024;
+			unit = " MB";
+		}
+		int round = BigDecimal.ROUND_HALF_UP;
+		return new BigDecimal(size).setScale(1, round).doubleValue() + unit;
 	}
 
 	private boolean textEquals(String url, File file) {
