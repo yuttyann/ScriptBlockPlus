@@ -197,7 +197,7 @@ public enum PackageType {
 			if (i == lastLength) {
 				return builder.append(']').toString();
 			}
-			builder.append(',').append(' ');
+			builder.append(',');
 		}
 		return builder.toString();
 	}

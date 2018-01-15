@@ -44,7 +44,7 @@ public class ItemCost extends BaseOption {
 				allAmount += item.getAmount();
 				items[i] = setAmount(item, allAmount > amount ? allAmount - amount : item.getAmount() - amount);
 			}
-			if (allAmount >= amount) {
+			if (allAmount >= amount && !getSBPlayer().hasData(KEY_ITEM)) {
 				getSBPlayer().setData(KEY_ITEM, copyItems(inventory.getContents()));
 				break;
 			}
@@ -69,7 +69,7 @@ public class ItemCost extends BaseOption {
 		if (amount > 0) {
 			item.setAmount(amount);
 		} else {
-			item = new ItemStack(Material.AIR);
+			item.setType(Material.AIR);
 		}
 		return item;
 	}

@@ -23,7 +23,7 @@ import com.github.yuttyann.scriptblockplus.script.option.other.Execute;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemHand;
 import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
-import com.github.yuttyann.scriptblockplus.script.option.other.Sound;
+import com.github.yuttyann.scriptblockplus.script.option.other.SoundPlay;
 import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
 import com.github.yuttyann.scriptblockplus.script.option.time.Delay;
 import com.github.yuttyann.scriptblockplus.script.option.time.OldCooldown;
@@ -66,7 +66,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		add(Say.class);
 		add(Server.class);
 		add(ToPlayer.class);
-		add(Sound.class);
+		add(SoundPlay.class);
 		add(Title.class);
 		add(ActionBar.class);
 		add(GroupAdd.class);
@@ -113,5 +113,4 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		isModified = true;
 		return super.remove(index);
 	}
-
 }

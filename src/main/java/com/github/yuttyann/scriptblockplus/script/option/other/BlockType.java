@@ -13,37 +13,29 @@ public class BlockType extends BaseOption {
 		super("blocktype", "@blocktype:");
 	}
 
-	private class BlockData {
-
-		private final Material type;
-		private final byte data;
-
-		public BlockData(String type) {
-			String[] array = StringUtils.split(type, ":");
-			this.type = Material.getMaterial(array[0]);
-			this.data = array.length == 2 ? Byte.parseByte(array[1]) : 0;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (!(obj instanceof Block) || type == null || !type.isBlock()) {
-				return false;
-			}
-			Block block = (Block) obj;
-			return type == block.getType() && data == getData(block);
-		}
-
-		private byte getData(Block block) {
-			@SuppressWarnings("deprecation")
-			byte data = block.getData();
-			return data;
-		}
-	}
-
 	@Override
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), ",");
 		Block block = getLocation().getBlock();
-		return StreamUtils.anyMatch(array, s -> new BlockData(s).equals(block));
+		return StreamUtils.anyMatch(array, s -> equals(block, s));
+	}
+
+	private boolean equals(Block block, String blockType) {
+		if (block == null || StringUtils.isEmpty(blockType)) {
+			return false;
+		}
+		String[] array = StringUtils.split(blockType, ":");
+		Material type = Material.getMaterial(array[0]);
+		if (type == null || !type.isBlock()) {
+			return false;
+		}
+		byte data = array.length == 2 ? Byte.parseByte(array[1]) : 0;
+		return type == block.getType() && data == getData(block);
+	}
+
+	private byte getData(Block block) {
+		@SuppressWarnings("deprecation")
+		byte data = block.getData();
+		return data;
 	}
 }

@@ -19,28 +19,25 @@ public class ScriptAction extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		Action action = getSBPlayer().getData(KEY_CLICK_ACTION, null);
-		if (action == null) {
-			return false;
-		}
 		String[] array = StringUtils.split(getOptionValue(), ",");
-		return StreamUtils.allMatch(array, s -> checkAction(action, s));
+		return StreamUtils.allMatch(array, s -> equals(action, s));
 	}
 
-	private boolean checkAction(Action action, String value) {
-		if (getOptionValue().equalsIgnoreCase("shift")) {
+	private boolean equals(Action action, String actionType) {
+		if (actionType.equalsIgnoreCase("shift")) {
 			return getPlayer().isSneaking();
 		}
 		if (getScriptType() == ScriptType.INTERACT) {
-			return action == null ? false : action == getAction(value);
+			return action == null ? false : action == getAction(actionType);
 		}
 		return false;
 	}
 
-	private Action getAction(String value) {
-		if (value.equalsIgnoreCase("left")) {
+	private Action getAction(String actionType) {
+		if (actionType.equalsIgnoreCase("left")) {
 			return Action.LEFT_CLICK_BLOCK;
 		}
-		if (value.equalsIgnoreCase("right")) {
+		if (actionType.equalsIgnoreCase("right")) {
 			return Action.RIGHT_CLICK_BLOCK;
 		}
 		return null;

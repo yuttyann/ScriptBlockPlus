@@ -10,7 +10,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Delay extends BaseOption implements Runnable {
 
-	private boolean unsafe;
+	private boolean unSaveExec;
 
 	public Delay() {
 		super("delay", "@delay:");
@@ -19,7 +19,7 @@ public class Delay extends BaseOption implements Runnable {
 	@Override
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
-		unsafe = array.length > 1 ? Boolean.valueOf(array[1]) : false;
+		unSaveExec = array.length > 1 ? Boolean.valueOf(array[1]) : false;
 		if (containsDelay()) {
 			Utils.sendMessage(getPlayer(), SBConfig.getActiveDelayMessage());
 		} else {
@@ -45,19 +45,19 @@ public class Delay extends BaseOption implements Runnable {
 	}
 
 	private void putDelay() {
-		if (!unsafe) {
+		if (!unSaveExec) {
 			getMapManager().putDelay(getScriptType(), getFullCoords(), getUniqueId());
 		}
 	}
 
 	private void removeDelay() {
-		if (!unsafe) {
+		if (!unSaveExec) {
 			getMapManager().removeDelay(getScriptType(), getFullCoords(), getUniqueId());
 		}
 	}
 
 	private boolean containsDelay() {
-		if (!unsafe) {
+		if (!unSaveExec) {
 			return getMapManager().containsDelay(getScriptType(), getFullCoords(), getUniqueId());
 		}
 		return false;
