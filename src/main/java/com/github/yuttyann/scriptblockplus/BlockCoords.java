@@ -164,7 +164,7 @@ public class BlockCoords extends Location {
 
 	private class UnmodifiableBlockCoords extends BlockCoords {
 
-		public UnmodifiableBlockCoords(BlockCoords blockCoords) {
+		private UnmodifiableBlockCoords(BlockCoords blockCoords) {
 			super(blockCoords);
 		}
 
