@@ -7,9 +7,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
-public class SoundPlay extends BaseOption {
+public class PlaySound extends BaseOption {
 
-	public SoundPlay() {
+	public PlaySound() {
 		super("sound", "@sound:");
 	}
 
