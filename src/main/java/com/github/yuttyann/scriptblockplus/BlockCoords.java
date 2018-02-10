@@ -134,7 +134,7 @@ public class BlockCoords extends Location {
 	}
 
 	public static BlockCoords fromString(String fullCoords) {
-		String[] array = StringUtils.split(fullCoords, ", ");
+		String[] array = StringUtils.split(fullCoords, ",");
 		if (array.length != 4) {
 			throw new IllegalArgumentException();
 		}

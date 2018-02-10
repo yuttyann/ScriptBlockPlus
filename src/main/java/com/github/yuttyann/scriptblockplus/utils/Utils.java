@@ -189,14 +189,22 @@ public class Utils {
 	}
 
 	public static World getWorld(String name) {
-		World world = Bukkit.getWorld(name);
-		if (world == null) {
-			File file = new File(Bukkit.getWorldContainer(), name + "/level.dat");
-			if (file.exists()) {
-				world = Bukkit.createWorld(WorldCreator.name(name));
-			}
+		if (StringUtils.isEmpty(name)) {
+			return null;
 		}
-		return world;
+		try {
+			name = name.trim();
+			World world = Bukkit.getWorld(name);
+			if (world == null) {
+				File file = new File(Bukkit.getWorldContainer(), name + "/level.dat");
+				if (file.exists()) {
+					world = Bukkit.createWorld(WorldCreator.name(name));
+				}
+			}
+			return world;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	@SuppressWarnings("deprecation")
