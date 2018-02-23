@@ -20,7 +20,7 @@ public class EndMoneyCost implements EndProcess {
 		VaultEconomy economy = HookPlugins.getVaultEconomy();
 		if (economy.isEnabled()) {
 			SBPlayer sbPlayer = sbRead.getSBPlayer();
-			Double cost = sbPlayer.getData(MoneyCost.KEY_COST, null);
+			Double cost = sbPlayer.getData(MoneyCost.KEY_COST);
 			if (cost != null) {
 				sbPlayer.removeData(MoneyCost.KEY_COST);
 				economy.depositPlayer(sbPlayer.getOfflinePlayer(), cost.doubleValue());

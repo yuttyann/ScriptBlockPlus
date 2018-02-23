@@ -23,16 +23,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  */
 public abstract class BaseOption extends Option {
 
-	private Plugin plugin;
-	private SBPlayer sbPlayer;
-	private String optionValue;
-	private BlockCoords blockCoords;
-	private MapManager mapManager;
-	private List<String> scripts;
-	private ScriptType scriptType;
 	private ScriptRead scriptRead;
-	private ScriptData scriptData;
-	private int scriptIndex;
 
 	/**
 	 * コンストラクタ
@@ -47,56 +38,56 @@ public abstract class BaseOption extends Option {
 	 * プラグインを取得する
 	 * @return プラグイン
 	 */
-	protected Plugin getPlugin() {
-		return plugin;
+	protected final Plugin getPlugin() {
+		return scriptRead.getPlugin();
 	}
 
 	/**
 	 * プレイヤーを取得する
 	 * @return プレイヤー
 	 */
-	protected Player getPlayer() {
-		return sbPlayer.getPlayer();
+	protected final Player getPlayer() {
+		return getSBPlayer().getPlayer();
 	}
 
 	/**
 	 * SBプレイヤーを取得する
 	 * @return SBプレイヤー
 	 */
-	protected SBPlayer getSBPlayer() {
-		return sbPlayer;
+	protected final SBPlayer getSBPlayer() {
+		return scriptRead.getSBPlayer();
 	}
 
 	/**
 	 * UUIDを取得する
 	 * @return UUID
 	 */
-	protected UUID getUniqueId() {
-		return sbPlayer.getUniqueId();
+	protected final UUID getUniqueId() {
+		return getSBPlayer().getUniqueId();
 	}
 
 	/**
 	 * オプションの値を取得する
 	 * @return オプションの値
 	 */
-	protected String getOptionValue() {
-		return optionValue;
+	protected final String getOptionValue() {
+		return scriptRead.getOptionValue();
 	}
 
 	/**
 	 * 座標文字列を取得する
 	 * @return ワールド名を除いた、文字列(x, y, z)
 	 */
-	protected String getCoords() {
-		return blockCoords.getCoords();
+	protected final String getCoords() {
+		return scriptRead.getCoords();
 	}
 
 	/**
 	 * 座標文字列を取得する
 	 * @return ワールド名を含めた、文字列(world, x, y, z)
 	 */
-	protected String getFullCoords() {
-		return blockCoords.getFullCoords();
+	protected final String getFullCoords() {
+		return scriptRead.getFullCoords();
 	}
 
 	/**
@@ -104,39 +95,39 @@ public abstract class BaseOption extends Option {
 	 * ※座標変更不可
 	 * @return スクリプトの座標
 	 */
-	protected Location getLocation() {
-		return blockCoords;
+	protected final Location getLocation() {
+		return scriptRead.getLocation();
 	}
 
 	/**
 	 * マップの管理クラスを取得する
 	 * @return マップの管理クラス
 	 */
-	protected MapManager getMapManager() {
-		return mapManager;
+	protected final MapManager getMapManager() {
+		return scriptRead.getMapManager();
 	}
 
 	/**
-	 * スクリプトの内容を取得する
-	 * @return スクリプトの内容
+	 * スクリプトのリストを取得する
+	 * @return スクリプトのリスト
 	 */
-	protected List<String> getScripts() {
-		return scripts;
+	protected final List<String> getScripts() {
+		return scriptRead.getScripts();
 	}
 
 	/**
 	 * スクリプトの種類を取得する
 	 * @return スクリプトの種類
 	 */
-	protected ScriptType getScriptType() {
-		return scriptType;
+	protected final ScriptType getScriptType() {
+		return scriptRead.getScriptType();
 	}
 
 	/**
 	 * スクリプトの実行クラスを取得する
 	 * @return スクリプトの実行クラス
 	 */
-	protected ScriptRead getScriptRead() {
+	protected final ScriptRead getScriptRead() {
 		return scriptRead;
 	}
 
@@ -144,16 +135,16 @@ public abstract class BaseOption extends Option {
 	 * スクリプトの管理クラスを取得する
 	 * @return スクリプトの管理クラス
 	 */
-	protected ScriptData getScriptData() {
-		return scriptData;
+	protected final ScriptData getScriptData() {
+		return scriptRead.getScriptData();
 	}
 
 	/**
-	 * スクリプトの進行度を取得する
+	 * スクリプト読み込むの進行度を取得する
 	 * @return 進行度
 	 */
-	protected int getScriptIndex() {
-		return scriptIndex;
+	protected final int getScriptIndex() {
+		return scriptRead.getScriptIndex();
 	}
 
 	/**
@@ -166,20 +157,11 @@ public abstract class BaseOption extends Option {
 	@Deprecated
 	public final boolean callOption(ScriptRead scriptRead) {
 		this.scriptRead = scriptRead;
-		this.plugin = scriptRead.getPlugin();
-		this.sbPlayer = scriptRead.getSBPlayer();
-		this.optionValue = scriptRead.getOptionValue();
-		this.blockCoords = scriptRead.getBlockCoords();
-		this.mapManager = scriptRead.getMapManager();
-		this.scripts = scriptRead.getScripts();
-		this.scriptType = scriptRead.getScriptType();
-		this.scriptData = scriptRead.getScriptData();
-		this.scriptIndex = scriptRead.getScriptIndex();
 		try {
 			return isValid();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Utils.sendMessage(sbPlayer, SBConfig.getOptionFailedToExecuteMessage(this, e));
+			Utils.sendMessage(getSBPlayer(), SBConfig.getOptionFailedToExecuteMessage(this, e));
 		}
 		return false;
 	}
@@ -190,7 +172,7 @@ public abstract class BaseOption extends Option {
 	 * @return 実行が成功したかどうか
 	 */
 	protected final boolean executeConsoleCommand(String command) {
-		return Utils.dispatchCommand(Bukkit.getConsoleSender(), new BlockCoords(blockCoords), command);
+		return Utils.dispatchCommand(Bukkit.getConsoleSender(), new BlockCoords(getLocation()), command);
 	}
 
 	/**
@@ -201,7 +183,7 @@ public abstract class BaseOption extends Option {
 	 * @return 実行が成功したかどうか
 	 */
 	protected final boolean executeCommand(Player player, String command, boolean isBypass) {
-		Location location = new BlockCoords(blockCoords);
+		Location location = new BlockCoords(getLocation());
 		if (!isBypass || player.isOp()) {
 			return Utils.dispatchCommand(player, location, command);
 		} else {

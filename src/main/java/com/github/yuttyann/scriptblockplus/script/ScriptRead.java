@@ -46,6 +46,21 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 	}
 
 	@Override
+	public String getCoords() {
+		return blockCoords.getCoords();
+	}
+
+	@Override
+	public String getFullCoords() {
+		return blockCoords.getFullCoords();
+	}
+
+	@Override
+	public Location getLocation() {
+		return blockCoords;
+	}
+
+	@Override
 	public List<String> getScripts() {
 		return scripts;
 	}
@@ -53,11 +68,6 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 	@Override
 	public ScriptData getScriptData() {
 		return scriptData;
-	}
-
-	@Override
-	public BlockCoords getBlockCoords() {
-		return blockCoords;
 	}
 
 	@Override

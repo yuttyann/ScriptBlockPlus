@@ -59,11 +59,11 @@ public abstract class Option {
 	}
 
 	/**
-	 * スクリプトがオプションなのかどうかチェックします
+	 * スクリプトがオプションなのかどうかチェックする
 	 * @return オプションなのかどうか
 	 */
 	public final boolean isOption(String script) {
-		return script != null && script.startsWith(syntax);
+		return script == null ? false : script.startsWith(syntax);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public abstract class Option {
 
 	/**
 	 * オプションを実行する</br>
-	 * このメソッドは ScriptRead.java から呼び出されることを前提としているため、使用しないでください。
+	 * このメソッドは ScriptRead.java から呼び出されることを前提としているため、使用しないでください
 	 * @param scriptRead
 	 * @return 実行が成功したかどうか
 	 */

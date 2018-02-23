@@ -29,26 +29,26 @@ public abstract class PlayerData implements SBPlayer {
 	}
 
 	@Override
-	public Object getData(String key) {
-		return objectData.get(key);
+	public <T> T getData(String key) {
+		return getData(key, null);
 	}
 
 	@Override
 	public <T> T getData(String key, Class<T> classOfT) {
 		@SuppressWarnings("unchecked")
-		T value = classOfT == null ? (T) getData(key) : classOfT.cast(getData(key));
+		T value = classOfT == null ? (T) objectData.get(key) : classOfT.cast(objectData.get(key));
 		return value;
 	}
 
 	@Override
-	public Object removeData(String key) {
-		return objectData.remove(key);
+	public <T> T removeData(String key) {
+		return getData(key, null);
 	}
 
 	@Override
 	public <T> T removeData(String key, Class<T> classOfT) {
 		@SuppressWarnings("unchecked")
-		T value = classOfT == null ? (T) removeData(key) : classOfT.cast(removeData(key));
+		T value = classOfT == null ? (T) objectData.remove(key) : classOfT.cast(objectData.remove(key));
 		return value;
 	}
 
@@ -69,7 +69,7 @@ public abstract class PlayerData implements SBPlayer {
 
 	@Override
 	public Clipboard getClipboard() {
-		return getData(KEY_CLIPBOARD, Clipboard.class);
+		return getData(KEY_CLIPBOARD);
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public abstract class PlayerData implements SBPlayer {
 
 	@Override
 	public String getScriptLine() {
-		return getData(KEY_SCRIPTLINE, String.class);
+		return getData(KEY_SCRIPTLINE);
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public abstract class PlayerData implements SBPlayer {
 
 	@Override
 	public String getClickAction() {
-		return getData(KEY_CLICKACTION, String.class);
+		return getData(KEY_CLICKACTION);
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public abstract class PlayerData implements SBPlayer {
 
 	@Override
 	public String getOldFullCoords() {
-		return getData(KEY_OLDFULLCOORDS, String.class);
+		return getData(KEY_OLDFULLCOORDS);
 	}
 
 	@Override

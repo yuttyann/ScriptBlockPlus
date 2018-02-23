@@ -18,7 +18,7 @@ public class ScriptAction extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		Action action = getSBPlayer().getData(KEY_CLICK_ACTION, null);
+		Action action = getSBPlayer().getData(KEY_CLICK_ACTION);
 		String[] array = StringUtils.split(getOptionValue(), ",");
 		return StreamUtils.allMatch(array, s -> equals(action, s));
 	}

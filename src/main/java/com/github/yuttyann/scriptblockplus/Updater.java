@@ -145,10 +145,9 @@ public final class Updater {
 					}
 					for(int k = 0; k < detailsChildren.getLength(); k++) {
 						Node detailsNode = detailsChildren.item(k);
-						if (detailsNode.getNodeType() != Node.ELEMENT_NODE) {
-							continue;
+						if (detailsNode.getNodeType() == Node.ELEMENT_NODE) {
+							details.add(((Element) detailsNode).getAttribute("info"));
 						}
-						details.add(((Element) detailsNode).getAttribute("info"));
 					}
 				}
 			}

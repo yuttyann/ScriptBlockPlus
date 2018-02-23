@@ -92,10 +92,7 @@ public class Calculation extends BaseOption {
 			ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
 			Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
 			Objective objective = scoreboard.getObjective(objectName);
-			if (objective == null) {
-				return 0.0D;
-			}
-			return getScore(objective, player).getScore();
+			return objective == null ? 0.0D : getScore(objective, player).getScore();
 		}
 		switch (variable) {
 		case "%server_online%":
@@ -112,17 +109,17 @@ public class Calculation extends BaseOption {
 		case "%player_z%":
 			return player.getLocation().getBlockZ();
 		case "%player_bed_x%":
-			return player.getBedSpawnLocation() != null ? player.getBedSpawnLocation().getBlockX() : 0.0D;
+			return player.getBedSpawnLocation() == null ? 0.0D : player.getBedSpawnLocation().getBlockX();
 		case "%player_bed_y%":
-			return player.getBedSpawnLocation() != null ? player.getBedSpawnLocation().getBlockY() : 0.0D;
+			return player.getBedSpawnLocation() == null ? 0.0D : player.getBedSpawnLocation().getBlockY();
 		case "%player_bed_z%":
-			return player.getBedSpawnLocation() != null ? player.getBedSpawnLocation().getBlockZ() : 0.0D;
+			return player.getBedSpawnLocation() == null ? 0.0D : player.getBedSpawnLocation().getBlockZ();
 		case "%player_compass_x%":
-			return player.getCompassTarget() != null ? player.getCompassTarget().getBlockX() : 0.0D;
+			return player.getCompassTarget() == null ? 0.0D : player.getCompassTarget().getBlockX();
 		case "%player_compass_y%":
-			return player.getCompassTarget() != null ? player.getCompassTarget().getBlockY() : 0.0D;
+			return player.getCompassTarget() == null ? 0.0D : player.getCompassTarget().getBlockY();
 		case "%player_compass_z%":
-			return player.getCompassTarget() != null ? player.getCompassTarget().getBlockZ() : 0.0D;
+			return player.getCompassTarget() == null ? 0.0D : player.getCompassTarget().getBlockZ();
 		case "%player_gamemode%":
 			return player.getGameMode().getValue();
 		case "%player_world_time%":
@@ -183,10 +180,7 @@ public class Calculation extends BaseOption {
 		int count = 0;
 		int result = distance * distance;
 		for (Player p : player.getLocation().getWorld().getPlayers()) {
-			if (player == p) {
-				continue;
-			}
-			if (player.getLocation().distanceSquared(p.getLocation()) <= result) {
+			if (player != p && player.getLocation().distanceSquared(p.getLocation()) <= result) {
 				count++;
 			}
 		}
