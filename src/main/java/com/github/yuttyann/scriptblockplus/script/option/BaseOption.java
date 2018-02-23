@@ -153,6 +153,12 @@ public abstract class BaseOption extends Option {
 	 */
 	protected abstract boolean isValid() throws Exception;
 
+	/**
+	 * オプションを実行する</br>
+	 * このメソッドは ScriptRead.java から呼び出されることを前提としているため、使用しないでください
+	 * @param scriptRead
+	 * @return 実行が成功したかどうか
+	 */
 	@Override
 	@Deprecated
 	public final boolean callOption(ScriptRead scriptRead) {

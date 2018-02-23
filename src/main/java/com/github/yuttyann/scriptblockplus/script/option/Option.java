@@ -85,11 +85,11 @@ public abstract class Option {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Option)) {
-			return false;
+		if (obj instanceof Option) {
+			Option option = (Option) obj;
+			return name.equals(option.getName()) && syntax.equals(option.getSyntax());
 		}
-		Option option = (Option) obj;
-		return name.equals(option.getName()) && syntax.equals(option.getSyntax());
+		return false;
 	}
 
 	@Override
