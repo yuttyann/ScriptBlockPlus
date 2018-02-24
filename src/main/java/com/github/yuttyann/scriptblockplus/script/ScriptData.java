@@ -1,8 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -140,7 +138,7 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void setLastEdit() {
-		setLastEdit(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+		setLastEdit(Utils.getFormatTime());
 	}
 
 	public void setLastEdit(String time) {

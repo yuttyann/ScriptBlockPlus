@@ -1,9 +1,7 @@
 package com.github.yuttyann.scriptblockplus.command;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -46,7 +44,6 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	public ScriptBlockPlusCommand(ScriptBlock plugin) {
 		super(plugin);
-		updateUsage();
 	}
 
 	@Override
@@ -59,8 +56,9 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private void updateUsage() {
-		CommandData[] commands = {
+	@Override
+	public CommandData[] getUsages() {
+		return new CommandData[] {
 			new CommandData(SBConfig.getToolCommandMessage(), Permission.COMMAND_TOOL),
 			new CommandData(SBConfig.getReloadCommandMessage(), Permission.COMMAND_RELOAD),
 			new CommandData(SBConfig.getCheckVerCommandMessage(), Permission.COMMAND_CHECKVER),
@@ -72,7 +70,6 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			new CommandData(SBConfig.getWorldEditPasteCommandMessage(), Permission.COMMAND_WORLDEDIT),
 			new CommandData(SBConfig.getWorldEditRemoveCommandMessage(), Permission.COMMAND_WORLDEDIT)
 		};
-		setUsage(commands);
 	}
 
 	@Override
@@ -124,7 +121,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return false;
 		}
 		Files.reload();
-		updateUsage();
+		setUsage(getUsages());
 		ScriptBlock.getInstance().getMapManager().loadAllScripts();
 		Utils.sendMessage(sender, SBConfig.getAllFileReloadMessage());
 		return true;
@@ -150,7 +147,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			Utils.sendMessage(player, SBConfig.getNotScriptBlockFileMessage());
 		} else {
 			Utils.sendMessage(player, SBConfig.getDataMigrStartMessage());
-			String time = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+			String time = Utils.getFormatTime();
 			YamlConfig scriptFile;
 			if (interactFile.exists()) {
 				scriptFile = YamlConfig.load(getPlugin(), interactFile, false);
@@ -372,7 +369,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	}
 
 	private String[] getOptionSyntaxs() {
-		List<Option> options = new OptionManager().getOptions();
+		List<Option> options = new OptionManager().getTempOptions();
 		String[] syntaxs = new String[options.size()];
 		for (int i = 0; i < syntaxs.length; i++) {
 			syntaxs[i] = options.get(i).getSyntax();
@@ -384,7 +381,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	private boolean checkScript(String scriptLine) {
 		try {
 			int successCount = 0;
-			List<Option> options = new OptionManager().getOptions();
+			List<Option> options = new OptionManager().getTempOptions();
 			List<String> scripts = StringUtils.getScripts(scriptLine);
 			for (String script : scripts) {
 				for (Option option : options) {

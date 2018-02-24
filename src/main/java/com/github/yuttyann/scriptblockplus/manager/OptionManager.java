@@ -87,7 +87,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		return newInstances(new Option[getConstructors().size()]);
 	}
 
-	public List<Option> getOptions() {
+	public List<Option> getTempOptions() {
 		if (options == null || (isModified && !(isModified = false))) {
 			options = Collections.unmodifiableList(Arrays.asList(newInstances()));
 		}

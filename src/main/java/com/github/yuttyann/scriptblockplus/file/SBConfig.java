@@ -36,6 +36,7 @@ public final class SBConfig {
 		DATAS.put("language", yaml.getString("language", "en"));
 		DATAS.put("consoleLog", yaml.getBoolean("consoleLog", false));
 		DATAS.put("sortScripts", yaml.getBoolean("sortScripts", true));
+		DATAS.put("optionPermission", yaml.getBoolean("optionPermission", false));
 		DATAS.put("interactLeft", yaml.getBoolean("clickActions.interactLeft", true));
 		DATAS.put("interactRight", yaml.getBoolean("clickActions.interactRight", true));
 	}
@@ -131,6 +132,10 @@ public final class SBConfig {
 
 	public static boolean isSortScripts() {
 		return getBoolean("sortScripts");
+	}
+
+	public static boolean isOptionPermission() {
+		return getBoolean("optionPermission");
 	}
 
 	public static boolean isLeftClick() {

@@ -2,8 +2,10 @@ package com.github.yuttyann.scriptblockplus.utils;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -104,6 +106,10 @@ public class Utils {
 			result += Integer.parseInt(array[2]);
 		}
 		return result;
+	}
+
+	public static String getFormatTime() {
+		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 	}
 
 	public static void sendMessage(String message) {

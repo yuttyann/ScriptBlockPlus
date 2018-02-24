@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -83,7 +84,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return false;
 		}
-		List<Option> options = optionManager.getOptions();
+		List<Option> options = optionManager.getTempOptions();
 		if (!sort(scriptData.getScripts(), options)) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptMessage(scriptType));
 			Utils.sendMessage(SBConfig.getConsoleErrorScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
@@ -95,9 +96,9 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 				if (!option.isOption(script)) {
 					continue;
 				}
-				optionValue = textOption(option.getValue(script));
+				optionValue = replaceValue(option.getValue(script));
 				Option instance = optionManager.newInstance(option);
-				if (!sbPlayer.isOnline() || !instance.callOption(this)) {
+				if (!sbPlayer.isOnline() || !hasPermission(option) || !instance.callOption(this)) {
 					if (!instance.isFailedIgnore()) {
 						endProcessManager.forEach(e -> e.failed(this), true);
 					}
@@ -108,14 +109,6 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 		endProcessManager.forEach(e -> e.success(this), true);
 		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
 		return true;
-	}
-
-	private String textOption(String value) {
-		if (sbPlayer.isOnline() && StringUtils.isNotEmpty(value)) {
-			value = StringUtils.replace(value, "<player>", sbPlayer.getName());
-			value = StringUtils.replace(value, "<world>", sbPlayer.getLocation().getWorld().getName());
-		}
-		return value;
 	}
 
 	private boolean sort(List<String> scripts, List<Option> options) {
@@ -133,6 +126,22 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	private boolean hasPermission(Option option) {
+		if (SBConfig.isOptionPermission() && Permission.has(sbPlayer, option.getPermissionNode())) {
+			return true;
+		}
+		Utils.sendMessage(sbPlayer, SBConfig.getNotPermissionMessage());
+		return false;
+	}
+
+	private String replaceValue(String value) {
+		if (sbPlayer.isOnline() && StringUtils.isNotEmpty(value)) {
+			value = StringUtils.replace(value, "<player>", sbPlayer.getName());
+			value = StringUtils.replace(value, "<world>", sbPlayer.getLocation().getWorld().getName());
+		}
+		return value;
 	}
 
 	private List<String> getScripts(String scriptLine) {

@@ -73,7 +73,7 @@ public final class Clipboard {
 		}
 		scriptData.setAuthor(author);
 		scriptData.addAuthor(sbPlayer.getOfflinePlayer());
-		scriptData.setLastEdit(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+		scriptData.setLastEdit(Utils.getFormatTime());
 		scriptData.setScripts(new ArrayList<String>(scripts));
 		scriptData.save();
 		ScriptBlock.getInstance().getMapManager().addCoords(scriptType, location);

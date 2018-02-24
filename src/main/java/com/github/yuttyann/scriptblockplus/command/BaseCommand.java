@@ -22,6 +22,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 
 	public BaseCommand(Plugin plugin) {
 		this.plugin = plugin;
+		setUsage(getUsages());
 	}
 
 	public final Plugin getPlugin() {
@@ -29,6 +30,8 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 	}
 
 	public abstract String getCommandName();
+
+	public abstract CommandData[] getUsages();
 
 	public abstract boolean isAliases();
 
