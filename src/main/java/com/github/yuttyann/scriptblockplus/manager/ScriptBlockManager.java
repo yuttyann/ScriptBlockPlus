@@ -265,7 +265,7 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 	}
 
 	private ScriptBlockEvent callEvent(Player player, ScriptType scriptType) {
-		ScriptBlockEvent event = null;
+		ScriptBlockEvent event;
 		switch (scriptType) {
 		case INTERACT:
 			event = new ScriptBlockInteractEvent(player, getLocation().getBlock());
