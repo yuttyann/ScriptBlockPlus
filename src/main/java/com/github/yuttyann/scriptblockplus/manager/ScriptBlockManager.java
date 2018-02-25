@@ -277,7 +277,7 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 			event = new ScriptBlockWalkEvent(player, getLocation().getBlock());
 			break;
 		default:
-			return null;
+			event = null;
 		}
 		if (event != null) {
 			Bukkit.getPluginManager().callEvent(event);

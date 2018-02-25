@@ -124,8 +124,8 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
 		}
+		return false;
 	}
 
 	private boolean hasPermission(Option option) {

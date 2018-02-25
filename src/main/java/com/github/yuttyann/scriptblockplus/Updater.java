@@ -264,12 +264,11 @@ public final class Updater {
 		connection.setAllowUserInteraction(false);
 		connection.setInstanceFollowRedirects(true);
 		connection.connect();
-		int httpStatusCode = connection.getResponseCode();
-		if (httpStatusCode != HttpURLConnection.HTTP_OK) {
-			connection.disconnect();
-			return null;
+		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			return factory.newDocumentBuilder().parse(connection.getInputStream());
 		}
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		return factory.newDocumentBuilder().parse(connection.getInputStream());
+		connection.disconnect();
+		return null;
 	}
 }
