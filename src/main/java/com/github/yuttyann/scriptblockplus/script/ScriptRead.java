@@ -129,12 +129,10 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 	}
 
 	private boolean hasPermission(Option option) {
-		if (SBConfig.isOptionPermission()) {
-			if (Permission.has(sbPlayer, option.getPermissionNode())) {
-				return true;
-			}
-			Utils.sendMessage(sbPlayer, SBConfig.getNotPermissionMessage());
+		if (!SBConfig.isOptionPermission() || Permission.has(sbPlayer, option.getPermissionNode())) {
+			return true;
 		}
+		Utils.sendMessage(sbPlayer, SBConfig.getNotPermissionMessage());
 		return false;
 	}
 
