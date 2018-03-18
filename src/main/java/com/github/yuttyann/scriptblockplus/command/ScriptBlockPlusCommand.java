@@ -86,7 +86,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			}
 		} else if (args.length == 2) {
 			if (equals(args[0], "interact", "break", "walk") && equals(args[1], "remove", "view")) {
-				return setClickDataA(sender, args);
+				return setClickData(sender, args);
 			} else if (equals(args[0], "worldedit") && equals(args[1], "remove")) {
 				return doWorldEditRemove(sender, args);
 			}
@@ -94,7 +94,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			if (args.length <= 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
 				return doWorldEditPaste(sender, args);
 			} else if (equals(args[0], "interact", "break", "walk") && equals(args[1], "create", "add")) {
-				return setClickDataB(sender, args);
+				return setClickData(sender, args);
 			}
 		}
 		return false;
@@ -173,9 +173,9 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 					scripts.remove(0);
 				}
 				for (int i = 0; i < scripts.size(); i++) {
-					String script = scripts.get(i);
-					if (script.contains("@cooldown:")) {
-						scripts.set(i, StringUtils.replace(script, "@cooldown:", "@oldcooldown:"));
+					String scriptLine = scripts.get(i);
+					if (scriptLine.contains("@cooldown:")) {
+						scripts.set(i, StringUtils.replace(scriptLine, "@cooldown:", "@oldcooldown:"));
 					}
 				}
 				String[] array = StringUtils.split(coords, ",");
@@ -194,7 +194,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		ScriptBlock.getInstance().getMapManager().loadScripts(scriptFile, scriptType);
 	}
 
-	private boolean setClickDataA(CommandSender sender, String[] args) {
+	private boolean setClickData(CommandSender sender, String[] args) {
 		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
 		if (!hasPermission(sender, Permission.valueOf("COMMAND_" + scriptType.name()))) {
 			return false;
@@ -204,28 +204,14 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorEditDataMessage());
 			return true;
 		}
-		ClickType clickType = ClickType.valueOf(args[1].toUpperCase());
-		sbPlayer.setClickAction(clickType.createKey(scriptType));
-		Utils.sendMessage(sbPlayer, SBConfig.getSuccEditDataMessage(scriptType, clickType));
-		return true;
-	}
-
-	private boolean setClickDataB(CommandSender sender, String[] args) {
-		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
-		if (!hasPermission(sender, Permission.valueOf("COMMAND_" + scriptType.name()))) {
-			return false;
+		if (args.length >= 3) {
+			String script = StringUtils.createString(args, 2).trim();
+			if (!checkScript(script)) {
+				Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptCheckMessage());
+				return true;
+			}
+			sbPlayer.setScriptLine(script);
 		}
-		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
-		if (sbPlayer.hasScriptLine() || sbPlayer.hasClickAction()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getErrorEditDataMessage());
-			return true;
-		}
-		String script = StringUtils.createString(args, 2).trim();
-		if (!checkScript(script)) {
-			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptCheckMessage());
-			return true;
-		}
-		sbPlayer.setScriptLine(script);
 		ClickType clickType = ClickType.valueOf(args[1].toUpperCase());
 		sbPlayer.setClickAction(clickType.createKey(scriptType));
 		Utils.sendMessage(sbPlayer, SBConfig.getSuccEditDataMessage(scriptType, clickType));
@@ -380,9 +366,9 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	private boolean checkScript(String scriptLine) {
 		try {
-			int successCount = 0;
 			List<Option> options = new OptionManager().getTempOptions();
 			List<String> scripts = StringUtils.getScripts(scriptLine);
+			int successCount = 0;
 			for (String script : scripts) {
 				for (Option option : options) {
 					if (option.isOption(script)) {

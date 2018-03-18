@@ -32,13 +32,13 @@ public final class MovingPosition {
 		}
 	}
 
-	private final BlockPos blockPos;
 	private final Vec3D vec3d;
+	private final BlockPos blockPos;
 	private final BlockFace blockFace;
 
 	MovingPosition(Object rayTrace) throws ReflectiveOperationException {
-		this.blockPos = new BlockPos(rayTrace);
 		this.vec3d = Vec3D.fromNMSVec3D(getMOPField("pos").get(rayTrace));
+		this.blockPos = new BlockPos(rayTrace);
 
 		Object face = getMOPField(Utils.isCB18orLater() ? "direction" : "face").get(rayTrace);
 		this.blockFace = (BlockFace) PackageType.CB_BLOCK.invokeMethod(null, "CraftBlock", "notchToBlockFace", face);

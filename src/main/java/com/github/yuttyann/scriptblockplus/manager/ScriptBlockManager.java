@@ -295,7 +295,7 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 	}
 
 	private void putScript(ScriptType scriptType, Location location, boolean isAdd) {
-		Map<Location, ScriptType> value = scripts.get(location);
+		Map<Location, ScriptType> value = scripts.get(isAdd);
 		if (value == null) {
 			value = new HashMap<Location, ScriptType>();
 			scripts.put(isAdd, value);

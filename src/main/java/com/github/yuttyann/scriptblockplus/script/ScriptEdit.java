@@ -125,18 +125,13 @@ public final class ScriptEdit {
 	private String getAuthors() {
 		StrBuilder builder = new StrBuilder();
 		List<String> authors = scriptData.getAuthors(true);
-		if (authors.size() > 1) {
+		if (authors.size() <= 1) {
+			builder.append(authors.size() == 1 ? authors.get(0) : "null");
+		} else {
 			builder.append("[");
 			for (int i = 0; i < authors.size(); i++) {
-				builder.append(authors.get(i));
-				if (i == (authors.size() - 1)) {
-					builder.append("]");
-				} else {
-					builder.append(", ");
-				}
+				builder.append(authors.get(i)).append(i == (authors.size() - 1) ? "]" : ", ");
 			}
-		} else {
-			builder.append(authors.size() == 1 ? authors.get(0) : "null");
 		}
 		return builder.toString();
 	}

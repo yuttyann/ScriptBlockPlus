@@ -16,18 +16,9 @@ public class Vec3D {
 	public final double z;
 
 	public Vec3D(double x, double y, double z) {
-		if (x == -0.0D) {
-			x = 0.0D;
-		}
-		if (y == -0.0D) {
-			y = 0.0D;
-		}
-		if (z == -0.0D) {
-			z = 0.0D;
-		}
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.x = x == -0.0D ? 0.0D : x;
+		this.y = y == -0.0D ? 0.0D : y;
+		this.z = z == -0.0D ? 0.0D : z;
 	}
 
 	public Vec3D a(Vec3D vec3d) {
