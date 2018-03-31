@@ -75,9 +75,13 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public List<String> getAuthors(boolean isName) {
-		String[] authors = StringUtils.split(getAuthor(), ", ");
+		String author = getAuthor();
+		if (StringUtils.isEmpty(author)) {
+			return new ArrayList<String>();
+		}
+		String[] authors = StringUtils.split(author, ",");
 		List<String> list = new ArrayList<String>(authors.length);
-		StreamUtils.forEach(authors, s -> list.add(isName ? Utils.getName(UUID.fromString(s)) : s));
+		StreamUtils.forEach(authors, s -> list.add(isName ? Utils.getName(UUID.fromString(s.trim())) : s.trim()));
 		return list;
 	}
 
@@ -111,27 +115,25 @@ public final class ScriptData implements Cloneable {
 
 	public void addAuthor(UUID uuid) {
 		List<String> authors = getAuthors(false);
-		String uuid_toString = uuid.toString();
-		if (!authors.contains(uuid_toString)) {
-			String value = authors.size() > 0 ? getAuthor() + ", " + uuid_toString : uuid_toString;
+		String uuidToString = uuid.toString();
+		if (!authors.contains(uuidToString)) {
+			String value = authors.size() > 0 ? getAuthor() + ", " + uuidToString : uuidToString;
 			scriptFile.set(scriptPath + ".Author", value);
 		}
 	}
 
 	public void removeAuthor(OfflinePlayer player) {
-		removeAuthor(Utils.getUniqueId(player).toString());
+		removeAuthor(Utils.getUniqueId(player));
 	}
 
-	public void removeAuthor(String uuid) {
+	public void removeAuthor(UUID uuid) {
 		List<String> authors = getAuthors(false);
-		if (authors.size() > 0 && authors.contains(uuid)) {
-			authors.remove(uuid);
+		String uuidToString = uuid.toString();
+		if (authors.size() > 0 && authors.contains(uuidToString)) {
+			authors.remove(uuidToString);
 			StrBuilder builder = new StrBuilder();
 			for (int i = 0; i < authors.size(); i++) {
-				builder.append(authors.get(i));
-				if (i != (authors.size() - 1)) {
-					builder.append(", ");
-				}
+				builder.append(authors.get(i)).append(i == (authors.size() - 1) ? "" : ", ");
 			}
 			scriptFile.set(scriptPath + ".Author", builder.toString());
 		}

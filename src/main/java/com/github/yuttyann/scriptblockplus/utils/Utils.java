@@ -209,8 +209,9 @@ public class Utils {
 			}
 			return world;
 		} catch (Exception e) {
-			return null;
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -238,41 +239,32 @@ public class Utils {
 			String name = getName(uuid);
 			for (OfflinePlayer offline : Bukkit.getOfflinePlayers()) {
 				if (offline.getName().equals(name)) {
-					return player;
+					return offline;
 				}
 			}
 		}
-		if (player == null || !player.hasPlayedBefore()) {
-			return null;
-		}
-		return player;
+		return (player == null || !player.hasPlayedBefore()) ? null : player;
 	}
 
 	public static String getName(UUID uuid) {
 		try {
 			if (isCB175orLater()) {
 				OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-				if (player == null || !player.hasPlayedBefore()) {
-					return ProfileFetcher.getName(uuid);
-				}
-				return player.getName();
+				return (player == null || !player.hasPlayedBefore()) ? ProfileFetcher.getName(uuid) : player.getName();
 			}
 			return ProfileFetcher.getName(uuid);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 
 	public static UUID getUniqueId(OfflinePlayer player) {
 		if (player == null || !player.hasPlayedBefore()) {
 			return null;
 		}
-		if (isCB175orLater()) {
-			return player.getUniqueId();
-		}
 		try {
-			return ProfileFetcher.getUniqueId(player.getName());
+			return isCB175orLater() ? player.getUniqueId() : ProfileFetcher.getUniqueId(player.getName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
