@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -246,18 +247,13 @@ public final class SBConfig {
 		String message = getString("updateCheckMessage");
 		message = replace(message, "%pluginname%", pluginName);
 		message = replace(message, "%latestversion%", latestVersion);
-		if (message.indexOf("%details%") != -1) {
-			StringBuilder builder = new StringBuilder(details.size());
+		if (message.indexOf("%details%") >= 0) {
+			StrBuilder builder = new StrBuilder(details.size());
 			for (int i = 0; i < details.size(); i++) {
 				String info = details.get(i);
-				if (info.startsWith("$")) {
-					builder.append("  - ").append(StringUtils.removeStart(info, "$"));
-				} else {
-					builder.append("・").append(info);
-				}
-				if (i != (details.size() - 1)) {
-					builder.append("|~");
-				}
+				boolean isTree = info.startsWith("$");
+				info = isTree ? StringUtils.removeStart(info, "$") : info;
+				builder.append(isTree ? "  - " : "・").append(info).append(i == (details.size() - 1) ? "" : "|~");
 			}
 			message = replace(message, "%details%", builder.toString());
 		}

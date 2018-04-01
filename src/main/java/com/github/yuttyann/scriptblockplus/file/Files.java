@@ -9,6 +9,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.ProfileFetcher;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public final class Files {
@@ -24,10 +25,7 @@ public final class Files {
 		FILES.put("lang", loadLang("lang_{code}.yml", "lang"));
 		SBConfig.reloadLang();
 
-		for (ScriptType scriptType : ScriptType.values()) {
-			String type = scriptType.getType();
-			FILES.put(type, loadFile("scripts/" + type + ".yml", false));
-		}
+		StreamUtils.forEach(ScriptType.values(), s -> loadScript(s));
 	}
 
 	public static Map<String, YamlConfig> getFiles() {
@@ -46,6 +44,11 @@ public final class Files {
 		return scriptType == null ? null : FILES.get(scriptType.getType());
 	}
 
+	private static void loadScript(ScriptType scriptType) {
+		String type = scriptType.getType();
+		FILES.put(type, loadFile("scripts/" + type + ".yml", false));
+	}
+
 	private static YamlConfig loadFile(String filePath, boolean isCopyFile) {
 		return YamlConfig.load(ScriptBlock.getInstance(), filePath, isCopyFile);
 	}
@@ -53,10 +56,7 @@ public final class Files {
 	private static YamlConfig loadLang(String filePath, String dirPath) {
 		String language = SBConfig.getLanguage();
 		if ("default".equalsIgnoreCase(language)) {
-			if (defaultLanguage == null) {
-				defaultLanguage = getDefaultLanguage();
-			}
-			language = defaultLanguage;
+			language = defaultLanguage == null ? defaultLanguage = getDefaultLanguage() : defaultLanguage;
 		}
 		return new Lang(ScriptBlock.getInstance(), language).load(filePath, dirPath);
 	}
