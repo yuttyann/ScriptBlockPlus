@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -84,7 +86,7 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return false;
 		}
-		List<Option> options = optionManager.getTempOptions();
+		List<Option> options = OptionList.getOptions();
 		if (!sort(scriptData.getScripts(), options)) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptMessage(scriptType));
 			Utils.sendMessage(SBConfig.getConsoleErrorScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
@@ -97,16 +99,16 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 					continue;
 				}
 				optionValue = replaceValue(option.getValue(script));
-				Option instance = optionManager.newInstance(option);
+				Option instance = OptionList.getManager().newInstance(option);
 				if (!sbPlayer.isOnline() || !hasPermission(option) || !instance.callOption(this)) {
 					if (!instance.isFailedIgnore()) {
-						endProcessManager.forEach(e -> e.failed(this), true);
+						EndProcessManager.getInstance().forEach(e -> e.failed(this), true);
 					}
 					return false;
 				}
 			}
 		}
-		endProcessManager.forEach(e -> e.success(this), true);
+		EndProcessManager.getInstance().forEach(e -> e.success(this), true);
 		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
 		return true;
 	}

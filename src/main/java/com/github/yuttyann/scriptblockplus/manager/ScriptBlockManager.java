@@ -17,6 +17,7 @@ import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
@@ -102,52 +103,52 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 
 	@Override
 	public void addOption(Class<? extends BaseOption> option) {
-		scriptManager.getOptionManager().add(option);
+		OptionList.getManager().add(option);
 	}
 
 	@Override
 	public void addOption(int index, Class<? extends BaseOption> option) {
-		scriptManager.getOptionManager().add(index, option);
+		OptionList.getManager().add(index, option);
 	}
 
 	@Override
 	public void removeOption(Class<? extends BaseOption> option) {
-		scriptManager.getOptionManager().remove(option);
+		OptionList.getManager().remove(option);
 	}
 
 	@Override
 	public void removeOption(int scriptIndex) {
-		scriptManager.getOptionManager().remove(scriptIndex);
+		OptionList.getManager().remove(scriptIndex);
 	}
 
 	@Override
 	public int indexOfOption(Class<? extends BaseOption> option) {
-		return scriptManager.getOptionManager().indexOf(option);
+		return OptionList.getManager().indexOf(option);
 	}
 
 	@Override
 	public void addEndProcess(Class<? extends EndProcess> endProcess) {
-		scriptManager.getEndProcessManager().add(endProcess);
+		EndProcessManager.getInstance().add(endProcess);
 	}
 
 	@Override
 	public void addEndProcess(int index, Class<? extends EndProcess> endProcess) {
-		scriptManager.getEndProcessManager().add(index, endProcess);
+		EndProcessManager.getInstance().add(index, endProcess);
 	}
 
 	@Override
 	public void removeEndProcess(Class<? extends EndProcess> endProcess) {
-		scriptManager.getEndProcessManager().remove(endProcess);
+		EndProcessManager.getInstance().remove(endProcess);
 	}
 
 	@Override
 	public void removeEndProcess(int index) {
-		scriptManager.getEndProcessManager().remove(index);
+		EndProcessManager.getInstance().remove(index);
 	}
 
 	@Override
 	public int indexOfEndProcess(Class<? extends EndProcess> endProcess) {
-		return scriptManager.getEndProcessManager().indexOf(endProcess);
+		return EndProcessManager.getInstance().indexOf(endProcess);
 	}
 
 	@Override

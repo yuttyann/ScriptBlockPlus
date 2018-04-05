@@ -10,12 +10,14 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public final class Lang {
 
+	private static final String DEFAULT_LANGUAGE = "en";
+
 	private final Plugin plugin;
 	private final String language;
 
 	public Lang(Plugin plugin, String language) {
 		this.plugin = plugin;
-		this.language = language.toLowerCase();
+		this.language = StringUtils.isEmpty(language) ? DEFAULT_LANGUAGE : language.toLowerCase();
 	}
 
 	public String getLanguage() {
@@ -28,7 +30,7 @@ public final class Lang {
 
 	private File getFile(String filePath, String dirPath) {
 		String path = dirPath + "/" + language + ".yml";
-		String code = isExists(path) ? language : "en";
+		String code = isExists(path) ? language : DEFAULT_LANGUAGE;
 		filePath = StringUtils.replace(filePath, "{code}", code);
 		File file = new File(plugin.getDataFolder(), filePath);
 		if (!file.exists()) {

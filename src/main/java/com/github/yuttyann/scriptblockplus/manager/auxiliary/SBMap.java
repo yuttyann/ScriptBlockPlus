@@ -127,9 +127,7 @@ public final class SBMap<T> implements Serializable {
 			}
 			if (o instanceof Entry) {
 				Entry<?, ?> entry = (Entry<?, ?>) o;
-				if (Objects.equals(key, entry.getKey()) && Objects.equals(value, entry.getValue())) {
-					return true;
-				}
+				return Objects.equals(key, entry.getKey()) && Objects.equals(value, entry.getValue());
 			}
 			return false;
 		}

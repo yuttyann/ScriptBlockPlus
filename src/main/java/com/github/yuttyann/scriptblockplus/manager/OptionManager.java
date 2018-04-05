@@ -46,6 +46,31 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	private static List<Option> options;
 	private static boolean isModified;
 
+	private OptionManager() {
+		// OptionList
+	}
+
+	public static final class OptionList {
+
+		private static final OptionManager OPTION_MANAGER;
+
+		static {
+			OPTION_MANAGER = new OptionManager();
+			OPTION_MANAGER.registerDefaults();
+		}
+
+		public static OptionManager getManager() {
+			return OPTION_MANAGER;
+		}
+
+		public static List<Option> getOptions() {
+			if (options == null || (isModified && !(isModified = false))) {
+				options = Collections.unmodifiableList(Arrays.asList(OPTION_MANAGER.newInstances()));
+			}
+			return options;
+		}
+	}
+
 	@Override
 	public void registerDefaults() {
 		getConstructors().clear();
@@ -85,13 +110,6 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	@Override
 	public Option[] newInstances() {
 		return newInstances(new Option[getConstructors().size()]);
-	}
-
-	public List<Option> getTempOptions() {
-		if (options == null || (isModified && !(isModified = false))) {
-			options = Collections.unmodifiableList(Arrays.asList(newInstances()));
-		}
-		return options;
 	}
 
 	public boolean add(Class<? extends Option> clazz) {

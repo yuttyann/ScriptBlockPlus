@@ -21,7 +21,7 @@ import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.Clipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
@@ -355,7 +355,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	}
 
 	private String[] getOptionSyntaxs() {
-		List<Option> options = new OptionManager().getTempOptions();
+		List<Option> options = OptionList.getOptions();
 		String[] syntaxs = new String[options.size()];
 		for (int i = 0; i < syntaxs.length; i++) {
 			syntaxs[i] = options.get(i).getSyntax();
@@ -366,7 +366,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	private boolean checkScript(String scriptLine) {
 		try {
-			List<Option> options = new OptionManager().getTempOptions();
+			List<Option> options = OptionList.getOptions();
 			List<String> scripts = StringUtils.getScripts(scriptLine);
 			int successCount = 0;
 			for (String script : scripts) {

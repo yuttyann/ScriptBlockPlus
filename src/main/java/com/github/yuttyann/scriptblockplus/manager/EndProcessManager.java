@@ -12,10 +12,21 @@ import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 
 public final class EndProcessManager extends AbstractConstructor<EndProcess> {
 
+	private final static EndProcessManager END_PROCESS_MANAGER;
 	private final static List<Constructor<? extends EndProcess>> CONSTRUCTORS;
 
 	static {
+		END_PROCESS_MANAGER = new EndProcessManager();
 		CONSTRUCTORS = new ArrayList<Constructor<? extends EndProcess>>();
+		END_PROCESS_MANAGER.registerDefaults();
+	}
+
+	private EndProcessManager() {
+		// EndProcessManager
+	}
+
+	public static EndProcessManager getInstance() {
+		return END_PROCESS_MANAGER;
 	}
 
 	@Override
