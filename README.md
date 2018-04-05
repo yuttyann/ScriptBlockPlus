@@ -5,7 +5,7 @@
 <br>
 ライセンス: LGPLv3
 <br>
-紹介ページ: http://forum.minecraftuser.jp/viewtopic.php?f=38&t=33171
+紹介ページ: http://forum.minecraftuser.jp/viewtopic.php?f=38&t=36104
 <br>
 配布サイト: http://file.yuttyann44581.net/
 <br>
