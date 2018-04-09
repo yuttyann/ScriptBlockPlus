@@ -78,10 +78,10 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		add(BlockType.class);
 		add(Group.class);
 		add(Perm.class);
+		add(Calculation.class);
 		add(OldCooldown.class);
 		add(Cooldown.class);
 		add(Delay.class);
-		add(Calculation.class);
 		add(ItemHand.class);
 		add(ItemCost.class);
 		add(MoneyCost.class);

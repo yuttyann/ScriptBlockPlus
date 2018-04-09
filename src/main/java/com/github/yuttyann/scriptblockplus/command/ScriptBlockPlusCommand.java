@@ -85,7 +85,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 				return doDataMigr(sender, args);
 			}
 		} else if (args.length == 2) {
-			if (equals(args[0], "interact", "break", "walk") && equals(args[1], "remove", "view")) {
+			if (equals(args[0], ScriptType.types()) && equals(args[1], "remove", "view")) {
 				return setClickData(sender, args);
 			} else if (equals(args[0], "worldedit") && equals(args[1], "remove")) {
 				return doWorldEditRemove(sender, args);
@@ -93,7 +93,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		} else if (args.length >= 3) {
 			if (args.length <= 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
 				return doWorldEditPaste(sender, args);
-			} else if (equals(args[0], "interact", "break", "walk") && equals(args[1], "create", "add")) {
+			} else if (equals(args[0], ScriptType.types()) && equals(args[1], "create", "add")) {
 				return setClickData(sender, args);
 			}
 		}
@@ -204,7 +204,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorEditDataMessage());
 			return true;
 		}
-		if (args.length >= 3) {
+		if (args.length > 2) {
 			String script = StringUtils.createString(args, 2).trim();
 			if (!checkScript(script)) {
 				Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptCheckMessage());
@@ -233,8 +233,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			Utils.sendMessage(player, SBConfig.getWorldEditNotSelectionMessage());
 			return true;
 		}
-		List<Block> blocks = weSelection.getBlocks(selection);
 		StringBuilder builder = new StringBuilder();
+		List<Block> blocks = weSelection.getBlocks(selection);
 		for (ScriptType scriptType : ScriptType.values()) {
 			if (!Files.getScriptFile(scriptType).exists()) {
 				continue;
@@ -243,10 +243,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			ScriptEdit scriptEdit = new ScriptEdit(scriptType);
 			for (Block block : blocks) {
 				if (scriptEdit.weRemove(block.getLocation()) && isFirst && !(isFirst = false)) {
-					if (builder.length() != 0) {
-						builder.append(", ");
-					}
-					builder.append(scriptType.getType());
+					builder.append(scriptType.getType()).append(builder.length() == 0 ? "" : ", ");
 				}
 			}
 			scriptEdit.save();
@@ -318,7 +315,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 					String[] answers = new String[]{"paste", "remove"};
 					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
-			} else if (equals(args[0], "interact", "break", "walk")) {
+			} else if (equals(args[0], ScriptType.types())) {
 				if (Permission.valueOf("COMMAND_" + args[0].toUpperCase()).has(sender)) {
 					String prefix = args[1].toLowerCase();
 					String[] answers = new String[]{"create", "add", "remove", "view"};
@@ -339,7 +336,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
 			} else {
-				if (equals(args[0], "interact", "break", "walk") && equals(args[1], "create", "add")) {
+				if (equals(args[0], ScriptType.types()) && equals(args[1], "create", "add")) {
 					if (Permission.valueOf("COMMAND_" + args[0].toUpperCase()).has(sender)) {
 						String prefix = args[args.length - 1].toLowerCase();
 						String[] answers = getOptionSyntaxs();

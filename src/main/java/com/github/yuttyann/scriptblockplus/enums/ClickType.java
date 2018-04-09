@@ -1,8 +1,10 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public enum ClickType {
 	CREATE,
@@ -13,20 +15,19 @@ public enum ClickType {
 	private static final List<String> TYPES;
 
 	static {
-		List<String> list = new ArrayList<String>();
-		for (ScriptType scriptType : ScriptType.values()) {
-			for (ClickType clickType : ClickType.values()) {
-				list.add(clickType.createKey(scriptType));
-			}
-		}
-		TYPES = Collections.unmodifiableList(list);
+		TYPES = new ArrayList<String>();
+		forE(ScriptType.values(), s -> forE(values(), c -> TYPES.add(c.createKey(s))));
 	}
 
 	public String createKey(ScriptType scriptType) {
 		return scriptType.name() + "_" + name();
 	}
 
-	public static List<String> types() {
-		return TYPES;
+	public static String[] types() {
+		return TYPES.toArray(new String[TYPES.size()]);
+	}
+
+	private static <T> void forE(T[] array, Consumer<T> action) {
+		StreamUtils.forEach(array, action);
 	}
 }

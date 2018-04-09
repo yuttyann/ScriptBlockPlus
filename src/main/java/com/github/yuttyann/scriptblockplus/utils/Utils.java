@@ -195,10 +195,10 @@ public class Utils {
 	}
 
 	public static World getWorld(String name) {
-		if (StringUtils.isEmpty(name)) {
-			return null;
-		}
 		try {
+			if (StringUtils.isEmpty(name)) {
+				return null;
+			}
 			name = name.trim();
 			World world = Bukkit.getWorld(name);
 			if (world == null) {
@@ -220,6 +220,9 @@ public class Utils {
 	}
 
 	public static Player getPlayer(UUID uuid) {
+		if (uuid == null) {
+			return null;
+		}
 		if (Utils.isCB175orLater()) {
 			return Bukkit.getPlayer(uuid);
 		}
@@ -232,6 +235,9 @@ public class Utils {
 	}
 
 	public static OfflinePlayer getOfflinePlayer(UUID uuid) {
+		if (uuid == null) {
+			return null;
+		}
 		OfflinePlayer player = null;
 		if (Utils.isCB175orLater()) {
 			player = Bukkit.getOfflinePlayer(uuid);
@@ -248,6 +254,9 @@ public class Utils {
 
 	public static String getName(UUID uuid) {
 		try {
+			if (uuid == null) {
+				return null;
+			}
 			if (isCB175orLater()) {
 				OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 				return (player == null || !player.hasPlayedBefore()) ? ProfileFetcher.getName(uuid) : player.getName();

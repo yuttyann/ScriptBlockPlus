@@ -94,7 +94,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 	}
 
 	protected final boolean equals(String source, String another) {
-		return another != null && another.equalsIgnoreCase(source);
+		return another == null ? false : another.equalsIgnoreCase(source);
 	}
 
 	protected final boolean equals(String source, String... anothers) {
