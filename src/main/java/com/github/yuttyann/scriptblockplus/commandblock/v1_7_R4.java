@@ -5,19 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
-import net.minecraft.server.v1_7_R4.ChunkCoordinates;
-import net.minecraft.server.v1_7_R4.CommandBlockListenerAbstract;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.ICommandListener;
-import net.minecraft.server.v1_7_R4.MinecraftServer;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutTileEntityData;
-import net.minecraft.server.v1_7_R4.PlayerSelector;
-import net.minecraft.server.v1_7_R4.TileEntity;
-import net.minecraft.server.v1_7_R4.World;
-import net.minecraft.server.v1_7_R4.WorldServer;
-
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
@@ -26,57 +13,16 @@ import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.google.common.base.Joiner;
 
+import net.minecraft.server.v1_7_R4.ChunkCoordinates;
+import net.minecraft.server.v1_7_R4.CommandBlockListenerAbstract;
+import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.ICommandListener;
+import net.minecraft.server.v1_7_R4.MinecraftServer;
+import net.minecraft.server.v1_7_R4.PlayerSelector;
+import net.minecraft.server.v1_7_R4.TileEntityCommand;
+import net.minecraft.server.v1_7_R4.WorldServer;
+
 final class v1_7_R4 implements CommandListener {
-
-	private class TileEntityCommand extends TileEntity {
-
-		private final CommandBlockListenerAbstract i = new CommandBlockListenerAbstract() {
-
-			@Override
-			public ChunkCoordinates getChunkCoordinates() {
-				return new ChunkCoordinates(x, y, z);
-			}
-
-			@Override
-			public World getWorld() {
-				return TileEntityCommand.this.getWorld();
-			}
-
-			@Override
-			public void setCommand(String s) {
-				super.setCommand(s);
-				TileEntityCommand.this.update();
-			}
-
-			@Override
-			public void e() {
-				getWorld().notify(x, y, z);
-			}
-		};
-
-		@Override
-		public void b(NBTTagCompound paramNBTTagCompound) {
-			super.b(paramNBTTagCompound);
-			i.a(paramNBTTagCompound);
-		}
-
-		@Override
-		public void a(NBTTagCompound paramNBTTagCompound) {
-			super.a(paramNBTTagCompound);
-			i.b(paramNBTTagCompound);
-		}
-
-		@Override
-		public Packet getUpdatePacket() {
-			NBTTagCompound localNBTTagCompound = new NBTTagCompound();
-			b(localNBTTagCompound);
-			return new PacketPlayOutTileEntityData(this.x, this.y, this.z, 2, localNBTTagCompound);
-		}
-
-		public CommandBlockListenerAbstract getCommandBlock() {
-			return i;
-		}
-	}
 
 	@Override
 	public boolean executeCommand(CommandSender sender, Location location, String command) {
@@ -160,7 +106,7 @@ final class v1_7_R4 implements CommandListener {
 				}
 			} catch (Throwable exception) {
 				String message = "CommandBlock at (%d,%d,%d) failed to handle command";
-				ChunkCoordinates chunkCoordinates = ((CommandBlockListenerAbstract) sender).getChunkCoordinates();
+				ChunkCoordinates chunkCoordinates = sender.getChunkCoordinates();
 				server.server.getLogger().log(Level.WARNING,
 					String.format(message, chunkCoordinates.x, chunkCoordinates.y, chunkCoordinates.z), exception
 				);

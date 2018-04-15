@@ -100,6 +100,35 @@ public class FileUtils {
 		}
 	}
 
+    public static void copyFile(File sourceFile, File targetFile) {
+    	FileInputStream fis = null;
+    	FileOutputStream fos = null;
+		try {
+			fis = new FileInputStream(sourceFile);
+			fos = new FileOutputStream(targetFile);
+			fis.getChannel().transferTo(0, fis.getChannel().size(), fos.getChannel());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+            if (fis != null) {
+            	try {
+					fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            }
+            if (fos != null) {
+            	try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            }
+		}
+    }
+
 	public static void fileEncode(File file, Charset charset) {
 		if (!isExists(file)) {
 			return;
@@ -167,7 +196,7 @@ public class FileUtils {
 			}
 			is = connection.getInputStream();
 			fos = new FileOutputStream(file);
-			byte[] bytes = new byte[4096];
+			byte[] bytes = new byte[2048];
 			int length;
 			while ((length = is.read(bytes)) != -1) {
 				fos.write(bytes, 0, length);
@@ -239,6 +268,11 @@ public class FileUtils {
 			}
 		}
 		return null;
+	}
+
+	public static boolean isEmpty(File file) {
+		String[] array = file.list();
+		return array == null || array.length == 0;
 	}
 
 	public static boolean isExists(File file) {

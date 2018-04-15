@@ -70,8 +70,8 @@ public class ScriptBlock extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ScriptWalkListener(this), this);
 
 		// 初期化
-		OptionList.getManager();
-		EndProcessManager.getInstance();
+		OptionList.getOptions();
+		EndProcessManager.getInstance().newInstances();
 	}
 
 	@Override

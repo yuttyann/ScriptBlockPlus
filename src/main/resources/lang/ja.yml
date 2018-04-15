@@ -7,6 +7,7 @@
 
 toolCommandMessage: 'tool - 実行者にスクリプト編集ツールを配布します。'
 reloadCommandMessage: 'reload - 全てのファイルの再読み込みを行います。'
+backupCommandMessage: 'backup - スクリプトデータのバックアップを作成します。'
 checkVerCommandMessage: 'checkver - 最新のプラグインが存在するかチェックします。'
 dataMigrCommandMessage: 'datamigr - ScriptBlockのスクリプトをPlusに移行します。'
 createCommandMessage: '<scripttype> create <options> - ブロックにスクリプトを設定します。'

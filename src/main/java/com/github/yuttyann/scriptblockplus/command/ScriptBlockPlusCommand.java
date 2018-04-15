@@ -29,6 +29,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -61,6 +62,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return new CommandData[] {
 			new CommandData(SBConfig.getToolCommandMessage(), Permission.COMMAND_TOOL),
 			new CommandData(SBConfig.getReloadCommandMessage(), Permission.COMMAND_RELOAD),
+			new CommandData(SBConfig.getBackupCommandMessage(), Permission.COMMAND_BACKUP),
 			new CommandData(SBConfig.getCheckVerCommandMessage(), Permission.COMMAND_CHECKVER),
 			new CommandData(SBConfig.getDataMigrCommandMessage(), Permission.COMMAND_DATAMIGR),
 			new CommandData(SBConfig.getCreateCommandMessage(), SCRIPT_PERMISSIONS),
@@ -78,17 +80,19 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			if (equals(args[0], "tool")) {
 				return doTool(sender, args);
 			} else if (equals(args[0], "reload")) {
-				return doReload(sender, args);
+				return doReload(sender);
+			} else if (equals(args[0], "backup")) {
+				return doBackup(sender);
 			} else if (equals(args[0], "checkver")) {
-				return doCheckVer(sender, args);
+				return doCheckVer(sender);
 			} else if (equals(args[0], "datamigr")) {
-				return doDataMigr(sender, args);
+				return doDataMigr(sender);
 			}
 		} else if (args.length == 2) {
 			if (equals(args[0], ScriptType.types()) && equals(args[1], "remove", "view")) {
 				return setClickData(sender, args);
 			} else if (equals(args[0], "worldedit") && equals(args[1], "remove")) {
-				return doWorldEditRemove(sender, args);
+				return doWorldEditRemove(sender);
 			}
 		} else if (args.length >= 3) {
 			if (args.length <= 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
@@ -116,7 +120,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private boolean doReload(CommandSender sender, String[] args) {
+	private boolean doReload(CommandSender sender) {
 		if (!hasPermission(sender, Permission.COMMAND_RELOAD, false)) {
 			return false;
 		}
@@ -127,7 +131,24 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private boolean doCheckVer(CommandSender sender, String[] args) {
+	private boolean doBackup(CommandSender sender) {
+		if (!hasPermission(sender, Permission.COMMAND_BACKUP, false)) {
+			return false;
+		}
+		File dataFolder = Files.getConfig().getDataFolder();
+		File scripts = new File(dataFolder, "scripts");
+		if (scripts.exists() || FileUtils.isEmpty(scripts)) {
+			// Utils.sendMessage(sender, SBConfig.get...);
+			return false;
+		}
+		File backup = new File(dataFolder, "backup");
+		String formatTime = Utils.getFormatTime("yyyy-MM-dd HH-mm-ss");
+		FileUtils.copyFile(scripts, new File(backup, "scripts " + formatTime));
+		return true;
+	}
+
+
+	private boolean doCheckVer(CommandSender sender) {
 		if (!hasPermission(sender, Permission.COMMAND_CHECKVER, false)) {
 			return false;
 		}
@@ -135,7 +156,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private boolean doDataMigr(CommandSender sender, String[] args) {
+	private boolean doDataMigr(CommandSender sender) {
 		if (!hasPermission(sender, Permission.COMMAND_DATAMIGR)) {
 			return false;
 		}
@@ -146,25 +167,27 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!walkFile.exists() && !interactFile.exists()) {
 			Utils.sendMessage(player, SBConfig.getNotScriptBlockFileMessage());
 		} else {
-			Utils.sendMessage(player, SBConfig.getDataMigrStartMessage());
 			String time = Utils.getFormatTime();
-			YamlConfig scriptFile;
-			if (interactFile.exists()) {
-				scriptFile = YamlConfig.load(getPlugin(), interactFile, false);
-				saveScript(player, time, scriptFile, ScriptType.INTERACT);
-			}
-			if (walkFile.exists()) {
-				scriptFile = YamlConfig.load(getPlugin(), walkFile, false);
-				saveScript(player, time, scriptFile, ScriptType.WALK);
-			}
-			Utils.sendMessage(player, SBConfig.getDataMigrEndMessage());
+			String uuid = player.getUniqueId().toString();
+			Utils.sendMessage(player, SBConfig.getDataMigrStartMessage());
+			new Thread(() -> {
+				YamlConfig scriptFile;
+				if (interactFile.exists()) {
+					scriptFile = YamlConfig.load(getPlugin(), interactFile, false);
+					saveScript(uuid, time, scriptFile, ScriptType.INTERACT);
+				}
+				if (walkFile.exists()) {
+					scriptFile = YamlConfig.load(getPlugin(), walkFile, false);
+					saveScript(uuid, time, scriptFile, ScriptType.WALK);
+				}
+				Utils.sendMessage(player, SBConfig.getDataMigrEndMessage());
+			}).start();
 		}
 		return true;
 	}
 
-	private void saveScript(Player player, String time, YamlConfig scriptFile, ScriptType scriptType) {
+	private void saveScript(String uuid, String time, YamlConfig scriptFile, ScriptType scriptType) {
 		ScriptData scriptData = new ScriptData(null, scriptType);
-		String uuid = player.getUniqueId().toString();
 		for (String world : scriptFile.getKeys(false)) {
 			World tWorld = Utils.getWorld(world);
 			for (String coords : scriptFile.getKeys(world, false)) {
@@ -218,7 +241,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private boolean doWorldEditRemove(CommandSender sender, String[] args) {
+	private boolean doWorldEditRemove(CommandSender sender) {
 		if (!hasPermission(sender, Permission.COMMAND_WORLDEDIT)) {
 			return false;
 		}
@@ -300,6 +323,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			String[] answers = {
 				hasPermission(sender, Permission.COMMAND_TOOL, "tool"),
 				hasPermission(sender, Permission.COMMAND_RELOAD, "reload"),
+				hasPermission(sender, Permission.COMMAND_BACKUP, "backup"),
 				hasPermission(sender, Permission.COMMAND_CHECKVER, "checkver"),
 				hasPermission(sender, Permission.COMMAND_DATAMIGR, "datamigr"),
 				hasPermission(sender, Permission.COMMAND_INTERACT, "interact"),

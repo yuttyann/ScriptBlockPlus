@@ -51,6 +51,7 @@ public final class SBConfig {
 		DATAS.put("toolCommandMessage", yaml.getString("toolCommandMessage"));
 		DATAS.put("reloadCommandMessage", yaml.getString("reloadCommandMessage"));
 		DATAS.put("checkVerCommandMessage", yaml.getString("checkVerCommandMessage"));
+		DATAS.put("backupCommandMessage", yaml.getString("backupCommandMessage"));
 		DATAS.put("dataMigrCommandMessage", yaml.getString("dataMigrCommandMessage"));
 		DATAS.put("createCommandMessage", yaml.getString("createCommandMessage"));
 		DATAS.put("addCommandMessage", yaml.getString("addCommandMessage"));
@@ -157,6 +158,10 @@ public final class SBConfig {
 
 	public static String getReloadCommandMessage() {
 		return ChatColor.stripColor(getString("reloadCommandMessage"));
+	}
+
+	public static String getBackupCommandMessage() {
+		return ChatColor.stripColor(getString("backupCommandMessage"));
 	}
 
 	public static String getCheckVerCommandMessage() {

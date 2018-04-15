@@ -8,6 +8,7 @@ public enum Permission {
 	COMMAND_TOOL("scriptblockplus.command.tool"),
 	COMMAND_RELOAD("scriptblockplus.command.reload"),
 	COMMAND_CHECKVER("scriptblockplus.command.checkver"),
+	COMMAND_BACKUP("scriptblockplus.command.backup"),
 	COMMAND_DATAMIGR("scriptblockplus.command.datamigr"),
 	COMMAND_INTERACT("scriptblockplus.command.interact"),
 	COMMAND_BREAK("scriptblockplus.command.break"),

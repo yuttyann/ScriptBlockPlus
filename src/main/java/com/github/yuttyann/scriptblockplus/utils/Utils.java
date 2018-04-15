@@ -109,7 +109,11 @@ public class Utils {
 	}
 
 	public static String getFormatTime() {
-		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+		return getFormatTime("yyyy/MM/dd HH:mm:ss");
+	}
+
+	public static String getFormatTime(String pattern) {
+		return new SimpleDateFormat(pattern).format(new Date());
 	}
 
 	public static void sendMessage(String message) {
@@ -117,6 +121,9 @@ public class Utils {
 	}
 
 	public static void sendMessage(CommandSender sender, String message) {
+		if (sender instanceof Player && !((Player) sender).isOnline()) {
+			return;
+		}
 		if (sender == null || StringUtils.isEmpty(message)) {
 			return;
 		}
@@ -162,7 +169,7 @@ public class Utils {
 
 	public static ItemStack getItemInMainHand(Player player) {
 		PlayerInventory inventory = player.getInventory();
-		if(isCB19orLater()) {
+		if (isCB19orLater()) {
 			return inventory.getItemInMainHand();
 		} else {
 			@SuppressWarnings("deprecation")
@@ -172,7 +179,7 @@ public class Utils {
 	}
 
 	public static ItemStack getItemInOffHand(Player player) {
-		if(isCB19orLater()) {
+		if (isCB19orLater()) {
 			return player.getInventory().getItemInOffHand();
 		}
 		return null;
