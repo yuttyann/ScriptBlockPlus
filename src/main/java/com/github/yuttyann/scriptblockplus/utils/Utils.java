@@ -32,6 +32,7 @@ public class Utils {
 	private static String serverVersion;
 	private static Boolean isCB175orLaterCache;
 	private static Boolean isCB178orLaterCache;
+	private static Boolean isCB1710orLaterCache;
 	private static Boolean isCB18orLaterCache;
 	private static Boolean isCB183orLaterCache;
 	private static Boolean isCB19orLaterCache;
@@ -59,6 +60,14 @@ public class Utils {
 		}
 		return isCB178orLaterCache;
 	}
+
+	public static boolean isCB1710orLater() {
+		if (isCB1710orLaterCache == null) {
+			isCB1710orLaterCache = isUpperVersion(getServerVersion(), "1.7.10");
+		}
+		return isCB1710orLaterCache;
+	}
+
 
 	public static boolean isCB18orLater() {
 		if (isCB18orLaterCache == null) {

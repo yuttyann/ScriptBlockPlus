@@ -130,11 +130,8 @@ public class FileUtils {
     }
 
 	public static void fileEncode(File file, Charset charset) {
-		if (!isExists(file)) {
+		if (charset == null || !isExists(file)) {
 			return;
-		}
-		if (charset == null) {
-			charset = Charset.defaultCharset();
 		}
 		BufferedReader reader = null;
 		BufferedWriter writer = null;

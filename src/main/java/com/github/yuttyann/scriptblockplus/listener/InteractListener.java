@@ -37,7 +37,7 @@ public class InteractListener implements Listener {
 			return;
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
-		if (sbPlayer.hasData(KEY_FLAG) ? sbPlayer.getData(KEY_FLAG, Boolean.class) : false) {
+		if (sbPlayer.hasData(KEY_FLAG) && sbPlayer.getData(KEY_FLAG, Boolean.class)) {
 			sbPlayer.setData(KEY_FLAG, false);
 			return;
 		}
@@ -83,7 +83,7 @@ public class InteractListener implements Listener {
 			}
 			if (action == Action.RIGHT_CLICK_BLOCK) {
 				SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
-				if (sbPlayer.hasData(KEY_FLAG) ? !sbPlayer.getData(KEY_FLAG, Boolean.class) : true) {
+				if (sbPlayer.hasData(KEY_FLAG) && !sbPlayer.getData(KEY_FLAG, Boolean.class)) {
 					sbPlayer.setData(KEY_FLAG, true);
 				}
 			}

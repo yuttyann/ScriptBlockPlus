@@ -12,7 +12,7 @@ public final class FakeCommandBlock {
 	private static final CommandListener COMMAND_LISTENER;
 
 	static {
-		CommandListener listener = null;
+		CommandListener listener;
 		switch (PackageType.getVersionName()) {
 		case "v1_7_R1":
 			listener = new v1_7_R1();

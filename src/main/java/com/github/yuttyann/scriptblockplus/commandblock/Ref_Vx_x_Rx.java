@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-final class Ref_Vx_x_Rx implements CommandListener {
+class Ref_Vx_x_Rx implements CommandListener {
 
 	private static final Class<?>[] PARAMS_EXECUTE_COMMAND = {
 		getClass(PackageType.NMS, "ICommandListener"), CommandSender.class, String.class
@@ -22,12 +22,16 @@ final class Ref_Vx_x_Rx implements CommandListener {
 	public boolean executeCommand(CommandSender sender, Location location, String command) {
 		try {
 			Object iCommandListener = getICommandListener(sender, location);
-			Method executeCommand = PackageType.NMS.getMethod(CLASS_NAME_1, "executeCommand", PARAMS_EXECUTE_COMMAND);
-			return Integer.class.cast(executeCommand.invoke(null, iCommandListener, sender, command)) > 0;
+			return executeCommand(iCommandListener, sender, command) > 0;
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	protected int executeCommand(Object sender, CommandSender bSender, String command) throws ReflectiveOperationException {
+		Method executeCommand = PackageType.NMS.getMethod(CLASS_NAME_1, "executeCommand", PARAMS_EXECUTE_COMMAND);
+		return Integer.class.cast(executeCommand.invoke(null, sender, bSender, command));
 	}
 
 	private Object getICommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {
@@ -42,7 +46,8 @@ final class Ref_Vx_x_Rx implements CommandListener {
 	}
 
 	private void setName(Object commandListener, String name) throws ReflectiveOperationException {
-		PackageType.NMS.invokeMethod(commandListener, CLASS_NAME_1, "setName", name);
+		String methodName = Utils.isCB1710orLater() ? "setName" : "b";
+		PackageType.NMS.invokeMethod(commandListener, CLASS_NAME_1, methodName, name);
 	}
 
 	private Object newTileEntityCommand() throws ReflectiveOperationException {
@@ -59,13 +64,20 @@ final class Ref_Vx_x_Rx implements CommandListener {
 		int x = location.getBlockX();
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
-		String methodName = Utils.isCB110orLater() ? "setPosition" : "a";
-		Object instance = PackageType.NMS.newInstance("BlockPosition", x, y, z);
-		PackageType.NMS.invokeMethod(titleEntityCommand, CLASS_NAME_2, methodName, instance);
+		if (Utils.isCB18orLater()) {
+			String methodName = Utils.isCB110orLater() ? "setPosition" : "a";
+			Object instance = PackageType.NMS.newInstance("BlockPosition", x, y, z);
+			PackageType.NMS.invokeMethod(titleEntityCommand, CLASS_NAME_2, methodName, instance);
+		} else {
+			PackageType.NMS.setFieldValue(CLASS_NAME_2, "x", titleEntityCommand, x);
+			PackageType.NMS.setFieldValue(CLASS_NAME_2, "y", titleEntityCommand, y);
+			PackageType.NMS.setFieldValue(CLASS_NAME_2, "z", titleEntityCommand, z);
+		}
 	}
 
 	private Object getCommandBlock(Object titleEntityCommand) throws ReflectiveOperationException {
-		return PackageType.NMS.invokeMethod(titleEntityCommand, CLASS_NAME_2, "getCommandBlock", (Object[]) null);
+		String methodName = Utils.isCB1710orLater() ? "getCommandBlock" : "a";
+		return PackageType.NMS.invokeMethod(titleEntityCommand, CLASS_NAME_2, methodName, (Object[]) null);
 	}
 
 	private static Class<?> getClass(PackageType packageType, String className) {

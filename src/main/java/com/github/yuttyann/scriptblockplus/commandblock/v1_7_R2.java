@@ -5,45 +5,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.google.common.base.Joiner;
 
 import net.minecraft.server.v1_7_R2.ChunkCoordinates;
-import net.minecraft.server.v1_7_R2.CommandBlockListenerAbstract;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.ICommandListener;
 import net.minecraft.server.v1_7_R2.MinecraftServer;
 import net.minecraft.server.v1_7_R2.PlayerSelector;
-import net.minecraft.server.v1_7_R2.TileEntityCommand;
 import net.minecraft.server.v1_7_R2.WorldServer;
 
-final class v1_7_R2 implements CommandListener {
+final class v1_7_R2 extends Ref_Vx_x_Rx {
 
 	@Override
-	public boolean executeCommand(CommandSender sender, Location location, String command) {
-		return executeCommand(getICommandListener(sender, location), sender, command) > 0;
-	}
-
-	private ICommandListener getICommandListener(CommandSender sender, Location location) {
-		TileEntityCommand titleEntityCommand = new TileEntityCommand();
-		titleEntityCommand.a(((CraftWorld) location.getWorld()).getHandle());
-		titleEntityCommand.x = location.getBlockX();
-		titleEntityCommand.y = location.getBlockY();
-		titleEntityCommand.z = location.getBlockZ();
-		CommandBlockListenerAbstract commandListener = titleEntityCommand.a();
-		if (sender != null) {
-			commandListener.b(sender.getName());
-		}
-		return commandListener;
-	}
-
-	private int executeCommand(ICommandListener sender, CommandSender bSender, String command) {
-		SimpleCommandMap commandMap = sender.getWorld().getServer().getCommandMap();
+	public int executeCommand(Object sender, CommandSender bSender, String command) {
+		ICommandListener iSender = (ICommandListener) sender;
+		SimpleCommandMap commandMap = iSender.getWorld().getServer().getCommandMap();
 		Joiner joiner = Joiner.on(" ");
 		if (command.charAt(0) == '/') {
 			command = command.substring(1);
@@ -62,7 +42,7 @@ final class v1_7_R2 implements CommandListener {
 				|| cmd.equalsIgnoreCase("pardon") || cmd.equalsIgnoreCase("pardon-ip") || cmd.equalsIgnoreCase("reload")) {
 			return 0;
 		}
-		if (sender.getWorld().players.isEmpty()) {
+		if (iSender.getWorld().players.isEmpty()) {
 			return 0;
 		}
 		if (commandMap.getCommand(args[0]) == null) {
@@ -72,7 +52,7 @@ final class v1_7_R2 implements CommandListener {
 		MinecraftServer server = MinecraftServer.getServer();
 		WorldServer[] prev = server.worldServer;
 		server.worldServer = new WorldServer[server.worlds.size()];
-		server.worldServer[0] = (WorldServer) sender.getWorld();
+		server.worldServer[0] = (WorldServer) iSender.getWorld();
 		int bpos = 0;
 		for (int pos = 1; pos < server.worldServer.length; pos++) {
 			WorldServer world = server.worlds.get(bpos++);
@@ -87,7 +67,7 @@ final class v1_7_R2 implements CommandListener {
 			for (int i = 0; i < args.length; i++) {
 				if (PlayerSelector.isPattern(args[i])) {
 					for (int j = 0; j < commands.size(); j++) {
-						newCommands.addAll(buildCommands(sender, commands.get(j), i));
+						newCommands.addAll(buildCommands(iSender, commands.get(j), i));
 					}
 					List<String[]> temp = commands;
 					commands = newCommands;
@@ -106,7 +86,7 @@ final class v1_7_R2 implements CommandListener {
 				}
 			} catch (Throwable exception) {
 				String message = "CommandBlock at (%d,%d,%d) failed to handle command";
-				ChunkCoordinates chunkCoordinates = sender.getChunkCoordinates();
+				ChunkCoordinates chunkCoordinates = iSender.getChunkCoordinates();
 				server.server.getLogger().log(Level.WARNING,
 					String.format(message, chunkCoordinates.x, chunkCoordinates.y, chunkCoordinates.z), exception
 				);
