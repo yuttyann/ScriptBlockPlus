@@ -4,9 +4,9 @@
 
 
 ## ===== 帮助页 ===== ##
-
 toolCommandMessage: 'tool - 获得脚本编辑工具'
 reloadCommandMessage: 'reload - 重载插件'
+backupCommandMessage: 'backup - 備份腳本數據'
 checkVerCommandMessage: 'checkver - 查询最新版本'
 dataMigrCommandMessage: 'datamigr - 将ScriptBlock的旧数据转移至ScriptBlockPlus'
 createCommandMessage: '<交互方式> create <脚本内容> - 创建脚本方块'
@@ -17,9 +17,7 @@ worldEditPasteCommandMessage: 'worldedit paste <pasteonair> [overwrite] - 粘贴
 worldEditRemoveCommandMessage: 'worldedit remove - 移除WorldEdit选区内的脚本方块'
 
 # &(code) : 可以使用彩色代码
-
 ## ===== 脚本编辑器物品设定 ===== ##
-
 scriptEditor:
 - '&a这是一个可以复制并粘贴脚本的工具'
 - '&6左键点击: &e复制"interact"类型的脚本'
@@ -28,14 +26,14 @@ scriptEditor:
 - '&6Shift+右键点击: &e粘贴该脚本'
 
 # |~, \n : 改行
-
 ## ===== 消息设定 ===== ##
-
 notVaultMessage: '&cVault经济插件前置未找到'
 senderNoPlayerMessage: '&c控制台不能这么做'
 notPermissionMessage: '&c你没有权限'
 giveScriptEditorMessage: '&a获得脚本编辑工具'
 allFileReloadMessage: '&a插件成功重载，汉化 by 秋风残叶'
+scriptsBackupMessage: '&a腳本數據已完成。'
+errorScriptsBackupMessage: '&c腳本數據的備份失敗。'
 notLatestPluginMessage: '&c已是最新版本'
 notScriptBlockFileMessage: '&cScriptBlock无数据或者数据损坏'
 dataMigrStartMessage: '&7开始从ScriptBlock转移数据....'
@@ -53,7 +51,7 @@ updateDownloadEndMessage: '&6新更新下载完成|~文件名: %filename%|~文�
 # %details%       : 更新内容
 updateCheckMessage: '&b新版本插件可用|~v%latestversion% 最新版本|~插件名: %pluginname%|~☆更新内容☆|~%details%'
 
-updateErrorMessage: '&c查询更新失败，可能是国内网络导致的，建议去这个中文搬运帖查看更新http://www.mcbbs.net/thread-691900-1-1.html'
+errorUpdateMessage: '&c查询更新失败，可能是国内网络导致的，建议去这个中文搬运帖查看更新http://www.mcbbs.net/thread-691900-1-1.html'
 
 # %scripttype% : 脚本种类
 scriptCopyMessage: '&a复制一个种类是"%scripttype%"的脚本'

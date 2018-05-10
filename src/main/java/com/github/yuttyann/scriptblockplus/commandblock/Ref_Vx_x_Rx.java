@@ -31,7 +31,7 @@ class Ref_Vx_x_Rx implements CommandListener {
 
 	protected int executeCommand(Object sender, CommandSender bSender, String command) throws ReflectiveOperationException {
 		Method executeCommand = PackageType.NMS.getMethod(CLASS_NAME_1, "executeCommand", PARAMS_EXECUTE_COMMAND);
-		return Integer.class.cast(executeCommand.invoke(null, sender, bSender, command));
+		return int.class.cast(executeCommand.invoke(null, sender, bSender, command));
 	}
 
 	private Object getICommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {
@@ -46,7 +46,7 @@ class Ref_Vx_x_Rx implements CommandListener {
 	}
 
 	private void setName(Object commandListener, String name) throws ReflectiveOperationException {
-		String methodName = Utils.isCB1710orLater() ? "setName" : "b";
+		String methodName = Utils.isCBXXXorLater("1.7.10") ? "setName" : "b";
 		PackageType.NMS.invokeMethod(commandListener, CLASS_NAME_1, methodName, name);
 	}
 
@@ -64,8 +64,8 @@ class Ref_Vx_x_Rx implements CommandListener {
 		int x = location.getBlockX();
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
-		if (Utils.isCB18orLater()) {
-			String methodName = Utils.isCB110orLater() ? "setPosition" : "a";
+		if (Utils.isCBXXXorLater("1.8")) {
+			String methodName = Utils.isCBXXXorLater("1.1.0") ? "setPosition" : "a";
 			Object instance = PackageType.NMS.newInstance("BlockPosition", x, y, z);
 			PackageType.NMS.invokeMethod(titleEntityCommand, CLASS_NAME_2, methodName, instance);
 		} else {
@@ -76,7 +76,7 @@ class Ref_Vx_x_Rx implements CommandListener {
 	}
 
 	private Object getCommandBlock(Object titleEntityCommand) throws ReflectiveOperationException {
-		String methodName = Utils.isCB1710orLater() ? "getCommandBlock" : "a";
+		String methodName = Utils.isCBXXXorLater("1.7.10") ? "getCommandBlock" : "a";
 		return PackageType.NMS.invokeMethod(titleEntityCommand, CLASS_NAME_2, methodName, (Object[]) null);
 	}
 

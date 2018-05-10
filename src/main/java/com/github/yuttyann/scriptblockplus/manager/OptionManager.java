@@ -47,7 +47,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	private static boolean isModified;
 
 	private OptionManager() {
-		// OptionList
+		// OptionManager
 	}
 
 	public static final class OptionList {

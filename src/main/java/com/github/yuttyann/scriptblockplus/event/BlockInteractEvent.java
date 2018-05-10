@@ -21,7 +21,7 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 
 	static {
 		Method method = null;
-		if (Utils.isCB19orLater()) {
+		if (Utils.isCBXXXorLater("1.9")) {
 			try {
 				method = PlayerInteractEvent.class.getMethod("getHand");
 			} catch (ReflectiveOperationException e) {}
@@ -102,7 +102,7 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 	}
 
 	private EquipSlot fromHand(PlayerInteractEvent event) {
-		if (event == null || !Utils.isCB19orLater()) {
+		if (event == null || !Utils.isCBXXXorLater("1.9")) {
 			return EquipSlot.HAND;
 		}
 		try {

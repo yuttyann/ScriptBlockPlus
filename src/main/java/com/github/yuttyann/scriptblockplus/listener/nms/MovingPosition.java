@@ -18,7 +18,7 @@ public final class MovingPosition {
 		private final int z;
 
 		private BlockPos(Object rayTrace) throws ReflectiveOperationException {
-			if (Utils.isCB18orLater()) {
+			if (Utils.isCBXXXorLater("1.8")) {
 				Object[] nullArray = (Object[]) null;
 				Object blockPosition = PackageType.NMS.invokeMethod(rayTrace, null, "a", nullArray);
 				this.x = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getX", nullArray);
@@ -40,7 +40,7 @@ public final class MovingPosition {
 		this.vec3d = Vec3D.fromNMSVec3D(getMOPField("pos").get(rayTrace));
 		this.blockPos = new BlockPos(rayTrace);
 
-		Object face = getMOPField(Utils.isCB18orLater() ? "direction" : "face").get(rayTrace);
+		Object face = getMOPField(Utils.isCBXXXorLater("1.8") ? "direction" : "face").get(rayTrace);
 		this.blockFace = (BlockFace) PackageType.CB_BLOCK.invokeMethod(null, "CraftBlock", "notchToBlockFace", face);
 	}
 

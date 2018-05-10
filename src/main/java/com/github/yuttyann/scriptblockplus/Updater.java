@@ -201,7 +201,7 @@ public final class Updater {
 
 	private void sendErrorMessage(CommandSender sender) {
 		if(!isUpdateError && (isUpdateError = true)) {
-			Utils.sendMessage(sender, SBConfig.getUpdateErrorMessage());
+			Utils.sendMessage(sender, SBConfig.getErrorUpdateMessage());
 		}
 	}
 

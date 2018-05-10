@@ -21,12 +21,12 @@ public class NMSHelper {
 
 	public static String getChatSerializerName() {
 		String chatSerializer = "ChatSerializer";
-		return Utils.isCB183orLater() ? "IChatBaseComponent$" + chatSerializer : chatSerializer;
+		return Utils.isCBXXXorLater("1.8.3") ? "IChatBaseComponent$" + chatSerializer : chatSerializer;
 	}
 
 	public static String getEnumTitleActionName() {
 		String enumTitleAction = "EnumTitleAction";
-		return Utils.isCB183orLater() ? "PacketPlayOutTitle$" + enumTitleAction : enumTitleAction;
+		return Utils.isCBXXXorLater("1.8.3") ? "PacketPlayOutTitle$" + enumTitleAction : enumTitleAction;
 	}
 
 	public static Object getEnumField(Class<?> clazz, String name) {

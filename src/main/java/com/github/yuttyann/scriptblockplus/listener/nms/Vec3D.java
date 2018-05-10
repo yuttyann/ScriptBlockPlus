@@ -182,7 +182,7 @@ public class Vec3D {
 	public static Object newNMSVec3D(double x, double y, double z) {
 		Object vec3D = null;
 		try {
-			if (Utils.isCB18orLater()) {
+			if (Utils.isCBXXXorLater("1.8")) {
 				vec3D = PackageType.NMS.newInstance("Vec3D", x, y, z);
 			} else {
 				vec3D = PackageType.NMS.invokeMethod(null, "Vec3D", "a", x, y, z);
@@ -194,6 +194,6 @@ public class Vec3D {
 	}
 
 	private static String getFieldName(String _19orLater, String _175orLater, String other) {
-		return Utils.isCB19orLater() ? _19orLater : Utils.isCB175orLater() ? _175orLater : other;
+		return Utils.isCBXXXorLater("1.9") ? _19orLater : Utils.isCBXXXorLater("1.7.5") ? _175orLater : other;
 	}
 }

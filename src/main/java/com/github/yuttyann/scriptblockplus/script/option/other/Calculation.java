@@ -2,8 +2,6 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import java.util.regex.Pattern;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
@@ -16,6 +14,8 @@ import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+
+import me.clip.placeholderapi.PlaceholderAPI;
 
 public class Calculation extends BaseOption {
 
@@ -188,7 +188,7 @@ public class Calculation extends BaseOption {
 	}
 
 	private Score getScore(Objective objective, Player player) {
-		if (Utils.isCB178orLater()) {
+		if (Utils.isCBXXXorLater("1.7.8")) {
 			return objective.getScore(player.getName());
 		} else {
 			@SuppressWarnings("deprecation")

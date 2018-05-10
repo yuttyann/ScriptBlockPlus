@@ -64,8 +64,9 @@ public final class SBConfig {
 		DATAS.put("notPermissionMessage", yaml.getString("notPermissionMessage"));
 		DATAS.put("giveScriptEditorMessage", yaml.getString("giveScriptEditorMessage"));
 		DATAS.put("allFileReloadMessage", yaml.getString("allFileReloadMessage"));
+		DATAS.put("scriptsBackupMessage", yaml.getString("scriptsBackupMessage"));
+		DATAS.put("errorScriptsBackupMessage", yaml.getString("errorScriptsBackupMessage"));
 		DATAS.put("notLatestPluginMessage", yaml.getString("notLatestPluginMessage"));
-		DATAS.put("updateErrorMessage", yaml.getString("updateErrorMessage"));
 		DATAS.put("notScriptBlockFileMessage", yaml.getString("notScriptBlockFileMessage"));
 		DATAS.put("dataMigrStartMessage", yaml.getString("dataMigrStartMessage"));
 		DATAS.put("dataMigrEndMessage", yaml.getString("dataMigrEndMessage"));
@@ -73,6 +74,7 @@ public final class SBConfig {
 		DATAS.put("updateDownloadStartMessage", yaml.getString("updateDownloadStartMessage"));
 		DATAS.put("updateDownloadEndMessage", yaml.getString("updateDownloadEndMessage"));
 		DATAS.put("updateCheckMessage", yaml.getString("updateCheckMessage"));
+		DATAS.put("errorUpdateMessage", yaml.getString("updateErrorMessage"));
 		DATAS.put("scriptCopyMessage", yaml.getString("scriptCopyMessage"));
 		DATAS.put("scriptPasteMessage", yaml.getString("scriptPasteMessage"));
 		DATAS.put("scriptCreateMessage", yaml.getString("scriptCreateMessage"));
@@ -224,6 +226,14 @@ public final class SBConfig {
 		return replaceColorCode(getString("notScriptBlockFileMessage"));
 	}
 
+	public static String getScriptsBackupMessage() {
+		return replaceColorCode(getString("scriptsBackupMessage"));
+	}
+
+	public static String getErrorScriptsBackupMessage() {
+		return replaceColorCode(getString("errorScriptsBackupMessage"));
+	}
+
 	public static String getDataMigrStartMessage() {
 		return replaceColorCode(getString("dataMigrStartMessage"));
 	}
@@ -265,8 +275,8 @@ public final class SBConfig {
 		return replaceColorCode(message);
 	}
 
-	public static String getUpdateErrorMessage() {
-		return replaceColorCode(getString("updateErrorMessage"));
+	public static String getErrorUpdateMessage() {
+		return replaceColorCode(getString("errorUpdateMessage"));
 	}
 
 	public static String getScriptCopyMessage(ScriptType scriptType) {

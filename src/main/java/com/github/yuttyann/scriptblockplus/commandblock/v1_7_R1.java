@@ -22,12 +22,12 @@ final class v1_7_R1 extends Ref_Vx_x_Rx {
 
 	@Override
 	public int executeCommand(Object sender, CommandSender bSender, String command) {
-		ICommandListener iSender = (ICommandListener) sender;
-		SimpleCommandMap commandMap = iSender.getWorld().getServer().getCommandMap();
-		Joiner joiner = Joiner.on(" ");
 		if (command.charAt(0) == '/') {
 			command = command.substring(1);
 		}
+		ICommandListener iSender = (ICommandListener) sender;
+		SimpleCommandMap commandMap = iSender.getWorld().getServer().getCommandMap();
+		Joiner joiner = Joiner.on(" ");
 		String[] args = StringUtils.split(command, " ");
 		List<String[]> commands = new ArrayList<String[]>();
 		String cmd = args[0];
@@ -39,13 +39,8 @@ final class v1_7_R1 extends Ref_Vx_x_Rx {
 		}
 		if (cmd.equalsIgnoreCase("stop") || cmd.equalsIgnoreCase("kick") || cmd.equalsIgnoreCase("op")
 				|| cmd.equalsIgnoreCase("deop") || cmd.equalsIgnoreCase("ban") || cmd.equalsIgnoreCase("ban-ip")
-				|| cmd.equalsIgnoreCase("pardon") || cmd.equalsIgnoreCase("pardon-ip") || cmd.equalsIgnoreCase("reload")) {
-			return 0;
-		}
-		if (iSender.getWorld().players.isEmpty()) {
-			return 0;
-		}
-		if (commandMap.getCommand(args[0]) == null) {
+				|| cmd.equalsIgnoreCase("pardon") || cmd.equalsIgnoreCase("pardon-ip") || cmd.equalsIgnoreCase("reload")
+				|| iSender.getWorld().players.isEmpty() || commandMap.getCommand(args[0]) == null) {
 			return 0;
 		}
 		commands.add(args);

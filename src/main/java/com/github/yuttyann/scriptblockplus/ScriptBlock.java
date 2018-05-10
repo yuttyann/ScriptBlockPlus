@@ -104,7 +104,7 @@ public class ScriptBlock extends JavaPlugin {
 					Utils.sendMessage(sender, SBConfig.getNotLatestPluginMessage());
 				}
 			} catch (Exception e) {
-				Utils.sendMessage(SBConfig.getUpdateErrorMessage());
+				Utils.sendMessage(SBConfig.getErrorUpdateMessage());
 			}
 		}).start();
 	}

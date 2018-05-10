@@ -18,7 +18,7 @@ public class Title extends BaseOption {
 	static{
 		Class<?> enumTitleActionClass = null;
 		Class<?> iChatBaseComponentClass = null;
-		if (Utils.isCB18orLater()) {
+		if (Utils.isCBXXXorLater("1.8")) {
 			try {
 				enumTitleActionClass = PackageType.NMS.getClass(NMSHelper.getEnumTitleActionName());
 				iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
@@ -39,7 +39,7 @@ public class Title extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		if (!Utils.isCB18orLater()) {
+		if (!Utils.isCBXXXorLater("1.8")) {
 			throw new UnsupportedOperationException();
 		}
 		String[] array = StringUtils.split(getOptionValue(), "/");
@@ -61,7 +61,7 @@ public class Title extends BaseOption {
 	}
 
 	private void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
-		if (Utils.isCB112orLater()) {
+		if (Utils.isCBXXXorLater("1.1.2")) {
 			player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		} else {
 			Class<?> enumTitleActionClass = PackageType.NMS.getClass(NMSHelper.getEnumTitleActionName());

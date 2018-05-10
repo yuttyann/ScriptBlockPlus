@@ -6,7 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -29,79 +31,24 @@ import com.github.yuttyann.scriptblockplus.commandblock.FakeCommandBlock;
 
 public class Utils {
 
-	private static String serverVersion;
-	private static Boolean isCB175orLaterCache;
-	private static Boolean isCB178orLaterCache;
-	private static Boolean isCB1710orLaterCache;
-	private static Boolean isCB18orLaterCache;
-	private static Boolean isCB183orLaterCache;
-	private static Boolean isCB19orLaterCache;
-	private static Boolean isCB110orLaterCache;
-	private static Boolean isCB112orLaterCache;
+	private static final String SERVER_VERSION = getServerVersion();
+	private static final Map<String, Boolean> VC_CACHE_MAP = new HashMap<String, Boolean>();
 
 	public static String getServerVersion() {
-		if (serverVersion == null) {
+		if (SERVER_VERSION == null) {
 			String version = Bukkit.getBukkitVersion();
-			serverVersion = version.substring(0, version.indexOf("-"));
+			return version.substring(0, version.indexOf("-"));
 		}
-		return serverVersion;
+		return SERVER_VERSION;
 	}
 
-	public static boolean isCB175orLater() {
-		if (isCB175orLaterCache == null) {
-			isCB175orLaterCache = isUpperVersion(getServerVersion(), "1.7.5");
+	public static boolean isCBXXXorLater(String version) {
+		Boolean result = VC_CACHE_MAP.get(version);
+		if (result == null) {
+			result = isUpperVersion(getServerVersion(), version);
+			VC_CACHE_MAP.put(version, result);
 		}
-		return isCB175orLaterCache;
-	}
-
-	public static boolean isCB178orLater() {
-		if (isCB178orLaterCache == null) {
-			isCB178orLaterCache = isUpperVersion(getServerVersion(), "1.7.8");
-		}
-		return isCB178orLaterCache;
-	}
-
-	public static boolean isCB1710orLater() {
-		if (isCB1710orLaterCache == null) {
-			isCB1710orLaterCache = isUpperVersion(getServerVersion(), "1.7.10");
-		}
-		return isCB1710orLaterCache;
-	}
-
-
-	public static boolean isCB18orLater() {
-		if (isCB18orLaterCache == null) {
-			isCB18orLaterCache = isUpperVersion(getServerVersion(), "1.8");
-		}
-		return isCB18orLaterCache;
-	}
-
-	public static boolean isCB183orLater() {
-		if (isCB183orLaterCache == null) {
-			isCB183orLaterCache = isUpperVersion(getServerVersion(), "1.8.3");
-		}
-		return isCB183orLaterCache;
-	}
-
-	public static boolean isCB19orLater() {
-		if (isCB19orLaterCache == null) {
-			isCB19orLaterCache = isUpperVersion(getServerVersion(), "1.9");
-		}
-		return isCB19orLaterCache;
-	}
-
-	public static boolean isCB110orLater() {
-		if (isCB110orLaterCache == null) {
-			isCB110orLaterCache = isUpperVersion(getServerVersion(), "1.10");
-		}
-		return isCB110orLaterCache;
-	}
-
-	public static boolean isCB112orLater() {
-		if (isCB112orLaterCache == null) {
-			isCB112orLaterCache = isUpperVersion(getServerVersion(), "1.12");
-		}
-		return isCB112orLaterCache;
+		return result;
 	}
 
 	public static boolean isUpperVersion(String source, String target) {
@@ -130,10 +77,7 @@ public class Utils {
 	}
 
 	public static void sendMessage(CommandSender sender, String message) {
-		if (sender instanceof Player && !((Player) sender).isOnline()) {
-			return;
-		}
-		if (sender == null || StringUtils.isEmpty(message)) {
+		if (StringUtils.isEmpty(message) || (sender instanceof Player && !((Player) sender).isOnline())) {
 			return;
 		}
 		String color = "";
@@ -178,7 +122,7 @@ public class Utils {
 
 	public static ItemStack getItemInMainHand(Player player) {
 		PlayerInventory inventory = player.getInventory();
-		if (isCB19orLater()) {
+		if (isCBXXXorLater("1.9")) {
 			return inventory.getItemInMainHand();
 		} else {
 			@SuppressWarnings("deprecation")
@@ -188,7 +132,7 @@ public class Utils {
 	}
 
 	public static ItemStack getItemInOffHand(Player player) {
-		if (isCB19orLater()) {
+		if (isCBXXXorLater("1.9")) {
 			return player.getInventory().getItemInOffHand();
 		}
 		return null;
@@ -239,7 +183,7 @@ public class Utils {
 		if (uuid == null) {
 			return null;
 		}
-		if (Utils.isCB175orLater()) {
+		if (isCBXXXorLater("1.7.5")) {
 			return Bukkit.getPlayer(uuid);
 		}
 		for (Player player : getOnlinePlayers()) {
@@ -255,7 +199,7 @@ public class Utils {
 			return null;
 		}
 		OfflinePlayer player = null;
-		if (Utils.isCB175orLater()) {
+		if (isCBXXXorLater("1.7.5")) {
 			player = Bukkit.getOfflinePlayer(uuid);
 		} else {
 			String name = getName(uuid);
@@ -273,7 +217,7 @@ public class Utils {
 			if (uuid == null) {
 				return null;
 			}
-			if (isCB175orLater()) {
+			if (isCBXXXorLater("1.7.5")) {
 				OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 				return (player == null || !player.hasPlayedBefore()) ? ProfileFetcher.getName(uuid) : player.getName();
 			}
@@ -289,7 +233,7 @@ public class Utils {
 			return null;
 		}
 		try {
-			return isCB175orLater() ? player.getUniqueId() : ProfileFetcher.getUniqueId(player.getName());
+			return isCBXXXorLater("1.7.5") ? player.getUniqueId() : ProfileFetcher.getUniqueId(player.getName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

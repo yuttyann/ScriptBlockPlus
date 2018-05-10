@@ -17,10 +17,10 @@ public class ActionBar extends BaseOption {
 	static {
 		Class<?> iChatBaseComponentClass = null;
 		Class<?> byteOrChatMessageTypeClass = null;
-		if (Utils.isCB18orLater()) {
+		if (Utils.isCBXXXorLater("1.8")) {
 			try {
 				iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
-				if (Utils.isCB112orLater()) {
+				if (Utils.isCBXXXorLater("1.1.2")) {
 					byteOrChatMessageTypeClass = PackageType.NMS.getClass("ChatMessageType");
 				} else {
 					byteOrChatMessageTypeClass = byte.class;
@@ -72,7 +72,7 @@ public class ActionBar extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		if (!Utils.isCB18orLater()) {
+		if (!Utils.isCBXXXorLater("1.8")) {
 			throw new UnsupportedOperationException();
 		}
 		String[] array = StringUtils.split(getOptionValue(), "/");
@@ -96,7 +96,7 @@ public class ActionBar extends BaseOption {
 
 	private Object newPacketPlayOutChat(Object component) throws ReflectiveOperationException {
 		Object type = (byte) 2;
-		if (Utils.isCB112orLater()) {
+		if (Utils.isCBXXXorLater("1.1.2")) {
 			type = NMSHelper.getEnumField(PackageType.NMS.getClass("ChatMessageType"), "GAME_INFO");
 		}
 		return PackageType.NMS.getConstructor("PacketPlayOutChat", PACKET_PARAMS).newInstance(component, type);

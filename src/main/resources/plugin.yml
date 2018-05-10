@@ -10,16 +10,17 @@ commands:
   scriptblockplus:
     description: ScriptBlockPlus コマンド
     usage: |
-           /<command> tool - 実行者にスクリプト編集ツールを配布します。
-           /<command> reload - 全てのファイルの再読み込みを行います。
-           /<command> checkver - 最新のプラグインが存在するかチェックします。
-           /<command> datamigr - ScriptBlockのスクリプトをPlusに移行します。
-           /<command> <scripttype> create <options> - ブロックにスクリプトを設定します。
-           /<command> <scripttype> add <options> - ブロックにスクリプトを追加します。
-           /<command> <scripttype> remove - ブロックのスクリプトを削除します。
-           /<command> <scripttype> view - ブロックのスクリプトを表示します。
-           /<command> worldedit paste <pasteonair> [overwrite] - 選択範囲にスクリプトをペーストします。
-           /<command> worldedit remove - 選択範囲のスクリプトを削除します。
+           /<command> tool - get the scriptblock editor
+           /<command> reload - reload the plugin
+           /<command> backup - make a backup of the script data
+           /<command> checkver - check new version
+           /<command> datamigr - migrate old data from ScriptBlock to ScriptBlockPlus
+           /<command> <scripttype> create <options> - create new scriptblock
+           /<command> <scripttype> add <options> - add new script to the block
+           /<command> <scripttype> remove - remove script of block
+           /<command> <scripttype> view - view the script of block
+           /<command> worldedit paste <pasteonair> [overwrite] - paste scriptblock for WorldEdit selected area
+           /<command> worldedit remove - remove scriptblock for WorldEdit selected area
     aliases: [sbp]
 
 permissions:
@@ -28,6 +29,7 @@ permissions:
     children:
       scriptblockplus.command.tool: true
       scriptblockplus.command.reload: true
+      scriptblockplus.command.backup: true
       scriptblockplus.command.checkver: true
       scriptblockplus.command.datamigr: true
       scriptblockplus.command.interact: true
@@ -41,6 +43,8 @@ permissions:
   scriptblockplus.command.tool:
     default: op
   scriptblockplus.command.reload:
+    default: op
+  scriptblockplus.command.backup:
     default: op
   scriptblockplus.command.checkver:
     default: op
