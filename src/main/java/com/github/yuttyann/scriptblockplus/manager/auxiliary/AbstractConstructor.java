@@ -4,8 +4,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -15,8 +13,6 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public abstract class AbstractConstructor<T> {
 
-	private T cacheInstance;
-	private List<T> cacheList;
 	private Class<?> genericClass;
 
 	public abstract void registerDefaults();
@@ -73,34 +69,17 @@ public abstract class AbstractConstructor<T> {
 
 	public abstract List<Constructor<? extends T>> getConstructors();
 
-	public final T getCacheInstance() {
-		return cacheInstance;
-	}
-
-	public final List<T> getCacheList() {
-		return Collections.unmodifiableList(getLinkCacheList());
-	}
-
-	@Deprecated
-	public final List<T> getLinkCacheList() {
-		if (cacheList == null || cacheList.isEmpty()) {
-			newInstances();
-		}
-		return cacheList;
-	}
-
 	public T[] newInstances() {
 		return newInstances(newGenericArray());
 	}
 
 	public T[] newInstances(T[] array) {
-		clearCacheList();
 		T[] instances = array;
 		try {
 			int count = 0;
 			Object[] empty = ArrayUtils.EMPTY_OBJECT_ARRAY;
 			for (Constructor<? extends T> constructor : getConstructors()) {
-				cacheList.add(instances[count++] = constructor.newInstance(empty));
+				instances[count++] = constructor.newInstance(empty);
 			}
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
@@ -113,12 +92,11 @@ public abstract class AbstractConstructor<T> {
 	}
 
 	public T newInstance(Class<?> clazz) {
-		clearCacheInstance();
 		try {
 			Object[] empty = ArrayUtils.EMPTY_OBJECT_ARRAY;
 			for (Constructor<? extends T> constructor : getConstructors()) {
 				if (clazz == constructor.getDeclaringClass()) {
-					return cacheInstance = constructor.newInstance(empty);
+					return constructor.newInstance(empty);
 				}
 			}
 		} catch (ReflectiveOperationException e) {
@@ -129,15 +107,6 @@ public abstract class AbstractConstructor<T> {
 
 	public final void forEach(Consumer<? super T> action, boolean cache) {
 		StreamUtils.forEach(newInstances(), action);
-	}
-
-	protected final void clearCacheInstance() {
-		cacheInstance = null;
-	}
-
-	protected final void clearCacheList() {
-		clearCacheInstance();
-		cacheList = new ArrayList<T>(getConstructors().size());
 	}
 
 	private T[] newGenericArray() {
