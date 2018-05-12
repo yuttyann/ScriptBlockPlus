@@ -109,8 +109,8 @@ public class FileUtils {
             BufferedWriter writer = null;
             try {
             	File copy = new File(targetFile, file.getName());
-                reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(copy)));
+                reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8));
+                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(copy), Charsets.UTF_8));
     			boolean isFirst = true;
     			String line;
     			while ((line = reader.readLine()) != null) {
