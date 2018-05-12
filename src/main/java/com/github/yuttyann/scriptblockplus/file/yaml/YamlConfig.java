@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.file.yaml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -112,8 +111,7 @@ public class YamlConfig {
 			yaml.load(file);
 		} catch (FileNotFoundException e) {
 		} catch (IOException | InvalidConfigurationException e) {
-			FileUtils.fileEncode(file, Charset.defaultCharset());
-			yaml = UTF8Config.loadConfiguration(file);
+			e.printStackTrace();
 		}
 	}
 

@@ -31,7 +31,7 @@ class Ref_Vx_x_Rx implements CommandListener {
 
 	protected int executeCommand(Object sender, CommandSender bSender, String command) throws ReflectiveOperationException {
 		Method executeCommand = PackageType.NMS.getMethod(CLASS_NAME_1, "executeCommand", PARAMS_EXECUTE_COMMAND);
-		return int.class.cast(executeCommand.invoke(null, sender, bSender, command));
+		return Integer.class.cast(executeCommand.invoke(null, sender, bSender, command)).intValue();
 	}
 
 	private Object getICommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {

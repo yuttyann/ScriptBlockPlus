@@ -128,11 +128,7 @@ public abstract class AbstractConstructor<T> {
 	}
 
 	public final void forEach(Consumer<? super T> action, boolean cache) {
-		if (cache) {
-			getLinkCacheList().forEach(action);
-		} else {
-			StreamUtils.forEach(newInstances(), action);
-		}
+		StreamUtils.forEach(newInstances(), action);
 	}
 
 	protected final void clearCacheInstance() {

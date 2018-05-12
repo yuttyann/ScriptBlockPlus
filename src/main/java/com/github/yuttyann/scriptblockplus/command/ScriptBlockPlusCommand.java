@@ -137,13 +137,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		File dataFolder = Files.getConfig().getDataFolder();
 		File scripts = new File(dataFolder, "scripts");
-		if (scripts.exists() || FileUtils.isEmpty(scripts)) {
+		if (!scripts.exists() || FileUtils.isEmpty(scripts)) {
 			Utils.sendMessage(sender, SBConfig.getErrorScriptsBackupMessage());
 			return true;
 		}
 		File backup = new File(dataFolder, "backup");
 		String formatTime = Utils.getFormatTime("yyyy-MM-dd HH-mm-ss");
-		FileUtils.copyFile(scripts, new File(backup, "scripts " + formatTime));
+		FileUtils.copyDirectory(scripts, new File(backup, "scripts " + formatTime));
 		Utils.sendMessage(sender, SBConfig.getScriptsBackupMessage());
 		return true;
 	}

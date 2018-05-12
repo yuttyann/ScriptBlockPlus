@@ -38,15 +38,14 @@ public class ItemCost extends BaseOption {
 		PlayerInventory inventory = player.getInventory();
 		ItemStack[] items = copyItems(inventory.getContents());
 		int allAmount = 0;
+		if (!getSBPlayer().hasData(KEY_ITEM)) {
+			getSBPlayer().setData(KEY_ITEM, copyItems(inventory.getContents()));
+		}
 		for (int i = 0; i < items.length; i++) {
 			ItemStack item = items[i];
 			if (checkItem(item, itemName, id, damage)) {
 				allAmount += item.getAmount();
 				items[i] = setAmount(item, allAmount > amount ? allAmount - amount : item.getAmount() - amount);
-			}
-			if (allAmount >= amount && !getSBPlayer().hasData(KEY_ITEM)) {
-				getSBPlayer().setData(KEY_ITEM, copyItems(inventory.getContents()));
-				break;
 			}
 		}
 		if (allAmount < amount) {

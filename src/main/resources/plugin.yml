@@ -8,7 +8,7 @@ softdepend: [ScriptBlock, Vault, WorldEdit, PlaceholderAPI]
 
 commands:
   scriptblockplus:
-    description: ScriptBlockPlus コマンド
+    description: ScriptBlockPlus Commands
     usage: |
            /<command> tool - get the scriptblock editor
            /<command> reload - reload the plugin

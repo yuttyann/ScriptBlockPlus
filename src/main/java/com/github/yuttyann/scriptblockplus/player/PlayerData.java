@@ -42,7 +42,7 @@ public abstract class PlayerData implements SBPlayer {
 
 	@Override
 	public <T> T removeData(String key) {
-		return getData(key, null);
+		return removeData(key, null);
 	}
 
 	@Override

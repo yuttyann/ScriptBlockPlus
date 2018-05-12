@@ -16,9 +16,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.bukkit.plugin.Plugin;
 
@@ -44,7 +41,7 @@ public class FileUtils {
 	}
 
 	public static void copyFileFromPlugin(Plugin plugin, File targetFile, String sourceFilePath) {
-		if (isExists(targetFile) || StringUtils.isEmpty(sourceFilePath)) {
+		if (targetFile == null || StringUtils.isEmpty(sourceFilePath)) {
 			return;
 		}
 		File parent = targetFile.getParentFile();
@@ -100,78 +97,52 @@ public class FileUtils {
 		}
 	}
 
-    public static void copyFile(File sourceFile, File targetFile) {
-    	FileInputStream fis = null;
-    	FileOutputStream fos = null;
-		try {
-			fis = new FileInputStream(sourceFile);
-			fos = new FileOutputStream(targetFile);
-			fis.getChannel().transferTo(0, fis.getChannel().size(), fos.getChannel());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-            if (fis != null) {
-            	try {
-					fis.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-            }
-            if (fos != null) {
-            	try {
-					fos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+    public static void copyDirectory(File sourceFile, File targetFile) {
+    	if (targetFile == null || !isExists(sourceFile) || isEmpty(sourceFile)) {
+    		return;
+    	}
+		if (!targetFile.exists()) {
+			targetFile.mkdirs();
+		}
+		for (File file : sourceFile.listFiles()) {
+            BufferedReader reader = null;
+            BufferedWriter writer = null;
+            try {
+            	File copy = new File(targetFile, file.getName());
+                reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(copy)));
+    			boolean isFirst = true;
+    			String line;
+    			while ((line = reader.readLine()) != null) {
+    				if (isFirst && !(isFirst = false)) {
+    					line = removeBom(line);
+    				}
+    				writer.write(line);
+    				writer.newLine();
+    			}
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (writer != null) {
+                    try {
+                        writer.flush();
+                        writer.close();
+                    } catch (IOException e) {
+                    	e.printStackTrace();
+                    }
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                    	e.printStackTrace();
+                    }
+                }
             }
 		}
     }
-
-	public static void fileEncode(File file, Charset charset) {
-		if (charset == null || !isExists(file)) {
-			return;
-		}
-		BufferedReader reader = null;
-		BufferedWriter writer = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
-			List<String> contents = new LinkedList<String>();
-			while (reader.ready()) {
-				contents.add(reader.readLine());
-			}
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8));
-			boolean isFirst = true;
-			for (String line : contents) {
-				if (isFirst && !(isFirst = false)) {
-					line = removeBom(line);
-				}
-				writer.write(line);
-				writer.newLine();
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (writer != null) {
-				try {
-					writer.flush();
-					writer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 
 	public static void fileDownload(String url, File file) throws IOException {
 		File parent = file.getParentFile();
@@ -193,7 +164,7 @@ public class FileUtils {
 			}
 			is = connection.getInputStream();
 			fos = new FileOutputStream(file);
-			byte[] bytes = new byte[2048];
+			byte[] bytes = new byte[1024];
 			int length;
 			while ((length = is.read(bytes)) != -1) {
 				fos.write(bytes, 0, length);
