@@ -9,6 +9,8 @@
 <br>
 配布サイト: http://file.yuttyann44581.net/
 <br>
+言語ファイルの追加方法: https://github.com/yuttyann/ScriptBlockPlus/wiki/言語ファイルの追加方法
+<br>
 API、Eventの使い方: https://github.com/yuttyann/ScriptBlockPlus/wiki/APIとEventの使用方法
 <br>
 (やる気が出たらソースにコメント付ける。)
