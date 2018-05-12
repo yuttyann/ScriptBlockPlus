@@ -65,7 +65,7 @@ class Ref_Vx_x_Rx implements CommandListener {
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
 		if (Utils.isCBXXXorLater("1.8")) {
-			String methodName = Utils.isCBXXXorLater("1.1.0") ? "setPosition" : "a";
+			String methodName = Utils.isCBXXXorLater("1.10") ? "setPosition" : "a";
 			Object instance = PackageType.NMS.newInstance("BlockPosition", x, y, z);
 			PackageType.NMS.invokeMethod(titleEntityCommand, CLASS_NAME_2, methodName, instance);
 		} else {

@@ -61,7 +61,7 @@ public class Title extends BaseOption {
 	}
 
 	private void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
-		if (Utils.isCBXXXorLater("1.1.2")) {
+		if (Utils.isCBXXXorLater("1.12")) {
 			player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		} else {
 			Class<?> enumTitleActionClass = PackageType.NMS.getClass(NMSHelper.getEnumTitleActionName());

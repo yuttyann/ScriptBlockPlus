@@ -26,6 +26,9 @@ public final class FakeCommandBlock {
 		case "v1_7_R4":
 			listener = new v1_7_R4();
 			break;
+		case "v1_8_R1":
+			listener = new v1_8_R1();
+			break;
 		default:
 			listener = new Ref_Vx_x_Rx();
 		}
