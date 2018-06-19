@@ -21,7 +21,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class BaseSBPlayer extends PlayerData {
 
-	private static final Map<UUID, SBPlayer> PLAYERS = new HashMap<UUID, SBPlayer>(32);
+	private static final Map<UUID, SBPlayer> PLAYERS = new HashMap<>(32);
 
 	private final UUID uuid;
 	private Player player;

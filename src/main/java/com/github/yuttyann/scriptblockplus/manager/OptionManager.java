@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,18 +42,17 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		CONSTRUCTORS = new ArrayList<Constructor<? extends Option>>();
 	}
 
-	private static List<Option> options;
-	private static boolean isModified;
-
 	private OptionManager() {
 		// OptionManager
 	}
 
 	public static final class OptionList {
 
+		private static final List<Option> OPTIONS;
 		private static final OptionManager OPTION_MANAGER;
 
 		static {
+			OPTIONS = new ArrayList<>();
 			OPTION_MANAGER = new OptionManager();
 			OPTION_MANAGER.registerDefaults();
 		}
@@ -64,10 +62,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		}
 
 		public static List<Option> getOptions() {
-			if (options == null || (isModified && !(isModified = false))) {
-				options = Collections.unmodifiableList(Arrays.asList(OPTION_MANAGER.newInstances()));
-			}
-			return options;
+			return Collections.unmodifiableList(OPTIONS);
 		}
 	}
 
@@ -112,23 +107,39 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		return newInstances(new Option[getConstructors().size()]);
 	}
 
+	@Override
 	public boolean add(Class<? extends Option> clazz) {
-		isModified = true;
-		return super.add(clazz);
+		boolean result = super.add(clazz);
+		if (result) {
+			OptionList.OPTIONS.add(newInstance(clazz));
+		}
+		return result;
 	}
 
+	@Override
 	public boolean add(int index, Class<? extends Option> clazz) {
-		isModified = true;
-		return super.add(index, clazz);
+		boolean result = super.add(index, clazz);
+		if (result) {
+			OptionList.OPTIONS.add(index, newInstance(clazz));
+		}
+		return result;
 	}
 
+	@Override
 	public boolean remove(Class<? extends Option> clazz) {
-		isModified = true;
-		return super.remove(clazz);
+		boolean result = super.remove(clazz);
+		if (result) {
+			OptionList.OPTIONS.remove(newInstance(clazz));
+		}
+		return result;
 	}
 
+	@Override
 	public boolean remove(int index) {
-		isModified = true;
-		return super.remove(index);
+		boolean result = super.remove(index);
+		if (result) {
+			OptionList.OPTIONS.remove(index);
+		}
+		return result;
 	}
 }

@@ -173,7 +173,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * コンソールからコマンドを実行する</br>
+	 * コンソールからコマンドを実行する
 	 * @param command
 	 * @return 実行が成功したかどうか
 	 */
@@ -182,7 +182,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * プレイヤーからコマンドを実行する</br>
+	 * プレイヤーからコマンドを実行する
 	 * @param player
 	 * @param command
 	 * @param isBypass

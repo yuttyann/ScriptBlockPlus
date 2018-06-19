@@ -19,11 +19,10 @@ public final class MovingPosition {
 
 		private BlockPos(Object rayTrace) throws ReflectiveOperationException {
 			if (Utils.isCBXXXorLater("1.8")) {
-				Object[] nullArray = (Object[]) null;
-				Object blockPosition = PackageType.NMS.invokeMethod(rayTrace, null, "a", nullArray);
-				this.x = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getX", nullArray);
-				this.y = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getY", nullArray);
-				this.z = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getZ", nullArray);
+				Object blockPosition = PackageType.NMS.invokeMethod(rayTrace, null, "a", (Object[]) null);
+				this.x = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getX", (Object[]) null);
+				this.y = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getY", (Object[]) null);
+				this.z = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getZ", (Object[]) null);
 			} else {
 				this.x = getMOPField("b").getInt(rayTrace);
 				this.y = getMOPField("c").getInt(rayTrace);

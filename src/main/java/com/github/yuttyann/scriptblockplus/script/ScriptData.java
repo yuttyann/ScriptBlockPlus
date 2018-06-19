@@ -77,10 +77,10 @@ public final class ScriptData implements Cloneable {
 	public List<String> getAuthors(boolean isName) {
 		String author = getAuthor();
 		if (StringUtils.isEmpty(author)) {
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		}
 		String[] authors = StringUtils.split(author, ",");
-		List<String> list = new ArrayList<String>(authors.length);
+		List<String> list = new ArrayList<>(authors.length);
 		StreamUtils.forEach(authors, s -> list.add(isName ? Utils.getName(UUID.fromString(s.trim())) : s.trim()));
 		return list;
 	}

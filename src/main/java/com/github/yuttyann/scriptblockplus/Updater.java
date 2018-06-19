@@ -141,7 +141,7 @@ public final class Updater {
 				if (updateNode.getNodeName().equals("details")) {
 					NodeList detailsChildren = updateNode.getChildNodes();
 					if (details == null) {
-						details = new ArrayList<String>(detailsChildren.getLength());
+						details = new ArrayList<>(detailsChildren.getLength());
 					}
 					for(int k = 0; k < detailsChildren.getLength(); k++) {
 						Node detailsNode = detailsChildren.item(k);

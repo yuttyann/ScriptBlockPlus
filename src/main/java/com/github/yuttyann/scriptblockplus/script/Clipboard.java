@@ -74,7 +74,7 @@ public final class Clipboard {
 		scriptData.setAuthor(author);
 		scriptData.addAuthor(sbPlayer.getOfflinePlayer());
 		scriptData.setLastEdit(Utils.getFormatTime());
-		scriptData.setScripts(new ArrayList<String>(scripts));
+		scriptData.setScripts(new ArrayList<>(scripts));
 		scriptData.save();
 		ScriptBlock.getInstance().getMapManager().addCoords(scriptType, location);
 		Utils.sendMessage(sbPlayer, SBConfig.getScriptPasteMessage(scriptType));
@@ -96,7 +96,7 @@ public final class Clipboard {
 		scriptData.setAuthor(author);
 		scriptData.addAuthor(sbPlayer.getOfflinePlayer());
 		scriptData.setLastEdit(lastEdit);
-		scriptData.setScripts(new ArrayList<String>(scripts));
+		scriptData.setScripts(new ArrayList<>(scripts));
 		ScriptBlock.getInstance().getMapManager().addCoords(scriptType, location);
 		return true;
 	}

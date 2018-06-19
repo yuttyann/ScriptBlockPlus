@@ -15,7 +15,7 @@ public enum DataType {
 	DOUBLE(double.class, Double.class),
 	BOOLEAN(boolean.class, Boolean.class);
 
-	private static final Map<Class<?>, DataType> CLASS_MAP = new HashMap<Class<?>, DataType>();
+	private static final Map<Class<?>, DataType> CLASS_MAP = new HashMap<>();
 
 	private final Class<?> primitive;
 	private final Class<?> reference;

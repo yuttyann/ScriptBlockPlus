@@ -32,7 +32,7 @@ import com.github.yuttyann.scriptblockplus.commandblock.FakeCommandBlock;
 public class Utils {
 
 	private static final String SERVER_VERSION = getServerVersion();
-	private static final Map<String, Boolean> VC_CACHE_MAP = new HashMap<String, Boolean>();
+	private static final Map<String, Boolean> VC_CACHE_MAP = new HashMap<>();
 
 	public static String getServerVersion() {
 		if (SERVER_VERSION == null) {
@@ -247,10 +247,10 @@ public class Utils {
 				Collection<?> temp = ((Collection<?>) method.invoke(null, ArrayUtils.EMPTY_OBJECT_ARRAY));
 				@SuppressWarnings("unchecked")
 				Collection<? extends Player> players = (Collection<? extends Player>) temp;
-				return new ArrayList<Player>(players);
+				return new ArrayList<>(players);
 			} else {
 				Player[] temp = (Player[]) method.invoke(null, ArrayUtils.EMPTY_OBJECT_ARRAY);
-				List<Player> players = new ArrayList<Player>(temp.length);
+				List<Player> players = new ArrayList<>(temp.length);
 				for (Player player : temp) {
 					players.add(player);
 				}

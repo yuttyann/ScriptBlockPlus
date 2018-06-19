@@ -34,10 +34,10 @@ public enum PackageType {
 	CB_UPDATER(CB, "updater"),
 	CB_UTIL(CB, "util");
 
-	private static final Map<String, Field> FIELD_CACHE_MAP = new HashMap<String, Field>();
-	private static final Map<String, Method> METHOD_CACHE_MAP = new HashMap<String, Method>();
-	private static final Map<String, Class<?>> CLASS_CACHE_MAP = new HashMap<String, Class<?>>();
-	private static final Map<String, Constructor<?>> CONSTRUCTOR_CACHE_MAP = new HashMap<String, Constructor<?>>();
+	private static final Map<String, Field> FIELD_CACHE_MAP = new HashMap<>();
+	private static final Map<String, Method> METHOD_CACHE_MAP = new HashMap<>();
+	private static final Map<String, Class<?>> CLASS_CACHE_MAP = new HashMap<>();
+	private static final Map<String, Constructor<?>> CONSTRUCTOR_CACHE_MAP = new HashMap<>();
 
 	private static String packageName;
 
@@ -171,10 +171,7 @@ public enum PackageType {
 		if (StringUtils.isEmpty(className)) {
 			return "null";
 		}
-		if (objects == null) {
-			objects = ArrayUtils.EMPTY_CLASS_ARRAY;
-		}
-		int lastLength = objects.length - 1;
+		int lastLength = objects == null ? -1 : objects.length - 1;
 		if (lastLength == -1) {
 			if (name != null) {
 				return this + "." + className + "=" + name + "[]";

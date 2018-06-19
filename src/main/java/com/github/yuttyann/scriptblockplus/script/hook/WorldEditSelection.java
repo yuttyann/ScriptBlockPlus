@@ -29,7 +29,7 @@ public final class WorldEditSelection {
 	}
 
 	public List<Block> getBlocks(Selection selection) {
-		List<Block> blocks = new ArrayList<Block>();
+		List<Block> blocks = new ArrayList<>();
 		if (!(selection instanceof CuboidSelection)) {
 			return blocks;
 		}

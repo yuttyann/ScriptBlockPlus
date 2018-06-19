@@ -29,7 +29,7 @@ final class v1_8_R1 extends Ref_Vx_x_Rx {
 		SimpleCommandMap commandMap = iSender.getWorld().getServer().getCommandMap();
 		Joiner joiner = Joiner.on(" ");
 		String[] args = StringUtils.split(command, " ");
-		List<String[]> commands = new ArrayList<String[]>();
+		List<String[]> commands = new ArrayList<>();
 		String cmd = args[0];
 		if (cmd.startsWith("minecraft:")) {
 			cmd = cmd.substring("minecraft:".length());
@@ -58,7 +58,7 @@ final class v1_8_R1 extends Ref_Vx_x_Rx {
 			server.worldServer[pos] = world;
 		}
 		try {
-			List<String[]> newCommands = new ArrayList<String[]>();
+			List<String[]> newCommands = new ArrayList<>();
 			for (int i = 0; i < args.length; i++) {
 				if (PlayerSelector.isPattern(args[i])) {
 					for (int j = 0; j < commands.size(); j++) {
@@ -91,7 +91,7 @@ final class v1_8_R1 extends Ref_Vx_x_Rx {
 	}
 
 	private List<String[]> buildCommands(ICommandListener sender, String[] args, int pos) {
-		List<String[]> commands = new ArrayList<String[]>();
+		List<String[]> commands = new ArrayList<>();
 		@SuppressWarnings("unchecked")
 		List<EntityPlayer> playerList = PlayerSelector.getPlayers(sender, args[pos], EntityPlayer.class);
 		EntityPlayer[] players = playerList.toArray(new EntityPlayer[playerList.size()]);

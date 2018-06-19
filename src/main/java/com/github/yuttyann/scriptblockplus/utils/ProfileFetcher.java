@@ -21,8 +21,8 @@ public class ProfileFetcher {
 
 	private static final JSONParser JSON_PARSER = new JSONParser();
 
-	private static final Map<String, UUID> UUID_CACHE_MAP = new HashMap<String, UUID>();
-	private static final Map<UUID, String> NAME_CACHE_MAP = new HashMap<UUID, String>();
+	private static final Map<String, UUID> UUID_CACHE_MAP = new HashMap<>();
+	private static final Map<UUID, String> NAME_CACHE_MAP = new HashMap<>();
 
 	public static UUID getUniqueId(String name) throws Exception {
 		UUID uuid = UUID_CACHE_MAP.get(name);

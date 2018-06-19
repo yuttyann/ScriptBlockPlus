@@ -19,6 +19,7 @@ class Ref_Vx_x_Rx implements CommandListener {
 	private static final String CLASS_NAME_2 = "TileEntityCommand";
 
 	@Override
+	@Deprecated
 	public boolean executeCommand(CommandSender sender, Location location, String command) {
 		try {
 			Object iCommandListener = getICommandListener(sender, location);

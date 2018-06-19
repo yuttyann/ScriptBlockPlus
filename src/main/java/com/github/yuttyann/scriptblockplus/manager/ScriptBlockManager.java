@@ -17,6 +17,7 @@ import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
+import com.github.yuttyann.scriptblockplus.listener.IAssist;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -25,16 +26,16 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
 public final class ScriptBlockManager implements ScriptBlockAPI {
 
+	private IAssist iAssist;
 	private ScriptData scriptData;
-	private ScriptManager scriptManager;
 	private Map<ScriptType, List<Location>> timers;
 	private Map<Boolean, Map<Location, ScriptType>> scripts;
 
 	public ScriptBlockManager(ScriptBlock plugin, Location location, ScriptType scriptType) {
+		this.iAssist = new IAssist(plugin, scriptType);
 		this.scriptData = new ScriptData(location, scriptType);
-		this.scriptManager = new ScriptManager(plugin, scriptType);
-		this.timers = new HashMap<ScriptType, List<Location>>();
-		this.scripts = new HashMap<Boolean, Map<Location, ScriptType>>();
+		this.timers = new HashMap<>();
+		this.scripts = new HashMap<>();
 		setLocation(location);
 	}
 
@@ -53,7 +54,7 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 			if (event == null || event.isCancelled()) {
 				return false;
 			}
-			return new ScriptRead(scriptManager, player, getLocation()).read(index);
+			return new ScriptRead(iAssist, player, getLocation()).read(index);
 		} catch (Exception e) {
 			return false;
 		}
@@ -91,8 +92,8 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 	@Override
 	public void save() {
 		scriptData.save();
-		timers.forEach((s, ll) -> ll.forEach(l -> scriptManager.getMapManager().removeTimes(s, l)));
-		scripts.forEach((b, m) -> m.forEach((l, s) -> scriptManager.getMapManager().setCoords(s, l, b)));
+		timers.forEach((s, ll) -> ll.forEach(l -> iAssist.getMapManager().removeTimes(s, l)));
+		scripts.forEach((b, m) -> m.forEach((l, s) -> setCoords(iAssist.getMapManager(), s, l, b)));
 		if (timers.size() > 0) {
 			timers.clear();
 		}
@@ -284,6 +285,14 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 			Bukkit.getPluginManager().callEvent(event);
 		}
 		return event;
+	}
+
+	private void setCoords(MapManager mapManager, ScriptType scriptType, Location location, boolean isAdd) {
+		if (isAdd) {
+			mapManager.addCoords(scriptType, location);
+		} else {
+			mapManager.removeCoords(scriptType, location);
+		}
 	}
 
 	private void putTimer(ScriptType scriptType, Location location) {

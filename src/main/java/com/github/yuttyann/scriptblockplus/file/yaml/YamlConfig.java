@@ -384,9 +384,9 @@ public class YamlConfig {
 	public List<UUID> getUUIDList(String path) {
 		List<?> list = getList(path);
 		if (list == null) {
-			return new ArrayList<UUID>();
+			return new ArrayList<>();
 		}
-		List<UUID> result = new ArrayList<UUID>(list.size());
+		List<UUID> result = new ArrayList<>(list.size());
 		for (Object object : list) {
 			if (object instanceof String) {
 				result.add(UUID.fromString(object.toString()));

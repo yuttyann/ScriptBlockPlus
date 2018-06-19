@@ -18,11 +18,7 @@ public final class SBMap<T> implements Serializable {
 	}
 
 	public SBMap(int initialCapacity) {
-		if (initialCapacity > 0) {
-			this.sbMap = new HashMap<ScriptType, Map<String, T>>(initialCapacity);
-		} else {
-			this.sbMap = new HashMap<ScriptType, Map<String, T>>();
-		}
+		this.sbMap = initialCapacity > 0 ? new HashMap<>(initialCapacity) : new HashMap<>();
 	}
 
 	public int size() {
@@ -53,7 +49,7 @@ public final class SBMap<T> implements Serializable {
 	public T put(ScriptType scriptType, String fullCoords, T value) {
 		Map<String, T> map = get(scriptType);
 		if (map == null) {
-			map = new HashMap<String, T>();
+			map = new HashMap<>();
 			sbMap.put(scriptType, map);
 		}
 		return map.put(fullCoords, value);
@@ -65,7 +61,7 @@ public final class SBMap<T> implements Serializable {
 
 	public Map<String, T> remove(ScriptType scriptType, String fullCoords) {
 		Map<String, T> map = get(scriptType);
-		if (map != null && map.containsKey(fullCoords)) {
+		if (map != null) {
 			map.remove(fullCoords);
 			return sbMap.put(scriptType, map);
 		}

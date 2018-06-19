@@ -42,7 +42,7 @@ public final class CommandData {
 	public CommandData addPermission(Permission... permission) {
 		if (permission != null && permission.length > 0) {
 			if (permissions == null) {
-				permissions = new ArrayList<Permission>(permission.length);
+				permissions = new ArrayList<>(permission.length);
 			}
 			StreamUtils.forEach(permission, permissions::add);
 		}

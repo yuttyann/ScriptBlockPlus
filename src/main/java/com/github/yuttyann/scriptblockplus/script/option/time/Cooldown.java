@@ -1,22 +1,19 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBMap;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Cooldown extends BaseOption {
 
-	private Task task;
+	private TimeData timeData;
 
 	public Cooldown() {
 		super("cooldown", "@cooldown:");
@@ -24,31 +21,27 @@ public class Cooldown extends BaseOption {
 
 	private class Task extends BukkitRunnable {
 
-		private int second = -1;
-		private UUID uuid;
-		private String fullCoords;
-		private MapManager mapManager;
-		private ScriptType scriptType;
-
-		private Task(Cooldown cooldown, int second) {
-			this.second = second + 1;
-			if (cooldown != null) {
-				this.uuid = cooldown.getUniqueId();
-				this.fullCoords = cooldown.getFullCoords();
-				this.scriptType = cooldown.getScriptType();
-			}
+		private Task(TimeData timeData) {
+			Cooldown.this.timeData = timeData;
 		}
 
-		public void runTaskTimer(Plugin plugin, MapManager mapManager) {
-			this.mapManager = mapManager;
-			mapManager.putCooldown(scriptType, fullCoords, uuid, Cooldown.this);
+		private Task(int index, int second, UUID uuid, String fullCoords, ScriptType scriptType) {
+			timeData = new TimeData(index, second + 1, false);
+			timeData.uuid = uuid;
+			timeData.fullCoords = fullCoords;
+			timeData.scriptType = scriptType;
+		}
+
+		public void runTaskTimer() {
+			ScriptBlock plugin = ScriptBlock.getInstance();
+			plugin.getMapManager().getCooldownMap().put(timeData.hashCode(), timeData);
 			runTaskTimer(plugin, 0, 20L);
 		}
 
 		@Override
 		public void run() {
-			if (--second <= 0) {
-				mapManager.removeCooldown(scriptType, fullCoords, uuid);
+			if (--timeData.second <= 0) {
+				ScriptBlock.getInstance().getMapManager().getCooldownMap().remove(timeData.hashCode());
 				cancel();
 			}
 		}
@@ -64,32 +57,18 @@ public class Cooldown extends BaseOption {
 			Utils.sendMessage(getPlayer(), SBConfig.getActiveCooldownMessage(hour, minute, second));
 			return false;
 		}
-		task = new Task(this, Integer.parseInt(getOptionValue()));
-		task.runTaskTimer(getPlugin(), getMapManager());
+		int second = Integer.parseInt(getOptionValue());
+		new Task(getScriptIndex(), second, getUniqueId(), getFullCoords(), getScriptType()).runTaskTimer();
 		return true;
 	}
 
-	public Map<String, Object> serialize() {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("second", task.second);
-		map.put("uuid", task.uuid);
-		map.put("fullcoords", task.fullCoords);
-		map.put("scripttype", task.scriptType);
-		return map;
-	}
-
-	public void deserialize(Plugin plugin, MapManager mapManager, Map<String, Object> map) {
-		task = new Task(null, (int) map.get("second"));
-		task.uuid = (UUID) map.get("uuid");
-		task.fullCoords = (String) map.get("fullcoords");
-		task.scriptType = (ScriptType) map.get("scripttype");
-		task.runTaskTimer(plugin, mapManager);
+	void deserialize(TimeData timeData) {
+		new Task(timeData).runTaskTimer();
 	}
 
 	private int getSecond() {
-		SBMap<Map<UUID, Cooldown>> cooldownMap = getMapManager().getCooldownMap();
-		Map<UUID, Cooldown> cooldowns = cooldownMap.get(getScriptType(), getFullCoords());
-		Cooldown cooldown = cooldowns == null ? null : cooldowns.get(getUniqueId());
-		return cooldown == null ? -1 : cooldown.task.second;
+		int hashKey = Objects.hash(getScriptIndex(), getUniqueId(), getFullCoords(), getScriptType());
+		TimeData timeData = getMapManager().getCooldownMap().get(hashKey);
+		return timeData == null ? -1 : timeData.second;
 	}
 }

@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public final class SBConfig {
 
-	private static final Map<String, Object> DATAS = new HashMap<String, Object>();
+	private static final Map<String, Object> DATAS = new HashMap<>();
 
 	public static void reload() {
 		reloadConfig();

@@ -10,16 +10,16 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.listener.IAssist;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
-import com.github.yuttyann.scriptblockplus.manager.ScriptManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public final class ScriptRead extends ScriptManager implements SBRead {
+public final class ScriptRead extends IAssist implements SBRead {
 
 	private SBPlayer sbPlayer;
 	private String optionValue;
@@ -28,8 +28,8 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 	private BlockCoords blockCoords;
 	private int scriptIndex;
 
-	public ScriptRead(ScriptManager scriptManager, Player player, Location location) {
-		super(scriptManager);
+	public ScriptRead(IAssist iAssist, Player player, Location location) {
+		super(iAssist);
 		this.sbPlayer = SBPlayer.fromPlayer(player);
 		this.scriptData = new ScriptData(location, scriptType, true);
 		if (!(location instanceof BlockCoords)) {
@@ -115,11 +115,11 @@ public final class ScriptRead extends ScriptManager implements SBRead {
 
 	private boolean sort(List<String> scripts, List<Option> options) {
 		try {
-			List<String> parse = new ArrayList<String>();
+			List<String> parse = new ArrayList<>();
 			List<String> result = parse;
 			StreamUtils.mapForEach(scripts, this::getScripts, parse::addAll);
 			if (SBConfig.isSortScripts()) {
-				List<String> list = (result = new ArrayList<String>(parse.size()));
+				List<String> list = (result = new ArrayList<>(parse.size()));
 				options.forEach(o -> StreamUtils.filterForEach(parse, s -> o.isOption(s), list::add));
 			}
 			this.scripts = Collections.unmodifiableList(result);

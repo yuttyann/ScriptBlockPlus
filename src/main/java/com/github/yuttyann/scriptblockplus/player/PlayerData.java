@@ -16,7 +16,7 @@ public abstract class PlayerData implements SBPlayer {
 	private final Map<String, Object> objectData;
 
 	PlayerData() {
-		objectData = new HashMap<String, Object>();
+		objectData = new HashMap<>();
 	}
 
 	public static String createRandomId(String key) {

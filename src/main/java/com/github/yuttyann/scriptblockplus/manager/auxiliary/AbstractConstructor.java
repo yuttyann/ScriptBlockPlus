@@ -76,10 +76,9 @@ public abstract class AbstractConstructor<T> {
 	public T[] newInstances(T[] array) {
 		T[] instances = array;
 		try {
-			int count = 0;
-			Object[] empty = ArrayUtils.EMPTY_OBJECT_ARRAY;
+			int i = 0;
 			for (Constructor<? extends T> constructor : getConstructors()) {
-				instances[count++] = constructor.newInstance(empty);
+				instances[i++] = constructor.newInstance(ArrayUtils.EMPTY_OBJECT_ARRAY);
 			}
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
@@ -93,10 +92,9 @@ public abstract class AbstractConstructor<T> {
 
 	public T newInstance(Class<?> clazz) {
 		try {
-			Object[] empty = ArrayUtils.EMPTY_OBJECT_ARRAY;
 			for (Constructor<? extends T> constructor : getConstructors()) {
 				if (clazz == constructor.getDeclaringClass()) {
-					return constructor.newInstance(empty);
+					return constructor.newInstance(ArrayUtils.EMPTY_OBJECT_ARRAY);
 				}
 			}
 		} catch (ReflectiveOperationException e) {

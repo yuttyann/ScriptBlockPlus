@@ -31,7 +31,7 @@ public abstract class CommandUsage {
 		if (usages == null || usages.isEmpty()) {
 			return;
 		}
-		List<CommandData> list = new ArrayList<CommandData>(usages.size());
+		List<CommandData> list = new ArrayList<>(usages.size());
 		StreamUtils.filterForEach(usages, c -> c.hasPermission(sender), list::add);
 		if (list.isEmpty()) {
 			Utils.sendMessage(sender, SBConfig.getNotPermissionMessage());

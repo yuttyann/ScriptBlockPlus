@@ -30,7 +30,7 @@ public class StringUtils {
 		if (start != end) {
 			throw new IllegalArgumentException("Failed to load the script.");
 		}
-		List<String> result = new ArrayList<String>(start);
+		List<String> result = new ArrayList<>(start);
 		for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
 			if (chars[i] == '[' && j++ == 0) {
 				k = i;
@@ -47,7 +47,7 @@ public class StringUtils {
 		}
 		int start = 0;
 		int end = source.indexOf(delimiter, start);
-		List<String> result = new LinkedList<String>();
+		List<String> result = new LinkedList<>();
 		while (end != -1) {
 			result.add(source.substring(start, end));
 			start = end + delimiter.length();

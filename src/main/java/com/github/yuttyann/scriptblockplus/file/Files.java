@@ -13,7 +13,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public final class Files {
 
-	private static final Map<String, YamlConfig> FILES = new HashMap<String, YamlConfig>();
+	private static final Map<String, YamlConfig> FILES = new HashMap<>();
 
 	private static String defaultLanguage;
 

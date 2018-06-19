@@ -13,7 +13,7 @@ public enum ScriptType {
 	private static final List<String> TYPES;
 
 	static {
-		TYPES = new ArrayList<String>();
+		TYPES = new ArrayList<>();
 		StreamUtils.forEach(values(), s -> TYPES.add(s.type));
 	}
 

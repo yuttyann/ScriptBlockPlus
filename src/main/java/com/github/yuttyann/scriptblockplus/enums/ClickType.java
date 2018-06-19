@@ -15,7 +15,7 @@ public enum ClickType {
 	private static final List<String> TYPES;
 
 	static {
-		TYPES = new ArrayList<String>();
+		TYPES = new ArrayList<>();
 		forE(ScriptType.values(), s -> forE(values(), c -> TYPES.add(c.createKey(s))));
 	}
 

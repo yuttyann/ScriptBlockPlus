@@ -16,8 +16,8 @@ public final class EndProcessManager extends AbstractConstructor<EndProcess> {
 	private final static List<Constructor<? extends EndProcess>> CONSTRUCTORS;
 
 	static {
+		CONSTRUCTORS = new ArrayList<>();
 		END_PROCESS_MANAGER = new EndProcessManager();
-		CONSTRUCTORS = new ArrayList<Constructor<? extends EndProcess>>();
 		END_PROCESS_MANAGER.registerDefaults();
 	}
 
