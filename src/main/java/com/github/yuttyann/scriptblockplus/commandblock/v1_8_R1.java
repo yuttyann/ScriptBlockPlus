@@ -92,7 +92,6 @@ final class v1_8_R1 extends Ref_Vx_x_Rx {
 
 	private List<String[]> buildCommands(ICommandListener sender, String[] args, int pos) {
 		List<String[]> commands = new ArrayList<>();
-		@SuppressWarnings("unchecked")
 		List<EntityPlayer> playerList = PlayerSelector.getPlayers(sender, args[pos], EntityPlayer.class);
 		EntityPlayer[] players = playerList.toArray(new EntityPlayer[playerList.size()]);
 		if (players != null) {

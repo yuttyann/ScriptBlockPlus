@@ -35,9 +35,7 @@ public abstract class PlayerData implements SBPlayer {
 
 	@Override
 	public <T> T getData(String key, Class<T> classOfT) {
-		@SuppressWarnings("unchecked")
-		T value = classOfT == null ? (T) objectData.get(key) : classOfT.cast(objectData.get(key));
-		return value;
+		return classOfT == null ? (T) objectData.get(key) : classOfT.cast(objectData.get(key));
 	}
 
 	@Override
@@ -47,9 +45,7 @@ public abstract class PlayerData implements SBPlayer {
 
 	@Override
 	public <T> T removeData(String key, Class<T> classOfT) {
-		@SuppressWarnings("unchecked")
-		T value = classOfT == null ? (T) objectData.remove(key) : classOfT.cast(objectData.remove(key));
-		return value;
+		return classOfT == null ? (T) objectData.remove(key) : classOfT.cast(objectData.remove(key));
 	}
 
 	@Override

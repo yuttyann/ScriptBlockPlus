@@ -217,9 +217,7 @@ public class FileUtils {
 		ObjectInputStream ois = null;
 		try {
 			ois = new ObjectInputStream(new FileInputStream(file));
-			@SuppressWarnings("unchecked")
-			T value = (T) ois.readObject();
-			return value;
+			return (T) ois.readObject();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

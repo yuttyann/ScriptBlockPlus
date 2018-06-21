@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.commandblock;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
@@ -51,5 +52,15 @@ public final class FakeCommandBlock {
 
 	public static boolean isPattern(String s) {
 		return COMMAND_PATTERN.matcher(s).matches();
+	}
+
+	String str;
+
+	public void set(String str) {
+		this.str = str;
+	}
+
+	public Optional<String> get() {
+		return Optional.ofNullable(str);
 	}
 }

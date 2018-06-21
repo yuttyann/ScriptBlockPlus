@@ -331,7 +331,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 				hasPermission(sender, Permission.COMMAND_WALK, "walk"),
 				hasPermission(sender, Permission.COMMAND_WORLDEDIT , "worldedit")
 			};
-			StreamUtils.filterForEach(answers, s -> s != null && s.startsWith(prefix), emptyList::add);
+			StreamUtils.filterForEach(answers, s -> StringUtils.startsWith(s, prefix), emptyList::add);
 		} else if (args.length == 2) {
 			if (equals(args[0], "worldedit")) {
 				if (Permission.COMMAND_WORLDEDIT.has(sender)) {

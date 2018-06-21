@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -52,7 +54,10 @@ public class Utils {
 	}
 
 	public static boolean isUpperVersion(String source, String target) {
-		return getVersionInt(source) >= getVersionInt(target);
+		if (StringUtils.isNotEmpty(source) && StringUtils.isNotEmpty(target)) {
+			return getVersionInt(source) >= getVersionInt(target);
+		}
+		return false;
 	}
 
 	public static int getVersionInt(String source) {
@@ -69,6 +74,7 @@ public class Utils {
 	}
 
 	public static String getFormatTime(String pattern) {
+		Validate.notNull(pattern, "Pattern cannot be null");
 		return new SimpleDateFormat(pattern).format(new Date());
 	}
 
@@ -77,26 +83,21 @@ public class Utils {
 	}
 
 	public static void sendMessage(CommandSender sender, String message) {
-		if (StringUtils.isEmpty(message) || (sender instanceof Player && !((Player) sender).isOnline())) {
-			return;
-		}
-		String color = "";
-		message = StringUtils.replace(message, "\\n", "|~");
-		for (String line : StringUtils.split(message, "|~")) {
-			sender.sendMessage(line = (color + line));
-			if (line.indexOf('§') > -1) {
-				color = StringUtils.getColors(line);
+		if (StringUtils.isNotEmpty(message) && sender instanceof Player && ((Player) sender).isOnline()) {
+			message = StringUtils.replace(message, "\\n", "|~");
+			String color = "";
+			for (String line : StringUtils.split(message, "|~")) {
+				sender.sendMessage(line = (color + line));
+				if (line.indexOf('§') > -1) {
+					color = StringUtils.getColors(line);
+				}
 			}
 		}
 	}
 
 	public static boolean dispatchCommand(CommandSender sender, Location location, String command) {
-		if (sender == null) {
-			throw new IllegalArgumentException("Sender cannot be null");
-		}
-		if (StringUtils.isEmpty(command)) {
-			throw new IllegalArgumentException("Command cannot be " + command == null ? "null" : "empty");
-		}
+		Validate.notNull(sender, "Sender cannot be null");
+		Validate.notNull(command, "Command cannot be null");
 		if (FakeCommandBlock.isCommandPattern(command)) {
 			if (location == null) {
 				if (sender instanceof Player) {
@@ -105,13 +106,12 @@ public class Utils {
 					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
 				} else if (sender instanceof CommandMinecart) {
 					location = ((CommandMinecart) sender).getLocation().clone();
-				} else {
-					throw new IllegalArgumentException("Location is an invalid value");
 				}
 			}
+			Validate.notNull(location, "Location is an invalid value");
 			return FakeCommandBlock.getListener().executeCommand(sender, location, command);
 		} else {
-			return Bukkit.dispatchCommand(sender, command.charAt(0) == '/' ? command.substring(1) : command);
+			return Bukkit.dispatchCommand(sender, command.startsWith("/") ? command.substring(1) : command);
 		}
 	}
 
@@ -120,22 +120,14 @@ public class Utils {
 		player.updateInventory();
 	}
 
+	@SuppressWarnings("deprecation")
 	public static ItemStack getItemInMainHand(Player player) {
 		PlayerInventory inventory = player.getInventory();
-		if (isCBXXXorLater("1.9")) {
-			return inventory.getItemInMainHand();
-		} else {
-			@SuppressWarnings("deprecation")
-			ItemStack item = inventory.getItemInHand();
-			return item;
-		}
+		return isCBXXXorLater("1.9") ? inventory.getItemInMainHand() : inventory.getItemInHand();
 	}
 
 	public static ItemStack getItemInOffHand(Player player) {
-		if (isCBXXXorLater("1.9")) {
-			return player.getInventory().getItemInOffHand();
-		}
-		return null;
+		return isCBXXXorLater("1.9") ? player.getInventory().getItemInOffHand() : null;
 	}
 
 	public static ItemStack[] getHandItems(Player player) {
@@ -155,11 +147,8 @@ public class Utils {
 	}
 
 	public static World getWorld(String name) {
+		Validate.notNull(name, "Name cannot be null");
 		try {
-			if (StringUtils.isEmpty(name)) {
-				return null;
-			}
-			name = name.trim();
 			World world = Bukkit.getWorld(name);
 			if (world == null) {
 				File file = new File(Bukkit.getWorldContainer(), name + "/level.dat");
@@ -180,9 +169,6 @@ public class Utils {
 	}
 
 	public static Player getPlayer(UUID uuid) {
-		if (uuid == null) {
-			return null;
-		}
 		if (isCBXXXorLater("1.7.5")) {
 			return Bukkit.getPlayer(uuid);
 		}
@@ -195,12 +181,9 @@ public class Utils {
 	}
 
 	public static OfflinePlayer getOfflinePlayer(UUID uuid) {
-		if (uuid == null) {
-			return null;
-		}
-		OfflinePlayer player = null;
 		if (isCBXXXorLater("1.7.5")) {
-			player = Bukkit.getOfflinePlayer(uuid);
+			OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+			return (player == null || !player.hasPlayedBefore()) ? null : player;
 		} else {
 			String name = getName(uuid);
 			for (OfflinePlayer offline : Bukkit.getOfflinePlayers()) {
@@ -209,56 +192,47 @@ public class Utils {
 				}
 			}
 		}
-		return (player == null || !player.hasPlayedBefore()) ? null : player;
+		return null;
 	}
 
 	public static String getName(UUID uuid) {
-		try {
-			if (uuid == null) {
-				return null;
-			}
-			if (isCBXXXorLater("1.7.5")) {
-				OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+		if (uuid != null) {
+			try {
+				OfflinePlayer player = null;
+				if (isCBXXXorLater("1.7.5")) {
+					player = Bukkit.getOfflinePlayer(uuid);
+				}
 				return (player == null || !player.hasPlayedBefore()) ? ProfileFetcher.getName(uuid) : player.getName();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			return ProfileFetcher.getName(uuid);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return null;
 	}
 
 	public static UUID getUniqueId(OfflinePlayer player) {
-		if (player == null || !player.hasPlayedBefore()) {
-			return null;
-		}
-		try {
-			return isCBXXXorLater("1.7.5") ? player.getUniqueId() : ProfileFetcher.getUniqueId(player.getName());
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (player.hasPlayedBefore()) {
+			try {
+				return isCBXXXorLater("1.7.5") ? player.getUniqueId() : ProfileFetcher.getUniqueId(player.getName());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
 
 	public static List<Player> getOnlinePlayers() {
+		Object[] emptyArray = ArrayUtils.EMPTY_OBJECT_ARRAY;
 		try {
 			Method method = Bukkit.class.getMethod("getOnlinePlayers", ArrayUtils.EMPTY_CLASS_ARRAY);
 			if (method.getReturnType() == Collection.class) {
-				Collection<?> temp = ((Collection<?>) method.invoke(null, ArrayUtils.EMPTY_OBJECT_ARRAY));
-				@SuppressWarnings("unchecked")
-				Collection<? extends Player> players = (Collection<? extends Player>) temp;
-				return new ArrayList<>(players);
+				return new ArrayList<>((Collection<? extends Player>) method.invoke(null, emptyArray));
 			} else {
-				Player[] temp = (Player[]) method.invoke(null, ArrayUtils.EMPTY_OBJECT_ARRAY);
-				List<Player> players = new ArrayList<>(temp.length);
-				for (Player player : temp) {
-					players.add(player);
-				}
-				return players;
+				return new ArrayList<>(Arrays.asList((Player[]) method.invoke(null, emptyArray)));
 			}
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
-		return new ArrayList<Player>();
+		return new ArrayList<>();
 	}
 }

@@ -24,11 +24,10 @@ public class ProfileFetcher {
 	private static final Map<String, UUID> UUID_CACHE_MAP = new HashMap<>();
 	private static final Map<UUID, String> NAME_CACHE_MAP = new HashMap<>();
 
-	public static UUID getUniqueId(String name) throws Exception {
+	public static UUID getUniqueId(String name) throws ProtocolException, ParseException, IOException {
 		UUID uuid = UUID_CACHE_MAP.get(name);
 		if (uuid == null) {
-			String url = PROFILE_NAME_URL + name;
-			JSONObject json = getJsonObject(url);
+			JSONObject json = getJsonObject(PROFILE_NAME_URL + name);
 			String errorMessage = (String) json.get("errorMessage");
 			if (StringUtils.isNotEmpty(errorMessage)) {
 				throw new IllegalStateException(errorMessage);
@@ -39,11 +38,10 @@ public class ProfileFetcher {
 		return uuid;
 	}
 
-	public static String getName(UUID uuid) throws Exception {
+	public static String getName(UUID uuid) throws ProtocolException, ParseException, IOException {
 		String name = NAME_CACHE_MAP.get(uuid);
 		if (name == null) {
-			String url = PROFILE_UUID_URL + StringUtils.replace(uuid.toString(), "-", "");
-			JSONObject json = getJsonObject(url);
+			JSONObject json = getJsonObject(PROFILE_UUID_URL + StringUtils.replace(uuid.toString(), "-", ""));
 			String errorMessage = (String) json.get("errorMessage");
 			if (StringUtils.isNotEmpty(errorMessage)) {
 				throw new IllegalStateException(errorMessage);
@@ -73,13 +71,12 @@ public class ProfileFetcher {
 			connection.setInstanceFollowRedirects(true);
 			connection.connect();
 			int httpStatusCode = connection.getResponseCode();
-			if (httpStatusCode != HttpURLConnection.HTTP_OK) {
-				connection.disconnect();
-				return null;
+			if (httpStatusCode == HttpURLConnection.HTTP_OK) {
+				reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String line = reader.readLine();
+				return StringUtils.isNotEmpty(line) ? (JSONObject) JSON_PARSER.parse(line) : null;
 			}
-			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String line = reader.readLine();
-			return StringUtils.isNotEmpty(line) ? (JSONObject) JSON_PARSER.parse(line) : null;
+			connection.disconnect();
 		} catch (ParseException e) {
 			throw e;
 		} catch (ProtocolException e) {
@@ -95,5 +92,6 @@ public class ProfileFetcher {
 				}
 			}
 		}
+		return null;
 	}
 }

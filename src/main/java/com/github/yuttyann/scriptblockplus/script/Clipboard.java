@@ -1,8 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -91,7 +89,7 @@ public final class Clipboard {
 			return false;
 		}
 		if (lastEdit == null || updateTime) {
-			lastEdit = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+			lastEdit = Utils.getFormatTime("yyyy/MM/dd HH:mm:ss");
 		}
 		scriptData.setAuthor(author);
 		scriptData.addAuthor(sbPlayer.getOfflinePlayer());

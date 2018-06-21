@@ -114,9 +114,7 @@ public abstract class AbstractConstructor<T> {
 				Type[] types = ((ParameterizedType) type).getActualTypeArguments();
 				genericClass = Class.forName(types[0].getTypeName());
 			}
-			@SuppressWarnings("unchecked")
-			T[] array = (T[]) Array.newInstance(genericClass, getConstructors().size());
-			return array;
+			return (T[]) Array.newInstance(genericClass, getConstructors().size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -509,9 +509,7 @@ public final class SBConfig {
 	}
 
 	private static List<String> getStringList(String key) {
-		@SuppressWarnings("unchecked")
-		List<String> list = (List<String>) DATAS.get(key);
-		return list;
+		return (List<String>) DATAS.get(key);
 	}
 
 	private static String getString(String key) {

@@ -3,9 +3,6 @@ package com.github.yuttyann.scriptblockplus.manager.auxiliary;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.function.BiConsumer;
 
 import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 
@@ -75,57 +72,5 @@ public final class SBMap<T> implements Serializable {
 
 	public Map<ScriptType, Map<String, T>> getMap() {
 		return sbMap;
-	}
-
-	public void forEach(BiConsumer<Entry<ScriptType, String>, T> action) {
-		SBEntry<ScriptType, String> sbEntry = new SBEntry<ScriptType, String>(null, null);
-		for (Entry<ScriptType, Map<String, T>> entry1 : sbMap.entrySet()) {
-			for (Entry<String, T> entry2 : entry1.getValue().entrySet()) {
-				sbEntry.key = entry1.getKey();
-				sbEntry.value = entry2.getKey();
-				action.accept(sbEntry, entry2.getValue());
-			}
-		}
-	}
-
-	private class SBEntry<K, V> implements Entry<K, V> {
-
-		private K key;
-		private V value;
-
-		private SBEntry(K key, V value) {
-			this.key = key;
-			this.value = value;
-		}
-
-		public K getKey() {
-			return key;
-		}
-
-		public V getValue() {
-			return value;
-		}
-
-		@Override
-		public V setValue(V value) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hashCode(key) ^ Objects.hashCode(value);
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (o == this) {
-				return true;
-			}
-			if (o instanceof Entry) {
-				Entry<?, ?> entry = (Entry<?, ?>) o;
-				return Objects.equals(key, entry.getKey()) && Objects.equals(value, entry.getValue());
-			}
-			return false;
-		}
 	}
 }

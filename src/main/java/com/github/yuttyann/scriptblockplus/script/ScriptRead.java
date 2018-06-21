@@ -146,9 +146,9 @@ public final class ScriptRead extends IAssist implements SBRead {
 		return value;
 	}
 
-	private List<String> getScripts(String scriptLine) {
+	private List<String> getScripts(String script) {
 		try {
-			return StringUtils.getScripts(scriptLine);
+			return StringUtils.getScripts(script);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}

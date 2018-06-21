@@ -13,10 +13,10 @@ public class StringUtils {
 
 	private static final Random RANDOM = new Random();
 
-	public static List<String> getScripts(String scriptLine) throws IllegalArgumentException {
-		char[] chars = scriptLine.toCharArray();
+	public static List<String> getScripts(String script) throws IllegalArgumentException {
+		char[] chars = script.toCharArray();
 		if (chars[0] != '[' || chars[chars.length - 1] != ']') {
-			return Arrays.asList(scriptLine);
+			return Arrays.asList(script);
 		}
 		int start = 0;
 		int end = 0;
@@ -35,7 +35,7 @@ public class StringUtils {
 			if (chars[i] == '[' && j++ == 0) {
 				k = i;
 			} else if (chars[i] == ']' && --j == 0) {
-				result.add(scriptLine.substring(k + 1, i));
+				result.add(script.substring(k + 1, i));
 			}
 		}
 		return result;
@@ -156,6 +156,10 @@ public class StringUtils {
 			return source;
 		}
 		return source.startsWith(prefix) ? source.substring(prefix.length(), source.length()) : source;
+	}
+
+	public static boolean startsWith(String source, String prefix) {
+		return isEmpty(source) ? false : source.startsWith(prefix);
 	}
 
 	public static boolean isNotEmpty(String source) {
