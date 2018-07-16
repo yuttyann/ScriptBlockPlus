@@ -13,7 +13,12 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public abstract class AbstractConstructor<T> {
 
+
 	private Class<?> genericClass;
+
+	private final List<Constructor<? extends T>> list = initialList();
+
+	protected abstract List<Constructor<? extends T>> initialList();
 
 	public abstract void registerDefaults();
 
@@ -67,7 +72,9 @@ public abstract class AbstractConstructor<T> {
 		return true;
 	}
 
-	public abstract List<Constructor<? extends T>> getConstructors();
+	public List<Constructor<? extends T>> getConstructors() {
+		return list;
+	}
 
 	public T[] newInstances() {
 		return newInstances(newGenericArray());
