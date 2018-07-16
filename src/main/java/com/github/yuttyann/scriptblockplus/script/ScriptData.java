@@ -10,7 +10,6 @@ import org.bukkit.OfflinePlayer;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;

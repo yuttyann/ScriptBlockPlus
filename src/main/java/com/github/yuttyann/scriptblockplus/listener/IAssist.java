@@ -4,8 +4,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 
 public class IAssist implements Listener {
 

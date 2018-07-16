@@ -21,7 +21,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class BaseSBPlayer extends PlayerData {
 
-	private static final Map<UUID, SBPlayer> PLAYERS = new HashMap<>(32);
+	private static final Map<UUID, SBPlayer> PLAYERS = new HashMap<>(64);
 
 	private final UUID uuid;
 	private Player player;
@@ -30,7 +30,7 @@ public final class BaseSBPlayer extends PlayerData {
 		this.uuid = Objects.requireNonNull(uuid);
 	}
 
-	protected static SBPlayer getSBPlayer(UUID uuid) {
+	static SBPlayer getSBPlayer(UUID uuid) {
 		SBPlayer sbPlayer = PLAYERS.get(uuid);
 		if (sbPlayer == null) {
 			sbPlayer = new BaseSBPlayer(uuid);

@@ -90,9 +90,7 @@ public class InteractListener implements Listener {
 		}
 		BlockInteractEvent interactEvent = new BlockInteractEvent(event, null, false);
 		Bukkit.getPluginManager().callEvent(interactEvent);
-		if (interactEvent.isCancelled()) {
-			event.setCancelled(true);
-		}
+		event.setCancelled(interactEvent.isCancelled());
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)

@@ -86,7 +86,7 @@ public final class ScriptRead extends IAssist implements SBRead {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return false;
 		}
-		List<Option> options = OptionList.getOptions();
+		List<Option> options = OptionList.getList();
 		if (!sort(scriptData.getScripts(), options)) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptMessage(scriptType));
 			Utils.sendMessage(SBConfig.getConsoleErrorScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));

@@ -12,19 +12,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Button;
 import org.bukkit.material.Door;
 import org.bukkit.material.Lever;
-import org.bukkit.material.MaterialData;
 import org.bukkit.material.TrapDoor;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.EquipSlot;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
+import com.github.yuttyann.scriptblockplus.event.ScriptBlockEditEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptType.SPermission;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -59,11 +60,10 @@ public class ScriptInteractListener extends IAssist {
 					|| (action == Action.RIGHT_CLICK_BLOCK && !SBConfig.isRightClick())) {
 				return;
 			}
-			MaterialData data = block.getState().getData();
-			if (isPowered(data) || isOpen(data)) {
+			if (isPowered(block) || isOpen(block)) {
 				return;
 			}
-			if (!Permission.INTERACT_USE.has(player)) {
+			if (!SPermission.has(player, ScriptType.INTERACT, false)) {
 				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
 				return;
 			}
@@ -100,18 +100,23 @@ public class ScriptInteractListener extends IAssist {
 		}
 		if (sbPlayer.hasClickAction()) {
 			String[] array = StringUtils.split(sbPlayer.getClickAction(), "_");
-			ScriptEdit scriptEdit = new ScriptEdit(ScriptType.valueOf(array[0]));
-			switch (array[1]) {
-			case "CREATE":
+			ScriptBlockEditEvent editEvent = new ScriptBlockEditEvent(player, location.getBlock(), array);
+			Bukkit.getPluginManager().callEvent(editEvent);
+			if (editEvent.isCancelled()) {
+				return false;
+			}
+			ScriptEdit scriptEdit = new ScriptEdit(editEvent.getScriptType());
+			switch (editEvent.getActionType()) {
+			case CREATE:
 				scriptEdit.create(sbPlayer, location, sbPlayer.getScriptLine());
 				return true;
-			case "ADD":
+			case ADD:
 				scriptEdit.add(sbPlayer, location, sbPlayer.getScriptLine());
 				return true;
-			case "REMOVE":
+			case REMOVE:
 				scriptEdit.remove(sbPlayer, location);
 				return true;
-			case "VIEW":
+			case VIEW:
 				scriptEdit.view(sbPlayer, location);
 				return true;
 			}
@@ -123,14 +128,15 @@ public class ScriptInteractListener extends IAssist {
 		if (!HookPlugins.hasWorldEdit() || !Permission.has(player, "worldedit.selection.pos")) {
 			return false;
 		}
-		return item != null && item.getType() == HookPlugins.getWorldEditSelection().getWandType();
+		return item == null ? false : item.getType() == HookPlugins.getWorldEditSelection().getWandType();
 	}
 
 	private boolean isScriptEditor(Player player, ItemStack item) {
 		return Utils.checkItem(item, Material.BLAZE_ROD, "§dScript Editor");
 	}
 
-	private boolean isPowered(MaterialData data) {
+	private boolean isPowered(Block block) {
+		Object data = block.getState().getData();
 		if (data instanceof Button) {
 			return ((Button) data).isPowered();
 		}
@@ -140,7 +146,8 @@ public class ScriptInteractListener extends IAssist {
 		return false;
 	}
 
-	private boolean isOpen(MaterialData data) {
+	private boolean isOpen(Block block) {
+		Object data = block.getState().getData();
 		if (data instanceof Door) {
 			return ((Door) data).isOpen();
 		}
