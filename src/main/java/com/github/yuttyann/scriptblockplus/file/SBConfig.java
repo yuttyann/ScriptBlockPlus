@@ -11,9 +11,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.ClickType;
-import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -330,9 +330,9 @@ public final class SBConfig {
 		return replaceColorCode(message);
 	}
 
-	public static String getSuccEditDataMessage(ScriptType scriptType, ClickType clickType) {
-		String type = scriptType.getType() + "-"  + clickType.name().toLowerCase();
-		return replaceColorCode(replace(getString("succEditDataMessage"), "%clicktype%", type));
+	public static String getSuccEditDataMessage(ScriptType scriptType, ActionType actionType) {
+		String type = scriptType.getType() + "-"  + actionType.name().toLowerCase();
+		return replaceColorCode(replace(getString("succEditDataMessage"), "%actionType%", type));
 	}
 
 	public static String getErrorEditDataMessage() {
@@ -355,20 +355,20 @@ public final class SBConfig {
 		return replaceColorCode(replace(getString("errorGroupMessage"), "%group%", group));
 	}
 
-	public static String getErrorHandMessage(Material material, int id, int amount, short damage, String itemName) {
+	public static String getErrorHandMessage(Material material, String id, int amount, short damage, String itemName) {
 		String message = getString("errorHandMessage");
 		message = replace(message, "%material%", material.toString());
-		message = replace(message, "%id%", id + "");
+		message = replace(message, "%id%", id);
 		message = replace(message, "%amount%", amount + "");
 		message = replace(message, "%damage%", damage + "");
 		message = replace(message, "%itemname%", itemName != null ? itemName : material.toString());
 		return replaceColorCode(message);
 	}
 
-	public static String getErrorItemMessage(Material material, int id, int amount, short damage, String itemName) {
+	public static String getErrorItemMessage(Material material, String id, int amount, short damage, String itemName) {
 		String message = getString("errorItemMessage");
 		message = replace(message, "%material%", material.toString());
-		message = replace(message, "%id%", id + "");
+		message = replace(message, "%id%", id);
 		message = replace(message, "%amount%", amount + "");
 		message = replace(message, "%damage%", damage + "");
 		message = replace(message, "%itemname%", itemName != null ? itemName : material.toString());
