@@ -5,22 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
-import com.github.yuttyann.scriptblockplus.enums.ScriptType;
-import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
-import com.github.yuttyann.scriptblockplus.event.ScriptBlockEvent;
-import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
-import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
 import com.github.yuttyann.scriptblockplus.listener.IAssist;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
@@ -46,18 +41,10 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 
 	@Override
 	public boolean scriptRead(int index, Player player) {
-		try {
-			if (getScriptType() == null || getLocation() == null) {
-				return false;
-			}
-			ScriptBlockEvent event = callEvent(player, getScriptType());
-			if (event == null || event.isCancelled()) {
-				return false;
-			}
-			return new ScriptRead(iAssist, player, getLocation()).read(index);
-		} catch (Exception e) {
+		if (getScriptType() == null || getLocation() == null) {
 			return false;
 		}
+		return new ScriptRead(iAssist, player, getLocation()).read(index);
 	}
 
 	@Override
@@ -264,27 +251,6 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 	@Override
 	public void reload() {
 		scriptData.reload();
-	}
-
-	private ScriptBlockEvent callEvent(Player player, ScriptType scriptType) {
-		ScriptBlockEvent event;
-		switch (scriptType) {
-		case INTERACT:
-			event = new ScriptBlockInteractEvent(player, getLocation().getBlock());
-			break;
-		case BREAK:
-			event = new ScriptBlockBreakEvent(player, getLocation().getBlock());
-			break;
-		case WALK:
-			event = new ScriptBlockWalkEvent(player, getLocation().getBlock());
-			break;
-		default:
-			event = null;
-		}
-		if (event != null) {
-			Bukkit.getPluginManager().callEvent(event);
-		}
-		return event;
 	}
 
 	private void setCoords(MapManager mapManager, ScriptType scriptType, Location location, boolean isAdd) {
