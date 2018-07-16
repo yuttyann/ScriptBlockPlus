@@ -1,6 +1,7 @@
 name: ${project.name}
 main: com.github.yuttyann.scriptblockplus.ScriptBlock
 version: ${project.version}
+api-version: 1.13
 description: ${project.description}
 author: yuttyann44581
 website: https://github.com/yuttyann/ScriptBlockPlus
