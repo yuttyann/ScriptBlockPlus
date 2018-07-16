@@ -6,8 +6,8 @@ import java.util.UUID;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -34,14 +34,14 @@ public class Cooldown extends BaseOption {
 
 		public void runTaskTimer() {
 			ScriptBlock plugin = ScriptBlock.getInstance();
-			plugin.getMapManager().getCooldownMap().put(timeData.hashCode(), timeData);
+			plugin.getMapManager().getCooldowns().put(timeData.hashCode(), timeData);
 			runTaskTimer(plugin, 0, 20L);
 		}
 
 		@Override
 		public void run() {
 			if (--timeData.second <= 0) {
-				ScriptBlock.getInstance().getMapManager().getCooldownMap().remove(timeData.hashCode());
+				ScriptBlock.getInstance().getMapManager().getCooldowns().remove(timeData.hashCode());
 				cancel();
 			}
 		}
@@ -68,7 +68,7 @@ public class Cooldown extends BaseOption {
 
 	private int getSecond() {
 		int hashKey = Objects.hash(getScriptIndex(), getUniqueId(), getFullCoords(), getScriptType());
-		TimeData timeData = getMapManager().getCooldownMap().get(hashKey);
+		TimeData timeData = getMapManager().getCooldowns().get(hashKey);
 		return timeData == null ? -1 : timeData.second;
 	}
 }

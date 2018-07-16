@@ -30,14 +30,14 @@ public class OldCooldown extends BaseOption {
 
 		public void runTaskTimer() {
 			ScriptBlock plugin = ScriptBlock.getInstance();
-			plugin.getMapManager().getCooldownMap().put(timeData.hashCode(), timeData);
+			plugin.getMapManager().getCooldowns().put(timeData.hashCode(), timeData);
 			runTaskTimer(plugin, 0, 20L);
 		}
 
 		@Override
 		public void run() {
 			if (--timeData.second <= 0) {
-				ScriptBlock.getInstance().getMapManager().getCooldownMap().remove(timeData.hashCode());
+				ScriptBlock.getInstance().getMapManager().getCooldowns().remove(timeData.hashCode());
 				cancel();
 			}
 		}
@@ -64,7 +64,7 @@ public class OldCooldown extends BaseOption {
 
 	private int getSecond() {
 		int hashKey = Objects.hash(getScriptIndex(), getFullCoords());
-		TimeData timeData = getMapManager().getCooldownMap().get(hashKey);
+		TimeData timeData = getMapManager().getCooldowns().get(hashKey);
 		return timeData == null ? -1 : timeData.second;
 	}
 }
