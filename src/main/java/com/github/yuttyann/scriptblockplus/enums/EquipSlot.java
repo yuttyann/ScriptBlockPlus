@@ -1,14 +1,27 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
+import java.lang.reflect.Method;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.event.player.PlayerEvent;
+
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+
 public enum EquipSlot {
-	HAND, OFF_HAND, FEET, LEGS, CHEST, HEAD, NONE;
+	HAND,
+	OFF_HAND,
+	FEET,
+	LEGS,
+	CHEST,
+	HEAD,
+	NONE;
 
 	private static final Class<?> BUKKIT_ES_CLASS;
 
 	static {
 		Class<?> clazz = null;
 		try {
-			clazz = Class.forName("org.bukkit.inventory.EquipmentSlot");
+			clazz = Utils.isCBXXXorLater("1.9") ? null : Class.forName("org.bukkit.inventory.EquipmentSlot");
 		} catch (ClassNotFoundException e) {}
 		BUKKIT_ES_CLASS = clazz;
 	}
@@ -40,6 +53,19 @@ public enum EquipSlot {
 		default:
 			return NONE;
 		}
+	}
+
+	public static EquipSlot getHand(PlayerEvent event) {
+		if (event != null && Utils.isCBXXXorLater("1.9")) {
+			try {
+				Method method = event.getClass().getMethod("getHand");
+				if (method.getReturnType() == BUKKIT_ES_CLASS) {
+					Object hand = method.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY);
+					return fromEquipmentSlot((Enum<?>) hand);
+				}
+			} catch (ReflectiveOperationException e) {}
+		}
+		return HAND;
 	}
 
 	private static boolean isBukkitEquipmentSlot(Enum<?> bukkitEquipmentSlot) {
