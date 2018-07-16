@@ -14,10 +14,10 @@ import org.bukkit.Location;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBMap;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.time.TimeData;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -25,23 +25,23 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 public final class MapManager {
 
 	private ScriptBlock plugin;
-	private SBMap<List<UUID>> delayMap;
-	private Map<Integer, TimeData> cooldownMap;
+	private SBMap<List<UUID>> delays;
+	private Map<Integer, TimeData> cooldowns;
 	private Map<ScriptType, Set<String>> scriptCoords;
 
 	public MapManager(ScriptBlock plugin) {
 		this.plugin = plugin;
-		this.delayMap = new SBMap<>();
-		this.cooldownMap = new HashMap<>();
+		this.delays = new SBMap<>();
+		this.cooldowns = new HashMap<>();
 		this.scriptCoords = new HashMap<>();
 	}
 
-	public SBMap<List<UUID>> getDelayMap() {
-		return delayMap;
+	public SBMap<List<UUID>> getDelays() {
+		return delays;
 	}
 
-	public Map<Integer, TimeData> getCooldownMap() {
-		return cooldownMap;
+	public Map<Integer, TimeData> getCooldowns() {
+		return cooldowns;
 	}
 
 	public Map<ScriptType, Set<String>> getScriptCoords() {
@@ -63,11 +63,11 @@ public final class MapManager {
 	}
 
 	public void saveCooldown() {
-		if (cooldownMap.size() > 0) {
+		if (cooldowns.size() > 0) {
 			File cooldownFile = new File(plugin.getDataFolder(), "scripts/cooldown.dat");
 			Set<Map<String, Object>> set = new HashSet<>();
 			try {
-				cooldownMap.values().forEach(t -> set.add(t.serialize()));
+				cooldowns.values().forEach(t -> set.add(t.serialize()));
 			} catch (Exception e) {
 				set.clear();
 			} finally {
@@ -86,7 +86,7 @@ public final class MapManager {
 				set.forEach(TimeData::deserialize);
 			} catch (Exception e) {
 				e.printStackTrace();
-				cooldownMap = new HashMap<>();
+				cooldowns = new HashMap<>();
 			} finally {
 				cooldownFile.delete();
 			}
@@ -94,23 +94,23 @@ public final class MapManager {
 	}
 
 	public void putDelay(ScriptType scriptType, String fullCoords, UUID uuid) {
-		List<UUID> uuids = delayMap.get(scriptType, fullCoords);
+		List<UUID> uuids = delays.get(scriptType, fullCoords);
 		if (uuids == null) {
 			uuids = new ArrayList<>();
-			delayMap.put(scriptType, fullCoords, uuids);
+			delays.put(scriptType, fullCoords, uuids);
 		}
 		uuids.add(uuid);
 	}
 
 	public void removeDelay(ScriptType scriptType, String fullCoords, UUID uuid) {
-		List<UUID> uuids = delayMap.get(scriptType, fullCoords);
+		List<UUID> uuids = delays.get(scriptType, fullCoords);
 		if (uuids != null) {
 			uuids.remove(uuid);
 		}
 	}
 
 	public boolean containsDelay(ScriptType scriptType, String fullCoords, UUID uuid) {
-		List<UUID> uuids = delayMap.get(scriptType, fullCoords);
+		List<UUID> uuids = delays.get(scriptType, fullCoords);
 		return uuids == null ?  false : uuids.contains(uuid);
 	}
 
@@ -143,15 +143,16 @@ public final class MapManager {
 	}
 
 	public void removeTimes(ScriptType scriptType, String fullCoords) {
-		delayMap.remove(scriptType, fullCoords);
+		delays.remove(scriptType, fullCoords);
+
 		Set<Integer> set = new HashSet<>();
-		for (Entry<Integer, TimeData> entry : cooldownMap.entrySet()) {
+		for (Entry<Integer, TimeData> entry : cooldowns.entrySet()) {
 			TimeData timeData = entry.getValue();
 			if (timeData.getFullCoords().equals(fullCoords)
 					&& timeData.getScriptType() == null ? true : timeData.getScriptType() == scriptType) {
 				set.add(entry.getKey());
 			}
 		}
-		set.forEach(cooldownMap::remove);
+		set.forEach(cooldowns::remove);
 	}
 }
