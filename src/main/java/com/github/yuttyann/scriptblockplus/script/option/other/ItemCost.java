@@ -28,8 +28,8 @@ public class ItemCost extends BaseOption {
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), " ");
 		String[] itemData = StringUtils.split(array[0], ":");
+		String id = getId(itemData[0]);
 		short damage = itemData.length > 1 ? Short.parseShort(itemData[1]) : 0;
-		int id = Integer.parseInt(getId(itemData[0]));
 		int amount = Integer.parseInt(array[1]);
 		String create = array.length > 2 ? StringUtils.createString(array, 2) : null;
 		String itemName = StringUtils.replaceColorCode(create, false);
@@ -73,7 +73,7 @@ public class ItemCost extends BaseOption {
 		return item;
 	}
 
-	private boolean checkItem(ItemStack item, String itemName, int id, short damage) {
+	private boolean checkItem(ItemStack item, String itemName, String id, short damage) {
 		if (item == null || item.getType() != getMaterial(id) || item.getDurability() != damage) {
 			return false;
 		}
@@ -89,9 +89,13 @@ public class ItemCost extends BaseOption {
 		return id;
 	}
 
-	private Material getMaterial(int id) {
-		@SuppressWarnings("deprecation")
-		Material material = Material.getMaterial(id);
+	static Material getMaterial(String id) {
+		Material material = null;
+		if (Utils.isCBXXXorLater("1.13")) {
+			material = Material.getMaterial(id);
+		} else {
+			material = Utils.getMaterial(Integer.valueOf(id));
+		}
 		return material;
 	}
 }
