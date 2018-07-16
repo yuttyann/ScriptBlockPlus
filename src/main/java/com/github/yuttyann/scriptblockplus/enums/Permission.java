@@ -10,13 +10,17 @@ public enum Permission {
 	COMMAND_BACKUP("scriptblockplus.command.backup"),
 	COMMAND_CHECKVER("scriptblockplus.command.checkver"),
 	COMMAND_DATAMIGR("scriptblockplus.command.datamigr"),
+	/*
 	COMMAND_INTERACT("scriptblockplus.command.interact"),
 	COMMAND_BREAK("scriptblockplus.command.break"),
 	COMMAND_WALK("scriptblockplus.command.walk"),
+	*/
 	COMMAND_WORLDEDIT("scriptblockplus.command.worldedit"),
+	/*
 	INTERACT_USE("scriptblockplus.interact.use"),
 	BREAK_USE("scriptblockplus.break.use"),
 	WALK_USE("scriptblockplus.walk.use"),
+	*/
 	TOOL_SCRIPTEDITOR("scriptblockplus.tool.scripteditor");
 
 	private final String node;
