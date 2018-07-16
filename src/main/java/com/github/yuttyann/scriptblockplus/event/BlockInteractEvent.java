@@ -1,34 +1,24 @@
 package com.github.yuttyann.scriptblockplus.event;
 
-import java.lang.reflect.Method;
-
-import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.yuttyann.scriptblockplus.enums.EquipSlot;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable {
+public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 
-	private static final Method GET_HAND_METHOD;
+	private static final HandlerList HANDLERS = new HandlerList();
 
-	static {
-		Method method = null;
-		if (Utils.isCBXXXorLater("1.9")) {
-			try {
-				method = PlayerInteractEvent.class.getMethod("getHand");
-			} catch (ReflectiveOperationException e) {}
-		}
-		GET_HAND_METHOD = method;
-	}
-
+	private Block block;
 	private ItemStack item;
 	private Action action;
 	private BlockFace blockFace;
@@ -45,12 +35,21 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 	}
 
 	public BlockInteractEvent(PlayerInteractEvent event, Player player, Block block, ItemStack item, Action action, BlockFace blockFace, EquipSlot hand, boolean isAnimation) {
-		super(player, block);
+		super(player);
+		this.block = block;
 		this.item = item;
 		this.action = action;
 		this.blockFace = blockFace;
-		this.hand = hand == null ? fromHand(event) : hand;
+		this.hand = hand == null ? EquipSlot.getHand(event) : hand;
 		this.isAnimation = isAnimation;
+	}
+
+	public Block getBlock() {
+		return block;
+	}
+
+	public Location getLocation() {
+		return block.getLocation();
 	}
 
 	public ItemStack getItem() {
@@ -101,15 +100,12 @@ public class BlockInteractEvent extends ScriptBlockEvent implements Cancellable 
 		cancelled = cancel;
 	}
 
-	private EquipSlot fromHand(PlayerInteractEvent event) {
-		if (event == null || !Utils.isCBXXXorLater("1.9")) {
-			return EquipSlot.HAND;
-		}
-		try {
-			Object hand = GET_HAND_METHOD.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY);
-			return EquipSlot.fromEquipmentSlot((Enum<?>) hand);
-		} catch (ReflectiveOperationException e) {
-			return EquipSlot.HAND;
-		}
+	@Override
+	public HandlerList getHandlers() {
+		return HANDLERS;
+	}
+
+	public static HandlerList getHandlerList() {
+		return HANDLERS;
 	}
 }
