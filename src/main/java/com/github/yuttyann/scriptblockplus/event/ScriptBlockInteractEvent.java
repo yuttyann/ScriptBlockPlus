@@ -4,14 +4,9 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
-import org.bukkit.inventory.ItemStack;
-
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptBlockInteractEvent extends ScriptBlockEvent {
 
-	private ItemStack mainHand;
-	private ItemStack offHand;
 	private boolean isLeftClick;
 	private boolean cancelled;
 
@@ -21,24 +16,7 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent {
 
 	public ScriptBlockInteractEvent(Player player, Block block, Action action) {
 		super(player, block);
-		this.mainHand = Utils.getItemInMainHand(player);
-		this.offHand = Utils.getItemInOffHand(player);
 		this.isLeftClick = action.name().startsWith("LEFT_CLICK_");
-	}
-
-	public ItemStack getItemInMainHand() {
-		return mainHand;
-	}
-
-	public ItemStack getItemInOffHand() {
-		return offHand;
-	}
-
-	public ItemStack getItem(boolean isMainHand) {
-		if (!isMainHand && !Utils.isCBXXXorLater("1.9")) {
-			isMainHand = true;
-		}
-		return isMainHand ? mainHand : offHand;
 	}
 
 	public Material getMaterial(boolean isMainHand) {

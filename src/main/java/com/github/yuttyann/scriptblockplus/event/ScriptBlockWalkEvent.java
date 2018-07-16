@@ -3,36 +3,13 @@ package com.github.yuttyann.scriptblockplus.event;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.inventory.ItemStack;
 
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+public class ScriptBlockWalkEvent extends ScriptBlockEvent {
 
-public class ScriptBlockWalkEvent extends ScriptBlockEvent implements Cancellable {
-
-	private ItemStack mainHand;
-	private ItemStack offHand;
 	private boolean cancelled;
 
 	public ScriptBlockWalkEvent(Player player, Block block) {
 		super(player, block);
-		this.mainHand = Utils.getItemInMainHand(player);
-		this.offHand = Utils.getItemInOffHand(player);
-	}
-
-	public ItemStack getItemInMainHand() {
-		return mainHand;
-	}
-
-	public ItemStack getItemInOffHand() {
-		return offHand;
-	}
-
-	public ItemStack getItem(boolean isMainHand) {
-		if (!isMainHand && !Utils.isCBXXXorLater("1.9")) {
-			isMainHand = true;
-		}
-		return isMainHand ? mainHand : offHand;
 	}
 
 	public Material getMaterial(boolean isMainHand) {
