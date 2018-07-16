@@ -6,8 +6,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.ScriptType;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -44,8 +44,7 @@ public final class Files {
 	}
 
 	private static void loadScript(ScriptType scriptType) {
-		String type = scriptType.getType();
-		FILES.put(type, loadFile("scripts/" + type + ".yml", false));
+		FILES.put(scriptType.getType(), loadFile("scripts/" + scriptType.getType() + ".yml", false));
 	}
 
 	private static YamlConfig loadFile(String filePath, boolean isCopyFile) {
