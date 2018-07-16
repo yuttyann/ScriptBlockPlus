@@ -13,10 +13,8 @@ import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 public final class EndProcessManager extends AbstractConstructor<EndProcess> {
 
 	private final static EndProcessManager END_PROCESS_MANAGER;
-	private final static List<Constructor<? extends EndProcess>> CONSTRUCTORS;
 
 	static {
-		CONSTRUCTORS = new ArrayList<>();
 		END_PROCESS_MANAGER = new EndProcessManager();
 		END_PROCESS_MANAGER.registerDefaults();
 	}
@@ -30,16 +28,16 @@ public final class EndProcessManager extends AbstractConstructor<EndProcess> {
 	}
 
 	@Override
+	protected List<Constructor<? extends EndProcess>> initialList() {
+		return new ArrayList<Constructor<? extends EndProcess>>();
+	}
+
+	@Override
 	public void registerDefaults() {
 		getConstructors().clear();
 		add(EndClickAction.class);
 		add(EndItemCost.class);
 		add(EndMoneyCost.class);
-	}
-
-	@Override
-	public List<Constructor<? extends EndProcess>> getConstructors() {
-		return CONSTRUCTORS;
 	}
 
 	@Override
