@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.enums.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
@@ -198,13 +198,13 @@ public interface ScriptBlockAPI {
 	public void setLastEdit();
 
 	/**
-	 * スクリプトの実行回数を増やす
+	 * スクリプトの実行可能な回数を増やす
 	 * @param amount 量
 	 */
 	public void addAmount(int amount);
 
 	/**
-	 * スクリプトの実行回数を減らす
+	 * スクリプトの実行可能な回数を減らす
 	 * @param amount 量
 	 */
 	public void subtractAmount(int amount);
