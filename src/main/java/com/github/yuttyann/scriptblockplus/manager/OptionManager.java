@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,14 +34,9 @@ import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
 import com.github.yuttyann.scriptblockplus.script.option.vault.Perm;
 import com.github.yuttyann.scriptblockplus.script.option.vault.PermAdd;
 import com.github.yuttyann.scriptblockplus.script.option.vault.PermRemove;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public final class OptionManager extends AbstractConstructor<Option> {
-
-	private final static List<Constructor<? extends Option>> CONSTRUCTORS;
-
-	static {
-		CONSTRUCTORS = new ArrayList<Constructor<? extends Option>>();
-	}
 
 	private OptionManager() {
 		// OptionManager
@@ -61,9 +57,30 @@ public final class OptionManager extends AbstractConstructor<Option> {
 			return OPTION_MANAGER;
 		}
 
-		public static List<Option> getOptions() {
+		public static List<Option> getList() {
 			return Collections.unmodifiableList(OPTIONS);
 		}
+
+		public static Option[] toArray() {
+			return OPTIONS.toArray(new Option[OPTIONS.size()]);
+		}
+
+		public static String[] toArrayNames() {
+			String[] array = StreamUtils.toArray(OPTIONS, o -> o.getName(), new String[OPTIONS.size()]);
+			Arrays.sort(array);
+			return array;
+		}
+
+		public static String[] toArraySyntaxs() {
+			String[] array = StreamUtils.toArray(OPTIONS, o -> o.getSyntax(), new String[OPTIONS.size()]);
+			Arrays.sort(array);
+			return array;
+		}
+	}
+
+	@Override
+	protected ArrayList<Constructor<? extends Option>> initialList() {
+		return new ArrayList<Constructor<? extends Option>>();
 	}
 
 	@Override
@@ -95,11 +112,6 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		add(PermRemove.class);
 		add(Execute.class);
 		add(Amount.class);
-	}
-
-	@Override
-	public List<Constructor<? extends Option>> getConstructors() {
-		return CONSTRUCTORS;
 	}
 
 	@Override
