@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.json.simple.parser.ParseException;
 
 import com.github.yuttyann.scriptblockplus.commandblock.FakeCommandBlock;
 
@@ -120,6 +122,20 @@ public class Utils {
 		player.updateInventory();
 	}
 
+	public static Material getMaterial(int id) {
+		Material material = null;
+		if (!isCBXXXorLater("1.13")) {
+			try {
+				Class<?>[] emptyClass = ArrayUtils.EMPTY_CLASS_ARRAY;
+				Object[] emptyObject = ArrayUtils.EMPTY_OBJECT_ARRAY;
+				material = (Material) Material.class.getMethod("getMaterial", emptyClass).invoke(null, emptyObject);
+			} catch (ReflectiveOperationException e) {
+				e.printStackTrace();
+			}
+		}
+		return material;
+	}
+
 	@SuppressWarnings("deprecation")
 	public static ItemStack getItemInMainHand(Player player) {
 		PlayerInventory inventory = player.getInventory();
@@ -148,19 +164,14 @@ public class Utils {
 
 	public static World getWorld(String name) {
 		Validate.notNull(name, "Name cannot be null");
-		try {
-			World world = Bukkit.getWorld(name);
-			if (world == null) {
-				File file = new File(Bukkit.getWorldContainer(), name + "/level.dat");
-				if (file.exists()) {
-					world = Bukkit.createWorld(WorldCreator.name(name));
-				}
+		World world = Bukkit.getWorld(name);
+		if (world == null) {
+			File file = new File(Bukkit.getWorldContainer(), name + "/level.dat");
+			if (file.exists()) {
+				world = Bukkit.createWorld(WorldCreator.name(name));
 			}
-			return world;
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		return null;
+		return world;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -183,7 +194,7 @@ public class Utils {
 	public static OfflinePlayer getOfflinePlayer(UUID uuid) {
 		if (isCBXXXorLater("1.7.5")) {
 			OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-			return (player == null || !player.hasPlayedBefore()) ? null : player;
+			return player == null || !player.hasPlayedBefore() ? null : player;
 		} else {
 			String name = getName(uuid);
 			for (OfflinePlayer offline : Bukkit.getOfflinePlayers()) {
@@ -202,8 +213,8 @@ public class Utils {
 				if (isCBXXXorLater("1.7.5")) {
 					player = Bukkit.getOfflinePlayer(uuid);
 				}
-				return (player == null || !player.hasPlayedBefore()) ? ProfileFetcher.getName(uuid) : player.getName();
-			} catch (Exception e) {
+				return player == null || !player.hasPlayedBefore() ? ProfileFetcher.getName(uuid) : player.getName();
+			} catch (ParseException | IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -214,7 +225,7 @@ public class Utils {
 		if (player.hasPlayedBefore()) {
 			try {
 				return isCBXXXorLater("1.7.5") ? player.getUniqueId() : ProfileFetcher.getUniqueId(player.getName());
-			} catch (Exception e) {
+			} catch (ParseException | IOException e) {
 				e.printStackTrace();
 			}
 		}
