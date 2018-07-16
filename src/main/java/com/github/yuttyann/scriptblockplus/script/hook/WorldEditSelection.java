@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
@@ -55,8 +56,12 @@ public final class WorldEditSelection {
 	}
 
 	public Material getWandType() {
-		@SuppressWarnings("deprecation")
-		Material material = Material.getMaterial(worldEdit.getConfig().getInt("wand-item"));
+		Material material = null;
+		if (Utils.isCBXXXorLater("1.13")) {
+			material = Material.getMaterial(worldEdit.getConfig().getString("wand-item"));
+		} else {
+			material = Utils.getMaterial(worldEdit.getConfig().getInt("wand-item"));
+		}
 		return material;
 	}
 }
