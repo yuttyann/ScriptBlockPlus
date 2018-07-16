@@ -1,12 +1,25 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class StreamUtils {
+
+	public static <T, R> R[] toArray(Collection<T> collection, Function<T, R> mapper, R[] array) {
+		Objects.requireNonNull(collection);
+		Objects.requireNonNull(array);
+        Iterator<T> iterator = collection.iterator();
+        for (int i = 0; i < collection.size(); i++) {
+        	if (iterator.hasNext()) {
+        		array[i] = mapper.apply(iterator.next());
+        	}
+        }
+        return array;
+	}
 
 	public static <T> void forEach(T[] array, Consumer<T> action) {
 		Objects.requireNonNull(array);
