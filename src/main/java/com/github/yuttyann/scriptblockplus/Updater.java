@@ -209,17 +209,9 @@ public final class Updater {
 		if (1024 > length) {
 			return length + " Byte";
 		}
-		double size;
-		String unit;
-		if (1024 * 1024 > length) {
-			size = length / 1024;
-			unit = " KB";
-		} else {
-			size = length / 1024 / 1024;
-			unit = " MB";
-		}
-		int round = BigDecimal.ROUND_HALF_UP;
-		return new BigDecimal(size).setScale(1, round).doubleValue() + unit;
+		double size = 1024 * 1024 > length ? length / 1024 : length / 1024 / 1024;
+		String unit = 1024 * 1024 > length ? " KB" : " MB";
+		return new BigDecimal(size).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue() + unit;
 	}
 
 	private boolean textEquals(String url, File file) {
