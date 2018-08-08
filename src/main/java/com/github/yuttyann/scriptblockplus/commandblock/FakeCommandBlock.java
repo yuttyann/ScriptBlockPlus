@@ -2,6 +2,8 @@ package com.github.yuttyann.scriptblockplus.commandblock;
 
 import java.util.regex.Pattern;
 
+import com.github.yuttyann.scriptblockplus.commandblock.versions.Vx_x_Rx;
+import com.github.yuttyann.scriptblockplus.commandblock.versions.v1_8_R1;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -12,27 +14,15 @@ public final class FakeCommandBlock {
 	private static final CommandListener COMMAND_LISTENER;
 
 	static {
-		CommandListener listener;
+		Vx_x_Rx listener;
 		switch (PackageType.getVersionName()) {
-		case "v1_7_R1":
-			listener = new v1_7_R1();
-			break;
-		case "v1_7_R2":
-			listener = new v1_7_R2();
-			break;
-		case "v1_7_R3":
-			listener = new v1_7_R3();
-			break;
-		case "v1_7_R4":
-			listener = new v1_7_R4();
-			break;
 		case "v1_8_R1":
 			listener = new v1_8_R1();
 			break;
 		default:
-			listener = new Ref_Vx_x_Rx();
+			listener = new Vx_x_Rx();
 		}
-		COMMAND_LISTENER = listener;
+		COMMAND_LISTENER = listener.getCommandBlock();
 	}
 
 	public static CommandListener getListener() {
