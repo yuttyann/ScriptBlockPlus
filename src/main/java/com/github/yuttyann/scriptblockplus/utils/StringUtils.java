@@ -9,7 +9,7 @@ import java.util.Random;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.ChatColor;
 
-public class StringUtils {
+public final class StringUtils {
 
 	private static final Random RANDOM = new Random();
 
