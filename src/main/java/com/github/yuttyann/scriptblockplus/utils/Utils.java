@@ -2,19 +2,13 @@ package com.github.yuttyann.scriptblockplus.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -32,10 +26,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.parser.ParseException;
 
 import com.github.yuttyann.scriptblockplus.commandblock.FakeCommandBlock;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 
-public class Utils {
+public final class Utils {
 
 	private static final String SERVER_VERSION = getServerVersion();
+
 	private static final Map<String, Boolean> VC_CACHE_MAP = new HashMap<>();
 
 	public static String getServerVersion() {
@@ -122,18 +119,46 @@ public class Utils {
 		player.updateInventory();
 	}
 
+	public static void setItemName(ItemStack item, String name) {
+		if (item == null || StringUtils.isEmpty(name)) {
+			return;
+		}
+		ItemMeta itemMeta = item.getItemMeta();
+		itemMeta.setDisplayName(name);
+		item.setItemMeta(itemMeta);
+	}
+
+	public static String getItemName(ItemStack item, String def) {
+		if (item == null || item.getType() == Material.AIR) {
+			return def;
+		}
+		ItemMeta meta = item.getItemMeta();
+		return meta == null ? def : meta.hasDisplayName() ? meta.getDisplayName() : def;
+	}
+
+	public static boolean checkItem(ItemStack item, Material material, String itemName) {
+		return item == null ? false : item.getType() == material && Objects.equals(getItemName(item, null), itemName);
+	}
+
 	public static Material getMaterial(int id) {
 		Material material = null;
 		if (!isCBXXXorLater("1.13")) {
 			try {
-				Class<?>[] emptyClass = ArrayUtils.EMPTY_CLASS_ARRAY;
-				Object[] emptyObject = ArrayUtils.EMPTY_OBJECT_ARRAY;
-				material = (Material) Material.class.getMethod("getMaterial", emptyClass).invoke(null, emptyObject);
+				material = (Material) Material.class.getMethod("getMaterial", int.class).invoke(null, id);
 			} catch (ReflectiveOperationException e) {
 				e.printStackTrace();
 			}
 		}
 		return material;
+	}
+
+	public static ItemStack getScriptEditor(ScriptType scriptType) {
+		ItemStack item = new ItemStack(Material.BLAZE_ROD);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§dScript Editor§6[Mode: " + scriptType.name() + "]");
+		meta.setLore(SBConfig.getScriptEditorLore(scriptType));
+		item.setItemMeta(meta);
+		return item;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -148,18 +173,6 @@ public class Utils {
 
 	public static ItemStack[] getHandItems(Player player) {
 		return new ItemStack[]{Utils.getItemInMainHand(player), Utils.getItemInOffHand(player)};
-	}
-
-	public static String getItemName(ItemStack item, String def) {
-		if (item == null || item.getType() == Material.AIR) {
-			return def;
-		}
-		ItemMeta meta = item.getItemMeta();
-		return meta == null ? def : meta.hasDisplayName() ? meta.getDisplayName() : def;
-	}
-
-	public static boolean checkItem(ItemStack item, Material material, String itemName) {
-		return item == null ? false : item.getType() == material && Objects.equals(getItemName(item, null), itemName);
 	}
 
 	public static World getWorld(String name) {
@@ -179,71 +192,22 @@ public class Utils {
 		return Bukkit.getPlayer(name);
 	}
 
-	public static Player getPlayer(UUID uuid) {
-		if (isCBXXXorLater("1.7.5")) {
-			return Bukkit.getPlayer(uuid);
-		}
-		for (Player player : getOnlinePlayers()) {
-			if (player.getUniqueId().equals(uuid)) {
-				return player;
-			}
-		}
-		return null;
-	}
-
 	public static OfflinePlayer getOfflinePlayer(UUID uuid) {
-		if (isCBXXXorLater("1.7.5")) {
-			OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-			return player == null || !player.hasPlayedBefore() ? null : player;
-		} else {
-			String name = getName(uuid);
-			for (OfflinePlayer offline : Bukkit.getOfflinePlayers()) {
-				if (offline.getName().equals(name)) {
-					return offline;
-				}
-			}
-		}
-		return null;
+		OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+		return player == null || !player.hasPlayedBefore() ? null : player;
 	}
 
 	public static String getName(UUID uuid) {
-		if (uuid != null) {
-			try {
-				OfflinePlayer player = null;
-				if (isCBXXXorLater("1.7.5")) {
-					player = Bukkit.getOfflinePlayer(uuid);
-				}
-				return player == null || !player.hasPlayedBefore() ? ProfileFetcher.getName(uuid) : player.getName();
-			} catch (ParseException | IOException e) {
-				e.printStackTrace();
-			}
+		try {
+			OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+			return player == null || !player.hasPlayedBefore() ? ProfileFetcher.getName(uuid) : player.getName();
+		} catch (ParseException | IOException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
 
 	public static UUID getUniqueId(OfflinePlayer player) {
-		if (player.hasPlayedBefore()) {
-			try {
-				return isCBXXXorLater("1.7.5") ? player.getUniqueId() : ProfileFetcher.getUniqueId(player.getName());
-			} catch (ParseException | IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
-
-	public static List<Player> getOnlinePlayers() {
-		Object[] emptyArray = ArrayUtils.EMPTY_OBJECT_ARRAY;
-		try {
-			Method method = Bukkit.class.getMethod("getOnlinePlayers", ArrayUtils.EMPTY_CLASS_ARRAY);
-			if (method.getReturnType() == Collection.class) {
-				return new ArrayList<>((Collection<? extends Player>) method.invoke(null, emptyArray));
-			} else {
-				return new ArrayList<>(Arrays.asList((Player[]) method.invoke(null, emptyArray)));
-			}
-		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
-		}
-		return new ArrayList<>();
+		return player == null || !player.hasPlayedBefore() ? null : player.getUniqueId();
 	}
 }
