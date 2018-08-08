@@ -40,12 +40,12 @@ public final class BaseSBPlayer extends PlayerData {
 	}
 
 	public void setPlayer(Player player) {
-		this.player = player != null && player.getUniqueId().equals(uuid) ? player : null;
+		this.player = player == null ? null : player.getUniqueId().equals(uuid) ? player : null;
 	}
 
 	@Override
 	public Server getServer() {
-		return player == null ? null : player.getServer();
+		return isOnline() ? player.getServer() : null;
 	}
 
 	@Override
@@ -55,22 +55,22 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public OfflinePlayer getOfflinePlayer() {
-		return player == null ? Utils.getOfflinePlayer(uuid) : player;
+		return isOnline() ? player : Utils.getOfflinePlayer(uuid);
 	}
 
 	@Override
 	public PlayerInventory getInventory() {
-		return player == null ? null : player.getInventory();
+		return isOnline() ? player.getInventory() : null;
 	}
 
 	@Override
 	public ItemStack getItemInMainHand() {
-		return player == null ? null : Utils.getItemInMainHand(player);
+		return isOnline() ? Utils.getItemInMainHand(player) : null;
 	}
 
 	@Override
 	public ItemStack getItemInOffHand() {
-		return player == null ? null : Utils.getItemInOffHand(player);
+		return isOnline() ? Utils.getItemInOffHand(player) : null;
 	}
 
 	@Override
@@ -85,12 +85,12 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public Location getLocation() {
-		return player == null ? null : player.getLocation();
+		return isOnline() ? player.getLocation() : null;
 	}
 
 	@Override
 	public boolean isOnline() {
-		return player != null;
+		return player.isOnline();
 	}
 
 	@Override
@@ -119,47 +119,47 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin) {
-		return player == null ? null : player.addAttachment(plugin);
+		return isOnline() ? player.addAttachment(plugin) : null;
 	}
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin, int value) {
-		return player == null ? null : player.addAttachment(plugin, value);
+		return isOnline() ? player.addAttachment(plugin, value) : null;
 	}
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin, String permission, boolean value) {
-		return player == null ? null : player.addAttachment(plugin, permission, value);
+		return isOnline() ? player.addAttachment(plugin, permission, value) : null;
 	}
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin, String permission, boolean value, int ticks) {
-		return player == null ? null : player.addAttachment(plugin, permission, value, ticks);
+		return isOnline() ? player.addAttachment(plugin, permission, value, ticks) : null;
 	}
 
 	@Override
 	public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-		return player == null ? null : player.getEffectivePermissions();
+		return isOnline() ? player.getEffectivePermissions() : null;
 	}
 
 	@Override
 	public boolean hasPermission(String permission) {
-		return player == null ? false : player.hasPermission(permission);
+		return isOnline() ? player.hasPermission(permission) : false;
 	}
 
 	@Override
 	public boolean hasPermission(Permission permission) {
-		return player == null ? false : player.hasPermission(permission);
+		return isOnline() ? player.hasPermission(permission) : false;
 	}
 
 	@Override
 	public boolean isPermissionSet(String permission) {
-		return player == null ? false : player.isPermissionSet(permission);
+		return isOnline() ? player.isPermissionSet(permission) : false;
 	}
 
 	@Override
 	public boolean isPermissionSet(Permission permission) {
-		return player == null ? false : player.isPermissionSet(permission);
+		return isOnline() ? player.isPermissionSet(permission) : false;
 	}
 
 	@Override
@@ -178,10 +178,7 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		return obj instanceof BaseSBPlayer && uuid.equals(((BaseSBPlayer) obj).uuid);
+		return this == obj || obj instanceof BaseSBPlayer && uuid.equals(((BaseSBPlayer) obj).uuid);
 	}
 
 	@Override
