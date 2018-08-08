@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.command;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,8 +13,6 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
@@ -27,7 +26,7 @@ import com.github.yuttyann.scriptblockplus.script.Clipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.ScriptType.SPermission;
+import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -55,7 +54,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	@Override
 	public CommandData[] getUsages() {
-		String[] typeNodes = SPermission.getNodes(true);
+		String[] typeNodes = SBPermission.getNodes(true);
 		return new CommandData[] {
 			new CommandData(SBConfig.getToolCommandMessage(), Permission.COMMAND_TOOL.getNode()),
 			new CommandData(SBConfig.getReloadCommandMessage(), Permission.COMMAND_RELOAD.getNode()),
@@ -87,7 +86,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			}
 		} else if (args.length == 2) {
 			if (equals(args[0], ScriptType.types()) && equals(args[1], "remove", "view")) {
-				return setClickData(sender, args);
+				return setData(sender, args);
 			} else if (equals(args[0], "worldedit") && equals(args[1], "remove")) {
 				return doWorldEditRemove(sender);
 			}
@@ -95,7 +94,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			if (args.length <= 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
 				return doWorldEditPaste(sender, args);
 			} else if (equals(args[0], ScriptType.types()) && equals(args[1], "create", "add")) {
-				return setClickData(sender, args);
+				return setData(sender, args);
 			}
 		}
 		return false;
@@ -106,12 +105,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return false;
 		}
 		Player player = (Player) sender;
-		ItemStack item = new ItemStack(Material.BLAZE_ROD);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§dScript Editor");
-		meta.setLore(SBConfig.getScriptEditorLore());
-		item.setItemMeta(meta);
-		player.getInventory().addItem(item);
+		player.getInventory().addItem(Utils.getScriptEditor(ScriptType.INTERACT));
 		Utils.updateInventory(player);
 		Utils.sendMessage(player, SBConfig.getGiveScriptEditorMessage());
 		return true;
@@ -214,13 +208,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		ScriptBlock.getInstance().getMapManager().loadScripts(scriptFile, scriptType);
 	}
 
-	private boolean setClickData(CommandSender sender, String[] args) {
+	private boolean setData(CommandSender sender, String[] args) {
 		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
-		if (!hasPermission(sender, Permission.valueOf("COMMAND_" + scriptType.name()))) {
+		if (!SBPermission.has(sender, scriptType, true)) {
 			return false;
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
-		if (sbPlayer.hasScriptLine() || sbPlayer.hasClickAction()) {
+		if (sbPlayer.hasScriptLine() || sbPlayer.hasActionType()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorEditDataMessage());
 			return true;
 		}
@@ -233,7 +227,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			sbPlayer.setScriptLine(script);
 		}
 		ActionType actionType = ActionType.valueOf(args[1].toUpperCase());
-		sbPlayer.setClickAction(actionType.createKey(scriptType));
+		sbPlayer.setActionType(actionType.createKey(scriptType));
 		Utils.sendMessage(sbPlayer, SBConfig.getSuccEditDataMessage(scriptType, actionType));
 		return true;
 	}
@@ -254,7 +248,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return true;
 		}
 		StringBuilder builder = new StringBuilder();
-		List<Block> blocks = weSelection.getBlocks(selection);
+		Set<Block> blocks = weSelection.getBlocks(selection);
 		for (ScriptType scriptType : ScriptType.values()) {
 			if (!Files.getScriptFile(scriptType).exists()) {
 				continue;
@@ -327,7 +321,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
 			} else if (equals(args[0], ScriptType.types())) {
-				if (Permission.valueOf("COMMAND_" + args[0].toUpperCase()).has(sender)) {
+				if (SBPermission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
 					String prefix = args[1].toLowerCase();
 					String[] answers = new String[]{"create", "add", "remove", "view"};
 					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
@@ -348,9 +342,10 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 				}
 			} else {
 				if (equals(args[0], ScriptType.types()) && equals(args[1], "create", "add")) {
-					if (Permission.valueOf("COMMAND_" + args[0].toUpperCase()).has(sender)) {
+					if (SBPermission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
 						String prefix = args[args.length - 1].toLowerCase();
-						String[] answers = OptionList.toArraySyntaxs();
+						String[] answers = OptionList.getSyntaxs();
+						Arrays.sort(answers);
 						StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), s -> emptyList.add(s.trim()));
 					}
 				}
@@ -365,8 +360,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		set.add(hasPermission(sender, Permission.COMMAND_CHECKVER, "checkver"));
 		set.add(hasPermission(sender, Permission.COMMAND_DATAMIGR, "datamigr"));
 
-		ScriptType[] values = ScriptType.values();
-		StreamUtils.filterForEach(values, s -> SPermission.has(sender, s, true), s -> set.add(s.getType()));
+		StreamUtils.filterForEach(ScriptType.values(),
+				s -> SBPermission.has(sender, s, true), s -> set.add(s.getType()));
 
 		set.add(hasPermission(sender, Permission.COMMAND_WORLDEDIT , "worldedit"));
 		return set;

@@ -21,7 +21,7 @@ import org.bukkit.plugin.Plugin;
 
 import com.google.common.base.Charsets;
 
-public class FileUtils {
+public final class FileUtils {
 
 	public static InputStream getResource(Plugin plugin, String filePath) {
 		if (plugin == null || StringUtils.isEmpty(filePath)) {

@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class StreamUtils {
+public final class StreamUtils {
 
 	public static <T, R> R[] toArray(Collection<T> collection, Function<T, R> mapper, R[] array) {
 		Objects.requireNonNull(collection);

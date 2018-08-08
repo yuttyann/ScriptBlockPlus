@@ -14,8 +14,10 @@ public enum ActionType {
 
 	private static final Set<String> TYPES = new HashSet<>();
 
+	private static int i;
+
 	static {
-		StreamUtils.forEach(ScriptType.values(), s -> StreamUtils.forEach(values(), c -> TYPES.add(c.createKey(s))));
+		reload();
 	}
 
 	public String createKey(ScriptType scriptType) {
@@ -23,6 +25,18 @@ public enum ActionType {
 	}
 
 	public static String[] types() {
+		if (i != ScriptType.size()) {
+			reload();
+		}
 		return TYPES.toArray(new String[TYPES.size()]);
+	}
+
+	private static void reload() {
+		TYPES.clear();
+		try {
+			StreamUtils.forEach(ScriptType.values(), s -> StreamUtils.forEach(values(), c -> TYPES.add(c.createKey(s))));
+		} finally {
+			i = ScriptType.size();
+		}
 	}
 }

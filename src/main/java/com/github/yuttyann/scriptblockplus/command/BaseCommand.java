@@ -41,7 +41,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 
 	@Override
 	public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (Utils.isCBXXXorLater("1.8.3") && sender instanceof ProxiedCommandSender) {
+		if (sender instanceof ProxiedCommandSender) {
 			CommandSender proxiedCommandSender = ((ProxiedCommandSender) sender).getCallee();
 			if (proxiedCommandSender instanceof Player) {
 				sender = proxiedCommandSender;

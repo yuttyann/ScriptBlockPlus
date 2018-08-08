@@ -2,16 +2,15 @@ package com.github.yuttyann.scriptblockplus.script;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.permissions.Permissible;
 
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
-public final class ScriptType {
+public final class ScriptType implements Comparable<ScriptType> {
 
-	public static final class SPermission {
+	public static final class SBPermission {
 
 		private static final String PREFIX = "scriptblockplus.";
 
@@ -37,12 +36,18 @@ public final class ScriptType {
 
 	private final String type;
 	private final String name;
+	private final int ordinal;
 
 	public ScriptType(String type) {
     	Validate.notNull(type, "Type cannot be null");
 		this.type = type;
 		this.name = type.toUpperCase();
-		TYPES.put(name, this);
+
+		ScriptType scriptType = TYPES.get(name);
+		this.ordinal = scriptType == null ? size() : scriptType.ordinal;
+		if (scriptType == null) {
+			TYPES.put(name, this);
+		}
 	}
 
 	public String getType() {
@@ -53,23 +58,36 @@ public final class ScriptType {
 		return name;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(type.hashCode(), name.hashCode());
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof ScriptType) {
-			ScriptType scriptType = (ScriptType) obj;
-			return type.equals(scriptType.type) && name.equals(scriptType.name);
-		}
-		return false;
+	public int ordinal() {
+		return ordinal;
 	}
 
 	@Override
 	public String toString() {
 		return type;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * (31 * 1 + type.hashCode()) + name.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ScriptType) {
+			ScriptType scriptType = ((ScriptType) obj);
+			return type.equals(((ScriptType) obj).type) && name.equals(scriptType.name);
+		}
+		return false;
+	}
+
+	@Override
+	public int compareTo(ScriptType another) {
+		return Integer.compare(ordinal, another.ordinal);
+	}
+
+	public static int size() {
+		return TYPES.size();
 	}
 
 	public static String[] types() {
@@ -83,6 +101,18 @@ public final class ScriptType {
 	public static ScriptType[] values() {
 		return TYPES.values().toArray(new ScriptType[TYPES.size()]);
 	}
+
+    public static ScriptType valueOf(int ordinal) {
+        if (ordinal < 0) {
+            throw new IllegalArgumentException("Ordinal cannot be null");
+        }
+    	for (ScriptType scriptType : TYPES.values()) {
+    		if (scriptType.ordinal == ordinal) {
+    			return scriptType;
+    		}
+    	}
+    	throw new NullPointerException(ordinal + " does not exist");
+    }
 
     public static ScriptType valueOf(String name) {
     	Validate.notNull(name, "Name cannot be null");

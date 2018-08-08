@@ -14,7 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class ProfileFetcher {
+public final class ProfileFetcher {
 
 	private static final String PROFILE_NAME_URL = "https://api.mojang.com/users/profiles/minecraft/";
 	private static final String PROFILE_UUID_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";

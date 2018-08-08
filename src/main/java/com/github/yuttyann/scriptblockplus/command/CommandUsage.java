@@ -21,10 +21,9 @@ public abstract class CommandUsage {
 	}
 
 	public final void addUsage(CommandData... args) {
-		if (usages == null) {
-			return;
+		if (usages != null) {
+			StreamUtils.forEach(args, usages::add);
 		}
-		StreamUtils.forEach(args, usages::add);
 	}
 
 	protected final void sendUsage(Plugin plugin, CommandSender sender, Command command, boolean isAliases) {
@@ -41,7 +40,7 @@ public abstract class CommandUsage {
 		if (isAliases && command.getAliases().size() > 0) {
 			commandName = command.getAliases().get(0).toLowerCase();
 		}
-		sender.sendMessage("§d==== " + plugin.getName() + " Commands ====");
+		sender.sendMessage("§d===== " + plugin.getName() + " Commands =====");
 		String prefix = "§b/" + commandName + " ";
 		StreamUtils.filterForEach(list, c -> c.hasMessage(), c -> sender.sendMessage(text(c, prefix)));
 	}

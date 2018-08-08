@@ -96,7 +96,7 @@ public class Calculation extends BaseOption {
 		}
 		switch (variable) {
 		case "%server_online%":
-			return Utils.getOnlinePlayers().size();
+			return Bukkit.getOnlinePlayers().size();
 		case "%server_offline%":
 			return Bukkit.getOfflinePlayers().length;
 		case "%player_ping%":
@@ -188,13 +188,7 @@ public class Calculation extends BaseOption {
 	}
 
 	private Score getScore(Objective objective, Player player) {
-		if (Utils.isCBXXXorLater("1.7.8")) {
-			return objective.getScore(player.getName());
-		} else {
-			@SuppressWarnings("deprecation")
-			Score score = objective.getScore(player);
-			return score;
-		}
+		return objective.getScore(player.getName());
 	}
 
 	private boolean result(double value1, double value2, String operator) {

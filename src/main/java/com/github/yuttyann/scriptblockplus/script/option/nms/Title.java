@@ -18,19 +18,14 @@ public class Title extends BaseOption {
 	static{
 		Class<?> enumTitleActionClass = null;
 		Class<?> iChatBaseComponentClass = null;
-		if (Utils.isCBXXXorLater("1.8")) {
-			try {
-				enumTitleActionClass = PackageType.NMS.getClass(NMSHelper.getEnumTitleActionName());
-				iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			TITLE_PARAMS = new Class<?>[]{enumTitleActionClass, iChatBaseComponentClass};
-			TIMES_PARAMS = new Class<?>[]{enumTitleActionClass, iChatBaseComponentClass, int.class, int.class, int.class};
-		} else {
-			TITLE_PARAMS = null;
-			TIMES_PARAMS = null;
+		try {
+			enumTitleActionClass = PackageType.NMS.getClass(NMSHelper.getEnumTitleActionName());
+			iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+		TITLE_PARAMS = new Class<?>[]{enumTitleActionClass, iChatBaseComponentClass};
+		TIMES_PARAMS = new Class<?>[]{enumTitleActionClass, iChatBaseComponentClass, int.class, int.class, int.class};
 	}
 
 	public Title() {
@@ -39,9 +34,6 @@ public class Title extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		if (!Utils.isCBXXXorLater("1.8")) {
-			throw new UnsupportedOperationException();
-		}
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String title = StringUtils.replaceColorCode(array[0], true);
 		String subtitle = StringUtils.replaceColorCode(array[1], true);

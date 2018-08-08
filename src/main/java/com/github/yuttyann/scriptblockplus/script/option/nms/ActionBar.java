@@ -17,21 +17,17 @@ public class ActionBar extends BaseOption {
 	static {
 		Class<?> iChatBaseComponentClass = null;
 		Class<?> byteOrChatMessageTypeClass = null;
-		if (Utils.isCBXXXorLater("1.8")) {
-			try {
-				iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
-				if (Utils.isCBXXXorLater("1.12")) {
-					byteOrChatMessageTypeClass = PackageType.NMS.getClass("ChatMessageType");
-				} else {
-					byteOrChatMessageTypeClass = byte.class;
-				}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+		try {
+			iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
+			if (Utils.isCBXXXorLater("1.12")) {
+				byteOrChatMessageTypeClass = PackageType.NMS.getClass("ChatMessageType");
+			} else {
+				byteOrChatMessageTypeClass = byte.class;
 			}
-			PACKET_PARAMS = new Class<?>[]{iChatBaseComponentClass, byteOrChatMessageTypeClass};
-		} else {
-			PACKET_PARAMS = null;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+		PACKET_PARAMS = new Class<?>[]{iChatBaseComponentClass, byteOrChatMessageTypeClass};
 	}
 
 	public ActionBar() {
@@ -72,9 +68,6 @@ public class ActionBar extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		if (!Utils.isCBXXXorLater("1.8")) {
-			throw new UnsupportedOperationException();
-		}
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String message = StringUtils.replaceColorCode(array[0], true);
 

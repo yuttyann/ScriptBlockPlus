@@ -85,6 +85,10 @@ public enum PackageType {
 		return field;
 	}
 
+	public Object invokeMethod(Object instance, String className, String methodName) throws ReflectiveOperationException {
+		return invokeMethod(false, instance, className, methodName, ArrayUtils.EMPTY_OBJECT_ARRAY);
+	}
+
 	public Object invokeMethod(Object instance, String className, String methodName, Object... arguments) throws ReflectiveOperationException {
 		return invokeMethod(false, instance, className, methodName, arguments);
 	}
@@ -97,6 +101,10 @@ public enum PackageType {
 			arguments = ArrayUtils.EMPTY_OBJECT_ARRAY;
 		}
 		return getMethod(declared, className, methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
+	}
+
+	public Method getMethod(String className, String methodName) throws ReflectiveOperationException {
+		return getMethod(false, className, methodName, ArrayUtils.EMPTY_CLASS_ARRAY);
 	}
 
 	public Method getMethod(String className, String methodName, Class<?>... parameterTypes) throws ReflectiveOperationException {
@@ -121,6 +129,10 @@ public enum PackageType {
 		return method;
 	}
 
+	public Object newInstance(String className) throws ReflectiveOperationException {
+		return newInstance(false, className, ArrayUtils.EMPTY_OBJECT_ARRAY);
+	}
+
 	public Object newInstance(String className, Object... arguments) throws ReflectiveOperationException {
 		return newInstance(false, className, arguments);
 	}
@@ -130,6 +142,10 @@ public enum PackageType {
 			return getClass(className).newInstance();
 		}
 		return getConstructor(declared, className, DataType.getPrimitive(arguments)).newInstance(arguments);
+	}
+
+	public Constructor<?> getConstructor(String className) throws ReflectiveOperationException {
+		return getConstructor(false, className, ArrayUtils.EMPTY_CLASS_ARRAY);
 	}
 
 	public Constructor<?> getConstructor(String className, Class<?>... parameterTypes) throws ReflectiveOperationException {

@@ -10,7 +10,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class ScriptAction extends BaseOption {
 
-	public static final String KEY_CLICK_ACTION = PlayerData.createRandomId("ClickAction");
+	public static final String KEY_ENUM_ACTION = PlayerData.createRandomId("EnumAction");
 
 	public ScriptAction() {
 		super("scriptaction", "@scriptaction:");
@@ -18,7 +18,7 @@ public class ScriptAction extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		Action action = getSBPlayer().getData(KEY_CLICK_ACTION);
+		Action action = getScriptRead().getData(KEY_ENUM_ACTION);
 		String[] array = StringUtils.split(getOptionValue(), ",");
 		return StreamUtils.allMatch(array, s -> equals(action, s));
 	}

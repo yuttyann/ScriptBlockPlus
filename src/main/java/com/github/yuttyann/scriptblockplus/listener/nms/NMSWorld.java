@@ -12,7 +12,7 @@ public final class NMSWorld {
 	public NMSWorld(World world) {
 		Object nmsWorld = null;
 		try {
-			nmsWorld = PackageType.CB.invokeMethod(world, null, "getHandle", (Object[]) null);
+			nmsWorld = PackageType.CB.invokeMethod(world, null, "getHandle");
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
@@ -33,10 +33,9 @@ public final class NMSWorld {
 			Object nmsStart = start.toNMSVec3D();
 			Object nmsEnd = end.toNMSVec3D();
 			Object rayTrace = PackageType.NMS.invokeMethod(nmsWorld, null, "rayTrace", nmsStart, nmsEnd, flag);
-			if (rayTrace == null) {
-				return null;
+			if (rayTrace != null) {
+				return new MovingPosition(rayTrace);
 			}
-			return new MovingPosition(rayTrace);
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}

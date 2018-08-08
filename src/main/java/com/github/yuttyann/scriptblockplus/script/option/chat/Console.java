@@ -11,8 +11,6 @@ public class Console extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		String command = StringUtils.replaceColorCode(getOptionValue(), true);
-		executeConsoleCommand(command);
-		return true;
+		return executeConsoleCommand(StringUtils.replaceColorCode(getOptionValue(), true));
 	}
 }

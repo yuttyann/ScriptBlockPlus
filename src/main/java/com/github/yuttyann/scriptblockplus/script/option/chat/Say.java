@@ -10,7 +10,6 @@ public class Say extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		executeCommand(getPlayer(), "say " + getOptionValue(), true);
-		return true;
+		return executeCommand(getPlayer(), "say " + getOptionValue(), true);
 	}
 }

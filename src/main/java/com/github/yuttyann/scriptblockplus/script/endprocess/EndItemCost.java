@@ -11,21 +11,22 @@ public class EndItemCost implements EndProcess {
 
 	@Override
 	public void success(SBRead sbRead) {
-		SBPlayer sbPlayer = sbRead.getSBPlayer();
-		sbPlayer.removeData(ItemCost.KEY_ITEM);
-		if (sbPlayer.isOnline()) {
-			Utils.updateInventory(sbPlayer.getPlayer());
+		sbRead.removeData(ItemCost.KEY_ITEM);
+		if (sbRead.getSBPlayer().isOnline()) {
+			Utils.updateInventory(sbRead.getSBPlayer().getPlayer());
 		}
 	}
 
 	@Override
 	public void failed(SBRead sbRead) {
-		SBPlayer sbPlayer = sbRead.getSBPlayer();
-		ItemStack[] items = sbPlayer.getData(ItemCost.KEY_ITEM);
-		sbPlayer.removeData(ItemCost.KEY_ITEM);
-		if (items != null && sbPlayer.isOnline()) {
-			sbPlayer.getPlayer().getInventory().setContents(items);
-			Utils.updateInventory(sbPlayer.getPlayer());
+		if (sbRead.hasData(ItemCost.KEY_ITEM)) {
+			ItemStack[] items = sbRead.getData(ItemCost.KEY_ITEM);
+			sbRead.removeData(ItemCost.KEY_ITEM);
+			SBPlayer sbPlayer = sbRead.getSBPlayer();
+			if (sbPlayer.isOnline()) {
+				sbPlayer.getInventory().setContents(items);
+				Utils.updateInventory(sbPlayer.getPlayer());
+			}
 		}
 	}
 }

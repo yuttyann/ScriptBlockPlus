@@ -7,7 +7,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class MovingPosition {
 
@@ -18,16 +17,10 @@ public final class MovingPosition {
 		private final int z;
 
 		private BlockPos(Object rayTrace) throws ReflectiveOperationException {
-			if (Utils.isCBXXXorLater("1.8")) {
-				Object blockPosition = PackageType.NMS.invokeMethod(rayTrace, null, "a", (Object[]) null);
-				this.x = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getX", (Object[]) null);
-				this.y = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getY", (Object[]) null);
-				this.z = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getZ", (Object[]) null);
-			} else {
-				this.x = getMOPField("b").getInt(rayTrace);
-				this.y = getMOPField("c").getInt(rayTrace);
-				this.z = getMOPField("d").getInt(rayTrace);
-			}
+			Object blockPosition = PackageType.NMS.invokeMethod(rayTrace, null, "a");
+			this.x = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getX");
+			this.y = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getY");
+			this.z = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getZ");
 		}
 	}
 
@@ -39,7 +32,7 @@ public final class MovingPosition {
 		this.vec3d = Vec3D.fromNMSVec3D(getMOPField("pos").get(rayTrace));
 		this.blockPos = new BlockPos(rayTrace);
 
-		Object face = getMOPField(Utils.isCBXXXorLater("1.8") ? "direction" : "face").get(rayTrace);
+		Object face = getMOPField("direction").get(rayTrace);
 		this.blockFace = (BlockFace) PackageType.CB_BLOCK.invokeMethod(null, "CraftBlock", "notchToBlockFace", face);
 	}
 
