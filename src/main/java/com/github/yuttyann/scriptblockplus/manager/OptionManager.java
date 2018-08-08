@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,20 +60,16 @@ public final class OptionManager extends AbstractConstructor<Option> {
 			return Collections.unmodifiableList(OPTIONS);
 		}
 
+		public static String[] getNames() {
+			return StreamUtils.toArray(OPTIONS, o -> o.getName(), new String[OPTIONS.size()]);
+		}
+
+		public static String[] getSyntaxs() {
+			return StreamUtils.toArray(OPTIONS, o -> o.getSyntax(), new String[OPTIONS.size()]);
+		}
+
 		public static Option[] toArray() {
 			return OPTIONS.toArray(new Option[OPTIONS.size()]);
-		}
-
-		public static String[] toArrayNames() {
-			String[] array = StreamUtils.toArray(OPTIONS, o -> o.getName(), new String[OPTIONS.size()]);
-			Arrays.sort(array);
-			return array;
-		}
-
-		public static String[] toArraySyntaxs() {
-			String[] array = StreamUtils.toArray(OPTIONS, o -> o.getSyntax(), new String[OPTIONS.size()]);
-			Arrays.sort(array);
-			return array;
 		}
 	}
 
