@@ -13,10 +13,10 @@ public abstract class PlayerData implements SBPlayer {
 	private static final String KEY_CLICKACTION = createRandomId("ClickAction");
 	private static final String KEY_OLDFULLCOORDS = createRandomId("OldFullCoords");
 
-	private final Map<String, Object> objectData;
+	private final ObjectMap objectMap;
 
 	PlayerData() {
-		objectData = new HashMap<>();
+		objectMap = new ObjMap();
 	}
 
 	public static String createRandomId(String key) {
@@ -24,97 +24,156 @@ public abstract class PlayerData implements SBPlayer {
 	}
 
 	@Override
-	public void setData(String key, Object value) {
-		objectData.put(key, value);
+	public ObjectMap getObjectMap() {
+		return objectMap;
 	}
 
-	@Override
-	public <T> T getData(String key) {
-		return getData(key, null);
-	}
+	private class ObjMap implements ObjectMap {
 
-	@Override
-	public <T> T getData(String key, Class<T> classOfT) {
-		return classOfT == null ? (T) objectData.get(key) : classOfT.cast(objectData.get(key));
-	}
+		private final Map<String, Object> objectMap;
 
-	@Override
-	public <T> T removeData(String key) {
-		return removeData(key, null);
-	}
+		private ObjMap() {
+			objectMap = new HashMap<>();
+		}
 
-	@Override
-	public <T> T removeData(String key, Class<T> classOfT) {
-		return classOfT == null ? (T) objectData.remove(key) : classOfT.cast(objectData.remove(key));
-	}
+		@Override
+		public void setData(String key, Object value) {
+			objectMap.put(key, value);
+		}
 
-	@Override
-	public boolean hasData(String key) {
-		return getData(key) != null;
-	}
+		@Override
+		public byte getByte(String key) {
+			return getData(key, Byte.class);
+		}
 
-	@Override
-	public void clearData() {
-		objectData.clear();
+		@Override
+		public short getShort(String key) {
+			return getData(key, Short.class);
+		}
+
+		@Override
+		public int getInt(String key) {
+			return getData(key, Integer.class);
+		}
+
+		@Override
+		public long getLong(String key) {
+			return getData(key, Byte.class);
+		}
+
+		@Override
+		public char getChar(String key) {
+			return getData(key, Character.class);
+		}
+
+		@Override
+		public float getFloat(String key) {
+			return getData(key, Float.class);
+		}
+
+		@Override
+		public double getDouble(String key) {
+			return getData(key, Double.class);
+		}
+
+		@Override
+		public boolean getBoolean(String key) {
+			return getData(key, Boolean.class);
+		}
+
+		@Override
+		public String getString(String key) {
+			return getData(key, String.class);
+		}
+
+		@Override
+		public <T> T getData(String key) {
+			return getData(key, null);
+		}
+
+		@Override
+		public <T> T getData(String key, Class<T> classOfT) {
+			return classOfT == null ? (T) objectMap.get(key) : classOfT.cast(objectMap.get(key));
+		}
+
+		@Override
+		public <T> T removeData(String key) {
+			return removeData(key, null);
+		}
+
+		@Override
+		public <T> T removeData(String key, Class<T> classOfT) {
+			return classOfT == null ? (T) objectMap.remove(key) : classOfT.cast(objectMap.remove(key));
+		}
+
+		@Override
+		public boolean hasData(String key) {
+			return getData(key) != null;
+		}
+
+		@Override
+		public void clearData() {
+			objectMap.clear();
+		}
 	}
 
 	@Override
 	public void setClipboard(Clipboard clipboard) {
-		setData(KEY_CLIPBOARD, clipboard);
+		getObjectMap().setData(KEY_CLIPBOARD, clipboard);
 	}
 
 	@Override
 	public Clipboard getClipboard() {
-		return getData(KEY_CLIPBOARD);
+		return getObjectMap().getData(KEY_CLIPBOARD);
 	}
 
 	@Override
 	public boolean hasClipboard() {
-		return hasData(KEY_CLIPBOARD);
+		return getObjectMap().hasData(KEY_CLIPBOARD);
 	}
 
 	@Override
 	public void setScriptLine(String scriptLine) {
-		setData(KEY_SCRIPTLINE, scriptLine);
+		getObjectMap().setData(KEY_SCRIPTLINE, scriptLine);
 	}
 
 	@Override
 	public String getScriptLine() {
-		return getData(KEY_SCRIPTLINE);
+		return getObjectMap().getString(KEY_SCRIPTLINE);
 	}
 
 	@Override
 	public boolean hasScriptLine() {
-		return hasData(KEY_SCRIPTLINE);
+		return getObjectMap().hasData(KEY_SCRIPTLINE);
 	}
 
 	@Override
-	public void setClickAction(String clickAction) {
-		setData(KEY_CLICKACTION, clickAction);
+	public void setActionType(String actionType) {
+		getObjectMap().setData(KEY_CLICKACTION, actionType);
 	}
 
 	@Override
-	public String getClickAction() {
-		return getData(KEY_CLICKACTION);
+	public String getActionType() {
+		return getObjectMap().getString(KEY_CLICKACTION);
 	}
 
 	@Override
-	public boolean hasClickAction() {
-		return hasData(KEY_CLICKACTION);
+	public boolean hasActionType() {
+		return getObjectMap().hasData(KEY_CLICKACTION);
 	}
 
 	@Override
 	public void setOldFullCoords(String fullCoords) {
-		setData(KEY_OLDFULLCOORDS, fullCoords);
+		getObjectMap().setData(KEY_OLDFULLCOORDS, fullCoords);
 	}
 
 	@Override
 	public String getOldFullCoords() {
-		return getData(KEY_OLDFULLCOORDS);
+		return getObjectMap().getString(KEY_OLDFULLCOORDS);
 	}
 
 	@Override
 	public boolean hasOldFullCoords() {
-		return hasData(KEY_OLDFULLCOORDS);
+		return getObjectMap().hasData(KEY_OLDFULLCOORDS);
 	}
 }
