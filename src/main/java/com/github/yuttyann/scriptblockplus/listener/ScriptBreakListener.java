@@ -16,7 +16,7 @@ import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.ScriptType.SPermission;
+import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptBreakListener extends IAssist {
@@ -40,7 +40,7 @@ public class ScriptBreakListener extends IAssist {
 			if (breakEvent.isCancelled()) {
 				return;
 			}
-			if (!SPermission.has(player, ScriptType.BREAK, false)) {
+			if (!SBPermission.has(player, ScriptType.BREAK, false)) {
 				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
 				return;
 			}

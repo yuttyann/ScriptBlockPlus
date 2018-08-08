@@ -39,7 +39,7 @@ public final class Clipboard {
 
 	public boolean copy(SBPlayer sbPlayer) {
 		sbPlayer.setScriptLine(null);
-		sbPlayer.setClickAction(null);
+		sbPlayer.setActionType(null);
 		if (this.sbPlayer != null) {
 			return false;
 		}
@@ -60,7 +60,7 @@ public final class Clipboard {
 		}
 		sbPlayer.setClipboard(null);
 		sbPlayer.setScriptLine(null);
-		sbPlayer.setClickAction(null);
+		sbPlayer.setActionType(null);
 		if (scriptData == null) {
 			return false;
 		}

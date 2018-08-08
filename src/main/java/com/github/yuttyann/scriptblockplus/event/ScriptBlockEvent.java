@@ -52,9 +52,6 @@ public abstract class ScriptBlockEvent extends PlayerEvent implements Cancellabl
 	}
 
 	public ItemStack getItem(boolean isMainHand) {
-		if (!isMainHand && !Utils.isCBXXXorLater("1.9")) {
-			isMainHand = true;
-		}
 		return isMainHand ? mainHand : offHand;
 	}
 

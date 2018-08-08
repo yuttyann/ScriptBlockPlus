@@ -13,7 +13,7 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.ScriptType.SPermission;
+import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptWalkListener extends IAssist {
@@ -37,7 +37,7 @@ public class ScriptWalkListener extends IAssist {
 			if (walkEvent.isCancelled()) {
 				return;
 			}
-			if (!SPermission.has(sbPlayer, ScriptType.WALK, false)) {
+			if (!SBPermission.has(sbPlayer, ScriptType.WALK, false)) {
 				Utils.sendMessage(sbPlayer, SBConfig.getNotPermissionMessage());
 				return;
 			}

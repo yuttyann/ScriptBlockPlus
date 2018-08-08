@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -150,8 +151,8 @@ public final class SBConfig {
 		return getBoolean("interactRight");
 	}
 
-	public static List<String> getScriptEditorLore() {
-		return replaceColorCode(getStringList("scriptEditorLore"));
+	public static List<String> getScriptEditorLore(ScriptType scriptType) {
+		return replaceList(replaceColorCode(getStringList("scriptEditorLore")), "%scripttype%", scriptType.name());
 	}
 
 	public static String getToolCommandMessage() {
@@ -355,23 +356,21 @@ public final class SBConfig {
 		return replaceColorCode(replace(getString("errorGroupMessage"), "%group%", group));
 	}
 
-	public static String getErrorHandMessage(Material material, String id, int amount, short damage, String itemName) {
+	public static String getErrorHandMessage(Material type, int amount, short damage, String itemName) {
 		String message = getString("errorHandMessage");
-		message = replace(message, "%material%", material.toString());
-		message = replace(message, "%id%", id);
+		message = replace(message, "%material%", type.toString());
 		message = replace(message, "%amount%", amount + "");
 		message = replace(message, "%damage%", damage + "");
-		message = replace(message, "%itemname%", itemName != null ? itemName : material.toString());
+		message = replace(message, "%itemname%", StringUtils.isNotEmpty(itemName) ? itemName : type.toString());
 		return replaceColorCode(message);
 	}
 
-	public static String getErrorItemMessage(Material material, String id, int amount, short damage, String itemName) {
+	public static String getErrorItemMessage(Material type, int amount, short damage, String itemName) {
 		String message = getString("errorItemMessage");
-		message = replace(message, "%material%", material.toString());
-		message = replace(message, "%id%", id);
+		message = replace(message, "%material%", type.toString());
 		message = replace(message, "%amount%", amount + "");
 		message = replace(message, "%damage%", damage + "");
-		message = replace(message, "%itemname%", itemName != null ? itemName : material.toString());
+		message = replace(message, "%itemname%", StringUtils.isNotEmpty(itemName) ? itemName : type.toString());
 		return replaceColorCode(message);
 	}
 
@@ -524,9 +523,19 @@ public final class SBConfig {
 		return StringUtils.replaceColorCode(source, false);
 	}
 
+	private static List<String> replaceList(List<String> list, String search, String replace) {
+		if (list == null || list.size() == 0) {
+			return new ArrayList<>();
+		}
+		for (int i = 0; i < list.size(); i++) {
+			list.set(i, replace(list.get(i), search, replace));
+		}
+		return list;
+	}
+
 	private static List<String> replaceColorCode(List<String> list) {
 		if (list == null || list.size() == 0) {
-			return list;
+			return new ArrayList<>();
 		}
 		for (int i = 0; i < list.size(); i++) {
 			list.set(i, replaceColorCode(list.get(i)));

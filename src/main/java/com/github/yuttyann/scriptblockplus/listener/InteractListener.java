@@ -22,6 +22,7 @@ import com.github.yuttyann.scriptblockplus.listener.nms.MathHelper;
 import com.github.yuttyann.scriptblockplus.listener.nms.MovingPosition;
 import com.github.yuttyann.scriptblockplus.listener.nms.NMSWorld;
 import com.github.yuttyann.scriptblockplus.listener.nms.Vec3D;
+import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -36,9 +37,9 @@ public class InteractListener implements Listener {
 		if (event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
 			return;
 		}
-		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
-		if (sbPlayer.hasData(KEY_FLAG) && sbPlayer.getData(KEY_FLAG, Boolean.class)) {
-			sbPlayer.setData(KEY_FLAG, false);
+		ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
+		if (objectMap.hasData(KEY_FLAG) && objectMap.getBoolean(KEY_FLAG)) {
+			objectMap.setData(KEY_FLAG, false);
 			return;
 		}
 		Location location = player.getLocation();
@@ -82,9 +83,9 @@ public class InteractListener implements Listener {
 				return;
 			}
 			if (action == Action.RIGHT_CLICK_BLOCK) {
-				SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
-				if (sbPlayer.hasData(KEY_FLAG) && !sbPlayer.getData(KEY_FLAG, Boolean.class)) {
-					sbPlayer.setData(KEY_FLAG, true);
+				ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
+				if (objectMap.hasData(KEY_FLAG) && !objectMap.getBoolean(KEY_FLAG)) {
+					objectMap.setData(KEY_FLAG, true);
 				}
 			}
 		}
@@ -96,7 +97,7 @@ public class InteractListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerGameModeChangeEvent(PlayerGameModeChangeEvent event) {
 		if (event.getNewGameMode() != GameMode.ADVENTURE) {
-			SBPlayer.fromPlayer(event.getPlayer()).setData(KEY_FLAG, false);
+			SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().setData(KEY_FLAG, false);
 		}
 	}
 }

@@ -37,9 +37,8 @@ public class JoinQuitListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		SBPlayer sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
-		((BaseSBPlayer) sbPlayer).setPlayer(null);
 		sbPlayer.setScriptLine(null);
-		sbPlayer.setClickAction(null);
+		sbPlayer.setActionType(null);
 		sbPlayer.setClipboard(null);
 	}
 }
