@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.hook;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -29,8 +29,8 @@ public final class WorldEditSelection {
 		return new WorldEditSelection(Bukkit.getPluginManager().getPlugin("WorldEdit"));
 	}
 
-	public List<Block> getBlocks(Selection selection) {
-		List<Block> blocks = new ArrayList<>();
+	public Set<Block> getBlocks(Selection selection) {
+		Set<Block> blocks = new HashSet<>();
 		if (!(selection instanceof CuboidSelection)) {
 			return blocks;
 		}
