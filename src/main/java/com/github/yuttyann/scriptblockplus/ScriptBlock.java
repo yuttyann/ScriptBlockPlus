@@ -18,9 +18,7 @@ import com.github.yuttyann.scriptblockplus.listener.JoinQuitListener;
 import com.github.yuttyann.scriptblockplus.listener.ScriptBreakListener;
 import com.github.yuttyann.scriptblockplus.listener.ScriptInteractListener;
 import com.github.yuttyann.scriptblockplus.listener.ScriptWalkListener;
-import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.manager.ScriptBlockManager;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -38,7 +36,13 @@ public class ScriptBlock extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		for (Player player : Utils.getOnlinePlayers()) {
+		if (!Utils.isCBXXXorLater("1.8")) {
+			Utils.sendMessage("§cUnsupported Version: v" + Utils.getServerVersion());
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+
+		for (Player player : Bukkit.getOnlinePlayers()) {
 			((BaseSBPlayer) SBPlayer.fromPlayer(player)).setPlayer(player);
 		}
 		Files.reload();
@@ -68,10 +72,6 @@ public class ScriptBlock extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ScriptInteractListener(this), this);
 		getServer().getPluginManager().registerEvents(new ScriptBreakListener(this), this);
 		getServer().getPluginManager().registerEvents(new ScriptWalkListener(this), this);
-
-		// 初期化
-		OptionList.getManager().newInstances();
-		EndProcessManager.getInstance().newInstances();
 	}
 
 	@Override
