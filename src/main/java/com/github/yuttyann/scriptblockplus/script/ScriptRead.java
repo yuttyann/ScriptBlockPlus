@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public final class ScriptRead extends IAssist implements SBRead {
+public final class ScriptRead extends ScriptObjectMap implements SBRead {
 
 	private SBPlayer sbPlayer;
 	private String optionValue;
@@ -101,14 +101,22 @@ public final class ScriptRead extends IAssist implements SBRead {
 				optionValue = replaceValue(option.getValue(script));
 				Option instance = OptionList.getManager().newInstance(option);
 				if (!sbPlayer.isOnline() || !hasPermission(option) || !instance.callOption(this)) {
-					if (!instance.isFailedIgnore()) {
-						EndProcessManager.getInstance().forEach(e -> e.failed(this), true);
+					try {
+						if (!instance.isFailedIgnore()) {
+							EndProcessManager.getInstance().forEach(e -> e.failed(this), true);
+						}
+					} finally {
+						clearData();
 					}
 					return false;
 				}
 			}
 		}
-		EndProcessManager.getInstance().forEach(e -> e.success(this), true);
+		try {
+			EndProcessManager.getInstance().forEach(e -> e.success(this), true);
+		} finally {
+			clearData();
+		}
 		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
 		return true;
 	}
