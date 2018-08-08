@@ -11,7 +11,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.github.yuttyann.scriptblockplus.script.Clipboard;
 
-public interface SBPlayer extends ObjectData, CommandSender {
+public interface SBPlayer extends CommandSender {
 
 	public static SBPlayer fromPlayer(Player player) {
 		return player == null ? null : fromUUID(player.getUniqueId());
@@ -26,6 +26,8 @@ public interface SBPlayer extends ObjectData, CommandSender {
 	public OfflinePlayer getOfflinePlayer();
 
 	public PlayerInventory getInventory();
+
+	public ObjectMap getObjectMap();
 
 	public ItemStack getItemInMainHand();
 
@@ -43,17 +45,17 @@ public interface SBPlayer extends ObjectData, CommandSender {
 
 	public boolean hasClipboard();
 
-	public void setScriptLine(String scriptLine);
+	public void setScriptLine(String actionType);
 
 	public String getScriptLine();
 
 	public boolean hasScriptLine();
 
-	public void setClickAction(String clickAction);
+	public void setActionType(String actionType);
 
-	public String getClickAction();
+	public String getActionType();
 
-	public boolean hasClickAction();
+	public boolean hasActionType();
 
 	public void setOldFullCoords(String fullCoords);
 
