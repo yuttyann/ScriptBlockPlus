@@ -5,9 +5,10 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 
+import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 
-public interface SBRead {
+public interface SBRead extends ObjectMap {
 
 	/**
 	 * プラグインを取得する
@@ -16,8 +17,8 @@ public interface SBRead {
 	public Plugin getPlugin();
 
 	/**
-	 * SBプレイヤーを取得する
-	 * @return SBプレイヤー
+	 * SBPlayerを取得する
+	 * @return SBPlayer
 	 */
 	public SBPlayer getSBPlayer();
 
