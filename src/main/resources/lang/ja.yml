@@ -100,12 +100,11 @@ errorScriptExecMessage: '&c種類"%scripttype%"のスクリプトの実行に失
 errorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプトを実行することが出来ます。'
 
 # %material% : アイテムの種類
-# %id%       : アイテムのID
 # %amount%   : アイテムの個数
 # %damage%   : アイテムのダメージ値
 # %itemname% : アイテムの名前(アイテム名が無い場合は"アイテムの種類"と同じになります。)
-errorHandMessage: '&cアイテム「&r%itemname%&c(%id%:%damage%[%amount%])」&cを持っていません。'
-errorItemMessage: '&cアイテム「&r%itemname%&c(%id%:%damage%[%amount%])」&cを所持していません。'
+errorHandMessage: '&cアイテム「&r%itemname%&r(%damage%)[%amount%個]」&cを持っていません。'
+errorItemMessage: '&cアイテム「&r%itemname%&r(%damage%)[%amount%個]」&cを所持していません。'
 
 # %cost%   : 必要な金額
 # %result% : 足りない金額

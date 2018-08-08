@@ -100,12 +100,11 @@ errorScriptExecMessage: '&cFail to execute script from "%scripttype%" type scrip
 errorGroupMessage: '&cOnly players in group "%group%" can interact with this scriptblock.'
 
 # %material% : Type of item
-# %id%       : Item id
 # %amount%   : Amount of item
 # %damage%   : Damage value of item
 # %itemname% : Item name
-errorHandMessage: '&cThe items you hold in hand is not vaild, you must hold at least "%material%(%id%:%damage%)" with amount "%amount%x"'
-errorItemMessage: '&cThe items in your inventory is not vaild, you must keep in your inventory at least "%material%(%id%:%damage%)" with amount "%amount%x"'
+errorHandMessage: '&cThe items you hold in hand is not vaild, you must hold at least "%material%(%damage%)" with amount "%amount%x"'
+errorItemMessage: '&cThe items in your inventory is not vaild, you must keep in your inventory at least "%material%(%damage%)" with amount "%amount%x"'
 
 # %cost%   : Required amount
 # %result% : Missing amount
