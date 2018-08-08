@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.ScriptType.SPermission;
+import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -53,22 +53,19 @@ public class ScriptInteractListener extends IAssist {
 		if (mapManager.containsCoords(scriptType, location)) {
 			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, action);
 			Bukkit.getPluginManager().callEvent(interactEvent);
-			if (interactEvent.isCancelled()) {
+			if (interactEvent.isCancelled()
+					|| (action == Action.LEFT_CLICK_BLOCK && !SBConfig.isLeftClick())
+					|| (action == Action.RIGHT_CLICK_BLOCK && !SBConfig.isRightClick())
+					|| isPowered(block) || isOpen(block)) {
 				return;
 			}
-			if ((action == Action.LEFT_CLICK_BLOCK && !SBConfig.isLeftClick())
-					|| (action == Action.RIGHT_CLICK_BLOCK && !SBConfig.isRightClick())) {
-				return;
-			}
-			if (isPowered(block) || isOpen(block)) {
-				return;
-			}
-			if (!SPermission.has(player, ScriptType.INTERACT, false)) {
+			if (!SBPermission.has(player, ScriptType.INTERACT, false)) {
 				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
 				return;
 			}
-			SBPlayer.fromPlayer(player).setData(ScriptAction.KEY_CLICK_ACTION, action);
-			new ScriptRead(this, player, location).read(0);
+			ScriptRead scriptRead = new ScriptRead(this, player, location);
+			scriptRead.setData(ScriptAction.KEY_ENUM_ACTION, action);
+			scriptRead.read(0);
 		}
 	}
 
@@ -80,8 +77,14 @@ public class ScriptInteractListener extends IAssist {
 		if (isScriptEditor(player, item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			switch (action) {
 			case LEFT_CLICK_BLOCK:
-				ScriptType scriptType = player.isSneaking() ? ScriptType.WALK : ScriptType.INTERACT;
-				new ScriptEdit(scriptType).copy(sbPlayer, location);
+				if (player.isSneaking()) {
+					new ScriptEdit(getScriptType(item)).remove(sbPlayer, location);
+				} else {
+					ScriptType scriptType = getScriptType(item);
+					int ordinal = scriptType.ordinal() < ScriptType.size() ? scriptType.ordinal() : 0;
+					item.setItemMeta(Utils.getScriptEditor(ScriptType.valueOf(ordinal)).getItemMeta());
+					Utils.updateInventory(player);
+				}
 				return true;
 			case RIGHT_CLICK_BLOCK:
 				if (player.isSneaking()) {
@@ -89,17 +92,17 @@ public class ScriptInteractListener extends IAssist {
 						Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 					}
 				} else {
-					new ScriptEdit(ScriptType.BREAK).copy(sbPlayer, location);
+					new ScriptEdit(getScriptType(item)).copy(sbPlayer, location);
 				}
 				return true;
 			default:
 				sbPlayer.setScriptLine(null);
-				sbPlayer.setClickAction(null);
+				sbPlayer.setActionType(null);
 				return false;
 			}
 		}
-		if (sbPlayer.hasClickAction()) {
-			String[] array = StringUtils.split(sbPlayer.getClickAction(), "_");
+		if (sbPlayer.hasActionType()) {
+			String[] array = StringUtils.split(sbPlayer.getActionType(), "_");
 			ScriptBlockEditEvent editEvent = new ScriptBlockEditEvent(player, location.getBlock(), array);
 			Bukkit.getPluginManager().callEvent(editEvent);
 			if (editEvent.isCancelled()) {
@@ -124,6 +127,11 @@ public class ScriptInteractListener extends IAssist {
 		return false;
 	}
 
+	private ScriptType getScriptType(ItemStack item) {
+		String name = Utils.getItemName(item, null);
+		return ScriptType.valueOf(name.substring(name.indexOf("§dScript Editor§6[Mode: "), name.lastIndexOf("]")));
+	}
+
 	private boolean isWorldEditWand(Player player, ItemStack item) {
 		if (!HookPlugins.hasWorldEdit() || !Permission.has(player, "worldedit.selection.pos")) {
 			return false;
@@ -132,7 +140,8 @@ public class ScriptInteractListener extends IAssist {
 	}
 
 	private boolean isScriptEditor(Player player, ItemStack item) {
-		return Utils.checkItem(item, Material.BLAZE_ROD, "§dScript Editor");
+		String name = Utils.getItemName(item, null);
+		return name != null && item.getType() == Material.BLAZE_ROD && name.startsWith("§dScript Editor§6[Mode: ");
 	}
 
 	private boolean isPowered(Block block) {
