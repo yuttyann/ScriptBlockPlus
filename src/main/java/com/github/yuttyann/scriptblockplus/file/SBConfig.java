@@ -33,15 +33,15 @@ public final class SBConfig {
 		if (yaml == null) {
 			throw new NullPointerException();
 		}
-		put(yaml, "updateChecker", true);
-		put(yaml, "autoDownload", true);
-		put(yaml, "openChangeLog", true);
-		put(yaml, "language", "en");
-		put(yaml, "consoleLog", false);
-		put(yaml, "sortScripts", true);
-		put(yaml, "optionPermission", false);
-		put(yaml, "clickActions.interactLeft", true);
-		put(yaml, "clickActions.interactRight", true);
+		put(yaml, "UpdateChecker", true);
+		put(yaml, "AutoDownload", true);
+		put(yaml, "OpenChangeLog", true);
+		put(yaml, "Language", "en");
+		put(yaml, "ConsoleLog", false);
+		put(yaml, "SortScripts", true);
+		put(yaml, "OptionPermission", false);
+		put(yaml, "Actions.InteractLeft", true);
+		put(yaml, "Actions.InteractRight", true);
 	}
 
 	public static void reloadLang() {
@@ -49,66 +49,66 @@ public final class SBConfig {
 		if (yaml == null) {
 			throw new NullPointerException();
 		}
-		put(yaml, "blockSelector");
-		put(yaml, "scriptEditor");
-		put(yaml, "toolCommandMessage");
-		put(yaml, "reloadCommandMessage");
-		put(yaml, "checkVerCommandMessage");
-		put(yaml, "backupCommandMessage");
-		put(yaml, "dataMigrCommandMessage");
-		put(yaml, "createCommandMessage");
-		put(yaml, "addCommandMessage");
-		put(yaml, "removeCommandMessage");
-		put(yaml, "viewCommandMessage");
-		put(yaml, "selectorPasteCommandMessage");
-		put(yaml, "selectorRemoveCommandMessage");
-		put(yaml, "notVaultMessage");
-		put(yaml, "senderNoPlayerMessage");
-		put(yaml, "notPermissionMessage");
-		put(yaml, "giveToolMessage");
-		put(yaml, "allFileReloadMessage");
-		put(yaml, "scriptsBackupMessage");
-		put(yaml, "errorScriptsBackupMessage");
-		put(yaml, "notLatestPluginMessage");
-		put(yaml, "notScriptBlockFileMessage");
-		put(yaml, "dataMigrStartMessage");
-		put(yaml, "dataMigrEndMessage");
-		put(yaml, "updateDownloadStartMessage");
-		put(yaml, "updateDownloadEndMessage");
-		put(yaml, "updateCheckMessage");
-		put(yaml, "updateErrorMessage");
-		put(yaml, "scriptCopyMessage");
-		put(yaml, "scriptPasteMessage");
-		put(yaml, "scriptCreateMessage");
-		put(yaml, "scriptAddMessage");
-		put(yaml, "scriptRemoveMessage");
-		put(yaml, "notSelectionMessage");
-		put(yaml, "selectorPos1Message");
-		put(yaml, "selectorPos2Message");
-		put(yaml, "selectorPasteMessage");
-		put(yaml, "selectorRemoveMessage");
-		put(yaml, "optionFailedToExecuteMessage");
-		put(yaml, "activeDelayMessage");
-		put(yaml, "activeCooldownMessage");
-		put(yaml, "succActionDataMessage");
-		put(yaml, "errorEditDataMessage");
-		put(yaml, "errorScriptCheckMessage");
-		put(yaml, "errorScriptFileCheckMessage");
-		put(yaml, "errorScriptExecMessage");
-		put(yaml, "errorGroupMessage");
-		put(yaml, "errorHandMessage");
-		put(yaml, "errorItemMessage");
-		put(yaml, "errorCostMessage");
-		put(yaml, "consoleScriptCopyMessage");
-		put(yaml, "consoleScriptPasteMessage");
-		put(yaml, "consoleScriptCreateMessage");
-		put(yaml, "consoleScriptAddMessage");
-		put(yaml, "consoleScriptRemoveMessage");
-		put(yaml, "consoleScriptViewMessage");
-		put(yaml, "consoleSelectorPasteMessage");
-		put(yaml, "consoleSelectorPasteMessage");
-		put(yaml, "consoleSuccScriptExecMessage");
-		put(yaml, "consoleErrorScriptExecMessage");
+		put(yaml, "BlockSelector");
+		put(yaml, "ScriptEditor");
+		put(yaml, "ToolCommandMessage");
+		put(yaml, "ReloadCommandMessage");
+		put(yaml, "CheckVerCommandMessage");
+		put(yaml, "BackupCommandMessage");
+		put(yaml, "DataMigrCommandMessage");
+		put(yaml, "CreateCommandMessage");
+		put(yaml, "AddCommandMessage");
+		put(yaml, "RemoveCommandMessage");
+		put(yaml, "ViewCommandMessage");
+		put(yaml, "SelectorPasteCommandMessage");
+		put(yaml, "SelectorRemoveCommandMessage");
+		put(yaml, "NotVaultMessage");
+		put(yaml, "SenderNoPlayerMessage");
+		put(yaml, "NotPermissionMessage");
+		put(yaml, "GiveToolMessage");
+		put(yaml, "AllFileReloadMessage");
+		put(yaml, "ScriptsBackupMessage");
+		put(yaml, "ErrorScriptsBackupMessage");
+		put(yaml, "NotLatestPluginMessage");
+		put(yaml, "NotScriptBlockFileMessage");
+		put(yaml, "DataMigrStartMessage");
+		put(yaml, "DataMigrEndMessage");
+		put(yaml, "UpdateDownloadStartMessage");
+		put(yaml, "UpdateDownloadEndMessage");
+		put(yaml, "UpdateCheckMessage");
+		put(yaml, "UpdateErrorMessage");
+		put(yaml, "ScriptCopyMessage");
+		put(yaml, "ScriptPasteMessage");
+		put(yaml, "ScriptCreateMessage");
+		put(yaml, "ScriptAddMessage");
+		put(yaml, "ScriptRemoveMessage");
+		put(yaml, "NotSelectionMessage");
+		put(yaml, "SelectorPos1Message");
+		put(yaml, "SelectorPos2Message");
+		put(yaml, "SelectorPasteMessage");
+		put(yaml, "SelectorRemoveMessage");
+		put(yaml, "OptionFailedToExecuteMessage");
+		put(yaml, "ActiveDelayMessage");
+		put(yaml, "ActiveCooldownMessage");
+		put(yaml, "SuccActionDataMessage");
+		put(yaml, "ErrorEditDataMessage");
+		put(yaml, "ErrorScriptCheckMessage");
+		put(yaml, "ErrorScriptFileCheckMessage");
+		put(yaml, "ErrorScriptExecMessage");
+		put(yaml, "ErrorGroupMessage");
+		put(yaml, "ErrorHandMessage");
+		put(yaml, "ErrorItemMessage");
+		put(yaml, "ErrorCostMessage");
+		put(yaml, "ConsoleScriptCopyMessage");
+		put(yaml, "ConsoleScriptPasteMessage");
+		put(yaml, "ConsoleScriptCreateMessage");
+		put(yaml, "ConsoleScriptAddMessage");
+		put(yaml, "ConsoleScriptRemoveMessage");
+		put(yaml, "ConsoleScriptViewMessage");
+		put(yaml, "ConsoleSelectorPasteMessage");
+		put(yaml, "ConsoleSelectorPasteMessage");
+		put(yaml, "ConsoleSuccScriptExecMessage");
+		put(yaml, "ConsoleErrorScriptExecMessage");
 	}
 
 	public static Map<String, Object> getDatas() {
@@ -116,43 +116,43 @@ public final class SBConfig {
 	}
 
 	public static boolean isUpdateChecker() {
-		return get("updateChecker");
+		return get("UpdateChecker");
 	}
 
 	public static boolean isAutoDownload() {
-		return get("autoDownload");
+		return get("AutoDownload");
 	}
 
 	public static boolean isOpenChangeLog() {
-		return get("openChangeLog");
+		return get("OpenChangeLog");
 	}
 
 	public static String getLanguage() {
-		return get("language");
+		return get("Language");
 	}
 
 	public static boolean isConsoleLog() {
-		return get("consoleLog");
+		return get("ConsoleLog");
 	}
 
 	public static boolean isSortScripts() {
-		return get("sortScripts");
+		return get("SortScripts");
 	}
 
 	public static boolean isOptionPermission() {
-		return get("optionPermission");
+		return get("OptionPermission");
 	}
 
 	public static boolean isLeftClick() {
-		return get("clickActions.interactLeft");
+		return get("Actions.InteractLeft");
 	}
 
 	public static boolean isRightClick() {
-		return get("clickActions.interactRight");
+		return get("Actions.InteractRight");
 	}
 
 	public static List<String> getBlockSelectorLore() {
-		List<String> list = get("blockSelector") == null ? new ArrayList<>() : new ArrayList<>(get("blockSelector"));
+		List<String> list = get("BlockSelector") == null ? new ArrayList<>() : new ArrayList<>(get("BlockSelector"));
 		for (int i = 0; i < list.size(); i++) {
 			list.set(i, replaceColorCode(list.get(i)));
 		}
@@ -160,7 +160,7 @@ public final class SBConfig {
 	}
 
 	public static List<String> getScriptEditorLore(ScriptType scriptType) {
-		List<String> list = get("scriptEditor") == null ? new ArrayList<>() : new ArrayList<>(get("scriptEditor"));
+		List<String> list = get("ScriptEditor") == null ? new ArrayList<>() : new ArrayList<>(get("ScriptEditor"));
 		for (int i = 0; i < list.size(); i++) {
 			list.set(i, replaceColorCode(replace(list.get(i), "%scripttype%", scriptType.name())));
 		}
@@ -168,99 +168,99 @@ public final class SBConfig {
 	}
 
 	public static String getToolCommandMessage() {
-		return ChatColor.stripColor(get("toolCommandMessage"));
+		return ChatColor.stripColor(get("ToolCommandMessage"));
 	}
 
 	public static String getReloadCommandMessage() {
-		return ChatColor.stripColor(get("reloadCommandMessage"));
+		return ChatColor.stripColor(get("ReloadCommandMessage"));
 	}
 
 	public static String getBackupCommandMessage() {
-		return ChatColor.stripColor(get("backupCommandMessage"));
+		return ChatColor.stripColor(get("BackupCommandMessage"));
 	}
 
 	public static String getCheckVerCommandMessage() {
-		return ChatColor.stripColor(get("checkVerCommandMessage"));
+		return ChatColor.stripColor(get("CheckVerCommandMessage"));
 	}
 
 	public static String getDataMigrCommandMessage() {
-		return ChatColor.stripColor(get("dataMigrCommandMessage"));
+		return ChatColor.stripColor(get("DataMigrCommandMessage"));
 	}
 
 	public static String getCreateCommandMessage() {
-		return ChatColor.stripColor(get("createCommandMessage"));
+		return ChatColor.stripColor(get("CreateCommandMessage"));
 	}
 
 	public static String getAddCommandMessage() {
-		return ChatColor.stripColor(get("addCommandMessage"));
+		return ChatColor.stripColor(get("AddCommandMessage"));
 	}
 
 	public static String getRemoveCommandMessage() {
-		return ChatColor.stripColor(get("removeCommandMessage"));
+		return ChatColor.stripColor(get("RemoveCommandMessage"));
 	}
 
 	public static String getViewCommandMessage() {
-		return ChatColor.stripColor(get("viewCommandMessage"));
+		return ChatColor.stripColor(get("ViewCommandMessage"));
 	}
 
 	public static String getSelectorPasteCommandMessage() {
-		return ChatColor.stripColor(get("selectorPasteCommandMessage"));
+		return ChatColor.stripColor(get("SelectorPasteCommandMessage"));
 	}
 
 	public static String getSelectorRemoveCommandMessage() {
-		return ChatColor.stripColor(get("selectorRemoveCommandMessage"));
+		return ChatColor.stripColor(get("SelectorRemoveCommandMessage"));
 	}
 
 	public static String getNotVaultMessage() {
-		return replaceColorCode(get("notVaultMessage"));
+		return replaceColorCode(get("NotVaultMessage"));
 	}
 
 	public static String getSenderNoPlayerMessage() {
-		return replaceColorCode(get("senderNoPlayerMessage"));
+		return replaceColorCode(get("SenderNoPlayerMessage"));
 	}
 
 	public static String getNotPermissionMessage() {
-		return replaceColorCode(get("notPermissionMessage"));
+		return replaceColorCode(get("NotPermissionMessage"));
 	}
 
 	public static String getGiveToolMessage() {
-		return replaceColorCode(get("giveToolMessage"));
+		return replaceColorCode(get("GiveToolMessage"));
 	}
 
 	public static String getAllFileReloadMessage() {
-		return replaceColorCode(get("allFileReloadMessage"));
+		return replaceColorCode(get("AllFileReloadMessage"));
 	}
 
 	public static String getNotLatestPluginMessage() {
-		return replaceColorCode(get("notLatestPluginMessage"));
+		return replaceColorCode(get("NotLatestPluginMessage"));
 	}
 
 	public static String getNotScriptBlockFileMessage() {
-		return replaceColorCode(get("notScriptBlockFileMessage"));
+		return replaceColorCode(get("NotScriptBlockFileMessage"));
 	}
 
 	public static String getScriptsBackupMessage() {
-		return replaceColorCode(get("scriptsBackupMessage"));
+		return replaceColorCode(get("ScriptsBackupMessage"));
 	}
 
 	public static String getErrorScriptsBackupMessage() {
-		return replaceColorCode(get("errorScriptsBackupMessage"));
+		return replaceColorCode(get("ErrorScriptsBackupMessage"));
 	}
 
 	public static String getDataMigrStartMessage() {
-		return replaceColorCode(get("dataMigrStartMessage"));
+		return replaceColorCode(get("DataMigrStartMessage"));
 	}
 
 	public static String getDataMigrEndMessage() {
-		return replaceColorCode(get("dataMigrEndMessage"));
+		return replaceColorCode(get("DataMigrEndMessage"));
 	}
 
 	public static String getUpdateDownloadStartMessage() {
-		return replaceColorCode(get("updateDownloadStartMessage"));
+		return replaceColorCode(get("UpdateDownloadStartMessage"));
 	}
 
 	public static String getUpdateDownloadEndMessage(String fileName, String filePath, String fileSize) {
-		String message = get("updateDownloadEndMessage");
+		String message = get("UpdateDownloadEndMessage");
 		message = replace(message, "%filename%", fileName);
 		message = replace(message, "%filepath%", filePath);
 		message = replace(message, "%filesize%", fileSize);
@@ -268,7 +268,7 @@ public final class SBConfig {
 	}
 
 	public static String getUpdateCheckMessages(String pluginName, String latestVersion, List<String> details) {
-		String message = get("updateCheckMessage");
+		String message = get("UpdateCheckMessage");
 		message = replace(message, "%pluginname%", pluginName);
 		message = replace(message, "%latestversion%", latestVersion);
 		if (message.indexOf("%details%") >= 0) {
@@ -285,63 +285,63 @@ public final class SBConfig {
 	}
 
 	public static String getErrorUpdateMessage() {
-		return replaceColorCode(get("errorUpdateMessage"));
+		return replaceColorCode(get("ErrorUpdateMessage"));
 	}
 
 	public static String getScriptCopyMessage(ScriptType scriptType) {
-		return replaceColorCode(replace(get("scriptCopyMessage"), "%scripttype%", scriptType.getType()));
+		return replaceColorCode(replace(get("ScriptCopyMessage"), "%scripttype%", scriptType.getType()));
 	}
 
 	public static String getScriptPasteMessage(ScriptType scriptType) {
-		return replaceColorCode(replace(get("scriptPasteMessage"), "%scripttype%", scriptType.getType()));
+		return replaceColorCode(replace(get("ScriptPasteMessage"), "%scripttype%", scriptType.getType()));
 	}
 
 	public static String getScriptCreateMessage(ScriptType scriptType) {
-		return replaceColorCode(replace(get("scriptCreateMessage"), "%scripttype%", scriptType.getType()));
+		return replaceColorCode(replace(get("ScriptCreateMessage"), "%scripttype%", scriptType.getType()));
 	}
 
 	public static String getScriptAddMessage(ScriptType scriptType) {
-		return replaceColorCode(replace(get("scriptAddMessage"), "%scripttype%", scriptType.getType()));
+		return replaceColorCode(replace(get("ScriptAddMessage"), "%scripttype%", scriptType.getType()));
 	}
 
 	public static String getScriptRemoveMessage(ScriptType scriptType) {
-		return replaceColorCode(replace(get("scriptRemoveMessage"), "%scripttype%", scriptType.getType()));
+		return replaceColorCode(replace(get("ScriptRemoveMessage"), "%scripttype%", scriptType.getType()));
 	}
 
 	public static String getNotSelectionMessage() {
-		return replaceColorCode(get("notSelectionMessage"));
+		return replaceColorCode(get("NotSelectionMessage"));
 	}
 
 	public static String getSelectorPos1Message(Location pos1) {
-		String message = get("selectorPos1Message");
+		String message = get("SelectorPos1Message");
 		message = replace(message, "%world%", pos1.getWorld());
 		message = replace(message, "%coords%", BlockCoords.getCoords(pos1));
 		return replaceColorCode(message);
 	}
 
 	public static String getSelectorPos2Message(Location pos2) {
-		String message = get("selectorPos2Message");
+		String message = get("SelectorPos2Message");
 		message = replace(message, "%world%", pos2.getWorld());
 		message = replace(message, "%coords%", BlockCoords.getCoords(pos2));
 		return replaceColorCode(message);
 	}
 
 	public static String getSelectorPasteMessage(ScriptType scriptType, CuboidRegionBlocks regionBlocks) {
-		String message = get("selectorPasteMessage");
+		String message = get("SelectorPasteMessage");
 		message = replace(message, "%scripttype%", scriptType.getType());
 		message = replace(message, "%blockcount%", regionBlocks.getCount());
 		return replaceColorCode(message);
 	}
 
 	public static String getSelectorRemoveMessage(String scriptType, CuboidRegionBlocks regionBlocks) {
-		String message = get("selectorRemoveMessage");
+		String message = get("SelectorRemoveMessage");
 		message = replace(message, "%scripttype%", scriptType);
 		message = replace(message, "%blockcount%", regionBlocks.getCount());
 		return replaceColorCode(message);
 	}
 
 	public static String getOptionFailedToExecuteMessage(Option option, Throwable throwable) {
-		String message = get("optionFailedToExecuteMessage");
+		String message = get("OptionFailedToExecuteMessage");
 		String throwableMessage = throwable.getMessage() == null ? "" : " \"" + throwable.getMessage() + "\"";
 		message = replace(message, "%option%", option.getName());
 		message = replace(message, "%cause%", throwable.getClass().getSimpleName() + throwableMessage);
@@ -349,11 +349,11 @@ public final class SBConfig {
 	}
 
 	public static String getActiveDelayMessage() {
-		return replaceColorCode(get("activeDelayMessage"));
+		return replaceColorCode(get("ActiveDelayMessage"));
 	}
 
 	public static String getActiveCooldownMessage(short hour, byte minute, byte second) {
-		String message = get("activeCooldownMessage");
+		String message = get("ActiveCooldownMessage");
 		message = replace(message, "%hour%", hour);
 		message = replace(message, "%minute%", minute);
 		message = replace(message, "%second%", second);
@@ -362,31 +362,31 @@ public final class SBConfig {
 
 	public static String getSuccActionDataMessage(ScriptType scriptType, ActionType actionType) {
 		String type = scriptType.getType() + "-" + actionType.name().toLowerCase();
-		return replaceColorCode(replace(get("succActionDataMessage"), "%actiontype%", type));
+		return replaceColorCode(replace(get("SuccActionDataMessage"), "%actiontype%", type));
 	}
 
 	public static String getErrorEditDataMessage() {
-		return replaceColorCode(get("errorEditDataMessage"));
+		return replaceColorCode(get("ErrorEditDataMessage"));
 	}
 
 	public static String getErrorScriptCheckMessage() {
-		return replaceColorCode(get("errorScriptCheckMessage"));
+		return replaceColorCode(get("ErrorScriptCheckMessage"));
 	}
 
 	public static String getErrorScriptFileCheckMessage() {
-		return replaceColorCode(get("errorScriptFileCheckMessage"));
+		return replaceColorCode(get("ErrorScriptFileCheckMessage"));
 	}
 
 	public static String getErrorScriptMessage(ScriptType scriptType) {
-		return replaceColorCode(replace(get("errorScriptExecMessage"), "%scripttype%", scriptType.getType()));
+		return replaceColorCode(replace(get("ErrorScriptExecMessage"), "%scripttype%", scriptType.getType()));
 	}
 
 	public static String getErrorGroupMessage(String group) {
-		return replaceColorCode(replace(get("errorGroupMessage"), "%group%", group));
+		return replaceColorCode(replace(get("ErrorGroupMessage"), "%group%", group));
 	}
 
 	public static String getErrorHandMessage(Material type, int amount, int damage, String name) {
-		String message = get("errorHandMessage");
+		String message = get("ErrorHandMessage");
 		message = replace(message, "%material%", type.toString());
 		message = replace(message, "%amount%", amount);
 		message = replace(message, "%damage%", damage);
@@ -395,7 +395,7 @@ public final class SBConfig {
 	}
 
 	public static String getErrorItemMessage(Material type, int amount, int damage, String name) {
-		String message = get("errorItemMessage");
+		String message = get("ErrorItemMessage");
 		message = replace(message, "%material%", type.toString());
 		message = replace(message, "%amount%", amount);
 		message = replace(message, "%damage%", damage);
@@ -404,7 +404,7 @@ public final class SBConfig {
 	}
 
 	public static String getErrorCostMessage(double cost, double result) {
-		String message = get("errorCostMessage");
+		String message = get("ErrorCostMessage");
 		message = replace(message, "%cost%", cost);
 		message = replace(message, "%result%", result);
 		return replaceColorCode(message);
@@ -414,7 +414,7 @@ public final class SBConfig {
 		if (!isConsoleLog()) {
 			return null;
 		}
-		String message = get("consoleScriptCopyMessage");
+		String message = get("ConsoleScriptCopyMessage");
 		message = replace(message, "%player%", name);
 		message = replace(message, "%scripttype%", scriptType.getType());
 		message = replace(message, "%world%", location.getWorld().getName());
@@ -426,7 +426,7 @@ public final class SBConfig {
 		if (!isConsoleLog()) {
 			return null;
 		}
-		String message = get("consoleScriptPasteMessage");
+		String message = get("ConsoleScriptPasteMessage");
 		message = replace(message, "%player%", name);
 		message = replace(message, "%scripttype%", scriptType.getType());
 		message = replace(message, "%world%", location.getWorld().getName());
@@ -438,7 +438,7 @@ public final class SBConfig {
 		if (!isConsoleLog()) {
 			return null;
 		}
-		String message = get("consoleScriptCreateMessage");
+		String message = get("ConsoleScriptCreateMessage");
 		message = replace(message, "%player%", name);
 		message = replace(message, "%scripttype%", scriptType.getType());
 		message = replace(message, "%world%", location.getWorld().getName());
@@ -462,7 +462,7 @@ public final class SBConfig {
 		if (!isConsoleLog()) {
 			return null;
 		}
-		String message = get("consoleScriptRemoveMessage");
+		String message = get("ConsoleScriptRemoveMessage");
 		message = replace(message, "%player%", name);
 		message = replace(message, "%scripttype%", scriptType.getType());
 		message = replace(message, "%world%", location.getWorld().getName());
@@ -474,7 +474,7 @@ public final class SBConfig {
 		if (!isConsoleLog()) {
 			return null;
 		}
-		String message = get("consoleScriptViewMessage");
+		String message = get("ConsoleScriptViewMessage");
 		message = replace(message, "%player%", name);
 		message = replace(message, "%scripttype%", scriptType.getType());
 		message = replace(message, "%world%", location.getWorld().getName());
@@ -486,7 +486,7 @@ public final class SBConfig {
 		if (!isConsoleLog()) {
 			return null;
 		}
-		String message = get("consoleSelectorPasteMessage");
+		String message = get("ConsoleSelectorPasteMessage");
 		message = replace(message, "%scripttype%", scriptType.getType());
 		message = replace(message, "%blockcount%", regionBlocks.getCount());
 		message = replace(message, "%world%", regionBlocks.getWorld().getName());
@@ -499,7 +499,7 @@ public final class SBConfig {
 		if (!isConsoleLog()) {
 			return null;
 		}
-		String message = get("consoleSelectorRemoveMessage");
+		String message = get("ConsoleSelectorRemoveMessage");
 		message = replace(message, "%scripttype%", scriptType);
 		message = replace(message, "%blockcount%", regionBlocks.getCount());
 		message = replace(message, "%world%", regionBlocks.getWorld().getName());
@@ -512,7 +512,7 @@ public final class SBConfig {
 		if (!isConsoleLog()) {
 			return null;
 		}
-		String message = get("consoleSuccScriptExecMessage");
+		String message = get("ConsoleSuccScriptExecMessage");
 		message = replace(message, "%player%", name);
 		message = replace(message, "%scripttype%", scriptType.getType());
 		message = replace(message, "%world%", location.getWorld().getName());
@@ -524,7 +524,7 @@ public final class SBConfig {
 		if (!isConsoleLog()) {
 			return null;
 		}
-		String message = get("message");
+		String message = get("ConsoleErrorScriptExecMessage");
 		message = replace(message, "%player%", name);
 		message = replace(message, "%scripttype%", scriptType.getType());
 		message = replace(message, "%world%", location.getWorld().getName());

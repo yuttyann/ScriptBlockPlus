@@ -3,42 +3,41 @@
 ## ===== 自動アップデートの設定 ===== ##
 # [true -> 有効 | false -> 無効]
 # メッセージはOPにしか表示されません。
-
 # 最新バージョンを確認するかどうか。
-updateChecker: true
+UpdateChecker: true
 
 # 最新のプラグインをダウンロードするかどうか。
-autoDownload: true
+AutoDownload: true
 
 # ダウンロードした更新内容を、メモ帳で開くかどうか。
-openChangeLog: true
+OpenChangeLog: true
 
 ## ===== 言語の設定 ===== ##
 # 使用する言語を設定してください。
 # 初期[default(簡易自動), en(英語), ja(日本語), zh(中国語)]
-language: default
+Language: default
 
 ## ===== コンソールの設定 ===== ##
 # [true -> 有効 | false -> 無効]
 # 言語ファイルの console が対象です。
 # コンソールログを表示するかどうか。
-consoleLog: false
+ConsoleLog: false
 
 ## ===== スクリプト並び替えの設定 ===== ##
 # [true -> 有効 | false -> 無効]
 # スクリプトを並び替えるかどうか。
 # ※スクリプトの仕様を理解している人以外「無効」は「非推奨」です。
-sortScripts: true
+SortScripts: true
 
 ## ===== オプション実行権限の設定 ===== ##
 # [true -> 有効 | false -> 無効]
 # オプションを実行時に権限をチェックするかどうか。
-optionPermission: false
+OptionPermission: false
 
 ## ===== クリックの設定 ===== ##
 # [true -> 有効 | false -> 無効]
 # 「左」または「右」クリックでスクリプトを実行するかどうか。
-# 「@clickaction」を使用する場合は、全て有効にすることを推奨します。
-clickActions:
-  interactLeft: true
-  interactRight: true
+# 「@scriptaction」を使用する場合は、全て有効にすることを推奨します。
+Actions:
+  InteractLeft: true
+  InteractRight: true
