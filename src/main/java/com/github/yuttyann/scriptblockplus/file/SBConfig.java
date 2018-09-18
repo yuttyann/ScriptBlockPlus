@@ -342,7 +342,7 @@ public final class SBConfig {
 
 	public static String getOptionFailedToExecuteMessage(Option option, Throwable throwable) {
 		String message = get("optionFailedToExecuteMessage");
-		String throwableMessage = throwable.getMessage() == null ? "" : " (" + throwable.getMessage() + ")";
+		String throwableMessage = throwable.getMessage() == null ? "" : " \"" + throwable.getMessage() + "\"";
 		message = replace(message, "%option%", option.getName());
 		message = replace(message, "%cause%", throwable.getClass().getSimpleName() + throwableMessage);
 		return replaceColorCode(message);

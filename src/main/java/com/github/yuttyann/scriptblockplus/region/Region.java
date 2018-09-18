@@ -7,9 +7,9 @@ public interface Region {
 
 	public World getWorld();
 
-    public Location getMinimumPoint();
+	public Location getMinimumPoint();
 
-    public Location getMaximumPoint();
+	public Location getMaximumPoint();
 
-    public boolean hasPositions();
+	public boolean hasPositions();
 }

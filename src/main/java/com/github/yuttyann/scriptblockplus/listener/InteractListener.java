@@ -74,12 +74,7 @@ public class InteractListener implements Listener {
 			ItemStack item = ItemUtils.getItemInMainHand(player);
 			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, action, item, block, blockFace);
 			BlockInteractEvent blockInteractEvent = new BlockInteractEvent(interactEvent, EquipSlot.HAND, true);
-			if (action(player, action, blockInteractEvent)) {
-				event.setCancelled(!isAIR(action));
-			} else {
-				Bukkit.getPluginManager().callEvent(blockInteractEvent);
-				event.setCancelled(blockInteractEvent.isCancelled());
-			}
+			callEvent(action, interactEvent, blockInteractEvent);
 		}
 	}
 
@@ -101,19 +96,26 @@ public class InteractListener implements Listener {
 				}
 			}
 		}
-		BlockInteractEvent interactEvent = new BlockInteractEvent(event, null, false);
-		if (action(player, action, interactEvent)) {
-			event.setCancelled(!isAIR(action));
-		} else {
-			Bukkit.getPluginManager().callEvent(interactEvent);
-			event.setCancelled(interactEvent.isCancelled());
-		}
+		BlockInteractEvent blockInteractEvent = new BlockInteractEvent(event, null, false);
+		callEvent(action, event, blockInteractEvent);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerGameModeChangeEvent(PlayerGameModeChangeEvent event) {
 		if (event.getNewGameMode() != GameMode.ADVENTURE) {
 			SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().put(KEY_FLAG, false);
+		}
+	}
+
+	private void callEvent(Action action, PlayerInteractEvent interactEvent, BlockInteractEvent blockInteractEvent) {
+		Player player = interactEvent.getPlayer();
+		boolean actionResult = action(player, action, blockInteractEvent);
+		if (actionResult) {
+			blockInteractEvent.setCancelled(actionResult);
+			Bukkit.getPluginManager().callEvent(blockInteractEvent);
+		} else {
+			Bukkit.getPluginManager().callEvent(blockInteractEvent);
+			interactEvent.setCancelled(blockInteractEvent.isCancelled());
 		}
 	}
 

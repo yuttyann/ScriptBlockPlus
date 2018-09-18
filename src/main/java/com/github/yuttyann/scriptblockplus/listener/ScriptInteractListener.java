@@ -28,8 +28,8 @@ public class ScriptInteractListener extends IAssist {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onSBInteractEvent(BlockInteractEvent event) {
-		if (event.getHand() != EquipSlot.HAND) {
+	public void onBlockInteractEvent(BlockInteractEvent event) {
+		if (event.isCancelled() || event.getHand() != EquipSlot.HAND) {
 			return;
 		}
 		Block block = event.getBlock();
@@ -63,15 +63,5 @@ public class ScriptInteractListener extends IAssist {
 	private boolean isOpen(Block block) {
 		Object data = block.getState().getData();
 		return data instanceof Openable ? ((Openable) data).isOpen() : false;
-		/*
-		if (Utils.isCBXXXorLater("1.13")) {
-			if (data instanceof org.bukkit.block.data.Openable) {
-				return ((org.bukkit.block.data.Openable) data).isOpen();
-			}
-		} else if (data instanceof org.bukkit.material.Openable) {
-			return ((org.bukkit.material.Openable) data).isOpen();
-		}
-		return false;
-		*/
 	}
 }

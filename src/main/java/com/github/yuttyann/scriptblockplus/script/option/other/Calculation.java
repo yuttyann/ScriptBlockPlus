@@ -21,7 +21,7 @@ import me.clip.placeholderapi.PlaceholderAPIPlugin;
 
 public class Calculation extends BaseOption {
 
-	static final Pattern REALNUMBER_PATTERN = Pattern.compile("^-?(0|[1-9]\\\\d*)(\\\\.\\\\d+|)$");
+	static final Pattern REALNUMBER_PATTERN = Pattern.compile("^-?(0|[1-9]\\d*)(\\.\\d+|)$");
 
 	public Calculation() {
 		super("calculation", "@calc:");

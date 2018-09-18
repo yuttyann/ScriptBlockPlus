@@ -22,7 +22,6 @@ public final class FakeCommandBlock {
 		} catch (Exception e) {
 			nmsVx_x_Rx = new Vx_x_Rx();
 		}
-		System.out.println(nmsVx_x_Rx.getClass().getSimpleName());
 		COMMAND_LISTENER = nmsVx_x_Rx.getCommandBlock();
 	}
 

@@ -138,7 +138,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		File backup = new File(scripts, "backup");
 		String formatTime = Utils.getFormatTime("yyyy-MM-dd HH-mm-ss");
-		FileUtils.copyDirectory(scripts, new File(backup, "scripts " + formatTime), f -> backup.equals(f));
+		FileUtils.copyDirectory(scripts, new File(backup, "scripts " + formatTime), f -> f.isDirectory());
 		Utils.sendMessage(sender, SBConfig.getScriptsBackupMessage());
 		return true;
 	}
