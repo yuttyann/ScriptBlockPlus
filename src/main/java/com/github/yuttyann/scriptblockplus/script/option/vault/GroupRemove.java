@@ -25,7 +25,7 @@ public class GroupRemove extends BaseOption {
 
 		Player player = getPlayer();
 		if (vaultPermission.playerInGroup(world, player, group)) {
-			vaultPermission.playerRemoveGroup(world, player,  group);
+			vaultPermission.playerRemoveGroup(world, player, group);
 		}
 		return true;
 	}

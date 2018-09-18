@@ -75,8 +75,6 @@ public abstract class AbstractConstructor<T> {
 		return true;
 	}
 
-
-
 	public T[] newInstances() {
 		return newInstances(newGenericArray());
 	}

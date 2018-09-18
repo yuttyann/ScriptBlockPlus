@@ -7,10 +7,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public enum ActionType {
-	CREATE,
-	ADD,
-	REMOVE,
-	VIEW;
+	CREATE, ADD, REMOVE, VIEW;
 
 	private static final Set<String> TYPES = new HashSet<>();
 

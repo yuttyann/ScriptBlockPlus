@@ -12,17 +12,17 @@ public final class StreamUtils {
 	public static <T, R> R[] toArray(Collection<T> collection, Function<T, R> mapper, R[] array) {
 		Objects.requireNonNull(array);
 		Objects.requireNonNull(collection);
-        Iterator<T> iterator = collection.iterator();
-        for (int i = 0; iterator.hasNext(); i++) {
-        	array[i] = mapper.apply(iterator.next());
-        }
-        return array;
+		Iterator<T> iterator = collection.iterator();
+		for (int i = 0; iterator.hasNext(); i++) {
+			array[i] = mapper.apply(iterator.next());
+		}
+		return array;
 	}
 
 	public static <T> void forEach(T[] array, Consumer<T> action) {
-        for (T t : Objects.requireNonNull(array)) {
-        	action.accept(t);
-        }
+		for (T t : Objects.requireNonNull(array)) {
+			action.accept(t);
+		}
 	}
 
 	public static <T> void fForEach(T[] array, Predicate<T> filter, Consumer<T> action) {

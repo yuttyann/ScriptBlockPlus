@@ -18,22 +18,22 @@ public class ItemUtils {
 	public static void setDamage(ItemStack item, int damage) {
 		Validate.notNull(item, "Item cannot be null");
 		if (Utils.isCBXXXorLater("1.13")) {
-	        ItemMeta meta = item.getItemMeta();
-	        if (meta != null) {
-	            ((org.bukkit.inventory.meta.Damageable) meta).setDamage(damage);
-	            item.setItemMeta(meta);
-	        }
+			ItemMeta meta = item.getItemMeta();
+			if (meta != null) {
+				((org.bukkit.inventory.meta.Damageable) meta).setDamage(damage);
+				item.setItemMeta(meta);
+			}
 		} else {
 			item.setDurability((short) damage);
 		}
-    }
+	}
 
 	@SuppressWarnings("deprecation")
 	public static int getDamage(ItemStack item) {
 		Validate.notNull(item, "Item cannot be null");
 		if (Utils.isCBXXXorLater("1.13")) {
 			ItemMeta meta = item.getItemMeta();
-	        return meta == null ? 0 : ((org.bukkit.inventory.meta.Damageable) meta).getDamage();
+			return meta == null ? 0 : ((org.bukkit.inventory.meta.Damageable) meta).getDamage();
 		}
 		return item.getDurability();
 	}
@@ -75,7 +75,7 @@ public class ItemUtils {
 	}
 
 	public static ItemStack[] getHandItems(Player player) {
-		return new ItemStack[]{getItemInMainHand(player), getItemInOffHand(player)};
+		return new ItemStack[] { getItemInMainHand(player), getItemInOffHand(player) };
 	}
 
 	public static void setName(ItemStack item, String name) {

@@ -27,7 +27,7 @@ public class ActionBar extends BaseOption {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		PACKET_PARAMS = new Class<?>[]{iChatBaseComponentClass, byteOrChatMessageTypeClass};
+		PACKET_PARAMS = new Class<?>[] { iChatBaseComponentClass, byteOrChatMessageTypeClass };
 	}
 
 	public ActionBar() {

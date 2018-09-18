@@ -118,7 +118,7 @@ public final class Updater {
 		Document document = getDocument(pluginName);
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
-		for(int i = 0; i < rootChildren.getLength(); i++) {
+		for (int i = 0; i < rootChildren.getLength(); i++) {
 			Node node = rootChildren.item(i);
 			if (node.getNodeType() != Node.ELEMENT_NODE) {
 				continue;
@@ -146,7 +146,7 @@ public final class Updater {
 					if (details == null) {
 						details = new ArrayList<>(detailsChildren.getLength());
 					}
-					for(int k = 0; k < detailsChildren.getLength(); k++) {
+					for (int k = 0; k < detailsChildren.getLength(); k++) {
 						Node detailsNode = detailsChildren.item(k);
 						if (detailsNode.getNodeType() == Node.ELEMENT_NODE) {
 							element = (Element) detailsNode;
@@ -160,7 +160,7 @@ public final class Updater {
 	}
 
 	public boolean execute(CommandSender sender) {
-		if(SBConfig.isUpdateChecker() && isUpperVersion) {
+		if (SBConfig.isUpdateChecker() && isUpperVersion) {
 			if (sender == null) {
 				sender = Bukkit.getConsoleSender();
 			}
@@ -168,7 +168,7 @@ public final class Updater {
 			File dataFolder = Files.getConfig().getDataFolder();
 			File logFile = new File(dataFolder, "update/ChangeLog.txt");
 			boolean logEquals = !logFile.exists() || !textEquals(changeLogURL, logFile);
-			if(SBConfig.isAutoDownload()) {
+			if (SBConfig.isAutoDownload()) {
 				File jarFile = new File(dataFolder, "update/jar/" + getJarName());
 				try {
 					Utils.sendMessage(SBConfig.getUpdateDownloadStartMessage());
@@ -180,7 +180,8 @@ public final class Updater {
 					if (!isUpdateError && jarFile.exists()) {
 						String fileName = jarFile.getName();
 						String filePath = StringUtils.replace(jarFile.getPath(), "\\", "/");
-						Utils.sendMessage(SBConfig.getUpdateDownloadEndMessage(fileName, filePath, getSize(jarFile.length())));
+						Utils.sendMessage(
+								SBConfig.getUpdateDownloadEndMessage(fileName, filePath, getSize(jarFile.length())));
 					}
 				}
 			}
@@ -198,13 +199,13 @@ public final class Updater {
 	}
 
 	public void sendCheckMessage(CommandSender sender) {
-		if(isUpperVersion && !isUpdateError && sender.isOp()) {
+		if (isUpperVersion && !isUpdateError && sender.isOp()) {
 			Utils.sendMessage(sender, SBConfig.getUpdateCheckMessages(pluginName, latestVersion, details));
 		}
 	}
 
 	private void sendErrorMessage(CommandSender sender) {
-		if(!isUpdateError && (isUpdateError = true)) {
+		if (!isUpdateError && (isUpdateError = true)) {
 			Utils.sendMessage(sender, SBConfig.getErrorUpdateMessage());
 		}
 	}

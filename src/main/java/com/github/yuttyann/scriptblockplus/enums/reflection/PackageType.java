@@ -152,7 +152,8 @@ public enum PackageType {
 		return getConstructor(false, className, parameterTypes);
 	}
 
-	public Constructor<?> getConstructor(boolean declared, String className, Class<?>... parameterTypes) throws ReflectiveOperationException {
+	public Constructor<?> getConstructor(boolean declared, String className, Class<?>... parameterTypes)
+			throws ReflectiveOperationException {
 		if (parameterTypes == null) {
 			parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
 		}

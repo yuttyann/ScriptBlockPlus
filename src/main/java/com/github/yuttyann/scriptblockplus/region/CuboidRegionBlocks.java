@@ -36,7 +36,7 @@ public final class CuboidRegionBlocks {
 	}
 
 	public int getCount() {
-		int[] count = {0};
+		int[] count = { 0 };
 		forEach(b -> count[0]++);
 		return count[0];
 	}

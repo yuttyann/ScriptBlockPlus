@@ -356,29 +356,29 @@ public class BlockCoords extends Location {
 		}
 	}
 
-    @Utility
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("world", getWorld().getName());
-        map.put("x", getX());
-        map.put("y", getY());
-        map.put("z", getZ());
-        map.put("coords", getCoords());
-        map.put("fullcoords", getFullCoords());
-        return map;
-    }
+	@Utility
+	public Map<String, Object> serialize() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("world", getWorld().getName());
+		map.put("x", getX());
+		map.put("y", getY());
+		map.put("z", getZ());
+		map.put("coords", getCoords());
+		map.put("fullcoords", getFullCoords());
+		return map;
+	}
 
-    public static Location deserialize(Map<String, Object> args) {
-        World world = Utils.getWorld((String) args.get("world"));
-        if (world == null) {
-            throw new IllegalArgumentException("unknown world");
-        }
-        double x = (double) args.get("x");
-        double y = (double) args.get("y");
-        double z = (double) args.get("z");
-        BlockCoords blockCoords = new BlockCoords(world, x, y, z);
-        blockCoords.coords = (String) args.get("coords");
-        blockCoords.fullCoords = (String) args.get("fullcoords");
-        return blockCoords;
-    }
+	public static Location deserialize(Map<String, Object> args) {
+		World world = Utils.getWorld((String) args.get("world"));
+		if (world == null) {
+			throw new IllegalArgumentException("unknown world");
+		}
+		double x = (double) args.get("x");
+		double y = (double) args.get("y");
+		double z = (double) args.get("z");
+		BlockCoords blockCoords = new BlockCoords(world, x, y, z);
+		blockCoords.coords = (String) args.get("coords");
+		blockCoords.fullCoords = (String) args.get("fullcoords");
+		return blockCoords;
+	}
 }

@@ -24,7 +24,7 @@ public final class ProfileFetcher {
 	private static final Map<String, UUID> UUID_CACHE_MAP = new HashMap<>();
 	private static final Map<UUID, String> NAME_CACHE_MAP = new HashMap<>();
 
-	private static final int[] UUID_INDEX = {0, 8, 12, 16, 20, 32};
+	private static final int[] UUID_INDEX = { 0, 8, 12, 16, 20, 32 };
 
 	public static UUID getUniqueId(String name) throws ProtocolException, ParseException, IOException {
 		UUID uuid = UUID_CACHE_MAP.get(name);

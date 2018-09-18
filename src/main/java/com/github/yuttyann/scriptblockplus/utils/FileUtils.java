@@ -146,7 +146,7 @@ public final class FileUtils {
                 }
             }
 		}
-    }
+	}
 
 	public static void fileDownload(String url, File file) throws IOException {
 		File parent = file.getParentFile();

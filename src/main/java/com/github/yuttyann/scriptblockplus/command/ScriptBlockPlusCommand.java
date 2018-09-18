@@ -57,17 +57,17 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	public CommandData[] getUsages() {
 		String[] typeNodes = SBPermission.getNodes(true);
 		return new CommandData[] {
-			new CommandData(SBConfig.getToolCommandMessage(), Permission.COMMAND_TOOL.getNode()),
-			new CommandData(SBConfig.getReloadCommandMessage(), Permission.COMMAND_RELOAD.getNode()),
-			new CommandData(SBConfig.getBackupCommandMessage(), Permission.COMMAND_BACKUP.getNode()),
-			new CommandData(SBConfig.getCheckVerCommandMessage(), Permission.COMMAND_CHECKVER.getNode()),
-			new CommandData(SBConfig.getDataMigrCommandMessage(), Permission.COMMAND_DATAMIGR.getNode()),
-			new CommandData(SBConfig.getCreateCommandMessage(), typeNodes),
-			new CommandData(SBConfig.getAddCommandMessage(), typeNodes),
-			new CommandData(SBConfig.getRemoveCommandMessage(), typeNodes),
-			new CommandData(SBConfig.getViewCommandMessage(), typeNodes),
-			new CommandData(SBConfig.getSelectorPasteCommandMessage(), Permission.COMMAND_SELECTOR.getNode()),
-			new CommandData(SBConfig.getSelectorRemoveCommandMessage(), Permission.COMMAND_SELECTOR.getNode())
+				new CommandData(SBConfig.getToolCommandMessage(), Permission.COMMAND_TOOL.getNode()),
+				new CommandData(SBConfig.getReloadCommandMessage(), Permission.COMMAND_RELOAD.getNode()),
+				new CommandData(SBConfig.getBackupCommandMessage(), Permission.COMMAND_BACKUP.getNode()),
+				new CommandData(SBConfig.getCheckVerCommandMessage(), Permission.COMMAND_CHECKVER.getNode()),
+				new CommandData(SBConfig.getDataMigrCommandMessage(), Permission.COMMAND_DATAMIGR.getNode()),
+				new CommandData(SBConfig.getCreateCommandMessage(), typeNodes),
+				new CommandData(SBConfig.getAddCommandMessage(), typeNodes),
+				new CommandData(SBConfig.getRemoveCommandMessage(), typeNodes),
+				new CommandData(SBConfig.getViewCommandMessage(), typeNodes),
+				new CommandData(SBConfig.getSelectorPasteCommandMessage(), Permission.COMMAND_SELECTOR.getNode()),
+				new CommandData(SBConfig.getSelectorRemoveCommandMessage(), Permission.COMMAND_SELECTOR.getNode())
 		};
 	}
 
@@ -306,13 +306,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			if (equals(args[0], "selector")) {
 				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[1].toLowerCase();
-					String[] answers = new String[]{"paste", "remove"};
+					String[] answers = new String[] { "paste", "remove" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
 			} else if (equals(args[0], ScriptType.types())) {
 				if (SBPermission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
 					String prefix = args[1].toLowerCase();
-					String[] answers = new String[]{"create", "add", "remove", "view"};
+					String[] answers = new String[] { "create", "add", "remove", "view" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
 			}
@@ -320,13 +320,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			if (args.length == 3 && equals(args[0], "selector") && equals(args[1], "paste")) {
 				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[2].toLowerCase();
-					String[] answers = new String[]{"true", "false"};
+					String[] answers = new String[] { "true", "false" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
 			} else if (args.length == 4 && equals(args[0], "selector") && equals(args[1], "paste")) {
 				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[3].toLowerCase();
-					String[] answers = new String[]{"true", "false"};
+					String[] answers = new String[] { "true", "false" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
 			} else {
@@ -367,7 +367,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		try {
 			List<Option> options = OptionList.getList();
 			List<String> scripts = StringUtils.getScripts(scriptLine);
-			int[] success = {0};
+			int[] success = { 0 };
 			scripts.forEach(s -> StreamUtils.fForEach(options, o -> o.isOption(s), o -> success[0]++));
 			if (success[0] == 0 || success[0] != scripts.size()) {
 				return false;

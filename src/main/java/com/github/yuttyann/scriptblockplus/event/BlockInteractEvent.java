@@ -27,11 +27,11 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 	private boolean isAnimation;
 	private boolean cancelled;
 
-	public BlockInteractEvent(PlayerInteractEvent event, EquipSlot hand,  boolean isAnimation) {
+	public BlockInteractEvent(PlayerInteractEvent event, EquipSlot hand, boolean isAnimation) {
 		this(event, event.getItem(), hand, isAnimation);
 	}
 
-	public BlockInteractEvent(PlayerInteractEvent event, ItemStack item, EquipSlot hand,  boolean isAnimation) {
+	public BlockInteractEvent(PlayerInteractEvent event, ItemStack item, EquipSlot hand, boolean isAnimation) {
 		this(event, event.getPlayer(), event.getClickedBlock(), item, event.getAction(), event.getBlockFace(), hand, isAnimation);
 	}
 

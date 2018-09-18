@@ -89,8 +89,8 @@ public final class TimeData {
 		int hash = 1;
     	hash = hash * 31 + index;
     	hash = hash * 31 + uuid.hashCode();
-    	hash = hash * 31 + fullCoords.hashCode();
-    	hash = hash * 31 + scriptType.hashCode();
+		hash = hash * 31 + fullCoords.hashCode();
+		hash = hash * 31 + scriptType.hashCode();
 		return hash;
 	}
 }

@@ -3,13 +3,7 @@ package com.github.yuttyann.scriptblockplus.enums;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public enum EquipSlot {
-	HAND,
-	OFF_HAND,
-	FEET,
-	LEGS,
-	CHEST,
-	HEAD,
-	NONE;
+	HAND, OFF_HAND, FEET, LEGS, CHEST, HEAD, NONE;
 
 	private static final Class<?> BUKKIT_ES_CLASS;
 

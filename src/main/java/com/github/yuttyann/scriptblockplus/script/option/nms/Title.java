@@ -15,7 +15,7 @@ public class Title extends BaseOption {
 	private static final Class<?>[] TITLE_PARAMS;
 	private static final Class<?>[] TIMES_PARAMS;
 
-	static{
+	static {
 		Class<?> enumTitleActionClass = null;
 		Class<?> iChatBaseComponentClass = null;
 		try {
@@ -24,8 +24,8 @@ public class Title extends BaseOption {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		TITLE_PARAMS = new Class<?>[]{enumTitleActionClass, iChatBaseComponentClass};
-		TIMES_PARAMS = new Class<?>[]{enumTitleActionClass, iChatBaseComponentClass, int.class, int.class, int.class};
+		TITLE_PARAMS = new Class<?>[] { enumTitleActionClass, iChatBaseComponentClass };
+		TIMES_PARAMS = new Class<?>[] { enumTitleActionClass, iChatBaseComponentClass, int.class, int.class, int.class };
 	}
 
 	public Title() {

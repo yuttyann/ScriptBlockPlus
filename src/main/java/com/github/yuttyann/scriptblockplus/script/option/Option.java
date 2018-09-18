@@ -95,8 +95,8 @@ public abstract class Option {
 	@Override
 	public int hashCode() {
 		int hash = 1;
-    	hash = hash * 31 + name.hashCode();
-    	hash = hash * 31 + syntax.hashCode();
+		hash = hash * 31 + name.hashCode();
+		hash = hash * 31 + syntax.hashCode();
 		return hash;
 	}
 

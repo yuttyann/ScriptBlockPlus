@@ -361,7 +361,7 @@ public final class SBConfig {
 	}
 
 	public static String getSuccActionDataMessage(ScriptType scriptType, ActionType actionType) {
-		String type = scriptType.getType() + "-"  + actionType.name().toLowerCase();
+		String type = scriptType.getType() + "-" + actionType.name().toLowerCase();
 		return replaceColorCode(replace(get("succActionDataMessage"), "%actiontype%", type));
 	}
 

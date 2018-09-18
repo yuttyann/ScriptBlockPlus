@@ -35,12 +35,12 @@ public class CuboidRegion implements Region {
 
 	@Override
 	public Location getMinimumPoint() {
-		return toLocation(min(pos1.getX(), pos2.getX()),  min(pos1.getY(), pos2.getY()), min(pos1.getZ(), pos2.getZ()));
+		return toLocation(min(pos1.getX(), pos2.getX()), min(pos1.getY(), pos2.getY()), min(pos1.getZ(), pos2.getZ()));
 	}
 
 	@Override
 	public Location getMaximumPoint() {
-		return toLocation(max(pos1.getX(), pos2.getX()),  max(pos1.getY(), pos2.getY()), max(pos1.getZ(), pos2.getZ()));
+		return toLocation(max(pos1.getX(), pos2.getX()), max(pos1.getY(), pos2.getY()), max(pos1.getZ(), pos2.getZ()));
 	}
 
 	@Override

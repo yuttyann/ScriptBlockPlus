@@ -45,7 +45,7 @@ public final class StringUtils {
 
 	public static String[] split(String source, String delimiter) {
 		if (isEmpty(source) || isEmpty(delimiter)) {
-			return new String[]{source};
+			return new String[] { source };
 		}
 		int start = 0;
 		int end = source.indexOf(delimiter, start);
@@ -87,7 +87,7 @@ public final class StringUtils {
 		char[] chars = source.toCharArray();
 		StringBuilder builder = new StringBuilder(chars.length);
 		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] != '§' || (i + 1)  >= chars.length) {
+			if (chars[i] != '§' || (i + 1) >= chars.length) {
 				continue;
 			}
 			if (ChatColor.getByChar(Character.toLowerCase(chars[i + 1])) != null) {

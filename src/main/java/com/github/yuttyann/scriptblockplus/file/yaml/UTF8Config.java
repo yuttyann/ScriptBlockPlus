@@ -128,7 +128,7 @@ final class UTF8Config extends YamlConfiguration {
 		} catch (IOException e) {
 			Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, e);
 		} catch (InvalidConfigurationException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file , e);
+			Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, e);
 		}
 		return config;
 	}

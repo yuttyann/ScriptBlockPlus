@@ -13,7 +13,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Vx_x_Rx implements ClassHelper {
 
-	private static final Class<?>[] PARAMS = {getNMSClass(c), CommandSender.class, String.class};
+	private static final Class<?>[] PARAMS = { getNMSClass(c), CommandSender.class, String.class };
 
 	private CommandListener listener;
 

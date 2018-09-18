@@ -123,6 +123,6 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
     	if (scriptType == null) {
     		throw new NullPointerException(name + " does not exist");
     	}
-    	return scriptType;
-    }
+		return scriptType;
+	}
 }
