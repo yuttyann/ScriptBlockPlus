@@ -205,8 +205,7 @@ public enum PackageType {
 			builder.append(name).append('[');
 		}
 		for (int i = 0; i < objects.length; i++) {
-			Class<?> clazz = objects[i];
-			builder.append(clazz == null ? "null" : clazz.getName());
+			builder.append(objects[i] == null ? "null" : objects[i].getName());
 			if (i == lastLength) {
 				return builder.append(']').toString();
 			}

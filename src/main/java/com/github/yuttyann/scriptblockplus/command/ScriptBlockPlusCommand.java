@@ -6,14 +6,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
@@ -22,19 +23,19 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.Clipboard;
+import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
+import com.github.yuttyann.scriptblockplus.region.Region;
+import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
-import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
-import com.github.yuttyann.scriptblockplus.script.hook.WorldEditSelection;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import com.sk89q.worldedit.bukkit.selections.Selection;
 
 public final class ScriptBlockPlusCommand extends BaseCommand {
 
@@ -65,8 +66,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			new CommandData(SBConfig.getAddCommandMessage(), typeNodes),
 			new CommandData(SBConfig.getRemoveCommandMessage(), typeNodes),
 			new CommandData(SBConfig.getViewCommandMessage(), typeNodes),
-			new CommandData(SBConfig.getWorldEditPasteCommandMessage(), Permission.COMMAND_WORLDEDIT.getNode()),
-			new CommandData(SBConfig.getWorldEditRemoveCommandMessage(), Permission.COMMAND_WORLDEDIT.getNode())
+			new CommandData(SBConfig.getSelectorPasteCommandMessage(), Permission.COMMAND_SELECTOR.getNode()),
+			new CommandData(SBConfig.getSelectorRemoveCommandMessage(), Permission.COMMAND_SELECTOR.getNode())
 		};
 	}
 
@@ -86,15 +87,17 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			}
 		} else if (args.length == 2) {
 			if (equals(args[0], ScriptType.types()) && equals(args[1], "remove", "view")) {
-				return setData(sender, args);
-			} else if (equals(args[0], "worldedit") && equals(args[1], "remove")) {
-				return doWorldEditRemove(sender);
+				return setAction(sender, args);
+			} else if (equals(args[0], "selector") && equals(args[1], "remove")) {
+				return doSelectorRemove(sender);
+			} else if (equals(args[0], "selector") && equals(args[1], "paste")) {
+				return doSelectorPaste(sender, args);
 			}
 		} else if (args.length >= 3) {
-			if (args.length <= 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
-				return doWorldEditPaste(sender, args);
+			if (args.length <= 4 && equals(args[0], "selector") && equals(args[1], "paste")) {
+				return doSelectorPaste(sender, args);
 			} else if (equals(args[0], ScriptType.types()) && equals(args[1], "create", "add")) {
-				return setData(sender, args);
+				return setAction(sender, args);
 			}
 		}
 		return false;
@@ -105,9 +108,10 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return false;
 		}
 		Player player = (Player) sender;
-		player.getInventory().addItem(Utils.getScriptEditor(ScriptType.INTERACT));
+		player.getInventory().addItem(ItemUtils.getBlockSelector());
+		player.getInventory().addItem(ItemUtils.getScriptEditor(ScriptType.INTERACT));
 		Utils.updateInventory(player);
-		Utils.sendMessage(player, SBConfig.getGiveScriptEditorMessage());
+		Utils.sendMessage(player, SBConfig.getGiveToolMessage());
 		return true;
 	}
 
@@ -132,9 +136,9 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			Utils.sendMessage(sender, SBConfig.getErrorScriptsBackupMessage());
 			return true;
 		}
-		File backup = new File(dataFolder, "backup");
+		File backup = new File(scripts, "backup");
 		String formatTime = Utils.getFormatTime("yyyy-MM-dd HH-mm-ss");
-		FileUtils.copyDirectory(scripts, new File(backup, "scripts " + formatTime));
+		FileUtils.copyDirectory(scripts, new File(backup, "scripts " + formatTime), f -> backup.equals(f));
 		Utils.sendMessage(sender, SBConfig.getScriptsBackupMessage());
 		return true;
 	}
@@ -187,18 +191,11 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 					scripts.remove(0);
 				}
 				for (int i = 0; i < scripts.size(); i++) {
-					String scriptLine = scripts.get(i);
-					if (scriptLine.contains("@cooldown:")) {
-						scripts.set(i, StringUtils.replace(scriptLine, "@cooldown:", "@oldcooldown:"));
+					if (scripts.get(i).contains("@cooldown:")) {
+						scripts.set(i, StringUtils.replace(scripts.get(i), "@cooldown:", "@oldcooldown:"));
 					}
 				}
-				String[] array = StringUtils.split(coords, ",");
-				scriptData.setLocation(new Location(
-					tWorld,
-					Integer.parseInt(array[0]),
-					Integer.parseInt(array[1]),
-					Integer.parseInt(array[2]))
-				);
+				scriptData.setLocation(BlockCoords.fromString(tWorld, coords));
 				scriptData.setAuthor(uuid);
 				scriptData.setLastEdit(time);
 				scriptData.setScripts(scripts);
@@ -208,7 +205,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		ScriptBlock.getInstance().getMapManager().loadScripts(scriptFile, scriptType);
 	}
 
-	private boolean setData(CommandSender sender, String[] args) {
+	private boolean setAction(CommandSender sender, String[] args) {
 		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
 		if (!SBPermission.has(sender, scriptType, true)) {
 			return false;
@@ -227,28 +224,24 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			sbPlayer.setScriptLine(script);
 		}
 		ActionType actionType = ActionType.valueOf(args[1].toUpperCase());
-		sbPlayer.setActionType(actionType.createKey(scriptType));
-		Utils.sendMessage(sbPlayer, SBConfig.getSuccEditDataMessage(scriptType, actionType));
+		sbPlayer.setActionType(actionType.getKey(scriptType));
+		Utils.sendMessage(sbPlayer, SBConfig.getSuccActionDataMessage(scriptType, actionType));
 		return true;
 	}
 
-	private boolean doWorldEditRemove(CommandSender sender) {
-		if (!hasPermission(sender, Permission.COMMAND_WORLDEDIT)) {
+	private boolean doSelectorRemove(CommandSender sender) {
+		if (!hasPermission(sender, Permission.COMMAND_SELECTOR)) {
 			return false;
 		}
 		Player player = (Player) sender;
-		if (!HookPlugins.hasWorldEdit()) {
-			Utils.sendMessage(player, SBConfig.getNotWorldEditMessage());
-			return true;
-		}
-		WorldEditSelection weSelection = HookPlugins.getWorldEditSelection();
-		Selection selection = weSelection.getSelection(player);
-		if (selection == null) {
-			Utils.sendMessage(player, SBConfig.getWorldEditNotSelectionMessage());
+		Region region = SBPlayer.fromPlayer(player).getRegion();
+		if (!region.hasPositions()) {
+			Utils.sendMessage(player, SBConfig.getNotSelectionMessage());
 			return true;
 		}
 		StringBuilder builder = new StringBuilder();
-		Set<Block> blocks = weSelection.getBlocks(selection);
+		CuboidRegionBlocks regionBlocks = new CuboidRegionBlocks(region);
+		Set<Block> blocks = regionBlocks.getBlocks();
 		for (ScriptType scriptType : ScriptType.values()) {
 			if (!Files.getScriptFile(scriptType).exists()) {
 				continue;
@@ -256,8 +249,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			boolean isFirst = true;
 			ScriptEdit scriptEdit = new ScriptEdit(scriptType);
 			for (Block block : blocks) {
-				if (scriptEdit.weRemove(block.getLocation()) && isFirst && !(isFirst = false)) {
-					builder.append(scriptType.getType()).append(builder.length() == 0 ? "" : ", ");
+				if (scriptEdit.lightRemove(block.getLocation()) && isFirst && !(isFirst = false)) {
+					builder.append(builder.length() == 0 ? "" : ", ").append(scriptType.getType());
 				}
 			}
 			scriptEdit.save();
@@ -266,14 +259,14 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 		} else {
 			String types = builder.toString();
-			Utils.sendMessage(player, SBConfig.getWorldEditRemoveMessage(types));
-			Utils.sendMessage(SBConfig.getConsoleWorldEditRemoveMessage(types, selection.getMinimumPoint(), selection.getMaximumPoint()));
+			Utils.sendMessage(player, SBConfig.getSelectorRemoveMessage(types, regionBlocks));
+			Utils.sendMessage(SBConfig.getConsoleSelectorRemoveMessage(types, regionBlocks));
 		}
 		return true;
 	}
 
-	private boolean doWorldEditPaste(CommandSender sender, String[] args) {
-		if (!hasPermission(sender, Permission.COMMAND_WORLDEDIT)) {
+	private boolean doSelectorPaste(CommandSender sender, String[] args) {
+		if (!hasPermission(sender, Permission.COMMAND_SELECTOR)) {
 			return false;
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
@@ -281,29 +274,25 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return true;
 		}
-		if (!HookPlugins.hasWorldEdit()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getNotWorldEditMessage());
-			return true;
-		}
-		WorldEditSelection weSelection = HookPlugins.getWorldEditSelection();
-		Selection selection = weSelection.getSelection(sbPlayer.getPlayer());
-		if (selection == null) {
-			Utils.sendMessage(sbPlayer, SBConfig.getWorldEditNotSelectionMessage());
+		Region region = sbPlayer.getRegion();
+		if (!region.hasPositions()) {
+			Utils.sendMessage(sbPlayer, SBConfig.getNotSelectionMessage());
 			return true;
 		}
 		boolean pasteonair = args.length > 2 ? Boolean.parseBoolean(args[2]) : false;
 		boolean overwrite = args.length > 3 ? Boolean.parseBoolean(args[3]) : false;
-		Clipboard clipboard = sbPlayer.getClipboard();
-		for (Block block : weSelection.getBlocks(selection)) {
+		SBClipboard clipboard = sbPlayer.getClipboard();
+		CuboidRegionBlocks regionBlocks = new CuboidRegionBlocks(region);
+		for (Block block : regionBlocks.getBlocks()) {
 			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
 				continue;
 			}
-			clipboard.wePaste(block.getLocation(), overwrite, false);
+			clipboard.lightPaste(block.getLocation(), overwrite, false);
 		}
 		clipboard.save();
 		sbPlayer.setClipboard(null);
-		Utils.sendMessage(sbPlayer, SBConfig.getWorldEditPasteMessage(clipboard.getScriptType()));
-		Utils.sendMessage(SBConfig.getConsoleWorldEditPasteMessage(clipboard.getScriptType(), selection.getMinimumPoint(), selection.getMaximumPoint()));
+		Utils.sendMessage(sbPlayer, SBConfig.getSelectorPasteMessage(clipboard.getScriptType(), regionBlocks));
+		Utils.sendMessage(SBConfig.getConsoleSelectorPasteMessage(clipboard.getScriptType(), regionBlocks));
 		return true;
 	}
 
@@ -312,33 +301,33 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (args.length == 1) {
 			String prefix = args[0].toLowerCase();
 			Set<String> set = setCommandPermissions(sender, new LinkedHashSet<>());
-			StreamUtils.filterForEach(set, s -> StringUtils.startsWith(s, prefix), emptyList::add);
+			StreamUtils.fForEach(set, s -> StringUtils.startsWith(s, prefix), emptyList::add);
 		} else if (args.length == 2) {
-			if (equals(args[0], "worldedit")) {
-				if (Permission.COMMAND_WORLDEDIT.has(sender)) {
+			if (equals(args[0], "selector")) {
+				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[1].toLowerCase();
 					String[] answers = new String[]{"paste", "remove"};
-					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
+					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
 			} else if (equals(args[0], ScriptType.types())) {
 				if (SBPermission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
 					String prefix = args[1].toLowerCase();
 					String[] answers = new String[]{"create", "add", "remove", "view"};
-					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
+					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
 			}
 		} else if (args.length > 2) {
-			if (args.length == 3 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
-				if (Permission.COMMAND_WORLDEDIT.has(sender)) {
+			if (args.length == 3 && equals(args[0], "selector") && equals(args[1], "paste")) {
+				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[2].toLowerCase();
 					String[] answers = new String[]{"true", "false"};
-					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
+					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
-			} else if (args.length == 4 && equals(args[0], "worldedit") && equals(args[1], "paste")) {
-				if (Permission.COMMAND_WORLDEDIT.has(sender)) {
+			} else if (args.length == 4 && equals(args[0], "selector") && equals(args[1], "paste")) {
+				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[3].toLowerCase();
 					String[] answers = new String[]{"true", "false"};
-					StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), emptyList::add);
+					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
 				}
 			} else {
 				if (equals(args[0], ScriptType.types()) && equals(args[1], "create", "add")) {
@@ -346,7 +335,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 						String prefix = args[args.length - 1].toLowerCase();
 						String[] answers = OptionList.getSyntaxs();
 						Arrays.sort(answers);
-						StreamUtils.filterForEach(answers, s -> s.startsWith(prefix), s -> emptyList.add(s.trim()));
+						StreamUtils.fForEach(answers, s -> s.startsWith(prefix), s -> emptyList.add(s.trim()));
 					}
 				}
 			}
@@ -360,30 +349,27 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		set.add(hasPermission(sender, Permission.COMMAND_CHECKVER, "checkver"));
 		set.add(hasPermission(sender, Permission.COMMAND_DATAMIGR, "datamigr"));
 
-		StreamUtils.filterForEach(ScriptType.values(),
-				s -> SBPermission.has(sender, s, true), s -> set.add(s.getType()));
+		StreamUtils.fForEach(ScriptType.values(), s -> hasPermission(sender, s), s -> set.add(s.getType()));
 
-		set.add(hasPermission(sender, Permission.COMMAND_WORLDEDIT , "worldedit"));
+		set.add(hasPermission(sender, Permission.COMMAND_SELECTOR, "selector"));
 		return set;
 	}
 
-	private String hasPermission(CommandSender sender, Permission permission, String source) {
-		return StringUtils.isNotEmpty(permission.getNode()) && permission.has(sender) ? source : null;
+	private boolean hasPermission(Permissible permissible, ScriptType scriptType) {
+		return SBPermission.has(permissible, scriptType, true);
+	}
+
+	private String hasPermission(CommandSender sender, Permission permission, String name) {
+		return StringUtils.isNotEmpty(permission.getNode()) && permission.has(sender) ? name : null;
 	}
 
 	private boolean checkScript(String scriptLine) {
 		try {
 			List<Option> options = OptionList.getList();
 			List<String> scripts = StringUtils.getScripts(scriptLine);
-			int successCount = 0;
-			for (String script : scripts) {
-				for (Option option : options) {
-					if (option.isOption(script)) {
-						successCount++;
-					}
-				}
-			}
-			if (successCount == 0 || successCount != scripts.size()) {
+			int[] success = {0};
+			scripts.forEach(s -> StreamUtils.fForEach(options, o -> o.isOption(s), o -> success[0]++));
+			if (success[0] == 0 || success[0] != scripts.size()) {
 				return false;
 			}
 		} catch (Exception e) {

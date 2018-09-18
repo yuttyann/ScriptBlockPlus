@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -16,10 +17,11 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 
 public class Calculation extends BaseOption {
 
-	private static final Pattern REALNUMBER_PATTERN = Pattern.compile("^[+-]?([1-9]\\d*|0)(\\.\\d+)?$");
+	static final Pattern REALNUMBER_PATTERN = Pattern.compile("^-?(0|[1-9]\\\\d*)(\\\\.\\\\d+|)$");
 
 	public Calculation() {
 		super("calculation", "@calc:");
@@ -50,16 +52,21 @@ public class Calculation extends BaseOption {
 		if (REALNUMBER_PATTERN.matcher(source).matches()) {
 			return Double.parseDouble(source);
 		}
+		if (HookPlugins.hasPlaceholderAPI()) {
+			return setPlaceholders(source);
+		} else {
+			return getValue(getPlayer(), source);
+		}
+	}
 
-		double result = 0.0D;
-		try {
-			if (HookPlugins.hasPlaceholderAPI()) {
-				result = Double.parseDouble(PlaceholderAPI.setPlaceholders(getPlayer(), source));
-			} else {
-				result = getValue(getPlayer(), source);
-			}
-		} catch (Exception e) {}
-		return result;
+	@SuppressWarnings("deprecation")
+	private double setPlaceholders(String source) {
+		String version = PlaceholderAPIPlugin.getInstance().getDescription().getVersion();
+		if (Utils.isUpperVersion("2.8.8", version)) {
+			return Double.parseDouble(PlaceholderAPI.setPlaceholders((OfflinePlayer) getPlayer(), source));
+		} else {
+			return Double.parseDouble(PlaceholderAPI.setPlaceholders(getPlayer(), source));
+		}
 	}
 
 	@SuppressWarnings("deprecation")

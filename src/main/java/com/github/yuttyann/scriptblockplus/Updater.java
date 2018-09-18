@@ -36,6 +36,7 @@ public final class Updater {
 	private final Plugin plugin;
 	private final String pluginName;
 	private final String pluginVersion;
+
 	private String latestVersion;
 	private String downloadURL;
 	private String changeLogURL;
@@ -132,13 +133,15 @@ public final class Updater {
 				if (updateNode.getNodeType() != Node.ELEMENT_NODE) {
 					continue;
 				}
-				if (updateNode.getNodeName().equals("download")) {
-					downloadURL = ((Element) updateNode).getAttribute("url");
-				}
-				if (updateNode.getNodeName().equals("changelog")) {
-					changeLogURL = ((Element) updateNode).getAttribute("url");
-				}
-				if (updateNode.getNodeName().equals("details")) {
+				element = (Element) updateNode;
+				switch (element.getNodeName()) {
+				case "download":
+					downloadURL = element.getAttribute("url");
+					break;
+				case "changelog":
+					changeLogURL = element.getAttribute("url");
+					break;
+				case "details":
 					NodeList detailsChildren = updateNode.getChildNodes();
 					if (details == null) {
 						details = new ArrayList<>(detailsChildren.getLength());
@@ -146,7 +149,8 @@ public final class Updater {
 					for(int k = 0; k < detailsChildren.getLength(); k++) {
 						Node detailsNode = detailsChildren.item(k);
 						if (detailsNode.getNodeType() == Node.ELEMENT_NODE) {
-							details.add(((Element) detailsNode).getAttribute("info"));
+							element = (Element) detailsNode;
+							details.add(element.getAttribute("info"));
 						}
 					}
 				}

@@ -10,79 +10,74 @@ import java.util.function.Predicate;
 public final class StreamUtils {
 
 	public static <T, R> R[] toArray(Collection<T> collection, Function<T, R> mapper, R[] array) {
-		Objects.requireNonNull(collection);
 		Objects.requireNonNull(array);
+		Objects.requireNonNull(collection);
         Iterator<T> iterator = collection.iterator();
-        for (int i = 0; i < collection.size(); i++) {
-        	if (iterator.hasNext()) {
-        		array[i] = mapper.apply(iterator.next());
-        	}
+        for (int i = 0; iterator.hasNext(); i++) {
+        	array[i] = mapper.apply(iterator.next());
         }
         return array;
 	}
 
 	public static <T> void forEach(T[] array, Consumer<T> action) {
-		Objects.requireNonNull(array);
-		for (T t : array) {
+        for (T t : Objects.requireNonNull(array)) {
+        	action.accept(t);
+        }
+	}
+
+	public static <T> void fForEach(T[] array, Predicate<T> filter, Consumer<T> action) {
+		forEach(array, t -> filter(t, filter, action));
+	}
+
+	public static <T> void fForEach(Collection<T> collection, Predicate<T> filter, Consumer<T> action) {
+		collection.forEach(t -> filter(t, filter, action));
+	}
+
+	public static <T, R> void mForEach(T[] array, Function<T, R> mapper, Consumer<R> action) {
+		forEach(array, t -> action.accept(mapper.apply(t)));
+	}
+
+	public static <T, R> void mForEach(Collection<T> collection, Function<T, R> mapper, Consumer<R> action) {
+		collection.forEach(t -> action.accept(mapper.apply(t)));
+	}
+
+	public static <T> boolean allMatch(T[] array, Predicate<T> filter) {
+		return match(array, filter, false);
+	}
+
+	public static <T> boolean allMatch(Collection<T> collection, Predicate<T> filter) {
+		return match(collection, filter, false);
+	}
+
+	public static <T> boolean anyMatch(T[] array, Predicate<T> filter) {
+		return match(array, filter, true);
+	}
+
+	public static <T> boolean anyMatch(Collection<T> collection, Predicate<T> filter) {
+		return match(collection, filter, true);
+	}
+
+	public static <T> void filter(T t, Predicate<T> filter, Consumer<T> action) {
+		if (filter.test(t)) {
 			action.accept(t);
 		}
 	}
 
-	public static <T> void filterForEach(T[] array, Predicate<T> predicate, Consumer<T> action) {
-		Objects.requireNonNull(array);
+	private static <T> boolean match(T[] array, Predicate<T> filter, boolean result) {
 		for (T t : array) {
-			if (predicate.test(t)) {
-				action.accept(t);
+			if (filter.test(t)) {
+				return result;
 			}
 		}
+		return !result;
 	}
 
-	public static <T> void filterForEach(Collection<T> collection, Predicate<T> predicate, Consumer<T> action) {
-		Objects.requireNonNull(collection);
+	private static <T> boolean match(Collection<T> collection, Predicate<T> filter, boolean result) {
 		for (T t : collection) {
-			if (predicate.test(t)) {
-				action.accept(t);
+			if (filter.test(t)) {
+				return result;
 			}
 		}
-	}
-
-	public static <T, R> void mapForEach(Collection<T> collection, Function<T, R> mapper, Consumer<R> action) {
-		Objects.requireNonNull(collection);
-		for (T t : collection) {
-			action.accept(mapper.apply(t));
-		}
-	}
-
-	public static <T> boolean allMatch(T[] array, Predicate<T> predicate) {
-		Objects.requireNonNull(array);
-		if (array.length == 0) {
-			return false;
-		}
-		for (T t : array) {
-			if (!predicate.test(t)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public static <T> boolean anyMatch(T[] array, Predicate<T> predicate) {
-		Objects.requireNonNull(array);
-		for (T t : array) {
-			if (predicate.test(t)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static <T> boolean anyMatch(Collection<T> collection, Predicate<T> predicate) {
-		Objects.requireNonNull(collection);
-		for (T t : collection) {
-			if (predicate.test(t)) {
-				return true;
-			}
-		}
-		return false;
+		return !result;
 	}
 }

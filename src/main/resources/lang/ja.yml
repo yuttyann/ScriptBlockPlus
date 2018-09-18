@@ -3,9 +3,9 @@
 # コメントアウトすることで、非表示にすることができます。
 
 
-## ===== コマンドの説明 ===== ##
+## ===== Commands ===== ##
 # 変数はありません
-toolCommandMessage: 'tool - 実行者にスクリプト編集ツールを配布します。'
+toolCommandMessage: 'tool - 実行者に補助ツールを配布します。'
 reloadCommandMessage: 'reload - 全てのファイルの再読み込みを行います。'
 backupCommandMessage: 'backup - スクリプトデータのバックアップを作成します。'
 checkVerCommandMessage: 'checkver - 最新のプラグインが存在するかチェックします。'
@@ -14,28 +14,37 @@ createCommandMessage: '<scripttype> create <options> - ブロックにスクリ�
 addCommandMessage: '<scripttype> add <options> - ブロックにスクリプトを追加します。'
 removeCommandMessage: '<scripttype> remove - ブロックのスクリプトを削除します。'
 viewCommandMessage: '<scripttype> view - ブロックのスクリプトを表示します。'
-worldEditPasteCommandMessage: 'worldedit paste <pasteonair> [overwrite] - 選択範囲にスクリプトをペーストします。'
-worldEditRemoveCommandMessage: 'worldedit remove - 選択範囲のスクリプトを削除します。'
+selectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - 選択範囲にスクリプトをペーストします。'
+selectorRemoveCommandMessage: 'selector remove - 選択範囲のスクリプトを削除します。'
 
 # &(code) : カラーコード(以降の項目全て対象)
 
-## ===== ScriptEditorの説明 ===== ##
+## ===== BlockSelector ===== ##
+# 変数はありません
+blockSelector:
+- '&aこのツールは、複数のスクリプトのペーストをサポートします。'
+- '&6左クリック: &eブロックを選択範囲の始点に指定します。'
+- '&6右クリック: &eブロックを選択範囲の終点に指定します。'
+- '&6シフト+左クリック: &e現在位置を選択範囲の始点に指定します。'
+- '&6シフト+右クリック: &e現在位置を選択範囲の終点に指定します。'
+
+## ===== ScriptEditor ===== ##
 # %scripttype% : スクリプトの種類
 scriptEditor:
-- '&d対象: %scripttype%'
+- '&aこのツールは、スクリプトの編集をサポートします。'
 - '&6左クリック: &eツールの対象を切り替えます。'
 - '&6右クリック: &eスクリプトのコピーを行います。'
-- '&6シフトand左クリック: &eスクリプトの削除を行います。'
-- '&6シフトand右クリック: &eスクリプトのペーストを行います。'
+- '&6シフト+左クリック: &eスクリプトの削除を行います。'
+- '&6シフト+右クリック: &eスクリプトのペーストを行います。'
 
 # |~, \n : 改行(以降の項目全て対象)
 
-## ===== メッセージ ===== ##
+## ===== Messages ===== ##
 # 変数はありません
 notVaultMessage: '&cVaultが導入されていないため、プラグインを無効化します。'
 senderNoPlayerMessage: '&cコマンドはゲーム内から実行してください。'
 notPermissionMessage: '&cパーミッションが無いため、実行できません。'
-giveScriptEditorMessage: '&aScript Editorが配布されました。'
+giveToolMessage: '&a補助ツールが配布されました。'
 allFileReloadMessage: '&a全てのファイルの再読み込みが完了しました。'
 scriptsBackupMessage: '&aスクリプトデータのバックアップが完了しました。'
 errorScriptsBackupMessage: '&cスクリプトデータのバックアップに失敗しました。'
@@ -43,7 +52,6 @@ notLatestPluginMessage: '&b現在のバージョンが最新です。'
 notScriptBlockFileMessage: '&cScriptBlockのデータファイルが見つかりません。'
 dataMigrStartMessage: '&7ScriptBlockのスクリプトを移行しています....'
 dataMigrEndMessage: '&bスクリプトの移行が完了しました。'
-notWorldEditMessage: '&cWorldEditが導入されていないため、実行に失敗しました。'
 updateDownloadStartMessage: '&6最新のプラグインをダウンロードしています...'
 
 # %filename% : ファイル名
@@ -60,18 +68,24 @@ updateCheckMessage: '&b最新のバージョンを検出しました。|~v%lates
 errorUpdateMessage: '&cアップデートに失敗しました。'
 
 # %scripttype% : スクリプトの種類
-scriptCopyMessage: '&a種類"%scripttype%"のスクリプトをコピーしました。'
-scriptPasteMessage: '&a種類"%scripttype%"のスクリプトをペーストしました。'
-scriptCreateMessage: '&a種類"%scripttype%"のスクリプトを作成しました。'
-scriptAddMessage: '&a種類"%scripttype%"のスクリプトを追加しました。'
-scriptRemoveMessage: '&c種類"%scripttype%"のスクリプトを削除しました。'
+scriptCopyMessage: '&aブロック"%scripttype%"のスクリプトをコピーしました。'
+scriptPasteMessage: '&aブロック"%scripttype%"にスクリプトをペーストしました。'
+scriptCreateMessage: '&aブロック"%scripttype%"のスクリプトを作成しました。'
+scriptAddMessage: '&aブロック"%scripttype%"にスクリプトを追加しました。'
+scriptRemoveMessage: '&cブロック"%scripttype%"のスクリプトを削除しました。'
 
 # 変数はありません
-worldEditNotSelectionMessage: '&cWorldEditで座標を選択してください。'
+notSelectionMessage: '&cSelectorで座標を選択してください。'
+
+# %world%  : ワールドの名前
+# %coords% : 座標(x, y, z)
+selectorPos1Message: '&b始点"%coords%"を選択しました。'
+selectorPos2Message: '&b終点"%coords%"を選択しました。'
 
 # %scripttype% : スクリプトの種類
-worldEditPasteMessage: '&a種類"%scripttype%"のスクリプトをペーストしました。'
-worldEditRemoveMessage: '&c種類"%scripttype%"のスクリプトを削除しました。'
+# %blockcount% : ブロック数
+selectorPasteMessage: '&aブロック(%blockcount%)"%scripttype%"にスクリプトをペーストしました。'
+selectorRemoveMessage: '&cブロック(%blockcount%)"%scripttype%"のスクリプトを削除しました。'
 
 # %option% : オプション名
 # %cause%  : 発生原因
@@ -85,16 +99,16 @@ activeDelayMessage: '&c遅延したスクリプトが実行されるまで、再
 # %second% : 秒
 activeCooldownMessage: '&cクールダウン終了まで、%hour%時間%minute%分%second%秒です。'
 
-# %clicktype% : クリックの種類
-succEditDataMessage: '&a種類"%clicktype%"の設定を保持しました。'
+# %actiontype% : アクションの種類
+succActionDataMessage: '&aアクション"%actiontype%"を選択しました。'
 
 # 変数はありません
-errorEditDataMessage: '&c既にブロックのクリック設定がされています。'
+errorActionDataMessage: '&c既にアクションが選択されています。'
 errorScriptCheckMessage: '&c入力されたスクリプトが正しくありません。'
 errorScriptFileCheckMessage: '&cスクリプトが見つかりません。'
 
 # %scripttype% : スクリプトの種類
-errorScriptExecMessage: '&c種類"%scripttype%"のスクリプトの実行に失敗しました。'
+errorScriptExecMessage: '&cブロック"%scripttype%"のスクリプトの実行に失敗しました。'
 
 # %group% : グループ名
 errorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプトを実行することが出来ます。'
@@ -103,8 +117,8 @@ errorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプ�
 # %amount%   : アイテムの個数
 # %damage%   : アイテムのダメージ値
 # %itemname% : アイテムの名前(アイテム名が無い場合は"アイテムの種類"と同じになります。)
-errorHandMessage: '&cアイテム「&r%itemname%&r(%damage%)[%amount%個]」&cを持っていません。'
-errorItemMessage: '&cアイテム「&r%itemname%&r(%damage%)[%amount%個]」&cを所持していません。'
+errorHandMessage: '&cアイテム"&r%itemname%[%damage%]&r &e%amount%個&c"を持っていません。'
+errorItemMessage: '&cアイテム"&r%itemname%[%damage%]&r &e%amount%個&c"を所持していません。'
 
 # %cost%   : 必要な金額
 # %result% : 足りない金額
@@ -124,9 +138,9 @@ consoleSuccScriptExecMessage: '&aスクリプトが実行されました。[作�
 consoleErrorScriptExecMessage: '&cスクリプトの実行に失敗しました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
 
 # %scripttype% : スクリプトの種類
-# %player%     : プレイヤーのID
+# %blockcount% : ブロック数
 # %world%      : ワールドの名前
 # %mincoords%  : 最小座標(x, y, z)
 # %maxcoords%  : 最大座標(x, y, z)
-consoleWorldEditPasteMessage: '&aスクリプトがペーストされました。[種類"%scripttype%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
-consoleWorldEditRemoveMessage: '&cスクリプトが削除されました。[種類"%scripttype%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
+consoleSelectorPasteMessage: '&aスクリプトがペーストされました。[種類"%scripttype%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
+consoleSelectorRemoveMessage: '&cスクリプトが削除されました。[種類"%scripttype%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'

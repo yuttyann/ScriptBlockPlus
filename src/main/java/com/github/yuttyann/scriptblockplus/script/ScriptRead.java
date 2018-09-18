@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.script;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -14,6 +15,7 @@ import com.github.yuttyann.scriptblockplus.listener.IAssist;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -101,41 +103,22 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 				optionValue = replaceValue(option.getValue(script));
 				Option instance = OptionList.getManager().newInstance(option);
 				if (!sbPlayer.isOnline() || !hasPermission(option) || !instance.callOption(this)) {
-					try {
-						if (!instance.isFailedIgnore()) {
-							EndProcessManager.getInstance().forEach(e -> e.failed(this), true);
-						}
-					} finally {
-						clearData();
-					}
+					executeEndProcess(e -> { if (!instance.isFailedIgnore()) e.failed(this); });
 					return false;
 				}
 			}
 		}
-		try {
-			EndProcessManager.getInstance().forEach(e -> e.success(this), true);
-		} finally {
-			clearData();
-		}
+		executeEndProcess(e -> e.success(this));
 		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
 		return true;
 	}
 
-	private boolean sort(List<String> scripts, List<Option> options) {
+	private void executeEndProcess(Consumer<EndProcess> action) {
 		try {
-			List<String> parse = new ArrayList<>();
-			List<String> result = parse;
-			StreamUtils.mapForEach(scripts, this::getScripts, parse::addAll);
-			if (SBConfig.isSortScripts()) {
-				List<String> list = (result = new ArrayList<>(parse.size()));
-				options.forEach(o -> StreamUtils.filterForEach(parse, s -> o.isOption(s), list::add));
-			}
-			this.scripts = Collections.unmodifiableList(result);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
+			EndProcessManager.getInstance().forEach(e -> action.accept(e));
+		} finally {
+			clear();
 		}
-		return false;
 	}
 
 	private boolean hasPermission(Option option) {
@@ -152,6 +135,23 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 			value = StringUtils.replace(value, "<world>", sbPlayer.getLocation().getWorld().getName());
 		}
 		return value;
+	}
+
+	private boolean sort(List<String> scripts, List<Option> options) {
+		try {
+			List<String> parse = new ArrayList<>();
+			List<String> result = parse;
+			StreamUtils.mForEach(scripts, this::getScripts, parse::addAll);
+			if (SBConfig.isSortScripts()) {
+				List<String> list = (result = new ArrayList<>(parse.size()));
+				options.forEach(o -> StreamUtils.fForEach(parse, s -> o.isOption(s), list::add));
+			}
+			this.scripts = Collections.unmodifiableList(result);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	private List<String> getScripts(String script) {

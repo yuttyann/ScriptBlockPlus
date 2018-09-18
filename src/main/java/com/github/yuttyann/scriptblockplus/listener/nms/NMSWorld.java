@@ -28,14 +28,12 @@ public final class NMSWorld {
 		return bukkitWorld;
 	}
 
-	public MovingPosition rayTrace(Vec3D start, Vec3D end, boolean flag) {
+	public MovingPosition rayTrace(Vec3D vec3d1, Vec3D vec3d2) {
 		try {
-			Object nmsStart = start.toNMSVec3D();
-			Object nmsEnd = end.toNMSVec3D();
-			Object rayTrace = PackageType.NMS.invokeMethod(nmsWorld, null, "rayTrace", nmsStart, nmsEnd, flag);
-			if (rayTrace != null) {
-				return new MovingPosition(rayTrace);
-			}
+			Object nmsVec3D1 = vec3d1.toNMSVec3D();
+			Object nmsVec3D2 = vec3d2.toNMSVec3D();
+			Object rayTrace = PackageType.NMS.invokeMethod(nmsWorld, null, "rayTrace", nmsVec3D1, nmsVec3D2);
+			return rayTrace == null ? null : new MovingPosition(rayTrace);
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}

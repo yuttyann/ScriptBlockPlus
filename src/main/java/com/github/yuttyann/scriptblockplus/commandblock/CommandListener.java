@@ -12,7 +12,7 @@ public interface CommandListener {
 	/**
 	 * コマンドを実行する
 	 * @param sender 送信者
-	 * @param location 座標（[@a,@p]などの開始地点に使用されます）
+	 * @param location 座標（セレクターの開始地点に使用されます）
 	 * @param command コマンド
 	 * @return 実行が成功したかどうか
 	 */

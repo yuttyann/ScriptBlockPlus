@@ -44,10 +44,11 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	public static final class OptionList {
 
 		private static final List<Option> OPTIONS;
+		private static final List<Option> UNMOD_OPTIONS;
 		private static final OptionManager OPTION_MANAGER;
 
 		static {
-			OPTIONS = new ArrayList<>();
+			UNMOD_OPTIONS = Collections.unmodifiableList(OPTIONS = new ArrayList<>());
 			OPTION_MANAGER = new OptionManager();
 			OPTION_MANAGER.registerDefaults();
 		}
@@ -57,7 +58,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		}
 
 		public static List<Option> getList() {
-			return Collections.unmodifiableList(OPTIONS);
+			return UNMOD_OPTIONS;
 		}
 
 		public static String[] getNames() {
@@ -92,8 +93,6 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		add(ItemHand.class);
 		add(ItemCost.class);
 		add(MoneyCost.class);
-		add(Bypass.class);
-		add(Command.class);
 		add(Console.class);
 		add(Say.class);
 		add(Server.class);
@@ -101,6 +100,8 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		add(PlaySound.class);
 		add(Title.class);
 		add(ActionBar.class);
+		add(Bypass.class);
+		add(Command.class);
 		add(GroupAdd.class);
 		add(GroupRemove.class);
 		add(PermAdd.class);

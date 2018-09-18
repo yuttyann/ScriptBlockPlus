@@ -13,7 +13,6 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public abstract class AbstractConstructor<T> {
 
-
 	private Class<?> genericClass;
 
 	private final List<Constructor<? extends T>> list = initialList();
@@ -21,6 +20,10 @@ public abstract class AbstractConstructor<T> {
 	protected abstract List<Constructor<? extends T>> initialList();
 
 	public abstract void registerDefaults();
+
+	protected final List<Constructor<? extends T>> getConstructors() {
+		return list;
+	}
 
 	public int size() {
 		return getConstructors().size();
@@ -72,12 +75,24 @@ public abstract class AbstractConstructor<T> {
 		return true;
 	}
 
-	public List<Constructor<? extends T>> getConstructors() {
-		return list;
-	}
+
 
 	public T[] newInstances() {
 		return newInstances(newGenericArray());
+	}
+
+	private T[] newGenericArray() {
+		try {
+			if (genericClass == null) {
+				Type type = getClass().getGenericSuperclass();
+				Type[] types = ((ParameterizedType) type).getActualTypeArguments();
+				genericClass = Class.forName(types[0].getTypeName());
+			}
+			return (T[]) Array.newInstance(genericClass, getConstructors().size());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public T[] newInstances(T[] array) {
@@ -110,22 +125,8 @@ public abstract class AbstractConstructor<T> {
 		return null;
 	}
 
-	public final void forEach(Consumer<? super T> action, boolean cache) {
+	public final void forEach(Consumer<? super T> action) {
 		StreamUtils.forEach(newInstances(), action);
-	}
-
-	private T[] newGenericArray() {
-		try {
-			if (genericClass == null) {
-				Type type = getClass().getGenericSuperclass();
-				Type[] types = ((ParameterizedType) type).getActualTypeArguments();
-				genericClass = Class.forName(types[0].getTypeName());
-			}
-			return (T[]) Array.newInstance(genericClass, getConstructors().size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	private <R extends T> Constructor<R> getConstructor(Class<R> clazz) {

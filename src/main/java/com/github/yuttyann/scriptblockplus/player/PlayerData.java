@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.github.yuttyann.scriptblockplus.script.Clipboard;
+import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
+import com.github.yuttyann.scriptblockplus.region.Region;
+import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 
 public abstract class PlayerData implements SBPlayer {
 
@@ -12,15 +14,19 @@ public abstract class PlayerData implements SBPlayer {
 	private static final String KEY_SCRIPTLINE = createRandomId("ScriptLine");
 	private static final String KEY_CLICKACTION = createRandomId("ClickAction");
 	private static final String KEY_OLDFULLCOORDS = createRandomId("OldFullCoords");
+	private static final String KEY_REGION = createRandomId("CuboidRegion");
 
-	private final ObjectMap objectMap;
+	private final ObjectMap objectMap = new ObjMap();
 
-	PlayerData() {
-		objectMap = new ObjMap();
-	}
+	PlayerData() {}
 
-	public static String createRandomId(String key) {
-		return key + "_" + UUID.randomUUID();
+	@Override
+	public Region getRegion() {
+		CuboidRegion region = getObjectMap().get(KEY_REGION);
+		if (region == null) {
+			getObjectMap().put(KEY_REGION, region = new CuboidRegion());
+		}
+		return region;
 	}
 
 	@Override
@@ -37,104 +43,114 @@ public abstract class PlayerData implements SBPlayer {
 		}
 
 		@Override
-		public void setData(String key, Object value) {
+		public void put(String key, Object value) {
 			objectMap.put(key, value);
 		}
 
 		@Override
 		public byte getByte(String key) {
-			return getData(key, Byte.class);
+			return get(key, Byte.class);
 		}
 
 		@Override
 		public short getShort(String key) {
-			return getData(key, Short.class);
+			return get(key, Short.class);
 		}
 
 		@Override
 		public int getInt(String key) {
-			return getData(key, Integer.class);
+			return get(key, Integer.class);
 		}
 
 		@Override
 		public long getLong(String key) {
-			return getData(key, Byte.class);
+			return get(key, Byte.class);
 		}
 
 		@Override
 		public char getChar(String key) {
-			return getData(key, Character.class);
+			return get(key, Character.class);
 		}
 
 		@Override
 		public float getFloat(String key) {
-			return getData(key, Float.class);
+			return get(key, Float.class);
 		}
 
 		@Override
 		public double getDouble(String key) {
-			return getData(key, Double.class);
+			return get(key, Double.class);
 		}
 
 		@Override
 		public boolean getBoolean(String key) {
-			return getData(key, Boolean.class);
+			return get(key, Boolean.class);
 		}
 
 		@Override
 		public String getString(String key) {
-			return getData(key, String.class);
+			return get(key, String.class);
 		}
 
 		@Override
-		public <T> T getData(String key) {
-			return getData(key, null);
+		public <T> T get(String key) {
+			return get(key, null);
 		}
 
 		@Override
-		public <T> T getData(String key, Class<T> classOfT) {
+		public <T> T get(String key, Class<T> classOfT) {
 			return classOfT == null ? (T) objectMap.get(key) : classOfT.cast(objectMap.get(key));
 		}
 
 		@Override
-		public <T> T removeData(String key) {
-			return removeData(key, null);
+		public <T> T remove(String key) {
+			return remove(key, null);
 		}
 
 		@Override
-		public <T> T removeData(String key, Class<T> classOfT) {
+		public <T> T remove(String key, Class<T> classOfT) {
 			return classOfT == null ? (T) objectMap.remove(key) : classOfT.cast(objectMap.remove(key));
 		}
 
 		@Override
-		public boolean hasData(String key) {
-			return getData(key) != null;
+		public boolean has(String key) {
+			return get(key) != null;
 		}
 
 		@Override
-		public void clearData() {
+		public boolean containsKey(String key) {
+			return objectMap.containsKey(key);
+		}
+
+		@Override
+		public boolean containsValue(Object value) {
+			return objectMap.containsValue(value);
+		}
+
+		@Override
+		public void clear() {
 			objectMap.clear();
 		}
 	}
 
 	@Override
-	public void setClipboard(Clipboard clipboard) {
-		getObjectMap().setData(KEY_CLIPBOARD, clipboard);
+	public void setClipboard(SBClipboard clipboard) {
+		getObjectMap().put(KEY_CLIPBOARD, clipboard);
 	}
 
 	@Override
-	public Clipboard getClipboard() {
-		return getObjectMap().getData(KEY_CLIPBOARD);
+	public SBClipboard getClipboard() {
+		return getObjectMap().get(KEY_CLIPBOARD);
 	}
 
 	@Override
 	public boolean hasClipboard() {
-		return getObjectMap().hasData(KEY_CLIPBOARD);
+		return getObjectMap().has(KEY_CLIPBOARD);
 	}
 
 	@Override
 	public void setScriptLine(String scriptLine) {
-		getObjectMap().setData(KEY_SCRIPTLINE, scriptLine);
+		getObjectMap().put(KEY_SCRIPTLINE, scriptLine);
 	}
 
 	@Override
@@ -144,12 +160,12 @@ public abstract class PlayerData implements SBPlayer {
 
 	@Override
 	public boolean hasScriptLine() {
-		return getObjectMap().hasData(KEY_SCRIPTLINE);
+		return getObjectMap().has(KEY_SCRIPTLINE);
 	}
 
 	@Override
 	public void setActionType(String actionType) {
-		getObjectMap().setData(KEY_CLICKACTION, actionType);
+		getObjectMap().put(KEY_CLICKACTION, actionType);
 	}
 
 	@Override
@@ -159,12 +175,12 @@ public abstract class PlayerData implements SBPlayer {
 
 	@Override
 	public boolean hasActionType() {
-		return getObjectMap().hasData(KEY_CLICKACTION);
+		return getObjectMap().has(KEY_CLICKACTION);
 	}
 
 	@Override
 	public void setOldFullCoords(String fullCoords) {
-		getObjectMap().setData(KEY_OLDFULLCOORDS, fullCoords);
+		getObjectMap().put(KEY_OLDFULLCOORDS, fullCoords);
 	}
 
 	@Override
@@ -174,6 +190,10 @@ public abstract class PlayerData implements SBPlayer {
 
 	@Override
 	public boolean hasOldFullCoords() {
-		return getObjectMap().hasData(KEY_OLDFULLCOORDS);
+		return getObjectMap().has(KEY_OLDFULLCOORDS);
+	}
+
+	public static String createRandomId(String key) {
+		return key + "_" + UUID.randomUUID();
 	}
 }

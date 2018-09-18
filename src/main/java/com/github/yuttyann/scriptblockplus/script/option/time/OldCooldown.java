@@ -1,7 +1,5 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import java.util.Objects;
-
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
@@ -29,9 +27,8 @@ public class OldCooldown extends BaseOption {
 		}
 
 		public void runTaskTimer() {
-			ScriptBlock plugin = ScriptBlock.getInstance();
-			plugin.getMapManager().getCooldowns().put(timeData.hashCode(), timeData);
-			runTaskTimer(plugin, 0, 20L);
+			ScriptBlock.getInstance().getMapManager().getCooldowns().put(timeData.hashCode(), timeData);
+			runTaskTimer(ScriptBlock.getInstance(), 0, 20L);
 		}
 
 		@Override
@@ -45,11 +42,11 @@ public class OldCooldown extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		int original = getSecond();
-		if (original > 0) {
-			short hour = (short) (original / 3600);
-			byte minute = (byte) (original % 3600 / 60);
-			byte second = (byte) (original % 3600 % 60);
+		int temp = getSecond();
+		if (temp > 0) {
+			short hour = (short) (temp / 3600);
+			byte minute = (byte) (temp % 3600 / 60);
+			byte second = (byte) (temp % 3600 % 60);
 			Utils.sendMessage(getPlayer(), SBConfig.getActiveCooldownMessage(hour, minute, second));
 			return false;
 		}
@@ -63,8 +60,8 @@ public class OldCooldown extends BaseOption {
 	}
 
 	private int getSecond() {
-		int hashKey = Objects.hash(getScriptIndex(), getFullCoords());
-		TimeData timeData = getMapManager().getCooldowns().get(hashKey);
+		int hash = TimeData.hashCode(getScriptIndex(), getFullCoords());
+		TimeData timeData = getMapManager().getCooldowns().get(hash);
 		return timeData == null ? -1 : timeData.second;
 	}
 }

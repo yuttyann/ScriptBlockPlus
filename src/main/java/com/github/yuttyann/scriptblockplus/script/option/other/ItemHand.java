@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -22,14 +23,17 @@ public class ItemHand extends BaseOption {
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), " ");
 		String[] itemData = StringUtils.split(array[0], ":");
+		if (Calculation.REALNUMBER_PATTERN.matcher(itemData[0]).matches()) {
+			throw new IllegalAccessException("Numerical values can not be used");
+		}
 		Material type = Material.getMaterial(itemData[0]);
-		short damage = itemData.length > 1 ? Short.parseShort(itemData[1]) : 0;
+		int damage = itemData.length > 1 ? Integer.parseInt(itemData[1]) : 0;
 		int amount = Integer.parseInt(array[1]);
 		String create = array.length > 2 ? StringUtils.createString(array, 2) : null;
 		String itemName = StringUtils.replaceColorCode(create, false);
 
 		Player player = getPlayer();
-		ItemStack[] items = Utils.getHandItems(player);
+		ItemStack[] items = ItemUtils.getHandItems(player);
 		if (!StreamUtils.anyMatch(items, i -> checkItem(i, itemName, type, amount, damage))) {
 			Utils.sendMessage(player, SBConfig.getErrorHandMessage(type, amount, damage, itemName));
 			return false;
@@ -37,10 +41,10 @@ public class ItemHand extends BaseOption {
 		return true;
 	}
 
-	private boolean checkItem(ItemStack item, String itemName, Material type, int amount, short damage) {
-		if (item == null || item.getType() != type || item.getAmount() < amount || item.getDurability() != damage) {
+	private boolean checkItem(ItemStack item, String itemName, Material type, int amount, int damage) {
+		if (item == null || item.getType() != type || item.getAmount() < amount || ItemUtils.getDamage(item) != damage) {
 			return false;
 		}
-		return itemName == null || Objects.equals(Utils.getItemName(item, null), itemName);
+		return itemName == null || Objects.equals(ItemUtils.getName(item, null), itemName);
 	}
 }

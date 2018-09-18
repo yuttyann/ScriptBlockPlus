@@ -1,12 +1,12 @@
 package com.github.yuttyann.scriptblockplus.script.hook;
 
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
+
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 
 public final class VaultEconomy {
 
@@ -53,9 +53,9 @@ public final class VaultEconomy {
 	public boolean setPlayer(OfflinePlayer player, double amount) {
 		double balance = economy.getBalance(player);
 		if (balance > amount) {
-			return withdrawPlayer(player, (balance - amount));
+			return withdrawPlayer(player, balance - amount);
 		} else if (balance < amount) {
-			return depositPlayer(player, (amount - balance));
+			return depositPlayer(player, amount - balance);
 		}
 		return true;
 	}

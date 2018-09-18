@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 
 public abstract class ScriptBlockEvent extends PlayerEvent implements Cancellable {
 
@@ -31,8 +31,8 @@ public abstract class ScriptBlockEvent extends PlayerEvent implements Cancellabl
 		super(player);
 		this.block = block;
 		this.location = location;
-		this.mainHand = Utils.getItemInMainHand(player);
-		this.offHand = Utils.getItemInOffHand(player);
+		this.mainHand = ItemUtils.getItemInMainHand(player);
+		this.offHand = ItemUtils.getItemInOffHand(player);
 	}
 
 	public final Block getBlock() {
@@ -52,7 +52,7 @@ public abstract class ScriptBlockEvent extends PlayerEvent implements Cancellabl
 	}
 
 	public ItemStack getItem(boolean isMainHand) {
-		return isMainHand ? mainHand : offHand;
+		return isMainHand ? getItemInMainHand() : getItemInOffHand();
 	}
 
 	@Override

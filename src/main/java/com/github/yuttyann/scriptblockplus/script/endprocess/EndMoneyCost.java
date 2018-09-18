@@ -8,17 +8,12 @@ import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
 public class EndMoneyCost implements EndProcess {
 
 	@Override
-	public void success(SBRead sbRead) {
-		if (HookPlugins.getVaultEconomy().isEnabled()) {
-			sbRead.removeData(MoneyCost.KEY_COST);
-		}
-	}
+	public void success(SBRead sbRead) {}
 
 	@Override
 	public void failed(SBRead sbRead) {
 		VaultEconomy economy = HookPlugins.getVaultEconomy();
-		if (economy.isEnabled() && sbRead.hasData(MoneyCost.KEY_COST)) {
-			sbRead.removeData(MoneyCost.KEY_COST);
+		if (economy.isEnabled() && sbRead.has(MoneyCost.KEY_COST)) {
 			economy.depositPlayer(sbRead.getSBPlayer().getOfflinePlayer(), sbRead.getDouble(MoneyCost.KEY_COST));
 		}
 	}

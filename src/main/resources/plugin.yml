@@ -1,7 +1,7 @@
 name: ${project.name}
 main: com.github.yuttyann.scriptblockplus.ScriptBlock
 version: ${project.version}
-# api-version: 1.13 暫くの間、使用する予定無し
+# api-version: 1.13
 description: ${project.description}
 author: yuttyann44581
 website: https://github.com/yuttyann/ScriptBlockPlus
@@ -20,8 +20,8 @@ commands:
            /<command> <scripttype> add <options> - add new script to the block
            /<command> <scripttype> remove - remove script of block
            /<command> <scripttype> view - view the script of block
-           /<command> worldedit paste <pasteonair> [overwrite] - paste scriptblock for WorldEdit selected area
-           /<command> worldedit remove - remove scriptblock for WorldEdit selected area
+           /<command> selector paste <pasteonair> [overwrite] - paste scriptblock for selected area
+           /<command> selector remove - remove scriptblock for selected area
     aliases: [sbp]
 
 permissions:
@@ -36,32 +36,35 @@ permissions:
       scriptblockplus.command.interact: true
       scriptblockplus.command.break: true
       scriptblockplus.command.walk: true
-      scriptblockplus.command.worldedit: true
+      scriptblockplus.command.selector: true
       scriptblockplus.interact.use: true
       scriptblockplus.break.use: true
       scriptblockplus.walk.use: true
+      scriptblockplus.tool.blockselector: true
       scriptblockplus.tool.scripteditor: true
   scriptblockplus.command.tool:
-    default: op
+    default: false
   scriptblockplus.command.reload:
-    default: op
+    default: false
   scriptblockplus.command.backup:
-    default: op
+    default: false
   scriptblockplus.command.checkver:
-    default: op
+    default: false
   scriptblockplus.command.datamigr:
-    default: op
+    default: false
   scriptblockplus.command.interact:
-    default: op
+    default: false
   scriptblockplus.command.walk:
-    default: op
-  scriptblockplus.command.worldedit:
-    default: op
+    default: false
+  scriptblockplus.command.selector:
+    default: false
   scriptblockplus.interact.use:
-    default: true
-  scriptblockplus.break.use:
-    default: true
-  scriptblockplus.walk.use:
-    default: true
-  scriptblockplus.tool.scripteditor:
     default: op
+  scriptblockplus.break.use:
+    default: op
+  scriptblockplus.walk.use:
+    default: op
+  scriptblockplus.tool.blockselector:
+    default: false
+  scriptblockplus.tool.scripteditor:
+    default: false

@@ -6,13 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -20,14 +18,9 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.CommandMinecart;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.parser.ParseException;
 
 import com.github.yuttyann.scriptblockplus.commandblock.FakeCommandBlock;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
 
 public final class Utils {
 
@@ -82,7 +75,7 @@ public final class Utils {
 	}
 
 	public static void sendMessage(CommandSender sender, String message) {
-		if (StringUtils.isNotEmpty(message) && sender instanceof Player && ((Player) sender).isOnline()) {
+		if (StringUtils.isNotEmpty(message)) {
 			message = StringUtils.replace(message, "\\n", "|~");
 			String color = "";
 			for (String line : StringUtils.split(message, "|~")) {
@@ -94,10 +87,11 @@ public final class Utils {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean dispatchCommand(CommandSender sender, Location location, String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		if (FakeCommandBlock.isCommandPattern(command)) {
+		if (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command)) {
 			if (location == null) {
 				if (sender instanceof Player) {
 					location = ((Player) sender).getLocation().clone();
@@ -105,74 +99,14 @@ public final class Utils {
 					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
 				} else if (sender instanceof CommandMinecart) {
 					location = ((CommandMinecart) sender).getLocation().clone();
+				} else {
+					location = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
 				}
 			}
-			Validate.notNull(location, "Location is an invalid value");
 			return FakeCommandBlock.getListener().executeCommand(sender, location, command);
 		} else {
 			return Bukkit.dispatchCommand(sender, command.startsWith("/") ? command.substring(1) : command);
 		}
-	}
-
-	@SuppressWarnings("deprecation")
-	public static void updateInventory(Player player) {
-		player.updateInventory();
-	}
-
-	public static void setItemName(ItemStack item, String name) {
-		if (item == null || StringUtils.isEmpty(name)) {
-			return;
-		}
-		ItemMeta itemMeta = item.getItemMeta();
-		itemMeta.setDisplayName(name);
-		item.setItemMeta(itemMeta);
-	}
-
-	public static String getItemName(ItemStack item, String def) {
-		if (item == null || item.getType() == Material.AIR) {
-			return def;
-		}
-		ItemMeta meta = item.getItemMeta();
-		return meta == null ? def : meta.hasDisplayName() ? meta.getDisplayName() : def;
-	}
-
-	public static boolean checkItem(ItemStack item, Material material, String itemName) {
-		return item == null ? false : item.getType() == material && Objects.equals(getItemName(item, null), itemName);
-	}
-
-	public static Material getMaterial(int id) {
-		Material material = null;
-		if (!isCBXXXorLater("1.13")) {
-			try {
-				material = (Material) Material.class.getMethod("getMaterial", int.class).invoke(null, id);
-			} catch (ReflectiveOperationException e) {
-				e.printStackTrace();
-			}
-		}
-		return material;
-	}
-
-	public static ItemStack getScriptEditor(ScriptType scriptType) {
-		ItemStack item = new ItemStack(Material.BLAZE_ROD);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§dScript Editor§6[Mode: " + scriptType.name() + "]");
-		meta.setLore(SBConfig.getScriptEditorLore(scriptType));
-		item.setItemMeta(meta);
-		return item;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static ItemStack getItemInMainHand(Player player) {
-		PlayerInventory inventory = player.getInventory();
-		return isCBXXXorLater("1.9") ? inventory.getItemInMainHand() : inventory.getItemInHand();
-	}
-
-	public static ItemStack getItemInOffHand(Player player) {
-		return isCBXXXorLater("1.9") ? player.getInventory().getItemInOffHand() : null;
-	}
-
-	public static ItemStack[] getHandItems(Player player) {
-		return new ItemStack[]{Utils.getItemInMainHand(player), Utils.getItemInOffHand(player)};
 	}
 
 	public static World getWorld(String name) {
@@ -185,6 +119,11 @@ public final class Utils {
 			}
 		}
 		return world;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void updateInventory(Player player) {
+		player.updateInventory();
 	}
 
 	@SuppressWarnings("deprecation")

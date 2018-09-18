@@ -1,10 +1,8 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -25,7 +23,7 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 public final class MapManager {
 
 	private ScriptBlock plugin;
-	private SBMap<List<UUID>> delays;
+	private SBMap<Set<UUID>> delays;
 	private Map<Integer, TimeData> cooldowns;
 	private Map<ScriptType, Set<String>> scriptCoords;
 
@@ -36,7 +34,7 @@ public final class MapManager {
 		this.scriptCoords = new HashMap<>();
 	}
 
-	public SBMap<List<UUID>> getDelays() {
+	public SBMap<Set<UUID>> getDelays() {
 		return delays;
 	}
 
@@ -85,7 +83,6 @@ public final class MapManager {
 				Set<Map<String, Object>> set = FileUtils.loadFile(cooldownFile);
 				set.forEach(TimeData::deserialize);
 			} catch (Exception e) {
-				e.printStackTrace();
 				cooldowns = new HashMap<>();
 			} finally {
 				cooldownFile.delete();
@@ -94,24 +91,23 @@ public final class MapManager {
 	}
 
 	public void putDelay(ScriptType scriptType, String fullCoords, UUID uuid) {
-		List<UUID> uuids = delays.get(scriptType, fullCoords);
-		if (uuids == null) {
-			uuids = new ArrayList<>();
-			delays.put(scriptType, fullCoords, uuids);
+		Set<UUID> set = delays.get(scriptType, fullCoords);
+		if (set == null) {
+			delays.put(scriptType, fullCoords, set = new HashSet<>());
 		}
-		uuids.add(uuid);
+		set.add(uuid);
 	}
 
 	public void removeDelay(ScriptType scriptType, String fullCoords, UUID uuid) {
-		List<UUID> uuids = delays.get(scriptType, fullCoords);
-		if (uuids != null) {
-			uuids.remove(uuid);
+		Set<UUID> set = delays.get(scriptType, fullCoords);
+		if (set != null) {
+			set.remove(uuid);
 		}
 	}
 
 	public boolean containsDelay(ScriptType scriptType, String fullCoords, UUID uuid) {
-		List<UUID> uuids = delays.get(scriptType, fullCoords);
-		return uuids == null ?  false : uuids.contains(uuid);
+		Set<UUID> set = delays.get(scriptType, fullCoords);
+		return set != null && set.contains(uuid);
 	}
 
 	public void addCoords(ScriptType scriptType, Location location) {
@@ -135,7 +131,7 @@ public final class MapManager {
 	public boolean containsCoords(ScriptType scriptType, Location location) {
 		String fullCoords = BlockCoords.getFullCoords(location);
 		Set<String> set = scriptCoords.get(scriptType);
-		return set == null ? false : set.contains(fullCoords);
+		return set != null && set.contains(fullCoords);
 	}
 
 	public void removeTimes(ScriptType scriptType, Location location) {
@@ -148,8 +144,8 @@ public final class MapManager {
 		Set<Integer> set = new HashSet<>();
 		for (Entry<Integer, TimeData> entry : cooldowns.entrySet()) {
 			TimeData timeData = entry.getValue();
-			if (timeData.getFullCoords().equals(fullCoords)
-					&& timeData.getScriptType() == null ? true : timeData.getScriptType() == scriptType) {
+			ScriptType tScriptType = timeData.getScriptType();
+			if (timeData.getFullCoords().equals(fullCoords) && (tScriptType == null || tScriptType == scriptType)) {
 				set.add(entry.getKey());
 			}
 		}

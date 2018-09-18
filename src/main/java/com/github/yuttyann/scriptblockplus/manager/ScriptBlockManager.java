@@ -36,11 +36,11 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 
 	@Override
 	public boolean scriptRead(Player player) {
-		return scriptRead(0, player);
+		return scriptRead(player, 0);
 	}
 
 	@Override
-	public boolean scriptRead(int index, Player player) {
+	public boolean scriptRead(Player player, int index) {
 		if (getScriptType() == null || getLocation() == null) {
 			return false;
 		}

@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.function.Predicate;
 
 import org.bukkit.plugin.Plugin;
 
@@ -97,7 +98,7 @@ public final class FileUtils {
 		}
 	}
 
-    public static void copyDirectory(File sourceFile, File targetFile) {
+    public static void copyDirectory(File sourceFile, File targetFile, Predicate<File> filter) {
     	if (targetFile == null || !isExists(sourceFile) || isEmpty(sourceFile)) {
     		return;
     	}
@@ -105,6 +106,9 @@ public final class FileUtils {
 			targetFile.mkdirs();
 		}
 		for (File file : sourceFile.listFiles()) {
+			if (filter.test(file)) {
+				continue;
+			}
             BufferedReader reader = null;
             BufferedWriter writer = null;
             try {

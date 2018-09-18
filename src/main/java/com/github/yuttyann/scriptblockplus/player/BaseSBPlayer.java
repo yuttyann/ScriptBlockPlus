@@ -17,6 +17,7 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class BaseSBPlayer extends PlayerData {
@@ -33,14 +34,13 @@ public final class BaseSBPlayer extends PlayerData {
 	static SBPlayer getSBPlayer(UUID uuid) {
 		SBPlayer sbPlayer = PLAYERS.get(uuid);
 		if (sbPlayer == null) {
-			sbPlayer = new BaseSBPlayer(uuid);
-			PLAYERS.put(uuid, sbPlayer);
+			PLAYERS.put(uuid, sbPlayer = new BaseSBPlayer(uuid));
 		}
 		return sbPlayer;
 	}
 
 	public void setPlayer(Player player) {
-		this.player = player == null ? null : player.getUniqueId().equals(uuid) ? player : null;
+		this.player = player != null && player.getUniqueId().equals(uuid) ? player : null;
 	}
 
 	@Override
@@ -65,12 +65,12 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public ItemStack getItemInMainHand() {
-		return isOnline() ? Utils.getItemInMainHand(player) : null;
+		return isOnline() ? ItemUtils.getItemInMainHand(player) : null;
 	}
 
 	@Override
 	public ItemStack getItemInOffHand() {
-		return isOnline() ? Utils.getItemInOffHand(player) : null;
+		return isOnline() ? ItemUtils.getItemInOffHand(player) : null;
 	}
 
 	@Override

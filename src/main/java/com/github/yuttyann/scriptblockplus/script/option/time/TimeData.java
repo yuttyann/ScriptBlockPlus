@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.script.option.time;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
@@ -11,7 +10,7 @@ public final class TimeData {
 
 	int index;
 	int second;
-	boolean isOldCooldown;
+	boolean isOld;
 
 	UUID uuid;
 	String fullCoords;
@@ -19,15 +18,15 @@ public final class TimeData {
 
 	TimeData(int index, int second, boolean isOldCooldown) {
 		this.second = second;
-		this.isOldCooldown = isOldCooldown;
+		this.isOld = isOldCooldown;
 	}
 
 	public int getSecond() {
 		return second;
 	}
 
-	public boolean isOldCooldown() {
-		return isOldCooldown;
+	public boolean isOld() {
+		return isOld;
 	}
 
 	public UUID getUniqueId() {
@@ -46,32 +45,52 @@ public final class TimeData {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("index", index);
 		map.put("second", second);
-		map.put("isoldcooldown", isOldCooldown);
+		map.put("isold", isOld);
 		map.put("fullcoords", fullCoords);
-		if (isOldCooldown) {
+		if (!isOld) {
 			map.put("uuid", uuid);
 			map.put("scripttype", scriptType);
 		}
 		return map;
 	}
 
-	public static void deserialize(Map<String, Object> map) {
-		int index = (int) map.get("index");
-		int second = (int) map.get("second");
-		boolean isOldCooldown = (boolean) map.get("isoldcooldown");
-		TimeData timeData = new TimeData(index, second, isOldCooldown);
-		timeData.fullCoords = (String) map.get("fullcoords");
-		if (timeData.isOldCooldown) {
+	public static void deserialize(Map<String, Object> args) {
+		int index = (int) args.get("index");
+		int second = (int) args.get("second");
+		boolean isOld = (boolean) args.get("isold");
+		TimeData timeData = new TimeData(index, second, isOld);
+		timeData.fullCoords = (String) args.get("fullcoords");
+		if (timeData.isOld) {
 			new OldCooldown().deserialize(timeData);
 		} else {
-			timeData.uuid = (UUID) map.get("uuid");
-			timeData.scriptType = (ScriptType) map.get("scripttype");
+			timeData.uuid = (UUID) args.get("uuid");
+			timeData.scriptType = (ScriptType) args.get("scripttype");
 			new Cooldown().deserialize(timeData);
 		}
 	}
 
 	@Override
 	public int hashCode() {
-		return isOldCooldown ? Objects.hash(index, fullCoords) : Objects.hash(index, uuid, fullCoords, scriptType);
+        if (isOld) {
+        	return hashCode(index, fullCoords);
+        } else {
+        	return hashCode(index, uuid, fullCoords, scriptType);
+        }
+	}
+
+	static int hashCode(int index, String fullCoords) {
+		int hash = 1;
+    	hash = hash * 31 + index;
+    	hash = hash * 31 + fullCoords.hashCode();
+		return hash;
+	}
+
+	static int hashCode(int index, UUID uuid, String fullCoords, ScriptType scriptType) {
+		int hash = 1;
+    	hash = hash * 31 + index;
+    	hash = hash * 31 + uuid.hashCode();
+    	hash = hash * 31 + fullCoords.hashCode();
+    	hash = hash * 31 + scriptType.hashCode();
+		return hash;
 	}
 }

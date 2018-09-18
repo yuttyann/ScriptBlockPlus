@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.yuttyann.scriptblockplus.enums.EquipSlot;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 
@@ -40,8 +41,12 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 		this.item = item;
 		this.action = action;
 		this.blockFace = blockFace;
-		this.hand = hand == null ? EquipSlot.getHand(event) : hand;
+		this.hand = hand == null ? fromEquipmentSlot(event) : hand;
 		this.isAnimation = isAnimation;
+	}
+
+	private EquipSlot fromEquipmentSlot(PlayerInteractEvent event) {
+		return Utils.isCBXXXorLater("1.9") ? EquipSlot.fromEquipmentSlot(event.getHand()) : EquipSlot.HAND;
 	}
 
 	public Block getBlock() {
@@ -49,7 +54,7 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 	}
 
 	public Location getLocation() {
-		return block.getLocation();
+		return block == null ? null : block.getLocation();
 	}
 
 	public ItemStack getItem() {

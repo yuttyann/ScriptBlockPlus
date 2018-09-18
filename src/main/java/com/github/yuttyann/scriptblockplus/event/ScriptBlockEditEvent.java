@@ -8,8 +8,8 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType;
 
 public class ScriptBlockEditEvent extends ScriptBlockEvent {
 
-	private ScriptType scriptType;
-	private ActionType actionType;
+	private final ScriptType scriptType;
+	private final ActionType actionType;
 	private boolean cancelled;
 
 	public ScriptBlockEditEvent(Player player, Block block, String[] actionArray) {

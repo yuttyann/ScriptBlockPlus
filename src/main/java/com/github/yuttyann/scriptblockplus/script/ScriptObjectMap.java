@@ -19,87 +19,100 @@ abstract class ScriptObjectMap extends IAssist implements ObjectMap {
 	}
 
 	@Override
-	public void setData(String key, Object value) {
-		if (!OBJECT_MAP.containsKey(scriptId)) {
-			OBJECT_MAP.put(scriptId, new HashMap<>());
+	public void put(String key, Object value) {
+		Map<String, Object> map = OBJECT_MAP.get(scriptId);
+		if (map == null) {
+			OBJECT_MAP.put(scriptId, map = new HashMap<>());
 		}
-		OBJECT_MAP.get(scriptId).put(key, value);
+		map.put(key, value);
 	}
 
 	@Override
 	public byte getByte(String key) {
-		return getData(key, Byte.class);
+		return get(key, Byte.class);
 	}
 
 	@Override
 	public short getShort(String key) {
-		return getData(key, Short.class);
+		return get(key, Short.class);
 	}
 
 	@Override
 	public int getInt(String key) {
-		return getData(key, Integer.class);
+		return get(key, Integer.class);
 	}
 
 	@Override
 	public long getLong(String key) {
-		return getData(key, Byte.class);
+		return get(key, Byte.class);
 	}
 
 	@Override
 	public char getChar(String key) {
-		return getData(key, Character.class);
+		return get(key, Character.class);
 	}
 
 	@Override
 	public float getFloat(String key) {
-		return getData(key, Float.class);
+		return get(key, Float.class);
 	}
 
 	@Override
 	public double getDouble(String key) {
-		return getData(key, Double.class);
+		return get(key, Double.class);
 	}
 
 	@Override
 	public boolean getBoolean(String key) {
-		return getData(key, Boolean.class);
+		return get(key, Boolean.class);
 	}
 
 	@Override
 	public String getString(String key) {
-		return getData(key, String.class);
+		return get(key, String.class);
 	}
 
 	@Override
-	public <T> T getData(String key) {
-		return getData(key, null);
+	public <T> T get(String key) {
+		return get(key, null);
 	}
 
 	@Override
-	public <T> T getData(String key, Class<T> classOfT) {
+	public <T> T get(String key, Class<T> classOfT) {
 		Map<String, Object> map = OBJECT_MAP.get(scriptId);
 		return map == null ? null : classOfT == null ? (T) map.get(key) : classOfT.cast(map.get(key));
 	}
 
 	@Override
-	public <T> T removeData(String key) {
-		return removeData(key, null);
+	public <T> T remove(String key) {
+		return remove(key, null);
 	}
 
 	@Override
-	public <T> T removeData(String key, Class<T> classOfT) {
+	public <T> T remove(String key, Class<T> classOfT) {
 		Map<String, Object> map = OBJECT_MAP.get(scriptId);
 		return map == null ? null : classOfT == null ? (T) map.remove(key) : classOfT.cast(map.remove(key));
 	}
 
 	@Override
-	public boolean hasData(String key) {
-		return getData(key) != null;
+	public boolean has(String key) {
+		return get(key) != null;
 	}
 
 	@Override
-	public void clearData() {
+	public boolean containsKey(String key) {
+		Map<String, Object> map = OBJECT_MAP.get(scriptId);
+		return map != null && map.containsKey(key);
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		Map<String, Object> map = OBJECT_MAP.get(scriptId);
+		return map != null && map.containsValue(value);
+	}
+
+	@Override
+	public void clear() {
 		OBJECT_MAP.remove(scriptId);
 	}
 }

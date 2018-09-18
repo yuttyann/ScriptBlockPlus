@@ -29,7 +29,7 @@ public interface ScriptBlockAPI {
 	 * @param player プレイヤー
 	 * @return 実行が成功したかどうか
 	 */
-	public boolean scriptRead(int index, Player player);
+	public boolean scriptRead(Player player, int index);
 
 	/**
 	 * スクリプトの座標を設定する</br>

@@ -1,21 +1,26 @@
 package com.github.yuttyann.scriptblockplus.script;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.permissions.Permissible;
 
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
-public final class ScriptType implements Comparable<ScriptType> {
+public final class ScriptType implements Comparable<ScriptType>, Serializable {
+
+	private static final Map<String, ScriptType> TYPES = new LinkedHashMap<>();
 
 	public static final class SBPermission {
 
 		private static final String PREFIX = "scriptblockplus.";
 
 		public static boolean has(Permissible permissible, ScriptType scriptType, boolean isCMDorUse) {
-			return scriptType == null ? false : permissible.hasPermission(getNode(scriptType, isCMDorUse));
+			return Permission.has(permissible, scriptType == null ? null : getNode(scriptType, isCMDorUse));
 		}
 
 		public static String[] getNodes(boolean isCMDorUse) {
@@ -32,15 +37,13 @@ public final class ScriptType implements Comparable<ScriptType> {
 	public static final ScriptType BREAK = new ScriptType("break");
 	public static final ScriptType WALK = new ScriptType("walk");
 
-	private static final Map<String, ScriptType> TYPES = new LinkedHashMap<>();
-
 	private final String type;
 	private final String name;
 	private final int ordinal;
 
 	public ScriptType(String type) {
     	Validate.notNull(type, "Type cannot be null");
-		this.type = type;
+		this.type = type.toLowerCase();
 		this.name = type.toUpperCase();
 
 		ScriptType scriptType = TYPES.get(name);
@@ -64,12 +67,12 @@ public final class ScriptType implements Comparable<ScriptType> {
 
 	@Override
 	public String toString() {
-		return type;
+		return name;
 	}
 
 	@Override
 	public int hashCode() {
-		return 31 * (31 * 1 + type.hashCode()) + name.hashCode();
+		return Objects.hash(ordinal, type, name);
 	}
 
 	@Override
@@ -116,7 +119,7 @@ public final class ScriptType implements Comparable<ScriptType> {
 
     public static ScriptType valueOf(String name) {
     	Validate.notNull(name, "Name cannot be null");
-    	ScriptType scriptType = TYPES.get(name);
+    	ScriptType scriptType = TYPES.get(name.toUpperCase());
     	if (scriptType == null) {
     		throw new NullPointerException(name + " does not exist");
     	}

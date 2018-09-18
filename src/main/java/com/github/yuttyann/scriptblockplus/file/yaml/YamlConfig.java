@@ -354,11 +354,11 @@ public class YamlConfig {
 	}
 
 	public Set<String> getKeys(String path) {
-		return yaml.getConfigurationSection(path).getKeys(false);
+		return getConfigurationSection(path).getKeys(false);
 	}
 
 	public Set<String> getKeys(String path, boolean deep) {
-		return yaml.getConfigurationSection(path).getKeys(deep);
+		return getConfigurationSection(path).getKeys(deep);
 	}
 
 	public Map<String, Object> getValues(boolean deep) {

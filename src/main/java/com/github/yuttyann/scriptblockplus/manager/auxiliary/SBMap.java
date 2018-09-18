@@ -46,8 +46,7 @@ public final class SBMap<T> implements Serializable {
 	public T put(ScriptType scriptType, String fullCoords, T value) {
 		Map<String, T> map = get(scriptType);
 		if (map == null) {
-			map = new HashMap<>();
-			sbMap.put(scriptType, map);
+			sbMap.put(scriptType, map = new HashMap<>());
 		}
 		return map.put(fullCoords, value);
 	}
@@ -63,6 +62,10 @@ public final class SBMap<T> implements Serializable {
 			return sbMap.put(scriptType, map);
 		}
 		return null;
+	}
+
+	public boolean containsKey(ScriptType scriptType) {
+		return sbMap.containsKey(scriptType);
 	}
 
 	public boolean containsKey(ScriptType scriptType, String fullCoords) {

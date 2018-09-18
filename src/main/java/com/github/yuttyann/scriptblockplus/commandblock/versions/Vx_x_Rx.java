@@ -5,13 +5,15 @@ import java.lang.reflect.Method;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
-import com.github.yuttyann.scriptblockplus.commandblock.ClassListener;
+import com.github.yuttyann.scriptblockplus.commandblock.ClassHelper;
 import com.github.yuttyann.scriptblockplus.commandblock.CommandListener;
 import com.github.yuttyann.scriptblockplus.commandblock.TileEntityCommand;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class Vx_x_Rx implements ClassListener {
+public class Vx_x_Rx implements ClassHelper {
+
+	private static final Class<?>[] PARAMS = {getNMSClass(c), CommandSender.class, String.class};
 
 	private CommandListener listener;
 
@@ -39,19 +41,16 @@ public class Vx_x_Rx implements ClassListener {
 		}
 	}
 
-	protected int executeCommand(Object sender, CommandSender bSender, String command) throws ReflectiveOperationException {
-		int completed = 0;
+	protected int executeCommand(Object iSender, CommandSender bSender, String command) throws ReflectiveOperationException {
 		if (Utils.isCBXXXorLater("1.13")) {
-			Object wrapper = PackageType.NMS.invokeMethod(sender, CLASS_NAME[1], "getWrapper");
-			Object server = PackageType.CB.invokeMethod(bSender.getServer(), CLASS_NAME[6], "getServer");
-			Object dispatcher = PackageType.NMS.invokeMethod(server, CLASS_NAME[6], "getCommandDispatcher");
-			Object dispatch = PackageType.NMS.invokeMethod(dispatcher, CLASS_NAME[3], "dispatchServerCommand", wrapper, command);
-			completed = Integer.class.cast(dispatch).intValue();
+			Object server = PackageType.CB.invokeMethod(bSender.getServer(), i, "getServer");
+			Object wrapper = PackageType.NMS.invokeMethod(iSender, a, "getWrapper");
+			Object dispatcher = PackageType.NMS.invokeMethod(server, h, "getCommandDispatcher");
+			return (int) PackageType.NMS.invokeMethod(dispatcher, b, "dispatchServerCommand", wrapper, command);
 		} else {
-			Method executeCommand = PackageType.NMS.getMethod(CLASS_NAME[1], "executeCommand", PARAMS_EXECUTE_COMMAND);
-			completed = Integer.class.cast(executeCommand.invoke(null, sender, bSender, command)).intValue();
+			Method executeCommand = PackageType.NMS.getMethod(a, "executeCommand", PARAMS);
+			return (int) executeCommand.invoke(null, iSender, bSender, command);
 		}
-		return completed;
 	}
 
 	protected Object getICommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {
@@ -63,5 +62,14 @@ public class Vx_x_Rx implements ClassListener {
 			tileEntityCommand.setName(sender.getName());
 		}
 		return commandListener;
+	}
+
+	private static Class<?> getNMSClass(String className) {
+		try {
+			return PackageType.NMS.getClass(className);
+		} catch (IllegalArgumentException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

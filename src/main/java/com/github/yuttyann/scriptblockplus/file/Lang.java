@@ -8,7 +8,7 @@ import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
-public final class Lang {
+public class Lang {
 
 	private static final String DEFAULT_LANGUAGE = "en";
 
@@ -20,11 +20,11 @@ public final class Lang {
 		this.language = StringUtils.isEmpty(language) ? DEFAULT_LANGUAGE : language.toLowerCase();
 	}
 
-	public String getLanguage() {
+	public final String getLanguage() {
 		return language;
 	}
 
-	public YamlConfig load(String filePath, String dirPath) {
+	public final YamlConfig load(String filePath, String dirPath) {
 		return YamlConfig.load(plugin, getFile(filePath, dirPath), false);
 	}
 

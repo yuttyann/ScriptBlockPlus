@@ -1,7 +1,9 @@
 package com.github.yuttyann.scriptblockplus.script;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Location;
@@ -106,21 +108,6 @@ public final class ScriptEdit {
 		Utils.sendMessage(SBConfig.getConsoleScriptViewMessage(sbPlayer.getName(), scriptType, scriptData.getLocation()));
 	}
 
-	public boolean copy(SBPlayer sbPlayer, Location location) {
-		setLocation(location);
-		return new Clipboard(scriptData).copy(sbPlayer);
-	}
-
-	public boolean weRemove(Location location) {
-		setLocation(location);
-		if (!scriptData.checkPath()) {
-			return false;
-		}
-		scriptData.remove();
-		mapManager.removeCoords(scriptType, location);
-		return true;
-	}
-
 	private String getAuthors() {
 		StrBuilder builder = new StrBuilder();
 		List<String> authors = scriptData.getAuthors(true);
@@ -133,5 +120,113 @@ public final class ScriptEdit {
 			}
 		}
 		return builder.toString();
+	}
+
+	public boolean copy(SBPlayer sbPlayer, Location location) {
+		setLocation(location);
+		return new Clipboard(scriptData).copy(sbPlayer);
+	}
+
+	public boolean lightRemove(Location location) {
+		setLocation(location);
+		if (!scriptData.checkPath()) {
+			return false;
+		}
+		scriptData.remove();
+		mapManager.removeCoords(scriptType, location);
+		return true;
+	}
+
+	private class Clipboard implements SBClipboard {
+
+		private final ScriptData scriptData;
+		private final String author;
+		private final List<String> scripts;
+		private final ScriptType scriptType;
+
+		private SBPlayer sbPlayer;
+		private String lastEdit;
+
+		private Clipboard(ScriptData scriptData) {
+			Objects.requireNonNull(scriptData);
+			this.scriptData = scriptData.clone();
+			this.author = this.scriptData.getAuthor();
+			this.scripts = this.scriptData.getScripts();
+			this.scriptType = this.scriptData.getScriptType();
+		}
+
+		@Override
+		public ScriptType getScriptType() {
+			return scriptType;
+		}
+
+		@Override
+		public void save() {
+			scriptData.save();
+		}
+
+		@Override
+		public boolean copy(SBPlayer sbPlayer) {
+			sbPlayer.setScriptLine(null);
+			sbPlayer.setActionType(null);
+			if (this.sbPlayer != null) {
+				return false;
+			}
+			if (scriptData == null || !scriptData.checkPath()) {
+				Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
+				return false;
+			}
+			this.sbPlayer = sbPlayer;
+			sbPlayer.setClipboard(this);
+			Utils.sendMessage(sbPlayer, SBConfig.getScriptCopyMessage(scriptType));
+			Utils.sendMessage(SBConfig.getConsoleScriptCopyMessage(sbPlayer.getName(), scriptType, scriptData.getLocation()));
+			return true;
+		}
+
+		@Override
+		public boolean paste(Location location, boolean overwrite) {
+			if (sbPlayer == null) {
+				return false;
+			}
+			sbPlayer.setClipboard(null);
+			sbPlayer.setScriptLine(null);
+			sbPlayer.setActionType(null);
+			if (scriptData == null) {
+				return false;
+			}
+			scriptData.setLocation(location);
+			if (scriptData.checkPath() && !overwrite) {
+				return false;
+			}
+			scriptData.setAuthor(author);
+			scriptData.addAuthor(sbPlayer.getOfflinePlayer());
+			scriptData.setLastEdit(Utils.getFormatTime());
+			scriptData.setScripts(new ArrayList<>(scripts));
+			scriptData.save();
+			ScriptBlock.getInstance().getMapManager().addCoords(scriptType, location);
+			Utils.sendMessage(sbPlayer, SBConfig.getScriptPasteMessage(scriptType));
+			Utils.sendMessage(SBConfig.getConsoleScriptPasteMessage(sbPlayer.getName(), scriptType, location));
+			return true;
+		}
+
+		@Override
+		public boolean lightPaste(Location location, boolean overwrite, boolean updateTime) {
+			if (scriptData == null || sbPlayer == null) {
+				return false;
+			}
+			scriptData.setLocation(location);
+			if (scriptData.checkPath() && !overwrite) {
+				return false;
+			}
+			if (lastEdit == null || updateTime) {
+				lastEdit = Utils.getFormatTime("yyyy/MM/dd HH:mm:ss");
+			}
+			scriptData.setAuthor(author);
+			scriptData.addAuthor(sbPlayer.getOfflinePlayer());
+			scriptData.setLastEdit(lastEdit);
+			scriptData.setScripts(new ArrayList<>(scripts));
+			ScriptBlock.getInstance().getMapManager().addCoords(scriptType, location);
+			return true;
+		}
 	}
 }

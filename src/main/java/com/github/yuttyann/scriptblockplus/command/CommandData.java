@@ -5,14 +5,16 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
-public final class CommandData {
+public class CommandData {
 
 	private String message;
 	private boolean isPrefix;
-	private List<String> permissions;
+
+	private List<String> permissions = new ArrayList<>();
 
 	public CommandData(String message, boolean isPrefix) {
 		this(message, isPrefix, (String) null);
@@ -40,9 +42,6 @@ public final class CommandData {
 
 	public CommandData addPermission(String... permission) {
 		if (permission != null && permission.length > 0) {
-			if (permissions == null) {
-				permissions = new ArrayList<>(permission.length);
-			}
 			StreamUtils.forEach(permission, permissions::add);
 		}
 		return this;
@@ -60,7 +59,7 @@ public final class CommandData {
 		return permissions;
 	}
 
-	public boolean hasMessage() {
+	public final boolean hasMessage() {
 		return StringUtils.isNotEmpty(message);
 	}
 
@@ -68,6 +67,6 @@ public final class CommandData {
 		if (permissions == null || permissions.size() == 0) {
 			return true;
 		}
-		return StreamUtils.anyMatch(permissions, s -> sender.hasPermission(s));
+		return StreamUtils.anyMatch(permissions, s -> Permission.has(sender, s));
 	}
 }

@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +16,7 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptBreakListener extends IAssist {
@@ -28,7 +28,9 @@ public class ScriptBreakListener extends IAssist {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
 		Player player = event.getPlayer();
-		if (isScriptEditor(player) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
+		ItemStack item = ItemUtils.getItemInMainHand(player);
+		if (ItemUtils.isBlockSelector(player, item) && Permission.TOOL_BLOCKSELECTOR.has(player)
+				|| ItemUtils.isScriptEditor(player, item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			event.setCancelled(true);
 			return;
 		}
@@ -46,10 +48,5 @@ public class ScriptBreakListener extends IAssist {
 			}
 			new ScriptRead(this, player, location).read(0);
 		}
-	}
-
-	private boolean isScriptEditor(Player player) {
-		ItemStack item = Utils.getItemInMainHand(player);
-		return Utils.checkItem(item, Material.BLAZE_ROD, "§dScript Editor");
 	}
 }

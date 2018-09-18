@@ -10,13 +10,9 @@ public class ScriptBlockInteractEvent extends ScriptBlockEvent {
 	private boolean isLeftClick;
 	private boolean cancelled;
 
-	public ScriptBlockInteractEvent(Player player, Block block) {
-		this(player, block, Action.RIGHT_CLICK_BLOCK);
-	}
-
 	public ScriptBlockInteractEvent(Player player, Block block, Action action) {
 		super(player, block);
-		this.isLeftClick = action.name().startsWith("LEFT_CLICK_");
+		this.isLeftClick = action == Action.LEFT_CLICK_BLOCK;
 	}
 
 	public Material getMaterial(boolean isMainHand) {

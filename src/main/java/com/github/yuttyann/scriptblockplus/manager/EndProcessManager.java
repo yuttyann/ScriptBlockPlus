@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.AbstractConstructor;
-import com.github.yuttyann.scriptblockplus.script.endprocess.EndEnumAction;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndItemCost;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndMoneyCost;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
@@ -35,7 +34,6 @@ public final class EndProcessManager extends AbstractConstructor<EndProcess> {
 	@Override
 	public void registerDefaults() {
 		getConstructors().clear();
-		add(EndEnumAction.class);
 		add(EndItemCost.class);
 		add(EndMoneyCost.class);
 	}

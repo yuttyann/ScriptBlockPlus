@@ -1,4 +1,5 @@
-﻿# ScriptBlockPlus v${project.version} Lang #
+﻿# 未翻訳 作業中
+# ScriptBlockPlus v${project.version} Lang #
 # Created by yuttyann44581  Translated by AndyYu
 # There may be some mistakes in grammar
 
@@ -14,19 +15,28 @@ createCommandMessage: '<scripttype> create <options> - create new scriptblock'
 addCommandMessage: '<scripttype> add <options> - add new script to the block'
 removeCommandMessage: '<scripttype> remove - remove script of block'
 viewCommandMessage: '<scripttype> view - view the script of block'
-worldEditPasteCommandMessage: 'worldedit paste <pasteonair> [overwrite] - paste scriptblock for WorldEdit selected area'
-worldEditRemoveCommandMessage: 'worldedit remove - remove scriptblock for WorldEdit selected area'
+selectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - paste scriptblock for selected area'
+selectorRemoveCommandMessage: 'selector remove - remove scriptblock for selected area'
 
 # &(code) : you can use color code
 
-## ===== SCRIPTBLOCK EDITOR SETTING ===== ##
+## ===== BLOCK SELECTOR ===== ##
 # There are no variables
+blockSelector:
+- '&aこのツールは、複数のスクリプトのペーストをサポートします。'
+- '&6左クリック: &eブロックを選択範囲の始点に指定します。'
+- '&6右クリック: &eブロックを選択範囲の終点に指定します。'
+- '&6シフト+左クリック: &e現在位置を選択範囲の始点に指定します。'
+- '&6シフト+右クリック: &e現在位置を選択範囲の終点に指定します。'
+
+## ===== SCRIPT EDITOR ===== ##
+# %scripttype% : Type of script
 scriptEditor:
-- '&aThis is a tool for copying and pasting scriptblock'
-- '&6Left-click: &ecopy "interact" type scriptblock'
-- '&6Right-click: &ecopy "break" type scriptblock'
-- '&6Shift+Leftclick: &ecopy "walk" type scriptblock'
-- '&6Shift+Rightclick: &epaste the script to a new block'
+- '&aこのツールは、スクリプトの編集をサポートします。'
+- '&6左クリック: &eツールの対象を切り替えます。'
+- '&6右クリック: &eスクリプトのコピーを行います。'
+- '&6シフト+左クリック: &eスクリプトの削除を行います。'
+- '&6シフト+右クリック: &eスクリプトのペーストを行います。'
 
 # |~, \n : change the line
 
@@ -35,7 +45,7 @@ scriptEditor:
 notVaultMessage: '&cVault not found!'
 senderNoPlayerMessage: '&cYou cannot do this as console.'
 notPermissionMessage: '&cYou dont have permission to do this.'
-giveScriptEditorMessage: '&aget the scriptblock editor.'
+giveToolMessage: '&aAuxiliary tools were distributed.'
 allFileReloadMessage: '&aReloaded successfully.'
 scriptsBackupMessage: '&aBackup of script data is complete.'
 errorScriptsBackupMessage: '&cBackup of script data failed.'
@@ -43,7 +53,6 @@ notLatestPluginMessage: '&cNo latest version!'
 notScriptBlockFileMessage: '&cNo ScriptBlock File.'
 dataMigrStartMessage: '&7Start migrating from Scriptblock....'
 dataMigrEndMessage: '&bMigrating completed.'
-notWorldEditMessage: '&cWorldEdit not found!'
 updateDownloadStartMessage: '&6Start downloading the latest ScriptBlockPlus...'
 
 # %filename% : Downloaded file name
@@ -67,11 +76,17 @@ scriptAddMessage: '&aAdd script to a "%scripttype%" type scriptblock.'
 scriptRemoveMessage: '&cRemove a "%scripttype%" type scriptblock.'
 
 # There are no variables
-worldEditNotSelectionMessage: '&cWorldEdit area not selected'
+notSelectionMessage: '&cSelector area not selected.'
+
+# %world%  : The name of the world
+# %coords% : Coordinate(x, y, z)
+selectorPos1Message: '&bI selected the starting point "%coords%".'
+selectorPos2Message: '&bI chose the end point "%coords%".'
 
 # %scripttype% : Type of script
-worldEditPasteMessage: '&aScriptblock "%scripttype%" has been pasted from WorldEdit selected area.'
-worldEditRemoveMessage: '&cScriptblock "%scripttype%" has been removed from WorldEdit selected area.'
+# %blockcount% : Number of blocks
+selectorPasteMessage: '&aScriptblock "%scripttype%" has been pasted from selected area.'
+selectorRemoveMessage: '&cScriptblock "%scripttype%" has been removed from selected area.'
 
 # %option% : Name of the option where the error occurred
 # %cause%  : Cause of error
@@ -85,11 +100,11 @@ activeDelayMessage: '&cThis scriptblock is in delay, you cant use it now.'
 # %second% : second
 activeCooldownMessage: '&cThis scriptblock is in cooldown [%hour%h %minute%m %second%s ]'
 
-# %clicktype% : Type of click
-succEditDataMessage: '&aScriptblock type "%clicktype%" selected, please click a block to add it on.'
+# %actiontype% : Type of action
+succEditDataMessage: '&aScriptblock type "%actiontype%" selected, please click a block to add it on.'
 
 # There are no variables
-errorEditDataMessage: '&cInvaild setting.'
+errorActionDataMessage: '&cInvaild setting.'
 errorScriptCheckMessage: '&cInvaild script.'
 errorScriptFileCheckMessage: '&cNo script file.'
 
@@ -124,9 +139,9 @@ consoleSuccScriptExecMessage: '&aOperator"%player%"、Type"%scripttype%"、Locat
 consoleErrorScriptExecMessage: '&cOperator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" fail to execute.'
 
 # %scripttype% : Type of script
-# %player%     : Player ID
+# %blockcount% : Number of blocks
 # %world%      : The name of the world
 # %mincoords%  : Minimum coordinate(x, y, z)
 # %maxcoords%  : Maximum coordinate(x, y, z)
-consoleWorldEditPasteMessage: '&aType"%scripttype%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been pasted.'
-consoleWorldEditRemoveMessage: '&cType"%scripttype%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been removed.'
+consoleSelectorPasteMessage: '&aType"%scripttype%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been pasted.'
+consoleSelectorRemoveMessage: '&cType"%scripttype%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been removed.'

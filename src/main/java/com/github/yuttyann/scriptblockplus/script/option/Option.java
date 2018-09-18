@@ -63,13 +63,13 @@ public abstract class Option {
 	 * @return オプションなのかどうか
 	 */
 	public final boolean isOption(String script) {
-		return script == null ? false : script.startsWith(syntax);
+		return StringUtils.isNotEmpty(script) && script.startsWith(syntax);
 	}
 
 	/**
-	 * 失敗時に終了処理を無視するかどうか
-	 * @return 無視するかどうか</br>
+	 * 失敗時に終了処理を無視するかどうか</br>
 	 * 戻り値が true の場合は無視します
+	 * @return 無視するかどうか
 	 */
 	public boolean isFailedIgnore() {
 		return false;
@@ -94,11 +94,14 @@ public abstract class Option {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, syntax);
+		int hash = 1;
+    	hash = hash * 31 + name.hashCode();
+    	hash = hash * 31 + syntax.hashCode();
+		return hash;
 	}
 
 	@Override
 	public String toString() {
-		return "[name: " + name + ", syntax: " + syntax + "]";
+		return "Option{name: " + name + ", syntax: " + syntax + "}";
 	}
 }

@@ -25,12 +25,12 @@ import net.minecraft.server.v1_8_R1.WorldServer;
 public final class v1_8_R1 extends Vx_x_Rx {
 
 	@Override
-	public int executeCommand(Object sender, CommandSender bSender, String command) {
+	public int executeCommand(Object iSender, CommandSender bSender, String command) {
 		if (command.charAt(0) == '/') {
 			command = command.substring(1);
 		}
-		ICommandListener iSender = (ICommandListener) sender;
-		SimpleCommandMap commandMap = iSender.getWorld().getServer().getCommandMap();
+		ICommandListener sender = (ICommandListener) iSender;
+		SimpleCommandMap commandMap = sender.getWorld().getServer().getCommandMap();
 		Joiner joiner = Joiner.on(" ");
 		String[] args = StringUtils.split(command, " ");
 		List<String[]> commands = new ArrayList<>();
@@ -44,14 +44,14 @@ public final class v1_8_R1 extends Vx_x_Rx {
 		if (cmd.equalsIgnoreCase("stop") || cmd.equalsIgnoreCase("kick") || cmd.equalsIgnoreCase("op")
 				|| cmd.equalsIgnoreCase("deop") || cmd.equalsIgnoreCase("ban") || cmd.equalsIgnoreCase("ban-ip")
 				|| cmd.equalsIgnoreCase("pardon") || cmd.equalsIgnoreCase("pardon-ip") || cmd.equalsIgnoreCase("reload")
-				|| iSender.getWorld().players.isEmpty() || commandMap.getCommand(args[0]) == null) {
+				|| sender.getWorld().players.isEmpty() || commandMap.getCommand(args[0]) == null) {
 			return 0;
 		}
 		commands.add(args);
 		MinecraftServer server = MinecraftServer.getServer();
 		WorldServer[] prev = server.worldServer;
 		server.worldServer = new WorldServer[server.worlds.size()];
-		server.worldServer[0] = (WorldServer) iSender.getWorld();
+		server.worldServer[0] = (WorldServer) sender.getWorld();
 		int bpos = 0;
 		for (int pos = 1; pos < server.worldServer.length; pos++) {
 			WorldServer world = server.worlds.get(bpos++);
@@ -66,7 +66,7 @@ public final class v1_8_R1 extends Vx_x_Rx {
 			for (int i = 0; i < args.length; i++) {
 				if (PlayerSelector.isPattern(args[i])) {
 					for (int j = 0; j < commands.size(); j++) {
-						newCommands.addAll(buildCommands(iSender, commands.get(j), i));
+						newCommands.addAll(buildCommands(sender, commands.get(j), i));
 					}
 					List<String[]> temp = commands;
 					commands = newCommands;
@@ -85,7 +85,7 @@ public final class v1_8_R1 extends Vx_x_Rx {
 				}
 			} catch (Throwable exception) {
 				String message = "CommandBlock at (%d,%d,%d) failed to handle command";
-				BlockPosition blockPosition = iSender.getChunkCoordinates();
+				BlockPosition blockPosition = sender.getChunkCoordinates();
 				server.server.getLogger().log(Level.WARNING,
 					String.format(message, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ()), exception
 				);
@@ -95,7 +95,7 @@ public final class v1_8_R1 extends Vx_x_Rx {
 	}
 
 	@Override
-	protected Object getICommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {
+	protected ICommandListener getICommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {
 		int x = location.getBlockX();
 		int y = location.getBlockY();
 		int z = location.getBlockZ();

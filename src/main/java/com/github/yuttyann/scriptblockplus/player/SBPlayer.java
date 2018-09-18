@@ -9,7 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import com.github.yuttyann.scriptblockplus.script.Clipboard;
+import com.github.yuttyann.scriptblockplus.region.Region;
+import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 
 public interface SBPlayer extends CommandSender {
 
@@ -27,6 +28,8 @@ public interface SBPlayer extends CommandSender {
 
 	public PlayerInventory getInventory();
 
+	public Region getRegion();
+
 	public ObjectMap getObjectMap();
 
 	public ItemStack getItemInMainHand();
@@ -39,13 +42,13 @@ public interface SBPlayer extends CommandSender {
 
 	public boolean isOnline();
 
-	public void setClipboard(Clipboard clipboard);
+	public void setClipboard(SBClipboard clipboard);
 
-	public Clipboard getClipboard();
+	public SBClipboard getClipboard();
 
 	public boolean hasClipboard();
 
-	public void setScriptLine(String actionType);
+	public void setScriptLine(String scriptLine);
 
 	public String getScriptLine();
 

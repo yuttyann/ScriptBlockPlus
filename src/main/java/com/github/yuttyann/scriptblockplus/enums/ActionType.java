@@ -20,7 +20,7 @@ public enum ActionType {
 		reload();
 	}
 
-	public String createKey(ScriptType scriptType) {
+	public String getKey(ScriptType scriptType) {
 		return scriptType.name() + "_" + name();
 	}
 
@@ -34,7 +34,7 @@ public enum ActionType {
 	private static void reload() {
 		TYPES.clear();
 		try {
-			StreamUtils.forEach(ScriptType.values(), s -> StreamUtils.forEach(values(), c -> TYPES.add(c.createKey(s))));
+			StreamUtils.forEach(ScriptType.values(), s -> StreamUtils.forEach(values(), c -> TYPES.add(c.getKey(s))));
 		} finally {
 			i = ScriptType.size();
 		}

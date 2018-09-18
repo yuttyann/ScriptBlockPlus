@@ -10,10 +10,9 @@ public class NMSHelper {
 
 	public static void sendPacket(Player player, Object packet) {
 		try {
-			Object handle = player.getClass().getMethod("getHandle").invoke(player);
-			Object connection = handle.getClass().getField("playerConnection").get(handle);
-			Class<?> nmsPacketClass = PackageType.NMS.getClass("Packet");
-			connection.getClass().getMethod("sendPacket", nmsPacketClass).invoke(connection, packet);
+			Object handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle", player);
+			Object connection = PackageType.NMS.getField("EntityPlayer", "playerConnection").get(handle);
+			PackageType.NMS.invokeMethod(connection, "PlayerConnection", "sendPacket", packet);
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}

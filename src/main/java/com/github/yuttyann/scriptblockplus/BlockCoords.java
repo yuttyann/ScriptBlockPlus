@@ -1,6 +1,10 @@
 package com.github.yuttyann.scriptblockplus;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Location;
+import org.bukkit.Utility;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
@@ -133,6 +137,17 @@ public class BlockCoords extends Location {
 		return location.getWorld().getName() + ", " + getCoords(location);
 	}
 
+	public static BlockCoords fromString(World world, String coords) {
+		String[] array = StringUtils.split(coords, ",");
+		if (array.length != 3) {
+			throw new IllegalArgumentException();
+		}
+		double x = Double.parseDouble(array[1]);
+		double y = Double.parseDouble(array[2]);
+		double z = Double.parseDouble(array[3]);
+		return new BlockCoords(world, x, y, z);
+	}
+
 	public static BlockCoords fromString(String fullCoords) {
 		String[] array = StringUtils.split(fullCoords, ",");
 		if (array.length != 4) {
@@ -248,4 +263,122 @@ public class BlockCoords extends Location {
 			return unmodifiable();
 		}
 	}
+
+	// おまけ
+	public static Location unmodifiableLocation(Location location) {
+		return new UnmodifiableLocation(location);
+	}
+
+	private static class UnmodifiableLocation extends Location {
+
+		private UnmodifiableLocation(Location location) {
+			super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		}
+
+		@Override
+		public void setWorld(World world) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setX(double x) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setY(double y) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setZ(double z) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setYaw(float yaw) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void setPitch(float pitch) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Location setDirection(Vector vector) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Location add(Location vec) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Location add(Vector vec) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Location add(double x, double y, double z) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Location subtract(Location vec) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Location subtract(Vector vec) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Location subtract(double x, double y, double z) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Location multiply(double m) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Location zero() {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Location clone() {
+			return unmodifiableLocation(this);
+		}
+	}
+
+    @Utility
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("world", getWorld().getName());
+        map.put("x", getX());
+        map.put("y", getY());
+        map.put("z", getZ());
+        map.put("coords", getCoords());
+        map.put("fullcoords", getFullCoords());
+        return map;
+    }
+
+    public static Location deserialize(Map<String, Object> args) {
+        World world = Utils.getWorld((String) args.get("world"));
+        if (world == null) {
+            throw new IllegalArgumentException("unknown world");
+        }
+        double x = (double) args.get("x");
+        double y = (double) args.get("y");
+        double z = (double) args.get("z");
+        BlockCoords blockCoords = new BlockCoords(world, x, y, z);
+        blockCoords.coords = (String) args.get("coords");
+        blockCoords.fullCoords = (String) args.get("fullcoords");
+        return blockCoords;
+    }
 }
