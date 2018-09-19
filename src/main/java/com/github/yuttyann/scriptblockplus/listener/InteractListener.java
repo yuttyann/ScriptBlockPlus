@@ -109,14 +109,9 @@ public class InteractListener implements Listener {
 
 	private void callEvent(Action action, PlayerInteractEvent interactEvent, BlockInteractEvent blockInteractEvent) {
 		Player player = interactEvent.getPlayer();
-		boolean actionResult = action(player, action, blockInteractEvent);
-		if (actionResult) {
-			blockInteractEvent.setCancelled(actionResult);
-			Bukkit.getPluginManager().callEvent(blockInteractEvent);
-		} else {
-			Bukkit.getPluginManager().callEvent(blockInteractEvent);
-			interactEvent.setCancelled(blockInteractEvent.isCancelled());
-		}
+		blockInteractEvent.setCancelled(action(player, action, blockInteractEvent));
+		Bukkit.getPluginManager().callEvent(blockInteractEvent);
+		interactEvent.setCancelled(blockInteractEvent.isCancelled());
 	}
 
 	private boolean action(Player player, Action action, BlockInteractEvent event) {

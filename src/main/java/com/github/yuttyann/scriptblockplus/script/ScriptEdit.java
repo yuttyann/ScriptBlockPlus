@@ -35,16 +35,16 @@ public final class ScriptEdit {
 		}
 	}
 
-	public ScriptType getScriptType() {
-		return scriptType;
+	public void save() {
+		scriptData.save();
 	}
 
 	public boolean checkPath() {
 		return scriptData.checkPath();
 	}
 
-	public void save() {
-		scriptData.save();
+	public ScriptType getScriptType() {
+		return scriptType;
 	}
 
 	public void create(SBPlayer sbPlayer, Location location, String script) {
@@ -156,13 +156,13 @@ public final class ScriptEdit {
 		}
 
 		@Override
-		public ScriptType getScriptType() {
-			return scriptType;
+		public void save() {
+			scriptData.save();
 		}
 
 		@Override
-		public void save() {
-			scriptData.save();
+		public ScriptType getScriptType() {
+			return scriptType;
 		}
 
 		@Override

@@ -49,6 +49,14 @@ public final class ScriptData implements Cloneable {
 		return location.getWorld().getName() + "." + BlockCoords.getCoords(location);
 	}
 
+	public void save() {
+		scriptFile.save();
+	}
+
+	public boolean checkPath() {
+		return scriptPath != null && scriptFile.contains(scriptPath);
+	}
+
 	public Location getLocation() {
 		return location;
 	}
@@ -59,14 +67,6 @@ public final class ScriptData implements Cloneable {
 
 	public ScriptType getScriptType() {
 		return scriptType;
-	}
-
-	public boolean checkPath() {
-		return scriptPath != null && scriptFile.contains(scriptPath);
-	}
-
-	public void save() {
-		scriptFile.save();
 	}
 
 	public String getAuthor() {

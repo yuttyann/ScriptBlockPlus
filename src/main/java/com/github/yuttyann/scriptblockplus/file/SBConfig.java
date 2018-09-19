@@ -274,9 +274,8 @@ public final class SBConfig {
 		if (message.indexOf("%details%") >= 0) {
 			StrBuilder builder = new StrBuilder(details.size());
 			for (int i = 0; i < details.size(); i++) {
-				String info = details.get(i);
-				boolean isTree = info.startsWith("$");
-				info = isTree ? info.substring(1) : info;
+				boolean isTree = details.get(i).startsWith("$");
+				String info = StringUtils.removeStart(details.get(i), "$");
 				builder.append(isTree ? "  - " : "・").append(info).append(i == (details.size() - 1) ? "" : "|~");
 			}
 			message = replace(message, "%details%", builder.toString());

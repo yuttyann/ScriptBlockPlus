@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockType extends BaseOption {
 
@@ -25,6 +26,10 @@ public class BlockType extends BaseOption {
 			return false;
 		}
 		String[] array = StringUtils.split(blockType, ":");
+		if (Calculation.REALNUMBER_PATTERN.matcher(array[0]).matches()) {
+			Utils.sendMessage(getPlayer(), "§cNumerical values can not be used");
+			return false;
+		}
 		Material type = Material.getMaterial(array[0]);
 		if (type == null || !type.isBlock()) {
 			return false;
