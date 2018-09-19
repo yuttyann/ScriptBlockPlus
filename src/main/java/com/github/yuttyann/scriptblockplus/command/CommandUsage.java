@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -26,7 +25,7 @@ public abstract class CommandUsage {
 		}
 	}
 
-	protected final void sendUsage(Plugin plugin, CommandSender sender, Command command, boolean isAliases) {
+	protected final void sendUsage(BaseCommand baseCommand, CommandSender sender, Command command) {
 		if (usages == null || usages.isEmpty()) {
 			return;
 		}
@@ -37,10 +36,10 @@ public abstract class CommandUsage {
 			return;
 		}
 		String commandName = command.getName();
-		if (isAliases && command.getAliases().size() > 0) {
+		if (baseCommand.isAliases() && command.getAliases().size() > 0) {
 			commandName = command.getAliases().get(0).toLowerCase();
 		}
-		sender.sendMessage("§d===== " + plugin.getName() + " Commands =====");
+		sender.sendMessage("§d====== " + baseCommand.getName() + " Commands ======");
 		String prefix = "§b/" + commandName + " ";
 		StreamUtils.fForEach(list, c -> c.hasMessage(), c -> sender.sendMessage(text(c, prefix)));
 	}

@@ -29,6 +29,8 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 		return plugin;
 	}
 
+	public abstract String getName();
+
 	public abstract String getCommandName();
 
 	public abstract CommandData[] getUsages();
@@ -49,7 +51,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 		}
 		try {
 			if (!runCommand(sender, command, label, args) && !isIgnoreUsage) {
-				sendUsage(plugin, sender, command, isAliases());
+				sendUsage(this, sender, command);
 			}
 		} finally {
 			isIgnoreUsage = false;

@@ -44,6 +44,11 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	}
 
 	@Override
+	public String getName() {
+		return "ScriptBlockPlus";
+	}
+
+	@Override
 	public String getCommandName() {
 		return "scriptblockplus";
 	}
