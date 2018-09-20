@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,13 +23,13 @@ public final class MapManager {
 
 	private ScriptBlock plugin;
 	private SBMap<Set<UUID>> delays;
-	private Map<Integer, TimeData> cooldowns;
+	private Set<TimeData> cooldowns;
 	private Map<ScriptType, Set<String>> scriptCoords;
 
 	public MapManager(ScriptBlock plugin) {
 		this.plugin = plugin;
 		this.delays = new SBMap<>();
-		this.cooldowns = new HashMap<>();
+		this.cooldowns = new HashSet<>();
 		this.scriptCoords = new HashMap<>();
 	}
 
@@ -38,7 +37,7 @@ public final class MapManager {
 		return delays;
 	}
 
-	public Map<Integer, TimeData> getCooldowns() {
+	public Set<TimeData> getCooldowns() {
 		return cooldowns;
 	}
 
@@ -65,7 +64,7 @@ public final class MapManager {
 			File cooldownFile = new File(plugin.getDataFolder(), "scripts/cooldown.dat");
 			Set<Map<String, Object>> set = new HashSet<>();
 			try {
-				cooldowns.values().forEach(t -> set.add(t.serialize()));
+				cooldowns.forEach(t -> set.add(t.serialize()));
 			} catch (Exception e) {
 				set.clear();
 			} finally {
@@ -83,7 +82,7 @@ public final class MapManager {
 				Set<Map<String, Object>> set = FileUtils.loadFile(cooldownFile);
 				set.forEach(TimeData::deserialize);
 			} catch (Exception e) {
-				cooldowns = new HashMap<>();
+				cooldowns = new HashSet<>();
 			} finally {
 				cooldownFile.delete();
 			}
@@ -140,13 +139,11 @@ public final class MapManager {
 
 	public void removeTimes(ScriptType scriptType, String fullCoords) {
 		delays.remove(scriptType, fullCoords);
-
-		Set<Integer> set = new HashSet<>();
-		for (Entry<Integer, TimeData> entry : cooldowns.entrySet()) {
-			TimeData timeData = entry.getValue();
-			ScriptType tScriptType = timeData.getScriptType();
-			if (timeData.getFullCoords().equals(fullCoords) && (tScriptType == null || tScriptType == scriptType)) {
-				set.add(entry.getKey());
+		Set<TimeData> set = new HashSet<>();
+		for (TimeData entry : cooldowns) {
+			ScriptType tScriptType = entry.getScriptType();
+			if (entry.getFullCoords().equals(fullCoords) && (tScriptType == null || tScriptType == scriptType)) {
+				set.add(entry);
 			}
 		}
 		set.forEach(cooldowns::remove);

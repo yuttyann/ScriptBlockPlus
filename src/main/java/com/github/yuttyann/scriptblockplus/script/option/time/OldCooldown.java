@@ -9,32 +9,31 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class OldCooldown extends BaseOption {
 
-	private TimeData timeData;
-
 	public OldCooldown() {
 		super("oldcooldown", "@oldcooldown:");
 	}
 
 	private class Task extends BukkitRunnable {
 
+		private TimeData timeData;
+
 		private Task(TimeData timeData) {
-			OldCooldown.this.timeData = timeData;
+			this.timeData = timeData;
 		}
 
-		private Task(int index, int second, String fullCoords) {
-			timeData = new TimeData(getScriptIndex(), second + 1, true);
-			timeData.fullCoords = fullCoords;
+		private Task(int scriptIndex, int second, String fullCoords) {
+			this.timeData = new TimeData(scriptIndex, second + 1, true);
 		}
 
-		public void runTaskTimer() {
-			ScriptBlock.getInstance().getMapManager().getCooldowns().put(timeData.hashCode(), timeData);
+		private void runTaskTimer() {
+			ScriptBlock.getInstance().getMapManager().getCooldowns().add(timeData);
 			runTaskTimer(ScriptBlock.getInstance(), 0, 20L);
 		}
 
 		@Override
 		public void run() {
 			if (--timeData.second <= 0) {
-				ScriptBlock.getInstance().getMapManager().getCooldowns().remove(timeData.hashCode());
+				ScriptBlock.getInstance().getMapManager().getCooldowns().remove(timeData);
 				cancel();
 			}
 		}
@@ -60,8 +59,6 @@ public class OldCooldown extends BaseOption {
 	}
 
 	private int getSecond() {
-		int hash = TimeData.hashCode(getScriptIndex(), getFullCoords());
-		TimeData timeData = getMapManager().getCooldowns().get(hash);
-		return timeData == null ? -1 : timeData.second;
+		return TimeData.getSecond(TimeData.hashCode(getScriptIndex(), false, getFullCoords(), null, null));
 	}
 }

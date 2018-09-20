@@ -2,31 +2,45 @@ package com.github.yuttyann.scriptblockplus.script.option.time;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 
 public final class TimeData {
 
-	int index;
-	int second;
-	boolean isOld;
+	protected int second;
 
-	UUID uuid;
-	String fullCoords;
-	ScriptType scriptType;
+	private final int scriptIndex;
+	private final boolean isOldCooldown;
+	private final UUID uuid;
+	private final String fullCoords;
+	private final ScriptType scriptType;
 
-	TimeData(int index, int second, boolean isOldCooldown) {
+	TimeData(int scriptIndex, int second, boolean isOldCooldown) {
+		this(scriptIndex, second, isOldCooldown, null, null, null);
+	}
+
+	TimeData(int scriptIndex, int second, boolean isOldCooldown, String fullCoords, UUID uuid, ScriptType scriptType) {
+		this.scriptIndex = scriptIndex;
 		this.second = second;
-		this.isOld = isOldCooldown;
+		this.isOldCooldown = isOldCooldown;
+		this.uuid = uuid;
+		this.fullCoords = fullCoords;
+		this.scriptType = scriptType;
 	}
 
 	public int getSecond() {
 		return second;
 	}
 
-	public boolean isOld() {
-		return isOld;
+	public int getScriptIndex() {
+		return scriptIndex;
+	}
+
+	public boolean isOldCooldown() {
+		return isOldCooldown;
 	}
 
 	public UUID getUniqueId() {
@@ -43,11 +57,11 @@ public final class TimeData {
 
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("index", index);
 		map.put("second", second);
-		map.put("isold", isOld);
+		map.put("scriptindex", scriptIndex);
+		map.put("isoldcooldown", isOldCooldown);
 		map.put("fullcoords", fullCoords);
-		if (!isOld) {
+		if (!isOldCooldown) {
 			map.put("uuid", uuid);
 			map.put("scripttype", scriptType);
 		}
@@ -55,42 +69,43 @@ public final class TimeData {
 	}
 
 	public static void deserialize(Map<String, Object> args) {
-		int index = (int) args.get("index");
 		int second = (int) args.get("second");
-		boolean isOld = (boolean) args.get("isold");
-		TimeData timeData = new TimeData(index, second, isOld);
-		timeData.fullCoords = (String) args.get("fullcoords");
-		if (timeData.isOld) {
+		int scriptIndex = (int) args.get("scriptindex");
+		boolean isOldCooldown = (boolean) args.get("isoldcooldown");
+		String fullCoords = (String) args.get("fullcoords");
+		UUID uuid = (UUID) args.get("uuid");
+		ScriptType scriptType = (ScriptType) args.get("scripttype");
+		TimeData timeData = new TimeData(scriptIndex, second, isOldCooldown, fullCoords, uuid, scriptType);
+		if (timeData.isOldCooldown) {
 			new OldCooldown().deserialize(timeData);
 		} else {
-			timeData.uuid = (UUID) args.get("uuid");
-			timeData.scriptType = (ScriptType) args.get("scripttype");
 			new Cooldown().deserialize(timeData);
 		}
 	}
 
 	@Override
 	public int hashCode() {
-        if (isOld) {
-        	return hashCode(index, fullCoords);
-        } else {
-        	return hashCode(index, uuid, fullCoords, scriptType);
-        }
+		return hashCode(scriptIndex, isOldCooldown, fullCoords, uuid, scriptType);
 	}
 
-	static int hashCode(int index, String fullCoords) {
+	static int hashCode(int scriptIndex, boolean isOldCooldown, String fullCoords, UUID uuid, ScriptType scriptType) {
 		int hash = 1;
-    	hash = hash * 31 + index;
-    	hash = hash * 31 + fullCoords.hashCode();
+		hash = hash * 31 + Integer.hashCode(scriptIndex);
+		hash = hash * 31 + Boolean.hashCode(isOldCooldown);
+		hash = hash * 31 + Objects.requireNonNull(fullCoords).hashCode();
+		if (uuid != null && scriptType != null) {
+			hash = hash * 31 + uuid.hashCode();
+			hash = hash * 31 + scriptType.hashCode();
+		}
 		return hash;
 	}
 
-	static int hashCode(int index, UUID uuid, String fullCoords, ScriptType scriptType) {
-		int hash = 1;
-    	hash = hash * 31 + index;
-    	hash = hash * 31 + uuid.hashCode();
-		hash = hash * 31 + fullCoords.hashCode();
-		hash = hash * 31 + scriptType.hashCode();
-		return hash;
+	static int getSecond(int hash) {
+		for (TimeData timeData : ScriptBlock.getInstance().getMapManager().getCooldowns()) {
+			if (hash == timeData.hashCode()) {
+				return timeData.second;
+			}
+		}
+		return -1;
 	}
 }

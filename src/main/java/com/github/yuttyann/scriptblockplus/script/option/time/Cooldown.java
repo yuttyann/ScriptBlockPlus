@@ -12,34 +12,31 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Cooldown extends BaseOption {
 
-	private TimeData timeData;
-
 	public Cooldown() {
 		super("cooldown", "@cooldown:");
 	}
 
 	private class Task extends BukkitRunnable {
 
+		private TimeData timeData;
+
 		private Task(TimeData timeData) {
-			Cooldown.this.timeData = timeData;
+			this.timeData = timeData;
 		}
 
-		private Task(int index, int second, UUID uuid, String fullCoords, ScriptType scriptType) {
-			timeData = new TimeData(index, second + 1, false);
-			timeData.uuid = uuid;
-			timeData.fullCoords = fullCoords;
-			timeData.scriptType = scriptType;
+		private Task(int scriptIndex, int second, String fullCoords, UUID uuid, ScriptType scriptType) {
+			this.timeData = new TimeData(scriptIndex, second + 1, false, fullCoords, uuid, scriptType);
 		}
 
-		public void runTaskTimer() {
-			ScriptBlock.getInstance().getMapManager().getCooldowns().put(timeData.hashCode(), timeData);
+		private void runTaskTimer() {
+			ScriptBlock.getInstance().getMapManager().getCooldowns().add(timeData);
 			runTaskTimer(ScriptBlock.getInstance(), 0, 20L);
 		}
 
 		@Override
 		public void run() {
 			if (--timeData.second <= 0) {
-				ScriptBlock.getInstance().getMapManager().getCooldowns().remove(timeData.hashCode());
+				ScriptBlock.getInstance().getMapManager().getCooldowns().remove(timeData);
 				cancel();
 			}
 		}
@@ -56,7 +53,7 @@ public class Cooldown extends BaseOption {
 			return false;
 		}
 		int second = Integer.parseInt(getOptionValue());
-		new Task(getScriptIndex(), second, getUniqueId(), getFullCoords(), getScriptType()).runTaskTimer();
+		new Task(getScriptIndex(), second, getFullCoords(), getUniqueId(), getScriptType()).runTaskTimer();
 		return true;
 	}
 
@@ -65,8 +62,6 @@ public class Cooldown extends BaseOption {
 	}
 
 	private int getSecond() {
-		int hash = TimeData.hashCode(getScriptIndex(), getUniqueId(), getFullCoords(), getScriptType());
-		TimeData timeData = getMapManager().getCooldowns().get(hash);
-		return timeData == null ? -1 : timeData.second;
+		return TimeData.getSecond(TimeData.hashCode(getScriptIndex(), true, getFullCoords(), getUniqueId(), getScriptType()));
 	}
 }
