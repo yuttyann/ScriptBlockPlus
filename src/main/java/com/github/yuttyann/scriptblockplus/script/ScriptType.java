@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.script;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.permissions.Permissible;
@@ -72,7 +71,11 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(ordinal, type, name);
+		int hash = 1;
+		hash = hash * 31 + ordinal;
+		hash = hash * 31 + type.hashCode();
+		hash = hash * 31 + name.hashCode();
+		return hash;
 	}
 
 	@Override

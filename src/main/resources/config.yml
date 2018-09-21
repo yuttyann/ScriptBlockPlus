@@ -6,9 +6,11 @@
 # 最新バージョンを確認するかどうか。
 UpdateChecker: true
 
+# UpdateChecker　有効必須
 # 最新のプラグインをダウンロードするかどうか。
 AutoDownload: true
 
+# UpdateChecker　有効必須
 # ダウンロードした更新内容を、メモ帳で開くかどうか。
 OpenChangeLog: true
 
@@ -25,8 +27,8 @@ ConsoleLog: false
 
 ## ===== スクリプト並び替えの設定 ===== ##
 # [true -> 有効 | false -> 無効]
-# スクリプトを並び替えるかどうか。
-# ※スクリプトの仕様を理解している人以外「無効」は「非推奨」です。
+# スクリプトをオプションの追加順で並び替えるかどうか。
+# ※スクリプトの仕様を理解している人以外"無効"は"非推奨"です。
 SortScripts: true
 
 ## ===== オプション実行権限の設定 ===== ##
@@ -36,8 +38,8 @@ OptionPermission: false
 
 ## ===== クリックの設定 ===== ##
 # [true -> 有効 | false -> 無効]
-# 「左」または「右」クリックでスクリプトを実行するかどうか。
-# 「@scriptaction」を使用する場合は、全て有効にすることを推奨します。
+# "左"または"右"クリックでスクリプトを実行するかどうか。
+# "@scriptaction"を使用する場合は、全て有効にすることを推奨します。
 Actions:
   InteractLeft: true
   InteractRight: true

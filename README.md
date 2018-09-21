@@ -1,4 +1,4 @@
-# ScriptBlockPlus Java8【1.13対応】Readme
+# ScriptBlockPlus Java8【1.13.1対応】Readme
 このプラグインは yuttyann44581 によって作成されています。
 <br>
 ブロックにスクリプト(コマンドなど)を追加する事が出来るプラグインです。
