@@ -83,7 +83,6 @@ final class UTF8Config extends YamlConfiguration {
 		load(new BufferedReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8)));
 	}
 
-	@Deprecated
 	public void load(InputStream stream) throws IOException, InvalidConfigurationException {
 		Validate.notNull(stream, "Stream cannot be null");
 		load(new BufferedReader(new InputStreamReader(stream, Charsets.UTF_8)));
@@ -133,7 +132,6 @@ final class UTF8Config extends YamlConfiguration {
 		return config;
 	}
 
-	@Deprecated
 	public static UTF8Config loadConfiguration(InputStream stream) {
 		Validate.notNull(stream, "Stream cannot be null");
 		UTF8Config config = new UTF8Config();

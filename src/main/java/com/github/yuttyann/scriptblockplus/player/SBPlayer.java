@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -28,19 +29,21 @@ public interface SBPlayer extends CommandSender {
 
 	public PlayerInventory getInventory();
 
-	public Region getRegion();
+	public UUID getUniqueId();
 
-	public ObjectMap getObjectMap();
+	public World getWorld();
+
+	public Location getLocation();
 
 	public ItemStack getItemInMainHand();
 
 	public ItemStack getItemInOffHand();
 
-	public UUID getUniqueId();
-
-	public Location getLocation();
-
 	public boolean isOnline();
+
+	public Region getRegion();
+
+	public ObjectMap getObjectMap();
 
 	public void setClipboard(SBClipboard clipboard);
 

@@ -31,6 +31,7 @@ public class YamlConfig {
 
 	private final Plugin plugin;
 	private final File file;
+
 	private UTF8Config yaml;
 	private boolean isCopyFile;
 

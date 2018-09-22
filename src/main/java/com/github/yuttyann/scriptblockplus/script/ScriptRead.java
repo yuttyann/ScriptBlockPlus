@@ -24,8 +24,8 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public final class ScriptRead extends ScriptObjectMap implements SBRead {
 
 	private SBPlayer sbPlayer;
-	private String optionValue;
 	private List<String> scripts;
+	private String optionValue;
 	private ScriptData scriptData;
 	private BlockCoords blockCoords;
 	private int scriptIndex;
@@ -46,6 +46,11 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 	}
 
 	@Override
+	public List<String> getScripts() {
+		return scripts;
+	}
+
+	@Override
 	public String getOptionValue() {
 		return optionValue;
 	}
@@ -63,11 +68,6 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 	@Override
 	public Location getLocation() {
 		return blockCoords;
-	}
-
-	@Override
-	public List<String> getScripts() {
-		return scripts;
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 	private String replaceValue(String value) {
 		if (sbPlayer.isOnline() && StringUtils.isNotEmpty(value)) {
 			value = StringUtils.replace(value, "<player>", sbPlayer.getName());
-			value = StringUtils.replace(value, "<world>", sbPlayer.getLocation().getWorld().getName());
+			value = StringUtils.replace(value, "<world>", sbPlayer.getWorld().getName());
 		}
 		return value;
 	}

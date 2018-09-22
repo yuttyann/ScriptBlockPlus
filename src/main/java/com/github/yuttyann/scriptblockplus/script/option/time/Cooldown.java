@@ -24,8 +24,8 @@ public class Cooldown extends BaseOption {
 			this.timeData = timeData;
 		}
 
-		private Task(int scriptIndex, int second, String fullCoords, UUID uuid, ScriptType scriptType) {
-			this.timeData = new TimeData(scriptIndex, second + 1, false, fullCoords, uuid, scriptType);
+		private Task(int second, int scriptIndex, String fullCoords, UUID uuid, ScriptType scriptType) {
+			this.timeData = new TimeData(second + 1, scriptIndex, fullCoords, uuid, scriptType);
 		}
 
 		private void runTaskTimer() {
@@ -44,16 +44,16 @@ public class Cooldown extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		int original = getSecond();
-		if (original > 0) {
-			short hour = (short) (original / 3600);
-			byte minute = (byte) (original % 3600 / 60);
-			byte second = (byte) (original % 3600 % 60);
+		int temp = getSecond();
+		if (temp > 0) {
+			short hour = (short) (temp / 3600);
+			byte minute = (byte) (temp % 3600 / 60);
+			byte second = (byte) (temp % 3600 % 60);
 			Utils.sendMessage(getPlayer(), SBConfig.getActiveCooldownMessage(hour, minute, second));
 			return false;
 		}
 		int second = Integer.parseInt(getOptionValue());
-		new Task(getScriptIndex(), second, getFullCoords(), getUniqueId(), getScriptType()).runTaskTimer();
+		new Task(second, getScriptIndex(), getFullCoords(), getUniqueId(), getScriptType()).runTaskTimer();
 		return true;
 	}
 
@@ -62,6 +62,6 @@ public class Cooldown extends BaseOption {
 	}
 
 	private int getSecond() {
-		return TimeData.getSecond(TimeData.hashCode(getScriptIndex(), true, getFullCoords(), getUniqueId(), getScriptType()));
+		return TimeData.getSecond(TimeData.hashCode(getScriptIndex(), false, getFullCoords(), getUniqueId(), getScriptType()));
 	}
 }

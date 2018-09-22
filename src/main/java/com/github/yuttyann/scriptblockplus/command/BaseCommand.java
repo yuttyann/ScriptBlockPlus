@@ -68,7 +68,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 
 	protected abstract boolean runCommand(CommandSender sender, Command command, String label, String[] args);
 
-	protected abstract void tabComplete(CommandSender sender, Command command, String label, String[] args, List<String> emptyList);
+	protected abstract void tabComplete(CommandSender sender, Command command, String label, String[] args, List<String> empty);
 
 	protected final boolean hasPermission(CommandSender sender, Permission permission) {
 		return hasPermission(sender, permission, true);

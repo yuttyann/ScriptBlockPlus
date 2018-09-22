@@ -21,8 +21,8 @@ public class OldCooldown extends BaseOption {
 			this.timeData = timeData;
 		}
 
-		private Task(int scriptIndex, int second, String fullCoords) {
-			this.timeData = new TimeData(scriptIndex, second + 1, true);
+		private Task(int second, int scriptIndex, String fullCoords) {
+			this.timeData = new TimeData(second + 1, scriptIndex, fullCoords);
 		}
 
 		private void runTaskTimer() {
@@ -50,7 +50,7 @@ public class OldCooldown extends BaseOption {
 			return false;
 		}
 		int second = Integer.parseInt(getOptionValue());
-		new Task(getScriptIndex(), second, getFullCoords()).runTaskTimer();
+		new Task(second, getScriptIndex(), getFullCoords()).runTaskTimer();
 		return true;
 	}
 
@@ -59,6 +59,6 @@ public class OldCooldown extends BaseOption {
 	}
 
 	private int getSecond() {
-		return TimeData.getSecond(TimeData.hashCode(getScriptIndex(), false, getFullCoords(), null, null));
+		return TimeData.getSecond(TimeData.hashCode(getScriptIndex(), true, getFullCoords(), null, null));
 	}
 }

@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -64,16 +65,6 @@ public final class BaseSBPlayer extends PlayerData {
 	}
 
 	@Override
-	public ItemStack getItemInMainHand() {
-		return isOnline() ? ItemUtils.getItemInMainHand(player) : null;
-	}
-
-	@Override
-	public ItemStack getItemInOffHand() {
-		return isOnline() ? ItemUtils.getItemInOffHand(player) : null;
-	}
-
-	@Override
 	public String getName() {
 		return getOfflinePlayer().getName();
 	}
@@ -84,8 +75,23 @@ public final class BaseSBPlayer extends PlayerData {
 	}
 
 	@Override
+	public World getWorld() {
+		return isOnline() ? player.getLocation().getWorld() : null;
+	}
+
+	@Override
 	public Location getLocation() {
 		return isOnline() ? player.getLocation() : null;
+	}
+
+	@Override
+	public ItemStack getItemInMainHand() {
+		return isOnline() ? ItemUtils.getItemInMainHand(player) : null;
+	}
+
+	@Override
+	public ItemStack getItemInOffHand() {
+		return isOnline() ? ItemUtils.getItemInOffHand(player) : null;
 	}
 
 	@Override

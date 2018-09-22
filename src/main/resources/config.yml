@@ -6,11 +6,11 @@
 # 最新バージョンを確認するかどうか。
 UpdateChecker: true
 
-# UpdateChecker　有効必須
+# UpdateChecker 有効必須
 # 最新のプラグインをダウンロードするかどうか。
 AutoDownload: true
 
-# UpdateChecker　有効必須
+# UpdateChecker 有効必須
 # ダウンロードした更新内容を、メモ帳で開くかどうか。
 OpenChangeLog: true
 

@@ -23,6 +23,12 @@ public interface SBRead extends ObjectMap {
 	public SBPlayer getSBPlayer();
 
 	/**
+	 * スクリプトのリストを取得する
+	 * @return スクリプトのリスト
+	 */
+	public List<String> getScripts();
+
+	/**
 	 * オプションの値を取得する
 	 * @return オプションの値
 	 */
@@ -46,12 +52,6 @@ public interface SBRead extends ObjectMap {
 	 * @return スクリプトの座標
 	 */
 	public Location getLocation();
-
-	/**
-	 * スクリプトのリストを取得する
-	 * @return スクリプトのリスト
-	 */
-	public List<String> getScripts();
 
 	/**
 	 * スクリプトの種類を取得する

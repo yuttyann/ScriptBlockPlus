@@ -18,16 +18,20 @@ public final class TimeData {
 	private final String fullCoords;
 	private final ScriptType scriptType;
 
-	TimeData(int scriptIndex, int second, boolean isOldCooldown) {
-		this(scriptIndex, second, isOldCooldown, null, null, null);
+	TimeData(int second, int scriptIndex, String fullCoords) {
+		this(second, scriptIndex, true, fullCoords, null, null);
 	}
 
-	TimeData(int scriptIndex, int second, boolean isOldCooldown, String fullCoords, UUID uuid, ScriptType scriptType) {
-		this.scriptIndex = scriptIndex;
+	TimeData(int second, int scriptIndex, String fullCoords, UUID uuid, ScriptType scriptType) {
+		this(second, scriptIndex, false, fullCoords, uuid, scriptType);
+	}
+
+	private TimeData(int second, int scriptIndex, boolean isOldCooldown, String fullCoords, UUID uuid, ScriptType scriptType) {
 		this.second = second;
+		this.scriptIndex = scriptIndex;
 		this.isOldCooldown = isOldCooldown;
-		this.uuid = uuid;
 		this.fullCoords = fullCoords;
+		this.uuid = uuid;
 		this.scriptType = scriptType;
 	}
 
@@ -75,7 +79,7 @@ public final class TimeData {
 		String fullCoords = (String) args.get("fullcoords");
 		UUID uuid = (UUID) args.get("uuid");
 		ScriptType scriptType = (ScriptType) args.get("scripttype");
-		TimeData timeData = new TimeData(scriptIndex, second, isOldCooldown, fullCoords, uuid, scriptType);
+		TimeData timeData = new TimeData(second, scriptIndex, isOldCooldown, fullCoords, uuid, scriptType);
 		if (timeData.isOldCooldown) {
 			new OldCooldown().deserialize(timeData);
 		} else {
@@ -93,10 +97,8 @@ public final class TimeData {
 		hash = hash * 31 + Integer.hashCode(scriptIndex);
 		hash = hash * 31 + Boolean.hashCode(isOldCooldown);
 		hash = hash * 31 + Objects.requireNonNull(fullCoords).hashCode();
-		if (uuid != null && scriptType != null) {
-			hash = hash * 31 + uuid.hashCode();
-			hash = hash * 31 + scriptType.hashCode();
-		}
+		hash = uuid == null ? hash : hash * 31 + uuid.hashCode();
+		hash = scriptType == null ? hash : hash * 31 + scriptType.hashCode();
 		return hash;
 	}
 

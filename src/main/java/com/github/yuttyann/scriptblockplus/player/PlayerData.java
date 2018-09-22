@@ -10,11 +10,12 @@ import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 
 public abstract class PlayerData implements SBPlayer {
 
+	private static final String KEY_REGION = createRandomId("CuboidRegion");
 	private static final String KEY_CLIPBOARD = createRandomId("ClipBoard");
 	private static final String KEY_SCRIPTLINE = createRandomId("ScriptLine");
 	private static final String KEY_CLICKACTION = createRandomId("ClickAction");
 	private static final String KEY_OLDFULLCOORDS = createRandomId("OldFullCoords");
-	private static final String KEY_REGION = createRandomId("CuboidRegion");
+
 
 	private final ObjectMap objectMap = new ObjMap();
 

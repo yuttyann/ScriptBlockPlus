@@ -302,23 +302,23 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	}
 
 	@Override
-	public void tabComplete(CommandSender sender, Command command, String label, String[] args, List<String> emptyList) {
+	public void tabComplete(CommandSender sender, Command command, String label, String[] args, List<String> empty) {
 		if (args.length == 1) {
 			String prefix = args[0].toLowerCase();
 			Set<String> set = setCommandPermissions(sender, new LinkedHashSet<>());
-			StreamUtils.fForEach(set, s -> StringUtils.startsWith(s, prefix), emptyList::add);
+			StreamUtils.fForEach(set, s -> StringUtils.startsWith(s, prefix), empty::add);
 		} else if (args.length == 2) {
 			if (equals(args[0], "selector")) {
 				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[1].toLowerCase();
 					String[] answers = new String[] { "paste", "remove" };
-					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
+					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			} else if (equals(args[0], ScriptType.types())) {
 				if (SBPermission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
 					String prefix = args[1].toLowerCase();
 					String[] answers = new String[] { "create", "add", "remove", "view" };
-					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
+					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			}
 		} else if (args.length > 2) {
@@ -326,13 +326,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[2].toLowerCase();
 					String[] answers = new String[] { "true", "false" };
-					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
+					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			} else if (args.length == 4 && equals(args[0], "selector") && equals(args[1], "paste")) {
 				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[3].toLowerCase();
 					String[] answers = new String[] { "true", "false" };
-					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), emptyList::add);
+					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			} else {
 				if (equals(args[0], ScriptType.types()) && equals(args[1], "create", "add")) {
@@ -340,7 +340,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 						String prefix = args[args.length - 1].toLowerCase();
 						String[] answers = OptionList.getSyntaxs();
 						Arrays.sort(answers);
-						StreamUtils.fForEach(answers, s -> s.startsWith(prefix), s -> emptyList.add(s.trim()));
+						StreamUtils.fForEach(answers, s -> s.startsWith(prefix), s -> empty.add(s.trim()));
 					}
 				}
 			}
