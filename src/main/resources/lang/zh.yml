@@ -1,5 +1,4 @@
-﻿# 未翻訳 作業中
-# ScriptBlockPlus v${project.version} Lang #
+﻿# ScriptBlockPlus v${project.version} Lang #
 # MCBBS PCD小组 秋风残叶 搬运并汉化 请支持原作者 yuttyann44581
 # 本配置源语言为日本语，可能存在翻译不准确的地方
 
@@ -22,20 +21,20 @@ SelectorRemoveCommandMessage: 'selector remove - 移除选区内的脚本方块'
 ## ===== BlockSelector ===== ##
 # 沒有變數
 BlockSelector:
-- '&aこのツールは、複数のスクリプトのペーストをサポートします。'
-- '&6左クリック: &eブロックを選択範囲の始点に指定します。'
-- '&6右クリック: &eブロックを選択範囲の終点に指定します。'
-- '&6シフト+左クリック: &e現在位置を選択範囲の始点に指定します。'
-- '&6シフト+右クリック: &e現在位置を選択範囲の終点に指定します。'
+- '&a此工具支持範圍選擇'
+- '&6左键点击: &e指定塊作為選擇範圍的起點'
+- '&6左键点击: &e將塊指定為選擇範圍的結束點'
+- '&6Shift+左键点击: &e將當前位置指定為選擇範圍的起點'
+- '&6Shift+右键点击: &e將當前位置指定為選擇範圍的結束點'
 
 ## ===== 脚本编辑器物品设定 ===== ##
 # 沒有變數
 ScriptEditor:
-- '&aこのツールは、スクリプトの編集をサポートします。'
-- '&6左クリック: &eツールの対象を切り替えます。'
-- '&6右クリック: &eスクリプトのコピーを行います。'
-- '&6シフト+左クリック: &eスクリプトの削除を行います。'
-- '&6シフト+右クリック: &eスクリプトのペーストを行います。'
+- '&a此工具支持腳本編輯'
+- '&6左键点击: &e更改工具的目標'
+- '&6左键点击: &e複製腳本'
+- '&6Shift+左键点击: &e刪除腳本'
+- '&6Shift+右键点击: &e粘贴该脚本'
 
 # |~, \n : 改行
 
@@ -79,13 +78,13 @@ NotSelectionMessage: '&cBlockSelectorで座標を選択してください。'
 
 # %world%  : ワールドの名前
 # %coords% : 座標(x, y, z)
-SelectorPos1Message: '&b始点"%coords%"を選択しました。'
-SelectorPos2Message: '&b終点"%coords%"を選択しました。'
+SelectorPos1Message: '&b我選擇了起點"%coords%"'
+SelectorPos2Message: '&b我選擇了終點"%coords%"'
 
 # %scripttype% : スクリプトの種類
 # %blockcount% : ブロック数
-SelectorPasteMessage: '&aブロック(%blockcount%)"%scripttype%"にスクリプトをペーストしました。'
-SelectorRemoveMessage: '&cブロック(%blockcount%)"%scripttype%"のスクリプトを削除しました。'
+SelectorPasteMessage: '&a脚本种类"%scripttype%"已通过BlockSelector进行粘贴'
+SelectorRemoveMessage: '&c脚本种类"%scripttype%"已通过BlockSelector移除'
 
 # %option% : 脚本名称
 # %cause%  : 错误发生原因
@@ -124,7 +123,6 @@ ErrorItemMessage: '&c您的背包内物品不满足条件，所需物品必须�
 ErrorCostMessage: '&c你的金钱至少应该有"%result%"，执行这个脚本需要花费金钱"%cost%"'
 
 # %scripttype% : 脚本种类
-# %blockcount% : 塊數
 # %player%     : 玩家ID
 # %world%      : 世界名
 # %coords%     : 坐标(x, y, z)
@@ -138,9 +136,10 @@ ConsoleSuccScriptExecMessage: '&a执行者"%player%"、脚本种类"%scripttype%
 ConsoleErrorScriptExecMessage: '&c执行者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本触发失败'
 
 # %scripttype% : 脚本种类
+# %blockcount% : 塊數
 # %player%     : 玩家ID
 # %world%      : 世界名
 # %mincoords%  : 最小位置(x, y, z)
 # %maxcoords%  : 最大位置(x, y, z)
-ConsoleWorldEditPasteMessage: '&a脚本种类"%scripttype%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已完成粘贴'
-ConsoleWorldEditRemoveMessage: '&c脚本种类"%scripttype%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已被删除'
+ConsoleSelectorPasteMessage: '&a脚本种类"%scripttype%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已完成粘贴'
+ConsoleSelectorRemoveMessage: '&c脚本种类"%scripttype%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已被删除'

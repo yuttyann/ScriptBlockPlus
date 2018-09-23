@@ -1,5 +1,4 @@
-﻿# 未翻訳 作業中
-# ScriptBlockPlus v${project.version} Lang #
+﻿# ScriptBlockPlus v${project.version} Lang #
 # Created by yuttyann44581  Translated by AndyYu
 # There may be some mistakes in grammar
 
@@ -23,20 +22,20 @@ SelectorRemoveCommandMessage: 'selector remove - remove scriptblock for selected
 ## ===== BLOCK SELECTOR ===== ##
 # There are no variables
 BlockSelector:
-- '&aこのツールは、複数のスクリプトのペーストをサポートします。'
-- '&6左クリック: &eブロックを選択範囲の始点に指定します。'
-- '&6右クリック: &eブロックを選択範囲の終点に指定します。'
-- '&6シフト+左クリック: &e現在位置を選択範囲の始点に指定します。'
-- '&6シフト+右クリック: &e現在位置を選択範囲の終点に指定します。'
+- '&aThis tool supports range selection.'
+- '&6Left-click: &eSpecify the block as Pos1.'
+- '&6Left-click: &eSpecify the block as Pos2.'
+- '&6Shift+Leftclick: &eSpecify Player as Pos1.'
+- '&6Shift+Leftclick: &eSpecify Player as Pos1.'
 
 ## ===== SCRIPT EDITOR ===== ##
 # %scripttype% : Type of script
 ScriptEditor:
-- '&aこのツールは、スクリプトの編集をサポートします。'
-- '&6左クリック: &eツールの対象を切り替えます。'
-- '&6右クリック: &eスクリプトのコピーを行います。'
-- '&6シフト+左クリック: &eスクリプトの削除を行います。'
-- '&6シフト+右クリック: &eスクリプトのペーストを行います。'
+- '&aThis tool supports script editing.'
+- '&6Left-click: &eChange the target of the tool.'
+- '&6Left-click: &eCopy the script.'
+- '&6Shift+Leftclick: &eDelete the script.'
+- '&6Shift+Leftclick: &ePaste the script.'
 
 # |~, \n : change the line
 
@@ -144,4 +143,4 @@ ConsoleErrorScriptExecMessage: '&cOperator"%player%"、Type"%scripttype%"、Loca
 # %mincoords%  : Minimum coordinate(x, y, z)
 # %maxcoords%  : Maximum coordinate(x, y, z)
 ConsoleSelectorPasteMessage: '&aType"%scripttype%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been pasted.'
-consoleSelectorRemoveMessage: '&cType"%scripttype%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been removed.'
+ConsoleSelectorRemoveMessage: '&cType"%scripttype%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been removed.'
