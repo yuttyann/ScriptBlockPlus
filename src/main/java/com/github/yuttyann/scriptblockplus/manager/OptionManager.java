@@ -93,7 +93,6 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		add(ItemHand.class);
 		add(ItemCost.class);
 		add(MoneyCost.class);
-		add(Console.class);
 		add(Say.class);
 		add(Server.class);
 		add(ToPlayer.class);
@@ -102,6 +101,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		add(ActionBar.class);
 		add(Bypass.class);
 		add(Command.class);
+		add(Console.class);
 		add(GroupAdd.class);
 		add(GroupRemove.class);
 		add(PermAdd.class);
