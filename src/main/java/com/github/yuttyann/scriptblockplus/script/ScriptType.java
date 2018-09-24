@@ -108,24 +108,24 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 		return TYPES.values().toArray(new ScriptType[TYPES.size()]);
 	}
 
-    public static ScriptType valueOf(int ordinal) {
-        if (ordinal < 0) {
-            throw new IllegalArgumentException("Ordinal cannot be null");
-        }
-    	for (ScriptType scriptType : TYPES.values()) {
-    		if (scriptType.ordinal == ordinal) {
-    			return scriptType;
-    		}
-    	}
-    	throw new NullPointerException(ordinal + " does not exist");
-    }
+	public static ScriptType valueOf(int ordinal) {
+		if (ordinal < 0) {
+			throw new IllegalArgumentException("Ordinal cannot be null");
+		}
+		for (ScriptType scriptType : TYPES.values()) {
+			if (scriptType.ordinal == ordinal) {
+				return scriptType;
+			}
+		}
+		throw new NullPointerException(ordinal + " does not exist");
+	}
 
-    public static ScriptType valueOf(String name) {
-    	Validate.notNull(name, "Name cannot be null");
-    	ScriptType scriptType = TYPES.get(name.toUpperCase());
-    	if (scriptType == null) {
-    		throw new NullPointerException(name + " does not exist");
-    	}
+	public static ScriptType valueOf(String name) {
+		Validate.notNull(name, "Name cannot be null");
+		ScriptType scriptType = TYPES.get(name.toUpperCase());
+		if (scriptType == null) {
+			throw new NullPointerException(name + " does not exist");
+		}
 		return scriptType;
 	}
 }
