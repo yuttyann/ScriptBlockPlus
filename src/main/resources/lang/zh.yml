@@ -1,12 +1,13 @@
-﻿# ScriptBlockPlus v${project.version} Lang #
+# ScriptBlockPlus v1.6.0 Lang #
 # MCBBS PCD小组 秋风残叶 搬运并汉化 请支持原作者 yuttyann44581
 # 本配置源语言为日本语，可能存在翻译不准确的地方
 
 
 ## ===== 帮助页 ===== ##
+
 ToolCommandMessage: 'tool - 获得脚本编辑工具'
 ReloadCommandMessage: 'reload - 重载插件'
-BackupCommandMessage: 'backup - 備份腳本數據'
+BackupCommandMessage: 'backup - 备份脚本数据'
 CheckVerCommandMessage: 'checkver - 查询最新版本'
 DataMigrCommandMessage: 'datamigr - 将ScriptBlock的旧数据转移至ScriptBlockPlus'
 CreateCommandMessage: '<交互方式> create <脚本内容> - 创建脚本方块'
@@ -18,35 +19,35 @@ SelectorRemoveCommandMessage: 'selector remove - 移除选区内的脚本方块'
 
 # &(code) : 可以使用彩色代码
 
-## ===== BlockSelector ===== ##
+## ===== 方块选择器物品设定 ===== ##
 # 沒有變數
 BlockSelector:
-- '&a此工具支持範圍選擇'
-- '&6左键点击: &e指定塊作為選擇範圍的起點'
-- '&6左键点击: &e將塊指定為選擇範圍的結束點'
-- '&6Shift+左键点击: &e將當前位置指定為選擇範圍的起點'
-- '&6Shift+右键点击: &e將當前位置指定為選擇範圍的結束點'
+- '&a这是一个可以选择方块区域的工具'
+- '&6左键点击: &e选择区域的起点'
+- '&6左键点击: &e选择区域的结束点'
+- '&6Shift+左键点击: &e将当前位置设置为区域的起点'
+- '&6Shift+右键点击: &e将当前位置设置为区域的结束点'
 
 ## ===== 脚本编辑器物品设定 ===== ##
-# 沒有變數
-ScriptEditor:
-- '&a此工具支持腳本編輯'
-- '&6左键点击: &e更改工具的目標'
-- '&6左键点击: &e複製腳本'
-- '&6Shift+左键点击: &e刪除腳本'
-- '&6Shift+右键点击: &e粘贴该脚本'
 
-# |~, \n : 改行
+ScriptEditor:
+- '&a这是一个可以复制并粘贴脚本的工具'
+- '&6左键点击: &e更改选择模式'
+- '&6右键点击: &e复制脚本'
+- '&6Shift+左键点击: &e删除脚本'
+- '&6Shift+右键点击: &e粘贴脚本'
+
+# |~ \n : 改行
 
 ## ===== 消息设定 ===== ##
-# 沒有變數
+
 NotVaultMessage: '&cVault经济插件前置未找到'
 SenderNoPlayerMessage: '&c控制台不能这么做'
 NotPermissionMessage: '&c你没有权限'
-GiveToolMessage: '&a獲得助手工具'
+GiveToolMessage: '&a获得选择工具'
 AllFileReloadMessage: '&a插件成功重载，汉化 by 秋风残叶'
-ScriptsBackupMessage: '&a腳本數據已完成。'
-ErrorScriptsBackupMessage: '&c腳本數據的備份失敗。'
+ScriptsBackupMessage: '&a腳本数据备份已完成。'
+ErrorScriptsBackupMessage: '&c脚本数据备份失败。'
 NotLatestPluginMessage: '&c已是最新版本'
 NotScriptBlockFileMessage: '&cScriptBlock无数据或者数据损坏'
 DataMigrStartMessage: '&7开始从ScriptBlock转移数据....'
@@ -56,14 +57,15 @@ UpdateDownloadStartMessage: '&6开始下载最新版本ScriptBlockPlus...如果�
 # %filename% : 文件名
 # %filepath% : 文件路径
 # %filesize% : 文件大小
+
 UpdateDownloadEndMessage: '&6新更新下载完成|~文件名: %filename%|~文件大小: %filesize%|~文件路径: %filepath%'
 
 # %pluginname%    : 插件名
 # %latestversion% : 最新版本
 # %details%       : 更新内容
+
 UpdateCheckMessage: '&b新版本插件可用|~v%latestversion% 最新版本|~插件名: %pluginname%|~☆更新内容☆|~%details%'
 
-# 沒有變數
 ErrorUpdateMessage: '&c查询更新失败，可能是国内网络导致的，建议去这个中文搬运帖查看更新http://www.mcbbs.net/thread-691900-1-1.html'
 
 # %scripttype% : 脚本种类
@@ -73,13 +75,12 @@ ScriptCreateMessage: '&a创建一个种类是"%scripttype%"的脚本'
 ScriptAddMessage: '&a添加一个种类是"%scripttype%"的脚本'
 ScriptRemoveMessage: '&c删除一个种类是"%scripttype%"的脚本'
 
-# 沒有變數
-NotSelectionMessage: '&cBlockSelectorで座標を選択してください。'
+NotSelectionMessage: '&cBlockSelector坐标范围未选择'
 
 # %world%  : 世界名
 # %coords% : 坐标(x, y, z)
-SelectorPos1Message: '&b我選擇了起點"%coords%"'
-SelectorPos2Message: '&b我選擇了終點"%coords%"'
+SelectorPos1Message: '&b已选择起点"%coords%"'
+SelectorPos2Message: '&b已选择终点"%coords%"'
 
 # %scripttype% : 脚本种类
 # %blockcount% : 塊數
@@ -98,9 +99,8 @@ ActiveDelayMessage: '&c该脚本在延迟中 你暂时不能使用'
 ActiveCooldownMessage: '&c脚本还在冷却中 [%hour%时%minute%分%second%秒]'
 
 # %clicktype% : 点击种类
-SuccEditDataMessage: '&a脚本种类"%clicktype%"的设定已选定。请点击需要生效的方块'
+SuccActionDataMessage: '&a脚本种类"%clicktype%"的设定已选定。请点击需要生效的方块'
 
-# 沒有變數
 ErrorEditDataMessage: '&c设定出现错误'
 ErrorScriptCheckMessage: '&c脚本输入错误！'
 ErrorScriptFileCheckMessage: '&c无脚本'
@@ -112,11 +112,12 @@ ErrorScriptExecMessage: '&c脚本种类"%scripttype%"执行失败'
 ErrorGroupMessage: '&c只有属于权限组"%group%"的玩家才可以运行该脚本'
 
 # %material% : 物品种类
+# %id%       : 物品ID
 # %amount%   : 物品的数量
 # %damage%   : 物品的子ID
 # %itemname% : 物品的名称
-ErrorHandMessage: '&c您的手持物品不满足条件，所需物品必须满足"%material%(%damage%)"以及数量"%amount%个"'
-ErrorItemMessage: '&c您的背包内物品不满足条件，所需物品必须满足"%material%(%damage%)"以及数量"%amount%个"'
+ErrorHandMessage: '&c您的手持物品不满足条件，所需物品必须满足"%material%(%id%:%damage%)"以及数量"%amount%个"'
+ErrorItemMessage: '&c您的背包内物品不满足条件，所需物品必须满足"%material%(%id%:%damage%)"以及数量"%amount%个"'
 
 # %cost%   : 需要支付的金额
 # %result% : 至少应该剩余的金钱
@@ -136,7 +137,7 @@ ConsoleSuccScriptExecMessage: '&a执行者"%player%"、脚本种类"%scripttype%
 ConsoleErrorScriptExecMessage: '&c执行者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本触发失败'
 
 # %scripttype% : 脚本种类
-# %blockcount% : 塊數
+# %blockcount% : 方块数量
 # %player%     : 玩家ID
 # %world%      : 世界名
 # %mincoords%  : 最小位置(x, y, z)
