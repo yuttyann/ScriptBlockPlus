@@ -11,9 +11,9 @@
 <br>
 配布サイト: http://file.yuttyann44581.net/
 <br>
-言語ファイルの追加方法: https://github.com/yuttyann/ScriptBlockPlus/wiki/言語ファイルの追加方法
-<br>
 API、Eventの使い方: https://github.com/yuttyann/ScriptBlockPlus/wiki/APIの取得方法
+<br>
+言語ファイルの追加方法: https://github.com/yuttyann/ScriptBlockPlus/wiki/言語ファイルの追加方法
 <br>
 <br>
 変更点が多い場合は、コミットメッセージをバージョン表記のみにすることがあります。
