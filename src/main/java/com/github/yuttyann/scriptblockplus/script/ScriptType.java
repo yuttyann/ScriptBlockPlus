@@ -41,7 +41,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	private final int ordinal;
 
 	public ScriptType(String type) {
-    	Validate.notNull(type, "Type cannot be null");
+		Validate.notNull(type, "Type cannot be null");
 		this.type = type.toLowerCase();
 		this.name = type.toUpperCase();
 
