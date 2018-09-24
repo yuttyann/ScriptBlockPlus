@@ -73,16 +73,16 @@ ScriptCreateMessage: '&a创建一个种类是"%scripttype%"的脚本'
 ScriptAddMessage: '&a添加一个种类是"%scripttype%"的脚本'
 ScriptRemoveMessage: '&c删除一个种类是"%scripttype%"的脚本'
 
-# 変数はありません
+# 沒有變數
 NotSelectionMessage: '&cBlockSelectorで座標を選択してください。'
 
-# %world%  : ワールドの名前
-# %coords% : 座標(x, y, z)
+# %world%  : 世界名
+# %coords% : 坐标(x, y, z)
 SelectorPos1Message: '&b我選擇了起點"%coords%"'
 SelectorPos2Message: '&b我選擇了終點"%coords%"'
 
-# %scripttype% : スクリプトの種類
-# %blockcount% : ブロック数
+# %scripttype% : 脚本种类
+# %blockcount% : 塊數
 SelectorPasteMessage: '&a脚本种类"%scripttype%"已通过BlockSelector进行粘贴'
 SelectorRemoveMessage: '&c脚本种类"%scripttype%"已通过BlockSelector移除'
 
