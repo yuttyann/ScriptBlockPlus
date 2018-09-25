@@ -83,7 +83,7 @@ SelectorPos1Message: '&bI selected the starting point "%coords%".'
 SelectorPos2Message: '&bI chose the end point "%coords%".'
 
 # %scripttype% : Type of script
-# %blockcount% : Number of blocks
+# %blockcount% : Block amount
 SelectorPasteMessage: '&aScriptblock "%scripttype%" has been pasted from selected area.'
 SelectorRemoveMessage: '&cScriptblock "%scripttype%" has been removed from selected area.'
 
@@ -138,7 +138,7 @@ ConsoleSuccScriptExecMessage: '&aOperator"%player%"、Type"%scripttype%"、Locat
 ConsoleErrorScriptExecMessage: '&cOperator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" fail to execute.'
 
 # %scripttype% : Type of script
-# %blockcount% : Number of blocks
+# %blockcount% : Block amount
 # %world%      : The name of the world
 # %mincoords%  : Minimum coordinate(x, y, z)
 # %maxcoords%  : Maximum coordinate(x, y, z)
