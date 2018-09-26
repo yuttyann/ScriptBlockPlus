@@ -25,6 +25,7 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 	private BlockFace blockFace;
 	private EquipSlot hand;
 	private boolean isAnimation;
+	private boolean isInvalid;
 	private boolean cancelled;
 
 	public BlockInteractEvent(PlayerInteractEvent event, EquipSlot hand, boolean isAnimation) {
@@ -93,6 +94,14 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 
 	public boolean isAnimation() {
 		return isAnimation;
+	}
+
+	public boolean isInvalid() {
+		return isInvalid;
+	}
+
+	public void setInvalid(boolean isInvalid) {
+		this.isInvalid = isInvalid;
 	}
 
 	@Override

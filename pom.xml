@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.yuttyann</groupId>
   <artifactId>ScriptBlockPlus</artifactId>
-  <version>1.6.0</version>
+  <version>1.6.1</version>
   <description>Allow you to add script to any blocks.</description>
 
 
@@ -56,7 +56,7 @@
     </repository>
     <repository>
       <id>placeholderapi</id>
-      <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+      <url>http://repo.extendedclip.com/content/repositories/placeholderapi</url>
     </repository>
   </repositories>
 
@@ -69,7 +69,7 @@
     <dependency>
       <groupId>net.milkbowl.vault</groupId>
       <artifactId>VaultAPI</artifactId>
-      <version>1.6</version>
+      <version>1.7</version>
     </dependency>
     <dependency>
       <groupId>me.clip</groupId>

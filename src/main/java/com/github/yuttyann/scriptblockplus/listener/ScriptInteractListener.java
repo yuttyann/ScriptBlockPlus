@@ -29,7 +29,7 @@ public class ScriptInteractListener extends IAssist {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockInteractEvent(BlockInteractEvent event) {
-		if (event.isCancelled() || event.getHand() != EquipSlot.HAND) {
+		if (event.isInvalid() || event.getHand() != EquipSlot.HAND) {
 			return;
 		}
 		Block block = event.getBlock();
@@ -40,8 +40,8 @@ public class ScriptInteractListener extends IAssist {
 			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, action);
 			Bukkit.getPluginManager().callEvent(interactEvent);
 			if (interactEvent.isCancelled()
-					|| (action == Action.LEFT_CLICK_BLOCK && !SBConfig.isLeftClick())
-					|| (action == Action.RIGHT_CLICK_BLOCK && !SBConfig.isRightClick())
+					|| action == Action.LEFT_CLICK_BLOCK && !SBConfig.isLeftClick()
+					|| action == Action.RIGHT_CLICK_BLOCK && !SBConfig.isRightClick()
 					|| isPowered(block) || isOpen(block)) {
 				return;
 			}
