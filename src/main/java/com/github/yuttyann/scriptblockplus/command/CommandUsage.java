@@ -39,7 +39,7 @@ public abstract class CommandUsage {
 		if (baseCommand.isAliases() && command.getAliases().size() > 0) {
 			commandName = command.getAliases().get(0).toLowerCase();
 		}
-		sender.sendMessage("§d====== " + baseCommand.getName() + " Commands ======");
+		sender.sendMessage("§d========== " + baseCommand.getName() + " Commands ==========");
 		String prefix = "§b/" + commandName + " ";
 		StreamUtils.fForEach(list, c -> c.hasMessage(), c -> sender.sendMessage(text(c, prefix)));
 	}

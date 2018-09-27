@@ -14,6 +14,7 @@ CreateCommandMessage: '<scripttype> create <options> - ブロックにスクリ�
 AddCommandMessage: '<scripttype> add <options> - ブロックにスクリプトを追加します。'
 RemoveCommandMessage: '<scripttype> remove - ブロックのスクリプトを削除します。'
 ViewCommandMessage: '<scripttype> view - ブロックのスクリプトを表示します。'
+RunCommandMessage: '<scripttype> run <world> <x> <y> <z> - 指定したスクリプトを実行します。'
 SelectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - 選択範囲にスクリプトをペーストします。'
 SelectorRemoveCommandMessage: 'selector remove - 選択範囲のスクリプトを削除します。'
 

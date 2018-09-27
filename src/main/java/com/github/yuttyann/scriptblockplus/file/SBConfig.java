@@ -60,6 +60,7 @@ public final class SBConfig {
 		put(yaml, "AddCommandMessage");
 		put(yaml, "RemoveCommandMessage");
 		put(yaml, "ViewCommandMessage");
+		put(yaml, "RunCommandMessage");
 		put(yaml, "SelectorPasteCommandMessage");
 		put(yaml, "SelectorRemoveCommandMessage");
 		put(yaml, "NotVaultMessage");
@@ -91,7 +92,7 @@ public final class SBConfig {
 		put(yaml, "ActiveDelayMessage");
 		put(yaml, "ActiveCooldownMessage");
 		put(yaml, "SuccActionDataMessage");
-		put(yaml, "ErrorEditDataMessage");
+		put(yaml, "ErrorActionDataMessage");
 		put(yaml, "ErrorScriptCheckMessage");
 		put(yaml, "ErrorScriptFileCheckMessage");
 		put(yaml, "ErrorScriptExecMessage");
@@ -201,6 +202,10 @@ public final class SBConfig {
 
 	public static String getViewCommandMessage() {
 		return ChatColor.stripColor(get("ViewCommandMessage"));
+	}
+
+	public static String getRunCommandMessage() {
+		return ChatColor.stripColor(get("RunCommandMessage"));
 	}
 
 	public static String getSelectorPasteCommandMessage() {
@@ -364,8 +369,8 @@ public final class SBConfig {
 		return replaceColorCode(replace(get("SuccActionDataMessage"), "%actiontype%", type));
 	}
 
-	public static String getErrorEditDataMessage() {
-		return replaceColorCode(get("ErrorEditDataMessage"));
+	public static String getErrorActionDataMessage() {
+		return replaceColorCode(get("ErrorActionDataMessage"));
 	}
 
 	public static String getErrorScriptCheckMessage() {

@@ -140,10 +140,10 @@ public final class MapManager {
 	public void removeTimes(ScriptType scriptType, String fullCoords) {
 		delays.remove(scriptType, fullCoords);
 		Set<TimeData> set = new HashSet<>();
-		for (TimeData entry : cooldowns) {
-			ScriptType tScriptType = entry.getScriptType();
-			if (entry.getFullCoords().equals(fullCoords) && (tScriptType == null || tScriptType == scriptType)) {
-				set.add(entry);
+		for (TimeData timeData : cooldowns) {
+			ScriptType tScriptType = timeData.getScriptType();
+			if (timeData.getFullCoords().equals(fullCoords) && (tScriptType == null || tScriptType == scriptType)) {
+				set.add(timeData);
 			}
 		}
 		set.forEach(cooldowns::remove);

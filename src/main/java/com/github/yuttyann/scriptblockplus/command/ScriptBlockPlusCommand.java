@@ -6,6 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -16,6 +18,7 @@ import org.bukkit.permissions.Permissible;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.Files;
@@ -71,6 +74,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 				new CommandData(SBConfig.getAddCommandMessage(), typeNodes),
 				new CommandData(SBConfig.getRemoveCommandMessage(), typeNodes),
 				new CommandData(SBConfig.getViewCommandMessage(), typeNodes),
+				new CommandData(SBConfig.getRunCommandMessage(), typeNodes),
 				new CommandData(SBConfig.getSelectorPasteCommandMessage(), Permission.COMMAND_SELECTOR.getNode()),
 				new CommandData(SBConfig.getSelectorRemoveCommandMessage(), Permission.COMMAND_SELECTOR.getNode())
 		};
@@ -78,6 +82,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	@Override
 	public boolean runCommand(CommandSender sender, Command command, String label, String[] args) {
+		// viewArgs(sender, args);
 		if (args.length == 1) {
 			if (equals(args[0], "tool")) {
 				return doTool(sender, args);
@@ -98,11 +103,15 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			} else if (equals(args[0], "selector") && equals(args[1], "paste")) {
 				return doSelectorPaste(sender, args);
 			}
-		} else if (args.length >= 3) {
-			if (args.length <= 4 && equals(args[0], "selector") && equals(args[1], "paste")) {
+		} else if (args.length > 2) {
+			if (args.length < 5 && equals(args[0], "selector") && equals(args[1], "paste")) {
 				return doSelectorPaste(sender, args);
-			} else if (equals(args[0], ScriptType.types()) && equals(args[1], "create", "add")) {
-				return setAction(sender, args);
+			} else if (equals(args[0], ScriptType.types())) {
+				if (args.length == 6 && equals(args[1], "run")) {
+					return doRun(sender, args);
+				} else if (equals(args[1], "create", "add")) {
+					return setAction(sender, args);
+				}
 			}
 		}
 		return false;
@@ -210,6 +219,26 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		ScriptBlock.getInstance().getMapManager().loadScripts(scriptFile, scriptType);
 	}
 
+	private boolean doRun(CommandSender sender, String[] args) {
+		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
+		if (!SBPermission.has(sender, scriptType, true)) {
+			return false;
+		}
+		Player player = (Player) sender;
+		World world = Utils.getWorld(args[2]);
+		int x = Integer.parseInt(args[3]);
+		int y = Integer.parseInt(args[4]);
+		int z = Integer.parseInt(args[5]);
+		Location location = new Location(world, x, y, z);
+		ScriptBlockAPI sbAPI = ScriptBlock.getInstance().getAPI(location, scriptType);
+		if (!sbAPI.checkPath()) {
+			Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
+			return true;
+		}
+		sbAPI.scriptRead(player);
+		return true;
+	}
+
 	private boolean setAction(CommandSender sender, String[] args) {
 		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
 		if (!SBPermission.has(sender, scriptType, true)) {
@@ -217,7 +246,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
 		if (sbPlayer.hasScriptLine() || sbPlayer.hasActionType()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getErrorEditDataMessage());
+			Utils.sendMessage(sbPlayer, SBConfig.getErrorActionDataMessage());
 			return true;
 		}
 		if (args.length > 2) {
@@ -317,7 +346,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			} else if (equals(args[0], ScriptType.types())) {
 				if (SBPermission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
 					String prefix = args[1].toLowerCase();
-					String[] answers = new String[] { "create", "add", "remove", "view" };
+					String[] answers = new String[] { "create", "add", "remove", "view", "run" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			}
@@ -334,9 +363,14 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 					String[] answers = new String[] { "true", "false" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
-			} else {
-				if (equals(args[0], ScriptType.types()) && equals(args[1], "create", "add")) {
-					if (SBPermission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
+			} else if (equals(args[0], ScriptType.types())) {
+				if (SBPermission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
+					if (args.length == 3 && equals(args[1], "run")) {
+						List<World> worlds = Bukkit.getWorlds();
+						String prefix = args[args.length - 1].toLowerCase();
+						String[] answers = StreamUtils.toArray(worlds, w -> w.getName(), new String[worlds.size()]);
+						StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
+					} else if (equals(args[1], "create", "add")) {
 						String prefix = args[args.length - 1].toLowerCase();
 						String[] answers = OptionList.getSyntaxs();
 						Arrays.sort(answers);
@@ -382,4 +416,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		return true;
 	}
+
+	/*
+	private void viewArgs(CommandSender sender, String[] args) {
+		Utils.sendMessage(sender, "Length: " + args.length);
+		for (int i = 0; i < args.length; i++) {
+			Utils.sendMessage(sender, i + " : " + args[i]);
+		}
+	}
+	*/
 }

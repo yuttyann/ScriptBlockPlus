@@ -19,10 +19,10 @@ public class IAssist implements Listener {
 		this.mapManager = iAssist.getMapManager();
 	}
 
-	public IAssist(ScriptBlock plugin, ScriptType scriptType) {
+	public IAssist(Plugin plugin, ScriptType scriptType) {
 		this.plugin = plugin;
 		this.scriptType = scriptType;
-		this.mapManager = plugin == null ? null : plugin.getMapManager();
+		this.mapManager = ScriptBlock.getInstance().getMapManager();
 	}
 
 	public Plugin getPlugin() {
