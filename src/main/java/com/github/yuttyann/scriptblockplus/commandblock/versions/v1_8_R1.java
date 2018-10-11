@@ -52,8 +52,7 @@ public final class v1_8_R1 extends Vx_x_Rx {
 		WorldServer[] prev = server.worldServer;
 		server.worldServer = new WorldServer[server.worlds.size()];
 		server.worldServer[0] = (WorldServer) sender.getWorld();
-		int bpos = 0;
-		for (int pos = 1; pos < server.worldServer.length; pos++) {
+		for (int pos = 1, bpos = 0; pos < server.worldServer.length; pos++) {
 			WorldServer world = server.worlds.get(bpos++);
 			if (server.worldServer[0] == world) {
 				pos--;

@@ -47,24 +47,24 @@ public final class CuboidRegionBlocks {
 		return set;
 	}
 
-	public void forEach(Consumer<BlockPosition> action) {
-		BlockPosition position = new BlockPosition();
+	public void forEach(Consumer<BlockPos> action) {
+		BlockPos position = new BlockPos();
 		for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
 			for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
 				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-					action.accept(position.setPosition(x, y, z));
+					action.accept(position.setPos(x, y, z));
 				}
 			}
 		}
 	}
 
-	public final class BlockPosition {
+	public final class BlockPos {
 
 		private int x;
 		private int y;
 		private int z;
 
-		private BlockPosition setPosition(int x, int y, int z) {
+		private BlockPos setPos(int x, int y, int z) {
 			this.x = x;
 			this.y = y;
 			this.z = z;

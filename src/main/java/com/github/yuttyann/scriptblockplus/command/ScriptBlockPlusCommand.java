@@ -180,14 +180,11 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			String uuid = player.getUniqueId().toString();
 			Utils.sendMessage(player, SBConfig.getDataMigrStartMessage());
 			new Thread(() -> {
-				YamlConfig scriptFile;
 				if (interactFile.exists()) {
-					scriptFile = YamlConfig.load(getPlugin(), interactFile, false);
-					saveScript(uuid, time, scriptFile, ScriptType.INTERACT);
+					saveScript(uuid, time, YamlConfig.load(getPlugin(), interactFile, false), ScriptType.INTERACT);
 				}
 				if (walkFile.exists()) {
-					scriptFile = YamlConfig.load(getPlugin(), walkFile, false);
-					saveScript(uuid, time, scriptFile, ScriptType.WALK);
+					saveScript(uuid, time, YamlConfig.load(getPlugin(), walkFile, false), ScriptType.WALK);
 				}
 				Utils.sendMessage(player, SBConfig.getDataMigrEndMessage());
 			}).start();

@@ -82,7 +82,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	public boolean equals(Object obj) {
 		if (obj instanceof ScriptType) {
 			ScriptType scriptType = ((ScriptType) obj);
-			return type.equals(((ScriptType) obj).type) && name.equals(scriptType.name);
+			return type.equals(scriptType.type) && name.equals(scriptType.name);
 		}
 		return false;
 	}

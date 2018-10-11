@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.enums.TextOption;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.IAssist;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
@@ -100,9 +101,13 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 				if (!option.isOption(script)) {
 					continue;
 				}
-				optionValue = replaceValue(option.getValue(script));
+				if (!sbPlayer.isOnline()) {
+					executeEndProcess(e -> e.failed(this));
+					return false;
+				}
+				optionValue	= TextOption.replaceAll(option.getValue(script), this);
 				Option instance = OptionList.getManager().newInstance(option);
-				if (!sbPlayer.isOnline() || !hasPermission(option) || !instance.callOption(this)) {
+				if (!hasPermission(option) || !instance.callOption(this)) {
 					executeEndProcess(e -> { if (!instance.isFailedIgnore()) e.failed(this); });
 					return false;
 				}
@@ -127,14 +132,6 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 		}
 		Utils.sendMessage(sbPlayer, SBConfig.getNotPermissionMessage());
 		return false;
-	}
-
-	private String replaceValue(String value) {
-		if (sbPlayer.isOnline() && StringUtils.isNotEmpty(value)) {
-			value = StringUtils.replace(value, "<player>", sbPlayer.getName());
-			value = StringUtils.replace(value, "<world>", sbPlayer.getWorld().getName());
-		}
-		return value;
 	}
 
 	private boolean sort(List<String> scripts, List<Option> options) {

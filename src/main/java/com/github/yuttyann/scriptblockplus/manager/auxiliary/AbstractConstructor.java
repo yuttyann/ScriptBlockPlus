@@ -36,7 +36,7 @@ public abstract class AbstractConstructor<T> {
 	public int indexOf(Class<? extends T> clazz) {
 		List<Constructor<? extends T>> constructors = getConstructors();
 		for (int i = 0; i < constructors.size(); i++) {
-			if (clazz == constructors.get(i).getDeclaringClass()) {
+			if (constructors.get(i).getDeclaringClass().equals(clazz)) {
 				return i;
 			}
 		}
@@ -113,7 +113,7 @@ public abstract class AbstractConstructor<T> {
 	public T newInstance(Class<?> clazz) {
 		try {
 			for (Constructor<? extends T> constructor : getConstructors()) {
-				if (clazz == constructor.getDeclaringClass()) {
+				if (constructor.getDeclaringClass().equals(clazz)) {
 					return constructor.newInstance(ArrayUtils.EMPTY_OBJECT_ARRAY);
 				}
 			}
