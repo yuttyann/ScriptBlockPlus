@@ -105,7 +105,7 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 					executeEndProcess(e -> e.failed(this));
 					return false;
 				}
-				optionValue	= TextOption.replaceAll(option.getValue(script), this);
+				optionValue = TextOption.replaceAll(option.getValue(script), this);
 				Option instance = OptionList.getManager().newInstance(option);
 				if (!hasPermission(option) || !instance.callOption(this)) {
 					executeEndProcess(e -> { if (!instance.isFailedIgnore()) e.failed(this); });
