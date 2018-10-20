@@ -30,7 +30,8 @@ public class MoneyCost extends BaseOption {
 			vaultEconomy.withdrawPlayer(player, cost);
 
 			ScriptRead scriptRead = getScriptRead();
-			scriptRead.put(KEY_COST, cost + scriptRead.getDouble(KEY_COST));
+			Double value = scriptRead.get(KEY_COST);
+			scriptRead.put(KEY_COST, cost + (value == null ? 0.0D : value.doubleValue()));
 			return true;
 		}
 		double result = cost - vaultEconomy.getBalance(player);
