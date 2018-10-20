@@ -38,12 +38,13 @@ public class JoinQuitListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		SBPlayer sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
+		sbPlayer.setScriptLine(null);
+		sbPlayer.setActionType(null);
+		sbPlayer.setClipboard(null);
+
 		CuboidRegion region = ((CuboidRegion) sbPlayer.getRegion());
 		region.setWorld(null);
 		region.setPos1(null);
 		region.setPos2(null);
-		sbPlayer.setScriptLine(null);
-		sbPlayer.setActionType(null);
-		sbPlayer.setClipboard(null);
 	}
 }

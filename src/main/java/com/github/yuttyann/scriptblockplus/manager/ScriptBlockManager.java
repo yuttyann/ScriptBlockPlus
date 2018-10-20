@@ -21,10 +21,10 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
 public final class ScriptBlockManager implements ScriptBlockAPI {
 
-	private IAssist iAssist;
-	private ScriptData scriptData;
-	private Map<ScriptType, List<Location>> timers;
-	private Map<Boolean, Map<Location, ScriptType>> scripts;
+	private final IAssist iAssist;
+	private final ScriptData scriptData;
+	private final Map<ScriptType, List<Location>> timers;
+	private final Map<Boolean, Map<Location, ScriptType>> scripts;
 
 	public ScriptBlockManager(ScriptBlock plugin, Location location, ScriptType scriptType) {
 		this.iAssist = new IAssist(plugin, scriptType);
@@ -51,12 +51,8 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 	public void setLocation(Location location) {
 		Location oldLocation = scriptData.getLocation();
 		if (oldLocation == null || !oldLocation.equals(location)) {
-			if (timers.size() > 0) {
-				timers.clear();
-			}
-			if (scripts.size() > 0) {
-				scripts.clear();
-			}
+			timers.clear();
+			scripts.clear();
 			scriptData.setLocation(location);
 		}
 	}
@@ -79,14 +75,14 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 	@Override
 	public void save() {
 		scriptData.save();
-		timers.forEach((s, ll) -> ll.forEach(l -> iAssist.getMapManager().removeTimes(s, l)));
-		scripts.forEach((b, m) -> m.forEach((l, s) -> setCoords(iAssist.getMapManager(), s, l, b)));
-		if (timers.size() > 0) {
+		try {
+			timers.forEach((s, ll) -> ll.forEach(l -> iAssist.getMapManager().removeTimes(s, l)));
+			scripts.forEach((b, m) -> m.forEach((l, s) -> setCoords(iAssist.getMapManager(), s, l, b)));
+		} finally {
 			timers.clear();
-		}
-		if (scripts.size() > 0) {
 			scripts.clear();
 		}
+
 	}
 
 	@Override
