@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -69,7 +70,11 @@ public final class MapManager {
 				set.clear();
 			} finally {
 				if (set.size() > 0) {
-					FileUtils.saveFile(cooldownFile, set);
+					try {
+						FileUtils.saveFile(cooldownFile, set);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

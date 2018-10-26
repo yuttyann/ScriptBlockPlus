@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.yuttyann</groupId>
   <artifactId>ScriptBlockPlus</artifactId>
-  <version>1.6.3</version>
+  <version>1.6.4</version>
   <description>Allow you to add script to any blocks.</description>
 
 

@@ -196,15 +196,15 @@ public final class FileUtils {
 		}
 	}
 
-	public static void saveFile(File file, Object value) {
+	public static void saveFile(File file, Object value) throws IOException {
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(file));
 			oos.writeObject(value);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			throw e;
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw e;
 		} finally {
 			if (oos != null) {
 				try {
@@ -217,17 +217,17 @@ public final class FileUtils {
 		}
 	}
 
-	public static <T> T loadFile(File file) {
+	public static <T> T loadFile(File file) throws IOException, ClassNotFoundException {
 		ObjectInputStream ois = null;
 		try {
 			ois = new ObjectInputStream(new FileInputStream(file));
 			return (T) ois.readObject();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			throw e;
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw e;
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			throw e;
 		} finally {
 			if (ois != null) {
 				try {
@@ -237,7 +237,6 @@ public final class FileUtils {
 				}
 			}
 		}
-		return null;
 	}
 
 	public static boolean isEmpty(File file) {

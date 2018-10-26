@@ -10,8 +10,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
+import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
+import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class JoinQuitListener implements Listener {
 
@@ -32,6 +35,14 @@ public class JoinQuitListener implements Listener {
 		}
 		if (sbPlayer.isOp()) {
 			plugin.checkUpdate(sbPlayer, false);
+		}
+
+		// ItemCost アイテム返却
+		ObjectMap objectMap = sbPlayer.getObjectMap();
+		if (objectMap.has(ItemCost.KEY_ITEM_PLAYER)) {
+			player.getInventory().setContents(objectMap.get(ItemCost.KEY_ITEM_PLAYER));
+			objectMap.remove(ItemCost.KEY_ITEM_PLAYER);
+			Utils.updateInventory(player);
 		}
 	}
 

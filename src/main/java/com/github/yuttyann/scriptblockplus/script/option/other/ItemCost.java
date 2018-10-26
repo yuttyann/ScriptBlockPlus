@@ -19,6 +19,8 @@ public class ItemCost extends BaseOption {
 
 	public static final String KEY_ITEM = PlayerData.createRandomId("ItemCost");
 
+	public static final String KEY_ITEM_PLAYER = PlayerData.createRandomId("ItemCost_Player");
+
 	public ItemCost() {
 		super("itemcost", "$item:");
 	}
@@ -39,7 +41,10 @@ public class ItemCost extends BaseOption {
 		Player player = getPlayer();
 		PlayerInventory inventory = player.getInventory();
 		ScriptRead scriptRead = getScriptRead();
-		ItemStack[] items = scriptRead.has(KEY_ITEM) ? scriptRead.get(KEY_ITEM) : copyItems(inventory.getContents());
+		if (!scriptRead.has(KEY_ITEM)) {
+			getScriptRead().put(KEY_ITEM, copyItems(inventory.getContents()));
+		}
+		ItemStack[] items = inventory.getContents();
 		for (int i = 0, j = amount; i < items.length; i++) {
 			if (checkItem(items[i], itemName, type, damage)) {
 				j -= j > 0 ? setAmount(items[i], items[i].getAmount() - j) : 0;
@@ -49,7 +54,7 @@ public class ItemCost extends BaseOption {
 				return false;
 			}
 		}
-		getScriptRead().put(KEY_ITEM, items);
+		inventory.setContents(items);
 		return true;
 	}
 
