@@ -21,16 +21,16 @@ public class EndInventory implements EndProcess {
 	@Override
 	public void failed(SBRead sbRead) {
 		Player player = sbRead.getSBPlayer().getPlayer();
-		ItemStack[] items = sbRead.get(ItemCost.KEY_ITEM);
-		if (player.isOnline()) {
-			if (sbRead.has(ItemCost.KEY_ITEM)) {
+		if (sbRead.has(ItemCost.KEY_ITEM)) {
+			ItemStack[] items = sbRead.get(ItemCost.KEY_ITEM);
+			if (player.isOnline()) {
 				player.getInventory().setContents(items);
-			}
-			Utils.updateInventory(player);
-		} else {
-			ObjectMap objectMap = sbRead.getSBPlayer().getObjectMap();
-			if (!objectMap.has(ItemCost.KEY_ITEM_PLAYER)) {
-				objectMap.put(ItemCost.KEY_ITEM_PLAYER, items);
+				Utils.updateInventory(player);
+			} else {
+				ObjectMap objectMap = sbRead.getSBPlayer().getObjectMap();
+				if (!objectMap.has(ItemCost.KEY_ITEM_PLAYER)) {
+					objectMap.put(ItemCost.KEY_ITEM_PLAYER, items);
+				}
 			}
 		}
 	}
