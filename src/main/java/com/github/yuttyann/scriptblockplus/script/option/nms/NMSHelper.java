@@ -8,11 +8,23 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class NMSHelper {
 
+	private static final Class<?> PACKET;
+
+	static {
+		Class<?> clazz = null;
+		try {
+			clazz = PackageType.NMS.getClass("Packet");
+		} catch (IllegalArgumentException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		PACKET = clazz;
+	}
+
 	public static void sendPacket(Player player, Object packet) {
 		try {
-			Object handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle", player);
+			Object handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
 			Object connection = PackageType.NMS.getField("EntityPlayer", "playerConnection").get(handle);
-			PackageType.NMS.invokeMethod(connection, "PlayerConnection", "sendPacket", packet);
+			PackageType.NMS.getMethod("PlayerConnection", "sendPacket", PACKET).invoke(connection, packet);
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
