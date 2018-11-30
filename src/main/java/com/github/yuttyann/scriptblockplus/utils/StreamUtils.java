@@ -63,21 +63,21 @@ public final class StreamUtils {
 		}
 	}
 
-	private static <T> boolean match(T[] array, Predicate<T> filter, boolean result) {
+	private static <T> boolean match(T[] array, Predicate<T> filter, boolean anyMatch) {
 		for (T t : array) {
-			if (filter.test(t)) {
-				return result;
+			if (anyMatch ? filter.test(t) : !filter.test(t)) {
+				return anyMatch;
 			}
 		}
-		return !result;
+		return !anyMatch;
 	}
 
-	private static <T> boolean match(Collection<T> collection, Predicate<T> filter, boolean result) {
+	private static <T> boolean match(Collection<T> collection, Predicate<T> filter, boolean anyMatch) {
 		for (T t : collection) {
-			if (filter.test(t)) {
-				return result;
+			if (anyMatch ? filter.test(t) : !filter.test(t)) {
+				return anyMatch;
 			}
 		}
-		return !result;
+		return !anyMatch;
 	}
 }
