@@ -77,7 +77,6 @@ public class ScriptBlock extends JavaPlugin {
 		if (mapManager != null) {
 			mapManager.saveCooldown();
 		}
-		BaseSBPlayer.clear();
 	}
 
 	@Override
