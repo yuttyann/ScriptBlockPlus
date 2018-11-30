@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -77,6 +77,7 @@ public class ScriptBlock extends JavaPlugin {
 		if (mapManager != null) {
 			mapManager.saveCooldown();
 		}
+		BaseSBPlayer.clear();
 	}
 
 	@Override
@@ -121,7 +122,7 @@ public class ScriptBlock extends JavaPlugin {
 		return mapManager;
 	}
 
-	public BaseSBPlayer fromPlayer(Player player) {
+	public BaseSBPlayer fromPlayer(OfflinePlayer player) {
 		return (BaseSBPlayer) SBPlayer.fromPlayer(player);
 	}
 
