@@ -62,11 +62,11 @@ permissions:
   scriptblockplus.command.selector:
     default: false
   scriptblockplus.interact.use:
-    default: op
+    default: true
   scriptblockplus.break.use:
-    default: op
+    default: true
   scriptblockplus.walk.use:
-    default: op
+    default: true
   scriptblockplus.tool.blockselector:
     default: false
   scriptblockplus.tool.scripteditor:
