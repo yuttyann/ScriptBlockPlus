@@ -15,10 +15,10 @@ public class Vx_x_Rx implements ClassHelper {
 
 	private static final Class<?>[] PARAMS = { getNMSClass(c), CommandSender.class, String.class };
 
-	private CommandListener listener;
+	private final CommandListener listener = new CommandBlock(this);
 
 	public final CommandListener getCommandBlock() {
-		return listener == null ? listener = new CommandBlock(this) : listener;
+		return listener;
 	}
 
 	private final class CommandBlock implements CommandListener {
