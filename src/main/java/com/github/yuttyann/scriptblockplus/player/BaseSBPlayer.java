@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -40,6 +41,10 @@ public final class BaseSBPlayer extends PlayerData {
 		return sbPlayer;
 	}
 
+	public static void clear() {
+		PLAYERS.clear();
+	}
+
 	public void setPlayer(Player player) {
 		this.player = player != null && player.getUniqueId().equals(uuid) ? player : null;
 	}
@@ -51,7 +56,7 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public Player getPlayer() {
-		return player;
+		return player == null ? player = Bukkit.getPlayer(uuid) : player;
 	}
 
 	@Override
