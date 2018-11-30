@@ -45,14 +45,15 @@ public class ItemCost extends BaseOption {
 			getScriptRead().put(KEY_ITEM, copyItems(inventory.getContents()));
 		}
 		ItemStack[] items = inventory.getContents();
-		for (int i = 0, j = amount; i < items.length; i++) {
+		int result = amount;
+		for (int i = 0; i < items.length; i++) {
 			if (checkItem(items[i], itemName, type, damage)) {
-				j -= j > 0 ? setAmount(items[i], items[i].getAmount() - j) : 0;
+				result -= result > 0 ? setAmount(items[i], items[i].getAmount() - result) : 0;
 			}
-			if (i == (items.length - 1) && j > 0) {
-				Utils.sendMessage(player, SBConfig.getErrorItemMessage(type, amount, damage, itemName));
-				return false;
-			}
+		}
+		if (result > 0) {
+			Utils.sendMessage(player, SBConfig.getErrorItemMessage(type, amount, damage, itemName));
+			return false;
 		}
 		inventory.setContents(items);
 		return true;

@@ -27,7 +27,7 @@ public class ScriptAction extends BaseOption {
 		if (actionType.equalsIgnoreCase("shift")) {
 			return getPlayer().isSneaking();
 		}
-		if (getScriptType() == ScriptType.INTERACT) {
+		if (ScriptType.INTERACT.equals(getScriptType())) {
 			return action == null ? false : action == getAction(actionType);
 		}
 		return false;

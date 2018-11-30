@@ -29,14 +29,7 @@ public class PlaySound extends BaseOption {
 
 		@Override
 		public void run() {
-			Location location = getLocation();
-			if (isWorldPlay) {
-				location.getWorld().playSound(location, soundType, volume, pitch);
-			} else {
-				if (getSBPlayer().isOnline()) {
-					getPlayer().playSound(location, soundType, volume, pitch);
-				}
-			}
+			playSound(soundType, volume, pitch, isWorldPlay);
 		}
 	}
 
@@ -53,15 +46,17 @@ public class PlaySound extends BaseOption {
 		if (delay > 0) {
 			new Task(soundType, volume, pitch, isWorldPlay).runTaskLater(getPlugin(), delay);
 		} else {
-			Location location = getLocation();
-			if (isWorldPlay) {
-				location.getWorld().playSound(location, soundType, volume, pitch);
-			} else {
-				if (getSBPlayer().isOnline()) {
-					getPlayer().playSound(location, soundType, volume, pitch);
-				}
-			}
+			playSound(soundType, volume, pitch, isWorldPlay);
 		}
 		return true;
+	}
+
+	private void playSound(Sound soundType, int volume, int pitch, boolean isWorldPlay) {
+		Location location = getLocation();
+		if (isWorldPlay) {
+			location.getWorld().playSound(location, soundType, volume, pitch);
+		} else if (getSBPlayer().isOnline()) {
+			getPlayer().playSound(location, soundType, volume, pitch);
+		}
 	}
 }

@@ -98,10 +98,10 @@ public final class FileUtils {
 		}
 	}
 
-    public static void copyDirectory(File sourceFile, File targetFile, Predicate<File> filter) {
-    	if (targetFile == null || !isExists(sourceFile) || isEmpty(sourceFile)) {
-    		return;
-    	}
+	public static void copyDirectory(File sourceFile, File targetFile, Predicate<File> filter) {
+		if (targetFile == null || !isExists(sourceFile) || isEmpty(sourceFile)) {
+			return;
+		}
 		if (!targetFile.exists()) {
 			targetFile.mkdirs();
 		}
@@ -109,42 +109,42 @@ public final class FileUtils {
 			if (filter.test(file)) {
 				continue;
 			}
-            BufferedReader reader = null;
-            BufferedWriter writer = null;
-            try {
-            	File copy = new File(targetFile, file.getName());
-                reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8));
-                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(copy), Charsets.UTF_8));
-    			boolean isFirst = true;
-    			String line;
-    			while ((line = reader.readLine()) != null) {
-    				if (isFirst && !(isFirst = false)) {
-    					line = removeBom(line);
-    				}
-    				writer.write(line);
-    				writer.newLine();
-    			}
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (writer != null) {
-                    try {
-                        writer.flush();
-                        writer.close();
-                    } catch (IOException e) {
-                    	e.printStackTrace();
-                    }
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                    	e.printStackTrace();
-                    }
-                }
-            }
+			BufferedReader reader = null;
+			BufferedWriter writer = null;
+			try {
+				File copy = new File(targetFile, file.getName());
+				reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8));
+				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(copy), Charsets.UTF_8));
+				boolean isFirst = true;
+				String line;
+				while ((line = reader.readLine()) != null) {
+					if (isFirst && !(isFirst = false)) {
+						line = removeBom(line);
+					}
+					writer.write(line);
+					writer.newLine();
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				if (writer != null) {
+					try {
+						writer.flush();
+						writer.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				if (reader != null) {
+					try {
+						reader.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 	}
 
