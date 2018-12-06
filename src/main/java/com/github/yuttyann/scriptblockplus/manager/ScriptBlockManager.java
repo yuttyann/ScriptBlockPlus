@@ -86,6 +86,11 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 	}
 
 	@Override
+	public int indexOfOption(Class<? extends BaseOption> option) {
+		return OptionList.getManager().indexOf(option);
+	}
+
+	@Override
 	public void addOption(Class<? extends BaseOption> option) {
 		OptionList.getManager().add(option);
 	}
@@ -101,13 +106,13 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 	}
 
 	@Override
-	public void removeOption(int scriptIndex) {
-		OptionList.getManager().remove(scriptIndex);
+	public void removeOption(int index) {
+		OptionList.getManager().remove(index);
 	}
 
 	@Override
-	public int indexOfOption(Class<? extends BaseOption> option) {
-		return OptionList.getManager().indexOf(option);
+	public int indexOfEndProcess(Class<? extends EndProcess> endProcess) {
+		return EndProcessManager.getInstance().indexOf(endProcess);
 	}
 
 	@Override
@@ -128,11 +133,6 @@ public final class ScriptBlockManager implements ScriptBlockAPI {
 	@Override
 	public void removeEndProcess(int index) {
 		EndProcessManager.getInstance().remove(index);
-	}
-
-	@Override
-	public int indexOfEndProcess(Class<? extends EndProcess> endProcess) {
-		return EndProcessManager.getInstance().indexOf(endProcess);
 	}
 
 	@Override

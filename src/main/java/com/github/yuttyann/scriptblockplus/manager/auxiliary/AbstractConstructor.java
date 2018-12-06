@@ -1,27 +1,21 @@
 package com.github.yuttyann.scriptblockplus.manager.auxiliary;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.apache.commons.lang.ArrayUtils;
-
+import com.github.yuttyann.scriptblockplus.enums.InstanceType;
+import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public abstract class AbstractConstructor<T> {
 
-	private Class<?> genericClass;
+	private final List<SBConstructor<? extends T>> list = initList();
 
-	private final List<Constructor<? extends T>> list = initialList();
-
-	protected abstract List<Constructor<? extends T>> initialList();
+	protected abstract List<SBConstructor<? extends T>> initList();
 
 	public abstract void registerDefaults();
 
-	protected final List<Constructor<? extends T>> getConstructors() {
+	protected final List<SBConstructor<? extends T>> getConstructors() {
 		return list;
 	}
 
@@ -34,7 +28,7 @@ public abstract class AbstractConstructor<T> {
 	}
 
 	public int indexOf(Class<? extends T> clazz) {
-		List<Constructor<? extends T>> constructors = getConstructors();
+		List<SBConstructor<? extends T>> constructors = getConstructors();
 		for (int i = 0; i < constructors.size(); i++) {
 			if (constructors.get(i).getDeclaringClass().equals(clazz)) {
 				return i;
@@ -43,98 +37,83 @@ public abstract class AbstractConstructor<T> {
 		return -1;
 	}
 
-	public boolean add(Class<? extends T> clazz) {
-		if (indexOf(clazz) >= 0) {
+	public final boolean add(Class<? extends T> clazz) {
+		return add(new SBConstructor<>(clazz));
+	}
+
+	public final boolean add(SBInstance<? extends T> sbInstance) {
+		return add(new SBConstructor<>(sbInstance));
+	}
+
+	public boolean add(SBConstructor<? extends T> constructor) {
+		if (indexOf(constructor.getDeclaringClass()) >= 0) {
 			return false;
 		}
-		getConstructors().add(getConstructor(clazz));
+		getConstructors().add(constructor);
 		return true;
 	}
 
-	public boolean add(int index, Class<? extends T> clazz) {
-		if (index > getConstructors().size() || indexOf(clazz) >= 0) {
+	public final boolean add(int index, Class<? extends T> clazz) {
+		return add(index, new SBConstructor<>(clazz));
+	}
+
+	public final boolean add(int index, SBInstance<? extends T> sbInstance) {
+		return add(index, new SBConstructor<>(sbInstance));
+	}
+
+	public boolean add(int index, SBConstructor<? extends T> constructor) {
+		if (index > getConstructors().size() || indexOf(constructor.getDeclaringClass()) >= 0) {
 			return false;
 		}
-		getConstructors().add(index, getConstructor(clazz));
+		getConstructors().add(index, constructor);
 		return true;
 	}
 
-	public boolean remove(Class<? extends T> clazz) {
-		if (indexOf(clazz) == -1) {
-			return false;
-		}
-		getConstructors().remove(getConstructor(clazz));
-		return true;
+	public final boolean remove(Class<? extends T> clazz) {
+		return remove(indexOf(clazz));
+	}
+
+	public final boolean remove(SBInstance<? extends T> sbInstance) {
+		return remove(indexOf((Class<? extends T>) sbInstance.getClass()));
+	}
+
+	public final boolean remove(SBConstructor<? extends T> constructor) {
+		return remove(indexOf(constructor.getDeclaringClass()));
 	}
 
 	public boolean remove(int index) {
-		if (index > getConstructors().size()) {
+		if (index < 0 || index > getConstructors().size()) {
 			return false;
 		}
 		getConstructors().remove(index);
 		return true;
 	}
 
-	public T[] newInstances() {
-		return newInstances(newGenericArray());
-	}
+	public abstract T[] newInstances();
 
-	private T[] newGenericArray() {
-		try {
-			if (genericClass == null) {
-				Type type = getClass().getGenericSuperclass();
-				Type[] types = ((ParameterizedType) type).getActualTypeArguments();
-				genericClass = Class.forName(types[0].getTypeName());
-			}
-			return (T[]) Array.newInstance(genericClass, getConstructors().size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public T[] newInstances(T[] array) {
+	public T[] newInstances(T[] array, InstanceType instanceType) {
 		T[] instances = array;
-		try {
-			int i = 0;
-			for (Constructor<? extends T> constructor : getConstructors()) {
-				instances[i++] = constructor.newInstance(ArrayUtils.EMPTY_OBJECT_ARRAY);
-			}
-		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
+		int i = 0;
+		for (SBConstructor<? extends T> constructor : getConstructors()) {
+			instances[i++] = constructor.newInstance(instanceType);
 		}
 		return instances;
 	}
 
-	public <R extends T> T newInstance(R t) {
-		return newInstance(t.getClass());
+	public T newInstance(T t, InstanceType instanceType) {
+		return newInstance(t.getClass(), instanceType);
 	}
 
-	public T newInstance(Class<?> clazz) {
-		try {
-			for (Constructor<? extends T> constructor : getConstructors()) {
-				if (constructor.getDeclaringClass().equals(clazz)) {
-					return constructor.newInstance(ArrayUtils.EMPTY_OBJECT_ARRAY);
-				}
+	public T newInstance(Class<?> clazz, InstanceType instanceType) {
+		for (SBConstructor<? extends T> constructor : getConstructors()) {
+			if (constructor.getDeclaringClass().equals(clazz)) {
+				return constructor.newInstance(instanceType);
 			}
-		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
 		}
 		return null;
 	}
 
 	public final void forEach(Consumer<? super T> action) {
 		StreamUtils.forEach(newInstances(), action);
-	}
-
-	private <R extends T> Constructor<R> getConstructor(Class<R> clazz) {
-		try {
-			Constructor<R> constructor = clazz.getDeclaredConstructor();
-			constructor.setAccessible(true);
-			return constructor;
-		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 }

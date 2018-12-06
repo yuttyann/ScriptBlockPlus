@@ -1,17 +1,18 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.AbstractConstructor;
+import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndInventory;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndMoneyCost;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 
 public final class EndProcessManager extends AbstractConstructor<EndProcess> {
 
-	private final static EndProcessManager END_PROCESS_MANAGER;
+	private static final EndProcessManager END_PROCESS_MANAGER;
 
 	static {
 		END_PROCESS_MANAGER = new EndProcessManager();
@@ -27,19 +28,19 @@ public final class EndProcessManager extends AbstractConstructor<EndProcess> {
 	}
 
 	@Override
-	protected List<Constructor<? extends EndProcess>> initialList() {
-		return new ArrayList<Constructor<? extends EndProcess>>();
+	protected List<SBConstructor<? extends EndProcess>> initList() {
+		return new ArrayList<>();
 	}
 
 	@Override
 	public void registerDefaults() {
 		getConstructors().clear();
-		add(EndInventory.class);
-		add(EndMoneyCost.class);
+		add(new EndInventory());
+		add(new EndMoneyCost());
 	}
 
 	@Override
 	public EndProcess[] newInstances() {
-		return newInstances(new EndProcess[getConstructors().size()]);
+		return newInstances(new EndProcess[getConstructors().size()], InstanceType.SBINSTANCE);
 	}
 }

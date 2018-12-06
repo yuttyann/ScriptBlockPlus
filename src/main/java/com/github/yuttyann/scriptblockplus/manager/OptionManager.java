@@ -1,11 +1,12 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.AbstractConstructor;
+import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.chat.Bypass;
 import com.github.yuttyann.scriptblockplus.script.option.chat.Command;
@@ -75,69 +76,60 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	}
 
 	@Override
-	protected ArrayList<Constructor<? extends Option>> initialList() {
-		return new ArrayList<Constructor<? extends Option>>();
+	protected List<SBConstructor<? extends Option>> initList() {
+		return new ArrayList<>();
 	}
 
 	@Override
 	public void registerDefaults() {
 		getConstructors().clear();
-		add(ScriptAction.class);
-		add(BlockType.class);
-		add(Group.class);
-		add(Perm.class);
-		add(Calculation.class);
-		add(OldCooldown.class);
-		add(Cooldown.class);
-		add(Delay.class);
-		add(ItemHand.class);
-		add(ItemCost.class);
-		add(MoneyCost.class);
-		add(Say.class);
-		add(Server.class);
-		add(ToPlayer.class);
-		add(PlaySound.class);
-		add(Title.class);
-		add(ActionBar.class);
-		add(Bypass.class);
-		add(Command.class);
-		add(Console.class);
-		add(GroupAdd.class);
-		add(GroupRemove.class);
-		add(PermAdd.class);
-		add(PermRemove.class);
-		add(Execute.class);
-		add(Amount.class);
+		add(new ScriptAction());
+		add(new BlockType());
+		add(new Group());
+		add(new Perm());
+		add(new Calculation());
+		add(new OldCooldown());
+		add(new Cooldown());
+		add(new Delay());
+		add(new ItemHand());
+		add(new ItemCost());
+		add(new MoneyCost());
+		add(new Say());
+		add(new Server());
+		add(new ToPlayer());
+		add(new PlaySound());
+		add(new Title());
+		add(new ActionBar());
+		add(new Bypass());
+		add(new Command());
+		add(new Console());
+		add(new GroupAdd());
+		add(new GroupRemove());
+		add(new PermAdd());
+		add(new PermRemove());
+		add(new Execute());
+		add(new Amount());
 	}
 
 	@Override
 	public Option[] newInstances() {
-		return newInstances(new Option[getConstructors().size()]);
+		return newInstances(new Option[getConstructors().size()], InstanceType.SBINSTANCE);
 	}
 
 	@Override
-	public boolean add(Class<? extends Option> clazz) {
-		boolean result = super.add(clazz);
+	public boolean add(SBConstructor<? extends Option> constructor) {
+		boolean result = super.add(constructor);
 		if (result) {
-			OptionList.OPTIONS.add(newInstance(clazz));
+			OptionList.OPTIONS.add(constructor.getInstance());
 		}
 		return result;
 	}
 
 	@Override
-	public boolean add(int index, Class<? extends Option> clazz) {
-		boolean result = super.add(index, clazz);
+	public boolean add(int index, SBConstructor<? extends Option> constructor) {
+		boolean result = super.add(index, constructor);
 		if (result) {
-			OptionList.OPTIONS.add(index, newInstance(clazz));
-		}
-		return result;
-	}
-
-	@Override
-	public boolean remove(Class<? extends Option> clazz) {
-		boolean result = super.remove(clazz);
-		if (result) {
-			OptionList.OPTIONS.remove(newInstance(clazz));
+			OptionList.OPTIONS.add(index, constructor.getInstance());
 		}
 		return result;
 	}

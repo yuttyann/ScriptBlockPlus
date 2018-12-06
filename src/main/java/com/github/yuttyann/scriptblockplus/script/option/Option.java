@@ -2,6 +2,9 @@ package com.github.yuttyann.scriptblockplus.script.option;
 
 import java.util.Objects;
 
+import com.github.yuttyann.scriptblockplus.enums.InstanceType;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
+import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -9,7 +12,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
  * オプション クラス
  * @author yuttyann44581
  */
-public abstract class Option {
+public abstract class Option implements SBInstance<Option> {
 
 	private static final String PERMISSION_PREFIX = "scriptblockplus.option.";
 
@@ -24,6 +27,15 @@ public abstract class Option {
 	protected Option(String name, String syntax) {
 		this.name = Objects.requireNonNull(name);
 		this.syntax = Objects.requireNonNull(syntax);
+	}
+
+	/**
+	 * インスタンスを生成する
+	 * @return Option
+	 */
+	@Override
+	public Option newInstance() {
+		return OptionList.getManager().newInstance(this, InstanceType.REFLECTION);
 	}
 
 	/**
