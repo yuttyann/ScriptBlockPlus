@@ -62,6 +62,14 @@ public interface ScriptBlockAPI {
 	public void save();
 
 	/**
+	 * オプションの位置を取得する</br>
+	 * 指定するクラスには"BaseOption"を継承してください
+	 * @param option オプションクラス
+	 * @return 位置
+	 */
+	public int indexOfOption(Class<? extends BaseOption> option);
+
+	/**
 	 * オプションを追加する</br>
 	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
@@ -91,12 +99,12 @@ public interface ScriptBlockAPI {
 	public void removeOption(int scriptIndex);
 
 	/**
-	 * オプションの位置を取得する</br>
-	 * 指定するクラスには"BaseOption"を継承してください
-	 * @param option オプションクラス
+	 * スクリプトの終了処理の位置を取得する</br>
+	 * 指定するクラスには"EndProcess"を実装してください
+	 * @param process 終了処理クラス
 	 * @return 位置
 	 */
-	public int indexOfOption(Class<? extends BaseOption> option);
+	public int indexOfEndProcess(Class<? extends EndProcess> endProcess);
 
 	/**
 	 * スクリプトの終了処理を追加する</br>
@@ -125,14 +133,6 @@ public interface ScriptBlockAPI {
 	 * @param index 位置
 	 */
 	public void removeEndProcess(int index);
-
-	/**
-	 * スクリプトの終了処理の位置を取得する</br>
-	 * 指定するクラスには"EndProcess"を実装してください
-	 * @param process 終了処理クラス
-	 * @return 位置
-	 */
-	public int indexOfEndProcess(Class<? extends EndProcess> endProcess);
 
 	/**
 	 * スクリプトの作者を取得する
