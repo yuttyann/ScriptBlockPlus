@@ -5,12 +5,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class OldCooldown extends BaseOption {
 
 	public OldCooldown() {
 		super("oldcooldown", "@oldcooldown:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new OldCooldown();
 	}
 
 	private class Task extends BukkitRunnable {

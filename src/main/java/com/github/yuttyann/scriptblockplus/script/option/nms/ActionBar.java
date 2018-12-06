@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -32,6 +33,11 @@ public class ActionBar extends BaseOption {
 
 	public ActionBar() {
 		super("actionbar", "@actionbar:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new ActionBar();
 	}
 
 	private class Task extends BukkitRunnable {

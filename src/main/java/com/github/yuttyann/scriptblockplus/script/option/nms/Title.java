@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -30,6 +31,11 @@ public class Title extends BaseOption {
 
 	public Title() {
 		super("title", "@title:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new Title();
 	}
 
 	@Override

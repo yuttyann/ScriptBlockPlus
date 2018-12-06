@@ -5,12 +5,18 @@ import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class PlaySound extends BaseOption {
 
 	public PlaySound() {
 		super("sound", "@sound:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new PlaySound();
 	}
 
 	private class Task extends BukkitRunnable {

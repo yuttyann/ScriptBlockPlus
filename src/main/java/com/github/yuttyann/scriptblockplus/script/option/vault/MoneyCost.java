@@ -8,6 +8,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class MoneyCost extends BaseOption {
@@ -16,6 +17,11 @@ public class MoneyCost extends BaseOption {
 
 	public MoneyCost() {
 		super("moneycost", "$cost:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new MoneyCost();
 	}
 
 	@Override

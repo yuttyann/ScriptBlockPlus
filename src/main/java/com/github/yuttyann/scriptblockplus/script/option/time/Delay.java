@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -14,6 +15,11 @@ public class Delay extends BaseOption implements Runnable {
 
 	public Delay() {
 		super("delay", "@delay:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new Delay();
 	}
 
 	@Override

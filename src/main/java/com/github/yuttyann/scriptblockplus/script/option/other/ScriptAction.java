@@ -5,6 +5,7 @@ import org.bukkit.event.block.Action;
 import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -14,6 +15,11 @@ public class ScriptAction extends BaseOption {
 
 	public ScriptAction() {
 		super("scriptaction", "@scriptaction:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new ScriptAction();
 	}
 
 	@Override

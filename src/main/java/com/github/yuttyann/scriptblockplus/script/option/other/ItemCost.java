@@ -11,6 +11,7 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -23,6 +24,11 @@ public class ItemCost extends BaseOption {
 
 	public ItemCost() {
 		super("itemcost", "$item:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new ItemCost();
 	}
 
 	@Override

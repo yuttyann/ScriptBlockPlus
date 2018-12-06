@@ -8,12 +8,18 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class Cooldown extends BaseOption {
 
 	public Cooldown() {
 		super("cooldown", "@cooldown:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new Cooldown();
 	}
 
 	private class Task extends BukkitRunnable {

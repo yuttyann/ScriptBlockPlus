@@ -11,6 +11,11 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class EndInventory implements EndProcess {
 
 	@Override
+	public EndProcess newInstance() {
+		return new EndInventory();
+	}
+
+	@Override
 	public void success(SBRead sbRead) {
 		Player player = sbRead.getSBPlayer().getPlayer();
 		if (player.isOnline()) {

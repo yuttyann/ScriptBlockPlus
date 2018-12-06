@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -17,6 +18,11 @@ public class ItemHand extends BaseOption {
 
 	public ItemHand() {
 		super("itemhand", "@hand:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new ItemHand();
 	}
 
 	@Override

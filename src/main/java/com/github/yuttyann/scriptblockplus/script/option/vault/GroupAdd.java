@@ -5,12 +5,18 @@ import org.bukkit.entity.Player;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public class GroupAdd extends BaseOption {
 
 	public GroupAdd() {
 		super("group_add", "@groupADD:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new GroupAdd();
 	}
 
 	@Override

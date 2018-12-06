@@ -13,6 +13,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -25,6 +26,11 @@ public class Calculation extends BaseOption {
 
 	public Calculation() {
 		super("calculation", "@calc:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new Calculation();
 	}
 
 	@Override

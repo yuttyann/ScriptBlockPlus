@@ -9,6 +9,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -16,6 +17,11 @@ public class Execute extends BaseOption {
 
 	public Execute() {
 		super("execute", "@execute:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new Execute();
 	}
 
 	@Override

@@ -8,6 +8,11 @@ import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
 public class EndMoneyCost implements EndProcess {
 
 	@Override
+	public EndProcess newInstance() {
+		return new EndMoneyCost();
+	}
+
+	@Override
 	public void success(SBRead sbRead) {}
 
 	@Override

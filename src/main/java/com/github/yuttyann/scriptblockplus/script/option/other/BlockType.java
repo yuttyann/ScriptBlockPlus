@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -12,6 +13,11 @@ public class BlockType extends BaseOption {
 
 	public BlockType() {
 		super("blocktype", "@blocktype:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new BlockType();
 	}
 
 	@Override

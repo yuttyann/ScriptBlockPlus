@@ -2,11 +2,17 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 
 public class Amount extends BaseOption {
 
 	public Amount() {
 		super("amount", "@amount:");
+	}
+
+	@Override
+	public Option newInstance() {
+		return new Amount();
 	}
 
 	@Override
