@@ -40,7 +40,7 @@ public abstract class PlayerData implements SBPlayer {
 		private final Map<String, Object> objectMap;
 
 		private ObjMap() {
-			objectMap = new HashMap<>();
+			this.objectMap = new HashMap<>();
 		}
 
 		@Override
@@ -95,22 +95,22 @@ public abstract class PlayerData implements SBPlayer {
 
 		@Override
 		public <T> T get(String key) {
-			return get(key, null);
+			return (T) objectMap.get(key);
 		}
 
 		@Override
 		public <T> T get(String key, Class<T> classOfT) {
-			return classOfT == null ? (T) objectMap.get(key) : classOfT.cast(objectMap.get(key));
+			return classOfT == null ? get(key) : classOfT.cast(get(key));
 		}
 
 		@Override
 		public <T> T remove(String key) {
-			return remove(key, null);
+			return (T) objectMap.remove(key);
 		}
 
 		@Override
 		public <T> T remove(String key, Class<T> classOfT) {
-			return classOfT == null ? (T) objectMap.remove(key) : classOfT.cast(objectMap.remove(key));
+			return classOfT == null ? remove(key) : classOfT.cast(remove(key));
 		}
 
 		@Override

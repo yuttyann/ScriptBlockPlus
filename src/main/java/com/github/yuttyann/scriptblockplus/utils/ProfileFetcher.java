@@ -21,13 +21,16 @@ public final class ProfileFetcher {
 
 	private static final JSONParser JSON_PARSER = new JSONParser();
 
-	private static final Map<String, UUID> UUID_CACHE_MAP = new HashMap<>();
-	private static final Map<UUID, String> NAME_CACHE_MAP = new HashMap<>();
+	private static final Map<Integer, Object> CACHE_MAP = new HashMap<>();
 
 	private static final int[] UUID_INDEX = { 8, 12, 16, 20, 32 };
 
 	public static UUID getUniqueId(String name) throws ProtocolException, ParseException, IOException {
-		UUID uuid = UUID_CACHE_MAP.get(name);
+		if (name.length() < 1 || name.length() > 16) {
+			return null;
+		}
+		int hash = name.hashCode();
+		UUID uuid = (UUID) CACHE_MAP.get(hash);
 		if (uuid == null) {
 			JSONObject json = getJsonObject(PROFILE_NAME_URL + name);
 			String errorMessage = (String) json.get("errorMessage");
@@ -35,13 +38,17 @@ public final class ProfileFetcher {
 				throw new IllegalStateException(errorMessage);
 			}
 			uuid = fromString((String) json.get("id"));
-			UUID_CACHE_MAP.put(name, uuid);
+			CACHE_MAP.put(hash, uuid);
 		}
 		return uuid;
 	}
 
 	public static String getName(UUID uuid) throws ProtocolException, ParseException, IOException {
-		String name = NAME_CACHE_MAP.get(uuid);
+		if (uuid == null) {
+			return null;
+		}
+		int hash = uuid.hashCode();
+		String name = (String) CACHE_MAP.get(hash);
 		if (name == null) {
 			JSONObject json = getJsonObject(PROFILE_UUID_URL + StringUtils.replace(uuid.toString(), "-", ""));
 			String errorMessage = (String) json.get("errorMessage");
@@ -49,7 +56,7 @@ public final class ProfileFetcher {
 				throw new IllegalStateException(errorMessage);
 			}
 			name = (String) json.get("name");
-			NAME_CACHE_MAP.put(uuid, name);
+			CACHE_MAP.put(hash, name);
 		}
 		return name;
 	}

@@ -34,10 +34,18 @@ public enum PackageType {
 	CB_UPDATER(CB, "updater"),
 	CB_UTIL(CB, "util");
 
+	private enum RType {
+		CLASS, FIELD, METHOD, CONSTRUCTOR
+	}
+
+	private static final Map<String, Object> CACHE_MAP = new HashMap<>();
+
+	/*
 	private static final Map<String, Field> FIELD_CACHE_MAP = new HashMap<>();
 	private static final Map<String, Method> METHOD_CACHE_MAP = new HashMap<>();
 	private static final Map<String, Class<?>> CLASS_CACHE_MAP = new HashMap<>();
 	private static final Map<String, Constructor<?>> CONSTRUCTOR_CACHE_MAP = new HashMap<>();
+	*/
 
 	private static String packageName;
 
@@ -71,8 +79,8 @@ public enum PackageType {
 	}
 
 	public Field getField(boolean declared, String className, String fieldName) throws ReflectiveOperationException {
-		String key = createKey(className, fieldName, null);
-		Field field = FIELD_CACHE_MAP.get(key);
+		String key = createKey(RType.FIELD, className, fieldName, null);
+		Field field = (Field) CACHE_MAP.get(key);
 		if (field == null) {
 			if (declared) {
 				field = getClass(className).getDeclaredField(fieldName);
@@ -80,7 +88,7 @@ public enum PackageType {
 			} else {
 				field = getClass(className).getField(fieldName);
 			}
-			FIELD_CACHE_MAP.put(key, field);
+			CACHE_MAP.put(key, field);
 		}
 		return field;
 	}
@@ -115,8 +123,8 @@ public enum PackageType {
 		if (parameterTypes == null) {
 			parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
-		String key = createKey(className, methodName, parameterTypes);
-		Method method = METHOD_CACHE_MAP.get(key);
+		String key = createKey(RType.METHOD, className, methodName, parameterTypes);
+		Method method = (Method) CACHE_MAP.get(key);
 		if (method == null) {
 			if (declared) {
 				method = getClass(className).getDeclaredMethod(methodName, parameterTypes);
@@ -124,7 +132,7 @@ public enum PackageType {
 			} else {
 				method = getClass(className).getMethod(methodName, parameterTypes);
 			}
-			METHOD_CACHE_MAP.put(key, method);
+			CACHE_MAP.put(key, method);
 		}
 		return method;
 	}
@@ -157,8 +165,8 @@ public enum PackageType {
 		if (parameterTypes == null) {
 			parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
-		String key = createKey(className, null, parameterTypes);
-		Constructor<?> constructor = CONSTRUCTOR_CACHE_MAP.get(key);
+		String key = createKey(RType.CONSTRUCTOR, className, null, parameterTypes);
+		Constructor<?> constructor = (Constructor<?>) CACHE_MAP.get(key);
 		if (constructor == null) {
 			if (declared) {
 				constructor = getClass(className).getDeclaredConstructor(parameterTypes);
@@ -166,7 +174,7 @@ public enum PackageType {
 			} else {
 				constructor = getClass(className).getConstructor(parameterTypes);
 			}
-			CONSTRUCTOR_CACHE_MAP.put(key, constructor);
+			CACHE_MAP.put(key, constructor);
 		}
 		return constructor;
 	}
@@ -175,25 +183,27 @@ public enum PackageType {
 		if (StringUtils.isEmpty(className)) {
 			throw new IllegalArgumentException();
 		}
-		String key = this + "." + className;
-		Class<?> clazz = CLASS_CACHE_MAP.get(key);
+		String pass = this + "." + className;
+		String key = RType.CLASS + "_" + pass;
+		Class<?> clazz = (Class<?>) CACHE_MAP.get(key);
 		if (clazz == null) {
-			clazz = Class.forName(key);
-			CLASS_CACHE_MAP.put(key, clazz);
+			clazz = Class.forName(pass);
+			CACHE_MAP.put(key, clazz);
 		}
 		return clazz;
 	}
 
-	private String createKey(String className, String name, Class<?>[] objects) {
+	private String createKey(RType rType, String className, String name, Class<?>[] objects) {
 		if (StringUtils.isEmpty(className)) {
 			return "null";
 		}
+		String rName = rType + "_";
 		int lastLength = objects == null ? -1 : objects.length - 1;
 		if (lastLength == -1) {
 			if (name != null) {
-				return this + "." + className + "=" + name + "[]";
+				return rName + this + "." + className + "=" + name + "[]";
 			}
-			return this + "." + className;
+			return rName + this + "." + className;
 		}
 		boolean notEmptyName = StringUtils.isNotEmpty(name);
 		int length = objects.length + className.length();
@@ -201,7 +211,7 @@ public enum PackageType {
 			length += name.length();
 		}
 		StrBuilder builder = new StrBuilder(length);
-		builder.append(this).append('.').append(className).append(notEmptyName ? '=' : '[');
+		builder.append(rName).append(this).append('.').append(className).append(notEmptyName ? '=' : '[');
 		if (notEmptyName) {
 			builder.append(name).append('[');
 		}

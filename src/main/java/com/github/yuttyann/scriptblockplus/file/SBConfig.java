@@ -40,6 +40,7 @@ public final class SBConfig {
 		put(yaml, "ConsoleLog", false);
 		put(yaml, "SortScripts", true);
 		put(yaml, "OptionPermission", false);
+		put(yaml, "CommandSelector", false);
 		put(yaml, "Actions.InteractLeft", true);
 		put(yaml, "Actions.InteractRight", true);
 	}
@@ -142,6 +143,10 @@ public final class SBConfig {
 
 	public static boolean isOptionPermission() {
 		return get("OptionPermission");
+	}
+
+	public static boolean isCommandSelector() {
+		return get("CommandSelector");
 	}
 
 	public static boolean isLeftClick() {

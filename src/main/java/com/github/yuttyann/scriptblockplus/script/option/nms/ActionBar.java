@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.nms;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import org.bukkit.entity.Player;
@@ -13,22 +14,33 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ActionBar extends BaseOption {
 
-	private static final Class<?>[] PACKET_PARAMS;
+	private static final Object C_VALUE;
+	private static final Constructor<?> PACKET_CONSTRUCTOR;
 
 	static {
+		Object value = (byte) 2;
 		Class<?> iChatBaseComponentClass = null;
 		Class<?> byteOrChatMessageTypeClass = null;
+		Constructor<?> packetPlayOutChat = null;
 		try {
 			iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
 			if (Utils.isCBXXXorLater("1.12")) {
 				byteOrChatMessageTypeClass = PackageType.NMS.getClass("ChatMessageType");
+				value = NMSHelper.getEnumField(byteOrChatMessageTypeClass, "GAME_INFO");
 			} else {
 				byteOrChatMessageTypeClass = byte.class;
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		PACKET_PARAMS = new Class<?>[] { iChatBaseComponentClass, byteOrChatMessageTypeClass };
+		try {
+			Class<?>[] array = { iChatBaseComponentClass, byteOrChatMessageTypeClass };
+			packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", array);
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+		C_VALUE = value;
+		PACKET_CONSTRUCTOR = packetPlayOutChat;
 	}
 
 	public ActionBar() {
@@ -90,14 +102,6 @@ public class ActionBar extends BaseOption {
 		String chatSerializer = NMSHelper.getChatSerializerName();
 		Method a = PackageType.NMS.getMethod(false, chatSerializer, "a", String.class);
 		Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
-		NMSHelper.sendPacket(player, newPacketPlayOutChat(component));
-	}
-
-	private Object newPacketPlayOutChat(Object component) throws ReflectiveOperationException {
-		Object type = (byte) 2;
-		if (Utils.isCBXXXorLater("1.12")) {
-			type = NMSHelper.getEnumField(PackageType.NMS.getClass("ChatMessageType"), "GAME_INFO");
-		}
-		return PackageType.NMS.getConstructor("PacketPlayOutChat", PACKET_PARAMS).newInstance(component, type);
+		NMSHelper.sendPacket(player, PACKET_CONSTRUCTOR.newInstance(component, C_VALUE));
 	}
 }

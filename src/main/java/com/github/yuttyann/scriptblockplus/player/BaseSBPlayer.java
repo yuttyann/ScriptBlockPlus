@@ -27,7 +27,9 @@ public final class BaseSBPlayer extends PlayerData {
 	private static final Map<UUID, SBPlayer> PLAYERS = new HashMap<>(64);
 
 	private final UUID uuid;
+
 	private Player player;
+	private boolean isOnline;
 
 	private BaseSBPlayer(UUID uuid) {
 		this.uuid = Objects.requireNonNull(uuid);
@@ -45,8 +47,14 @@ public final class BaseSBPlayer extends PlayerData {
 		PLAYERS.clear();
 	}
 
-	public void setPlayer(Player player) {
-		this.player = player != null && player.getUniqueId().equals(uuid) ? player : null;
+	public BaseSBPlayer setPlayer(Player player) {
+		Objects.requireNonNull(player);
+		this.player = player.getUniqueId().equals(uuid) ? player : null;
+		return this;
+	}
+
+	public void setOnline(boolean isOnline) {
+		this.isOnline = isOnline;
 	}
 
 	@Override
@@ -56,7 +64,7 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public Player getPlayer() {
-		return player == null ? player = Bukkit.getPlayer(uuid) : player;
+		return !isOnline() ? null : player == null ? player = Bukkit.getPlayer(uuid) : player;
 	}
 
 	@Override
@@ -101,7 +109,7 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public boolean isOnline() {
-		return player.isOnline();
+		return player != null && isOnline;
 	}
 
 	@Override

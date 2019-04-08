@@ -5,13 +5,13 @@ import java.lang.reflect.Method;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
-import com.github.yuttyann.scriptblockplus.commandblock.ClassHelper;
+import com.github.yuttyann.scriptblockplus.commandblock.ClassNameList;
 import com.github.yuttyann.scriptblockplus.commandblock.CommandListener;
 import com.github.yuttyann.scriptblockplus.commandblock.TileEntityCommand;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class Vx_x_Rx implements ClassHelper {
+public class Vx_x_Rx implements ClassNameList {
 
 	private static final Class<?>[] PARAMS = { getNMSClass(c), CommandSender.class, String.class };
 

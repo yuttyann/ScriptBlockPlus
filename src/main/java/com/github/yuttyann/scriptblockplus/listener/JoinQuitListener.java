@@ -28,12 +28,12 @@ public class JoinQuitListener implements Listener {
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		BaseSBPlayer sbPlayer = plugin.fromPlayer(player);
-		sbPlayer.setPlayer(player);
+		sbPlayer.setPlayer(player).setOnline(true);
 		if (!sbPlayer.hasOldFullCoords()) {
-			BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation());
+			BlockCoords blockCoords = new BlockCoords(player.getLocation());
 			sbPlayer.setOldFullCoords(blockCoords.subtract(0.0D, 1.0D, 0.0D).getFullCoords());
 		}
-		if (sbPlayer.isOp()) {
+		if (player.isOp()) {
 			plugin.checkUpdate(sbPlayer, false);
 		}
 
@@ -49,6 +49,7 @@ public class JoinQuitListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		SBPlayer sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
+		((BaseSBPlayer) sbPlayer).setOnline(false);
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setActionType(null);
 		sbPlayer.setClipboard(null);

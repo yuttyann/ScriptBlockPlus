@@ -6,7 +6,7 @@ import org.bukkit.World;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public final class TileEntityCommand implements ClassHelper {
+public final class TileEntityCommand implements ClassNameList {
 
 	private final Object tileEntityCommand;
 

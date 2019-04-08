@@ -36,6 +36,10 @@ SortScripts: true
 # オプションを実行時に権限をチェックするかどうか。
 OptionPermission: false
 
+## ===== コマンドセレクターの設定 ===== ##
+# [true -> 有効 | false -> 無効]
+CommandSelector: true
+
 ## ===== クリックの設定 ===== ##
 # [true -> 有効 | false -> 無効]
 # "左"または"右"クリックでスクリプトを実行するかどうか。

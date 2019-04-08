@@ -43,7 +43,7 @@ public class ScriptBlock extends JavaPlugin {
 		}
 
 		Files.reload();
-		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setPlayer(p));
+		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setPlayer(p).setOnline(true));
 
 		if (!HookPlugins.hasVault()) {
 			Utils.sendMessage(SBConfig.getNotVaultMessage());
@@ -77,6 +77,7 @@ public class ScriptBlock extends JavaPlugin {
 		if (mapManager != null) {
 			mapManager.saveCooldown();
 		}
+		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setPlayer(p).setOnline(false));
 	}
 
 	@Override

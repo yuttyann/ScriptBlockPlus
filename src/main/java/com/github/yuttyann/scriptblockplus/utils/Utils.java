@@ -21,6 +21,7 @@ import org.bukkit.entity.minecart.CommandMinecart;
 import org.json.simple.parser.ParseException;
 
 import com.github.yuttyann.scriptblockplus.commandblock.FakeCommandBlock;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
 
 public final class Utils {
 
@@ -91,7 +92,7 @@ public final class Utils {
 	public static boolean dispatchCommand(CommandSender sender, Location location, String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		if (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command)) {
+		if (!SBConfig.isCommandSelector() || (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command))) {
 			if (location == null) {
 				if (sender instanceof Player) {
 					location = ((Player) sender).getLocation().clone();

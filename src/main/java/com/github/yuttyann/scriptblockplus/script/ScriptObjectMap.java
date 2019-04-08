@@ -74,24 +74,24 @@ abstract class ScriptObjectMap extends IAssist implements ObjectMap {
 
 	@Override
 	public <T> T get(String key) {
-		return get(key, null);
+		Map<String, Object> map = OBJECT_MAP.get(scriptId);
+		return map == null ? null : (T) map.get(key);
 	}
 
 	@Override
 	public <T> T get(String key, Class<T> classOfT) {
-		Map<String, Object> map = OBJECT_MAP.get(scriptId);
-		return map == null ? null : classOfT == null ? (T) map.get(key) : classOfT.cast(map.get(key));
+		return classOfT == null ? get(key) : classOfT.cast(get(key));
 	}
 
 	@Override
 	public <T> T remove(String key) {
-		return remove(key, null);
+		Map<String, Object> map = OBJECT_MAP.get(scriptId);
+		return map == null ? null : (T) map.remove(key);
 	}
 
 	@Override
 	public <T> T remove(String key, Class<T> classOfT) {
-		Map<String, Object> map = OBJECT_MAP.get(scriptId);
-		return map == null ? null : classOfT == null ? (T) map.remove(key) : classOfT.cast(map.remove(key));
+		return classOfT == null ? remove(key) : classOfT.cast(remove(key));
 	}
 
 	@Override
