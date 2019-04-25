@@ -118,8 +118,8 @@ ErrorGroupMessage: '&cOnly players in group "%group%" can interact with this scr
 # %amount%   : Amount of item
 # %damage%   : Damage value of item
 # %itemname% : Item name
-ErrorHandMessage: '&cThe items you hold in hand is not vaild, you must hold at least "%material%(%damage%)" with amount "%amount%x"'
-ErrorItemMessage: '&cThe items in your inventory is not vaild, you must keep in your inventory at least "%material%(%damage%)" with amount "%amount%x"'
+ErrorHandMessage: '&cThe items you hold in hand is not vaild, you must hold at least "%itemname%(%material%:%damage%)" with amount "%amount%x"'
+ErrorItemMessage: '&cThe items in your inventory is not vaild, you must keep in your inventory at least "%itemname%(%material%:%damage%)" with amount "%amount%x"'
 
 # %cost%   : Required amount
 # %result% : Missing amount

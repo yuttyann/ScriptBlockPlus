@@ -97,7 +97,7 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void setAuthor(OfflinePlayer player) {
-		setAuthor(Utils.getUniqueId(player));
+		setAuthor(player.getUniqueId());
 	}
 
 	public void setAuthor(UUID uuid) {
@@ -109,7 +109,7 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void addAuthor(OfflinePlayer player) {
-		addAuthor(Utils.getUniqueId(player));
+		addAuthor(player.getUniqueId());
 	}
 
 	public void addAuthor(UUID uuid) {
@@ -122,7 +122,7 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void removeAuthor(OfflinePlayer player) {
-		removeAuthor(Utils.getUniqueId(player));
+		removeAuthor(player.getUniqueId());
 	}
 
 	public void removeAuthor(UUID uuid) {

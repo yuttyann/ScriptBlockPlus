@@ -92,7 +92,8 @@ public final class Utils {
 	public static boolean dispatchCommand(CommandSender sender, Location location, String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		if (!SBConfig.isCommandSelector() || (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command))) {
+		System.out.println("Command: " + command + " : " + (SBConfig.isCommandSelector() && (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command))));
+		if (SBConfig.isCommandSelector() && (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command))) {
 			if (location == null) {
 				if (sender instanceof Player) {
 					location = ((Player) sender).getLocation().clone();
@@ -145,9 +146,5 @@ public final class Utils {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	public static UUID getUniqueId(OfflinePlayer player) {
-		return player == null || !player.hasPlayedBefore() ? null : player.getUniqueId();
 	}
 }

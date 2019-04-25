@@ -12,12 +12,11 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public interface SBPlayer extends CommandSender {
 
 	public static SBPlayer fromPlayer(OfflinePlayer player) {
-		return player == null ? null : fromUUID(Utils.getUniqueId(player));
+		return player == null ? null : fromUUID(player.getUniqueId());
 	}
 
 	public static SBPlayer fromUUID(UUID uuid) {

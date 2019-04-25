@@ -1,6 +1,8 @@
 package com.github.yuttyann.scriptblockplus.commandblock.versions;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -16,6 +18,8 @@ public class Vx_x_Rx implements ClassNameList {
 	private static final Class<?>[] PARAMS = { getNMSClass(c), CommandSender.class, String.class };
 
 	private final CommandListener listener = new CommandBlock(this);
+
+	private Map<Location, Object> cache_Vec3D = new HashMap<>(64);
 
 	public final CommandListener getCommandBlock() {
 		return listener;
@@ -33,7 +37,7 @@ public class Vx_x_Rx implements ClassNameList {
 		public final boolean executeCommand(CommandSender sender, Location location, String command) {
 			try {
 				Object iCommandListener = vx_x_Rx.getICommandListener(sender, location);
-				return vx_x_Rx.executeCommand(iCommandListener, sender, command) > 0;
+				return vx_x_Rx.executeCommand(iCommandListener, sender, location, command) > 0;
 			} catch (ReflectiveOperationException e) {
 				e.printStackTrace();
 			}
@@ -41,10 +45,11 @@ public class Vx_x_Rx implements ClassNameList {
 		}
 	}
 
-	protected int executeCommand(Object iSender, CommandSender bSender, String command) throws ReflectiveOperationException {
+	protected int executeCommand(Object iSender, CommandSender bSender, Location location, String command) throws ReflectiveOperationException {
 		if (Utils.isCBXXXorLater("1.13")) {
 			Object server = PackageType.CB.invokeMethod(bSender.getServer(), i, "getServer");
 			Object wrapper = PackageType.NMS.invokeMethod(iSender, a, "getWrapper");
+			wrapper = PackageType.NMS.invokeMethod(iSender, a, "a", newVec3D(location));
 			Object dispatcher = PackageType.NMS.invokeMethod(server, h, "getCommandDispatcher");
 			return (int) PackageType.NMS.invokeMethod(dispatcher, b, "dispatchServerCommand", wrapper, command);
 		} else {
@@ -52,6 +57,21 @@ public class Vx_x_Rx implements ClassNameList {
 			return (int) executeCommand.invoke(null, iSender, bSender, command);
 		}
 	}
+
+	private Object newVec3D(Location location) throws ReflectiveOperationException {
+		if (cache_Vec3D.size() > 500) {
+			cache_Vec3D = new HashMap<>(64);
+		}
+		Object vec3D = cache_Vec3D.get(location);
+		if (vec3D == null) {
+			double x = location.getBlockX() + 0.5D;
+			double y = location.getBlockY() + 0.5D;
+			double z = location.getBlockZ() + 0.5D;
+			cache_Vec3D.put(location, vec3D = PackageType.NMS.newInstance("Vec3D", x, y, z));
+		}
+		return vec3D;
+	}
+
 
 	protected Object getICommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {
 		TileEntityCommand tileEntityCommand = new TileEntityCommand();

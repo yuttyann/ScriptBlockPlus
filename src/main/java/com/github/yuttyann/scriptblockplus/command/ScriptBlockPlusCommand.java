@@ -418,7 +418,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	private void viewArgs(CommandSender sender, String[] args) {
 		Utils.sendMessage(sender, "Length: " + args.length);
 		for (int i = 0; i < args.length; i++) {
-			Utils.sendMessage(sender, i + " : " + args[i]);
+			Utils.sendMessage(sender, "[" + i + "] = " + args[i]);
 		}
 	}
 	*/

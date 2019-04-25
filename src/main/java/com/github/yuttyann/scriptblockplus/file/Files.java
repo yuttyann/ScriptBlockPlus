@@ -17,11 +17,14 @@ public final class Files {
 
 	private static final String DEFAULT_LANGUAGE = Locale.getDefault().getLanguage();
 
+	public static final String PATH_CONFIG = "config.yml";
+	public static final String PATH_LANGS = "langs/{code}.yml";
+
 	public static void reload() {
-		FILES.put("config", loadFile("config.yml", true));
+		loadFile(PATH_CONFIG, true);
 		SBConfig.reloadConfig();
 
-		FILES.put("lang", loadLang("langs/{code}.yml", "lang"));
+		loadLang(PATH_LANGS, "lang");
 		SBConfig.reloadLang();
 
 		StreamUtils.forEach(ScriptType.values(), s -> loadScript(s));
@@ -32,11 +35,11 @@ public final class Files {
 	}
 
 	public static YamlConfig getConfig() {
-		return FILES.get("config");
+		return FILES.get(PATH_CONFIG);
 	}
 
 	public static YamlConfig getLang() {
-		return FILES.get("lang");
+		return FILES.get(PATH_LANGS);
 	}
 
 	public static YamlConfig getScriptFile(ScriptType scriptType) {
@@ -49,12 +52,11 @@ public final class Files {
 
 	private static YamlConfig loadScript(ScriptType scriptType) {
 		YamlConfig yaml = loadFile("scripts/" + scriptType.getType() + ".yml", false);
-		FILES.put(scriptType.getType(), yaml);
-		return yaml;
+		return putFile(scriptType.getType(), yaml);
 	}
 
 	private static YamlConfig loadFile(String filePath, boolean isCopyFile) {
-		return YamlConfig.load(ScriptBlock.getInstance(), filePath, isCopyFile);
+		return putFile(filePath, YamlConfig.load(ScriptBlock.getInstance(), filePath, isCopyFile));
 	}
 
 	private static YamlConfig loadLang(String filePath, String dirPath) {
@@ -62,6 +64,11 @@ public final class Files {
 		if (StringUtils.isEmpty(language) || "default".equalsIgnoreCase(language)) {
 			language = DEFAULT_LANGUAGE;
 		}
-		return new Lang(ScriptBlock.getInstance(), language).load(filePath, dirPath);
+		return putFile(filePath, new Lang(ScriptBlock.getInstance(), language).load(filePath, dirPath));
+	}
+
+	private static YamlConfig putFile(String name, YamlConfig yaml) {
+		FILES.put(name, yaml);
+		return yaml;
 	}
 }

@@ -12,22 +12,24 @@ import net.minecraft.server.v1_13_R2.CommandListenerWrapper;
 import net.minecraft.server.v1_13_R2.ICommandListener;
 import net.minecraft.server.v1_13_R2.MinecraftServer;
 import net.minecraft.server.v1_13_R2.TileEntityCommand;
+import net.minecraft.server.v1_13_R2.Vec3D;
 
 public final class v1_13_R2 extends Vx_x_Rx {
 
 	@Override
-	public int executeCommand(Object iSender, CommandSender bSender, String command) {
+	public int executeCommand(Object iSender, CommandSender bSender, Location location, String command) {
 		ICommandListener sender = (ICommandListener) iSender;
 		MinecraftServer server = ((CraftServer) bSender.getServer()).getServer();
 		CommandListenerWrapper wrapper = ((CommandBlockListenerAbstract) sender).getWrapper();
-		return server.getCommandDispatcher().dispatchServerCommand(wrapper, command);
+		Vec3D vec3D = new Vec3D(location.getBlockX() + 0.5D, location.getBlockY() + 0.5D, location.getBlockZ() + 0.5D);
+		return server.getCommandDispatcher().dispatchServerCommand(wrapper.a(vec3D), command);
 	}
 
 	@Override
 	public ICommandListener getICommandListener(CommandSender sender, Location location) {
-		int x = location.getBlockX();
-		int y = location.getBlockY();
-		int z = location.getBlockZ();
+		double x = location.getBlockX();
+		double y = location.getBlockY();
+		double z = location.getBlockZ();
 		TileEntityCommand tileEntityCommand = new TileEntityCommand();
 		tileEntityCommand.setWorld(((CraftWorld) location.getWorld()).getHandle());
 		tileEntityCommand.setPosition(new BlockPosition(x, y, z));

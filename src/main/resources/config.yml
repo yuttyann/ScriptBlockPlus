@@ -38,6 +38,7 @@ OptionPermission: false
 
 ## ===== コマンドセレクターの設定 ===== ##
 # [true -> 有効 | false -> 無効]
+# コマンドが実行できない場合は、無効化を推奨します。
 CommandSelector: true
 
 ## ===== クリックの設定 ===== ##

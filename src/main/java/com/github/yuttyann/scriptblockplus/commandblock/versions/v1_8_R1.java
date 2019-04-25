@@ -25,7 +25,7 @@ import net.minecraft.server.v1_8_R1.WorldServer;
 public final class v1_8_R1 extends Vx_x_Rx {
 
 	@Override
-	public int executeCommand(Object iSender, CommandSender bSender, String command) {
+	public int executeCommand(Object iSender, CommandSender bSender, Location location, String command) {
 		if (command.charAt(0) == '/') {
 			command = command.substring(1);
 		}
