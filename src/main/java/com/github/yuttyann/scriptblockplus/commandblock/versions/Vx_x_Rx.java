@@ -19,8 +19,6 @@ public class Vx_x_Rx implements ClassNameList {
 
 	private final CommandListener listener = new CommandBlock(this);
 
-	private Map<Location, Object> cache_Vec3D = new HashMap<>(64);
-
 	public final CommandListener getCommandBlock() {
 		return listener;
 	}
@@ -48,14 +46,19 @@ public class Vx_x_Rx implements ClassNameList {
 	protected int executeCommand(Object iSender, CommandSender bSender, Location location, String command) throws ReflectiveOperationException {
 		if (Utils.isCBXXXorLater("1.13")) {
 			Object server = PackageType.CB.invokeMethod(bSender.getServer(), i, "getServer");
-			Object wrapper = PackageType.NMS.invokeMethod(iSender, a, "getWrapper");
-			wrapper = PackageType.NMS.invokeMethod(iSender, a, "a", newVec3D(location));
+			Object wrapper = setVec3D(PackageType.NMS.invokeMethod(iSender, a, "getWrapper"), newVec3D(location));
 			Object dispatcher = PackageType.NMS.invokeMethod(server, h, "getCommandDispatcher");
 			return (int) PackageType.NMS.invokeMethod(dispatcher, b, "dispatchServerCommand", wrapper, command);
 		} else {
 			Method executeCommand = PackageType.NMS.getMethod(a, "executeCommand", PARAMS);
 			return (int) executeCommand.invoke(null, iSender, bSender, command);
 		}
+	}
+
+	private Map<Location, Object> cache_Vec3D = new HashMap<>(64);
+
+	private Object setVec3D(Object wrapper, Object vec3D) throws ReflectiveOperationException {
+		return PackageType.NMS.getMethod(l, "a", PackageType.NMS.getClass(k)).invoke(wrapper, vec3D);
 	}
 
 	private Object newVec3D(Location location) throws ReflectiveOperationException {
@@ -67,7 +70,7 @@ public class Vx_x_Rx implements ClassNameList {
 			double x = location.getBlockX() + 0.5D;
 			double y = location.getBlockY() + 0.5D;
 			double z = location.getBlockZ() + 0.5D;
-			cache_Vec3D.put(location, vec3D = PackageType.NMS.newInstance("Vec3D", x, y, z));
+			cache_Vec3D.put(location, vec3D = PackageType.NMS.newInstance(k, x, y, z));
 		}
 		return vec3D;
 	}
@@ -76,7 +79,9 @@ public class Vx_x_Rx implements ClassNameList {
 	protected Object getICommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {
 		TileEntityCommand tileEntityCommand = new TileEntityCommand();
 		tileEntityCommand.setWorld(location.getWorld());
-		tileEntityCommand.setLocation(location);
+		if (!Utils.isCBXXXorLater("1.13")) {
+			tileEntityCommand.setLocation(location);
+		}
 		Object commandListener = tileEntityCommand.getCommandBlock();
 		if (sender != null) {
 			tileEntityCommand.setName(sender.getName());

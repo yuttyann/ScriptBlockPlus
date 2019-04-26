@@ -92,7 +92,6 @@ public final class Utils {
 	public static boolean dispatchCommand(CommandSender sender, Location location, String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		System.out.println("Command: " + command + " : " + (SBConfig.isCommandSelector() && (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command))));
 		if (SBConfig.isCommandSelector() && (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command))) {
 			if (location == null) {
 				if (sender instanceof Player) {

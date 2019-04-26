@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_13_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 
-import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.ChatComponentText;
 import net.minecraft.server.v1_13_R2.CommandBlockListenerAbstract;
 import net.minecraft.server.v1_13_R2.CommandListenerWrapper;
@@ -27,12 +26,9 @@ public final class v1_13_R2 extends Vx_x_Rx {
 
 	@Override
 	public ICommandListener getICommandListener(CommandSender sender, Location location) {
-		double x = location.getBlockX();
-		double y = location.getBlockY();
-		double z = location.getBlockZ();
 		TileEntityCommand tileEntityCommand = new TileEntityCommand();
 		tileEntityCommand.setWorld(((CraftWorld) location.getWorld()).getHandle());
-		tileEntityCommand.setPosition(new BlockPosition(x, y, z));
+		// tileEntityCommand.setPosition(new BlockPosition(x, y, z));
 		CommandBlockListenerAbstract commandListener = tileEntityCommand.getCommandBlock();
 		if (sender != null) {
 			commandListener.setName(new ChatComponentText(sender.getName()));

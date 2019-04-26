@@ -84,8 +84,8 @@ public final class v1_8_R1 extends Vx_x_Rx {
 				}
 			} catch (Throwable exception) {
 				String message = "CommandBlock at (%d,%d,%d) failed to handle command";
-				BlockPosition blockPosition = sender.getChunkCoordinates();
-				server.server.getLogger().log(Level.WARNING, String.format(message, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ()), exception);
+				BlockPosition position = sender.getChunkCoordinates();
+				server.server.getLogger().log(Level.WARNING, String.format(message, position.getX(), position.getY(), position.getZ()), exception);
 			}
 		}
 		return completed;
