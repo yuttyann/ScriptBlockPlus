@@ -14,7 +14,7 @@ CreateCommandMessage: '<交互方式> create <脚本内容> - 创建脚本方块
 AddCommandMessage: '<交互方式> add <脚本内容> - 添加脚本方块'
 RemoveCommandMessage: '<交互方式> remove - 移除脚本方块'
 ViewCommandMessage: '<交互方式> view - 查看方块的脚本'
-RunCommandMessage: '<scripttype> run <world> <x> <y> <z> - 执行指定的脚本'
+RunCommandMessage: '<交互方式> run <世界名> <x> <y> <z> - 执行指定的脚本'
 SelectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - 粘贴选区内的脚本方块'
 SelectorRemoveCommandMessage: 'selector remove - 移除选区内的脚本方块'
 
@@ -104,7 +104,7 @@ ActiveCooldownMessage: '&c脚本还在冷却中 [%hour%时%minute%分%second%秒
 SuccActionDataMessage: '&a脚本种类"%clicktype%"的设定已选定。请点击需要生效的方块'
 
 # 沒有變數
-ErrorEditDataMessage: '&c设定出现错误'
+ErrorActionDataMessage: '&c设定出现错误'
 ErrorScriptCheckMessage: '&c脚本输入错误！'
 ErrorScriptFileCheckMessage: '&c无脚本'
 
