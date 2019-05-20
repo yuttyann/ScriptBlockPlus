@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.commandblock;
 
 public interface ClassNameList {
 
-
 	final String a = "CommandBlockListenerAbstract";
 	final String b = "CommandDispatcher";
 	final String c = "ICommandListener";

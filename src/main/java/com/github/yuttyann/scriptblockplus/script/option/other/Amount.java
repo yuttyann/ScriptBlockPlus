@@ -18,8 +18,11 @@ public class Amount extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		ScriptData scriptData = getScriptData();
-		scriptData.addAmount(1);
-		if (scriptData.getAmount() >= Integer.parseInt(getOptionValue())) {
+		if (!scriptData.getScriptFile().contains("Amount")) {
+			scriptData.setAmount(Integer.parseInt(getOptionValue()));;
+		}
+		scriptData.subtractAmount(1);
+		if (scriptData.getAmount() <= 0) {
 			scriptData.remove();
 			getMapManager().removeCoords(getScriptType(), getLocation());
 		}

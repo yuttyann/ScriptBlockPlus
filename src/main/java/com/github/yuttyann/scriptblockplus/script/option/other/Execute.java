@@ -2,11 +2,10 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.listener.IAssist;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -34,14 +33,12 @@ public class Execute extends BaseOption {
 		double y = Integer.parseInt(coords[2]);
 		double z = Integer.parseInt(coords[3]);
 		Location location = new Location(world, x, y, z);
-
-		Player player = getPlayer();
-		ScriptBlockAPI scriptBlockAPI = ScriptBlock.getInstance().getAPI(location, scriptType);
-		if (!scriptBlockAPI.checkPath()) {
-			Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
+		ScriptRead scriptRead = new ScriptRead(new IAssist(getPlugin(), scriptType), getPlayer(), location);
+		if (!scriptRead.getScriptData().checkPath()) {
+			Utils.sendMessage(getPlayer(), SBConfig.getErrorScriptFileCheckMessage());
 			return false;
 		}
-		scriptBlockAPI.scriptRead(player);
+		scriptRead.read(0);
 		return true;
 	}
 }

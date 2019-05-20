@@ -18,8 +18,14 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class ScriptData implements Cloneable {
 
-	private Location location;
+	// Keys
+	private static final String KEY_AUTHOR = ".Author";
+	private static final String KEY_AMOUNT = ".Amount";
+	private static final String KEY_SCRIPTS = ".Scripts";
+	private static final String KEY_LASTEDIT = ".LastEdit";
+
 	private String scriptPath;
+	private Location location;
 	private YamlConfig scriptFile;
 	private ScriptType scriptType;
 	private boolean isUnmodifiableLocation;
@@ -45,10 +51,6 @@ public final class ScriptData implements Cloneable {
 		this.scriptPath = location == null ? null : createPath(location);
 	}
 
-	private String createPath(Location location) {
-		return location.getWorld().getName() + "." + BlockCoords.getCoords(location);
-	}
-
 	public void save() {
 		scriptFile.save();
 	}
@@ -70,7 +72,7 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public String getAuthor() {
-		return scriptFile.getString(scriptPath + ".Author");
+		return scriptFile.getString(scriptPath + KEY_AUTHOR);
 	}
 
 	public List<String> getAuthors(boolean isName) {
@@ -85,15 +87,15 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public String getLastEdit() {
-		return scriptFile.getString(scriptPath + ".LastEdit");
+		return scriptFile.getString(scriptPath + KEY_LASTEDIT);
 	}
 
 	public int getAmount() {
-		return scriptFile.getInt(scriptPath + ".Amount", 0);
+		return scriptFile.getInt(scriptPath + KEY_AMOUNT, 0);
 	}
 
 	public List<String> getScripts() {
-		return scriptFile.getStringList(scriptPath + ".Scripts");
+		return scriptFile.getStringList(scriptPath + KEY_SCRIPTS);
 	}
 
 	public void setAuthor(OfflinePlayer player) {
@@ -101,11 +103,11 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void setAuthor(UUID uuid) {
-		scriptFile.set(scriptPath + ".Author", uuid.toString());
+		scriptFile.set(scriptPath + KEY_AUTHOR, uuid.toString());
 	}
 
 	public void setAuthor(String author) {
-		scriptFile.set(scriptPath + ".Author", author);
+		scriptFile.set(scriptPath + KEY_AUTHOR, author);
 	}
 
 	public void addAuthor(OfflinePlayer player) {
@@ -117,7 +119,7 @@ public final class ScriptData implements Cloneable {
 		String uuidToString = uuid.toString();
 		if (!authors.contains(uuidToString)) {
 			String value = authors.size() > 0 ? getAuthor() + ", " + uuidToString : uuidToString;
-			scriptFile.set(scriptPath + ".Author", value);
+			scriptFile.set(scriptPath + KEY_AUTHOR, value);
 		}
 	}
 
@@ -134,7 +136,7 @@ public final class ScriptData implements Cloneable {
 			for (int i = 0; i < authors.size(); i++) {
 				builder.append(authors.get(i)).append(i == (authors.size() - 1) ? "" : ", ");
 			}
-			scriptFile.set(scriptPath + ".Author", builder.toString());
+			scriptFile.set(scriptPath + KEY_AUTHOR, builder.toString());
 		}
 	}
 
@@ -143,16 +145,20 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void setLastEdit(String time) {
-		scriptFile.set(scriptPath + ".LastEdit", time);
+		scriptFile.set(scriptPath + KEY_LASTEDIT, time);
+	}
+
+	public void setAmount(int amount) {
+		scriptFile.set(scriptPath + KEY_AMOUNT, amount);
 	}
 
 	public void addAmount(int amount) {
-		scriptFile.set(scriptPath + ".Amount", getAmount() + amount);
+		scriptFile.set(scriptPath + KEY_AMOUNT, getAmount() + amount);
 	}
 
 	public void subtractAmount(int amount) {
 		int result = getAmount() - amount;
-		scriptFile.set(scriptPath + ".Amount", result >= 0 ? result : 0);
+		scriptFile.set(scriptPath + KEY_AMOUNT, result >= 0 ? result : 0);
 	}
 
 	public boolean copyScripts(Location target, boolean overwrite) {
@@ -162,13 +168,14 @@ public final class ScriptData implements Cloneable {
 		}
 		targetData.setAuthor(getAuthor());
 		targetData.setLastEdit(getLastEdit());
+		targetData.setAmount(getAmount());
 		targetData.setScripts(getScripts());
 		targetData.save();
 		return true;
 	}
 
 	public void setScripts(List<String> scripts) {
-		scriptFile.set(scriptPath + ".Scripts", scripts);
+		scriptFile.set(scriptPath + KEY_SCRIPTS, scripts);
 	}
 
 	public void setScript(int index, String script) {
@@ -190,11 +197,11 @@ public final class ScriptData implements Cloneable {
 	public void removeScript(String script) {
 		List<String> scripts = getScripts();
 		scripts.remove(script);
-		scriptFile.set(scriptPath + ".Scripts", scripts);
+		scriptFile.set(scriptPath + KEY_SCRIPTS, scripts);
 	}
 
 	public void clearScripts() {
-		scriptFile.set(scriptPath + ".Scripts", null);
+		scriptFile.set(scriptPath + KEY_SCRIPTS, null);
 	}
 
 	public void remove() {
@@ -215,5 +222,9 @@ public final class ScriptData implements Cloneable {
 		scriptData.scriptType = this.scriptType;
 		scriptData.isUnmodifiableLocation = this.isUnmodifiableLocation;
 		return scriptData;
+	}
+
+	private String createPath(Location location) {
+		return location.getWorld() + "." + BlockCoords.getCoords(location);
 	}
 }

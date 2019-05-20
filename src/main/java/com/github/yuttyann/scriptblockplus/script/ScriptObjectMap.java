@@ -11,18 +11,17 @@ abstract class ScriptObjectMap extends IAssist implements ObjectMap {
 
 	private static final Map<UUID, Map<String, Object>> OBJECT_MAP = new HashMap<>();
 
-	private final UUID scriptId;
+	private final UUID ramdomId = UUID.randomUUID();
 
 	ScriptObjectMap(IAssist iAssist) {
 		super(iAssist);
-		this.scriptId = UUID.randomUUID();
 	}
 
 	@Override
 	public void put(String key, Object value) {
-		Map<String, Object> map = OBJECT_MAP.get(scriptId);
+		Map<String, Object> map = OBJECT_MAP.get(ramdomId);
 		if (map == null) {
-			OBJECT_MAP.put(scriptId, map = new HashMap<>());
+			OBJECT_MAP.put(ramdomId, map = new HashMap<>());
 		}
 		map.put(key, value);
 	}
@@ -74,7 +73,7 @@ abstract class ScriptObjectMap extends IAssist implements ObjectMap {
 
 	@Override
 	public <T> T get(String key) {
-		Map<String, Object> map = OBJECT_MAP.get(scriptId);
+		Map<String, Object> map = OBJECT_MAP.get(ramdomId);
 		return map == null ? null : (T) map.get(key);
 	}
 
@@ -85,7 +84,7 @@ abstract class ScriptObjectMap extends IAssist implements ObjectMap {
 
 	@Override
 	public <T> T remove(String key) {
-		Map<String, Object> map = OBJECT_MAP.get(scriptId);
+		Map<String, Object> map = OBJECT_MAP.get(ramdomId);
 		return map == null ? null : (T) map.remove(key);
 	}
 
@@ -101,18 +100,18 @@ abstract class ScriptObjectMap extends IAssist implements ObjectMap {
 
 	@Override
 	public boolean containsKey(String key) {
-		Map<String, Object> map = OBJECT_MAP.get(scriptId);
+		Map<String, Object> map = OBJECT_MAP.get(ramdomId);
 		return map != null && map.containsKey(key);
 	}
 
 	@Override
 	public boolean containsValue(Object value) {
-		Map<String, Object> map = OBJECT_MAP.get(scriptId);
+		Map<String, Object> map = OBJECT_MAP.get(ramdomId);
 		return map != null && map.containsValue(value);
 	}
 
 	@Override
 	public void clear() {
-		OBJECT_MAP.remove(scriptId);
+		OBJECT_MAP.remove(ramdomId);
 	}
 }

@@ -5,7 +5,7 @@ version: ${project.version}
 description: ${project.description}
 author: yuttyann44581
 website: https://github.com/yuttyann/ScriptBlockPlus
-softdepend: [ScriptBlock, Vault, WorldEdit, PlaceholderAPI]
+softdepend: [ScriptBlock, Vault, PlaceholderAPI]
 
 commands:
   scriptblockplus:

@@ -18,12 +18,12 @@ import org.bukkit.permissions.Permissible;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
+import com.github.yuttyann.scriptblockplus.listener.IAssist;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
@@ -31,6 +31,7 @@ import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -227,12 +228,12 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		int y = Integer.parseInt(args[4]);
 		int z = Integer.parseInt(args[5]);
 		Location location = new Location(world, x, y, z);
-		ScriptBlockAPI sbAPI = ScriptBlock.getInstance().getAPI(location, scriptType);
-		if (!sbAPI.checkPath()) {
+		ScriptRead scriptRead = new ScriptRead(new IAssist(getPlugin(), scriptType), player, location);
+		if (!scriptRead.getScriptData().checkPath()) {
 			Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
-			return true;
+			return false;
 		}
-		sbAPI.scriptRead(player);
+		scriptRead.read(0);
 		return true;
 	}
 

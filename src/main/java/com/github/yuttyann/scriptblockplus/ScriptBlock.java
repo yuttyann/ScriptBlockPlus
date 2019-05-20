@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,11 +17,10 @@ import com.github.yuttyann.scriptblockplus.listener.JoinQuitListener;
 import com.github.yuttyann.scriptblockplus.listener.ScriptBreakListener;
 import com.github.yuttyann.scriptblockplus.listener.ScriptInteractListener;
 import com.github.yuttyann.scriptblockplus.listener.ScriptWalkListener;
+import com.github.yuttyann.scriptblockplus.manager.APIManager;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.manager.ScriptBlockManager;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -111,11 +109,7 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	public ScriptBlockAPI getAPI() {
-		return getAPI(null, null);
-	}
-
-	public ScriptBlockAPI getAPI(Location location, ScriptType scriptType) {
-		return new ScriptBlockManager(this, location, scriptType);
+		return new APIManager(this);
 	}
 
 	public MapManager getMapManager() {

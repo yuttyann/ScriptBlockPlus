@@ -140,6 +140,9 @@ public final class ScriptEdit {
 	private class Clipboard implements SBClipboard {
 
 		private final ScriptData scriptData;
+
+		//Datas
+		private final int amount;
 		private final String author;
 		private final List<String> scripts;
 		private final ScriptType scriptType;
@@ -150,6 +153,7 @@ public final class ScriptEdit {
 		private Clipboard(ScriptData scriptData) {
 			Objects.requireNonNull(scriptData);
 			this.scriptData = scriptData.clone();
+			this.amount = this.scriptData.getAmount();
 			this.author = this.scriptData.getAuthor();
 			this.scripts = this.scriptData.getScripts();
 			this.scriptType = this.scriptData.getScriptType();
@@ -201,6 +205,9 @@ public final class ScriptEdit {
 			scriptData.setAuthor(author);
 			scriptData.addAuthor(sbPlayer.getOfflinePlayer());
 			scriptData.setLastEdit(Utils.getFormatTime());
+			if (amount > 0) {
+				scriptData.setAmount(amount);
+			}
 			scriptData.setScripts(new ArrayList<>(scripts));
 			scriptData.save();
 			ScriptBlock.getInstance().getMapManager().addCoords(scriptType, location);
@@ -223,6 +230,9 @@ public final class ScriptEdit {
 			}
 			scriptData.setAuthor(author);
 			scriptData.addAuthor(sbPlayer.getOfflinePlayer());
+			if (amount > 0) {
+				scriptData.setAmount(amount);
+			}
 			scriptData.setLastEdit(lastEdit);
 			scriptData.setScripts(new ArrayList<>(scripts));
 			ScriptBlock.getInstance().getMapManager().addCoords(scriptType, location);
