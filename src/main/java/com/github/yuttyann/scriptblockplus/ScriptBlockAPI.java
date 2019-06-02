@@ -15,6 +15,7 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
  * @author yuttyann44581
  */
 public interface ScriptBlockAPI {
+
 	/**
 	 * スクリプトの編集クラスを取得する</br>
 	 * @param scripttype スクリプトの種類
@@ -182,6 +183,12 @@ public interface ScriptBlockAPI {
 		 * スクリプトの編集時刻を現在の時刻に設定する
 		 */
 		public void setLastEdit();
+
+		/**
+		 * スクリプトの編集時刻を指定の時刻に設定する
+		 * @param time 時間
+		 */
+		public void setLastEdit(String time);
 
 		/**
 		 * スクリプトの実行可能な回数を設定する

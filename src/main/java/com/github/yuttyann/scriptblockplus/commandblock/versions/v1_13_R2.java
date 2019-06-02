@@ -28,7 +28,6 @@ public final class v1_13_R2 extends Vx_x_Rx {
 	public ICommandListener getICommandListener(CommandSender sender, Location location) {
 		TileEntityCommand tileEntityCommand = new TileEntityCommand();
 		tileEntityCommand.setWorld(((CraftWorld) location.getWorld()).getHandle());
-		// tileEntityCommand.setPosition(new BlockPosition(x, y, z));
 		CommandBlockListenerAbstract commandListener = tileEntityCommand.getCommandBlock();
 		if (sender != null) {
 			commandListener.setName(new ChatComponentText(sender.getName()));

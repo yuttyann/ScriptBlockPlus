@@ -1,54 +1,42 @@
 package com.github.yuttyann.scriptblockplus.listener.nms;
 
-import java.lang.reflect.Field;
-
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.util.RayTraceResult;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class MovingPosition {
 
-	private class BlockPos {
+	private static final String KEY_MOP = "MovingObjectPosition";
 
-		private final int x;
-		private final int y;
-		private final int z;
-
-		private BlockPos(Object rayTrace) throws ReflectiveOperationException {
-			Object blockPosition = PackageType.NMS.invokeMethod(rayTrace, null, "a");
-			this.x = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getX");
-			this.y = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getY");
-			this.z = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getZ");
-		}
-	}
-
-	private final Vec3D vec3d;
-	private final BlockPos blockPos;
+	private final Block block;
 	private final BlockFace blockFace;
 
-	MovingPosition(Object rayTrace) throws ReflectiveOperationException {
-		this.vec3d = Vec3D.fromNMSVec3D(getMOPField("pos").get(rayTrace));
-		this.blockPos = new BlockPos(rayTrace);
+	MovingPosition(World world, Object rayTrace) throws ReflectiveOperationException {
+		String name = Utils.isCBXXXorLater("1.13") ? "getBlockPosition" : "a";
+		Object blockPosition = PackageType.NMS.invokeMethod(rayTrace, null, name);
+		int x = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getX");
+		int y = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getY");
+		int z = (int) PackageType.NMS.invokeMethod(blockPosition, null, "getZ");
+		this.block = world.getBlockAt(x, y, z);
 
-		Object face = getMOPField("direction").get(rayTrace);
+		Object face = PackageType.NMS.getField(KEY_MOP, "direction").get(rayTrace);
 		this.blockFace = (BlockFace) PackageType.CB_BLOCK.invokeMethod(null, "CraftBlock", "notchToBlockFace", face);
 	}
 
-	public Vec3D getPosition() {
-		return vec3d == null ? Vec3D.a : vec3d;
+	MovingPosition(World world, RayTraceResult rayTrace) {
+		this.block = rayTrace.getHitBlock();
+		this.blockFace = rayTrace.getHitBlockFace();
 	}
 
-	public Block getBlock(World world) {
-		return world.getBlockAt(blockPos.x, blockPos.y, blockPos.z);
+	public Block getBlock() {
+		return block;
 	}
 
 	public BlockFace getFace() {
 		return blockFace;
-	}
-
-	private Field getMOPField(String fieldName) throws ReflectiveOperationException {
-		return PackageType.NMS.getField("MovingObjectPosition", fieldName);
 	}
 }

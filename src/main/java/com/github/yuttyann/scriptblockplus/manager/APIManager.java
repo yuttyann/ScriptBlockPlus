@@ -171,6 +171,11 @@ public final class APIManager implements ScriptBlockAPI {
 		}
 
 		@Override
+		public void setLastEdit(String time) {
+			scriptData.setLastEdit(time);
+		}
+
+		@Override
 		public void setAmount(int amount) {
 			scriptData.setAmount(amount);
 		}

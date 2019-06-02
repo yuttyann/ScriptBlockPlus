@@ -195,9 +195,9 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	private void saveScript(String uuid, String time, YamlConfig scriptFile, ScriptType scriptType) {
 		ScriptData scriptData = new ScriptData(null, scriptType);
-		for (String world : scriptFile.getKeys(false)) {
+		for (String world : scriptFile.getKeys()) {
 			World tWorld = Utils.getWorld(world);
-			for (String coords : scriptFile.getKeys(world, false)) {
+			for (String coords : scriptFile.getKeys(world)) {
 				List<String> scripts = scriptFile.getStringList(world + "." + coords);
 				if (scripts.size() > 0 && scripts.get(0).startsWith("Author:")) {
 					scripts.remove(0);

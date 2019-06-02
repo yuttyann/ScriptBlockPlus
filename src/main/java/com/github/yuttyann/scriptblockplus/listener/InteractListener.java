@@ -23,7 +23,6 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockEditEvent;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
-import com.github.yuttyann.scriptblockplus.listener.nms.MathHelper;
 import com.github.yuttyann.scriptblockplus.listener.nms.MovingPosition;
 import com.github.yuttyann.scriptblockplus.listener.nms.NMSWorld;
 import com.github.yuttyann.scriptblockplus.listener.nms.Vec3D;
@@ -40,6 +39,13 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class InteractListener implements Listener {
 
 	private static final String KEY_FLAG = PlayerData.createRandomId("InteractFlag");
+
+	private final float[] b = new float[65536];
+	{
+		for (int i = 0; i < 65536; ++i) {
+			b[i] = (float) Math.sin((double) i * 3.141592653589793D * 2.0D / 65536.0D);
+		}
+	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerAnimationEvent(PlayerAnimationEvent event) {
@@ -58,23 +64,24 @@ public class InteractListener implements Listener {
 		double z = location.getZ();
 		float pitch = location.getPitch();
 		float yaw = location.getYaw();
-		float f1 = MathHelper.cos(-yaw * 0.017453292F - 3.1415927F);
-		float f2 = MathHelper.sin(-yaw * 0.017453292F - 3.1415927F);
-		float f3 = -MathHelper.cos(-pitch * 0.017453292F);
-		float f4 = MathHelper.sin(-pitch * 0.017453292F);
+		float f1 = cos(-yaw * 0.017453292F - 3.1415927F);
+		float f2 = sin(-yaw * 0.017453292F - 3.1415927F);
+		float f3 = -cos(-pitch * 0.017453292F);
+		float f4 = sin(-pitch * 0.017453292F);
 		float f5 = f2 * f3;
 		float f6 = f1 * f3;
 		Vec3D vec3d1 = new Vec3D(x, y, z);
 		Vec3D vec3d2 = vec3d1.add(f5 * 4.5D, f4 * 4.5D, f6 * 4.5D);
 		MovingPosition movingPosition = new NMSWorld(player.getWorld()).rayTrace(vec3d1, vec3d2);
-		if (movingPosition != null) {
-			Action action = Action.LEFT_CLICK_BLOCK;
+		ItemStack item = ItemUtils.getItemInMainHand(player);
+		if (movingPosition == null) {
+			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR, item, null, null);
+			callEvent(interactEvent, new BlockInteractEvent(interactEvent, EquipSlot.HAND, true));
+		} else {
+			Block block = movingPosition.getBlock();
 			BlockFace blockFace = movingPosition.getFace();
-			Block block = movingPosition.getBlock(player.getWorld());
-			ItemStack item = ItemUtils.getItemInMainHand(player);
-			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, action, item, block, blockFace);
-			BlockInteractEvent blockInteractEvent = new BlockInteractEvent(interactEvent, EquipSlot.HAND, true);
-			callEvent(action, interactEvent, blockInteractEvent);
+			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, item, block, blockFace);
+			callEvent(interactEvent, new BlockInteractEvent(interactEvent, EquipSlot.HAND, true));
 		}
 	}
 
@@ -96,8 +103,7 @@ public class InteractListener implements Listener {
 				}
 			}
 		}
-		BlockInteractEvent blockInteractEvent = new BlockInteractEvent(event, null, false);
-		callEvent(action, event, blockInteractEvent);
+		callEvent(event, new BlockInteractEvent(event, null, false));
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -107,10 +113,10 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	private void callEvent(Action action, PlayerInteractEvent interactEvent, BlockInteractEvent blockInteractEvent) {
+	private void callEvent(PlayerInteractEvent interactEvent, BlockInteractEvent blockInteractEvent) {
 		Player player = interactEvent.getPlayer();
 		ItemStack item = interactEvent.getItem();
-		blockInteractEvent.setInvalid(action(player, action, blockInteractEvent));
+		blockInteractEvent.setInvalid(action(player, blockInteractEvent.getAction(), blockInteractEvent));
 		Bukkit.getPluginManager().callEvent(blockInteractEvent);
 		if (blockInteractEvent.isCancelled()
 				|| ItemUtils.isBlockSelector(player, item) && Permission.TOOL_BLOCKSELECTOR.has(player)
@@ -225,5 +231,13 @@ public class InteractListener implements Listener {
 	private ScriptType getScriptType(ItemStack item) {
 		String name = StringUtils.removeStart(ItemUtils.getName(item, null), "§dScript Editor§6[Mode: ");
 		return ScriptType.valueOf(name.substring(0, name.length() - 1));
+	}
+
+	private float sin(float a) {
+		return b[(int) (a * 10430.378F) & '\uffff'];
+	}
+
+	private float cos(float a) {
+		return b[(int) (a * 10430.378F + 16384.0F) & '\uffff'];
 	}
 }

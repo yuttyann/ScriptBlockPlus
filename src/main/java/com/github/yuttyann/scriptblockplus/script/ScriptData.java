@@ -225,6 +225,6 @@ public final class ScriptData implements Cloneable {
 	}
 
 	private String createPath(Location location) {
-		return location.getWorld() + "." + BlockCoords.getCoords(location);
+		return location.getWorld().getName() + "." + BlockCoords.getCoords(location);
 	}
 }

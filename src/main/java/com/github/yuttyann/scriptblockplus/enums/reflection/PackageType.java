@@ -193,6 +193,15 @@ public enum PackageType {
 		return clazz;
 	}
 
+	public static void viewMethods(Class<?> clazz) {
+		for (Method m : clazz.getMethods()) {
+			System.out.println("*#Method#: " + m.getName());
+			for (Class<?> p : m.getParameterTypes()) {
+				System.out.println("- #Parameter#: " + p.getSimpleName());
+			}
+		}
+	}
+
 	private String createKey(RType rType, String className, String name, Class<?>[] objects) {
 		if (StringUtils.isEmpty(className)) {
 			return "null";
