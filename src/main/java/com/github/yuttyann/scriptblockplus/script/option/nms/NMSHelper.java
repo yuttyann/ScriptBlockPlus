@@ -41,7 +41,7 @@ public class NMSHelper {
 	}
 
 	public static Object getEnumField(Class<?> clazz, String name) {
-		if (clazz == null || StringUtils.isEmpty(name)) {
+		if (clazz == null || !clazz.isEnum() || StringUtils.isEmpty(name)) {
 			return null;
 		}
 		for (Object field : clazz.getEnumConstants()) {

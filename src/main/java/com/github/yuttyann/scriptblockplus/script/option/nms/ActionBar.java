@@ -25,12 +25,12 @@ public class ActionBar extends BaseOption {
 		try {
 			iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
 			if (Utils.isCBXXXorLater("1.12")) {
-				byteOrChatMessageTypeClass = PackageType.NMS.getClass("ChatMessageType");
-				value = NMSHelper.getEnumField(byteOrChatMessageTypeClass, "GAME_INFO");
+				value = PackageType.NMS.getEnumValueOf("ChatMessageType", "GAME_INFO");
+				byteOrChatMessageTypeClass = value.getClass();
 			} else {
 				byteOrChatMessageTypeClass = byte.class;
 			}
-		} catch (ClassNotFoundException e) {
+		} catch (IllegalArgumentException | ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
 		try {
@@ -68,15 +68,14 @@ public class ActionBar extends BaseOption {
 		public void run() {
 			try {
 				if (getSBPlayer().isOnline()) {
-					if (tick >= stay) {
-						sendActionBar(getPlayer(), "");
-						cancel();
-					} else {
-						sendActionBar(getPlayer(), message);
-					}
-					tick++;
-				} else {
 					cancel();
+					return;
+				}
+				if (tick++ >= stay) {
+					sendActionBar(getPlayer(), "");
+					cancel();
+				} else {
+					sendActionBar(getPlayer(), message);
 				}
 			} catch (ReflectiveOperationException e) {
 				cancel();
@@ -100,7 +99,7 @@ public class ActionBar extends BaseOption {
 
 	private void sendActionBar(Player player, String message) throws ReflectiveOperationException {
 		String chatSerializer = NMSHelper.getChatSerializerName();
-		Method a = PackageType.NMS.getMethod(false, chatSerializer, "a", String.class);
+		Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
 		Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
 		NMSHelper.sendPacket(player, PACKET_CONSTRUCTOR.newInstance(component, C_VALUE));
 	}

@@ -1,5 +1,7 @@
 package com.github.yuttyann.scriptblockplus.listener.nms;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
@@ -7,11 +9,11 @@ import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 
 public class Vec3D {
 
-	public static final Vec3D a = new Vec3D(0.0D, 0.0D, 0.0D);
+	public static final Vec3D ZERO = new Vec3D(0.0D, 0.0D, 0.0D);
 
-	public final double x;
-	public final double y;
-	public final double z;
+	private final double x;
+	private final double y;
+	private final double z;
 
 	public Vec3D(double x, double y, double z) {
 		this.x = x == -0.0D ? 0.0D : x;
@@ -23,20 +25,20 @@ public class Vec3D {
         return x;
     }
 
-    public int getBlockX() {
-        return NumberConversions.floor(x);
-    }
-
     public double getY() {
         return y;
     }
 
-    public int getBlockY() {
-        return NumberConversions.floor(y);
-    }
-
     public double getZ() {
         return z;
+    }
+
+    public int getBlockX() {
+        return NumberConversions.floor(x);
+    }
+
+    public int getBlockY() {
+        return NumberConversions.floor(y);
     }
 
     public int getBlockZ() {
@@ -75,13 +77,16 @@ public class Vec3D {
 		return new Vector(x, y, z);
 	}
 
-	public Object toNMSVec3D() {
-		try {
-			return PackageType.NMS.newInstance("Vec3D", x, y, z);
-		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public Location toLocation(World world) {
+		return toLocation(world, 0.0F, 0.0F);
+	}
+
+	public Location toLocation(World world, float yaw, float pitch) {
+		return new Location(world, x, y, z, yaw, pitch);
+	}
+
+	public Object toNMSVec3D() throws ReflectiveOperationException {
+		return PackageType.NMS.newInstance("Vec3D", x, y, z);
 	}
 
 	public static Vec3D fromNMSVec3D(Object nmsVec3D) throws ReflectiveOperationException {

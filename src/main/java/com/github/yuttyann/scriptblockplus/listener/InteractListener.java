@@ -40,8 +40,10 @@ public class InteractListener implements Listener {
 
 	private static final String KEY_FLAG = PlayerData.createRandomId("InteractFlag");
 
-	private final float[] b = new float[65536];
-	{
+	private static final float I = 0.017453292F;
+	private static final float[] b = new float[65536];
+
+	static {
 		for (int i = 0; i < 65536; ++i) {
 			b[i] = (float) Math.sin((double) i * 3.141592653589793D * 2.0D / 65536.0D);
 		}
@@ -64,22 +66,23 @@ public class InteractListener implements Listener {
 		double z = location.getZ();
 		float pitch = location.getPitch();
 		float yaw = location.getYaw();
-		float f1 = cos(-yaw * 0.017453292F - 3.1415927F);
-		float f2 = sin(-yaw * 0.017453292F - 3.1415927F);
-		float f3 = -cos(-pitch * 0.017453292F);
-		float f4 = sin(-pitch * 0.017453292F);
+		float f1 = cos(-yaw * I - (float) Math.PI);
+		float f2 = sin(-yaw * I - (float) Math.PI);
+		float f3 = -cos(-pitch * I);
+		float f4 = sin(-pitch * I);
 		float f5 = f2 * f3;
 		float f6 = f1 * f3;
+		double r = 4.5D;
 		Vec3D vec3d1 = new Vec3D(x, y, z);
-		Vec3D vec3d2 = vec3d1.add(f5 * 4.5D, f4 * 4.5D, f6 * 4.5D);
-		MovingPosition movingPosition = new NMSWorld(player.getWorld()).rayTrace(vec3d1, vec3d2);
+		Vec3D vec3d2 = vec3d1.add(f5 * r, f4 * r, f6 * r);
+		MovingPosition movingPosition = new NMSWorld(location.getWorld()).rayTrace(vec3d1, vec3d2);
 		ItemStack item = ItemUtils.getItemInMainHand(player);
 		if (movingPosition == null) {
 			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR, item, null, null);
 			callEvent(interactEvent, new BlockInteractEvent(interactEvent, EquipSlot.HAND, true));
 		} else {
-			Block block = movingPosition.getBlock();
-			BlockFace blockFace = movingPosition.getFace();
+			Block block = movingPosition.getHitBlock();
+			BlockFace blockFace = movingPosition.getBlockFace();
 			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, item, block, blockFace);
 			callEvent(interactEvent, new BlockInteractEvent(interactEvent, EquipSlot.HAND, true));
 		}

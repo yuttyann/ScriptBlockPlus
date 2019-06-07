@@ -179,6 +179,14 @@ public enum PackageType {
 		return constructor;
 	}
 
+	public Enum<?> getEnumValueOf(String className, String name) throws IllegalArgumentException, ReflectiveOperationException {
+		Class<?> clazz = getClass(className);
+		if (clazz != null && clazz.isEnum()) {
+			return (Enum<?>) invokeMethod(null, className, "valueOf", name);
+		}
+		return null;
+	}
+
 	public Class<?> getClass(String className) throws IllegalArgumentException, ClassNotFoundException {
 		if (StringUtils.isEmpty(className)) {
 			throw new IllegalArgumentException();
@@ -194,7 +202,7 @@ public enum PackageType {
 	}
 
 	public static void viewMethods(Class<?> clazz) {
-		for (Method m : clazz.getMethods()) {
+		for (Method m : clazz.getDeclaredMethods()) {
 			System.out.println("*#Method#: " + m.getName());
 			for (Class<?> p : m.getParameterTypes()) {
 				System.out.println("- #Parameter#: " + p.getSimpleName());
