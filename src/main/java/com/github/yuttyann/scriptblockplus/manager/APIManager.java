@@ -62,23 +62,23 @@ public final class APIManager implements ScriptBlockAPI {
 		}
 
 		@Override
-		public void create(Player player, Location location, String script) {
-			scriptEdit.create(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), location, script);
+		public void create(Player player, String script) {
+			scriptEdit.create(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null, script);
 		}
 
 		@Override
-		public void add(Player player, Location location, String script) {
-			scriptEdit.add(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), location, script);
+		public void add(Player player, String script) {
+			scriptEdit.add(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null, script);
 		}
 
 		@Override
-		public void remove(Player player, Location location) {
-			scriptEdit.remove(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), location);
+		public void remove(Player player) {
+			scriptEdit.remove(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null);
 		}
 
 		@Override
-		public void view(Player player, Location location) {
-			scriptEdit.view(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), location);
+		public void view(Player player) {
+			scriptEdit.view(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null);
 		}
 	}
 

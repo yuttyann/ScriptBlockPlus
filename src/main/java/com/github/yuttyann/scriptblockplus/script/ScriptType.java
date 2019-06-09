@@ -72,9 +72,9 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	@Override
 	public int hashCode() {
 		int hash = 1;
-		hash = hash * 31 + ordinal;
-		hash = hash * 31 + type.hashCode();
-		hash = hash * 31 + name.hashCode();
+		hash *= 31 + ordinal;
+		hash *= 31 + type.hashCode();
+		hash *= 31 + name.hashCode();
 		return hash;
 	}
 

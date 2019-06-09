@@ -27,12 +27,13 @@ public final class ScriptEdit {
 		this.mapManager = ScriptBlock.getInstance().getMapManager();
 	}
 
-	public void setLocation(Location location) {
+	public Location setLocation(Location location) {
 		Location oldLocation = scriptData.getLocation();
 		if (oldLocation == null || !oldLocation.equals(location)) {
 			scriptData.setLocation(location);
 			scripts = scriptData.getScripts();
 		}
+		return scriptData.getLocation();
 	}
 
 	public void save() {
@@ -50,20 +51,20 @@ public final class ScriptEdit {
 	public void create(SBPlayer sbPlayer, Location location, String script) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setActionType(null);
-		setLocation(location);
+		location = location == null ? scriptData.getLocation() : setLocation(location);
 		scriptData.setAuthor(sbPlayer.getUniqueId());
 		scriptData.setLastEdit();
 		scriptData.setScripts(Arrays.asList(script));
 		scriptData.save();
-		mapManager.addCoords(scriptType, scriptData.getLocation());
+		mapManager.addCoords(scriptType, location);
 		Utils.sendMessage(sbPlayer, SBConfig.getScriptCreateMessage(scriptType));
-		Utils.sendMessage(SBConfig.getConsoleScriptCreateMessage(sbPlayer.getName(), scriptType, scriptData.getLocation()));
+		Utils.sendMessage(SBConfig.getConsoleScriptCreateMessage(sbPlayer.getName(), scriptType, location));
 	}
 
 	public void add(SBPlayer sbPlayer, Location location, String script) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setActionType(null);
-		setLocation(location);
+		location = location == null ? scriptData.getLocation() : setLocation(location);
 		if (!scriptData.checkPath()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return;
@@ -72,30 +73,30 @@ public final class ScriptEdit {
 		scriptData.setLastEdit();
 		scriptData.addScript(script);
 		scriptData.save();
-		mapManager.removeTimes(scriptType, scriptData.getLocation());
+		mapManager.removeTimes(scriptType, location);
 		Utils.sendMessage(sbPlayer, SBConfig.getScriptAddMessage(scriptType));
-		Utils.sendMessage(SBConfig.getConsoleScriptAddMessage(sbPlayer.getName(), scriptType, scriptData.getLocation()));
+		Utils.sendMessage(SBConfig.getConsoleScriptAddMessage(sbPlayer.getName(), scriptType, location));
 	}
 
 	public void remove(SBPlayer sbPlayer, Location location) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setActionType(null);
-		setLocation(location);
+		location = location == null ? scriptData.getLocation() : setLocation(location);
 		if (!scriptData.checkPath()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return;
 		}
 		scriptData.remove();
 		scriptData.save();
-		mapManager.removeCoords(scriptType, scriptData.getLocation());
+		mapManager.removeCoords(scriptType, location);
 		Utils.sendMessage(sbPlayer, SBConfig.getScriptRemoveMessage(scriptType));
-		Utils.sendMessage(SBConfig.getConsoleScriptRemoveMessage(sbPlayer.getName(), scriptType, scriptData.getLocation()));
+		Utils.sendMessage(SBConfig.getConsoleScriptRemoveMessage(sbPlayer.getName(), scriptType, location));
 	}
 
 	public void view(SBPlayer sbPlayer, Location location) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setActionType(null);
-		setLocation(location);
+		location = location == null ? scriptData.getLocation() : setLocation(location);
 		if (!scriptData.checkPath() || scripts.isEmpty()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return;
@@ -105,7 +106,7 @@ public final class ScriptEdit {
 		for (String script : scripts) {
 			Utils.sendMessage(sbPlayer, "- " + script);
 		}
-		Utils.sendMessage(SBConfig.getConsoleScriptViewMessage(sbPlayer.getName(), scriptType, scriptData.getLocation()));
+		Utils.sendMessage(SBConfig.getConsoleScriptViewMessage(sbPlayer.getName(), scriptType, location));
 	}
 
 	private String getAuthors() {

@@ -57,6 +57,7 @@ public final class SBConfig {
 		put(yaml, "CheckVerCommandMessage");
 		put(yaml, "BackupCommandMessage");
 		put(yaml, "DataMigrCommandMessage");
+		put(yaml, "ExportCommandMessage");
 		put(yaml, "CreateCommandMessage");
 		put(yaml, "AddCommandMessage");
 		put(yaml, "RemoveCommandMessage");
@@ -75,6 +76,8 @@ public final class SBConfig {
 		put(yaml, "NotScriptBlockFileMessage");
 		put(yaml, "DataMigrStartMessage");
 		put(yaml, "DataMigrEndMessage");
+		put(yaml, "ExportStartMessage");
+		put(yaml, "ExportEndMessage");
 		put(yaml, "UpdateDownloadStartMessage");
 		put(yaml, "UpdateDownloadEndMessage");
 		put(yaml, "UpdateCheckMessage");
@@ -193,6 +196,10 @@ public final class SBConfig {
 		return ChatColor.stripColor(get("DataMigrCommandMessage"));
 	}
 
+	public static String getExportCommandMessage() {
+		return ChatColor.stripColor(get("ExportCommandMessage"));
+	}
+
 	public static String getCreateCommandMessage() {
 		return ChatColor.stripColor(get("CreateCommandMessage"));
 	}
@@ -263,6 +270,14 @@ public final class SBConfig {
 
 	public static String getDataMigrEndMessage() {
 		return replaceColorCode(get("DataMigrEndMessage"));
+	}
+
+	public static String getExportStartMessage(String name) {
+		return replaceColorCode(replace(get("ExportStartMessage"), "%name%", name));
+	}
+
+	public static String getExportEndMessage(String name) {
+		return replaceColorCode(replace(get("ExportEndMessage"), "%name%", name));
 	}
 
 	public static String getUpdateDownloadStartMessage() {
@@ -405,10 +420,10 @@ public final class SBConfig {
 
 	public static String getErrorItemMessage(Material type, int amount, int damage, String name) {
 		String message = get("ErrorItemMessage");
-		message = replace(message, "%material%", type.toString());
+		message = replace(message, "%material%", String.valueOf(type));
 		message = replace(message, "%amount%", amount);
 		message = replace(message, "%damage%", damage);
-		message = replace(message, "%itemname%", StringUtils.isNotEmpty(name) ? name : type.toString());
+		message = replace(message, "%itemname%", StringUtils.isNotEmpty(name) ? name : String.valueOf(type));
 		return replaceColorCode(message);
 	}
 

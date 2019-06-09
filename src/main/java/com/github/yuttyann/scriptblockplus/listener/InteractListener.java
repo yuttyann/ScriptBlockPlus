@@ -101,7 +101,7 @@ public class InteractListener implements Listener {
 			}
 			if (action == Action.RIGHT_CLICK_BLOCK) {
 				ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
-				if (objectMap.has(KEY_FLAG) && !objectMap.getBoolean(KEY_FLAG)) {
+				if (!objectMap.has(KEY_FLAG) || !objectMap.getBoolean(KEY_FLAG)) {
 					objectMap.put(KEY_FLAG, true);
 				}
 			}

@@ -10,6 +10,7 @@ ReloadCommandMessage: 'reload - reload the plugin'
 BackupCommandMessage: 'backup - make a backup of the script data'
 CheckVerCommandMessage: 'checkver - check new version'
 DataMigrCommandMessage: 'datamigr - migrate old data from ScriptBlock to ScriptBlockPlus'
+ExportCommandMessage: 'export <sound | material> - Output BukkitAPI Sound and Material as text'
 CreateCommandMessage: '<scripttype> create <options> - create new scriptblock'
 AddCommandMessage: '<scripttype> add <options> - add new script to the block'
 RemoveCommandMessage: '<scripttype> remove - remove script of block'
@@ -55,6 +56,10 @@ DataMigrStartMessage: '&7Start migrating from Scriptblock....'
 DataMigrEndMessage: '&bMigrating completed.'
 UpdateDownloadStartMessage: '&6Start downloading the latest ScriptBlockPlus...'
 
+# %name% : name of the class(Sound, Material)
+ExportStartMessage: '&7Outputing BukkitAPI %name% to text ....'
+ExportEndMessage: '&bOutput of BukkitAPI''s Sound is complete.'
+
 # %filename% : Downloaded file name
 # %filepath% : File save destination
 # %filesize% : File capacity
@@ -78,7 +83,7 @@ ScriptRemoveMessage: '&cRemove a "%scripttype%" type scriptblock.'
 # There are no variables
 NotSelectionMessage: '&cBlockSelector area not selected.'
 
-# %world%  : The name of the world
+# %world%  : name of the world
 # %coords% : Coordinate(x, y, z)
 SelectorPos1Message: '&bI selected the starting point "%coords%".'
 SelectorPos2Message: '&bI chose the end point "%coords%".'
