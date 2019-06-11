@@ -41,6 +41,8 @@ public class ScriptBlock extends JavaPlugin {
 		}
 
 		Files.reload();
+		Files.searchKeys();
+
 		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setPlayer(p).setOnline(true));
 
 		if (!HookPlugins.hasVault()) {

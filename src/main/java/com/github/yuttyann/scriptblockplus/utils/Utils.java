@@ -26,7 +26,6 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 public final class Utils {
 
 	private static final String SERVER_VERSION = getServerVersion();
-
 	private static final Map<String, Boolean> VC_CACHE_MAP = new HashMap<>();
 
 	public static String getServerVersion() {
@@ -40,8 +39,7 @@ public final class Utils {
 	public static boolean isCBXXXorLater(String version) {
 		Boolean result = VC_CACHE_MAP.get(version);
 		if (result == null) {
-			result = isUpperVersion(getServerVersion(), version);
-			VC_CACHE_MAP.put(version, result);
+			VC_CACHE_MAP.put(version, result = isUpperVersion(getServerVersion(), version));
 		}
 		return result;
 	}

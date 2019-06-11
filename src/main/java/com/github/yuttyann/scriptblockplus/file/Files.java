@@ -1,15 +1,22 @@
 package com.github.yuttyann.scriptblockplus.file;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.file.yaml.UTF8Config;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.google.common.base.Charsets;
 
 public final class Files {
 
@@ -28,6 +35,17 @@ public final class Files {
 		SBConfig.reloadLang();
 
 		StreamUtils.forEach(ScriptType.values(), s -> loadScript(s));
+	}
+
+	public static void searchKeys() {
+		YamlConfig config = getConfig();
+		if (config.getFile().exists()) {
+			sendKeyMessages(config, PATH_CONFIG);
+		}
+		YamlConfig lang = getLang();
+		if (lang.getFile().exists()) {
+			sendKeyMessages(lang, "lang/" + lang.getFileName());
+		}
 	}
 
 	public static Map<String, YamlConfig> getFiles() {
@@ -70,5 +88,16 @@ public final class Files {
 	private static YamlConfig putFile(String name, YamlConfig yaml) {
 		FILES.put(name, yaml);
 		return yaml;
+	}
+
+	private static void sendKeyMessages(YamlConfig yaml, String path) {
+		String filePath = StringUtils.replace(yaml.getFolderPath(), "\\", "/");
+		InputStream is = FileUtils.getResource(ScriptBlock.getInstance(), path);
+		Set<String> keys = yaml.getKeys(true);
+		for (String key : UTF8Config.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8)).getKeys(true)) {
+			if (!keys.contains(key)) {
+				Utils.sendMessage("§c[" + filePath + "] Key not found: §r" + key);
+			}
+		}
 	}
 }

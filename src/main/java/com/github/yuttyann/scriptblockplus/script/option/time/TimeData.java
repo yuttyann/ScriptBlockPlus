@@ -94,9 +94,9 @@ public final class TimeData {
 
 	static int hashCode(int scriptIndex, boolean isOldCooldown, String fullCoords, UUID uuid, ScriptType scriptType) {
 		int hash = 1;
-		hash = hash * 31 + Integer.hashCode(scriptIndex);
-		hash = hash * 31 + Boolean.hashCode(isOldCooldown);
-		hash = hash * 31 + Objects.requireNonNull(fullCoords).hashCode();
+		hash *= 31 + Integer.hashCode(scriptIndex);
+		hash *= 31 + Boolean.hashCode(isOldCooldown);
+		hash *= 31 + Objects.requireNonNull(fullCoords).hashCode();
 		hash = uuid == null ? hash : hash * 31 + uuid.hashCode();
 		hash = scriptType == null ? hash : hash * 31 + scriptType.hashCode();
 		return hash;

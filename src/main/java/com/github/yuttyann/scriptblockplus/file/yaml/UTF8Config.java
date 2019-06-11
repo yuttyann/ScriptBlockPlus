@@ -24,7 +24,7 @@ import org.yaml.snakeyaml.representer.Representer;
 
 import com.google.common.base.Charsets;
 
-final class UTF8Config extends YamlConfiguration {
+public final class UTF8Config extends YamlConfiguration {
 
 	private final DumperOptions yamlOptions = new DumperOptions();
 	private final Representer yamlRepresenter = new YamlRepresenter();

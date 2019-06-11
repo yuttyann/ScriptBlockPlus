@@ -12,22 +12,18 @@ public enum EquipSlot {
 	}
 
 	public static EquipSlot fromEquipmentSlot(Enum<?> equipmentSlot) {
-		if (!isBukkitEquipmentSlot(equipmentSlot)) {
-			return NONE;
-		}
-		for (EquipSlot equipSlot : values()) {
-			if (equipSlot.name().equals(equipmentSlot.name())) {
-				return equipSlot;
+		if (isBukkitEquipmentSlot(equipmentSlot)) {
+			for (EquipSlot equipSlot : values()) {
+				if (equipSlot.name().equals(equipmentSlot.name())) {
+					return equipSlot;
+				}
 			}
 		}
 		return NONE;
 	}
 
 	public boolean equals(Enum<?> bukkitEquipmentSlot) {
-		if (!isBukkitEquipmentSlot(bukkitEquipmentSlot)) {
-			return false;
-		}
-		return name().equals(bukkitEquipmentSlot.name());
+		return isBukkitEquipmentSlot(bukkitEquipmentSlot) && name().equals(bukkitEquipmentSlot.name());
 	}
 
 	private static boolean isBukkitEquipmentSlot(Enum<?> equipmentSlot) {

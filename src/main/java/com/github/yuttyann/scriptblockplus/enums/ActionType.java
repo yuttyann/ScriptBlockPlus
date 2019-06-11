@@ -29,8 +29,8 @@ public enum ActionType {
 	}
 
 	private static void reload() {
-		TYPES.clear();
 		try {
+			TYPES.clear();
 			StreamUtils.forEach(ScriptType.values(), s -> StreamUtils.forEach(values(), c -> TYPES.add(c.getKey(s))));
 		} finally {
 			i = ScriptType.size();
