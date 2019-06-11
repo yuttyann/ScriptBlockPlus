@@ -53,7 +53,6 @@ public interface ScriptBlockAPI {
 		/**
 		 * 指定座標にスクリプトを作成する
 		 * @param player プレイヤー
-		 * @param location 座標
 		 * @param script スクリプト
 		 */
 		public void create(Player player, String script);
@@ -61,7 +60,6 @@ public interface ScriptBlockAPI {
 		/**
 		 * 指定座標にスクリプト追加する
 		 * @param player プレイヤー
-		 * @param location 座標
 		 * @param script スクリプト
 		 */
 		public void add(Player player, String script);
@@ -69,14 +67,12 @@ public interface ScriptBlockAPI {
 		/**
 		 * 指定座標のスクリプトを削除する
 		 * @param player プレイヤー
-		 * @param location 座標
 		 */
 		public void remove(Player player);
 
 		/**
 		 * 指定座標のスクリプトの情報を表示する
 		 * @param player プレイヤー
-		 * @param location 座標
 		 */
 		public void view(Player player);
 	}
