@@ -35,6 +35,7 @@ permissions:
       scriptblockplus.command.backup: true
       scriptblockplus.command.checkver: true
       scriptblockplus.command.datamigr: true
+      scriptblockplus.command.export: true
       scriptblockplus.command.interact: true
       scriptblockplus.command.break: true
       scriptblockplus.command.walk: true
@@ -53,6 +54,8 @@ permissions:
   scriptblockplus.command.checkver:
     default: false
   scriptblockplus.command.datamigr:
+    default: false
+  scriptblockplus.command.export:
     default: false
   scriptblockplus.command.interact:
     default: false
