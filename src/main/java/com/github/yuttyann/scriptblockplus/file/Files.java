@@ -8,6 +8,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.yaml.UTF8Config;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
@@ -15,7 +19,6 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.google.common.base.Charsets;
 
 public final class Files {
@@ -93,10 +96,12 @@ public final class Files {
 	private static void sendKeyMessages(YamlConfig yaml, String path) {
 		String filePath = StringUtils.replace(yaml.getFolderPath(), "\\", "/");
 		InputStream is = FileUtils.getResource(ScriptBlock.getInstance(), path);
+		YamlConfiguration config = UTF8Config.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8));
 		Set<String> keys = yaml.getKeys(true);
-		for (String key : UTF8Config.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8)).getKeys(true)) {
+		for (String key : config.getKeys(true)) {
 			if (!keys.contains(key)) {
-				Utils.sendMessage("§c[" + filePath + "] Key not found: §r" + key);
+				Object value = config.get(key) instanceof MemorySection ? "" : config.get(key);
+				Bukkit.getConsoleSender().sendMessage("§c[" + filePath + "] Key not found: §r" + key + ": " + value);
 			}
 		}
 	}
