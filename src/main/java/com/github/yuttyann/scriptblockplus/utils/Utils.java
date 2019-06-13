@@ -90,7 +90,8 @@ public final class Utils {
 	public static boolean dispatchCommand(CommandSender sender, Location location, String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		if (SBConfig.isCommandSelector() && (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command))) {
+		boolean isCommandSelector = Bukkit.getName().equals("CraftBukkit") && SBConfig.isCommandSelector();
+		if (isCommandSelector && (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command))) {
 			if (location == null) {
 				if (sender instanceof Player) {
 					location = ((Player) sender).getLocation().clone();

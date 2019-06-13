@@ -55,7 +55,7 @@ public class Title extends BaseOption {
 			}
 		}
 		sendTitle(getPlayer(), title, subtitle, fadeIn, stay, fadeOut);
-		return false;
+		return true;
 	}
 
 	private void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {

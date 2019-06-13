@@ -71,12 +71,13 @@ public class ActionBar extends BaseOption {
 					cancel();
 					return;
 				}
-				if (tick++ >= stay) {
+				if (tick >= stay) {
 					sendActionBar(getPlayer(), "");
 					cancel();
 				} else {
 					sendActionBar(getPlayer(), message);
 				}
+				tick++;
 			} catch (ReflectiveOperationException e) {
 				cancel();
 			}
