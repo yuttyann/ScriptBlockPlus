@@ -1,4 +1,4 @@
-# ScriptBlockPlus Java8【1.14対応】Readme
+# ScriptBlockPlus Java8【1.14.2対応】Readme
 このプラグインは yuttyann44581 によって作成されています。
 <br>
 ブロックにスクリプト(コマンドなど)を追加する事が出来るプラグインです。
@@ -7,9 +7,11 @@
 <br>
 ライセンス: LGPLv3
 <br>
-紹介ページ: http://forum.minecraftuser.jp/viewtopic.php?f=38&t=36104
-<br>
 配布サイト: http://file.yuttyann44581.net/
+<br>
+紹介ページ(更新停止): http://forum.minecraftuser.jp/viewtopic.php?f=38&t=36104
+<br>
+コマンドとパーミッション: https://github.com/yuttyann/ScriptBlockPlus/wiki/コマンドとパーミッション
 <br>
 API、Eventの使い方: https://github.com/yuttyann/ScriptBlockPlus/wiki/APIの取得方法
 <br>
