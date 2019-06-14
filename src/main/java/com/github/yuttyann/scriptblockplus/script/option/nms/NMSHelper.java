@@ -11,13 +11,13 @@ public class NMSHelper {
 	private static final Class<?> PACKET;
 
 	static {
-		Class<?> clazz = null;
+		Class<?> packet = null;
 		try {
-			clazz = PackageType.NMS.getClass("Packet");
+			packet = PackageType.NMS.getClass("Packet");
 		} catch (IllegalArgumentException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		PACKET = clazz;
+		PACKET = packet;
 	}
 
 	public static void sendPacket(Player player, Object packet) {

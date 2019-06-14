@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -67,17 +68,12 @@ public class ActionBar extends BaseOption {
 		@Override
 		public void run() {
 			try {
-				if (getSBPlayer().isOnline()) {
-					cancel();
-					return;
-				}
-				if (tick >= stay) {
-					sendActionBar(getPlayer(), "");
+				if (tick++ >= stay) {
+					sendActionBar(getSBPlayer(), "");
 					cancel();
 				} else {
-					sendActionBar(getPlayer(), message);
+					sendActionBar(getSBPlayer(), message);
 				}
-				tick++;
 			} catch (ReflectiveOperationException e) {
 				cancel();
 			}
@@ -93,15 +89,18 @@ public class ActionBar extends BaseOption {
 			int stay = Integer.parseInt(array[1]);
 			new Task(stay, message).runTaskTimer(getPlugin(), 0, 1);
 		} else {
-			sendActionBar(getPlayer(), message);
+			sendActionBar(getSBPlayer(), message);
 		}
 		return true;
 	}
 
-	private void sendActionBar(Player player, String message) throws ReflectiveOperationException {
-		String chatSerializer = NMSHelper.getChatSerializerName();
-		Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
-		Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
-		NMSHelper.sendPacket(player, PACKET_CONSTRUCTOR.newInstance(component, C_VALUE));
+	private void sendActionBar(SBPlayer sbPlayer, String message) throws ReflectiveOperationException {
+		if (sbPlayer.isOnline()) {
+			Player player = sbPlayer.getPlayer();
+			String chatSerializer = NMSHelper.getChatSerializerName();
+			Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
+			Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
+			NMSHelper.sendPacket(player, PACKET_CONSTRUCTOR.newInstance(component, C_VALUE));
+		}
 	}
 }
