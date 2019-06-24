@@ -162,8 +162,8 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * スクリプトのファイルクラスを取得する</br>
-	 * @param scripttype スクリプトの種類
 	 * @param location 座標
+	 * @param scripttype スクリプトの種類
 	 * @return SBFile
 	 */
 	public SBFile getSBFile(Location location, ScriptType scriptType);
