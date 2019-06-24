@@ -20,22 +20,20 @@ public class ActionBar extends BaseOption {
 
 	static {
 		Object value = (byte) 2;
-		Class<?> iChatBaseComponentClass = null;
-		Class<?> byteOrChatMessageTypeClass = null;
+		Class<?> byteOrChatMessageType = null;
 		Constructor<?> packetPlayOutChat = null;
 		try {
-			iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
 			if (Utils.isCBXXXorLater("1.12")) {
 				value = PackageType.NMS.getEnumValueOf("ChatMessageType", "GAME_INFO");
-				byteOrChatMessageTypeClass = value.getClass();
+				byteOrChatMessageType = value.getClass();
 			} else {
-				byteOrChatMessageTypeClass = byte.class;
+				byteOrChatMessageType = byte.class;
 			}
 		} catch (IllegalArgumentException | ReflectiveOperationException e) {
 			e.printStackTrace();
 		}
 		try {
-			Class<?>[] array = { iChatBaseComponentClass, byteOrChatMessageTypeClass };
+			Class<?>[] array = { PackageType.NMS.getClass("IChatBaseComponent"), byteOrChatMessageType };
 			packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", array);
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
@@ -53,11 +51,26 @@ public class ActionBar extends BaseOption {
 		return new ActionBar();
 	}
 
+	@Override
+	protected boolean isValid() throws Exception {
+		String[] array = StringUtils.split(getOptionValue(), "/");
+		String message = StringUtils.replaceColorCode(array[0], true);
+
+		if (array.length > 1) {
+			int stay = Integer.parseInt(array[1]);
+			new Task(stay, message).runTaskTimer(getPlugin(), 0, 1);
+		} else {
+			sendActionBar(getSBPlayer(), message);
+		}
+		return true;
+	}
+
 	private class Task extends BukkitRunnable {
 
-		private int tick;
 		private final int stay;
 		private final String message;
+
+		private int tick;
 
 		private Task(int stay, String message) {
 			this.tick = 0;
@@ -78,20 +91,6 @@ public class ActionBar extends BaseOption {
 				cancel();
 			}
 		}
-	}
-
-	@Override
-	protected boolean isValid() throws Exception {
-		String[] array = StringUtils.split(getOptionValue(), "/");
-		String message = StringUtils.replaceColorCode(array[0], true);
-
-		if (array.length > 1) {
-			int stay = Integer.parseInt(array[1]);
-			new Task(stay, message).runTaskTimer(getPlugin(), 0, 1);
-		} else {
-			sendActionBar(getSBPlayer(), message);
-		}
-		return true;
 	}
 
 	private void sendActionBar(SBPlayer sbPlayer, String message) throws ReflectiveOperationException {

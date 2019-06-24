@@ -15,15 +15,15 @@ public enum DataType {
 	DOUBLE(double.class, Double.class),
 	BOOLEAN(boolean.class, Boolean.class);
 
-	private static final Map<Class<?>, DataType> CLASS_MAP = new HashMap<>();
+	private static final Map<Class<?>, DataType> CLASS = new HashMap<>();
 
 	private final Class<?> primitive;
 	private final Class<?> reference;
 
 	static {
 		for (DataType type : values()) {
-			CLASS_MAP.put(type.primitive, type);
-			CLASS_MAP.put(type.reference, type);
+			CLASS.put(type.primitive, type);
+			CLASS.put(type.reference, type);
 		}
 	}
 
@@ -41,7 +41,7 @@ public enum DataType {
 	}
 
 	public static DataType fromClass(Class<?> clazz) {
-		return CLASS_MAP.get(clazz);
+		return CLASS.get(clazz);
 	}
 
 	public static Class<?> getPrimitive(Class<?> clazz) {

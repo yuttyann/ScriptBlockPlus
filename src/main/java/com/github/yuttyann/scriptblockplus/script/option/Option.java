@@ -107,8 +107,9 @@ public abstract class Option implements SBInstance<Option> {
 	@Override
 	public int hashCode() {
 		int hash = 1;
-		hash = hash * 31 + name.hashCode();
-		hash = hash * 31 + syntax.hashCode();
+		int prime = 31;
+		hash = prime * hash + name.hashCode();
+		hash = prime * hash + syntax.hashCode();
 		return hash;
 	}
 

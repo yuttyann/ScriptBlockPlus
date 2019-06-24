@@ -121,8 +121,8 @@ public class BlockCoords extends Location {
 	}
 
 	private void setModified(boolean flag) {
-		isModified1 = true;
-		isModified2 = true;
+		isModified1 = flag;
+		isModified2 = flag;
 	}
 
 	private boolean isModified(boolean isFull) {

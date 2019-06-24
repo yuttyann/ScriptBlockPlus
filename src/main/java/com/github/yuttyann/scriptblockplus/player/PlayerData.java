@@ -49,73 +49,13 @@ public abstract class PlayerData implements SBPlayer {
 		}
 
 		@Override
-		public byte getByte(String key) {
-			return get(key, Byte.class);
-		}
-
-		@Override
-		public short getShort(String key) {
-			return get(key, Short.class);
-		}
-
-		@Override
-		public int getInt(String key) {
-			return get(key, Integer.class);
-		}
-
-		@Override
-		public long getLong(String key) {
-			return get(key, Byte.class);
-		}
-
-		@Override
-		public char getChar(String key) {
-			return get(key, Character.class);
-		}
-
-		@Override
-		public float getFloat(String key) {
-			return get(key, Float.class);
-		}
-
-		@Override
-		public double getDouble(String key) {
-			return get(key, Double.class);
-		}
-
-		@Override
-		public boolean getBoolean(String key) {
-			return get(key, Boolean.class);
-		}
-
-		@Override
-		public String getString(String key) {
-			return get(key, String.class);
-		}
-
-		@Override
 		public <T> T get(String key) {
 			return (T) objectMap.get(key);
 		}
 
 		@Override
-		public <T> T get(String key, Class<T> classOfT) {
-			return classOfT == null ? get(key) : classOfT.cast(get(key));
-		}
-
-		@Override
 		public <T> T remove(String key) {
 			return (T) objectMap.remove(key);
-		}
-
-		@Override
-		public <T> T remove(String key, Class<T> classOfT) {
-			return classOfT == null ? remove(key) : classOfT.cast(remove(key));
-		}
-
-		@Override
-		public boolean has(String key) {
-			return get(key) != null;
 		}
 
 		@Override

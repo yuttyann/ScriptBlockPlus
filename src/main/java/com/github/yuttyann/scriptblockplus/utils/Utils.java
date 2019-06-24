@@ -26,7 +26,7 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 public final class Utils {
 
 	private static final String SERVER_VERSION = getServerVersion();
-	private static final Map<String, Boolean> VC_CACHE_MAP = new HashMap<>();
+	private static final Map<String, Boolean> VC_CACHE = new HashMap<>();
 
 	public static String getServerVersion() {
 		if (SERVER_VERSION == null) {
@@ -36,10 +36,14 @@ public final class Utils {
 		return SERVER_VERSION;
 	}
 
+	public static boolean isCraftBukkit() {
+		return Bukkit.getName().equals("CraftBukkit");
+	}
+
 	public static boolean isCBXXXorLater(String version) {
-		Boolean result = VC_CACHE_MAP.get(version);
+		Boolean result = VC_CACHE.get(version);
 		if (result == null) {
-			VC_CACHE_MAP.put(version, result = isUpperVersion(getServerVersion(), version));
+			VC_CACHE.put(version, result = isUpperVersion(getServerVersion(), version));
 		}
 		return result;
 	}
@@ -90,7 +94,7 @@ public final class Utils {
 	public static boolean dispatchCommand(CommandSender sender, Location location, String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		boolean isCommandSelector = Bukkit.getName().equals("CraftBukkit") && SBConfig.isCommandSelector();
+		boolean isCommandSelector = isCraftBukkit() && SBConfig.isCommandSelector();
 		if (isCommandSelector && (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command))) {
 			if (location == null) {
 				if (sender instanceof Player) {

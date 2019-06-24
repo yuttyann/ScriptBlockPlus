@@ -46,7 +46,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 		this.name = type.toUpperCase();
 
 		ScriptType scriptType = TYPES.get(name);
-		this.ordinal = scriptType == null ? size() : scriptType.ordinal;
+		this.ordinal = scriptType == null ? TYPES.size() : scriptType.ordinal;
 		if (scriptType == null) {
 			TYPES.put(name, this);
 		}
@@ -72,9 +72,10 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	@Override
 	public int hashCode() {
 		int hash = 1;
-		hash *= 31 + ordinal;
-		hash *= 31 + type.hashCode();
-		hash *= 31 + name.hashCode();
+		int prime = 31;
+		hash = prime * hash + ordinal;
+		hash = prime * hash + type.hashCode();
+		hash = prime * hash + name.hashCode();
 		return hash;
 	}
 

@@ -23,6 +23,11 @@ public class Delay extends BaseOption implements Runnable {
 	}
 
 	@Override
+	public boolean isFailedIgnore() {
+		return true;
+	}
+
+	@Override
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		unSaveExec = array.length > 1 ? Boolean.valueOf(array[1]) : false;
@@ -33,11 +38,6 @@ public class Delay extends BaseOption implements Runnable {
 			Bukkit.getScheduler().runTaskLater(getPlugin(), this, Long.parseLong(array[0]));
 		}
 		return false;
-	}
-
-	@Override
-	public boolean isFailedIgnore() {
-		return true;
 	}
 
 	@Override
@@ -52,19 +52,19 @@ public class Delay extends BaseOption implements Runnable {
 
 	private void putDelay() {
 		if (!unSaveExec) {
-			getMapManager().putDelay(getScriptType(), getFullCoords(), getUniqueId());
+			getMapManager().putDelay(getUniqueId(), getFullCoords(), getScriptType());
 		}
 	}
 
 	private void removeDelay() {
 		if (!unSaveExec) {
-			getMapManager().removeDelay(getScriptType(), getFullCoords(), getUniqueId());
+			getMapManager().removeDelay(getUniqueId(), getFullCoords(), getScriptType());
 		}
 	}
 
 	private boolean containsDelay() {
 		if (!unSaveExec) {
-			return getMapManager().containsDelay(getScriptType(), getFullCoords(), getUniqueId());
+			return getMapManager().containsDelay(getUniqueId(), getFullCoords(), getScriptType());
 		}
 		return false;
 	}

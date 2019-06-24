@@ -19,6 +19,21 @@ public class OldCooldown extends BaseOption {
 		return new OldCooldown();
 	}
 
+	@Override
+	protected boolean isValid() throws Exception {
+		int temp = getSecond();
+		if (temp > 0) {
+			short hour = (short) (temp / 3600);
+			byte minute = (byte) (temp % 3600 / 60);
+			byte second = (byte) (temp % 3600 % 60);
+			Utils.sendMessage(getPlayer(), SBConfig.getActiveCooldownMessage(hour, minute, second));
+			return false;
+		}
+		int second = Integer.parseInt(getOptionValue());
+		new Task(second, getScriptIndex(), getFullCoords()).runTaskTimer();
+		return true;
+	}
+
 	private class Task extends BukkitRunnable {
 
 		private TimeData timeData;
@@ -43,21 +58,6 @@ public class OldCooldown extends BaseOption {
 				cancel();
 			}
 		}
-	}
-
-	@Override
-	protected boolean isValid() throws Exception {
-		int temp = getSecond();
-		if (temp > 0) {
-			short hour = (short) (temp / 3600);
-			byte minute = (byte) (temp % 3600 / 60);
-			byte second = (byte) (temp % 3600 % 60);
-			Utils.sendMessage(getPlayer(), SBConfig.getActiveCooldownMessage(hour, minute, second));
-			return false;
-		}
-		int second = Integer.parseInt(getOptionValue());
-		new Task(second, getScriptIndex(), getFullCoords()).runTaskTimer();
-		return true;
 	}
 
 	void deserialize(TimeData timeData) {

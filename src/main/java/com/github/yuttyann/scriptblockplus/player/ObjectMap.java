@@ -20,63 +20,81 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return byte
 	 */
-	public byte getByte(String key);
+	public default byte getByte(String key) {
+		return get(key, byte.class);
+	}
 
 	/**
 	 * マップの「キー」に対応した「値」を取得する
 	 * @param key キー
 	 * @return short
 	 */
-	public short getShort(String key);
+	public default short getShort(String key) {
+		return get(key, short.class);
+	}
 
 	/**
 	 * マップの「キー」に対応した「値」を取得する
 	 * @param key キー
 	 * @return int
 	 */
-	public int getInt(String key);
+	public default int getInt(String key) {
+		return get(key, int.class);
+	}
 
 	/**
 	 * マップの「キー」に対応した「値」を取得する
 	 * @param key キー
 	 * @return long
 	 */
-	public long getLong(String key);
+	public default long getLong(String key) {
+		return get(key, long.class);
+	}
 
 	/**
 	 * マップの「キー」に対応した「値」を取得する
 	 * @param key キー
 	 * @return char
 	 */
-	public char getChar(String key);
+	public default char getChar(String key) {
+		return get(key, char.class);
+	}
 
 	/**
 	 * マップの「キー」に対応した「値」を取得する
 	 * @param key キー
 	 * @return float
 	 */
-	public float getFloat(String key);
+	public default float getFloat(String key) {
+		return get(key, float.class);
+	}
 
 	/**
 	 * マップの「キー」に対応した「値」を取得する
 	 * @param key キー
 	 * @return double
 	 */
-	public double getDouble(String key);
+	public default double getDouble(String key) {
+		return get(key, double.class);
+	}
 
 	/**
 	 * マップの「キー」に対応した「値」を取得する
 	 * @param key キー
 	 * @return byte
 	 */
-	public boolean getBoolean(String key);
+	public default boolean getBoolean(String key) {
+		return get(key, boolean.class);
+	}
 
 	/**
 	 * マップの「キー」に対応した「値」を取得する
 	 * @param key キー
 	 * @return String
 	 */
-	public String getString(String key);
+	public default String getString(String key) {
+		return get(key, String.class);
+	}
 
 	/**
 	 * マップの「キー」に対応した「値」を取得する
@@ -91,7 +109,9 @@ public interface ObjectMap {
 	 * @param classOfT キャストするクラス
 	 * @return Object
 	 */
-	public <T> T get(String key, Class<T> classOfT);
+	public default <T> T get(String key, Class<T> classOfT) {
+		return classOfT == null ? get(key) : (T) get(key);
+	}
 
 	/**
 	 * マップの「キー」と、それに対応した「値」を削除する
@@ -106,14 +126,18 @@ public interface ObjectMap {
 	 * @param classOfT キャストするクラス
 	 * @return Object
 	 */
-	public <T> T remove(String key, Class<T> classOfT);
+	public default <T> T remove(String key, Class<T> classOfT) {
+		return classOfT == null ? remove(key) : (T) remove(key);
+	}
 
 	/**
 	 * 指定された「キー」に要素が存在するのか確認する
 	 * @param key キー
 	 * @return 要素が存在するかどうか
 	 */
-	public boolean has(String key);
+	public default boolean has(String key) {
+		return get(key) != null;
+	}
 
 	/**
 	 * 指定された「キー」が存在するか確認する

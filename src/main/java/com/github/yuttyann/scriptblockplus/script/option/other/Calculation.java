@@ -7,9 +7,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
@@ -65,17 +64,17 @@ public class Calculation extends BaseOption {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private double setPlaceholders(String source) {
 		String version = PlaceholderAPIPlugin.getInstance().getDescription().getVersion();
 		if (Utils.isUpperVersion("2.8.8", version)) {
 			return Double.parseDouble(PlaceholderAPI.setPlaceholders((OfflinePlayer) getPlayer(), source));
 		} else {
-			return Double.parseDouble(PlaceholderAPI.setPlaceholders(getPlayer(), source));
+			@SuppressWarnings("deprecation")
+			double result = Double.parseDouble(PlaceholderAPI.setPlaceholders(getPlayer(), source));
+			return result;
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private double getValue(Player player, String variable) throws Exception {
 		if (variable.startsWith("%player_others_in_range_") && variable.endsWith("%")) {
 			variable = variable.substring(0, variable.length() - 1);
@@ -88,12 +87,12 @@ public class Calculation extends BaseOption {
 		}
 		if (variable.startsWith("%player_ping_") && variable.endsWith("%")) {
 			variable = variable.substring(0, variable.length() - 1);
-			Player target = Bukkit.getPlayer(StringUtils.split(variable, "%player_ping_")[1]);
+			Player target = Utils.getPlayer(StringUtils.split(variable, "%player_ping_")[1]);
 			if (target == null) {
 				return 0.0D;
 			}
-			Object handle = target.getClass().getMethod("getHandle").invoke(target);
-			return handle.getClass().getField("ping").getInt(handle);
+			Object handle = PackageType.CB_ENTITY.invokeMethod(target, "CraftPlayer", "getHandle");
+			return PackageType.NMS.getField("EntityPlayer", "ping").getInt(handle);
 		}
 		if (variable.startsWith("%server_online_") && variable.endsWith("%")) {
 			variable = variable.substring(0, variable.length() - 1);
@@ -101,10 +100,8 @@ public class Calculation extends BaseOption {
 		}
 		if (variable.startsWith("%objective_score_") && variable.endsWith("%")) {
 			variable = variable.substring(0, variable.length() - 1);
-			String objectName = StringUtils.split(variable, "%objective_score_")[1];
-			ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-			Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
-			Objective objective = scoreboard.getObjective(objectName);
+			String name = StringUtils.split(variable, "%objective_score_")[1];
+			Objective objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(name);
 			return objective == null ? 0.0D : getScore(objective, player).getScore();
 		}
 		switch (variable) {
@@ -134,7 +131,9 @@ public class Calculation extends BaseOption {
 		case "%player_compass_z%":
 			return player.getCompassTarget() == null ? 0.0D : player.getCompassTarget().getBlockZ();
 		case "%player_gamemode%":
-			return player.getGameMode().getValue();
+			@SuppressWarnings("deprecation")
+			int value = player.getGameMode().getValue();
+			return value;
 		case "%player_world_time%":
 			return player.getWorld().getTime();
 		case "%player_exp%":
@@ -154,7 +153,9 @@ public class Calculation extends BaseOption {
 		case "%player_last_damage%":
 			return player.getLastDamage();
 		case "%player_max_health%":
-			return player.getMaxHealth();
+			@SuppressWarnings("deprecation")
+			double health = player.getMaxHealth();
+			return health;
 		case "%player_max_air%":
 			return player.getMaximumAir();
 		case "%player_max_no_damage_ticks%":

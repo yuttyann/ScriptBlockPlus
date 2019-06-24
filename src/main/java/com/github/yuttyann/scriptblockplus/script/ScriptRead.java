@@ -31,7 +31,7 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 	private BlockCoords blockCoords;
 	private int scriptIndex;
 
-	public ScriptRead(IAssist iAssist, Player player, Location location) {
+	public ScriptRead(Player player, Location location, IAssist iAssist) {
 		super(iAssist);
 		this.sbPlayer = SBPlayer.fromPlayer(player);
 		this.scriptData = new ScriptData(location, scriptType, true);

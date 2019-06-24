@@ -35,19 +35,21 @@ public enum PackageType {
 	CB_UTIL(CB, "util");
 
 	private enum RType {
-		CLASS, FIELD, METHOD, CONSTRUCTOR
+		CLASS("class_"), FIELD("field_"), METHOD("method_"), CONSTRUCTOR("constructor_");
+
+		private String name;
+
+		private RType(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
 	}
 
-	private static final Map<String, Object> CACHE_MAP = new HashMap<>();
-
-	/*
-	private static final Map<String, Field> FIELD_CACHE_MAP = new HashMap<>();
-	private static final Map<String, Method> METHOD_CACHE_MAP = new HashMap<>();
-	private static final Map<String, Class<?>> CLASS_CACHE_MAP = new HashMap<>();
-	private static final Map<String, Constructor<?>> CONSTRUCTOR_CACHE_MAP = new HashMap<>();
-	*/
-
-	private static String packageName;
+	private static final Map<String, Object> CACHE = new HashMap<>();
 
 	private final String path;
 
@@ -80,7 +82,7 @@ public enum PackageType {
 
 	public Field getField(boolean declared, String className, String fieldName) throws ReflectiveOperationException {
 		String key = createKey(RType.FIELD, className, fieldName, null);
-		Field field = (Field) CACHE_MAP.get(key);
+		Field field = (Field) CACHE.get(key);
 		if (field == null) {
 			if (declared) {
 				field = getClass(className).getDeclaredField(fieldName);
@@ -88,7 +90,7 @@ public enum PackageType {
 			} else {
 				field = getClass(className).getField(fieldName);
 			}
-			CACHE_MAP.put(key, field);
+			CACHE.put(key, field);
 		}
 		return field;
 	}
@@ -124,7 +126,7 @@ public enum PackageType {
 			parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
 		String key = createKey(RType.METHOD, className, methodName, parameterTypes);
-		Method method = (Method) CACHE_MAP.get(key);
+		Method method = (Method) CACHE.get(key);
 		if (method == null) {
 			if (declared) {
 				method = getClass(className).getDeclaredMethod(methodName, parameterTypes);
@@ -132,7 +134,7 @@ public enum PackageType {
 			} else {
 				method = getClass(className).getMethod(methodName, parameterTypes);
 			}
-			CACHE_MAP.put(key, method);
+			CACHE.put(key, method);
 		}
 		return method;
 	}
@@ -160,13 +162,12 @@ public enum PackageType {
 		return getConstructor(false, className, parameterTypes);
 	}
 
-	public Constructor<?> getConstructor(boolean declared, String className, Class<?>... parameterTypes)
-			throws ReflectiveOperationException {
+	public Constructor<?> getConstructor(boolean declared, String className, Class<?>... parameterTypes) throws ReflectiveOperationException {
 		if (parameterTypes == null) {
 			parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
 		String key = createKey(RType.CONSTRUCTOR, className, null, parameterTypes);
-		Constructor<?> constructor = (Constructor<?>) CACHE_MAP.get(key);
+		Constructor<?> constructor = (Constructor<?>) CACHE.get(key);
 		if (constructor == null) {
 			if (declared) {
 				constructor = getClass(className).getDeclaredConstructor(parameterTypes);
@@ -174,17 +175,9 @@ public enum PackageType {
 			} else {
 				constructor = getClass(className).getConstructor(parameterTypes);
 			}
-			CACHE_MAP.put(key, constructor);
+			CACHE.put(key, constructor);
 		}
 		return constructor;
-	}
-
-	public Enum<?> getEnumValueOf(String className, String name) throws IllegalArgumentException, ReflectiveOperationException {
-		Class<?> clazz = getClass(className);
-		if (clazz != null && clazz.isEnum()) {
-			return (Enum<?>) invokeMethod(null, className, "valueOf", name);
-		}
-		return null;
 	}
 
 	public Class<?> getClass(String className) throws IllegalArgumentException, ClassNotFoundException {
@@ -192,13 +185,21 @@ public enum PackageType {
 			throw new IllegalArgumentException();
 		}
 		String pass = this + "." + className;
-		String key = RType.CLASS + "_" + pass;
-		Class<?> clazz = (Class<?>) CACHE_MAP.get(key);
+		String key = RType.CLASS + pass;
+		Class<?> clazz = (Class<?>) CACHE.get(key);
 		if (clazz == null) {
 			clazz = Class.forName(pass);
-			CACHE_MAP.put(key, clazz);
+			CACHE.put(key, clazz);
 		}
 		return clazz;
+	}
+
+	public Enum<?> getEnumValueOf(String className, String name) throws IllegalArgumentException, ReflectiveOperationException {
+		Class<?> clazz = getClass(className);
+		if (clazz != null && clazz.isEnum()) {
+			return (Enum<?>) getMethod(className, "valueOf", String.class).invoke(null, name);
+		}
+		return null;
 	}
 
 	public static void viewMethods(Class<?> clazz) {
@@ -214,7 +215,7 @@ public enum PackageType {
 		if (StringUtils.isEmpty(className)) {
 			return "null";
 		}
-		String rName = rType + "_";
+		String rName = rType + "";
 		int lastLength = objects == null ? -1 : objects.length - 1;
 		if (lastLength == -1) {
 			if (name != null) {
@@ -222,12 +223,8 @@ public enum PackageType {
 			}
 			return rName + this + "." + className;
 		}
+		StrBuilder builder = new StrBuilder();
 		boolean notEmptyName = StringUtils.isNotEmpty(name);
-		int length = objects.length + className.length();
-		if (notEmptyName) {
-			length += name.length();
-		}
-		StrBuilder builder = new StrBuilder(length);
 		builder.append(rName).append(this).append('.').append(className).append(notEmptyName ? '=' : '[');
 		if (notEmptyName) {
 			builder.append(name).append('[');
@@ -243,11 +240,8 @@ public enum PackageType {
 	}
 
 	public static String getVersionName() {
-		if (packageName == null) {
-			String version = Bukkit.getServer().getClass().getPackage().getName();
-			packageName = version.substring(version.lastIndexOf('.') + 1);
-		}
-		return packageName;
+		String version = Bukkit.getServer().getClass().getPackage().getName();
+		return version.substring(version.lastIndexOf('.') + 1);
 	}
 
 	@Override

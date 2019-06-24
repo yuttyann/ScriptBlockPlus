@@ -17,12 +17,95 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 public interface ScriptBlockAPI {
 
 	/**
-	 * スクリプトの編集クラスを取得する</br>
-	 * @param scripttype スクリプトの種類
+	 * 指定した位置からスクリプトを実行する
+	 * @param player プレイヤー
 	 * @param location 座標
+	 * @param scripttype スクリプトの種類
+	 * @param index 開始位置
+	 * @return 実行が成功したかどうか
+	 */
+	public boolean scriptRead(Player player, Location location, ScriptType scriptType, int index);
+
+	/**
+	 * オプションの位置を取得する</br>
+	 * 指定するクラスには"BaseOption"を継承してください
+	 * @param option オプションクラス
+	 * @return 位置
+	 */
+	public int indexOfOption(Class<? extends BaseOption> option);
+
+	/**
+	 * オプションを追加する</br>
+	 * 指定するクラスには"BaseOption"を継承してください
+	 * @param option オプションクラス
+	 */
+	public void addOption(Class<? extends BaseOption> option);
+
+	/**
+	 * 指定した位置にオプションを追加する
+	 * <br>
+	 * 指定するクラスには"BaseOption"を継承してください
+	 * @param index 位置
+	 * @param option オプションクラス
+	 */
+	public void addOption(int index, Class<? extends BaseOption> option);
+
+	/**
+	 * オプションを削除する</br>
+	 * 指定するクラスには"BaseOption"を継承してください
+	 * @param option オプションクラス
+	 */
+	public void removeOption(Class<? extends BaseOption> option);
+
+	/**
+	 * 指定した位置のオプションを削除する
+	 * @param scriptIndex 位置
+	 */
+	public void removeOption(int scriptIndex);
+
+	/**
+	 * スクリプトの終了処理の位置を取得する</br>
+	 * 指定するクラスには"EndProcess"を実装してください
+	 * @param process 終了処理クラス
+	 * @return 位置
+	 */
+	public int indexOfEndProcess(Class<? extends EndProcess> endProcess);
+
+	/**
+	 * スクリプトの終了処理を追加する</br>
+	 * 指定するクラスには"EndProcess"を実装してください
+	 * @param process 終了処理クラス
+	 */
+	public void addEndProcess(Class<? extends EndProcess> endProcess);
+
+	/**
+	 * 指定した位置にスクリプトの終了処理を追加する</br>
+	 * 指定するクラスには"EndProcess"を実装してください
+	 * @param index 位置
+	 * @param process 終了処理クラス
+	 */
+	public void addEndProcess(int index, Class<? extends EndProcess> endProcess);
+
+	/**
+	 * スクリプトの終了処理を削除する</br>
+	 * 指定するクラスには"EndProcess"を実装してください
+	 * @param process 終了処理クラス
+	 */
+	public void removeEndProcess(Class<? extends EndProcess> endProcess);
+
+	/**
+	 * 指定した位置のスクリプトの終了処理を削除する
+	 * @param index 位置
+	 */
+	public void removeEndProcess(int index);
+
+	/**
+	 * スクリプトの編集クラスを取得する</br>
+	 * @param location 座標
+	 * @param scripttype スクリプトの種類
 	 * @return SBEdit
 	 */
-	public SBEdit getSBEdit(ScriptType scriptType, Location location);
+	public SBEdit getSBEdit(Location location, ScriptType scriptType);
 
 	public interface SBEdit {
 
@@ -83,7 +166,7 @@ public interface ScriptBlockAPI {
 	 * @param location 座標
 	 * @return SBFile
 	 */
-	public SBFile getSBFile(ScriptType scriptType, Location location);
+	public SBFile getSBFile(Location location, ScriptType scriptType);
 
 	public interface SBFile {
 
@@ -251,87 +334,4 @@ public interface ScriptBlockAPI {
 		 */
 		public void reload();
 	}
-
-	/**
-	 * 指定した位置からスクリプトを実行する
-	 * @param player プレイヤー
-	 * @param scripttype スクリプトの種類
-	 * @param location 座標
-	 * @param index 開始位置
-	 * @return 実行が成功したかどうか
-	 */
-	public boolean scriptRead(Player player, ScriptType scriptType, Location location, int index);
-
-	/**
-	 * オプションの位置を取得する</br>
-	 * 指定するクラスには"BaseOption"を継承してください
-	 * @param option オプションクラス
-	 * @return 位置
-	 */
-	public int indexOfOption(Class<? extends BaseOption> option);
-
-	/**
-	 * オプションを追加する</br>
-	 * 指定するクラスには"BaseOption"を継承してください
-	 * @param option オプションクラス
-	 */
-	public void addOption(Class<? extends BaseOption> option);
-
-	/**
-	 * 指定した位置にオプションを追加する
-	 * <br>
-	 * 指定するクラスには"BaseOption"を継承してください
-	 * @param index 位置
-	 * @param option オプションクラス
-	 */
-	public void addOption(int index, Class<? extends BaseOption> option);
-
-	/**
-	 * オプションを削除する</br>
-	 * 指定するクラスには"BaseOption"を継承してください
-	 * @param option オプションクラス
-	 */
-	public void removeOption(Class<? extends BaseOption> option);
-
-	/**
-	 * 指定した位置のオプションを削除する
-	 * @param scriptIndex 位置
-	 */
-	public void removeOption(int scriptIndex);
-
-	/**
-	 * スクリプトの終了処理の位置を取得する</br>
-	 * 指定するクラスには"EndProcess"を実装してください
-	 * @param process 終了処理クラス
-	 * @return 位置
-	 */
-	public int indexOfEndProcess(Class<? extends EndProcess> endProcess);
-
-	/**
-	 * スクリプトの終了処理を追加する</br>
-	 * 指定するクラスには"EndProcess"を実装してください
-	 * @param process 終了処理クラス
-	 */
-	public void addEndProcess(Class<? extends EndProcess> endProcess);
-
-	/**
-	 * 指定した位置にスクリプトの終了処理を追加する</br>
-	 * 指定するクラスには"EndProcess"を実装してください
-	 * @param index 位置
-	 * @param process 終了処理クラス
-	 */
-	public void addEndProcess(int index, Class<? extends EndProcess> endProcess);
-
-	/**
-	 * スクリプトの終了処理を削除する</br>
-	 * 指定するクラスには"EndProcess"を実装してください
-	 * @param process 終了処理クラス
-	 */
-	public void removeEndProcess(Class<? extends EndProcess> endProcess);
-
-	/**
-	 * 指定した位置のスクリプトの終了処理を削除する
-	 * @param index 位置
-	 */
-	public void removeEndProcess(int index);
 }

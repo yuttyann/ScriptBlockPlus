@@ -43,8 +43,8 @@ public final class BaseSBPlayer extends PlayerData {
 		return sbPlayer;
 	}
 
-	public static void clear() {
-		PLAYERS.clear();
+	public static Map<UUID, SBPlayer> getPlayers() {
+		return PLAYERS;
 	}
 
 	public BaseSBPlayer setPlayer(Player player) {
@@ -124,16 +124,12 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public void sendMessage(String message) {
-		if (isOnline()) {
-			player.sendMessage(message);
-		}
+		if (isOnline()) player.sendMessage(message);
 	}
 
 	@Override
 	public void sendMessage(String[] messages) {
-		if (isOnline()) {
-			player.sendMessage(messages);
-		}
+		if (isOnline()) player.sendMessage(messages);
 	}
 
 	@Override
@@ -183,16 +179,17 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public void recalculatePermissions() {
-		if (isOnline()) {
-			player.recalculatePermissions();
-		}
+		if (isOnline()) player.recalculatePermissions();
 	}
 
 	@Override
 	public void removeAttachment(PermissionAttachment attachment) {
-		if (isOnline()) {
-			player.removeAttachment(attachment);
-		}
+		if (isOnline()) player.removeAttachment(attachment);
+	}
+
+	@Override
+	public int hashCode() {
+		return uuid.hashCode();
 	}
 
 	@Override

@@ -30,6 +30,7 @@ public class ScriptBlock extends JavaPlugin {
 
 	private Updater updater;
 	private MapManager mapManager;
+	private ScriptBlockAPI scriptAPI;
 	private ScriptBlockPlusCommand scriptBlockPlusCommand;
 
 	@Override
@@ -111,7 +112,7 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	public ScriptBlockAPI getAPI() {
-		return new APIManager(this);
+		return scriptAPI == null ? scriptAPI = new APIManager(this) : scriptAPI;
 	}
 
 	public MapManager getMapManager() {
@@ -123,9 +124,6 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	public static ScriptBlock getInstance() {
-		if (instance == null) {
-			instance = (ScriptBlock) Bukkit.getPluginManager().getPlugin("ScriptBlockPlus");
-		}
-		return instance;
+		return instance == null ? instance = HookPlugins.getPlugin("ScriptBlockPlus") : instance;
 	}
 }

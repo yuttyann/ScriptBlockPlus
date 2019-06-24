@@ -75,7 +75,6 @@ public class Vx_x_Rx implements ClassNameList {
 		return vec3D;
 	}
 
-
 	protected Object getICommandListener(CommandSender sender, Location location) throws ReflectiveOperationException {
 		TileEntityCommand tileEntityCommand = new TileEntityCommand();
 		tileEntityCommand.setWorld(location.getWorld());

@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.IAssist;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -18,6 +19,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class APIManager implements ScriptBlockAPI {
 
@@ -28,15 +30,75 @@ public final class APIManager implements ScriptBlockAPI {
 	}
 
 	@Override
-	public SBEdit getSBEdit(ScriptType scriptType, Location location) {
-		return new ScEdit(scriptType, location);
+	public boolean scriptRead(Player player, Location location, ScriptType scriptType, int index) {
+		ScriptRead scriptRead = new ScriptRead(player, location, new IAssist(plugin, scriptType));
+		if (!scriptRead.getScriptData().checkPath()) {
+			Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
+			return false;
+		}
+		return scriptRead.read(index);
+	}
+
+	@Override
+	public int indexOfOption(Class<? extends BaseOption> option) {
+		return OptionList.getManager().indexOf(option);
+	}
+
+	@Override
+	public void addOption(Class<? extends BaseOption> option) {
+		OptionList.getManager().add(option);
+	}
+
+	@Override
+	public void addOption(int index, Class<? extends BaseOption> option) {
+		OptionList.getManager().add(index, option);
+	}
+
+	@Override
+	public void removeOption(Class<? extends BaseOption> option) {
+		OptionList.getManager().remove(option);
+	}
+
+	@Override
+	public void removeOption(int index) {
+		OptionList.getManager().remove(index);
+	}
+
+	@Override
+	public int indexOfEndProcess(Class<? extends EndProcess> endProcess) {
+		return EndProcessManager.getInstance().indexOf(endProcess);
+	}
+
+	@Override
+	public void addEndProcess(Class<? extends EndProcess> endProcess) {
+		EndProcessManager.getInstance().add(endProcess);
+	}
+
+	@Override
+	public void addEndProcess(int index, Class<? extends EndProcess> endProcess) {
+		EndProcessManager.getInstance().add(index, endProcess);
+	}
+
+	@Override
+	public void removeEndProcess(Class<? extends EndProcess> endProcess) {
+		EndProcessManager.getInstance().remove(endProcess);
+	}
+
+	@Override
+	public void removeEndProcess(int index) {
+		EndProcessManager.getInstance().remove(index);
+	}
+
+	@Override
+	public SBEdit getSBEdit(Location location, ScriptType scriptType) {
+		return new ScEdit(location, scriptType);
 	}
 
 	private class ScEdit implements SBEdit {
 
 		private final ScriptEdit scriptEdit;
 
-		public ScEdit(ScriptType scriptType, Location location) {
+		public ScEdit(Location location, ScriptType scriptType) {
 			this.scriptEdit = new ScriptEdit(scriptType);
 			setLocation(location);
 		}
@@ -83,15 +145,15 @@ public final class APIManager implements ScriptBlockAPI {
 	}
 
 	@Override
-	public SBFile getSBFile(ScriptType scriptType, Location location) {
-		return new ScFile(scriptType, location);
+	public SBFile getSBFile(Location location, ScriptType scriptType) {
+		return new ScFile(location, scriptType);
 	}
 
 	private class ScFile implements SBFile {
 
 		private final ScriptData scriptData;
 
-		public ScFile(ScriptType scriptType, Location location) {
+		public ScFile(Location location, ScriptType scriptType) {
 			this.scriptData = new ScriptData(location, scriptType);
 		}
 
@@ -229,60 +291,5 @@ public final class APIManager implements ScriptBlockAPI {
 		public void reload() {
 			scriptData.reload();
 		}
-	}
-
-	@Override
-	public boolean scriptRead(Player player, ScriptType scriptType, Location location, int index) {
-		return new ScriptRead(new IAssist(plugin, scriptType), player, location).read(index);
-	}
-
-	@Override
-	public int indexOfOption(Class<? extends BaseOption> option) {
-		return OptionList.getManager().indexOf(option);
-	}
-
-	@Override
-	public void addOption(Class<? extends BaseOption> option) {
-		OptionList.getManager().add(option);
-	}
-
-	@Override
-	public void addOption(int index, Class<? extends BaseOption> option) {
-		OptionList.getManager().add(index, option);
-	}
-
-	@Override
-	public void removeOption(Class<? extends BaseOption> option) {
-		OptionList.getManager().remove(option);
-	}
-
-	@Override
-	public void removeOption(int index) {
-		OptionList.getManager().remove(index);
-	}
-
-	@Override
-	public int indexOfEndProcess(Class<? extends EndProcess> endProcess) {
-		return EndProcessManager.getInstance().indexOf(endProcess);
-	}
-
-	@Override
-	public void addEndProcess(Class<? extends EndProcess> endProcess) {
-		EndProcessManager.getInstance().add(endProcess);
-	}
-
-	@Override
-	public void addEndProcess(int index, Class<? extends EndProcess> endProcess) {
-		EndProcessManager.getInstance().add(index, endProcess);
-	}
-
-	@Override
-	public void removeEndProcess(Class<? extends EndProcess> endProcess) {
-		EndProcessManager.getInstance().remove(endProcess);
-	}
-
-	@Override
-	public void removeEndProcess(int index) {
-		EndProcessManager.getInstance().remove(index);
 	}
 }

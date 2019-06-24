@@ -31,7 +31,7 @@ public class ScriptWalkListener extends IAssist {
 			return;
 		}
 		sbPlayer.setOldFullCoords(blockCoords.getFullCoords());
-		if (mapManager.containsCoords(scriptType, blockCoords)) {
+		if (mapManager.containsCoords(blockCoords, scriptType)) {
 			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(player, blockCoords.getBlock());
 			Bukkit.getPluginManager().callEvent(walkEvent);
 			if (walkEvent.isCancelled()) {
@@ -41,7 +41,7 @@ public class ScriptWalkListener extends IAssist {
 				Utils.sendMessage(sbPlayer, SBConfig.getNotPermissionMessage());
 				return;
 			}
-			new ScriptRead(this, player, blockCoords).read(0);
+			new ScriptRead(player, blockCoords, this).read(0);
 		}
 	}
 }

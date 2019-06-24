@@ -56,7 +56,7 @@ public final class ScriptEdit {
 		scriptData.setLastEdit();
 		scriptData.setScripts(Arrays.asList(script));
 		scriptData.save();
-		mapManager.addCoords(scriptType, location);
+		mapManager.addCoords(location, scriptType);
 		Utils.sendMessage(sbPlayer, SBConfig.getScriptCreateMessage(scriptType));
 		Utils.sendMessage(SBConfig.getConsoleScriptCreateMessage(sbPlayer.getName(), scriptType, location));
 	}
@@ -73,7 +73,7 @@ public final class ScriptEdit {
 		scriptData.setLastEdit();
 		scriptData.addScript(script);
 		scriptData.save();
-		mapManager.removeTimes(scriptType, location);
+		mapManager.removeTimes(location, scriptType);
 		Utils.sendMessage(sbPlayer, SBConfig.getScriptAddMessage(scriptType));
 		Utils.sendMessage(SBConfig.getConsoleScriptAddMessage(sbPlayer.getName(), scriptType, location));
 	}
@@ -88,7 +88,7 @@ public final class ScriptEdit {
 		}
 		scriptData.remove();
 		scriptData.save();
-		mapManager.removeCoords(scriptType, location);
+		mapManager.removeCoords(location, scriptType);
 		Utils.sendMessage(sbPlayer, SBConfig.getScriptRemoveMessage(scriptType));
 		Utils.sendMessage(SBConfig.getConsoleScriptRemoveMessage(sbPlayer.getName(), scriptType, location));
 	}
@@ -134,7 +134,7 @@ public final class ScriptEdit {
 			return false;
 		}
 		scriptData.remove();
-		mapManager.removeCoords(scriptType, location);
+		mapManager.removeCoords(location, scriptType);
 		return true;
 	}
 
@@ -211,7 +211,7 @@ public final class ScriptEdit {
 			}
 			scriptData.setScripts(new ArrayList<>(scripts));
 			scriptData.save();
-			ScriptBlock.getInstance().getMapManager().addCoords(scriptType, location);
+			ScriptBlock.getInstance().getMapManager().addCoords(location, scriptType);
 			Utils.sendMessage(sbPlayer, SBConfig.getScriptPasteMessage(scriptType));
 			Utils.sendMessage(SBConfig.getConsoleScriptPasteMessage(sbPlayer.getName(), scriptType, location));
 			return true;
@@ -236,7 +236,7 @@ public final class ScriptEdit {
 			}
 			scriptData.setLastEdit(lastEdit);
 			scriptData.setScripts(new ArrayList<>(scripts));
-			ScriptBlock.getInstance().getMapManager().addCoords(scriptType, location);
+			ScriptBlock.getInstance().getMapManager().addCoords(location, scriptType);
 			return true;
 		}
 	}

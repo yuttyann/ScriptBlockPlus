@@ -24,7 +24,7 @@ public class Amount extends BaseOption {
 		scriptData.subtractAmount(1);
 		if (scriptData.getAmount() <= 0) {
 			scriptData.remove();
-			getMapManager().removeCoords(getScriptType(), getLocation());
+			getMapManager().removeCoords(getLocation(), getScriptType());
 		}
 		scriptData.save();
 		return true;

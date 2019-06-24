@@ -34,7 +34,7 @@ public class ScriptInteractListener extends IAssist {
 		}
 		Block block = event.getBlock();
 		Location location = block.getLocation();
-		if (mapManager.containsCoords(scriptType, location)) {
+		if (mapManager.containsCoords(location, scriptType)) {
 			Player player = event.getPlayer();
 			Action action = event.getAction();
 			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, action);
@@ -49,7 +49,7 @@ public class ScriptInteractListener extends IAssist {
 				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
 				return;
 			}
-			ScriptRead scriptRead = new ScriptRead(this, player, location);
+			ScriptRead scriptRead = new ScriptRead(player, location, this);
 			scriptRead.put(ScriptAction.KEY_ENUM_ACTION, action);
 			scriptRead.read(0);
 		}
