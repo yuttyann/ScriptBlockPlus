@@ -19,6 +19,24 @@ public class PlaySound extends BaseOption {
 		return new PlaySound();
 	}
 
+	@Override
+	protected boolean isValid() throws Exception {
+		String[] array = StringUtils.split(getOptionValue(), "/");
+		String[] sound = StringUtils.split(array[0], "-");
+		Sound soundType = Sound.valueOf(sound[0].toUpperCase());
+		int volume = Integer.valueOf(sound[1]);
+		int pitch = Integer.valueOf(sound[2]);
+		long delay = sound.length > 3 ? Long.parseLong(sound[3]) : 0;
+		boolean isWorldPlay = array.length > 1 ? Boolean.parseBoolean(array[1]) : false;
+
+		if (delay > 0) {
+			new Task(soundType, volume, pitch, isWorldPlay).runTaskLater(getPlugin(), delay);
+		} else {
+			playSound(soundType, volume, pitch, isWorldPlay);
+		}
+		return true;
+	}
+
 	private class Task extends BukkitRunnable {
 
 		private Sound soundType;
@@ -37,24 +55,6 @@ public class PlaySound extends BaseOption {
 		public void run() {
 			playSound(soundType, volume, pitch, isWorldPlay);
 		}
-	}
-
-	@Override
-	protected boolean isValid() throws Exception {
-		String[] array = StringUtils.split(getOptionValue(), "/");
-		String[] sound = StringUtils.split(array[0], "-");
-		Sound soundType = Sound.valueOf(sound[0].toUpperCase());
-		int volume = Integer.valueOf(sound[1]);
-		int pitch = Integer.valueOf(sound[2]);
-		long delay = sound.length > 3 ? Long.parseLong(sound[3]) : 0;
-		boolean isWorldPlay = array.length > 1 ? Boolean.parseBoolean(array[1]) : false;
-
-		if (delay > 0) {
-			new Task(soundType, volume, pitch, isWorldPlay).runTaskLater(getPlugin(), delay);
-		} else {
-			playSound(soundType, volume, pitch, isWorldPlay);
-		}
-		return true;
 	}
 
 	private void playSound(Sound soundType, int volume, int pitch, boolean isWorldPlay) {

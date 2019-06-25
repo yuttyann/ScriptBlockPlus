@@ -33,6 +33,24 @@ public final class StreamUtils {
 		collection.forEach(t -> filter(t, filter, action));
 	}
 
+	public static <T> T fOrElse(T[] array, Predicate<T> filter, T other) {
+		for (T t : array) {
+			if (filter.test(t)) {
+				return t;
+			}
+		}
+		return other;
+	}
+
+	public static <T> T fOrElse(Collection<T> collection, Predicate<T> filter, T other) {
+		for (T t : collection) {
+			if (filter.test(t)) {
+				return t;
+			}
+		}
+		return other;
+	}
+
 	public static <T, R> void mForEach(T[] array, Function<T, R> mapper, Consumer<R> action) {
 		forEach(array, t -> action.accept(mapper.apply(t)));
 	}

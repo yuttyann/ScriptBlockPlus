@@ -14,4 +14,6 @@ public interface ClassNameList {
 	final String j = "CraftWorld";
 	final String k = "Vec3D";
 	final String l = "CommandListenerWrapper";
+	final String m = "Entity";
+	final String n = "CraftPlayer";
 }

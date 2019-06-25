@@ -130,9 +130,11 @@ public final class Utils {
 		player.updateInventory();
 	}
 
-	@SuppressWarnings("deprecation")
 	public static Player getPlayer(String name) {
-		return Bukkit.getPlayer(name);
+		if (StringUtils.isEmpty(name)) {
+			return null;
+		}
+		return StreamUtils.fOrElse(Bukkit.getOnlinePlayers(), p -> name.equals(p.getName()), null);
 	}
 
 	public static OfflinePlayer getOfflinePlayer(UUID uuid) {

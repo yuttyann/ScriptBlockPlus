@@ -1,14 +1,19 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
+
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public enum EquipSlot {
 	HAND, OFF_HAND, FEET, LEGS, CHEST, HEAD, NONE;
 
-	private static final Class<?> BUKKIT_ES_CLASS;
+	public static final Class<?> BUKKIT_ES_CLASS;
 
 	static {
-		BUKKIT_ES_CLASS = Utils.isCBXXXorLater("1.9") ? org.bukkit.inventory.EquipmentSlot.class : null;
+		if (Utils.isCBXXXorLater("1.9")) {
+			BUKKIT_ES_CLASS = org.bukkit.inventory.EquipmentSlot.class;
+		} else {
+			BUKKIT_ES_CLASS = null;
+		}
 	}
 
 	public static EquipSlot fromEquipmentSlot(Enum<?> equipmentSlot) {
