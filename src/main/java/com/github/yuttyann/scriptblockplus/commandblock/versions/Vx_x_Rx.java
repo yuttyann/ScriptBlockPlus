@@ -66,7 +66,7 @@ public class Vx_x_Rx implements ClassNameList {
 	}
 
 	protected NMSSender getNMSSender(CommandSender sender, Location location) throws ReflectiveOperationException {
-		if (sender instanceof Player) {
+		if (Utils.isCBXXXorLater("1.13") && sender instanceof Player) {
 			Object entity = PackageType.CB_ENTITY.invokeMethod(sender, n, "getHandle");
 			return new NMSSender(entity, getWrapper(entity, location, true));
 		}
