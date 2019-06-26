@@ -1,12 +1,12 @@
-package com.github.yuttyann.scriptblockplus.commandblock;
+package com.github.yuttyann.scriptblockplus.selector;
 
 import java.util.regex.Pattern;
 
-import com.github.yuttyann.scriptblockplus.commandblock.versions.Vx_x_Rx;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.selector.versions.Vx_x_Rx;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
-public final class FakeCommandBlock {
+public final class CommandSelector {
 
 	@Deprecated
 	private static final Pattern COMMAND_PATTERN = Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$");

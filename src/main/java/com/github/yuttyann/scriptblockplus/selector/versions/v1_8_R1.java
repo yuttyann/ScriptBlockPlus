@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.commandblock.versions;
+package com.github.yuttyann.scriptblockplus.selector.versions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,11 +25,11 @@ import net.minecraft.server.v1_8_R1.WorldServer;
 public final class v1_8_R1 extends Vx_x_Rx {
 
 	@Override
-	public int executeCommand(NMSSender nSender, CommandSender bSender, Location location, String command) {
+	public int executeCommand(Object listener, CommandSender bSender, Location location, String command) {
 		if (command.charAt(0) == '/') {
 			command = command.substring(1);
 		}
-		ICommandListener sender = (ICommandListener) nSender.iSender;
+		ICommandListener sender = (ICommandListener) listener;
 		SimpleCommandMap commandMap = sender.getWorld().getServer().getCommandMap();
 		Joiner joiner = Joiner.on(" ");
 		String[] args = StringUtils.split(command, " ");
@@ -92,7 +92,7 @@ public final class v1_8_R1 extends Vx_x_Rx {
 	}
 
 	@Override
-	protected NMSSender getNMSSender(CommandSender sender, Location location) throws ReflectiveOperationException {
+	protected ICommandListener getListener(CommandSender sender, Location location) throws ReflectiveOperationException {
 		int x = location.getBlockX();
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
@@ -103,7 +103,7 @@ public final class v1_8_R1 extends Vx_x_Rx {
 		if (sender != null) {
 			commandListener.setName(sender.getName());
 		}
-		return new NMSSender(commandListener, null);
+		return commandListener;
 	}
 
 	private List<String[]> buildCommands(ICommandListener sender, String[] args, int pos) {

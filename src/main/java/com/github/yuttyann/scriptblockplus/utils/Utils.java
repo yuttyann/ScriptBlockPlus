@@ -20,8 +20,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.CommandMinecart;
 import org.json.simple.parser.ParseException;
 
-import com.github.yuttyann.scriptblockplus.commandblock.FakeCommandBlock;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
 
 public final class Utils {
 
@@ -95,7 +95,7 @@ public final class Utils {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
 		boolean isCommandSelector = isCraftBukkit() && SBConfig.isCommandSelector();
-		if (isCommandSelector && (isCBXXXorLater("1.13") || FakeCommandBlock.isCommandPattern(command))) {
+		if (isCommandSelector && (isCBXXXorLater("1.13") || CommandSelector.isCommandPattern(command))) {
 			if (location == null) {
 				if (sender instanceof Player) {
 					location = ((Player) sender).getLocation().clone();
@@ -107,7 +107,7 @@ public final class Utils {
 					location = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
 				}
 			}
-			return FakeCommandBlock.getListener().executeCommand(sender, location, command);
+			return CommandSelector.getListener().executeCommand(sender, location, command);
 		} else {
 			return Bukkit.dispatchCommand(sender, command.startsWith("/") ? command.substring(1) : command);
 		}

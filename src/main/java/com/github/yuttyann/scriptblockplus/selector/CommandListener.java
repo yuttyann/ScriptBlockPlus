@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.commandblock;
+package com.github.yuttyann.scriptblockplus.selector;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
