@@ -21,6 +21,7 @@ import org.bukkit.entity.minecart.CommandMinecart;
 import org.json.simple.parser.ParseException;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
 
 public final class Utils {
@@ -96,6 +97,9 @@ public final class Utils {
 		Validate.notNull(command, "Command cannot be null");
 		boolean isCommandSelector = isCraftBukkit() && SBConfig.isCommandSelector();
 		if (isCommandSelector && (isCBXXXorLater("1.13") || CommandSelector.isCommandPattern(command))) {
+			if (sender instanceof SBPlayer) {
+				sender = ((SBPlayer) sender).getPlayer();
+			}
 			if (location == null) {
 				if (sender instanceof Player) {
 					location = ((Player) sender).getLocation().clone();

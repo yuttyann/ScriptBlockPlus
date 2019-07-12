@@ -9,7 +9,6 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.PlayerData;
-import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
@@ -46,9 +45,8 @@ public class ItemCost extends BaseOption {
 
 		Player player = getPlayer();
 		PlayerInventory inventory = player.getInventory();
-		ScriptRead scriptRead = getScriptRead();
-		if (!scriptRead.has(KEY_ITEM)) {
-			getScriptRead().put(KEY_ITEM, copyItems(inventory.getContents()));
+		if (!getSBRead().has(KEY_ITEM)) {
+			getSBRead().put(KEY_ITEM, copyItems(inventory.getContents()));
 		}
 		ItemStack[] items = inventory.getContents();
 		int result = amount;

@@ -12,7 +12,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.TextOption;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
-import com.github.yuttyann.scriptblockplus.listener.IAssist;
+import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -31,13 +31,14 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 	private BlockCoords blockCoords;
 	private int scriptIndex;
 
-	public ScriptRead(Player player, Location location, IAssist iAssist) {
-		super(iAssist);
+	public ScriptRead(Player player, Location location, ScriptListener listener) {
+		super(listener);
 		this.sbPlayer = SBPlayer.fromPlayer(player);
 		this.scriptData = new ScriptData(location, scriptType, true);
 		if (!(location instanceof BlockCoords)) {
 			location = new BlockCoords(location);
 		}
+		setCenter(location);
 		this.blockCoords = ((BlockCoords) location).unmodifiable(); // 変更不可に設定
 	}
 
@@ -81,6 +82,7 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 		return scriptIndex;
 	}
 
+	@Override
 	public boolean read(int index) {
 		if (!sbPlayer.isOnline()) {
 			return false;
@@ -105,7 +107,7 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 					executeEndProcess(e -> e.failed(this));
 					return false;
 				}
-				optionValue = TextOption.replaceAll(option.getValue(script), this);
+				optionValue = TextOption.replaceAll(option.getValue(script), getSBPlayer());
 				Option instance = option.newInstance();
 				if (!hasPermission(option) || !instance.callOption(this)) {
 					executeEndProcess(e -> { if (!instance.isFailedIgnore()) e.failed(this); });
@@ -158,5 +160,12 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	private Location setCenter(Location location) {
+		location.setX(location.getBlockX() + 0.5D);
+		location.setY(location.getBlockY() + 0.5D);
+		location.setZ(location.getBlockZ() + 0.5D);
+		return location;
 	}
 }

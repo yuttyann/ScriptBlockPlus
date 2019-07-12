@@ -4,22 +4,24 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.file.Files;
+import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 
-public class IAssist implements Listener {
+public class ScriptListener implements Listener {
 
 	protected final Plugin plugin;
 	protected final ScriptType scriptType;
 	protected final MapManager mapManager;
 
-	public IAssist(IAssist iAssist) {
-		this.plugin = iAssist.getPlugin();
-		this.scriptType = iAssist.getScriptType();
-		this.mapManager = iAssist.getMapManager();
+	public ScriptListener(ScriptListener listener) {
+		this.plugin = listener.getPlugin();
+		this.scriptType = listener.getScriptType();
+		this.mapManager = listener.getMapManager();
 	}
 
-	public IAssist(Plugin plugin, ScriptType scriptType) {
+	public ScriptListener(Plugin plugin, ScriptType scriptType) {
 		this.plugin = plugin;
 		this.scriptType = scriptType;
 		this.mapManager = ScriptBlock.getInstance().getMapManager();
@@ -27,6 +29,10 @@ public class IAssist implements Listener {
 
 	public Plugin getPlugin() {
 		return plugin;
+	}
+
+	public YamlConfig getScriptFile() {
+		return Files.getScriptFile(scriptType);
 	}
 
 	public ScriptType getScriptType() {

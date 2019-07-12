@@ -9,8 +9,7 @@ import org.bukkit.entity.Player;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
-import com.github.yuttyann.scriptblockplus.listener.IAssist;
+import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
@@ -19,7 +18,6 @@ import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public final class APIManager implements ScriptBlockAPI {
 
@@ -31,12 +29,7 @@ public final class APIManager implements ScriptBlockAPI {
 
 	@Override
 	public boolean scriptRead(Player player, Location location, ScriptType scriptType, int index) {
-		ScriptRead scriptRead = new ScriptRead(player, location, new IAssist(plugin, scriptType));
-		if (!scriptRead.getScriptData().checkPath()) {
-			Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
-			return false;
-		}
-		return scriptRead.read(index);
+		return new ScriptRead(player, location, new ScriptListener(plugin, scriptType)).read(index);
 	}
 
 	@Override
@@ -163,13 +156,8 @@ public final class APIManager implements ScriptBlockAPI {
 		}
 
 		@Override
-		public Location getLocation() {
-			return scriptData.getLocation();
-		}
-
-		@Override
-		public ScriptType getScriptType() {
-			return scriptData.getScriptType();
+		public void save() {
+			scriptData.save();
 		}
 
 		@Override
@@ -178,8 +166,13 @@ public final class APIManager implements ScriptBlockAPI {
 		}
 
 		@Override
-		public void save() {
-			scriptData.save();
+		public ScriptType getScriptType() {
+			return scriptData.getScriptType();
+		}
+
+		@Override
+		public Location getLocation() {
+			return scriptData.getLocation();
 		}
 
 		@Override

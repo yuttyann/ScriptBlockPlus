@@ -21,7 +21,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class ScriptInteractListener extends IAssist {
+public class ScriptInteractListener extends ScriptListener {
 
 	public ScriptInteractListener(ScriptBlock plugin) {
 		super(plugin, ScriptType.INTERACT);

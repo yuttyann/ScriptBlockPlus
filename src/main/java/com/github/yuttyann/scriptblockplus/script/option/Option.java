@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.script.SBInstance;
-import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 /**
@@ -89,11 +89,10 @@ public abstract class Option implements SBInstance<Option> {
 
 	/**
 	 * オプションを実行する</br>
-	 * このメソッドは ScriptRead.java から呼び出されることを前提としているため、使用しないでください
-	 * @param scriptRead
+	 * @param sbRead
 	 * @return 実行が成功したかどうか
 	 */
-	public abstract boolean callOption(ScriptRead scriptRead);
+	public abstract boolean callOption(SBRead sbRead);
 
 	@Override
 	public boolean equals(Object obj) {

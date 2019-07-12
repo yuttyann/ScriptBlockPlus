@@ -8,12 +8,12 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
-import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -23,7 +23,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  */
 public abstract class BaseOption extends Option {
 
-	private ScriptRead scriptRead;
+	private SBRead sbRead;
 
 	/**
 	 * コンストラクタ
@@ -39,7 +39,7 @@ public abstract class BaseOption extends Option {
 	 * @return プラグイン
 	 */
 	protected final Plugin getPlugin() {
-		return scriptRead.getPlugin();
+		return sbRead.getPlugin();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public abstract class BaseOption extends Option {
 	 * @return SBプレイヤー
 	 */
 	protected final SBPlayer getSBPlayer() {
-		return scriptRead.getSBPlayer();
+		return sbRead.getSBPlayer();
 	}
 
 	/**
@@ -71,7 +71,7 @@ public abstract class BaseOption extends Option {
 	 * @return オプションの値
 	 */
 	protected final String getOptionValue() {
-		return scriptRead.getOptionValue();
+		return sbRead.getOptionValue();
 	}
 
 	/**
@@ -79,7 +79,7 @@ public abstract class BaseOption extends Option {
 	 * @return ワールド名を除いた、文字列(x, y, z)
 	 */
 	protected final String getCoords() {
-		return scriptRead.getCoords();
+		return sbRead.getCoords();
 	}
 
 	/**
@@ -87,7 +87,7 @@ public abstract class BaseOption extends Option {
 	 * @return ワールド名を含めた、文字列(world, x, y, z)
 	 */
 	protected final String getFullCoords() {
-		return scriptRead.getFullCoords();
+		return sbRead.getFullCoords();
 	}
 
 	/**
@@ -96,7 +96,7 @@ public abstract class BaseOption extends Option {
 	 * @return スクリプトの座標
 	 */
 	protected final Location getLocation() {
-		return scriptRead.getLocation();
+		return sbRead.getLocation();
 	}
 
 	/**
@@ -104,7 +104,7 @@ public abstract class BaseOption extends Option {
 	 * @return マップの管理クラス
 	 */
 	protected final MapManager getMapManager() {
-		return scriptRead.getMapManager();
+		return ScriptBlock.getInstance().getMapManager();
 	}
 
 	/**
@@ -112,7 +112,7 @@ public abstract class BaseOption extends Option {
 	 * @return スクリプトのリスト
 	 */
 	protected final List<String> getScripts() {
-		return scriptRead.getScripts();
+		return sbRead.getScripts();
 	}
 
 	/**
@@ -120,15 +120,15 @@ public abstract class BaseOption extends Option {
 	 * @return スクリプトの種類
 	 */
 	protected final ScriptType getScriptType() {
-		return scriptRead.getScriptType();
+		return sbRead.getScriptType();
 	}
 
 	/**
 	 * スクリプトの実行クラスを取得する
 	 * @return スクリプトの実行クラス
 	 */
-	protected final ScriptRead getScriptRead() {
-		return scriptRead;
+	protected final SBRead getSBRead() {
+		return sbRead;
 	}
 
 	/**
@@ -136,7 +136,7 @@ public abstract class BaseOption extends Option {
 	 * @return スクリプトの管理クラス
 	 */
 	protected final ScriptData getScriptData() {
-		return scriptRead.getScriptData();
+		return sbRead.getScriptData();
 	}
 
 	/**
@@ -144,7 +144,7 @@ public abstract class BaseOption extends Option {
 	 * @return 進行度
 	 */
 	protected final int getScriptIndex() {
-		return scriptRead.getScriptIndex();
+		return sbRead.getScriptIndex();
 	}
 
 	/**
@@ -154,15 +154,14 @@ public abstract class BaseOption extends Option {
 	protected abstract boolean isValid() throws Exception;
 
 	/**
-	 * オプションを実行する</br>
-	 * このメソッドは ScriptRead.java から呼び出されることを前提としているため、使用しないでください
-	 * @param scriptRead
+	 * オプションを実行する
+	 * @param sbRead
 	 * @return 実行が成功したかどうか
 	 */
 	@Override
 	@Deprecated
-	public final boolean callOption(ScriptRead scriptRead) {
-		this.scriptRead = scriptRead;
+	public final boolean callOption(SBRead sbRead) {
+		this.sbRead = sbRead;
 		try {
 			return isValid();
 		} catch (Exception e) {
@@ -178,7 +177,7 @@ public abstract class BaseOption extends Option {
 	 * @return 実行が成功したかどうか
 	 */
 	protected final boolean executeConsoleCommand(String command) {
-		return Utils.dispatchCommand(Bukkit.getConsoleSender(), new BlockCoords(getLocation()), command);
+		return Utils.dispatchCommand(Bukkit.getConsoleSender(), getLocation(), command);
 	}
 
 	/**
@@ -189,7 +188,7 @@ public abstract class BaseOption extends Option {
 	 * @return 実行が成功したかどうか
 	 */
 	protected final boolean executeCommand(Player player, String command, boolean isBypass) {
-		Location location = new BlockCoords(getLocation());
+		Location location = getLocation();
 		if (!isBypass || player.isOp()) {
 			return Utils.dispatchCommand(player, location, command);
 		} else {

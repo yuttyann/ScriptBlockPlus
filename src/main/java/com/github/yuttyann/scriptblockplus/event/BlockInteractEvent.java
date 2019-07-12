@@ -1,8 +1,5 @@
 package com.github.yuttyann.scriptblockplus.event;
 
-import java.lang.reflect.Method;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -50,7 +47,7 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 	}
 
 	private EquipSlot fromEquipmentSlot(PlayerInteractEvent event) {
-		return Utils.isCBXXXorLater("1.9") ? getHand(event) : EquipSlot.HAND;
+		return Utils.isCBXXXorLater("1.9") ? EquipSlot.getHand(event) : EquipSlot.HAND;
 	}
 
 	public Block getBlock() {
@@ -124,20 +121,5 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 
 	public static HandlerList getHandlerList() {
 		return HANDLERS;
-	}
-
-	private EquipSlot getHand(PlayerInteractEvent event) {
-		if (Utils.isCBXXXorLater("1.9")) {
-			try {
-				Method method = PlayerInteractEvent.class.getMethod("getHand");
-				if (method.getReturnType().equals(EquipSlot.BUKKIT_ES_CLASS)) {
-					Object hand = method.invoke(event, ArrayUtils.EMPTY_OBJECT_ARRAY);
-					return EquipSlot.fromEquipmentSlot((Enum<?>) hand);
-				}
-			} catch (ReflectiveOperationException e) {
-				e.printStackTrace();
-			}
-		}
-		return EquipSlot.HAND;
 	}
 }

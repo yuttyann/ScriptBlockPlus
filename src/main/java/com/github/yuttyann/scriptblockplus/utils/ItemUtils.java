@@ -56,12 +56,20 @@ public class ItemUtils {
 		return item;
 	}
 
-	public static boolean isBlockSelector(Player player, ItemStack item) {
+	public static boolean isBlockSelector(ItemStack item) {
 		return isItem(item, Material.STICK, s -> s.equals("§dBlock Selector"));
 	}
 
-	public static boolean isScriptEditor(Player player, ItemStack item) {
-		return isItem(item, Material.BLAZE_ROD, s -> s.startsWith("§dScript Editor§6[Mode: "));
+	public static boolean isScriptEditor(ItemStack item) {
+		return isItem(item, Material.BLAZE_ROD, s -> s.startsWith("§dScript Editor§6[Mode: ") && s.endsWith("]"));
+	}
+
+	public static ScriptType getScriptType(ItemStack item) {
+		if (isScriptEditor(item)) {
+			String name = StringUtils.removeStart(ItemUtils.getName(item, null), "§dScript Editor§6[Mode: ");
+			return ScriptType.valueOf(name.substring(0, name.length() - 1));
+		}
+		return null;
 	}
 
 	@SuppressWarnings("deprecation")

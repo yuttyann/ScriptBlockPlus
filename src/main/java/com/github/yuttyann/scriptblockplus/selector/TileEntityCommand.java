@@ -24,9 +24,7 @@ public final class TileEntityCommand {
 	}
 
 	public void setLocation(Location location) throws ReflectiveOperationException {
-		int x = location.getBlockX();
-		int y = location.getBlockY();
-		int z = location.getBlockZ();
+		double x = location.getX(), y = location.getY(), z = location.getZ();
 		String methodName = Utils.isCBXXXorLater("1.10") ? "setPosition" : "a";
 		Object instance = PackageType.NMS.newInstance("BlockPosition", x, y, z);
 		PackageType.NMS.invokeMethod(tileEntityCommand, "TileEntityCommand", methodName, instance);

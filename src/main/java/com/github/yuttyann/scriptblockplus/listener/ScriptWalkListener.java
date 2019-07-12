@@ -16,7 +16,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class ScriptWalkListener extends IAssist {
+public class ScriptWalkListener extends ScriptListener {
 
 	public ScriptWalkListener(ScriptBlock plugin) {
 		super(plugin, ScriptType.WALK);

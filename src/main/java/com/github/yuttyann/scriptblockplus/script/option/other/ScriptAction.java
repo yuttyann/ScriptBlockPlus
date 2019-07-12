@@ -24,7 +24,7 @@ public class ScriptAction extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		Action action = getScriptRead().get(KEY_ENUM_ACTION);
+		Action action = getSBRead().get(KEY_ENUM_ACTION);
 		String[] array = StringUtils.split(getOptionValue(), ",");
 		return StreamUtils.allMatch(array, s -> equals(action, s));
 	}

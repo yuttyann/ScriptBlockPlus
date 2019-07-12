@@ -93,9 +93,7 @@ public final class v1_8_R1 extends Vx_x_Rx {
 
 	@Override
 	protected ICommandListener getListener(CommandSender sender, Location location) throws ReflectiveOperationException {
-		int x = location.getBlockX();
-		int y = location.getBlockY();
-		int z = location.getBlockZ();
+		double x = location.getX(), y = location.getY(), z = location.getZ();
 		TileEntityCommand tileEntityCommand = new TileEntityCommand();
 		tileEntityCommand.a(((CraftWorld) location.getWorld()).getHandle());
 		tileEntityCommand.a(new BlockPosition(x, y, z));

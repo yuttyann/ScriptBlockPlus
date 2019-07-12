@@ -15,7 +15,7 @@ public final class v1_14_R1 extends Vx_x_Rx {
 	public int executeCommand(Object listener, CommandSender bSender, Location location, String command) {
 		CommandListenerWrapper wrapper = (CommandListenerWrapper) listener;
 		MinecraftServer server = ((CraftServer) bSender.getServer()).getServer();
-		Vec3D vec3D = new Vec3D(location.getBlockX() + 0.5D, location.getBlockY() + 0.5D, location.getBlockZ() + 0.5D);
+		Vec3D vec3D = new Vec3D(location.getX(), location.getY(), location.getZ());
 		return server.getCommandDispatcher().dispatchServerCommand(wrapper.a(vec3D), command);
 	}
 

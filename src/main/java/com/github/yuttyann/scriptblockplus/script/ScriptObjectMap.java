@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.github.yuttyann.scriptblockplus.listener.IAssist;
+import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 
-abstract class ScriptObjectMap extends IAssist implements ObjectMap {
+public abstract class ScriptObjectMap extends ScriptListener implements ObjectMap {
 
 	private static final Map<UUID, Map<String, Object>> OBJECT_MAP = new HashMap<>();
 
 	private final UUID ramdomId = UUID.randomUUID();
 
-	ScriptObjectMap(IAssist iAssist) {
-		super(iAssist);
+	protected ScriptObjectMap(ScriptListener listener) {
+		super(listener);
 	}
 
 	@Override

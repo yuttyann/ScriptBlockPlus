@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 
-public enum DataType {
+public enum ClassType {
 	BYTE(byte.class, Byte.class),
 	SHORT(short.class, Short.class),
 	INTEGER(int.class, Integer.class),
@@ -15,19 +15,19 @@ public enum DataType {
 	DOUBLE(double.class, Double.class),
 	BOOLEAN(boolean.class, Boolean.class);
 
-	private static final Map<Class<?>, DataType> CLASS = new HashMap<>();
+	private static final Map<Class<?>, ClassType> CLASS = new HashMap<>();
 
 	private final Class<?> primitive;
 	private final Class<?> reference;
 
 	static {
-		for (DataType type : values()) {
+		for (ClassType type : values()) {
 			CLASS.put(type.primitive, type);
 			CLASS.put(type.reference, type);
 		}
 	}
 
-	private DataType(Class<?> primitive, Class<?> reference) {
+	private ClassType(Class<?> primitive, Class<?> reference) {
 		this.primitive = primitive;
 		this.reference = reference;
 	}
@@ -40,17 +40,17 @@ public enum DataType {
 		return reference;
 	}
 
-	public static DataType fromClass(Class<?> clazz) {
+	public static ClassType fromClass(Class<?> clazz) {
 		return CLASS.get(clazz);
 	}
 
 	public static Class<?> getPrimitive(Class<?> clazz) {
-		DataType type = fromClass(clazz);
+		ClassType type = fromClass(clazz);
 		return type == null ? clazz : type.getPrimitive();
 	}
 
 	public static Class<?> getReference(Class<?> clazz) {
-		DataType type = fromClass(clazz);
+		ClassType type = fromClass(clazz);
 		return type == null ? clazz : type.getReference();
 	}
 

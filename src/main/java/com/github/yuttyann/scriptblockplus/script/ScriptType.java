@@ -110,9 +110,6 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	}
 
 	public static ScriptType valueOf(int ordinal) {
-		if (ordinal < 0) {
-			throw new IllegalArgumentException("Ordinal cannot be null");
-		}
 		for (ScriptType scriptType : TYPES.values()) {
 			if (scriptType.ordinal == ordinal) {
 				return scriptType;

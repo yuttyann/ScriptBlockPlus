@@ -20,7 +20,7 @@ public interface ScriptBlockAPI {
 	 * 指定した位置からスクリプトを実行する
 	 * @param player プレイヤー
 	 * @param location 座標
-	 * @param scripttype スクリプトの種類
+	 * @param scriptType スクリプトの種類
 	 * @param index 開始位置
 	 * @return 実行が成功したかどうか
 	 */
@@ -102,7 +102,7 @@ public interface ScriptBlockAPI {
 	/**
 	 * スクリプトの編集クラスを取得する</br>
 	 * @param location 座標
-	 * @param scripttype スクリプトの種類
+	 * @param scriptType スクリプトの種類
 	 * @return SBEdit
 	 */
 	public SBEdit getSBEdit(Location location, ScriptType scriptType);
@@ -163,7 +163,7 @@ public interface ScriptBlockAPI {
 	/**
 	 * スクリプトのファイルクラスを取得する</br>
 	 * @param location 座標
-	 * @param scripttype スクリプトの種類
+	 * @param scriptType スクリプトの種類
 	 * @return SBFile
 	 */
 	public SBFile getSBFile(Location location, ScriptType scriptType);
@@ -178,16 +178,9 @@ public interface ScriptBlockAPI {
 		public void setLocation(Location location);
 
 		/**
-		 * スクリプトの座標を取得する
-		 * @return 座標
+		 * 変更を保存する
 		 */
-		public Location getLocation();
-
-		/**
-		 * スクリプトの種類を取得する
-		 * @return スクリプトの種類
-		 */
-		public ScriptType getScriptType();
+		public void save();
 
 		/**
 		 * スクリプトが存在するかチェックする
@@ -196,9 +189,16 @@ public interface ScriptBlockAPI {
 		public boolean checkPath();
 
 		/**
-		 * 変更を保存する
+		 * スクリプトの種類を取得する
+		 * @return スクリプトの種類
 		 */
-		public void save();
+		public ScriptType getScriptType();
+
+		/**
+		 * スクリプトの座標を取得する
+		 * @return 座標
+		 */
+		public Location getLocation();
 
 		/**
 		 * スクリプトの作者を取得する

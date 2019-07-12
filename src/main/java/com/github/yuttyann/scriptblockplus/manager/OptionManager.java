@@ -76,7 +76,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	}
 
 	@Override
-	protected List<SBConstructor<? extends Option>> initList() {
+	protected List<SBConstructor<? extends Option>> newList() {
 		return new ArrayList<>();
 	}
 

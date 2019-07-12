@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public class ScriptBreakListener extends IAssist {
+public class ScriptBreakListener extends ScriptListener {
 
 	public ScriptBreakListener(ScriptBlock plugin) {
 		super(plugin, ScriptType.BREAK);
@@ -29,8 +29,8 @@ public class ScriptBreakListener extends IAssist {
 	public void onBlockBreakEvent(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		ItemStack item = ItemUtils.getItemInMainHand(player);
-		if (ItemUtils.isBlockSelector(player, item) && Permission.TOOL_BLOCKSELECTOR.has(player)
-				|| ItemUtils.isScriptEditor(player, item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
+		if (ItemUtils.isBlockSelector(item) && Permission.TOOL_BLOCKSELECTOR.has(player)
+				|| ItemUtils.isScriptEditor(item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			event.setCancelled(true);
 			return;
 		}

@@ -8,6 +8,8 @@ public interface SBClipboard {
 
 	public void save();
 
+	public Location getLocation();
+
 	public ScriptType getScriptType();
 
 	public boolean copy(SBPlayer sbPlayer);

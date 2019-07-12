@@ -70,4 +70,10 @@ public interface SBRead extends ObjectMap {
 	 * @return 進行度
 	 */
 	public int getScriptIndex();
+
+	/**
+	 * スクリプトを実行する
+	 * @param index 開始位置
+	 */
+	public boolean read(int index);
 }

@@ -28,7 +28,7 @@ public final class EndProcessManager extends AbstractConstructor<EndProcess> {
 	}
 
 	@Override
-	protected List<SBConstructor<? extends EndProcess>> initList() {
+	protected List<SBConstructor<? extends EndProcess>> newList() {
 		return new ArrayList<>();
 	}
 

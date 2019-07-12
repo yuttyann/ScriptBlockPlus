@@ -108,9 +108,7 @@ public class Vx_x_Rx {
 		}
 		Object vec3D = cache_Vec3D.get(location);
 		if (vec3D == null) {
-			double x = location.getBlockX() + 0.5D;
-			double y = location.getBlockY() + 0.5D;
-			double z = location.getBlockZ() + 0.5D;
+			double x = location.getX(), y = location.getY(), z = location.getZ();
 			cache_Vec3D.put(location, vec3D = PackageType.NMS.newInstance("Vec3D", x, y, z));
 		}
 		return vec3D;

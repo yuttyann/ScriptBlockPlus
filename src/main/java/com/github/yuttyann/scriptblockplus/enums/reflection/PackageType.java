@@ -110,7 +110,7 @@ public enum PackageType {
 		if (arguments == null) {
 			arguments = ArrayUtils.EMPTY_OBJECT_ARRAY;
 		}
-		return getMethod(declared, className, methodName, DataType.getPrimitive(arguments)).invoke(instance, arguments);
+		return getMethod(declared, className, methodName, ClassType.getPrimitive(arguments)).invoke(instance, arguments);
 	}
 
 	public Method getMethod(String className, String methodName) throws ReflectiveOperationException {
@@ -151,7 +151,7 @@ public enum PackageType {
 		if (arguments == null || arguments.length == 0) {
 			return getClass(className).newInstance();
 		}
-		return getConstructor(declared, className, DataType.getPrimitive(arguments)).newInstance(arguments);
+		return getConstructor(declared, className, ClassType.getPrimitive(arguments)).newInstance(arguments);
 	}
 
 	public Constructor<?> getConstructor(String className) throws ReflectiveOperationException {

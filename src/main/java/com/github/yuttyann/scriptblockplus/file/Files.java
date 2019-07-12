@@ -66,7 +66,7 @@ public final class Files {
 	public static YamlConfig getScriptFile(ScriptType scriptType) {
 		YamlConfig yaml = FILES.get(scriptType.getType());
 		if (yaml == null) {
-			yaml = loadScript(scriptType);
+			FILES.put(scriptType.getType(), yaml = loadScript(scriptType));
 		}
 		return yaml;
 	}

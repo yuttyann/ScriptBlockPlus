@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 public enum TextOption {
@@ -21,9 +20,8 @@ public enum TextOption {
 		return StringUtils.replace(source, name, value);
 	}
 
-	public static String replaceAll(String source, ScriptRead scriptRead) {
+	public static String replaceAll(String source, SBPlayer sbPlayer) {
 		if (StringUtils.isNotEmpty(source)) {
-			SBPlayer sbPlayer = scriptRead.getSBPlayer();
 			for (TextOption option : values()) {
 				source = option.replace(source, option == PLAYER ? sbPlayer.getName() : sbPlayer.getWorld().getName());
 			}

@@ -122,8 +122,8 @@ public class InteractListener implements Listener {
 		blockInteractEvent.setInvalid(action(player, blockInteractEvent.getAction(), blockInteractEvent));
 		Bukkit.getPluginManager().callEvent(blockInteractEvent);
 		if (blockInteractEvent.isCancelled()
-				|| ItemUtils.isBlockSelector(player, item) && Permission.TOOL_BLOCKSELECTOR.has(player)
-					|| ItemUtils.isScriptEditor(player, item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
+				|| ItemUtils.isBlockSelector(item) && Permission.TOOL_BLOCKSELECTOR.has(player)
+					|| ItemUtils.isScriptEditor(item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			interactEvent.setCancelled(true);
 		}
 	}
@@ -137,7 +137,7 @@ public class InteractListener implements Listener {
 		ItemStack item = event.getItem();
 		Location location = event.getLocation();
 		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
-		if (ItemUtils.isBlockSelector(player, item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
+		if (ItemUtils.isBlockSelector(item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			CuboidRegion region = ((CuboidRegion) sbPlayer.getRegion());
 			toolAction(action, location, left -> {
 				if (isSneaking || (!isAIR && !isSneaking)) {
@@ -161,10 +161,10 @@ public class InteractListener implements Listener {
 				}
 			});
 			return true;
-		} else if (ItemUtils.isScriptEditor(player, item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
+		} else if (ItemUtils.isScriptEditor(item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			toolAction(action, location, left -> {
 				if (!isAIR && isSneaking) {
-					new ScriptEdit(getScriptType(item)).remove(sbPlayer, left);
+					new ScriptEdit(ItemUtils.getScriptType(item)).remove(sbPlayer, left);
 				} else if (!isSneaking) {
 					item.setItemMeta(ItemUtils.getScriptEditor(getNextScriptType(item)).getItemMeta());
 					Utils.updateInventory(player);
@@ -175,7 +175,7 @@ public class InteractListener implements Listener {
 						Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 					}
 				} else if (!isAIR && !isSneaking) {
-					new ScriptEdit(getScriptType(item)).copy(sbPlayer, right);
+					new ScriptEdit(ItemUtils.getScriptType(item)).copy(sbPlayer, right);
 				}
 			});
 			return true;
@@ -225,15 +225,10 @@ public class InteractListener implements Listener {
 
 	private ScriptType getNextScriptType(ItemStack item) {
 		try {
-			return ScriptType.valueOf(getScriptType(item).ordinal() + 1);
+			return ScriptType.valueOf(ItemUtils.getScriptType(item).ordinal() + 1);
 		} catch (Exception e) {
 			return ScriptType.INTERACT;
 		}
-	}
-
-	private ScriptType getScriptType(ItemStack item) {
-		String name = StringUtils.removeStart(ItemUtils.getName(item, null), "§dScript Editor§6[Mode: ");
-		return ScriptType.valueOf(name.substring(0, name.length() - 1));
 	}
 
 	private float sin(float a) {

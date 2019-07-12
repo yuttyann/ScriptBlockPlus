@@ -165,6 +165,10 @@ public final class ScriptEdit {
 			scriptData.save();
 		}
 
+		public Location getLocation() {
+			return scriptData.getLocation();
+		}
+
 		@Override
 		public ScriptType getScriptType() {
 			return scriptType;

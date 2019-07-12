@@ -9,9 +9,9 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public abstract class AbstractConstructor<T> {
 
-	private final List<SBConstructor<? extends T>> list = initList();
+	private final List<SBConstructor<? extends T>> list = newList();
 
-	protected abstract List<SBConstructor<? extends T>> initList();
+	protected abstract List<SBConstructor<? extends T>> newList();
 
 	public abstract void registerDefaults();
 

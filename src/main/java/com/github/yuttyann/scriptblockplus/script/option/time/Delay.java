@@ -44,9 +44,9 @@ public class Delay extends BaseOption implements Runnable {
 	public void run() {
 		removeDelay();
 		if (getSBPlayer().isOnline()) {
-			getScriptRead().read(getScriptIndex() + 1);
+			getSBRead().read(getScriptIndex() + 1);
 		} else {
-			EndProcessManager.getInstance().forEach(e -> e.failed(getScriptRead()));
+			EndProcessManager.getInstance().forEach(e -> e.failed(getSBRead()));
 		}
 	}
 
