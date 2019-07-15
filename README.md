@@ -11,6 +11,8 @@
 <br>
 紹介ページ(更新停止): http://forum.minecraftuser.jp/viewtopic.php?f=38&t=36104
 <br>
+オプションの記述方法と詳細: https://github.com/yuttyann/ScriptBlockPlus/wiki/オプションの記述方法と詳細
+<br>
 コマンドとパーミッション: https://github.com/yuttyann/ScriptBlockPlus/wiki/コマンドとパーミッション
 <br>
 API、Eventの使い方: https://github.com/yuttyann/ScriptBlockPlus/wiki/APIの取得方法
