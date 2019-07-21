@@ -110,12 +110,11 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	}
 
 	public static ScriptType valueOf(int ordinal) {
-		for (ScriptType scriptType : TYPES.values()) {
-			if (scriptType.ordinal == ordinal) {
-				return scriptType;
-			}
+		ScriptType scriptType = StreamUtils.fOrElse(TYPES.values(), s -> s.ordinal == ordinal, null);
+		if (scriptType == null) {
+			throw new NullPointerException(ordinal + " does not exist");
 		}
-		throw new NullPointerException(ordinal + " does not exist");
+		return scriptType;
 	}
 
 	public static ScriptType valueOf(String name) {

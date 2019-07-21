@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.player;
 
 /**
  * ScriptBlockPlus ObjectMap インターフェース</br>
- * Map より出来ることは少ないけど、必要な分の機能は揃っている
  * @author yuttyann44581
  */
 public interface ObjectMap {

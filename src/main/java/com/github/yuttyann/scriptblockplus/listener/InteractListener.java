@@ -139,7 +139,8 @@ public class InteractListener implements Listener {
 		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
 		if (ItemUtils.isBlockSelector(item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			CuboidRegion region = ((CuboidRegion) sbPlayer.getRegion());
-			toolAction(action, location, left -> {
+			toolAction(action, location
+			, left -> {
 				if (isSneaking || (!isAIR && !isSneaking)) {
 					if (isSneaking) {
 						region.setPos1((left = player.getLocation()).toVector());
@@ -162,7 +163,8 @@ public class InteractListener implements Listener {
 			});
 			return true;
 		} else if (ItemUtils.isScriptEditor(item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
-			toolAction(action, location, left -> {
+			toolAction(action, location
+			, left -> {
 				if (!isAIR && isSneaking) {
 					new ScriptEdit(ItemUtils.getScriptType(item)).remove(sbPlayer, left);
 				} else if (!isSneaking) {
