@@ -16,57 +16,26 @@ import org.json.simple.parser.ParseException;
 
 public final class ProfileFetcher {
 
-	private static final String PROFILE_NAME_URL = "https://api.mojang.com/users/profiles/minecraft/";
 	private static final String PROFILE_UUID_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
 	private static final JSONParser JSON_PARSER = new JSONParser();
 
-	private static final Map<Integer, Object> CACHE = new HashMap<>();
-
-	private static final int[] UUID_INDEX = { 8, 12, 16, 20, 32 };
-
-	public static UUID getUniqueId(String name) throws ProtocolException, ParseException, IOException {
-		if (name.length() < 1 || name.length() > 16) {
-			return null;
-		}
-		int hash = name.hashCode();
-		UUID uuid = (UUID) CACHE.get(hash);
-		if (uuid == null) {
-			JSONObject json = getJsonObject(PROFILE_NAME_URL + name);
-			String errorMessage = (String) json.get("errorMessage");
-			if (StringUtils.isNotEmpty(errorMessage)) {
-				throw new IllegalStateException(errorMessage);
-			}
-			uuid = fromString((String) json.get("id"));
-			CACHE.put(hash, uuid);
-		}
-		return uuid;
-	}
+	private static final Map<UUID, String> CACHE = new HashMap<>();
 
 	public static String getName(UUID uuid) throws ProtocolException, ParseException, IOException {
 		if (uuid == null) {
 			return null;
 		}
-		int hash = uuid.hashCode();
-		String name = (String) CACHE.get(hash);
+		String name = CACHE.get(uuid);
 		if (name == null) {
 			JSONObject json = getJsonObject(PROFILE_UUID_URL + StringUtils.replace(uuid.toString(), "-", ""));
 			String errorMessage = (String) json.get("errorMessage");
 			if (StringUtils.isNotEmpty(errorMessage)) {
 				throw new IllegalStateException(errorMessage);
 			}
-			name = (String) json.get("name");
-			CACHE.put(hash, name);
+			CACHE.put(uuid, name = (String) json.get("name"));
 		}
 		return name;
-	}
-
-	public static UUID fromString(String uuid) {
-		String result = "";
-		for (int i = 0, j = 0; i < UUID_INDEX.length; i++) {
-			result += uuid.substring(j, j = UUID_INDEX[i]) + (UUID_INDEX[i] == 32 ? "" : "-");
-		}
-		return UUID.fromString(result);
 	}
 
 	public static JSONObject getJsonObject(String url) throws ParseException, ProtocolException, IOException {

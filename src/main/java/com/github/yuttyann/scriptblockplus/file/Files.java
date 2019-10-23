@@ -38,6 +38,8 @@ public final class Files {
 		SBConfig.reloadLang();
 
 		StreamUtils.forEach(ScriptType.values(), s -> loadScript(s));
+
+		searchKeys();
 	}
 
 	public static void searchKeys() {

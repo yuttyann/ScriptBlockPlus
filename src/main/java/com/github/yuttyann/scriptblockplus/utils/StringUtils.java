@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.ChatColor;
 
@@ -15,30 +15,34 @@ public final class StringUtils {
 	private static final Random RANDOM = new Random();
 
 	public static List<String> getScripts(String script) throws IllegalArgumentException {
-		Objects.requireNonNull(script);
+		Validate.notNull(script, "Script cannot be null");
 		int length = script.length();
-		if (script.charAt(0) != '[' || script.charAt(length - 1) != ']') {
+		char[] chars = script.toCharArray();
+		if (chars[0] != '[' || chars[length - 1] != ']') {
 			return Arrays.asList(script);
 		}
-		int start = 0;
-		int end = 0;
-		for (int i = 0; i < length; i++) {
-			if (script.charAt(i) == '[') {
+		List<String> result = new ArrayList<>();
+		int start = 0, end = 0;
+		for (int i = 0, j = 0, k = 0; i < length; i++) {
+			switch (chars[i]) {
+			case '[':
 				start++;
-			} else if (script.charAt(i) == ']') {
+				if (j++ == 0) {
+					k = i;
+				}
+				continue;
+			case ']':
 				end++;
+				if (--j == 0) {
+					result.add(script.substring(k + 1, i));
+				}
+				continue;
+			default:
+				continue;
 			}
 		}
 		if (start != end) {
 			throw new IllegalArgumentException("Failed to load the script");
-		}
-		List<String> result = new ArrayList<>(start);
-		for (int i = 0, j = 0, k = 0; i < length; i++) {
-			if (script.charAt(i) == '[' && j++ == 0) {
-				k = i;
-			} else if (script.charAt(i) == ']' && --j == 0) {
-				result.add(script.substring(k + 1, i));
-			}
 		}
 		return result;
 	}

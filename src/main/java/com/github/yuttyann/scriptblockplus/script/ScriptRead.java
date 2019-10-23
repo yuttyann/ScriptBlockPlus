@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -22,14 +23,19 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-public final class ScriptRead extends ScriptObjectMap implements SBRead {
+public class ScriptRead extends ScriptObjectMap implements SBRead {
 
-	private SBPlayer sbPlayer;
-	private List<String> scripts;
-	private String optionValue;
-	private ScriptData scriptData;
-	private BlockCoords blockCoords;
-	private int scriptIndex;
+	protected SBPlayer sbPlayer;
+	protected List<String> scripts;
+	protected String optionValue;
+	protected ScriptData scriptData;
+	protected BlockCoords blockCoords;
+	protected int scriptIndex;
+
+	// 継承用
+	protected ScriptRead(ScriptListener listener) {
+		super(listener);
+	}
 
 	public ScriptRead(Player player, Location location, ScriptListener listener) {
 		super(listener);
@@ -84,9 +90,7 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 
 	@Override
 	public boolean read(int index) {
-		if (!sbPlayer.isOnline()) {
-			return false;
-		}
+		Validate.notNull(sbPlayer.getPlayer(), "Player cannot be null");
 		if (!scriptData.checkPath()) {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return false;
@@ -120,7 +124,7 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 		return true;
 	}
 
-	private void executeEndProcess(Consumer<EndProcess> action) {
+	protected void executeEndProcess(Consumer<EndProcess> action) {
 		try {
 			EndProcessManager.getInstance().forEach(e -> action.accept(e));
 		} finally {
@@ -128,7 +132,7 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 		}
 	}
 
-	private boolean hasPermission(Option option) {
+	protected boolean hasPermission(Option option) {
 		if (!SBConfig.isOptionPermission() || Permission.has(sbPlayer, option.getPermissionNode())) {
 			return true;
 		}
@@ -136,7 +140,7 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 		return false;
 	}
 
-	private boolean sort(List<String> scripts, List<Option> options) {
+	protected boolean sort(List<String> scripts, List<Option> options) {
 		try {
 			List<String> parse = new ArrayList<>();
 			List<String> result = parse;
@@ -153,7 +157,7 @@ public final class ScriptRead extends ScriptObjectMap implements SBRead {
 		return false;
 	}
 
-	private List<String> getScripts(String script) {
+	protected List<String> getScripts(String script) {
 		try {
 			return StringUtils.getScripts(script);
 		} catch (IllegalArgumentException e) {
