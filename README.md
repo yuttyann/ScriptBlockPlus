@@ -9,7 +9,7 @@
 <br>
 配布サイト: http://file.yuttyann44581.net/
 <br>
-紹介ページ(更新停止): http://forum.minecraftuser.jp/viewtopic.php?f=38&t=36104
+紹介ページ(更新停止): https://bit.ly/2CP8Bzs
 <br>
 オプションの記述方法と詳細: https://github.com/yuttyann/ScriptBlockPlus/wiki/オプションの記述方法と詳細
 <br>
