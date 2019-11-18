@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -88,7 +89,6 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	@Override
 	public boolean runCommand(CommandSender sender, Command command, String label, String[] args) {
-		// viewArgs(sender, args);
 		if (args.length == 1) {
 			if (equals(args[0], "tool")) {
 				return doTool(sender, args);
@@ -146,24 +146,17 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!parent.exists()) {
 			parent.mkdirs();
 		}
-		BufferedWriter writer = null;
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8));
+		try (
+				OutputStream os = new FileOutputStream(file);
+				OutputStreamWriter osw = new OutputStreamWriter(os, Charsets.UTF_8);
+				BufferedWriter writer = new BufferedWriter(osw)
+			) {
 			for (Enum<?> t : values) {
 				writer.write(t.name());
 				writer.newLine();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (writer != null) {
-				try {
-					writer.flush();
-					writer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
@@ -465,13 +458,4 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		return true;
 	}
-
-	/*
-	private void viewArgs(CommandSender sender, String[] args) {
-		Utils.sendMessage(sender, "Length: " + args.length);
-		for (int i = 0; i < args.length; i++) {
-			Utils.sendMessage(sender, "[" + i + "] = " + args[i]);
-		}
-	}
-	*/
 }

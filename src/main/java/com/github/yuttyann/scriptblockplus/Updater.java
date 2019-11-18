@@ -5,9 +5,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,7 +103,6 @@ public final class Updater {
 		execute(null);
 	}
 
-	@Deprecated
 	public void init() {
 		latestVersion = null;
 		downloadURL = null;
@@ -114,7 +113,6 @@ public final class Updater {
 	}
 
 	public void load() throws Exception {
-		init();
 		Document document = getDocument(pluginName);
 		Element root = document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
@@ -222,11 +220,11 @@ public final class Updater {
 		if (!file.exists()) {
 			return false;
 		}
-		BufferedReader reader1 = null;
-		BufferedReader reader2 = null;
-		try {
-			reader1 = new BufferedReader(new FileReader(file));
-			reader2 = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
+		try (
+				FileReader fr = new FileReader(file);
+				InputStream is = new URL(url).openStream(); InputStreamReader isr = new InputStreamReader(is);
+				BufferedReader reader1 = new BufferedReader(fr); BufferedReader reader2 = new BufferedReader(isr)
+			) {
 			while (reader1.ready() && reader2.ready()) {
 				if (!reader1.readLine().equals(reader2.readLine())) {
 					return false;
@@ -235,36 +233,11 @@ public final class Updater {
 			return !(reader1.ready() || reader2.ready());
 		} catch (IOException e) {
 			return false;
-		} finally {
-			if (reader1 != null) {
-				try {
-					reader1.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (reader2 != null) {
-				try {
-					reader2.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
-	private Document getDocument(String pluginName) throws ParserConfigurationException, SAXException, IOException {
-		URL url = new URL("https://xml.yuttyann44581.net/uploads/" + pluginName + ".xml");
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setRequestMethod("GET");
-		connection.setAllowUserInteraction(false);
-		connection.setInstanceFollowRedirects(true);
-		connection.connect();
-		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			return factory.newDocumentBuilder().parse(connection.getInputStream());
-		}
-		connection.disconnect();
-		return null;
+	private Document getDocument(String name) throws ParserConfigurationException, SAXException, IOException {
+		InputStream is = FileUtils.getWebFile("https://xml.yuttyann44581.net/uploads/" + name + ".xml");
+		return is == null ? null : DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
 	}
 }

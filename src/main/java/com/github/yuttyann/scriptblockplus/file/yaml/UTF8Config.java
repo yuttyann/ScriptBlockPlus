@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
@@ -49,14 +48,8 @@ public final class UTF8Config extends YamlConfiguration {
 			parent.mkdirs();
 		}
 		String data = saveToString();
-		Writer writer = new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8);
-		try {
+		try (FileOutputStream fos = new FileOutputStream(file); OutputStreamWriter writer = new OutputStreamWriter(fos, Charsets.UTF_8)) {
 			writer.write(data);
-		} finally {
-			if (writer != null) {
-				writer.flush();
-				writer.close();
-			}
 		}
 	}
 
@@ -71,16 +64,11 @@ public final class UTF8Config extends YamlConfiguration {
 	}
 
 	public void load(Reader reader) throws IOException, InvalidConfigurationException {
-		BufferedReader input = reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader);
 		StringBuilder builder = new StringBuilder();
-		try {
+		try (BufferedReader input = reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader)) {
 			String line;
 			while ((line = input.readLine()) != null) {
 				builder.append(line).append('\n');
-			}
-		} finally {
-			if (input != null) {
-				input.close();
 			}
 		}
 		loadFromString(builder.toString());

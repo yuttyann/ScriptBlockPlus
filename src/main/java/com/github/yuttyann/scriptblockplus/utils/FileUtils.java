@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -49,16 +50,11 @@ public final class FileUtils {
 		if (!parent.exists()) {
 			parent.mkdirs();
 		}
-		InputStream is = null;
-		BufferedReader reader = null;
-		BufferedWriter writer = null;
-		try {
-			is = getResource(plugin, sourceFilePath);
-			if (is == null) {
-				return;
-			}
-			reader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), Charsets.UTF_8));
+		try (
+				InputStream is = getResource(plugin, sourceFilePath); InputStreamReader isr = new InputStreamReader(is, Charsets.UTF_8);
+				OutputStream os = new FileOutputStream(targetFile); OutputStreamWriter osw = new OutputStreamWriter(os, Charsets.UTF_8);
+				BufferedReader reader = new BufferedReader(isr); BufferedWriter writer = new BufferedWriter(osw)
+			) {
 			boolean isFirst = true;
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -72,29 +68,6 @@ public final class FileUtils {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (writer != null) {
-				try {
-					writer.flush();
-					writer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
@@ -109,12 +82,12 @@ public final class FileUtils {
 			if (filter.test(file)) {
 				continue;
 			}
-			BufferedReader reader = null;
-			BufferedWriter writer = null;
-			try {
-				File copy = new File(targetFile, file.getName());
-				reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8));
-				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(copy), Charsets.UTF_8));
+			File copy = new File(targetFile, file.getName());
+			try (
+					InputStream is = new FileInputStream(file); InputStreamReader isr = new InputStreamReader(is, Charsets.UTF_8);
+					OutputStream os = new FileOutputStream(copy); OutputStreamWriter osw = new OutputStreamWriter(os, Charsets.UTF_8);
+					BufferedReader reader = new BufferedReader(isr); BufferedWriter writer = new BufferedWriter(osw)
+				) {
 				boolean isFirst = true;
 				String line;
 				while ((line = reader.readLine()) != null) {
@@ -128,22 +101,6 @@ public final class FileUtils {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			} finally {
-				if (writer != null) {
-					try {
-						writer.flush();
-						writer.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				if (reader != null) {
-					try {
-						reader.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
 			}
 		}
 	}
@@ -153,21 +110,7 @@ public final class FileUtils {
 		if (!parent.exists()) {
 			parent.mkdirs();
 		}
-		InputStream is = null;
-		FileOutputStream fos = null;
-		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-			connection.setRequestMethod("GET");
-			connection.setAllowUserInteraction(false);
-			connection.setInstanceFollowRedirects(true);
-			connection.connect();
-			int httpStatusCode = connection.getResponseCode();
-			if (httpStatusCode != HttpURLConnection.HTTP_OK) {
-				connection.disconnect();
-				return;
-			}
-			is = connection.getInputStream();
-			fos = new FileOutputStream(file);
+		try (InputStream is = getWebFile(url); FileOutputStream fos = new FileOutputStream(file)) {
 			byte[] bytes = new byte[1024];
 			int length;
 			while ((length = is.read(bytes)) != -1) {
@@ -177,50 +120,21 @@ public final class FileUtils {
 			throw e;
 		} catch (IOException e) {
 			throw e;
-		} finally {
-			if (fos != null) {
-				try {
-					fos.flush();
-					fos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
 	public static void saveFile(File file, Object value) throws IOException {
-		ObjectOutputStream oos = null;
-		try {
-			oos = new ObjectOutputStream(new FileOutputStream(file));
+		try (OutputStream os = new FileOutputStream(file); ObjectOutputStream oos = new ObjectOutputStream(os)) {
 			oos.writeObject(value);
 		} catch (FileNotFoundException e) {
 			throw e;
 		} catch (IOException e) {
 			throw e;
-		} finally {
-			if (oos != null) {
-				try {
-					oos.flush();
-					oos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
 	public static <T> T loadFile(File file) throws IOException, ClassNotFoundException {
-		ObjectInputStream ois = null;
-		try {
-			ois = new ObjectInputStream(new FileInputStream(file));
+		try (InputStream is = new FileInputStream(file); ObjectInputStream ois = new ObjectInputStream(is))  {
 			return (T) ois.readObject();
 		} catch (FileNotFoundException e) {
 			throw e;
@@ -228,15 +142,21 @@ public final class FileUtils {
 			throw e;
 		} catch (ClassNotFoundException e) {
 			throw e;
-		} finally {
-			if (ois != null) {
-				try {
-					ois.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
+	}
+
+	public static InputStream getWebFile(String url) throws MalformedURLException, IOException {
+		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+		connection.setRequestMethod("GET");
+		connection.setAllowUserInteraction(false);
+		connection.setInstanceFollowRedirects(true);
+		connection.connect();
+		int httpStatusCode = connection.getResponseCode();
+		if (httpStatusCode == HttpURLConnection.HTTP_OK) {
+			return connection.getInputStream();
+		}
+		connection.disconnect();
+		return null;
 	}
 
 	public static boolean isEmpty(File file) {
