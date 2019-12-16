@@ -26,6 +26,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
@@ -177,6 +178,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return false;
 		}
 		Files.reload();
+		PackageType.clear();
 		setUsage(getUsages());
 		ScriptBlock.getInstance().getMapManager().loadAllScripts();
 		Utils.sendMessage(sender, SBConfig.getAllFileReloadMessage());

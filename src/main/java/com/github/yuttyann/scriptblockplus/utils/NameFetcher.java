@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public final class ProfileFetcher {
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
-	private static final String PROFILE_UUID_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
+public final class NameFetcher {
+
+	private static final String URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
 	private static final Map<UUID, String> CACHE = new HashMap<>();
 
@@ -25,22 +26,20 @@ public final class ProfileFetcher {
 		}
 		String name = CACHE.get(uuid);
 		if (name == null) {
-			JSONObject json = getJsonObject(PROFILE_UUID_URL + StringUtils.replace(uuid.toString(), "-", ""));
-			String errorMessage = (String) json.get("errorMessage");
+			JsonObject json = getJsonObject(URL + StringUtils.replace(uuid.toString(), "-", ""));
+			String errorMessage = json.get("errorMessage").getAsString();
 			if (StringUtils.isNotEmpty(errorMessage)) {
 				throw new IllegalStateException(errorMessage);
 			}
-			CACHE.put(uuid, name = (String) json.get("name"));
+			CACHE.put(uuid, name = json.get("name").getAsString());
 		}
 		return name;
 	}
 
-	public static JSONObject getJsonObject(String url) throws ParseException, ProtocolException, IOException {
+	public static JsonObject getJsonObject(String url) throws ProtocolException, IOException {
 		try (InputStream is = FileUtils.getWebFile(url); InputStreamReader isr = new InputStreamReader(is); BufferedReader reader = new BufferedReader(isr)) {
 			String line = reader.readLine();
-			return StringUtils.isNotEmpty(line) ? (JSONObject) new JSONParser().parse(line) : null;
-		} catch (ParseException e) {
-			throw e;
+			return StringUtils.isNotEmpty(line) ? (JsonObject) new Gson().fromJson(line, JsonObject.class) : null;
 		} catch (ProtocolException e) {
 			throw e;
 		} catch (IOException e) {

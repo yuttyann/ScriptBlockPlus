@@ -26,12 +26,13 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptBlock extends JavaPlugin {
 
-	private static ScriptBlock instance;
-
 	private Updater updater;
 	private MapManager mapManager;
 	private ScriptBlockAPI scriptAPI;
 	private ScriptBlockPlusCommand scriptBlockPlusCommand;
+	{
+		new PluginInstance(ScriptBlock.class, this).put();
+	}
 
 	@Override
 	public void onEnable() {
@@ -123,6 +124,6 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	public static ScriptBlock getInstance() {
-		return instance == null ? instance = HookPlugins.getPlugin("ScriptBlockPlus") : instance;
+		return PluginInstance.get(ScriptBlock.class);
 	}
 }

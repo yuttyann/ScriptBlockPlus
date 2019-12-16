@@ -41,11 +41,11 @@ public class InteractListener implements Listener {
 	private static final String KEY_FLAG = PlayerData.createRandomId("InteractFlag");
 
 	private static final float I = 0.017453292F;
-	private static final float[] b = new float[65536];
+	private static final float[] B = new float[65536];
 
 	static {
 		for (int i = 0; i < 65536; ++i) {
-			b[i] = (float) Math.sin((double) i * 3.141592653589793D * 2.0D / 65536.0D);
+			B[i] = (float) Math.sin((double) i * 3.141592653589793D * 2D / 65536D);
 		}
 	}
 
@@ -234,10 +234,10 @@ public class InteractListener implements Listener {
 	}
 
 	private float sin(float a) {
-		return b[(int) (a * 10430.378F) & '\uffff'];
+		return B[(int) (a * 10430.378F) & '\uffff'];
 	}
 
 	private float cos(float a) {
-		return b[(int) (a * 10430.378F + 16384.0F) & '\uffff'];
+		return B[(int) (a * 10430.378F + 16384.0F) & '\uffff'];
 	}
 }

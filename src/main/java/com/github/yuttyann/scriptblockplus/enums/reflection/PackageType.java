@@ -244,6 +244,10 @@ public enum PackageType {
 		return version.substring(version.lastIndexOf('.') + 1);
 	}
 
+	public static void clear() {
+		CACHE.clear();
+	}
+
 	@Override
 	public String toString() {
 		return path;

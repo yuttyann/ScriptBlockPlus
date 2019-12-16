@@ -149,7 +149,7 @@ public final class Utils {
 	public static String getName(UUID uuid) {
 		try {
 			OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-			return player == null || !player.hasPlayedBefore() ? ProfileFetcher.getName(uuid) : player.getName();
+			return player == null || !player.hasPlayedBefore() ? NameFetcher.getName(uuid) : player.getName();
 		} catch (ParseException | IOException e) {
 			e.printStackTrace();
 		}
