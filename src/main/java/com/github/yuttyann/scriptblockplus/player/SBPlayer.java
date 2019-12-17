@@ -43,6 +43,8 @@ public interface SBPlayer extends CommandSender {
 
 	public Region getRegion();
 
+	public PlayerCount getPlayerCount();
+
 	public ObjectMap getObjectMap();
 
 	public void setClipboard(SBClipboard clipboard);

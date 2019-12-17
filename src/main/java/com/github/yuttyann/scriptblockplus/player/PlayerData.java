@@ -14,6 +14,7 @@ public abstract class PlayerData implements SBPlayer {
 	private static final String KEY_CLIPBOARD = createRandomId("ClipBoard");
 	private static final String KEY_SCRIPTLINE = createRandomId("ScriptLine");
 	private static final String KEY_CLICKACTION = createRandomId("ClickAction");
+	private static final String KEY_PLAYERCOUNT = createRandomId("PlayerCount");
 	private static final String KEY_OLDFULLCOORDS = createRandomId("OldFullCoords");
 
 
@@ -28,6 +29,15 @@ public abstract class PlayerData implements SBPlayer {
 			getObjectMap().put(KEY_REGION, region = new CuboidRegion());
 		}
 		return region;
+	}
+
+	@Override
+	public PlayerCount getPlayerCount() {
+		PlayerCount playerCount = getObjectMap().get(KEY_PLAYERCOUNT);
+		if (playerCount == null) {
+			getObjectMap().put(KEY_PLAYERCOUNT, playerCount = new PlayerCount(getUniqueId()));
+		}
+		return playerCount;
 	}
 
 	@Override
