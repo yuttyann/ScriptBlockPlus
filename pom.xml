@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.yuttyann</groupId>
   <artifactId>ScriptBlockPlus</artifactId>
-  <version>1.8.0</version>
+  <version>1.8.1</version>
 
   <name>ScriptBlockPlus</name>
   <url>https://github.com/yuttyann/ScriptBlockPlus</url>
@@ -64,6 +64,12 @@
   </repositories>
 
   <dependencies>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.8.6</version>
+      <scope>compile</scope>
+	</dependency>
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
