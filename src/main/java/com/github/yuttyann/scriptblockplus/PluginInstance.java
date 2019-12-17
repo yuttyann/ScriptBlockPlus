@@ -14,7 +14,6 @@ public final class PluginInstance {
 	private final Class<? extends JavaPlugin> key;
 	private final JavaPlugin plugin;
 
-
 	public PluginInstance(Class<? extends JavaPlugin> key, JavaPlugin plugin) {
 		this.key = key;
 		this.plugin = plugin;
