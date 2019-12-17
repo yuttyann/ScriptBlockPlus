@@ -18,7 +18,6 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.CommandMinecart;
-import org.json.simple.parser.ParseException;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -155,7 +154,7 @@ public final class Utils {
 		try {
 			OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 			return player == null || !player.hasPlayedBefore() ? NameFetcher.getName(uuid) : player.getName();
-		} catch (ParseException | IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;

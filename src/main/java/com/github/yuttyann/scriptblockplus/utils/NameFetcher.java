@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.json.simple.parser.ParseException;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -20,7 +18,7 @@ public final class NameFetcher {
 
 	private static final Map<UUID, String> CACHE = new HashMap<>();
 
-	public static String getName(UUID uuid) throws ProtocolException, ParseException, IOException {
+	public static String getName(UUID uuid) throws ProtocolException, IOException {
 		if (uuid == null) {
 			return null;
 		}
