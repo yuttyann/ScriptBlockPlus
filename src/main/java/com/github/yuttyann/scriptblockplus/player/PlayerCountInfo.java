@@ -6,15 +6,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class PlayerCountInfo {
 
-    @SerializedName("amount")
+	@SerializedName("amount")
 	@Expose
 	private int amount;
 
-    @SerializedName("fullcoords")
+	@SerializedName("fullcoords")
 	@Expose
 	private String fullCoords;
 
-    @SerializedName("scripttype")
+	@SerializedName("scripttype")
 	@Expose
 	private ScriptType scriptType;
 
