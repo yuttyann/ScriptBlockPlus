@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
@@ -57,11 +58,7 @@ public class Calculation extends BaseOption {
 		if (REALNUMBER_PATTERN.matcher(source).matches()) {
 			return Double.parseDouble(source);
 		}
-		if (HookPlugins.hasPlaceholderAPI()) {
-			return setPlaceholders(source);
-		} else {
-			return getValue(getPlayer(), source);
-		}
+		return getValue(getPlayer(), source);
 	}
 
 	private double setPlaceholders(String source) {
@@ -77,17 +74,21 @@ public class Calculation extends BaseOption {
 
 	private double getValue(Player player, String variable) throws Exception {
 		if (variable.startsWith("%player_others_in_range_") && variable.endsWith("%")) {
-			variable = variable.substring(0, variable.length() - 1);
-			String distance = StringUtils.split(variable, "%player_others_in_range_")[1];
+			variable = variable.substring("%player_others_in_range_".length(), variable.length() - 1);
 			int i = 10;
 			try {
-				i = Integer.parseInt(distance);
+				i = Integer.parseInt(variable);
 			} catch (NumberFormatException e) {}
 			return getNearbyOthers(player, i);
 		}
+		if (variable.startsWith("%player_count_") && variable.endsWith("%")) {
+			variable = variable.substring("%player_count_".length(), variable.length() - 1);
+			BlockCoords blockCoords = BlockCoords.fromString(variable);
+			return getSBPlayer().getPlayerCount().getInfo(blockCoords, getScriptType()).getAmount();
+		}
 		if (variable.startsWith("%player_ping_") && variable.endsWith("%")) {
-			variable = variable.substring(0, variable.length() - 1);
-			Player target = Utils.getPlayer(StringUtils.split(variable, "%player_ping_")[1]);
+			variable = variable.substring("%player_ping_".length(), variable.length() - 1);
+			Player target = Utils.getPlayer(variable);
 			if (target == null) {
 				return 0.0D;
 			}
@@ -95,13 +96,12 @@ public class Calculation extends BaseOption {
 			return PackageType.NMS.getField("EntityPlayer", "ping").getInt(handle);
 		}
 		if (variable.startsWith("%server_online_") && variable.endsWith("%")) {
-			variable = variable.substring(0, variable.length() - 1);
-			return Utils.getWorld(StringUtils.split(variable, "%server_online_")[1]).getPlayers().size();
+			variable = variable.substring("%server_online_".length(), variable.length() - 1);
+			return Utils.getWorld(variable).getPlayers().size();
 		}
 		if (variable.startsWith("%objective_score_") && variable.endsWith("%")) {
-			variable = variable.substring(0, variable.length() - 1);
-			String name = StringUtils.split(variable, "%objective_score_")[1];
-			Objective objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(name);
+			variable = variable.substring("%objective_score_".length(), variable.length() - 1);
+			Objective objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(variable);
 			return objective == null ? 0.0D : getScore(objective, player).getScore();
 		}
 		switch (variable) {
@@ -109,6 +109,9 @@ public class Calculation extends BaseOption {
 			return Bukkit.getOnlinePlayers().size();
 		case "%server_offline%":
 			return Bukkit.getOfflinePlayers().length;
+		case "%player_count%":
+			BlockCoords fullCoords = BlockCoords.fromString(getFullCoords());
+			return getSBPlayer().getPlayerCount().getInfo(fullCoords, getScriptType()).getAmount();
 		case "%player_ping%":
 			Object handle = player.getClass().getMethod("getHandle").invoke(player);
 			return (int) handle.getClass().getField("ping").get(handle);
@@ -186,6 +189,9 @@ public class Calculation extends BaseOption {
 			VaultEconomy vaultEconomy = HookPlugins.getVaultEconomy();
 			return vaultEconomy.isEnabled() ? vaultEconomy.getBalance(player) : 0.0D;
 		default:
+			if (HookPlugins.hasPlaceholderAPI()) {
+				return setPlaceholders(variable);
+			}
 			return 0.0D;
 		}
 	}
