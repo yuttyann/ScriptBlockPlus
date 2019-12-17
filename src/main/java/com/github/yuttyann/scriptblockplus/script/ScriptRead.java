@@ -120,6 +120,7 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 			}
 		}
 		executeEndProcess(e -> e.success(this));
+		getSBPlayer().getPlayerCount().add(blockCoords, scriptType);
 		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
 		return true;
 	}
