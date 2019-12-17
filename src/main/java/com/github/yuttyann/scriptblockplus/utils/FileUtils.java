@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.function.Predicate;
 
 import org.bukkit.plugin.Plugin;
@@ -85,7 +87,7 @@ public final class FileUtils {
 			File copy = new File(targetFile, file.getName());
 			try (
 					InputStream is = new FileInputStream(file); InputStreamReader isr = new InputStreamReader(is, Charsets.UTF_8);
-					OutputStream os = new FileOutputStream(copy); OutputStreamWriter osw = new OutputStreamWriter(os, Charsets.UTF_8);
+					FileOutputStream fos = new FileOutputStream(copy); OutputStreamWriter osw = new OutputStreamWriter(fos, Charsets.UTF_8);
 					BufferedReader reader = new BufferedReader(isr); BufferedWriter writer = new BufferedWriter(osw)
 				) {
 				boolean isFirst = true;
@@ -103,6 +105,41 @@ public final class FileUtils {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public static void write(File file, String source, Charset charset) throws IOException {
+		File parent = file.getParentFile();
+		if (!parent.exists()) {
+			parent.mkdirs();
+		}
+        try (
+        		FileOutputStream fos = new FileOutputStream(file);
+        		OutputStreamWriter osw = new OutputStreamWriter(fos, charset);
+        		BufferedWriter writer = new BufferedWriter(osw)
+        	) {
+        	writer.write(source);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static String readToString(File file, Charset charset) throws IOException {
+		File parent = file.getParentFile();
+		if (!parent.exists()) {
+			parent.mkdirs();
+		}
+        try (FileInputStream fis = new FileInputStream(file); BufferedInputStream bis = new BufferedInputStream(fis)) {
+        	byte[] data = new byte[(int) file.length()];
+        	bis.read(data);
+        	return new String(data, charset);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static void fileDownload(String url, File file) throws IOException {
