@@ -111,7 +111,12 @@ public final class Utils {
 					location = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
 				}
 			}
-			return CommandSelector.getListener().executeCommand(sender, location, command);
+			try {
+				return CommandSelector.getListener().executeCommand(sender, location, command);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return Bukkit.dispatchCommand(sender, command.startsWith("/") ? command.substring(1) : command);
+			}
 		} else {
 			return Bukkit.dispatchCommand(sender, command.startsWith("/") ? command.substring(1) : command);
 		}
