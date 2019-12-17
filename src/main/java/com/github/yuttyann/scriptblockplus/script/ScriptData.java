@@ -59,6 +59,10 @@ public final class ScriptData implements Cloneable {
 		return scriptPath != null && scriptFile.contains(scriptPath);
 	}
 
+	public String getScriptPath() {
+		return scriptPath;
+	}
+
 	public Location getLocation() {
 		return location;
 	}
