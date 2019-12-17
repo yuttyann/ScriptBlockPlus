@@ -1,4 +1,6 @@
 # ScriptBlockPlus Java8【MC 1.15対応】Readme
+[![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+<br>
 このプラグインは yuttyann44581 によって作成されています。
 <br>
 ブロックにスクリプト(コマンドなど)を追加する事が出来るプラグインです。
