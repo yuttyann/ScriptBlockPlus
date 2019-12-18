@@ -42,6 +42,7 @@
   </build>
 
   <repositories>
+
     <repository>
       <id>bukkit-repo</id>
       <name>Craft Bukkit Maven Repository</name>
@@ -69,7 +70,12 @@
       <artifactId>gson</artifactId>
       <version>2.8.6</version>
       <scope>compile</scope>
-	</dependency>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>16.0.1</version>
+    </dependency>
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
