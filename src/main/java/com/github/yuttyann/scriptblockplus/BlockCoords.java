@@ -7,6 +7,8 @@ import org.bukkit.Location;
 import org.bukkit.Utility;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -14,130 +16,121 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public class BlockCoords extends Location {
 
 	private String coords, fullCoords;
-	private boolean isModified1, isModified2;
 
-	public BlockCoords(Location location) {
+	public BlockCoords(@NotNull final Location location) {
 		this(location.getWorld(), location.getX(), location.getY(), location.getZ());
 	}
 
-	public BlockCoords(World world, double x, double y, double z) {
+	public BlockCoords(@Nullable final World world, final double x, final double y, final double z) {
 		super(world, x, y, z);
 	}
 
 	@Override
-	public void setWorld(World world) {
-		setModified(true);
+	public void setWorld(@Nullable World world) {
 		super.setWorld(world);
 	}
 
 	@Override
 	public void setX(double x) {
-		setModified(true);
 		super.setX(x);
 	}
 
 	@Override
 	public void setY(double y) {
-		setModified(true);
 		super.setY(y);
 	}
 
 	@Override
 	public void setZ(double z) {
-		setModified(true);
 		super.setZ(z);
 	}
 
 	@Override
 	public void setYaw(float yaw) {
-		setModified(true);
 		super.setYaw(yaw);
 	}
 
 	@Override
 	public void setPitch(float pitch) {
-		setModified(true);
 		super.setPitch(pitch);
 	}
 
 	@Override
-	public BlockCoords setDirection(Vector vector) {
-		setModified(true);
+	@NotNull
+	public BlockCoords setDirection(@NotNull Vector vector) {
 		return (BlockCoords) super.setDirection(vector);
 	}
 
 	@Override
-	public BlockCoords add(Location vec) {
-		setModified(true);
+	@NotNull
+	public BlockCoords add(@NotNull Location vec) {
 		return (BlockCoords) super.add(vec);
 	}
 
 	@Override
-	public BlockCoords add(Vector vec) {
-		setModified(true);
+	@NotNull
+	public BlockCoords add(@NotNull Vector vec) {
 		return (BlockCoords) super.add(vec);
 	}
 
 	@Override
+	@NotNull
 	public BlockCoords add(double x, double y, double z) {
-		setModified(true);
 		return (BlockCoords) super.add(x, y, z);
 	}
 
 	@Override
-	public BlockCoords subtract(Location vec) {
-		setModified(true);
+	@NotNull
+	public BlockCoords subtract(@NotNull Location vec) {
 		return (BlockCoords) super.subtract(vec);
 	}
 
 	@Override
-	public BlockCoords subtract(Vector vec) {
-		setModified(true);
+	@NotNull
+	public BlockCoords subtract(@NotNull Vector vec) {
 		return (BlockCoords) super.subtract(vec);
 	}
 
 	@Override
+	@NotNull
 	public BlockCoords subtract(double x, double y, double z) {
-		setModified(true);
 		return (BlockCoords) super.subtract(x, y, z);
 	}
 
+	@Override
+	@NotNull
 	public BlockCoords multiply(double m) {
-		setModified(true);
 		return (BlockCoords) super.multiply(m);
 	}
 
+	@Override
+	@NotNull
 	public BlockCoords zero() {
-		setModified(true);
 		return (BlockCoords) super.zero();
 	}
 
+	@NotNull
 	public String getCoords() {
-		return coords == null || isModified(false) ? coords = getCoords(this) : coords;
+		return getCoords(this);
 	}
 
+	@NotNull
 	public String getFullCoords() {
-		return fullCoords == null || isModified(true) ? fullCoords = getFullCoords(this) : fullCoords;
+		return getFullCoords(this);
 	}
 
-	private void setModified(boolean flag) {
-		isModified1 = flag;
-		isModified2 = flag;
-	}
-
-	private boolean isModified(boolean isFull) {
-		return isFull ? isModified2 && !(isModified2 = false) : isModified1 && !(isModified1 = false);
-	}
-
-	public static String getCoords(Location location) {
+	@NotNull
+	public static String getCoords(@NotNull Location location) {
 		return location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ();
 	}
 
-	public static String getFullCoords(Location location) {
+	@NotNull
+	public static String getFullCoords(@NotNull Location location) {
 		return location.getWorld().getName() + ", " + getCoords(location);
 	}
 
-	public static BlockCoords fromString(World world, String coords) {
+	@NotNull
+	public static BlockCoords fromString(@NotNull World world, @NotNull String coords) {
 		String[] array = StringUtils.split(coords, ",");
 		if (array.length != 3) {
 			throw new IllegalArgumentException();
@@ -148,7 +141,8 @@ public class BlockCoords extends Location {
 		return new BlockCoords(world, x, y, z);
 	}
 
-	public static BlockCoords fromString(String fullCoords) {
+	@NotNull
+	public static BlockCoords fromString(@NotNull String fullCoords) {
 		String[] array = StringUtils.split(fullCoords, ",");
 		if (array.length != 4) {
 			throw new IllegalArgumentException();
@@ -161,15 +155,15 @@ public class BlockCoords extends Location {
 	}
 
 	@Override
+	@NotNull
 	public BlockCoords clone() {
 		BlockCoords blockCoords = new BlockCoords(this);
 		blockCoords.coords = this.coords;
 		blockCoords.fullCoords = this.fullCoords;
-		blockCoords.isModified1 = this.isModified1;
-		blockCoords.isModified2 = this.isModified2;
 		return blockCoords;
 	}
 
+	@NotNull
 	public BlockCoords unmodifiable() {
 		BlockCoords blockCoords = new UnmodifiableBlockCoords(this);
 		blockCoords.coords = getCoords();
@@ -177,10 +171,15 @@ public class BlockCoords extends Location {
 		return blockCoords;
 	}
 
-	private class UnmodifiableBlockCoords extends BlockCoords {
+	@NotNull
+	public static Location unmodifiableLocation(@NotNull Location location) {
+		return new UnmodifiableBlockCoords(location);
+	}
 
-		private UnmodifiableBlockCoords(BlockCoords blockCoords) {
-			super(blockCoords);
+	private static class UnmodifiableBlockCoords extends BlockCoords {
+
+		private UnmodifiableBlockCoords(Location location) {
+			super(location);
 		}
 
 		@Override
@@ -264,99 +263,9 @@ public class BlockCoords extends Location {
 		}
 	}
 
-	// おまけ
-	public static Location unmodifiableLocation(Location location) {
-		return new UnmodifiableLocation(location);
-	}
-
-	private static class UnmodifiableLocation extends Location {
-
-		private UnmodifiableLocation(Location location) {
-			super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-		}
-
-		@Override
-		public void setWorld(World world) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public void setX(double x) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public void setY(double y) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public void setZ(double z) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public void setYaw(float yaw) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public void setPitch(float pitch) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Location setDirection(Vector vector) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Location add(Location vec) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Location add(Vector vec) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Location add(double x, double y, double z) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Location subtract(Location vec) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Location subtract(Vector vec) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Location subtract(double x, double y, double z) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Location multiply(double m) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Location zero() {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Location clone() {
-			return unmodifiableLocation(this);
-		}
-	}
-
+	@Override
 	@Utility
+	@NotNull
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("world", getWorld().getName());
@@ -368,7 +277,8 @@ public class BlockCoords extends Location {
 		return map;
 	}
 
-	public static Location deserialize(Map<String, Object> args) {
+	@NotNull
+	public static Location deserialize(@NotNull Map<String, Object> args) {
 		World world = Utils.getWorld((String) args.get("world"));
 		if (world == null) {
 			throw new IllegalArgumentException("unknown world");
