@@ -6,7 +6,7 @@ public class DebugStream {
 
 	public static <T> void swForEach(T t,  Consumer<T> action, int limit, String prefix, boolean isNano) {
 		forEach(t, action, limit); // 最適化
-		StopWatch stopWatch = new StopWatch(isNano);
+		Stopwatch stopWatch = new Stopwatch(isNano);
 		stopWatch.start();
 		forEach(t, action, limit);
 		stopWatch.end();

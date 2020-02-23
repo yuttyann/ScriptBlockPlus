@@ -1,12 +1,12 @@
 package com.github.yuttyann.scriptblockplus.debug;
 
-public final class StopWatch {
+public final class Stopwatch {
 
 	private final boolean isNano;
 
 	private long start, end;
 
-	public StopWatch(boolean isNano) {
+	public Stopwatch(boolean isNano) {
 		this.isNano = isNano;
 	}
 
