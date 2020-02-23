@@ -21,6 +21,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
@@ -42,6 +43,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import com.github.yuttyann.scriptblockplus.utils.NameFetcher;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -49,18 +51,14 @@ import com.google.common.base.Charsets;
 
 public final class ScriptBlockPlusCommand extends BaseCommand {
 
-	public ScriptBlockPlusCommand(ScriptBlock plugin) {
+	public ScriptBlockPlusCommand(@NotNull ScriptBlock plugin) {
 		super(plugin);
 	}
 
-	@Override
-	public String getName() {
-		return "ScriptBlockPlus";
-	}
-
+	@NotNull
 	@Override
 	public String getCommandName() {
-		return "scriptblockplus";
+		return "ScriptBlockPlus";
 	}
 
 	@Override
@@ -68,6 +66,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
+	@NotNull
 	@Override
 	public CommandData[] getUsages() {
 		String[] typeNodes = SBPermission.getNodes(true);
@@ -89,7 +88,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	}
 
 	@Override
-	public boolean runCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		if (args.length == 1) {
 			if (equals(args[0], "tool")) {
 				return doTool(sender, args);
@@ -126,7 +125,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return false;
 	}
 
-	private boolean doExport(CommandSender sender, String[] args) {
+	private boolean doExport(@NotNull CommandSender sender, @NotNull String[] args) {
 		if (!hasPermission(sender, Permission.COMMAND_EXPORT, false)) {
 			return false;
 		}
@@ -142,7 +141,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private void write(File file, Enum<?>[] values) {
+	private void write(@NotNull File file, @NotNull Enum<?>[] values) {
 		File parent = file.getParentFile();
 		if (!parent.exists()) {
 			parent.mkdirs();
@@ -161,7 +160,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 	}
 
-	private boolean doTool(CommandSender sender, String[] args) {
+	private boolean doTool(@NotNull CommandSender sender, @NotNull String[] args) {
 		if (!hasPermission(sender, Permission.COMMAND_TOOL)) {
 			return false;
 		}
@@ -173,11 +172,12 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private boolean doReload(CommandSender sender) {
+	private boolean doReload(@NotNull CommandSender sender) {
 		if (!hasPermission(sender, Permission.COMMAND_RELOAD, false)) {
 			return false;
 		}
 		Files.reload();
+		NameFetcher.clear();
 		PackageType.clear();
 		setUsage(getUsages());
 		ScriptBlock.getInstance().getMapManager().loadAllScripts();
@@ -185,7 +185,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private boolean doBackup(CommandSender sender) {
+	private boolean doBackup(@NotNull CommandSender sender) {
 		if (!hasPermission(sender, Permission.COMMAND_BACKUP, false)) {
 			return false;
 		}
@@ -197,12 +197,12 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		File backup = new File(scripts, "backup");
 		String formatTime = Utils.getFormatTime("yyyy-MM-dd HH-mm-ss");
-		FileUtils.copyDirectory(scripts, new File(backup, "scripts " + formatTime), f -> f.isDirectory());
+		FileUtils.copyDirectory(scripts, new File(backup, "scripts " + formatTime), File::isDirectory);
 		Utils.sendMessage(sender, SBConfig.getScriptsBackupMessage());
 		return true;
 	}
 
-	private boolean doCheckVer(CommandSender sender) {
+	private boolean doCheckVer(@NotNull CommandSender sender) {
 		if (!hasPermission(sender, Permission.COMMAND_CHECKVER, false)) {
 			return false;
 		}
@@ -210,7 +210,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private boolean doDataMigr(CommandSender sender) {
+	private boolean doDataMigr(@NotNull CommandSender sender) {
 		if (!hasPermission(sender, Permission.COMMAND_DATAMIGR)) {
 			return false;
 		}
@@ -237,7 +237,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private void saveScript(String uuid, String time, YamlConfig scriptFile, ScriptType scriptType) {
+	private void saveScript(@NotNull String uuid, @NotNull String time, @NotNull YamlConfig scriptFile, @NotNull ScriptType scriptType) {
 		ScriptData scriptData = new ScriptData(null, scriptType);
 		for (String world : scriptFile.getKeys()) {
 			World tWorld = Utils.getWorld(world);
@@ -261,9 +261,9 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		ScriptBlock.getInstance().getMapManager().loadScripts(scriptFile, scriptType);
 	}
 
-	private boolean doRun(CommandSender sender, String[] args) {
+	private boolean doRun(@NotNull CommandSender sender, @NotNull String[] args) {
 		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
-		if (!SBPermission.has(sender, scriptType, true)) {
+		if (!isPlayer(sender) || !SBPermission.has(sender, scriptType, true)) {
 			return false;
 		}
 		Player player = (Player) sender;
@@ -276,9 +276,9 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private boolean setAction(CommandSender sender, String[] args) {
+	private boolean setAction(@NotNull CommandSender sender, @NotNull String[] args) {
 		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
-		if (!SBPermission.has(sender, scriptType, true)) {
+		if (!isPlayer(sender) || !SBPermission.has(sender, scriptType, true)) {
 			return false;
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
@@ -300,7 +300,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private boolean doSelectorRemove(CommandSender sender) {
+	private boolean doSelectorRemove(@NotNull CommandSender sender) {
 		if (!hasPermission(sender, Permission.COMMAND_SELECTOR)) {
 			return false;
 		}
@@ -336,7 +336,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private boolean doSelectorPaste(CommandSender sender, String[] args) {
+	private boolean doSelectorPaste(@NotNull CommandSender sender, @NotNull String[] args) {
 		if (!hasPermission(sender, Permission.COMMAND_SELECTOR)) {
 			return false;
 		}
@@ -350,8 +350,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			Utils.sendMessage(sbPlayer, SBConfig.getNotSelectionMessage());
 			return true;
 		}
-		boolean pasteonair = args.length > 2 ? Boolean.parseBoolean(args[2]) : false;
-		boolean overwrite = args.length > 3 ? Boolean.parseBoolean(args[3]) : false;
+		boolean pasteonair = args.length > 2 && Boolean.parseBoolean(args[2]);
+		boolean overwrite = args.length > 3 && Boolean.parseBoolean(args[3]);
 		SBClipboard clipboard = sbPlayer.getClipboard();
 		CuboidRegionBlocks regionBlocks = new CuboidRegionBlocks(region);
 		for (Block block : regionBlocks.getBlocks()) {
@@ -368,7 +368,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	}
 
 	@Override
-	public void tabComplete(CommandSender sender, Command command, String label, String[] args, List<String> empty) {
+	public void tabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args, @NotNull List<String> empty) {
 		if (args.length == 1) {
 			String prefix = args[0].toLowerCase();
 			Set<String> set = setCommandPermissions(sender, new LinkedHashSet<>());
@@ -411,7 +411,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 					if (args.length == 3 && equals(args[1], "run")) {
 						List<World> worlds = Bukkit.getWorlds();
 						String prefix = args[args.length - 1].toLowerCase();
-						String[] answers = StreamUtils.toArray(worlds, w -> w.getName(), new String[worlds.size()]);
+						String[] answers = StreamUtils.toArray(worlds, World::getName, new String[worlds.size()]);
 						StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 					} else if (equals(args[1], "create", "add")) {
 						String prefix = args[args.length - 1].toLowerCase();
