@@ -5,6 +5,8 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
@@ -24,7 +26,7 @@ public interface ScriptBlockAPI {
 	 * @param index 開始位置
 	 * @return 実行が成功したかどうか
 	 */
-	public boolean scriptRead(Player player, Location location, ScriptType scriptType, int index);
+	public boolean scriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index);
 
 	/**
 	 * オプションの位置を取得する</br>
@@ -32,30 +34,29 @@ public interface ScriptBlockAPI {
 	 * @param option オプションクラス
 	 * @return 位置
 	 */
-	public int indexOfOption(Class<? extends BaseOption> option);
+	public int indexOfOption(@NotNull Class<? extends BaseOption> option);
 
 	/**
 	 * オプションを追加する</br>
 	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
 	 */
-	public void addOption(Class<? extends BaseOption> option);
+	public void addOption(@NotNull Class<? extends BaseOption> option);
 
 	/**
-	 * 指定した位置にオプションを追加する
-	 * <br>
+	 * 指定した位置にオプションを追加する</br>
 	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param index 位置
 	 * @param option オプションクラス
 	 */
-	public void addOption(int index, Class<? extends BaseOption> option);
+	public void addOption(int index, @NotNull Class<? extends BaseOption> option);
 
 	/**
 	 * オプションを削除する</br>
 	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
 	 */
-	public void removeOption(Class<? extends BaseOption> option);
+	public void removeOption(@NotNull Class<? extends BaseOption> option);
 
 	/**
 	 * 指定した位置のオプションを削除する
@@ -66,32 +67,32 @@ public interface ScriptBlockAPI {
 	/**
 	 * スクリプトの終了処理の位置を取得する</br>
 	 * 指定するクラスには"EndProcess"を実装してください
-	 * @param process 終了処理クラス
+	 * @param endProcess 終了処理クラス
 	 * @return 位置
 	 */
-	public int indexOfEndProcess(Class<? extends EndProcess> endProcess);
+	public int indexOfEndProcess(@NotNull Class<? extends EndProcess> endProcess);
 
 	/**
 	 * スクリプトの終了処理を追加する</br>
 	 * 指定するクラスには"EndProcess"を実装してください
-	 * @param process 終了処理クラス
+	 * @param endProcess 終了処理クラス
 	 */
-	public void addEndProcess(Class<? extends EndProcess> endProcess);
+	public void addEndProcess(@NotNull Class<? extends EndProcess> endProcess);
 
 	/**
 	 * 指定した位置にスクリプトの終了処理を追加する</br>
 	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param index 位置
-	 * @param process 終了処理クラス
+	 * @param endProcess 終了処理クラス
 	 */
-	public void addEndProcess(int index, Class<? extends EndProcess> endProcess);
+	public void addEndProcess(int index, @NotNull Class<? extends EndProcess> endProcess);
 
 	/**
 	 * スクリプトの終了処理を削除する</br>
 	 * 指定するクラスには"EndProcess"を実装してください
-	 * @param process 終了処理クラス
+	 * @param endProcess 終了処理クラス
 	 */
-	public void removeEndProcess(Class<? extends EndProcess> endProcess);
+	public void removeEndProcess(@NotNull Class<? extends EndProcess> endProcess);
 
 	/**
 	 * 指定した位置のスクリプトの終了処理を削除する
@@ -105,7 +106,8 @@ public interface ScriptBlockAPI {
 	 * @param scriptType スクリプトの種類
 	 * @return SBEdit
 	 */
-	public SBEdit getSBEdit(Location location, ScriptType scriptType);
+	@NotNull
+	public SBEdit getSBEdit(@NotNull Location location, @NotNull ScriptType scriptType);
 
 	public interface SBEdit {
 
@@ -114,7 +116,7 @@ public interface ScriptBlockAPI {
 		 * ただし、別の座標に切り替える機能であり保存場所を変更するわけではない
 		 * @param location 座標
 		 */
-		public void setLocation(Location location);
+		public void setLocation(@NotNull Location location);
 
 		/**
 		 * 変更を保存する
@@ -131,6 +133,7 @@ public interface ScriptBlockAPI {
 		 * スクリプトの種類を取得する
 		 * @return スクリプトの種類
 		 */
+		@NotNull
 		public ScriptType getScriptType();
 
 		/**
@@ -138,26 +141,26 @@ public interface ScriptBlockAPI {
 		 * @param player プレイヤー
 		 * @param script スクリプト
 		 */
-		public void create(Player player, String script);
+		public void create(@NotNull Player player, @NotNull String script);
 
 		/**
 		 * 指定座標にスクリプト追加する
 		 * @param player プレイヤー
 		 * @param script スクリプト
 		 */
-		public void add(Player player, String script);
+		public void add(@NotNull Player player, @NotNull String script);
 
 		/**
 		 * 指定座標のスクリプトを削除する
 		 * @param player プレイヤー
 		 */
-		public void remove(Player player);
+		public void remove(@NotNull Player player);
 
 		/**
 		 * 指定座標のスクリプトの情報を表示する
 		 * @param player プレイヤー
 		 */
-		public void view(Player player);
+		public void view(@NotNull Player player);
 	}
 
 	/**
@@ -166,7 +169,7 @@ public interface ScriptBlockAPI {
 	 * @param scriptType スクリプトの種類
 	 * @return SBFile
 	 */
-	public SBFile getSBFile(Location location, ScriptType scriptType);
+	public SBFile getSBFile(@Nullable Location location, @NotNull ScriptType scriptType);
 
 	public interface SBFile {
 
@@ -175,7 +178,7 @@ public interface ScriptBlockAPI {
 		 * ただし、別の座標に切り替える機能であり保存場所を変更するわけではない
 		 * @param location 座標
 		 */
-		public void setLocation(Location location);
+		public void setLocation(@Nullable Location location);
 
 		/**
 		 * 変更を保存する
@@ -189,34 +192,46 @@ public interface ScriptBlockAPI {
 		public boolean checkPath();
 
 		/**
+		 * スクリプトのパスを取得する
+		 * @return スクリプトのパス
+		 */
+		@NotNull
+		public String getScriptPath();
+
+		/**
 		 * スクリプトの種類を取得する
 		 * @return スクリプトの種類
 		 */
+		@NotNull
 		public ScriptType getScriptType();
 
 		/**
 		 * スクリプトの座標を取得する
 		 * @return 座標
 		 */
+		@Nullable
 		public Location getLocation();
 
 		/**
 		 * スクリプトの作者を取得する
 		 * @return 作者
 		 */
+		@Nullable
 		public String getAuthor();
 
 		/**
 		 * スクリプトの作者を取得する
-		 * @param isName UUIDをMinecraftIDに変換するかどうか
+		 * @param isMinecraft "MinecraftID"を取得するかどうか（それ以外の場合はUUIDが取得される）
 		 * @return 作者
 		 */
-		public List<String> getAuthors(boolean isName);
+		@NotNull
+		public List<String> getAuthors(boolean isMinecraft);
 
 		/**
 		 * スクリプトの編集時刻を取得する
 		 * @return 時刻
 		 */
+		@Nullable
 		public String getLastEdit();
 
 		/**
@@ -229,6 +244,7 @@ public interface ScriptBlockAPI {
 		 * スクリプトを取得する
 		 * @return スクリプト
 		 */
+		@NotNull
 		public List<String> getScripts();
 
 		/**
@@ -237,26 +253,26 @@ public interface ScriptBlockAPI {
 		 * @param overwrite 上書きするか
 		 * @return コピーに成功したか
 		 */
-		public boolean copyScripts(Location target, boolean overwrite);
+		public boolean copyScripts(@NotNull Location target, boolean overwrite);
 
 		/**
 		 * スクリプトの作者を設定する
 		 * @param player 作者
 		 */
-		public void setAuthor(OfflinePlayer player);
+		public void setAuthor(@NotNull OfflinePlayer player);
 
 		/**
 		 * スクリプトの作者を追加する</br>
 		 * 同じ作者は追加されません
 		 * @param player 作者
 		 */
-		public void addAuthor(OfflinePlayer player);
+		public void addAuthor(@NotNull OfflinePlayer player);
 
 		/**
 		 * スクリプトの作者を削除する
 		 * @param player 作者
 		 */
-		public void removeAuthor(OfflinePlayer player);
+		public void removeAuthor(@NotNull OfflinePlayer player);
 
 		/**
 		 * スクリプトの編集時刻を現在の時刻に設定する
@@ -267,7 +283,7 @@ public interface ScriptBlockAPI {
 		 * スクリプトの編集時刻を指定の時刻に設定する
 		 * @param time 時間
 		 */
-		public void setLastEdit(String time);
+		public void setLastEdit(@NotNull String time);
 
 		/**
 		 * スクリプトの実行可能な回数を設定する
@@ -291,33 +307,33 @@ public interface ScriptBlockAPI {
 		 * スクリプトを設定する
 		 * @param scripts スクリプト
 		 */
-		public void setScripts(List<String> scripts);
+		public void setScripts(@NotNull List<String> scripts);
 
 		/**
 		 * 指定した位置のスクリプトを上書きする
 		 * @param index 位置
 		 * @param script スクリプト
 		 */
-		public void setScript(int index, String script);
+		public void setScript(int index, @NotNull String script);
 
 		/**
 		 * スクリプトを追加する
 		 * @param script スクリプト
 		 */
-		public void addScript(String script);
+		public void addScript(@NotNull String script);
 
 		/**
 		 * 指定した位置にスクリプトを追加する
 		 * @param index 位置
 		 * @param script スクリプト
 		 */
-		public void addScript(int index, String script);
+		public void addScript(int index, @NotNull String script);
 
 		/**
 		 * スクリプトを削除する
 		 * @param script スクリプト
 		 */
-		public void removeScript(String script);
+		public void removeScript(@NotNull String script);
 
 		/**
 		 * スクリプトを全て削除する

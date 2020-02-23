@@ -7,6 +7,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 
@@ -19,34 +20,34 @@ public abstract class ScriptBlockEvent extends PlayerEvent implements Cancellabl
 	protected ItemStack mainHand;
 	protected ItemStack offHand;
 
-	public ScriptBlockEvent(Player player) {
+	public ScriptBlockEvent(@NotNull final Player player) {
 		super(player);
 	}
 
-	public ScriptBlockEvent(Player player, Block block) {
-		this(player, block, block.getLocation());
-	}
-
-	public ScriptBlockEvent(Player player, Block block, Location location) {
+	public ScriptBlockEvent(@NotNull final Player player, @NotNull final Block block) {
 		super(player);
 		this.block = block;
-		this.location = location;
+		this.location = block.getLocation();
 		this.mainHand = ItemUtils.getItemInMainHand(player);
 		this.offHand = ItemUtils.getItemInOffHand(player);
 	}
 
+	@NotNull
 	public final Block getBlock() {
 		return block;
 	}
 
+	@NotNull
 	public final Location getLocation() {
 		return location;
 	}
 
+	@NotNull
 	public ItemStack getItemInMainHand() {
 		return mainHand;
 	}
 
+	@NotNull
 	public ItemStack getItemInOffHand() {
 		return offHand;
 	}
@@ -61,11 +62,13 @@ public abstract class ScriptBlockEvent extends PlayerEvent implements Cancellabl
 	@Override
 	public abstract void setCancelled(boolean cancel);
 
+	@NotNull
 	@Override
 	public HandlerList getHandlers() {
 		return HANDLERS;
 	}
 
+	@NotNull
 	public static HandlerList getHandlerList() {
 		return HANDLERS;
 	}

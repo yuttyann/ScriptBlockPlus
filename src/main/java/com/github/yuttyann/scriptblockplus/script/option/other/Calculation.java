@@ -19,6 +19,8 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Calculation extends BaseOption {
 
@@ -28,6 +30,7 @@ public class Calculation extends BaseOption {
 		super("calculation", "@calc:");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new Calculation();
@@ -54,25 +57,14 @@ public class Calculation extends BaseOption {
 		return false;
 	}
 
-	private double parse(String source) throws Exception {
+	private double parse(@NotNull String source) throws Exception {
 		if (REALNUMBER_PATTERN.matcher(source).matches()) {
 			return Double.parseDouble(source);
 		}
 		return getValue(getPlayer(), source);
 	}
 
-	private double setPlaceholders(String source) {
-		String version = PlaceholderAPIPlugin.getInstance().getDescription().getVersion();
-		if (Utils.isUpperVersion("2.8.8", version)) {
-			return Double.parseDouble(PlaceholderAPI.setPlaceholders((OfflinePlayer) getPlayer(), source));
-		} else {
-			@SuppressWarnings("deprecation")
-			double result = Double.parseDouble(PlaceholderAPI.setPlaceholders(getPlayer(), source));
-			return result;
-		}
-	}
-
-	private double getValue(Player player, String variable) throws Exception {
+	private double getValue(@NotNull Player player, @NotNull String variable) throws Exception {
 		if (variable.startsWith("%player_others_in_range_") && variable.endsWith("%")) {
 			variable = variable.substring("%player_others_in_range_".length(), variable.length() - 1);
 			int i = 10;
@@ -190,13 +182,20 @@ public class Calculation extends BaseOption {
 			return vaultEconomy.isEnabled() ? vaultEconomy.getBalance(player) : 0.0D;
 		default:
 			if (HookPlugins.hasPlaceholderAPI()) {
-				return setPlaceholders(variable);
+				String version = PlaceholderAPIPlugin.getInstance().getDescription().getVersion();
+				if (Utils.isUpperVersion("2.8.8", version)) {
+					return Double.parseDouble(PlaceholderAPI.setPlaceholders((OfflinePlayer) getPlayer(), variable));
+				} else {
+					@SuppressWarnings("deprecation")
+					double result = Double.parseDouble(PlaceholderAPI.setPlaceholders(getPlayer(), variable));
+					return result;
+				}
 			}
 			return 0.0D;
 		}
 	}
 
-	private int getNearbyOthers(Player player, int distance) {
+	private int getNearbyOthers(@NotNull Player player, int distance) {
 		int count = 0;
 		int result = distance * distance;
 		for (Player p : player.getLocation().getWorld().getPlayers()) {
@@ -207,11 +206,11 @@ public class Calculation extends BaseOption {
 		return count;
 	}
 
-	private Score getScore(Objective objective, Player player) {
+	private Score getScore(@NotNull Objective objective, @NotNull Player player) {
 		return objective.getScore(player.getName());
 	}
 
-	private boolean result(double value1, double value2, String operator) {
+	private boolean result(double value1, double value2, @NotNull String operator) {
 		switch (operator) {
 		case "<":
 			return value1 < value2;

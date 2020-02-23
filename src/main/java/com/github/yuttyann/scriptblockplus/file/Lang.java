@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.file;
 import java.io.File;
 
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
@@ -15,20 +16,23 @@ public class Lang {
 	private final Plugin plugin;
 	private final String language;
 
-	public Lang(Plugin plugin, String language) {
+	public Lang(@NotNull Plugin plugin, @NotNull String language) {
 		this.plugin = plugin;
 		this.language = StringUtils.isEmpty(language) ? DEFAULT_LANGUAGE : language.toLowerCase();
 	}
 
+	@NotNull
 	public final String getLanguage() {
 		return language;
 	}
 
-	public final YamlConfig load(String filePath, String dirPath) {
+	@NotNull
+	public final YamlConfig load(@NotNull String filePath, @NotNull String dirPath) {
 		return YamlConfig.load(plugin, getFile(filePath, dirPath), false);
 	}
 
-	private File getFile(String filePath, String dirPath) {
+	@NotNull
+	private File getFile(@NotNull String filePath, @NotNull String dirPath) {
 		String path = dirPath + "/" + language + ".yml";
 		String code = isExists(path) ? language : DEFAULT_LANGUAGE;
 		filePath = StringUtils.replace(filePath, "{code}", code);
@@ -42,7 +46,7 @@ public class Lang {
 		return file;
 	}
 
-	private boolean isExists(String filePath) {
+	private boolean isExists(@NotNull String filePath) {
 		if (StringUtils.isNotEmpty(filePath)) {
 			return FileUtils.getResource(plugin, filePath) != null;
 		}

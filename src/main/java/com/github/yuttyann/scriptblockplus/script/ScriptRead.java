@@ -22,6 +22,8 @@ import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ScriptRead extends ScriptObjectMap implements SBRead {
 
@@ -33,11 +35,11 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 	protected int scriptIndex;
 
 	// 継承用
-	protected ScriptRead(ScriptListener listener) {
+	protected ScriptRead(@NotNull ScriptListener listener) {
 		super(listener);
 	}
 
-	public ScriptRead(Player player, Location location, ScriptListener listener) {
+	public ScriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptListener listener) {
 		super(listener);
 		this.sbPlayer = SBPlayer.fromPlayer(player);
 		this.scriptData = new ScriptData(location, scriptType, true);
@@ -48,36 +50,43 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 		this.blockCoords = ((BlockCoords) location).unmodifiable(); // 変更不可に設定
 	}
 
+	@NotNull
 	@Override
 	public SBPlayer getSBPlayer() {
 		return sbPlayer;
 	}
 
+	@NotNull
 	@Override
 	public List<String> getScripts() {
 		return scripts;
 	}
+	@NotNull
 
 	@Override
 	public String getOptionValue() {
 		return optionValue;
 	}
 
+	@NotNull
 	@Override
 	public String getCoords() {
 		return blockCoords.getCoords();
 	}
 
+	@NotNull
 	@Override
 	public String getFullCoords() {
 		return blockCoords.getFullCoords();
 	}
 
+	@NotNull
 	@Override
 	public Location getLocation() {
 		return blockCoords;
 	}
 
+	@NotNull
 	@Override
 	public ScriptData getScriptData() {
 		return scriptData;
@@ -125,7 +134,7 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 		return true;
 	}
 
-	protected void executeEndProcess(Consumer<EndProcess> action) {
+	protected void executeEndProcess(@NotNull Consumer<EndProcess> action) {
 		try {
 			EndProcessManager.getInstance().forEach(e -> action.accept(e));
 		} finally {
@@ -133,7 +142,7 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 		}
 	}
 
-	protected boolean hasPermission(Option option) {
+	protected boolean hasPermission(@NotNull Option option) {
 		if (!SBConfig.isOptionPermission() || Permission.has(sbPlayer, option.getPermissionNode())) {
 			return true;
 		}
@@ -141,7 +150,7 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 		return false;
 	}
 
-	protected boolean sort(List<String> scripts, List<Option> options) {
+	protected boolean sort(@NotNull List<String> scripts, @NotNull List<Option> options) {
 		try {
 			List<String> parse = new ArrayList<>();
 			List<String> result = parse;
@@ -158,7 +167,8 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 		return false;
 	}
 
-	protected List<String> getScripts(String script) {
+	@Nullable
+	protected List<String> getScripts(@NotNull String script) {
 		try {
 			return StringUtils.getScripts(script);
 		} catch (IllegalArgumentException e) {
@@ -167,7 +177,8 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 		return null;
 	}
 
-	private Location setCenter(Location location) {
+	@NotNull
+	private Location setCenter(@NotNull Location location) {
 		location.setX(location.getBlockX() + 0.5D);
 		location.setY(location.getBlockY() + 0.5D);
 		location.setZ(location.getBlockZ() + 0.5D);

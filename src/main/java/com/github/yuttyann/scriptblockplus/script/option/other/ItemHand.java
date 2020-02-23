@@ -13,6 +13,8 @@ import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemHand extends BaseOption {
 
@@ -20,6 +22,7 @@ public class ItemHand extends BaseOption {
 		super("itemhand", "@hand:");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new ItemHand();
@@ -47,7 +50,7 @@ public class ItemHand extends BaseOption {
 		return true;
 	}
 
-	private boolean checkItem(ItemStack item, String itemName, Material type, int amount, int damage) {
+	private boolean checkItem(@Nullable ItemStack item, @Nullable String itemName, @NotNull Material type, int amount, int damage) {
 		if (item == null || item.getType() != type || item.getAmount() < amount || ItemUtils.getDamage(item) != damage) {
 			return false;
 		}

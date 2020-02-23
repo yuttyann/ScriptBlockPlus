@@ -22,12 +22,15 @@ import org.bukkit.entity.minecart.CommandMinecart;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class Utils {
 
 	private static final String SERVER_VERSION = getServerVersion();
 	private static final Map<String, Boolean> VC_CACHE = new HashMap<>();
 
+	@NotNull
 	public static String getServerVersion() {
 		if (SERVER_VERSION == null) {
 			String version = Bukkit.getBukkitVersion();
@@ -40,7 +43,7 @@ public final class Utils {
 		return Bukkit.getName().equals("CraftBukkit");
 	}
 
-	public static boolean isCBXXXorLater(String version) {
+	public static boolean isCBXXXorLater(@NotNull String version) {
 		Boolean result = VC_CACHE.get(version);
 		if (result == null) {
 			VC_CACHE.put(version, result = isUpperVersion(getServerVersion(), version));
@@ -48,14 +51,14 @@ public final class Utils {
 		return result;
 	}
 
-	public static boolean isUpperVersion(String source, String target) {
+	public static boolean isUpperVersion(@NotNull String source, @NotNull String target) {
 		if (StringUtils.isNotEmpty(source) && StringUtils.isNotEmpty(target)) {
 			return getVersionInt(source) >= getVersionInt(target);
 		}
 		return false;
 	}
 
-	public static int getVersionInt(String source) {
+	public static int getVersionInt(@NotNull String source) {
 		String[] array = StringUtils.split(source, ".");
 		int result = (Integer.parseInt(array[0]) * 100000) + (Integer.parseInt(array[1]) * 1000);
 		if (array.length == 3) {
@@ -64,20 +67,22 @@ public final class Utils {
 		return result;
 	}
 
+	@NotNull
 	public static String getFormatTime() {
 		return getFormatTime("yyyy/MM/dd HH:mm:ss");
 	}
 
-	public static String getFormatTime(String pattern) {
+	@NotNull
+	public static String getFormatTime(@NotNull String pattern) {
 		Validate.notNull(pattern, "Pattern cannot be null");
 		return new SimpleDateFormat(pattern).format(new Date());
 	}
 
-	public static void sendMessage(String message) {
+	public static void sendMessage(@Nullable String message) {
 		sendMessage(Bukkit.getConsoleSender(), message);
 	}
 
-	public static void sendMessage(CommandSender sender, String message) {
+	public static void sendMessage(@Nullable CommandSender sender, @Nullable String message) {
 		if (StringUtils.isNotEmpty(message)) {
 			message = StringUtils.replace(message, "\\n", "|~");
 			String color = "";
@@ -91,7 +96,7 @@ public final class Utils {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static boolean dispatchCommand(CommandSender sender, Location location, String command) {
+	public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
 		boolean isCommandSelector = isCraftBukkit() && SBConfig.isCommandSelector();
@@ -121,7 +126,8 @@ public final class Utils {
 		}
 	}
 
-	public static World getWorld(String name) {
+	@Nullable
+	public static World getWorld(@NotNull String name) {
 		Validate.notNull(name, "Name cannot be null");
 		World world = Bukkit.getWorld(name);
 		if (world == null) {
@@ -134,23 +140,26 @@ public final class Utils {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void updateInventory(Player player) {
+	public static void updateInventory(@NotNull Player player) {
 		player.updateInventory();
 	}
 
-	public static Player getPlayer(String name) {
+	@Nullable
+	public static Player getPlayer(@NotNull String name) {
 		if (StringUtils.isEmpty(name)) {
 			return null;
 		}
 		return StreamUtils.fOrElse(Bukkit.getOnlinePlayers(), p -> name.equals(p.getName()), null);
 	}
 
-	public static OfflinePlayer getOfflinePlayer(UUID uuid) {
+	@Nullable
+	public static OfflinePlayer getOfflinePlayer(@NotNull UUID uuid) {
 		OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 		return player == null || !player.hasPlayedBefore() ? null : player;
 	}
 
-	public static String getName(UUID uuid) {
+	@Nullable
+	public static String getName(@NotNull UUID uuid) {
 		try {
 			OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 			return player == null || !player.hasPlayedBefore() ? NameFetcher.getName(uuid) : player.getName();

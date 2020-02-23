@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.selector;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * コマンド実行 インターフェース
@@ -16,5 +17,5 @@ public interface CommandListener {
 	 * @param command コマンド
 	 * @return 実行が成功したかどうか
 	 */
-	public boolean executeCommand(CommandSender sender, Location location, String command);
+	public boolean executeCommand(@NotNull CommandSender sender, @NotNull Location location, @NotNull String command);
 }

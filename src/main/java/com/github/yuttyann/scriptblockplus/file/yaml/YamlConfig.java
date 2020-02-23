@@ -21,6 +21,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -37,58 +39,70 @@ public class YamlConfig {
 	private UTF8Config yaml;
 	private boolean isCopyFile;
 
-	protected YamlConfig(Plugin plugin, File file, boolean isCopyFile) {
+	protected YamlConfig(@NotNull Plugin plugin, @NotNull File file, boolean isCopyFile) {
 		this.plugin = plugin;
 		this.file = file;
 		this.isCopyFile = isCopyFile;
 		reload();
 	}
 
-	public static YamlConfig load(Plugin plugin, File file) {
+	@NotNull
+	public static YamlConfig load(@NotNull Plugin plugin, @NotNull File file) {
 		return load(plugin, file, true);
 	}
 
-	public static YamlConfig load(Plugin plugin, File file, boolean isCopyFile) {
+	@NotNull
+	public static YamlConfig load(@NotNull Plugin plugin, @NotNull File file, boolean isCopyFile) {
 		return new YamlConfig(plugin, file, isCopyFile);
 	}
 
-	public static YamlConfig load(Plugin plugin, String filePath) {
+	@NotNull
+	public static YamlConfig load(@NotNull Plugin plugin, @NotNull String filePath) {
 		return load(plugin, filePath, true);
 	}
 
-	public static YamlConfig load(Plugin plugin, String filePath, boolean isCopyFile) {
+	@NotNull
+	public static YamlConfig load(@NotNull Plugin plugin, @NotNull String filePath, boolean isCopyFile) {
 		return load(plugin, new File(plugin.getDataFolder(), filePath), isCopyFile);
 	}
 
+	@NotNull
 	public final YamlConfig setCopyFile(boolean isCopyFile) {
 		this.isCopyFile = isCopyFile;
 		return this;
 	}
 
+	@NotNull
 	public final Plugin getPlugin() {
 		return plugin;
 	}
 
+	@NotNull
 	public final File getDataFolder() {
 		return plugin.getDataFolder();
 	}
 
+	@NotNull
 	public final File getFile() {
 		return file;
 	}
 
+	@NotNull
 	public final String getFileName() {
 		return file.getName();
 	}
 
+	@NotNull
 	public final String getPath() {
 		return file.getPath();
 	}
 
+	@NotNull
 	public final String getAbsolutePath() {
 		return file.getAbsolutePath();
 	}
 
+	@NotNull
 	public final String getFolderPath() {
 		String path = StringUtils.removeStart(getPath(), getDataFolder().getPath());
 		return path.startsWith("\\") ? path.substring(1, path.length()) : path;
@@ -124,265 +138,297 @@ public class YamlConfig {
 		}
 	}
 
-	public void save(File file) throws IOException {
+	public void save(@NotNull File file) throws IOException {
 		yaml.save(file);
 	}
 
-	public void save(String file) throws IOException {
+	public void save(@NotNull String file) throws IOException {
 		yaml.save(file);
 	}
 
-	public void addDefault(String path, Object value) {
+	public void addDefault(@NotNull String path, @Nullable Object value) {
 		yaml.addDefault(path, value);
 	}
 
-	public void addDefault(Configuration defaults) {
+	public void addDefault(@NotNull Configuration defaults) {
 		yaml.addDefaults(defaults);
 	}
 
-	public void addDefault(Map<String, Object> defaults) {
+	public void addDefault(@NotNull Map<String, Object> defaults) {
 		yaml.addDefaults(defaults);
 	}
 
-	public void set(String path, Object value) {
+	public void set(@NotNull String path, @Nullable Object value) {
 		yaml.set(path, value);
 	}
 
-	public void setDefaults(Configuration defaults) {
+	public void setDefaults(@NotNull Configuration defaults) {
 		yaml.setDefaults(defaults);
 	}
 
-	public ConfigurationSection createSection(String path) {
+	@NotNull
+	public ConfigurationSection createSection(@NotNull String path) {
 		return yaml.createSection(path);
 	}
 
-	public ConfigurationSection createSection(String path, Map<?, ?> map) {
+	@NotNull
+	public ConfigurationSection createSection(@NotNull String path, @NotNull Map<?, ?> map) {
 		return yaml.createSection(path, map);
 	}
 
-	public ConfigurationSection getConfigurationSection(String path) {
+	@Nullable
+	public ConfigurationSection getConfigurationSection(@NotNull String path) {
 		return yaml.getConfigurationSection(path);
 	}
 
+	@Nullable
 	public Configuration getDefaults() {
 		return yaml.getDefaults();
 	}
 
+	@Nullable
 	public ConfigurationSection getDefaultSection() {
 		return yaml.getDefaultSection();
 	}
 
+	@Nullable
 	public ConfigurationSection getParent() {
 		return yaml.getParent();
 	}
 
+	@Nullable
 	public Configuration getRoot() {
 		return yaml.getRoot();
 	}
 
+	@NotNull
 	public String getCurrentPath() {
 		return yaml.getCurrentPath();
 	}
 
+	@NotNull
 	public String getName() {
 		return yaml.getName();
 	}
 
-	public String getString(String path) {
+	@Nullable
+	public String getString(@NotNull String path) {
 		return yaml.getString(path);
 	}
 
-	public String getString(String path, String def) {
+	@Nullable
+	public String getString(@NotNull String path, String def) {
 		return yaml.getString(path, def);
 	}
 
-	public Object get(String path) {
+	@Nullable
+	public Object get(@NotNull String path) {
 		return yaml.get(path);
 	}
 
-	public Object get(String path, Object def) {
+	@Nullable
+	public Object get(@NotNull String path, Object def) {
 		return yaml.get(path, def);
 	}
 
-	public UUID getUUID(String path) {
+	@Nullable
+	public UUID getUUID(@NotNull String path) {
 		Object def = getDefault(path);
 		return getUUID(path, def == null ? null : UUID.fromString(def.toString()));
 	}
 
-	public UUID getUUID(String path, UUID def) {
+	@Nullable
+	public UUID getUUID(@NotNull String path, UUID def) {
 		Object val = get(path, def);
 		return val == null ? def : UUID.fromString(val.toString());
 	}
 
-	public Color getColor(String path) {
+	@Nullable
+	public Color getColor(@NotNull String path) {
 		return yaml.getColor(path);
 	}
 
-	public Color getColor(String path, Color def) {
+	@Nullable
+	public Color getColor(@NotNull String path, Color def) {
 		return yaml.getColor(path, def);
 	}
 
-	public ItemStack getItemStack(String path) {
+	@Nullable
+	public ItemStack getItemStack(@NotNull String path) {
 		return yaml.getItemStack(path);
 	}
 
-	public ItemStack getItemStack(String path, ItemStack def) {
+	@Nullable
+	public ItemStack getItemStack(@NotNull String path, ItemStack def) {
 		return yaml.getItemStack(path, def);
 	}
 
-	public Vector getVector(String path) {
+	@Nullable
+	public Vector getVector(@NotNull String path) {
 		return yaml.getVector(path);
 	}
 
-	public Vector getVector(String path, Vector def) {
+	@Nullable
+	public Vector getVector(@NotNull String path, Vector def) {
 		return yaml.getVector(path, def);
 	}
 
-	public FileConfigurationOptions options(String path) {
+	@NotNull
+	public FileConfigurationOptions options() {
 		return yaml.options();
 	}
 
-	public boolean contains(String path) {
+	public boolean contains(@NotNull String path) {
 		return yaml.contains(path);
 	}
 
-	public boolean getBoolean(String path) {
+	public boolean getBoolean(@NotNull String path) {
 		return yaml.getBoolean(path);
 	}
 
-	public boolean getBoolean(String path, boolean def) {
+	public boolean getBoolean(@NotNull String path, boolean def) {
 		return yaml.getBoolean(path, def);
 	}
 
-	public boolean isString(String path) {
+	public boolean isString(@NotNull String path) {
 		return yaml.isString(path);
 	}
 
-	public boolean isUUID(String path) {
+	public boolean isUUID(@NotNull String path) {
 		String val = getString(path);
-		return val == null ? false : UUID_PATTERN.matcher(val).matches();
+		return val != null && UUID_PATTERN.matcher(val).matches();
 	}
 
-	public boolean isColor(String path) {
+	public boolean isColor(@NotNull String path) {
 		return yaml.isColor(path);
 	}
 
-	public boolean isItemStack(String path) {
+	public boolean isItemStack(@NotNull String path) {
 		return yaml.isItemStack(path);
 	}
 
-	public boolean isVector(String path) {
+	public boolean isVector(@NotNull String path) {
 		return yaml.isVector(path);
 	}
 
-	public boolean isBoolean(String path) {
+	public boolean isBoolean(@NotNull String path) {
 		return yaml.isBoolean(path);
 	}
 
-	public boolean isOfflinePlayer(String path) {
+	public boolean isOfflinePlayer(@NotNull String path) {
 		return yaml.isOfflinePlayer(path);
 	}
 
-	public boolean isConfigurationSection(String path) {
+	public boolean isConfigurationSection(@NotNull String path) {
 		return yaml.isConfigurationSection(path);
 	}
 
-	public boolean isInt(String path) {
+	public boolean isInt(@NotNull String path) {
 		return yaml.isInt(path);
 	}
 
-	public boolean isDouble(String path) {
+	public boolean isDouble(@NotNull String path) {
 		return yaml.isDouble(path);
 	}
 
-	public boolean isFloat(String path) {
+	public boolean isFloat(@NotNull String path) {
 		Object val = get(path);
 		return val instanceof Float;
 	}
 
-	public boolean isLong(String path) {
+	public boolean isLong(@NotNull String path) {
 		return yaml.isLong(path);
 	}
 
-	public boolean isSet(String path) {
+	public boolean isSet(@NotNull String path) {
 		return yaml.isSet(path);
 	}
 
-	public boolean isList(String path) {
+	public boolean isList(@NotNull String path) {
 		return yaml.isList(path);
 	}
 
-	public int getInt(String path) {
+	public int getInt(@NotNull String path) {
 		return yaml.getInt(path);
 	}
 
-	public int getInt(String path, int def) {
+	public int getInt(@NotNull String path, int def) {
 		return yaml.getInt(path, def);
 	}
 
-	public double getDouble(String path) {
+	public double getDouble(@NotNull String path) {
 		return yaml.getDouble(path);
 	}
 
-	public double getDouble(String path, double def) {
+	public double getDouble(@NotNull String path, double def) {
 		return yaml.getDouble(path, def);
 	}
 
-	public float getFloat(String path) {
+	public float getFloat(@NotNull String path) {
 		Object def = getDefault(path);
 		return getFloat(path, def instanceof Number ? NumberConversions.toFloat(def) : 0.0F);
 	}
 
-	public float getFloat(String path, float def) {
+	public float getFloat(@NotNull String path, float def) {
 		Object val = get(path, def);
 		return val instanceof Number ? NumberConversions.toFloat(val) : def;
 	}
 
-	public long getLong(String path) {
+	public long getLong(@NotNull String path) {
 		return yaml.getLong(path);
 	}
 
-	public long getLong(String path, long def) {
+	public long getLong(@NotNull String path, long def) {
 		return yaml.getLong(path, def);
 	}
 
+	@NotNull
 	public Set<String> getKeys() {
 		return yaml.getKeys(false);
 	}
 
+	@NotNull
 	public Set<String> getKeys(boolean deep) {
 		return yaml.getKeys(deep);
 	}
 
+	@NotNull
 	public Set<String> getKeys(String path) {
 		return getConfigurationSection(path).getKeys(false);
 	}
 
+	@NotNull
 	public Set<String> getKeys(String path, boolean deep) {
 		return getConfigurationSection(path).getKeys(deep);
 	}
 
+	@NotNull
 	public Map<String, Object> getValues(boolean deep) {
 		return yaml.getValues(deep);
 	}
 
-	public List<?> getList(String path) {
+	@Nullable
+	public List<?> getList(@NotNull String path) {
 		return yaml.getList(path);
 	}
 
-	public List<?> getList(String path, List<?> def) {
+	@Nullable
+	public List<?> getList(@NotNull String path, List<?> def) {
 		return yaml.getList(path, def);
 	}
 
-	public List<Map<?, ?>> getMapList(String path) {
+	@NotNull
+	public List<Map<?, ?>> getMapList(@NotNull String path) {
 		return yaml.getMapList(path);
 	}
 
-	public List<String> getStringList(String path) {
+	@NotNull
+	public List<String> getStringList(@NotNull String path) {
 		return yaml.getStringList(path);
 	}
 
-	public List<UUID> getUUIDList(String path) {
+	@NotNull
+	public List<UUID> getUUIDList(@NotNull String path) {
 		List<?> list = getList(path);
 		if (list == null) {
 			return new ArrayList<>();
@@ -396,44 +442,54 @@ public class YamlConfig {
 		return result;
 	}
 
-	public List<Boolean> getBooleanList(String path) {
+	@NotNull
+	public List<Boolean> getBooleanList(@NotNull String path) {
 		return yaml.getBooleanList(path);
 	}
 
-	public List<Character> getCharacterList(String path) {
+	@NotNull
+	public List<Character> getCharacterList(@NotNull String path) {
 		return yaml.getCharacterList(path);
 	}
 
-	public List<Integer> getIntegerList(String path) {
+	@NotNull
+	public List<Integer> getIntegerList(@NotNull String path) {
 		return yaml.getIntegerList(path);
 	}
 
-	public List<Double> getDoubleList(String path) {
+	@NotNull
+	public List<Double> getDoubleList(@NotNull String path) {
 		return yaml.getDoubleList(path);
 	}
 
-	public List<Float> getFloatList(String path) {
+	@NotNull
+	public List<Float> getFloatList(@NotNull String path) {
 		return yaml.getFloatList(path);
 	}
 
-	public List<Long> getLongList(String path) {
+	@NotNull
+	public List<Long> getLongList(@NotNull String path) {
 		return yaml.getLongList(path);
 	}
 
-	public List<Short> getShortList(String path) {
+	@NotNull
+	public List<Short> getShortList(@NotNull String path) {
 		return yaml.getShortList(path);
 	}
 
-	public List<Byte> getByteList(String path) {
+	@NotNull
+	public List<Byte> getByteList(@NotNull String path) {
 		return yaml.getByteList(path);
 	}
 
+	@NotNull
 	@Override
 	public String toString() {
 		return yaml.toString();
 	}
 
-	private Object getDefault(String path) {
+	@Nullable
+	protected Object getDefault(@NotNull String path) {
 		Validate.notNull(path, "Path cannot be null");
 		Configuration root = getRoot();
 		Configuration defaults = root == null ? null : root.getDefaults();

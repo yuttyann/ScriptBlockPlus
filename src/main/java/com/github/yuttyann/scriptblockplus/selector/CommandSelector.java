@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.selector.versions.Vx_x_Rx;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 public final class CommandSelector {
 
@@ -25,12 +26,13 @@ public final class CommandSelector {
 		COMMAND_LISTENER = nmsVx_x_Rx.getCommandBlock();
 	}
 
+	@NotNull
 	public static CommandListener getListener() {
 		return COMMAND_LISTENER;
 	}
 
 	@Deprecated
-	public static boolean isCommandPattern(String command) {
+	public static boolean isCommandPattern(@NotNull String command) {
 		String[] args = StringUtils.split(command, " ");
 		for (int i = 1; i < args.length; i++) {
 			if (isPattern(args[i])) {
@@ -41,7 +43,7 @@ public final class CommandSelector {
 	}
 
 	@Deprecated
-	public static boolean isPattern(String s) {
+	public static boolean isPattern(@NotNull String s) {
 		return COMMAND_PATTERN.matcher(s).matches();
 	}
 }

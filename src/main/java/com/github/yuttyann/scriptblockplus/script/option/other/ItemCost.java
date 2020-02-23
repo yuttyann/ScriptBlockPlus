@@ -14,6 +14,8 @@ import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemCost extends BaseOption {
 
@@ -25,6 +27,7 @@ public class ItemCost extends BaseOption {
 		super("itemcost", "$item:");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new ItemCost();
@@ -50,9 +53,9 @@ public class ItemCost extends BaseOption {
 		}
 		ItemStack[] items = inventory.getContents();
 		int result = amount;
-		for (int i = 0; i < items.length; i++) {
-			if (checkItem(items[i], itemName, type, damage)) {
-				result -= result > 0 ? setAmount(items[i], items[i].getAmount() - result) : 0;
+		for (ItemStack item : items) {
+			if (equalItems(item, itemName, type, damage)) {
+				result -= result > 0 ? setAmount(item, item.getAmount() - result) : 0;
 			}
 		}
 		if (result > 0) {
@@ -63,13 +66,13 @@ public class ItemCost extends BaseOption {
 		return true;
 	}
 
-	private int setAmount(ItemStack item, int amount) {
+	private int setAmount(@NotNull ItemStack item, int amount) {
 		int oldAmount = item.getAmount();
 		item.setAmount(amount);
 		return oldAmount;
 	}
 
-	private ItemStack[] copyItems(ItemStack[] items) {
+	private ItemStack[] copyItems(@NotNull ItemStack[] items) {
 		ItemStack[] copy = new ItemStack[items.length];
 		for (int i = 0; i < copy.length; i++) {
 			copy[i] = items[i] == null ? null : items[i].clone();
@@ -77,7 +80,7 @@ public class ItemCost extends BaseOption {
 		return copy;
 	}
 
-	private boolean checkItem(ItemStack item, String itemName, Material type, int damage) {
+	private boolean equalItems(@Nullable ItemStack item, @Nullable String itemName, @NotNull Material type, int damage) {
 		if (item == null || item.getType() != type || ItemUtils.getDamage(item) != damage) {
 			return false;
 		}

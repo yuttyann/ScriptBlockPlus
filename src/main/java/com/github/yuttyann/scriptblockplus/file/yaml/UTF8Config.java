@@ -17,6 +17,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.file.YamlConstructor;
 import org.bukkit.configuration.file.YamlRepresenter;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
@@ -29,6 +30,7 @@ public final class UTF8Config extends YamlConfiguration {
 	private final Representer yamlRepresenter = new YamlRepresenter();
 	private final Yaml yaml = new Yaml(new YamlConstructor(), yamlRepresenter, yamlOptions);
 
+	@NotNull
 	public String saveToString() {
         yamlOptions.setIndent(options().indent());
         yamlOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -41,7 +43,7 @@ public final class UTF8Config extends YamlConfiguration {
 		return header + dump;
 	}
 
-	public void save(File file) throws IOException {
+	public void save(@NotNull File file) throws IOException {
 		Validate.notNull(file, "File cannot be null");
 		File parent = file.getParentFile();
 		if (!parent.exists()) {
@@ -53,17 +55,17 @@ public final class UTF8Config extends YamlConfiguration {
 		}
 	}
 
-	public void save(String file) throws IOException {
+	public void save(@NotNull String file) throws IOException {
 		Validate.notNull(file, "File cannot be null");
 		save(new File(file));
 	}
 
-	public void load(File file) throws FileNotFoundException, IOException, InvalidConfigurationException {
+	public void load(@NotNull File file) throws FileNotFoundException, IOException, InvalidConfigurationException {
 		Validate.notNull(file, "File cannot be null");
 		load(new BufferedReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8)));
 	}
 
-	public void load(Reader reader) throws IOException, InvalidConfigurationException {
+	public void load(@NotNull Reader reader) throws IOException, InvalidConfigurationException {
 		StringBuilder builder = new StringBuilder();
 		try (BufferedReader input = reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader)) {
 			String line;
@@ -74,12 +76,13 @@ public final class UTF8Config extends YamlConfiguration {
 		loadFromString(builder.toString());
 	}
 
-	public void load(String file) throws FileNotFoundException, IOException, InvalidConfigurationException {
+	public void load(@NotNull String file) throws FileNotFoundException, IOException, InvalidConfigurationException {
 		Validate.notNull(file, "File cannot be null");
 		load(new File(file));
 	}
 
-	public static UTF8Config loadConfiguration(File file) {
+	@NotNull
+	public static UTF8Config loadConfiguration(@NotNull File file) {
 		Validate.notNull(file, "File cannot be null");
 		UTF8Config yaml = new UTF8Config();
 		try {
@@ -91,7 +94,8 @@ public final class UTF8Config extends YamlConfiguration {
 		return yaml;
 	}
 
-	public static UTF8Config loadConfiguration(Reader reader) {
+	@NotNull
+	public static UTF8Config loadConfiguration(@NotNull Reader reader) {
 		Validate.notNull(reader, "Stream cannot be null");
 		UTF8Config yaml = new UTF8Config();
 		try {

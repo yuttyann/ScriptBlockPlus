@@ -9,6 +9,8 @@ import java.util.Map;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -39,10 +41,11 @@ public enum PackageType {
 
 		private String name;
 
-		private RType(String name) {
+		private RType(@NotNull String name) {
 			this.name = name;
 		}
 
+		@NotNull
 		@Override
 		public String toString() {
 			return name;
@@ -53,34 +56,35 @@ public enum PackageType {
 
 	private final String path;
 
-	private PackageType(String path) {
+	private PackageType(@NotNull String path) {
 		this.path = path;
 	}
 
-	private PackageType(PackageType parent, String path) {
+	private PackageType(@NotNull PackageType parent, @NotNull String path) {
 		this(parent + "." + path);
 	}
 
+	@NotNull
 	public String getPath() {
 		return path;
 	}
 
-	public void setFieldValue(String className, String fieldName, Object instance, Object value) throws ReflectiveOperationException {
+	public void setFieldValue(@NotNull String className, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {
 		getField(false, className, fieldName).set(instance, value);
 	}
 
-	public void setFieldValue(boolean declared, String className, String fieldName, Object instance, Object value) throws ReflectiveOperationException {
+	public void setFieldValue(boolean declared, @NotNull String className, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {
 		if (StringUtils.isEmpty(className)) {
 			className = instance.getClass().getSimpleName();
 		}
 		getField(declared, className, fieldName).set(instance, value);
 	}
 
-	public Field getField(String className, String fieldName) throws ReflectiveOperationException {
+	public Field getField(@NotNull String className, @NotNull String fieldName) throws ReflectiveOperationException {
 		return getField(false, className, fieldName);
 	}
 
-	public Field getField(boolean declared, String className, String fieldName) throws ReflectiveOperationException {
+	public Field getField(boolean declared, @NotNull String className, @NotNull String fieldName) throws ReflectiveOperationException {
 		String key = createKey(RType.FIELD, className, fieldName, null);
 		Field field = (Field) CACHE.get(key);
 		if (field == null) {
@@ -95,15 +99,15 @@ public enum PackageType {
 		return field;
 	}
 
-	public Object invokeMethod(Object instance, String className, String methodName) throws ReflectiveOperationException {
+	public Object invokeMethod(@Nullable Object instance, @NotNull String className, @NotNull String methodName) throws ReflectiveOperationException {
 		return invokeMethod(false, instance, className, methodName, ArrayUtils.EMPTY_OBJECT_ARRAY);
 	}
 
-	public Object invokeMethod(Object instance, String className, String methodName, Object... arguments) throws ReflectiveOperationException {
+	public Object invokeMethod(@Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Object... arguments) throws ReflectiveOperationException {
 		return invokeMethod(false, instance, className, methodName, arguments);
 	}
 
-	public Object invokeMethod(boolean declared, Object instance, String className, String methodName, Object... arguments) throws ReflectiveOperationException {
+	public Object invokeMethod(boolean declared, @Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Object... arguments) throws ReflectiveOperationException {
 		if (StringUtils.isEmpty(className)) {
 			className = instance.getClass().getSimpleName();
 		}
@@ -113,15 +117,15 @@ public enum PackageType {
 		return getMethod(declared, className, methodName, ClassType.getPrimitive(arguments)).invoke(instance, arguments);
 	}
 
-	public Method getMethod(String className, String methodName) throws ReflectiveOperationException {
+	public Method getMethod(@NotNull String className, @NotNull String methodName) throws ReflectiveOperationException {
 		return getMethod(false, className, methodName, ArrayUtils.EMPTY_CLASS_ARRAY);
 	}
 
-	public Method getMethod(String className, String methodName, Class<?>... parameterTypes) throws ReflectiveOperationException {
+	public Method getMethod(@NotNull String className, @NotNull String methodName, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
 		return getMethod(false, className, methodName, parameterTypes);
 	}
 
-	public Method getMethod(boolean declared, String className, String methodName, Class<?>... parameterTypes) throws ReflectiveOperationException {
+	public Method getMethod(boolean declared, @NotNull String className, @NotNull String methodName, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
 		if (parameterTypes == null) {
 			parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
@@ -139,30 +143,30 @@ public enum PackageType {
 		return method;
 	}
 
-	public Object newInstance(String className) throws ReflectiveOperationException {
+	public Object newInstance(@NotNull String className) throws ReflectiveOperationException {
 		return newInstance(false, className, ArrayUtils.EMPTY_OBJECT_ARRAY);
 	}
 
-	public Object newInstance(String className, Object... arguments) throws ReflectiveOperationException {
+	public Object newInstance(@NotNull String className, @Nullable Object... arguments) throws ReflectiveOperationException {
 		return newInstance(false, className, arguments);
 	}
 
-	public Object newInstance(boolean declared, String className, Object... arguments) throws ReflectiveOperationException {
+	public Object newInstance(boolean declared, @NotNull String className, @Nullable Object... arguments) throws ReflectiveOperationException {
 		if (arguments == null || arguments.length == 0) {
 			return getClass(className).newInstance();
 		}
 		return getConstructor(declared, className, ClassType.getPrimitive(arguments)).newInstance(arguments);
 	}
 
-	public Constructor<?> getConstructor(String className) throws ReflectiveOperationException {
+	public Constructor<?> getConstructor(@NotNull String className) throws ReflectiveOperationException {
 		return getConstructor(false, className, ArrayUtils.EMPTY_CLASS_ARRAY);
 	}
 
-	public Constructor<?> getConstructor(String className, Class<?>... parameterTypes) throws ReflectiveOperationException {
+	public Constructor<?> getConstructor(@NotNull String className, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
 		return getConstructor(false, className, parameterTypes);
 	}
 
-	public Constructor<?> getConstructor(boolean declared, String className, Class<?>... parameterTypes) throws ReflectiveOperationException {
+	public Constructor<?> getConstructor(boolean declared, @NotNull String className, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
 		if (parameterTypes == null) {
 			parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
@@ -180,7 +184,7 @@ public enum PackageType {
 		return constructor;
 	}
 
-	public Class<?> getClass(String className) throws IllegalArgumentException, ClassNotFoundException {
+	public Class<?> getClass(@NotNull String className) throws IllegalArgumentException, ClassNotFoundException {
 		if (StringUtils.isEmpty(className)) {
 			throw new IllegalArgumentException();
 		}
@@ -194,7 +198,7 @@ public enum PackageType {
 		return clazz;
 	}
 
-	public Enum<?> getEnumValueOf(String className, String name) throws IllegalArgumentException, ReflectiveOperationException {
+	public Enum<?> getEnumValueOf(@NotNull String className, @NotNull String name) throws IllegalArgumentException, ReflectiveOperationException {
 		Class<?> clazz = getClass(className);
 		if (clazz != null && clazz.isEnum()) {
 			return (Enum<?>) getMethod(className, "valueOf", String.class).invoke(null, name);
@@ -202,7 +206,7 @@ public enum PackageType {
 		return null;
 	}
 
-	public static void viewMethods(Class<?> clazz) {
+	public static void viewMethods(@NotNull Class<?> clazz) {
 		for (Method m : clazz.getDeclaredMethods()) {
 			System.out.println("*#Method#: " + m.getName());
 			for (Class<?> p : m.getParameterTypes()) {
@@ -211,7 +215,7 @@ public enum PackageType {
 		}
 	}
 
-	private String createKey(RType rType, String className, String name, Class<?>[] objects) {
+	private String createKey(@NotNull RType rType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
 		if (StringUtils.isEmpty(className)) {
 			return "null";
 		}
@@ -239,6 +243,7 @@ public enum PackageType {
 		return builder.toString();
 	}
 
+	@NotNull
 	public static String getVersionName() {
 		String version = Bukkit.getServer().getClass().getPackage().getName();
 		return version.substring(version.lastIndexOf('.') + 1);
@@ -248,6 +253,7 @@ public enum PackageType {
 		CACHE.clear();
 	}
 
+	@NotNull
 	@Override
 	public String toString() {
 		return path;

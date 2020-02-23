@@ -5,6 +5,8 @@ import java.util.Objects;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CuboidRegion implements Region {
 
@@ -12,32 +14,35 @@ public class CuboidRegion implements Region {
 	private Vector pos1;
 	private Vector pos2;
 
-	public void setWorld(World world) {
+	public void setWorld(@Nullable World world) {
 		if (!Objects.equals(this.world, world)) {
-			this.pos1 = null;
-			this.pos2 = null;
+			setPos1(null);
+			setPos2(null);
 		}
 		this.world = world;
 	}
 
-	public void setPos1(Vector pos1) {
+	public void setPos1(@Nullable Vector pos1) {
 		this.pos1 = pos1;
 	}
 
-	public void setPos2(Vector pos2) {
+	public void setPos2(@Nullable Vector pos2) {
 		this.pos2 = pos2;
 	}
 
+	@Nullable
 	@Override
 	public World getWorld() {
 		return world;
 	}
 
+	@NotNull
 	@Override
 	public Location getMinimumPoint() {
 		return toLocation(min(pos1.getX(), pos2.getX()), min(pos1.getY(), pos2.getY()), min(pos1.getZ(), pos2.getZ()));
 	}
 
+	@NotNull
 	@Override
 	public Location getMaximumPoint() {
 		return toLocation(max(pos1.getX(), pos2.getX()), max(pos1.getY(), pos2.getY()), max(pos1.getZ(), pos2.getZ()));

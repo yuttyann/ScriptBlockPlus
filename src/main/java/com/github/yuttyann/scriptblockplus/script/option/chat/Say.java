@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import org.jetbrains.annotations.NotNull;
 
 public class Say extends BaseOption {
 
@@ -9,6 +10,7 @@ public class Say extends BaseOption {
 		super("say", "@say ");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new Say();

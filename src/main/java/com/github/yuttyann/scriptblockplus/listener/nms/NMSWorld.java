@@ -3,6 +3,8 @@ package com.github.yuttyann.scriptblockplus.listener.nms;
 import java.lang.reflect.Constructor;
 
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -29,29 +31,31 @@ public final class NMSWorld {
 
 	private final World bukkitWorld;
 
-	public NMSWorld(World world) {
+	public NMSWorld(@NotNull World world) {
 		this.bukkitWorld = world;
 	}
 
+	@NotNull
 	public World getWorld() {
 		return bukkitWorld;
 	}
 
-	public MovingPosition rayTrace(Vec3D vec3d1, Vec3D vec3d2) {
+	@Nullable
+	public MovingPosition rayTrace(SBVector vector1, SBVector vector2) {
 		try {
-			Object vec3D1 = vec3d1.toNMSVec3D();
-			Object vec3D2 = vec3d2.toNMSVec3D();
+			Object vec3d1 = vector1.toNMSVec3D();
+			Object vec3d2 = vector2.toNMSVec3D();
 			Object world = PackageType.CB.invokeMethod(bukkitWorld, "CraftWorld", "getHandle");
 			if (Utils.isCBXXXorLater("1.14")) {
-				Object rayTrace = RAYTRACE.newInstance(vec3D1, vec3D2, NMS_ENUMS[0], NMS_ENUMS[1], null);
+				Object rayTrace = RAYTRACE.newInstance(vec3d1, vec3d2, NMS_ENUMS[0], NMS_ENUMS[1], null);
 				Object result = PackageType.NMS.invokeMethod(world, "World", "rayTrace", rayTrace);
 				return result == null ? null : new MovingPosition(bukkitWorld, result);
 			}
 			Object[] args;
 			if (Utils.isCBXXXorLater("1.13")) {
-				args = new Object[] { vec3D1, vec3D2, NMS_ENUMS[0], false, false };
+				args = new Object[] { vec3d1, vec3d2, NMS_ENUMS[0], false, false };
 			} else {
-				args = new Object[] { vec3D1, vec3D2, false };
+				args = new Object[] { vec3d1, vec3d2, false };
 			}
 			Object rayTrace = PackageType.NMS.invokeMethod(world, "World", "rayTrace", args);
 			return rayTrace == null ? null : new MovingPosition(bukkitWorld, rayTrace);
@@ -61,6 +65,7 @@ public final class NMSWorld {
 		return null;
 	}
 
+	@Nullable
 	private static Constructor<?> getConstructor() {
 		if (!Utils.isCBXXXorLater("1.14")) {
 			return null;

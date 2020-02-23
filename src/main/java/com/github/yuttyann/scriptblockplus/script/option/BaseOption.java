@@ -16,6 +16,7 @@ import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ベースオプション クラス
@@ -30,7 +31,7 @@ public abstract class BaseOption extends Option {
 	 * @param name
 	 * @param syntax
 	 */
-	public BaseOption(String name, String syntax) {
+	public BaseOption(@NotNull String name, @NotNull String syntax) {
 		super(name, syntax);
 	}
 
@@ -38,6 +39,7 @@ public abstract class BaseOption extends Option {
 	 * プラグインを取得する
 	 * @return プラグイン
 	 */
+	@NotNull
 	protected final Plugin getPlugin() {
 		return sbRead.getPlugin();
 	}
@@ -46,6 +48,7 @@ public abstract class BaseOption extends Option {
 	 * プレイヤーを取得する
 	 * @return プレイヤー
 	 */
+	@NotNull
 	protected final Player getPlayer() {
 		return getSBPlayer().getPlayer();
 	}
@@ -54,6 +57,7 @@ public abstract class BaseOption extends Option {
 	 * SBプレイヤーを取得する
 	 * @return SBプレイヤー
 	 */
+	@NotNull
 	protected final SBPlayer getSBPlayer() {
 		return sbRead.getSBPlayer();
 	}
@@ -62,6 +66,7 @@ public abstract class BaseOption extends Option {
 	 * UUIDを取得する
 	 * @return UUID
 	 */
+	@NotNull
 	protected final UUID getUniqueId() {
 		return getSBPlayer().getUniqueId();
 	}
@@ -70,6 +75,7 @@ public abstract class BaseOption extends Option {
 	 * オプションの値を取得する
 	 * @return オプションの値
 	 */
+	@NotNull
 	protected final String getOptionValue() {
 		return sbRead.getOptionValue();
 	}
@@ -78,6 +84,7 @@ public abstract class BaseOption extends Option {
 	 * 座標文字列を取得する
 	 * @return ワールド名を除いた、文字列(x, y, z)
 	 */
+	@NotNull
 	protected final String getCoords() {
 		return sbRead.getCoords();
 	}
@@ -86,6 +93,7 @@ public abstract class BaseOption extends Option {
 	 * 座標文字列を取得する
 	 * @return ワールド名を含めた、文字列(world, x, y, z)
 	 */
+	@NotNull
 	protected final String getFullCoords() {
 		return sbRead.getFullCoords();
 	}
@@ -95,6 +103,7 @@ public abstract class BaseOption extends Option {
 	 * ※座標変更不可
 	 * @return スクリプトの座標
 	 */
+	@NotNull
 	protected final Location getLocation() {
 		return sbRead.getLocation();
 	}
@@ -103,6 +112,7 @@ public abstract class BaseOption extends Option {
 	 * マップの管理クラスを取得する
 	 * @return マップの管理クラス
 	 */
+	@NotNull
 	protected final MapManager getMapManager() {
 		return ScriptBlock.getInstance().getMapManager();
 	}
@@ -111,6 +121,7 @@ public abstract class BaseOption extends Option {
 	 * スクリプトのリストを取得する
 	 * @return スクリプトのリスト
 	 */
+	@NotNull
 	protected final List<String> getScripts() {
 		return sbRead.getScripts();
 	}
@@ -119,6 +130,7 @@ public abstract class BaseOption extends Option {
 	 * スクリプトの種類を取得する
 	 * @return スクリプトの種類
 	 */
+	@NotNull
 	protected final ScriptType getScriptType() {
 		return sbRead.getScriptType();
 	}
@@ -127,6 +139,7 @@ public abstract class BaseOption extends Option {
 	 * スクリプトの実行クラスを取得する
 	 * @return スクリプトの実行クラス
 	 */
+	@NotNull
 	protected final SBRead getSBRead() {
 		return sbRead;
 	}
@@ -135,6 +148,7 @@ public abstract class BaseOption extends Option {
 	 * スクリプトの管理クラスを取得する
 	 * @return スクリプトの管理クラス
 	 */
+	@NotNull
 	protected final ScriptData getScriptData() {
 		return sbRead.getScriptData();
 	}
@@ -160,7 +174,7 @@ public abstract class BaseOption extends Option {
 	 */
 	@Override
 	@Deprecated
-	public final boolean callOption(SBRead sbRead) {
+	public final boolean callOption(@NotNull SBRead sbRead) {
 		this.sbRead = sbRead;
 		try {
 			return isValid();
@@ -176,7 +190,7 @@ public abstract class BaseOption extends Option {
 	 * @param command
 	 * @return 実行が成功したかどうか
 	 */
-	protected final boolean executeConsoleCommand(String command) {
+	protected final boolean executeConsoleCommand(@NotNull String command) {
 		return Utils.dispatchCommand(Bukkit.getConsoleSender(), getLocation(), command);
 	}
 
@@ -187,7 +201,7 @@ public abstract class BaseOption extends Option {
 	 * @param isBypass
 	 * @return 実行が成功したかどうか
 	 */
-	protected final boolean executeCommand(Player player, String command, boolean isBypass) {
+	protected final boolean executeCommand(@NotNull Player player, @NotNull String command, boolean isBypass) {
 		Location location = getLocation();
 		if (!isBypass || player.isOp()) {
 			return Utils.dispatchCommand(player, location, command);

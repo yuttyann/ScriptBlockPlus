@@ -19,6 +19,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -44,40 +46,48 @@ public final class Updater {
 	private boolean isUpdateError;
 	private boolean isUpperVersion;
 
-	public Updater(Plugin plugin) {
+	public Updater(@NotNull Plugin plugin) {
 		this.plugin = plugin;
 		this.pluginName = plugin.getName();
 		this.pluginVersion = plugin.getDescription().getVersion();
 	}
 
+	@NotNull
 	public Plugin getPlugin() {
 		return plugin;
 	}
 
+	@NotNull
 	public String getPluginName() {
 		return pluginName;
 	}
 
+	@NotNull
 	public String getPluginVersion() {
 		return pluginVersion;
 	}
 
+	@NotNull
 	public String getJarName() {
 		return pluginName + " v" + latestVersion + ".jar";
 	}
 
+	@NotNull
 	public String getLatestVersion() {
 		return latestVersion;
 	}
 
+	@NotNull
 	public String getDownloadURL() {
 		return downloadURL;
 	}
 
+	@NotNull
 	public String getChangeLogURL() {
 		return changeLogURL;
 	}
 
+	@NotNull
 	public List<String> getDetails() {
 		return Collections.unmodifiableList(details);
 	}
@@ -141,9 +151,7 @@ public final class Updater {
 					break;
 				case "details":
 					NodeList detailsChildren = updateNode.getChildNodes();
-					if (details == null) {
-						details = new ArrayList<>(detailsChildren.getLength());
-					}
+					details = new ArrayList<>(detailsChildren.getLength());
 					for (int k = 0; k < detailsChildren.getLength(); k++) {
 						Node detailsNode = detailsChildren.item(k);
 						if (detailsNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -157,7 +165,7 @@ public final class Updater {
 		isUpperVersion = Utils.getVersionInt(latestVersion) > Utils.getVersionInt(pluginVersion);
 	}
 
-	public boolean execute(CommandSender sender) {
+	public boolean execute(@Nullable CommandSender sender) {
 		if (SBConfig.isUpdateChecker() && isUpperVersion) {
 			if (sender == null) {
 				sender = Bukkit.getConsoleSender();
@@ -195,13 +203,13 @@ public final class Updater {
 		return false;
 	}
 
-	public void sendCheckMessage(CommandSender sender) {
+	public void sendCheckMessage(@NotNull CommandSender sender) {
 		if (isUpperVersion && !isUpdateError && sender.isOp()) {
 			Utils.sendMessage(sender, SBConfig.getUpdateCheckMessages(pluginName, latestVersion, details));
 		}
 	}
 
-	private void sendErrorMessage(CommandSender sender) {
+	public void sendErrorMessage(@NotNull CommandSender sender) {
 		if (!isUpdateError && (isUpdateError = true)) {
 			Utils.sendMessage(sender, SBConfig.getErrorUpdateMessage());
 		}
@@ -216,7 +224,7 @@ public final class Updater {
 		return new BigDecimal(size).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue() + unit;
 	}
 
-	private boolean textEquals(String url, File file) {
+	private boolean textEquals(@NotNull String url, @NotNull File file) {
 		if (!file.exists()) {
 			return false;
 		}
@@ -236,7 +244,7 @@ public final class Updater {
 		}
 	}
 
-	private Document getDocument(String name) throws ParserConfigurationException, SAXException, IOException {
+	private Document getDocument(@NotNull String name) throws ParserConfigurationException, SAXException, IOException {
 		InputStream is = FileUtils.getWebFile("https://xml.yuttyann44581.net/uploads/" + name + ".xml");
 		return is == null ? null : DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
 	}

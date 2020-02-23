@@ -8,6 +8,8 @@ import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockType extends BaseOption {
 
@@ -15,6 +17,7 @@ public class BlockType extends BaseOption {
 		super("blocktype", "@blocktype:");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new BlockType();
@@ -27,8 +30,8 @@ public class BlockType extends BaseOption {
 		return StreamUtils.anyMatch(array, s -> equals(block, s));
 	}
 
-	private boolean equals(Block block, String blockType) {
-		if (block == null || StringUtils.isEmpty(blockType)) {
+	private boolean equals(@NotNull Block block, @NotNull String blockType) {
+		if (StringUtils.isEmpty(blockType)) {
 			return false;
 		}
 		String[] array = StringUtils.split(blockType, ":");
@@ -44,7 +47,7 @@ public class BlockType extends BaseOption {
 		return type == block.getType() && data == getData(block);
 	}
 
-	private byte getData(Block block) {
+	private byte getData(@NotNull Block block) {
 		@SuppressWarnings("deprecation")
 		byte data = block.getData();
 		return data;

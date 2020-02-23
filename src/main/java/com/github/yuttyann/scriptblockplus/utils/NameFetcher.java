@@ -11,6 +11,9 @@ import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class NameFetcher {
 
@@ -18,10 +21,13 @@ public final class NameFetcher {
 
 	private static final Map<UUID, String> CACHE = new HashMap<>();
 
-	public static String getName(UUID uuid) throws ProtocolException, IOException {
-		if (uuid == null) {
-			return null;
-		}
+	public static void clear() {
+		CACHE.clear();
+	}
+
+	@NotNull
+	public static String getName(@NotNull UUID uuid) throws ProtocolException, IOException {
+		Validate.notNull(uuid, "Command cannot be null");
 		String name = CACHE.get(uuid);
 		if (name == null) {
 			JsonObject json = getJsonObject(URL + StringUtils.replace(uuid.toString(), "-", ""));
@@ -34,7 +40,8 @@ public final class NameFetcher {
 		return name;
 	}
 
-	public static JsonObject getJsonObject(String url) throws ProtocolException, IOException {
+	@Nullable
+	public static JsonObject getJsonObject(@NotNull String url) throws ProtocolException, IOException {
 		try (InputStream is = FileUtils.getWebFile(url); InputStreamReader isr = new InputStreamReader(is); BufferedReader reader = new BufferedReader(isr)) {
 			String line = reader.readLine();
 			return StringUtils.isNotEmpty(line) ? (JsonObject) new Gson().fromJson(line, JsonObject.class) : null;

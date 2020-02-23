@@ -2,6 +2,9 @@ package com.github.yuttyann.scriptblockplus.enums;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -11,18 +14,20 @@ public enum ActionType {
 
 	private static final Set<String> TYPES = new HashSet<>();
 
-	private static int i;
+	private static AtomicInteger I = new AtomicInteger(ScriptType.size());
 
 	static {
 		reload();
 	}
 
-	public String getKey(ScriptType scriptType) {
+	@NotNull
+	public String getKey(@NotNull ScriptType scriptType) {
 		return scriptType.name() + "_" + name();
 	}
 
+	@NotNull
 	public static String[] types() {
-		if (i != ScriptType.size()) {
+		if (I.get() != ScriptType.size()) {
 			reload();
 		}
 		return TYPES.toArray(new String[TYPES.size()]);
@@ -33,7 +38,7 @@ public enum ActionType {
 			TYPES.clear();
 			StreamUtils.forEach(ScriptType.values(), s -> StreamUtils.forEach(values(), c -> TYPES.add(c.getKey(s))));
 		} finally {
-			i = ScriptType.size();
+			I.set(ScriptType.size());
 		}
 	}
 }

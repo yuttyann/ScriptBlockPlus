@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 
 public final class SBMap<T> implements Serializable {
@@ -30,20 +33,24 @@ public final class SBMap<T> implements Serializable {
 		sbMap.clear();
 	}
 
-	public Map<String, T> get(ScriptType key) {
+	@Nullable
+	public Map<String, T> get(@NotNull ScriptType key) {
 		return sbMap.get(key);
 	}
 
-	public T get(String fullCoords, ScriptType scriptType) {
+	@Nullable
+	public T get(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
 		Map<String, T> map = get(scriptType);
 		return map == null ? null : map.get(fullCoords);
 	}
 
-	public Map<String, T> put(ScriptType key, Map<String, T> value) {
+	@Nullable
+	public Map<String, T> put(@NotNull ScriptType key, @Nullable Map<String, T> value) {
 		return sbMap.put(key, value);
 	}
 
-	public T put(String fullCoords, ScriptType scriptType, T value) {
+	@Nullable
+	public T put(@NotNull String fullCoords, @NotNull ScriptType scriptType, T value) {
 		Map<String, T> map = get(scriptType);
 		if (map == null) {
 			sbMap.put(scriptType, map = new HashMap<>());
@@ -51,11 +58,13 @@ public final class SBMap<T> implements Serializable {
 		return map.put(fullCoords, value);
 	}
 
-	public Map<String, T> remove(ScriptType scriptType) {
+	@Nullable
+	public Map<String, T> remove(@NotNull ScriptType scriptType) {
 		return sbMap.remove(scriptType);
 	}
 
-	public Map<String, T> remove(String fullCoords, ScriptType scriptType) {
+	@Nullable
+	public Map<String, T> remove(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
 		Map<String, T> map = get(scriptType);
 		if (map != null) {
 			map.remove(fullCoords);
@@ -64,15 +73,16 @@ public final class SBMap<T> implements Serializable {
 		return null;
 	}
 
-	public boolean containsKey(ScriptType scriptType) {
+	public boolean containsKey(@NotNull ScriptType scriptType) {
 		return sbMap.containsKey(scriptType);
 	}
 
-	public boolean containsKey(String fullCoords, ScriptType scriptType) {
+	public boolean containsKey(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
 		Map<String, T> map = sbMap.get(scriptType);
 		return map == null ? false : map.containsKey(fullCoords);
 	}
 
+	@NotNull
 	public Map<ScriptType, Map<String, T>> getMap() {
 		return sbMap;
 	}

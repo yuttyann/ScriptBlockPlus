@@ -3,9 +3,11 @@ package com.github.yuttyann.scriptblockplus.listener.nms;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.Nullable;
 
 public final class MovingPosition {
 
@@ -15,7 +17,7 @@ public final class MovingPosition {
 	private final Block block;
 	private final BlockFace blockFace;
 
-	MovingPosition(World world, Object rayTrace) throws ReflectiveOperationException {
+	MovingPosition(@NotNull World world, @NotNull Object rayTrace) throws ReflectiveOperationException {
 		Object pos = PackageType.NMS.invokeMethod(rayTrace, KEY_MOP, KEY_BPS);
 		int x = (int) PackageType.NMS.invokeMethod(pos, "BaseBlockPosition", "getX");
 		int y = (int) PackageType.NMS.invokeMethod(pos, "BaseBlockPosition", "getY");
@@ -24,22 +26,26 @@ public final class MovingPosition {
 		this.blockFace = notchToBlockFace(getDirection(rayTrace));
 	}
 
+	@NotNull
 	public Block getHitBlock() {
 		return block;
 	}
 
+	@NotNull
 	public BlockFace getBlockFace() {
 		return blockFace;
 	}
 
-	private Enum<?> getDirection(Object rayTrace) throws ReflectiveOperationException {
+	@NotNull
+	private Enum<?> getDirection(@NotNull Object rayTrace) throws ReflectiveOperationException {
 		if (Utils.isCBXXXorLater("1.14")) {
 			return (Enum<?>) PackageType.NMS.invokeMethod(rayTrace, KEY_MOP, "getDirection");
 		}
 		return (Enum<?>) PackageType.NMS.getField(KEY_MOP, "direction").get(rayTrace);
 	}
 
-	private BlockFace notchToBlockFace(Enum<?> direction) {
+	@NotNull
+	private BlockFace notchToBlockFace(@Nullable Enum<?> direction) {
 		if (direction == null) {
 			return BlockFace.SELF;
 		}

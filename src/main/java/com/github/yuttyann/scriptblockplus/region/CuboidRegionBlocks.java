@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import org.jetbrains.annotations.NotNull;
 
 public final class CuboidRegionBlocks {
 
@@ -17,20 +18,23 @@ public final class CuboidRegionBlocks {
 	private final Location min;
 	private final Location max;
 
-	public CuboidRegionBlocks(Region region) {
+	public CuboidRegionBlocks(@NotNull Region region) {
 		this.world = Objects.requireNonNull(region.getWorld());
 		this.min = Objects.requireNonNull(region.getMinimumPoint());
 		this.max = Objects.requireNonNull(region.getMaximumPoint());
 	}
 
+	@NotNull
 	public World getWorld() {
 		return world;
 	}
 
+	@NotNull
 	public Location getMinimumPoint() {
 		return BlockCoords.unmodifiableLocation(min);
 	}
 
+	@NotNull
 	public Location getMaximumPoint() {
 		return BlockCoords.unmodifiableLocation(max);
 	}
@@ -41,13 +45,14 @@ public final class CuboidRegionBlocks {
 		return count[0];
 	}
 
+	@NotNull
 	public Set<Block> getBlocks() {
 		Set<Block> set = new HashSet<>();
 		forEach(b -> set.add(b.getBlock(world)));
 		return set;
 	}
 
-	public void forEach(Consumer<BlockPos> action) {
+	public void forEach(@NotNull Consumer<BlockPos> action) {
 		BlockPos position = new BlockPos();
 		for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
 			for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
@@ -83,7 +88,8 @@ public final class CuboidRegionBlocks {
 			return z;
 		}
 
-		public Block getBlock(World world) {
+		@NotNull
+		public Block getBlock(@NotNull World world) {
 			return world.getBlockAt(x, y, z);
 		}
 	}

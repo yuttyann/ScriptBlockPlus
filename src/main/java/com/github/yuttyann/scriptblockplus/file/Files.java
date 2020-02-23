@@ -11,6 +11,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.yaml.UTF8Config;
@@ -37,7 +38,7 @@ public final class Files {
 		loadLang(PATH_LANGS, "lang");
 		SBConfig.reloadLang();
 
-		StreamUtils.forEach(ScriptType.values(), s -> loadScript(s));
+		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
 
 		searchKeys();
 	}
@@ -53,19 +54,23 @@ public final class Files {
 		}
 	}
 
+	@NotNull
 	public static Map<String, YamlConfig> getFiles() {
 		return Collections.unmodifiableMap(FILES);
 	}
 
+	@NotNull
 	public static YamlConfig getConfig() {
 		return FILES.get(PATH_CONFIG);
 	}
 
+	@NotNull
 	public static YamlConfig getLang() {
 		return FILES.get(PATH_LANGS);
 	}
 
-	public static YamlConfig getScriptFile(ScriptType scriptType) {
+	@NotNull
+	public static YamlConfig getScriptFile(@NotNull ScriptType scriptType) {
 		YamlConfig yaml = FILES.get(scriptType.getType());
 		if (yaml == null) {
 			FILES.put(scriptType.getType(), yaml = loadScript(scriptType));
@@ -73,16 +78,19 @@ public final class Files {
 		return yaml;
 	}
 
-	private static YamlConfig loadScript(ScriptType scriptType) {
+	@NotNull
+	private static YamlConfig loadScript(@NotNull ScriptType scriptType) {
 		YamlConfig yaml = loadFile("scripts/" + scriptType.getType() + ".yml", false);
 		return putFile(scriptType.getType(), yaml);
 	}
 
-	private static YamlConfig loadFile(String filePath, boolean isCopyFile) {
+	@NotNull
+	private static YamlConfig loadFile(@NotNull String filePath, boolean isCopyFile) {
 		return putFile(filePath, YamlConfig.load(ScriptBlock.getInstance(), filePath, isCopyFile));
 	}
 
-	private static YamlConfig loadLang(String filePath, String dirPath) {
+	@NotNull
+	private static YamlConfig loadLang(@NotNull String filePath, @NotNull String dirPath) {
 		String language = SBConfig.getLanguage();
 		if (StringUtils.isEmpty(language) || "default".equalsIgnoreCase(language)) {
 			language = DEFAULT_LANGUAGE;
@@ -90,12 +98,13 @@ public final class Files {
 		return putFile(filePath, new Lang(ScriptBlock.getInstance(), language).load(filePath, dirPath));
 	}
 
-	private static YamlConfig putFile(String name, YamlConfig yaml) {
+	@NotNull
+	private static YamlConfig putFile(@NotNull String name, @NotNull YamlConfig yaml) {
 		FILES.put(name, yaml);
 		return yaml;
 	}
 
-	private static void sendKeyMessages(YamlConfig yaml, String path) {
+	private static void sendKeyMessages(@NotNull YamlConfig yaml, @NotNull String path) {
 		String filePath = StringUtils.replace(yaml.getFolderPath(), "\\", "/");
 		InputStream is = FileUtils.getResource(ScriptBlock.getInstance(), path);
 		YamlConfiguration config = UTF8Config.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8));

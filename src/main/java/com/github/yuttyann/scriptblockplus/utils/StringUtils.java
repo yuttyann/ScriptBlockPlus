@@ -9,12 +9,15 @@ import java.util.Random;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class StringUtils {
 
 	private static final Random RANDOM = new Random();
 
-	public static List<String> getScripts(String script) throws IllegalArgumentException {
+	@NotNull
+	public static List<String> getScripts(@NotNull String script) throws IllegalArgumentException {
 		Validate.notNull(script, "Script cannot be null");
 		int length = script.length();
 		char[] chars = script.toCharArray();
@@ -38,7 +41,6 @@ public final class StringUtils {
 				}
 				continue;
 			default:
-				continue;
 			}
 		}
 		if (start != end) {
@@ -47,7 +49,8 @@ public final class StringUtils {
 		return result;
 	}
 
-	public static String[] split(String source, String delimiter) {
+	@NotNull
+	public static String[] split(@Nullable String source, @Nullable String delimiter) {
 		if (isEmpty(source) || isEmpty(delimiter)) {
 			return new String[] { source };
 		}
@@ -63,28 +66,29 @@ public final class StringUtils {
 		return result.toArray(new String[result.size()]);
 	}
 
-	public static String replace(String source, char search, char replace) {
+	@Nullable
+	public static String replace(@Nullable String source, char search, char replace) {
 		if (isEmpty(source)) {
 			return source;
 		}
 		return source.replace(search, replace);
 	}
 
-	public static String replaceColorCode(String source, boolean randomColor) {
+	@Nullable
+	public static String replaceColorCode(@Nullable String source, boolean randomColor) {
 		if (isEmpty(source)) {
 			return null;
 		}
 		if (randomColor) {
-			source = replace(source, "&rc", () -> randomColor().toString());
+			source = replace(source, "&rc", () -> {
+				return ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16))).toString();
+			});
 		}
 		return ChatColor.translateAlternateColorCodes('&', source);
 	}
 
-	private static ChatColor randomColor() {
-		return ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16)));
-	}
-
-	public static String getColors(String source) {
+	@Nullable
+	public static String getColors(@Nullable String source) {
 		if (isEmpty(source)) {
 			return source;
 		}
@@ -101,11 +105,13 @@ public final class StringUtils {
 		return builder.toString();
 	}
 
-	public static String replace(String source, String search, String replace) {
-		return replace(source, search, () -> replace);
+	@Nullable
+	public static String replace(@Nullable String source, @Nullable String search, @Nullable String replace) {
+		return replace(source, search, () -> replace == null ? "" : replace);
 	}
 
-	public static String replace(String source, String search, ReplaceValue replace) {
+	@Nullable
+	public static String replace(@Nullable String source, @Nullable String search, @NotNull ReplaceValue replace) {
 		if (isEmpty(source) || isEmpty(search)) {
 			return source;
 		}
@@ -116,7 +122,7 @@ public final class StringUtils {
 		}
 		int searchLength = search.length();
 		int replaceLength = source.length() - replace.length();
-		replaceLength = replaceLength < 0 ? 0 : replaceLength;
+		replaceLength = Math.max(replaceLength, 0);
 		StrBuilder builder = new StrBuilder(source.length() + replaceLength);
 		while (end != -1) {
 			builder.append(source.substring(start, end)).append(replace.asString());
@@ -129,8 +135,10 @@ public final class StringUtils {
 
 	public interface ReplaceValue {
 
+		@Nullable
 		Object value();
 
+		@NotNull
 		default String asString() {
 			Object obj = value();
 			return obj == null ? "" : obj.toString();
@@ -141,10 +149,8 @@ public final class StringUtils {
 		}
 	}
 
-	public static String createString(String[] args, int start) {
-		if (isEmpty(args)) {
-			return null;
-		}
+	@NotNull
+	public static String createString(@NotNull String[] args, int start) {
 		StrBuilder builder = new StrBuilder();
 		for (int i = start; i < args.length; i++) {
 			builder.append(args[i]).append(i == (args.length - 1) ? "" : " ");
@@ -152,30 +158,28 @@ public final class StringUtils {
 		return builder.toString();
 	}
 
-	public static String removeStart(String source, String prefix) {
-		if (isEmpty(source) || isEmpty(prefix)) {
-			return source;
-		}
-		return source.startsWith(prefix) ? source.substring(prefix.length(), source.length()) : source;
+	@Nullable
+	public static String removeStart(@Nullable String source, @Nullable  String prefix) {
+		return isNotEmpty(prefix) ? (startsWith(source, prefix) ? source.substring(prefix.length()) : source) : source;
 	}
 
-	public static boolean startsWith(String source, String prefix) {
-		return isEmpty(source) ? false : source.startsWith(prefix);
+	public static boolean startsWith(@Nullable String source, @NotNull String prefix) {
+		return isNotEmpty(source) && source.startsWith(prefix);
 	}
 
-	public static boolean isNotEmpty(String source) {
+	public static boolean isNotEmpty(@Nullable String source) {
 		return !isEmpty(source);
 	}
 
-	public static boolean isNotEmpty(String[] sources) {
+	public static boolean isNotEmpty(@Nullable String[] sources) {
 		return !isEmpty(sources);
 	}
 
-	public static boolean isEmpty(String source) {
+	public static boolean isEmpty(@Nullable String source) {
 		return source == null || source.length() == 0;
 	}
 
-	public static boolean isEmpty(String[] sources) {
+	public static boolean isEmpty(@Nullable String[] sources) {
 		return StreamUtils.anyMatch(sources, StringUtils::isEmpty);
 	}
 }

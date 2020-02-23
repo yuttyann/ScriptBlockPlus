@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 public class Command extends BaseOption {
 
@@ -10,6 +11,7 @@ public class Command extends BaseOption {
 		super("command", "@command ");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new Command();

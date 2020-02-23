@@ -11,6 +11,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.enums.EquipSlot;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -28,15 +30,16 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 	private boolean isInvalid;
 	private boolean cancelled;
 
-	public BlockInteractEvent(PlayerInteractEvent event, EquipSlot hand, boolean isAnimation) {
+	public BlockInteractEvent(@NotNull final PlayerInteractEvent event, @Nullable final EquipSlot hand, final boolean isAnimation) {
 		this(event, event.getItem(), hand, isAnimation);
 	}
 
-	public BlockInteractEvent(PlayerInteractEvent event, ItemStack item, EquipSlot hand, boolean isAnimation) {
+	public BlockInteractEvent(@NotNull final PlayerInteractEvent event, @Nullable final ItemStack item, @Nullable final EquipSlot hand, final boolean isAnimation) {
 		this(event, event.getPlayer(), event.getClickedBlock(), item, event.getAction(), event.getBlockFace(), hand, isAnimation);
 	}
 
-	public BlockInteractEvent(PlayerInteractEvent event, Player player, Block block, ItemStack item, Action action, BlockFace blockFace, EquipSlot hand, boolean isAnimation) {
+	public BlockInteractEvent(@NotNull final PlayerInteractEvent event, @NotNull final Player player, @Nullable final Block block,
+			final ItemStack item, @NotNull final Action action, @NotNull final BlockFace blockFace, @Nullable final EquipSlot hand, final boolean isAnimation) {
 		super(player);
 		this.block = block;
 		this.item = item;
@@ -46,7 +49,8 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 		this.isAnimation = isAnimation;
 	}
 
-	private EquipSlot fromEquipmentSlot(PlayerInteractEvent event) {
+	@NotNull
+	private EquipSlot fromEquipmentSlot(@NotNull PlayerInteractEvent event) {
 		if (Utils.isCBXXXorLater("1.9")) {
 			try {
 				return EquipSlot.fromEquipmentSlot(event.getHand());
@@ -55,18 +59,22 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 		return EquipSlot.HAND;
 	}
 
+	@Nullable
 	public Block getBlock() {
 		return block;
 	}
 
+	@Nullable
 	public Location getLocation() {
 		return block == null ? null : block.getLocation();
 	}
 
+	@Nullable
 	public ItemStack getItem() {
 		return item;
 	}
 
+	@NotNull
 	public Material getMaterial() {
 		if (!hasItem()) {
 			return Material.AIR;
@@ -74,14 +82,17 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 		return item.getType();
 	}
 
+	@NotNull
 	public Action getAction() {
 		return action;
 	}
 
+	@NotNull
 	public BlockFace getBlockFace() {
 		return blockFace;
 	}
 
+	@NotNull
 	public EquipSlot getHand() {
 		return hand;
 	}
@@ -119,11 +130,13 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 		cancelled = cancel;
 	}
 
+	@NotNull
 	@Override
 	public HandlerList getHandlers() {
 		return HANDLERS;
 	}
 
+	@NotNull
 	public static HandlerList getHandlerList() {
 		return HANDLERS;
 	}

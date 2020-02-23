@@ -7,6 +7,7 @@ import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * オプション クラス
@@ -24,7 +25,7 @@ public abstract class Option implements SBInstance<Option> {
 	 * @param name
 	 * @param syntax
 	 */
-	protected Option(String name, String syntax) {
+	protected Option(@NotNull String name, @NotNull String syntax) {
 		this.name = Objects.requireNonNull(name);
 		this.syntax = Objects.requireNonNull(syntax);
 	}
@@ -33,6 +34,7 @@ public abstract class Option implements SBInstance<Option> {
 	 * インスタンスを生成する
 	 * @return Option
 	 */
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return OptionList.getManager().newInstance(this, InstanceType.REFLECTION);
@@ -42,6 +44,7 @@ public abstract class Option implements SBInstance<Option> {
 	 * オプション名を取得する
 	 * @return オプション名
 	 */
+	@NotNull
 	public final String getName() {
 		return name;
 	}
@@ -50,6 +53,7 @@ public abstract class Option implements SBInstance<Option> {
 	 * 構文を取得する
 	 * @return 構文
 	 */
+	@NotNull
 	public final String getSyntax() {
 		return syntax;
 	}
@@ -58,6 +62,7 @@ public abstract class Option implements SBInstance<Option> {
 	 * パーミッションノードを取得する
 	 * @return パーミッション
 	 */
+	@NotNull
 	public final String getPermissionNode() {
 		return PERMISSION_PREFIX + name;
 	}
@@ -66,7 +71,8 @@ public abstract class Option implements SBInstance<Option> {
 	 * スクリプトからオプションの値を取得
 	 * @return 値
 	 */
-	public final String getValue(String script) {
+	@NotNull
+	public final String getValue(@NotNull String script) {
 		return StringUtils.removeStart(script, syntax);
 	}
 
@@ -74,7 +80,7 @@ public abstract class Option implements SBInstance<Option> {
 	 * スクリプトがオプションなのかどうかチェックする
 	 * @return オプションなのかどうか
 	 */
-	public final boolean isOption(String script) {
+	public final boolean isOption(@NotNull String script) {
 		return StringUtils.isNotEmpty(script) && script.startsWith(syntax);
 	}
 
@@ -92,7 +98,7 @@ public abstract class Option implements SBInstance<Option> {
 	 * @param sbRead
 	 * @return 実行が成功したかどうか
 	 */
-	public abstract boolean callOption(SBRead sbRead);
+	public abstract boolean callOption(@NotNull SBRead sbRead);
 
 	@Override
 	public boolean equals(Object obj) {

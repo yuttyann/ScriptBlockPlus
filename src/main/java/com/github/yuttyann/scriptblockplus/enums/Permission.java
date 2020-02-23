@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.enums;
 import org.bukkit.permissions.Permissible;
 
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 public enum Permission {
 	COMMAND_TOOL("scriptblockplus.command.tool"),
@@ -27,10 +28,11 @@ public enum Permission {
 
 	private final String node;
 
-	private Permission(String node) {
+	private Permission(@NotNull String node) {
 		this.node = node;
 	}
 
+	@NotNull
 	public String getNode() {
 		return node;
 	}
@@ -40,11 +42,11 @@ public enum Permission {
 		return node;
 	}
 
-	public boolean has(Permissible permissible) {
+	public boolean has(@NotNull Permissible permissible) {
 		return has(permissible, node);
 	}
 
-	public static boolean has(Permissible permissible, String permission) {
+	public static boolean has(@NotNull Permissible permissible, @NotNull String permission) {
 		return StringUtils.isNotEmpty(permission) && permissible.hasPermission(permission);
 	}
 }

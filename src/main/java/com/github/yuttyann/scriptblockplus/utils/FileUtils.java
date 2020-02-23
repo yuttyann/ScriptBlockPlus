@@ -24,10 +24,13 @@ import java.util.function.Predicate;
 import org.bukkit.plugin.Plugin;
 
 import com.google.common.base.Charsets;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class FileUtils {
 
-	public static InputStream getResource(Plugin plugin, String filePath) {
+	@Nullable
+	public static InputStream getResource(@NotNull Plugin plugin, @NotNull String filePath) {
 		if (plugin == null || StringUtils.isEmpty(filePath)) {
 			return null;
 		}
@@ -44,7 +47,7 @@ public final class FileUtils {
 		}
 	}
 
-	public static void copyFileFromPlugin(Plugin plugin, File targetFile, String sourceFilePath) {
+	public static void copyFileFromPlugin(@NotNull Plugin plugin, @NotNull File targetFile, @NotNull String sourceFilePath) {
 		if (targetFile == null || StringUtils.isEmpty(sourceFilePath)) {
 			return;
 		}
@@ -73,7 +76,7 @@ public final class FileUtils {
 		}
 	}
 
-	public static void copyDirectory(File sourceFile, File targetFile, Predicate<File> filter) {
+	public static void copyDirectory(@NotNull File sourceFile, @NotNull File targetFile, @NotNull Predicate<File> filter) {
 		if (targetFile == null || !isExists(sourceFile) || isEmpty(sourceFile)) {
 			return;
 		}
@@ -107,17 +110,17 @@ public final class FileUtils {
 		}
 	}
 
-	public static void write(File file, String source, Charset charset) throws IOException {
+	public static void write(@NotNull File file, @NotNull String source, @NotNull Charset charset) throws IOException {
 		File parent = file.getParentFile();
 		if (!parent.exists()) {
 			parent.mkdirs();
 		}
-        try (
-        		FileOutputStream fos = new FileOutputStream(file);
-        		OutputStreamWriter osw = new OutputStreamWriter(fos, charset);
-        		BufferedWriter writer = new BufferedWriter(osw)
+		try (
+				FileOutputStream fos = new FileOutputStream(file);
+				OutputStreamWriter osw = new OutputStreamWriter(fos, charset);
+				BufferedWriter writer = new BufferedWriter(osw)
         	) {
-        	writer.write(source);
+			writer.write(source);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -125,24 +128,25 @@ public final class FileUtils {
 		}
 	}
 
-	public static String readToString(File file, Charset charset) throws IOException {
+	@NotNull
+	public static String readToString(@NotNull File file, @NotNull Charset charset) throws IOException {
 		File parent = file.getParentFile();
 		if (!parent.exists()) {
 			parent.mkdirs();
 		}
-        try (FileInputStream fis = new FileInputStream(file); BufferedInputStream bis = new BufferedInputStream(fis)) {
-        	byte[] data = new byte[(int) file.length()];
-        	bis.read(data);
-        	return new String(data, charset);
+		try (FileInputStream fis = new FileInputStream(file); BufferedInputStream bis = new BufferedInputStream(fis)) {
+			byte[] data = new byte[(int) file.length()];
+			bis.read(data);
+			return new String(data, charset);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return "";
 	}
 
-	public static void fileDownload(String url, File file) throws IOException {
+	public static void fileDownload(@NotNull String url, @NotNull File file) throws IOException {
 		File parent = file.getParentFile();
 		if (!parent.exists()) {
 			parent.mkdirs();
@@ -160,7 +164,7 @@ public final class FileUtils {
 		}
 	}
 
-	public static void saveFile(File file, Object value) throws IOException {
+	public static void saveFile(@NotNull File file, @NotNull Object value) throws IOException {
 		try (OutputStream os = new FileOutputStream(file); ObjectOutputStream oos = new ObjectOutputStream(os)) {
 			oos.writeObject(value);
 		} catch (FileNotFoundException e) {
@@ -170,7 +174,8 @@ public final class FileUtils {
 		}
 	}
 
-	public static <T> T loadFile(File file) throws IOException, ClassNotFoundException {
+	@NotNull
+	public static <T> T loadFile(@NotNull File file) throws IOException, ClassNotFoundException {
 		try (InputStream is = new FileInputStream(file); ObjectInputStream ois = new ObjectInputStream(is))  {
 			return (T) ois.readObject();
 		} catch (FileNotFoundException e) {
@@ -182,7 +187,8 @@ public final class FileUtils {
 		}
 	}
 
-	public static InputStream getWebFile(String url) throws MalformedURLException, IOException {
+	@Nullable
+	public static InputStream getWebFile(@NotNull String url) throws MalformedURLException, IOException {
 		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 		connection.setRequestMethod("GET");
 		connection.setAllowUserInteraction(false);
@@ -196,16 +202,17 @@ public final class FileUtils {
 		return null;
 	}
 
-	public static boolean isEmpty(File file) {
+	public static boolean isEmpty(@NotNull File file) {
 		String[] array = file.list();
 		return array == null || array.length == 0;
 	}
 
-	public static boolean isExists(File file) {
+	public static boolean isExists(@NotNull File file) {
 		return file != null && file.exists();
 	}
 
-	private static String removeBom(String source) {
+	@NotNull
+	private static String removeBom(@NotNull String source) {
 		if (source.startsWith("\uFEFF")) {
 			return source.substring(1);
 		}

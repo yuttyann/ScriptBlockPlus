@@ -9,6 +9,7 @@ import org.bukkit.permissions.Permissible;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import org.jetbrains.annotations.NotNull;
 
 public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
@@ -18,15 +19,17 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
 		private static final String PREFIX = "scriptblockplus.";
 
-		public static boolean has(Permissible permissible, ScriptType scriptType, boolean isCMDorUse) {
-			return Permission.has(permissible, scriptType == null ? null : getNode(scriptType, isCMDorUse));
+		public static boolean has(@NotNull Permissible permissible, @NotNull ScriptType scriptType, boolean isCMDorUse) {
+			return Permission.has(permissible, getNode(scriptType, isCMDorUse));
 		}
 
+		@NotNull
 		public static String[] getNodes(boolean isCMDorUse) {
 			return StreamUtils.toArray(TYPES.values(), t -> getNode(t, isCMDorUse), new String[TYPES.size()]);
 		}
 
-		public static String getNode(ScriptType scriptType, boolean isCMDorUse) {
+		@NotNull
+		public static String getNode(@NotNull ScriptType scriptType, boolean isCMDorUse) {
 			return isCMDorUse ? PREFIX + "command." + scriptType.type : PREFIX + scriptType.type + ".use";
 		}
 	}
@@ -40,7 +43,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	private final String name;
 	private final int ordinal;
 
-	public ScriptType(String type) {
+	public ScriptType(@NotNull String type) {
 		Validate.notNull(type, "Type cannot be null");
 		this.type = type.toLowerCase();
 		this.name = type.toUpperCase();
@@ -52,10 +55,12 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 		}
 	}
 
+	@NotNull
 	public String getType() {
 		return type;
 	}
 
+	@NotNull
 	public String name() {
 		return name;
 	}
@@ -89,7 +94,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	}
 
 	@Override
-	public int compareTo(ScriptType another) {
+	public int compareTo(@NotNull ScriptType another) {
 		return Integer.compare(ordinal, another.ordinal);
 	}
 
@@ -97,18 +102,22 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 		return TYPES.size();
 	}
 
+	@NotNull
 	public static String[] types() {
 		return StreamUtils.toArray(TYPES.values(), t -> t.type, new String[TYPES.size()]);
 	}
 
+	@NotNull
 	public static String[] names() {
 		return StreamUtils.toArray(TYPES.values(), t -> t.name, new String[TYPES.size()]);
 	}
 
+	@NotNull
 	public static ScriptType[] values() {
 		return TYPES.values().toArray(new ScriptType[TYPES.size()]);
 	}
 
+	@NotNull
 	public static ScriptType valueOf(int ordinal) {
 		ScriptType scriptType = StreamUtils.fOrElse(TYPES.values(), s -> s.ordinal == ordinal, null);
 		if (scriptType == null) {
@@ -117,6 +126,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 		return scriptType;
 	}
 
+	@NotNull
 	public static ScriptType valueOf(String name) {
 		Validate.notNull(name, "Name cannot be null");
 		ScriptType scriptType = TYPES.get(name.toUpperCase());

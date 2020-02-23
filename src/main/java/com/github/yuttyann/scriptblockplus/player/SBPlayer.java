@@ -12,61 +12,80 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface SBPlayer extends CommandSender {
 
-	public static SBPlayer fromPlayer(OfflinePlayer player) {
+	@Nullable
+	public static SBPlayer fromPlayer(@NotNull OfflinePlayer player) {
 		return player == null ? null : fromUUID(player.getUniqueId());
 	}
 
-	public static SBPlayer fromUUID(UUID uuid) {
+	@Nullable
+	public static SBPlayer fromUUID(@NotNull UUID uuid) {
 		return uuid == null ? null : BaseSBPlayer.getSBPlayer(uuid);
 	}
 
+	@Nullable
 	public Player getPlayer();
 
+	@NotNull
 	public OfflinePlayer getOfflinePlayer();
 
+	@Nullable
 	public PlayerInventory getInventory();
 
+	@NotNull
 	public UUID getUniqueId();
 
+	@Nullable
 	public World getWorld();
 
+	@Nullable
 	public Location getLocation();
 
+	@Nullable
 	public ItemStack getItemInMainHand();
 
+	@Nullable
 	public ItemStack getItemInOffHand();
 
 	public boolean isOnline();
 
+	@Nullable
 	public Region getRegion();
 
+	@NotNull
 	public PlayerCount getPlayerCount();
 
+	@NotNull
 	public ObjectMap getObjectMap();
 
-	public void setClipboard(SBClipboard clipboard);
+	public void setClipboard(@Nullable SBClipboard clipboard);
 
+	@Nullable
 	public SBClipboard getClipboard();
 
 	public boolean hasClipboard();
 
-	public void setScriptLine(String scriptLine);
+	public void setScriptLine(@Nullable String scriptLine);
 
+	@Nullable
 	public String getScriptLine();
 
 	public boolean hasScriptLine();
 
-	public void setActionType(String actionType);
+	public void setActionType(@Nullable String actionType);
 
+	@Nullable
 	public String getActionType();
 
 	public boolean hasActionType();
 
-	public void setOldFullCoords(String fullCoords);
+	public void setOldFullCoords(@Nullable String fullCoords);
 
+	@Nullable
 	public String getOldFullCoords();
 
 	public boolean hasOldFullCoords();

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public enum ClassType {
 	BYTE(byte.class, Byte.class),
@@ -27,38 +29,44 @@ public enum ClassType {
 		}
 	}
 
-	private ClassType(Class<?> primitive, Class<?> reference) {
+	private ClassType(@NotNull Class<?> primitive, @NotNull Class<?> reference) {
 		this.primitive = primitive;
 		this.reference = reference;
 	}
 
+	@NotNull
 	public Class<?> getPrimitive() {
 		return primitive;
 	}
 
+	@NotNull
 	public Class<?> getReference() {
 		return reference;
 	}
 
-	public static ClassType fromClass(Class<?> clazz) {
+	@Nullable
+	public static ClassType fromClass(@NotNull Class<?> clazz) {
 		return CLASS.get(clazz);
 	}
 
-	public static Class<?> getPrimitive(Class<?> clazz) {
+	@NotNull
+	public static Class<?> getPrimitive(@NotNull Class<?> clazz) {
 		ClassType type = fromClass(clazz);
 		return type == null ? clazz : type.getPrimitive();
 	}
 
-	public static Class<?> getReference(Class<?> clazz) {
+	@NotNull
+	public static Class<?> getReference(@NotNull Class<?> clazz) {
 		ClassType type = fromClass(clazz);
 		return type == null ? clazz : type.getReference();
 	}
 
-	public static Class<?>[] getPrimitive(Class<?>[] classes) {
+	@NotNull
+	public static Class<?>[] getPrimitive(@Nullable Class<?>[] classes) {
 		if (classes == null || classes.length == 0) {
 			return ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
-		int length = classes == null ? 0 : classes.length;
+		int length = classes.length;
 		Class<?>[] types = new Class<?>[length];
 		for (int index = 0; index < length; index++) {
 			types[index] = getPrimitive(classes[index]);
@@ -66,11 +74,12 @@ public enum ClassType {
 		return types;
 	}
 
-	public static Class<?>[] getReference(Class<?>[] classes) {
+	@NotNull
+	public static Class<?>[] getReference(@Nullable Class<?>[] classes) {
 		if (classes == null || classes.length == 0) {
 			return ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
-		int length = classes == null ? 0 : classes.length;
+		int length = classes.length;
 		Class<?>[] types = new Class<?>[length];
 		for (int index = 0; index < length; index++) {
 			types[index] = getReference(classes[index]);
@@ -78,11 +87,12 @@ public enum ClassType {
 		return types;
 	}
 
-	public static Class<?>[] getPrimitive(Object[] objects) {
+	@NotNull
+	public static Class<?>[] getPrimitive(@Nullable Object[] objects) {
 		if (objects == null || objects.length == 0) {
 			return ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
-		int length = objects == null ? 0 : objects.length;
+		int length = objects.length;
 		Class<?>[] types = new Class<?>[length];
 		for (int index = 0; index < length; index++) {
 			types[index] = getPrimitive(objects[index].getClass());
@@ -90,11 +100,12 @@ public enum ClassType {
 		return types;
 	}
 
-	public static Class<?>[] getReference(Object[] objects) {
+	@NotNull
+	public static Class<?>[] getReference(@Nullable Object[] objects) {
 		if (objects == null || objects.length == 0) {
 			return ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
-		int length = objects == null ? 0 : objects.length;
+		int length = objects.length;
 		Class<?>[] types = new Class<?>[length];
 		for (int index = 0; index < length; index++) {
 			types[index] = getReference(objects[index].getClass());
@@ -102,7 +113,7 @@ public enum ClassType {
 		return types;
 	}
 
-	public static boolean compare(Class<?>[] primary, Class<?>[] secondary) {
+	public static boolean compare(@Nullable Class<?>[] primary, @Nullable Class<?>[] secondary) {
 		if (primary == null || secondary == null || primary.length != secondary.length) {
 			return false;
 		}

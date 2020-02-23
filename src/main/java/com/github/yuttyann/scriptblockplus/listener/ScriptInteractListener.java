@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.material.Openable;
 import org.bukkit.material.Redstone;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.EquipSlot;
@@ -23,7 +24,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptInteractListener extends ScriptListener {
 
-	public ScriptInteractListener(ScriptBlock plugin) {
+	public ScriptInteractListener(@NotNull ScriptBlock plugin) {
 		super(plugin, ScriptType.INTERACT);
 	}
 

@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -21,7 +22,8 @@ public enum EquipSlot {
 		}
 	}
 
-	public static EquipSlot getHand(PlayerEvent event) {
+	@NotNull
+	public static EquipSlot getHand(@NotNull PlayerEvent event) {
 		if (!Utils.isCBXXXorLater("1.9")) {
 			return HAND;
 		}
@@ -33,7 +35,8 @@ public enum EquipSlot {
 		}
 	}
 
-	public static EquipSlot fromEquipmentSlot(Enum<?> equipmentSlot) {
+	@NotNull
+	public static EquipSlot fromEquipmentSlot(@NotNull Enum<?> equipmentSlot) {
 		if (isBukkitEquipmentSlot(equipmentSlot)) {
 			for (EquipSlot equipSlot : values()) {
 				if (equipSlot.name().equals(equipmentSlot.name())) {

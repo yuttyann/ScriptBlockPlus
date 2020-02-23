@@ -15,12 +15,13 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
 
 public class JoinQuitListener implements Listener {
 
 	private ScriptBlock plugin;
 
-	public JoinQuitListener(ScriptBlock plugin) {
+	public JoinQuitListener(@NotNull ScriptBlock plugin) {
 		this.plugin = plugin;
 	}
 

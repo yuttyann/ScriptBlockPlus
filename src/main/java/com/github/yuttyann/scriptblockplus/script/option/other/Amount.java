@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import org.jetbrains.annotations.NotNull;
 
 public class Amount extends BaseOption {
 
@@ -10,6 +11,7 @@ public class Amount extends BaseOption {
 		super("amount", "@amount:");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new Amount();

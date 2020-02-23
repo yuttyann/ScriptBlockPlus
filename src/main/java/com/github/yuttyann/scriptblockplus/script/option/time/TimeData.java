@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class TimeData {
 
@@ -18,15 +20,15 @@ public final class TimeData {
 	private final String fullCoords;
 	private final ScriptType scriptType;
 
-	TimeData(int second, int scriptIndex, String fullCoords) {
+	TimeData(int second, int scriptIndex, @NotNull String fullCoords) {
 		this(second, scriptIndex, true, fullCoords, null, null);
 	}
 
-	TimeData(int second, int scriptIndex, String fullCoords, UUID uuid, ScriptType scriptType) {
+	TimeData(int second, int scriptIndex, @NotNull String fullCoords, @Nullable UUID uuid, @Nullable ScriptType scriptType) {
 		this(second, scriptIndex, false, fullCoords, uuid, scriptType);
 	}
 
-	private TimeData(int second, int scriptIndex, boolean isOldCooldown, String fullCoords, UUID uuid, ScriptType scriptType) {
+	private TimeData(int second, int scriptIndex, boolean isOldCooldown, @NotNull String fullCoords, @Nullable UUID uuid, @Nullable ScriptType scriptType) {
 		this.second = second;
 		this.scriptIndex = scriptIndex;
 		this.isOldCooldown = isOldCooldown;
@@ -47,18 +49,22 @@ public final class TimeData {
 		return isOldCooldown;
 	}
 
+	@Nullable
 	public UUID getUniqueId() {
 		return uuid;
 	}
 
+	@NotNull
 	public String getFullCoords() {
 		return fullCoords;
 	}
 
+	@Nullable
 	public ScriptType getScriptType() {
 		return scriptType;
 	}
 
+	@NotNull
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("second", second);
@@ -72,7 +78,7 @@ public final class TimeData {
 		return map;
 	}
 
-	public static void deserialize(Map<String, Object> args) {
+	public static void deserialize(@NotNull Map<String, Object> args) {
 		int second = (int) args.get("second");
 		int scriptIndex = (int) args.get("scriptindex");
 		boolean isOldCooldown = (boolean) args.get("isoldcooldown");
@@ -92,7 +98,7 @@ public final class TimeData {
 		return hashCode(scriptIndex, isOldCooldown, fullCoords, uuid, scriptType);
 	}
 
-	static int hashCode(int scriptIndex, boolean isOldCooldown, String fullCoords, UUID uuid, ScriptType scriptType) {
+	static int hashCode(int scriptIndex, boolean isOldCooldown, @NotNull String fullCoords, @Nullable UUID uuid, @Nullable ScriptType scriptType) {
 		int hash = 1;
 		int prime = 31;
 		hash = prime * hash + scriptIndex;

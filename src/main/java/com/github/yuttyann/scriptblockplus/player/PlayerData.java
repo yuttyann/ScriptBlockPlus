@@ -7,6 +7,8 @@ import java.util.UUID;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class PlayerData implements SBPlayer {
 
@@ -20,8 +22,9 @@ public abstract class PlayerData implements SBPlayer {
 
 	private final ObjectMap objectMap = new ObjMap();
 
-	PlayerData() {}
+	PlayerData() { }
 
+	@NotNull
 	@Override
 	public Region getRegion() {
 		CuboidRegion region = getObjectMap().get(KEY_REGION);
@@ -31,6 +34,7 @@ public abstract class PlayerData implements SBPlayer {
 		return region;
 	}
 
+	@NotNull
 	@Override
 	public PlayerCount getPlayerCount() {
 		PlayerCount playerCount = getObjectMap().get(KEY_PLAYERCOUNT);
@@ -40,6 +44,7 @@ public abstract class PlayerData implements SBPlayer {
 		return playerCount;
 	}
 
+	@NotNull
 	@Override
 	public ObjectMap getObjectMap() {
 		return objectMap;
@@ -54,27 +59,29 @@ public abstract class PlayerData implements SBPlayer {
 		}
 
 		@Override
-		public void put(String key, Object value) {
+		public void put(@NotNull String key, @Nullable Object value) {
 			objectMap.put(key, value);
 		}
 
+		@Nullable
 		@Override
-		public <T> T get(String key) {
+		public <T> T get(@NotNull String key) {
 			return (T) objectMap.get(key);
 		}
 
+		@Nullable
 		@Override
-		public <T> T remove(String key) {
+		public <T> T remove(@NotNull String key) {
 			return (T) objectMap.remove(key);
 		}
 
 		@Override
-		public boolean containsKey(String key) {
+		public boolean containsKey(@NotNull String key) {
 			return objectMap.containsKey(key);
 		}
 
 		@Override
-		public boolean containsValue(Object value) {
+		public boolean containsValue(@NotNull Object value) {
 			return objectMap.containsValue(value);
 		}
 
@@ -85,10 +92,11 @@ public abstract class PlayerData implements SBPlayer {
 	}
 
 	@Override
-	public void setClipboard(SBClipboard clipboard) {
+	public void setClipboard(@Nullable SBClipboard clipboard) {
 		getObjectMap().put(KEY_CLIPBOARD, clipboard);
 	}
 
+	@Nullable
 	@Override
 	public SBClipboard getClipboard() {
 		return getObjectMap().get(KEY_CLIPBOARD);
@@ -100,10 +108,11 @@ public abstract class PlayerData implements SBPlayer {
 	}
 
 	@Override
-	public void setScriptLine(String scriptLine) {
+	public void setScriptLine(@Nullable String scriptLine) {
 		getObjectMap().put(KEY_SCRIPTLINE, scriptLine);
 	}
 
+	@Nullable
 	@Override
 	public String getScriptLine() {
 		return getObjectMap().getString(KEY_SCRIPTLINE);
@@ -115,10 +124,11 @@ public abstract class PlayerData implements SBPlayer {
 	}
 
 	@Override
-	public void setActionType(String actionType) {
+	public void setActionType(@Nullable String actionType) {
 		getObjectMap().put(KEY_CLICKACTION, actionType);
 	}
 
+	@Nullable
 	@Override
 	public String getActionType() {
 		return getObjectMap().getString(KEY_CLICKACTION);
@@ -130,10 +140,11 @@ public abstract class PlayerData implements SBPlayer {
 	}
 
 	@Override
-	public void setOldFullCoords(String fullCoords) {
+	public void setOldFullCoords(@Nullable String fullCoords) {
 		getObjectMap().put(KEY_OLDFULLCOORDS, fullCoords);
 	}
 
+	@Nullable
 	@Override
 	public String getOldFullCoords() {
 		return getObjectMap().getString(KEY_OLDFULLCOORDS);
@@ -144,7 +155,7 @@ public abstract class PlayerData implements SBPlayer {
 		return getObjectMap().has(KEY_OLDFULLCOORDS);
 	}
 
-	public static String createRandomId(String key) {
+	public static String createRandomId(@NotNull String key) {
 		return key + "_" + UUID.randomUUID();
 	}
 }

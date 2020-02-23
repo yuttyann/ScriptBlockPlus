@@ -13,6 +13,8 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class ScriptEdit {
 
@@ -21,13 +23,14 @@ public final class ScriptEdit {
 	private MapManager mapManager;
 	private List<String> scripts;
 
-	public ScriptEdit(ScriptType scriptType) {
+	public ScriptEdit(@NotNull ScriptType scriptType) {
 		this.scriptType = scriptType;
 		this.scriptData = new ScriptData(null, scriptType);
 		this.mapManager = ScriptBlock.getInstance().getMapManager();
 	}
 
-	public Location setLocation(Location location) {
+	@Nullable
+	public Location setLocation(@Nullable Location location) {
 		Location oldLocation = scriptData.getLocation();
 		if (oldLocation == null || !oldLocation.equals(location)) {
 			scriptData.setLocation(location);
@@ -44,11 +47,12 @@ public final class ScriptEdit {
 		return scriptData.checkPath();
 	}
 
+	@NotNull
 	public ScriptType getScriptType() {
 		return scriptType;
 	}
 
-	public void create(SBPlayer sbPlayer, Location location, String script) {
+	public void create(@NotNull SBPlayer sbPlayer, @Nullable Location location, @NotNull String script) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setActionType(null);
 		location = location == null ? scriptData.getLocation() : setLocation(location);
@@ -61,7 +65,7 @@ public final class ScriptEdit {
 		Utils.sendMessage(SBConfig.getConsoleScriptCreateMessage(sbPlayer.getName(), scriptType, location));
 	}
 
-	public void add(SBPlayer sbPlayer, Location location, String script) {
+	public void add(@NotNull SBPlayer sbPlayer, @Nullable Location location, @NotNull String script) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setActionType(null);
 		location = location == null ? scriptData.getLocation() : setLocation(location);
@@ -78,7 +82,7 @@ public final class ScriptEdit {
 		Utils.sendMessage(SBConfig.getConsoleScriptAddMessage(sbPlayer.getName(), scriptType, location));
 	}
 
-	public void remove(SBPlayer sbPlayer, Location location) {
+	public void remove(@NotNull SBPlayer sbPlayer, @Nullable Location location) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setActionType(null);
 		location = location == null ? scriptData.getLocation() : setLocation(location);
@@ -93,7 +97,7 @@ public final class ScriptEdit {
 		Utils.sendMessage(SBConfig.getConsoleScriptRemoveMessage(sbPlayer.getName(), scriptType, location));
 	}
 
-	public void view(SBPlayer sbPlayer, Location location) {
+	public void view(@NotNull SBPlayer sbPlayer, @Nullable Location location) {
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setActionType(null);
 		location = location == null ? scriptData.getLocation() : setLocation(location);
@@ -109,6 +113,7 @@ public final class ScriptEdit {
 		Utils.sendMessage(SBConfig.getConsoleScriptViewMessage(sbPlayer.getName(), scriptType, location));
 	}
 
+	@NotNull
 	private String getAuthors() {
 		StrBuilder builder = new StrBuilder();
 		List<String> authors = scriptData.getAuthors(true);
@@ -123,12 +128,12 @@ public final class ScriptEdit {
 		return builder.toString();
 	}
 
-	public boolean copy(SBPlayer sbPlayer, Location location) {
+	public boolean copy(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		setLocation(location);
 		return new Clipboard(scriptData).copy(sbPlayer);
 	}
 
-	public boolean lightRemove(Location location) {
+	public boolean lightRemove(@NotNull Location location) {
 		setLocation(location);
 		if (!scriptData.checkPath()) {
 			return false;
@@ -151,7 +156,7 @@ public final class ScriptEdit {
 		private SBPlayer sbPlayer;
 		private String lastEdit;
 
-		private Clipboard(ScriptData scriptData) {
+		private Clipboard(@NotNull ScriptData scriptData) {
 			Objects.requireNonNull(scriptData);
 			this.scriptData = scriptData.clone();
 			this.amount = this.scriptData.getAmount();
@@ -165,17 +170,19 @@ public final class ScriptEdit {
 			scriptData.save();
 		}
 
+		@NotNull
 		public Location getLocation() {
 			return scriptData.getLocation();
 		}
 
+		@NotNull
 		@Override
 		public ScriptType getScriptType() {
 			return scriptType;
 		}
 
 		@Override
-		public boolean copy(SBPlayer sbPlayer) {
+		public boolean copy(@NotNull SBPlayer sbPlayer) {
 			sbPlayer.setScriptLine(null);
 			sbPlayer.setActionType(null);
 			if (this.sbPlayer != null) {
@@ -193,7 +200,7 @@ public final class ScriptEdit {
 		}
 
 		@Override
-		public boolean paste(Location location, boolean overwrite) {
+		public boolean paste(@NotNull Location location, boolean overwrite) {
 			if (sbPlayer == null) {
 				return false;
 			}
@@ -222,7 +229,7 @@ public final class ScriptEdit {
 		}
 
 		@Override
-		public boolean lightPaste(Location location, boolean overwrite, boolean updateTime) {
+		public boolean lightPaste(@NotNull Location location, boolean overwrite, boolean updateTime) {
 			if (scriptData == null || sbPlayer == null) {
 				return false;
 			}

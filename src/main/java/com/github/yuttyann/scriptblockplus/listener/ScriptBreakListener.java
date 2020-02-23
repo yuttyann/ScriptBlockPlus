@@ -18,10 +18,11 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
 
 public class ScriptBreakListener extends ScriptListener {
 
-	public ScriptBreakListener(ScriptBlock plugin) {
+	public ScriptBreakListener(@NotNull ScriptBlock plugin) {
 		super(plugin, ScriptType.BREAK);
 	}
 

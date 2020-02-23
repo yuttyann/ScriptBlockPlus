@@ -1,5 +1,8 @@
 package com.github.yuttyann.scriptblockplus.player;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * ScriptBlockPlus ObjectMap インターフェース</br>
  * @author yuttyann44581
@@ -12,14 +15,15 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @param value 値
 	 */
-	public void put(String key, Object value);
+	public void put(@NotNull String key, @Nullable Object value);
 
 	/**
 	 * マップの「キー」に対応した「値」を取得する
 	 * @param key キー
 	 * @return byte
 	 */
-	public default byte getByte(String key) {
+	@Nullable
+	public default byte getByte(@NotNull String key) {
 		return get(key, byte.class);
 	}
 
@@ -28,7 +32,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return short
 	 */
-	public default short getShort(String key) {
+	@Nullable
+	public default short getShort(@NotNull String key) {
 		return get(key, short.class);
 	}
 
@@ -37,7 +42,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return int
 	 */
-	public default int getInt(String key) {
+	@Nullable
+	public default int getInt(@NotNull String key) {
 		return get(key, int.class);
 	}
 
@@ -46,7 +52,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return long
 	 */
-	public default long getLong(String key) {
+	@Nullable
+	public default long getLong(@NotNull String key) {
 		return get(key, long.class);
 	}
 
@@ -55,7 +62,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return char
 	 */
-	public default char getChar(String key) {
+	@Nullable
+	public default char getChar(@NotNull String key) {
 		return get(key, char.class);
 	}
 
@@ -64,7 +72,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return float
 	 */
-	public default float getFloat(String key) {
+	@Nullable
+	public default float getFloat(@NotNull String key) {
 		return get(key, float.class);
 	}
 
@@ -73,7 +82,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return double
 	 */
-	public default double getDouble(String key) {
+	@Nullable
+	public default double getDouble(@NotNull String key) {
 		return get(key, double.class);
 	}
 
@@ -82,7 +92,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return byte
 	 */
-	public default boolean getBoolean(String key) {
+	@Nullable
+	public default boolean getBoolean(@NotNull String key) {
 		return get(key, boolean.class);
 	}
 
@@ -91,7 +102,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return String
 	 */
-	public default String getString(String key) {
+	@Nullable
+	public default String getString(@NotNull String key) {
 		return get(key, String.class);
 	}
 
@@ -100,7 +112,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return Object
 	 */
-	public <T> T get(String key);
+	@Nullable
+	public <T> T get(@NotNull String key);
 
 	/**
 	 * マップの「キー」に対応した「値」を取得する
@@ -108,7 +121,8 @@ public interface ObjectMap {
 	 * @param classOfT キャストするクラス
 	 * @return Object
 	 */
-	public default <T> T get(String key, Class<T> classOfT) {
+	@Nullable
+	public default <T> T get(@NotNull String key, @Nullable Class<T> classOfT) {
 		return classOfT == null ? get(key) : (T) get(key);
 	}
 
@@ -117,6 +131,7 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return Object
 	 */
+	@Nullable
 	public <T> T remove(String key);
 
 	/**
@@ -125,7 +140,8 @@ public interface ObjectMap {
 	 * @param classOfT キャストするクラス
 	 * @return Object
 	 */
-	public default <T> T remove(String key, Class<T> classOfT) {
+	@Nullable
+	public default <T> T remove(@NotNull String key, @Nullable Class<T> classOfT) {
 		return classOfT == null ? remove(key) : (T) remove(key);
 	}
 
@@ -134,7 +150,7 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return 要素が存在するかどうか
 	 */
-	public default boolean has(String key) {
+	public default boolean has(@NotNull String key) {
 		return get(key) != null;
 	}
 
@@ -143,14 +159,14 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return キー が存在するかどうか
 	 */
-	public boolean containsKey(String key);
+	public boolean containsKey(@NotNull String key);
 
 	/**
 	 * 指定された「値」が存在するか確認する
 	 * @param value 値
 	 * @return 値 が存在するかどうか
 	 */
-	public boolean containsValue(Object value);
+	public boolean containsValue(@NotNull Object value);
 
 	/**
 	 * 全ての要素を削除する

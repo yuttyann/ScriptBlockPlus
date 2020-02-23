@@ -4,6 +4,8 @@ import java.lang.reflect.Constructor;
 import java.util.Objects;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.script.SBInstance;
@@ -13,23 +15,26 @@ public final class SBConstructor<T> {
 	private SBInstance<? extends T> sbInstance;
 	private Constructor<? extends T> constructor;
 
-	public SBConstructor(Class<? extends T> clazz) {
+	public SBConstructor(@NotNull Class<? extends T> clazz) {
 		this.constructor = getConstructor(Objects.requireNonNull(clazz));
 	}
 
-	public SBConstructor(SBInstance<? extends T> sbInstance) {
+	public SBConstructor(@NotNull SBInstance<? extends T> sbInstance) {
 		this.sbInstance = Objects.requireNonNull(sbInstance);
 	}
 
+	@NotNull
 	public Class<? extends T> getDeclaringClass() {
 		return sbInstance == null ? constructor.getDeclaringClass() : (Class<? extends T>) sbInstance.getClass();
 	}
 
+	@Nullable
 	public T getInstance() {
 		return sbInstance == null ? newInstance(InstanceType.REFLECTION) : (T) sbInstance;
 	}
 
-	public T newInstance(InstanceType instanceType) {
+	@Nullable
+	public T newInstance(@NotNull InstanceType instanceType) {
 		switch (instanceType) {
 		case SBINSTANCE:
 			return sbInstance == null ? newInstance(InstanceType.REFLECTION) : sbInstance.newInstance();
@@ -46,16 +51,16 @@ public final class SBConstructor<T> {
 					sbInstance = (SBInstance<? extends T>) t;
 				}
 				return t;
-			} catch (ReflectiveOperationException e) {
+			} catch (IllegalArgumentException | ReflectiveOperationException e) {
 				e.printStackTrace();
 			}
 			return null;
-		default:
-			return null;
 		}
+		return null;
 	}
 
-	private <R extends T> Constructor<R> getConstructor(Class<R> clazz) {
+	@Nullable
+	private <R extends T> Constructor<R> getConstructor(@NotNull Class<R> clazz) {
 		try {
 			Constructor<R> constructor = clazz.getDeclaredConstructor(ArrayUtils.EMPTY_CLASS_ARRAY);
 			constructor.setAccessible(true);

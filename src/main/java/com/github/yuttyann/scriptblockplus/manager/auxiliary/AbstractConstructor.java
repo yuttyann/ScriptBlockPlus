@@ -3,6 +3,9 @@ package com.github.yuttyann.scriptblockplus.manager.auxiliary;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -11,13 +14,15 @@ public abstract class AbstractConstructor<T> {
 
 	private final List<SBConstructor<? extends T>> list = newList();
 
+	@NotNull
 	protected abstract List<SBConstructor<? extends T>> newList();
 
-	public abstract void registerDefaults();
-
+	@NotNull
 	protected final List<SBConstructor<? extends T>> getConstructors() {
 		return list;
 	}
+
+	public abstract void registerDefaults();
 
 	public int size() {
 		return getConstructors().size();
@@ -27,7 +32,7 @@ public abstract class AbstractConstructor<T> {
 		return getConstructors().isEmpty();
 	}
 
-	public int indexOf(Class<? extends T> clazz) {
+	public int indexOf(@NotNull Class<? extends T> clazz) {
 		List<SBConstructor<? extends T>> constructors = getConstructors();
 		for (int i = 0; i < constructors.size(); i++) {
 			if (constructors.get(i).getDeclaringClass().equals(clazz)) {
@@ -37,15 +42,15 @@ public abstract class AbstractConstructor<T> {
 		return -1;
 	}
 
-	public final boolean add(Class<? extends T> clazz) {
+	public final boolean add(@NotNull Class<? extends T> clazz) {
 		return add(new SBConstructor<>(clazz));
 	}
 
-	public final boolean add(SBInstance<? extends T> sbInstance) {
+	public final boolean add(@NotNull SBInstance<? extends T> sbInstance) {
 		return add(new SBConstructor<>(sbInstance));
 	}
 
-	public boolean add(SBConstructor<? extends T> constructor) {
+	public boolean add(@NotNull SBConstructor<? extends T> constructor) {
 		if (indexOf(constructor.getDeclaringClass()) >= 0) {
 			return false;
 		}
@@ -53,15 +58,15 @@ public abstract class AbstractConstructor<T> {
 		return true;
 	}
 
-	public final boolean add(int index, Class<? extends T> clazz) {
+	public final boolean add(int index, @NotNull Class<? extends T> clazz) {
 		return add(index, new SBConstructor<>(clazz));
 	}
 
-	public final boolean add(int index, SBInstance<? extends T> sbInstance) {
+	public final boolean add(int index, @NotNull SBInstance<? extends T> sbInstance) {
 		return add(index, new SBConstructor<>(sbInstance));
 	}
 
-	public boolean add(int index, SBConstructor<? extends T> constructor) {
+	public boolean add(int index, @NotNull SBConstructor<? extends T> constructor) {
 		if (index > getConstructors().size() || indexOf(constructor.getDeclaringClass()) >= 0) {
 			return false;
 		}
@@ -69,15 +74,15 @@ public abstract class AbstractConstructor<T> {
 		return true;
 	}
 
-	public final boolean remove(Class<? extends T> clazz) {
+	public final boolean remove(@NotNull Class<? extends T> clazz) {
 		return remove(indexOf(clazz));
 	}
 
-	public final boolean remove(SBInstance<? extends T> sbInstance) {
+	public final boolean remove(@NotNull SBInstance<? extends T> sbInstance) {
 		return remove(indexOf((Class<? extends T>) sbInstance.getClass()));
 	}
 
-	public final boolean remove(SBConstructor<? extends T> constructor) {
+	public final boolean remove(@NotNull SBConstructor<? extends T> constructor) {
 		return remove(indexOf(constructor.getDeclaringClass()));
 	}
 
@@ -91,7 +96,8 @@ public abstract class AbstractConstructor<T> {
 
 	public abstract T[] newInstances();
 
-	public T[] newInstances(T[] array, InstanceType instanceType) {
+	@NotNull
+	public T[] newInstances(@NotNull T[] array, @NotNull InstanceType instanceType) {
 		T[] instances = array;
 		int i = 0;
 		for (SBConstructor<? extends T> constructor : getConstructors()) {
@@ -100,11 +106,13 @@ public abstract class AbstractConstructor<T> {
 		return instances;
 	}
 
-	public T newInstance(T t, InstanceType instanceType) {
+	@Nullable
+	public T newInstance(@NotNull T t, @NotNull InstanceType instanceType) {
 		return newInstance(t.getClass(), instanceType);
 	}
 
-	public T newInstance(Class<?> clazz, InstanceType instanceType) {
+	@Nullable
+	public T newInstance(@NotNull Class<?> clazz, @NotNull InstanceType instanceType) {
 		for (SBConstructor<? extends T> constructor : getConstructors()) {
 			if (constructor.getDeclaringClass().equals(clazz)) {
 				return constructor.newInstance(instanceType);
@@ -113,7 +121,7 @@ public abstract class AbstractConstructor<T> {
 		return null;
 	}
 
-	public final void forEach(Consumer<? super T> action) {
+	public final void forEach(@NotNull Consumer<? super T> action) {
 		StreamUtils.forEach(newInstances(), action);
 	}
 }

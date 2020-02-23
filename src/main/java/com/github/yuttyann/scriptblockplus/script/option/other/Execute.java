@@ -9,6 +9,7 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
 
 public class Execute extends BaseOption {
 
@@ -16,6 +17,7 @@ public class Execute extends BaseOption {
 		super("execute", "@execute:");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new Execute();

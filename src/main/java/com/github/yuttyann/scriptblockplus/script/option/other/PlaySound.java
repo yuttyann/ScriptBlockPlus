@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 public class PlaySound extends BaseOption {
 
@@ -14,6 +15,7 @@ public class PlaySound extends BaseOption {
 		super("sound", "@sound:");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new PlaySound();
@@ -24,42 +26,42 @@ public class PlaySound extends BaseOption {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String[] sound = StringUtils.split(array[0], "-");
 		Sound soundType = Sound.valueOf(sound[0].toUpperCase());
-		int volume = Integer.valueOf(sound[1]);
-		int pitch = Integer.valueOf(sound[2]);
+		int volume = Integer.parseInt(sound[1]);
+		int pitch = Integer.parseInt(sound[2]);
 		long delay = sound.length > 3 ? Long.parseLong(sound[3]) : 0;
-		boolean isWorldPlay = array.length > 1 ? Boolean.parseBoolean(array[1]) : false;
+		boolean playWorld = array.length > 1 && Boolean.parseBoolean(array[1]);
 
 		if (delay > 0) {
-			new Task(soundType, volume, pitch, isWorldPlay).runTaskLater(getPlugin(), delay);
+			new Task(soundType, volume, pitch, playWorld).runTaskLater(getPlugin(), delay);
 		} else {
-			playSound(soundType, volume, pitch, isWorldPlay);
+			playSound(soundType, volume, pitch, playWorld);
 		}
 		return true;
 	}
 
 	private class Task extends BukkitRunnable {
 
-		private Sound soundType;
-		private int volume;
-		private int pitch;
-		private boolean isWorldPlay;
+		Sound soundType;
+		int volume;
+		int pitch;
+		boolean playWorld;
 
-		private Task(Sound soundType, int volume, int pitch, boolean isWorldPlay) {
+		Task(@NotNull Sound soundType, int volume, int pitch, boolean playWorld) {
 			this.soundType = soundType;
 			this.volume = volume;
 			this.pitch = pitch;
-			this.isWorldPlay = isWorldPlay;
+			this.playWorld = playWorld;
 		}
 
 		@Override
 		public void run() {
-			playSound(soundType, volume, pitch, isWorldPlay);
+			playSound(soundType, volume, pitch, playWorld);
 		}
 	}
 
-	private void playSound(Sound soundType, int volume, int pitch, boolean isWorldPlay) {
+	private void playSound(@NotNull Sound soundType, int volume, int pitch, boolean playWorld) {
 		Location location = getLocation();
-		if (isWorldPlay) {
+		if (playWorld) {
 			location.getWorld().playSound(location, soundType, volume, pitch);
 		} else if (getSBPlayer().isOnline()) {
 			getPlayer().playSound(location, soundType, volume, pitch);

@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.file.Files;
@@ -23,6 +24,7 @@ import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.Nullable;
 
 public class ScriptBlock extends JavaPlugin {
 
@@ -81,22 +83,27 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (command.getName().equals(scriptBlockPlusCommand.getCommandName())) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+		if (command.getName().equalsIgnoreCase(scriptBlockPlusCommand.getCommandName())) {
 			return scriptBlockPlusCommand.onCommand(sender, command, label, args);
 		}
 		return false;
 	}
 
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		if (command.getName().equals(scriptBlockPlusCommand.getCommandName())) {
+	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+		if (command.getName().equalsIgnoreCase(scriptBlockPlusCommand.getCommandName())) {
 			return scriptBlockPlusCommand.onTabComplete(sender, command, label, args);
 		}
 		return super.onTabComplete(sender, command, label, args);
 	}
 
-	public void checkUpdate(CommandSender sender, boolean latestMessage) {
+	/**
+	 * 最新のバージョンが存在するか確認する
+	 * @param CommandSender 送信先
+	 * @param latestMessage 更新メッセージを表示するかどうか
+	 */
+	public void checkUpdate(@Nullable CommandSender sender, boolean latestMessage) {
 		new Thread(() -> {
 			try {
 				// updater.debug(true, true);
@@ -111,18 +118,22 @@ public class ScriptBlock extends JavaPlugin {
 		}).start();
 	}
 
+	@NotNull
 	public ScriptBlockAPI getAPI() {
 		return scriptAPI == null ? scriptAPI = new APIManager(this) : scriptAPI;
 	}
 
+	@NotNull
 	public MapManager getMapManager() {
 		return mapManager;
 	}
 
-	public BaseSBPlayer fromPlayer(OfflinePlayer player) {
+	@NotNull
+	public BaseSBPlayer fromPlayer(@NotNull OfflinePlayer player) {
 		return (BaseSBPlayer) SBPlayer.fromPlayer(player);
 	}
 
+	@NotNull
 	public static ScriptBlock getInstance() {
 		return PluginInstance.get(ScriptBlock.class);
 	}

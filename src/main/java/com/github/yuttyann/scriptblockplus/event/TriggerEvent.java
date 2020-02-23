@@ -3,15 +3,17 @@ package com.github.yuttyann.scriptblockplus.event;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class TriggerEvent extends ScriptBlockEvent {
 
 	private boolean cancelled;
 
-	public TriggerEvent(Player player, Block block) {
+	public TriggerEvent(@NotNull final Player player, @NotNull final Block block) {
 		super(player, block);
 	}
 
+	@NotNull
 	public Material getMaterial(boolean isMainHand) {
 		if (!hasItem(isMainHand)) {
 			return Material.AIR;

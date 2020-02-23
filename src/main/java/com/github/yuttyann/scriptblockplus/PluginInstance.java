@@ -3,9 +3,12 @@ package com.github.yuttyann.scriptblockplus;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class PluginInstance {
 
@@ -14,9 +17,9 @@ public final class PluginInstance {
 	private final Class<? extends JavaPlugin> key;
 	private final JavaPlugin plugin;
 
-	public PluginInstance(Class<? extends JavaPlugin> key, JavaPlugin plugin) {
-		this.key = key;
-		this.plugin = plugin;
+	public PluginInstance(@NotNull Class<? extends JavaPlugin> key, @NotNull JavaPlugin plugin) {
+		this.key = Objects.requireNonNull(key);
+		this.plugin = Objects.requireNonNull(plugin);
 	}
 
 	public void put() {
@@ -27,11 +30,13 @@ public final class PluginInstance {
 		INSTANCES.remove(key);
 	}
 
+	@NotNull
 	public Set<Entry<Class<? extends JavaPlugin>, JavaPlugin>> entrySet() {
 		return INSTANCES.entrySet();
 	}
 
-	public static <T extends JavaPlugin> T get(Class<? extends JavaPlugin> key) {
+	@Nullable
+	public static <T extends JavaPlugin> T get(@NotNull Class<? extends JavaPlugin> key) {
 		return (T) INSTANCES.get(key);
 	}
 }

@@ -7,15 +7,18 @@ import org.bukkit.plugin.ServicesManager;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class VaultEconomy {
 
 	private Economy economy;
 
-	private VaultEconomy(Economy economy) {
+	private VaultEconomy(@Nullable Economy economy) {
 		this.economy = economy;
 	}
 
+	@NotNull
 	static VaultEconomy setupEconomy() {
 		ServicesManager services = Bukkit.getServicesManager();
 		RegisteredServiceProvider<Economy> provider = services.getRegistration(Economy.class);
@@ -32,25 +35,25 @@ public final class VaultEconomy {
 		return economy != null && economy.isEnabled();
 	}
 
-	public double getBalance(OfflinePlayer player) {
+	public double getBalance(@NotNull OfflinePlayer player) {
 		return economy.getBalance(player);
 	}
 
-	public boolean has(OfflinePlayer player, double amount) {
+	public boolean has(@NotNull OfflinePlayer player, double amount) {
 		return economy.has(player, amount);
 	}
 
-	public boolean withdrawPlayer(OfflinePlayer player, double amount) {
+	public boolean withdrawPlayer(@NotNull OfflinePlayer player, double amount) {
 		EconomyResponse response = economy.withdrawPlayer(player, amount);
 		return response.transactionSuccess();
 	}
 
-	public boolean depositPlayer(OfflinePlayer player, double amount) {
+	public boolean depositPlayer(@NotNull OfflinePlayer player, double amount) {
 		EconomyResponse response = economy.depositPlayer(player, amount);
 		return response.transactionSuccess();
 	}
 
-	public boolean setPlayer(OfflinePlayer player, double amount) {
+	public boolean setPlayer(@NotNull OfflinePlayer player, double amount) {
 		double balance = economy.getBalance(player);
 		if (balance > amount) {
 			return withdrawPlayer(player, balance - amount);
@@ -60,6 +63,7 @@ public final class VaultEconomy {
 		return true;
 	}
 
+	@NotNull
 	public String format(double amount) {
 		return economy.format(amount);
 	}

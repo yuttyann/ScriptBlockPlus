@@ -8,6 +8,7 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 public class ScriptAction extends BaseOption {
 
@@ -17,6 +18,7 @@ public class ScriptAction extends BaseOption {
 		super("scriptaction", "@scriptaction:");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new ScriptAction();
@@ -29,21 +31,17 @@ public class ScriptAction extends BaseOption {
 		return StreamUtils.allMatch(array, s -> equals(action, s));
 	}
 
-	private boolean equals(Action action, String actionType) {
+	private boolean equals(@NotNull Action action, @NotNull String actionType) {
 		if (actionType.equalsIgnoreCase("shift")) {
 			return getPlayer().isSneaking();
 		}
-		if (ScriptType.INTERACT.equals(getScriptType())) {
-			return action == null ? false : action == getAction(actionType);
-		}
-		return false;
+		return ScriptType.INTERACT.equals(getScriptType()) && action == getAction(actionType);
 	}
 
-	private Action getAction(String actionType) {
+	private Action getAction(@NotNull String actionType) {
 		if (actionType.equalsIgnoreCase("left")) {
 			return Action.LEFT_CLICK_BLOCK;
-		}
-		if (actionType.equalsIgnoreCase("right")) {
+		} else if (actionType.equalsIgnoreCase("right")) {
 			return Action.RIGHT_CLICK_BLOCK;
 		}
 		return null;

@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.player;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerCountInfo {
 
@@ -18,31 +19,39 @@ public class PlayerCountInfo {
 	@Expose
 	private ScriptType scriptType;
 
-	public PlayerCountInfo(String fullCoords, ScriptType scriptType) {
+	public PlayerCountInfo(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
 		this.fullCoords = fullCoords;
 		this.scriptType = scriptType;
 	}
 
 	public int add() {
-		return ++amount;
+		synchronized(this) {
+			return ++amount;
+		}
 	}
 
 	public int subtract() {
-		return --amount;
+		synchronized(this) {
+			return --amount;
+		}
 	}
 
-	public int setAmount(int amount) {
-		return amount;
+	public void setAmount(int amount) {
+		synchronized(this) {
+			this.amount = amount;
+		}
 	}
 
 	public int getAmount() {
 		return amount;
 	}
 
+	@NotNull
 	public String getFullCoords() {
 		return fullCoords;
 	}
 
+	@NotNull
 	public ScriptType getScriptType() {
 		return scriptType;
 	}

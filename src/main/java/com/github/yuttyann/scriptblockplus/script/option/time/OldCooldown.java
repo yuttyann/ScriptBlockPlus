@@ -7,6 +7,8 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class OldCooldown extends BaseOption {
 
@@ -14,6 +16,7 @@ public class OldCooldown extends BaseOption {
 		super("oldcooldown", "@oldcooldown:");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new OldCooldown();
@@ -36,17 +39,17 @@ public class OldCooldown extends BaseOption {
 
 	private class Task extends BukkitRunnable {
 
-		private TimeData timeData;
+		TimeData timeData;
 
-		private Task(TimeData timeData) {
+		Task(@NotNull TimeData timeData) {
 			this.timeData = timeData;
 		}
 
-		private Task(int second, int scriptIndex, String fullCoords) {
+		Task(int second, int scriptIndex, @NotNull String fullCoords) {
 			this.timeData = new TimeData(second + 1, scriptIndex, fullCoords);
 		}
 
-		private void runTaskTimer() {
+		void runTaskTimer() {
 			ScriptBlock.getInstance().getMapManager().getCooldowns().add(timeData);
 			runTaskTimer(ScriptBlock.getInstance(), 0, 20L);
 		}
@@ -60,7 +63,7 @@ public class OldCooldown extends BaseOption {
 		}
 	}
 
-	void deserialize(TimeData timeData) {
+	void deserialize(@NotNull TimeData timeData) {
 		new Task(timeData).runTaskTimer();
 	}
 

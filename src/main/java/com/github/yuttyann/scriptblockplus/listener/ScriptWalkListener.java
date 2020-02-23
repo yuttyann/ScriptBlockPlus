@@ -15,10 +15,11 @@ import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
 
 public class ScriptWalkListener extends ScriptListener {
 
-	public ScriptWalkListener(ScriptBlock plugin) {
+	public ScriptWalkListener(@NotNull ScriptBlock plugin) {
 		super(plugin, ScriptType.WALK);
 	}
 

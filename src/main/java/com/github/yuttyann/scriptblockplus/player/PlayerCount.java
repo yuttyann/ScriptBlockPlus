@@ -16,6 +16,8 @@ import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PlayerCount {
 
@@ -27,7 +29,7 @@ public class PlayerCount {
 	@Expose
 	private List<PlayerCountInfo> infos = null;
 
-	public PlayerCount(UUID uuid) {
+	public PlayerCount(@NotNull UUID uuid) {
 		this.uuid = uuid;
 		try {
 			PlayerCount playerCount = load(uuid);
@@ -43,7 +45,8 @@ public class PlayerCount {
 		FileUtils.write(getFile(uuid), json, Charsets.UTF_8);
 	}
 
-	public static PlayerCount load(UUID uuid) throws IOException {
+	@Nullable
+	public static PlayerCount load(@NotNull UUID uuid) throws IOException {
 		File file = getFile(uuid);
 		if (!file.exists()) {
 			return null;
@@ -53,19 +56,19 @@ public class PlayerCount {
 		return gson.fromJson(json, PlayerCount.class);
 	}
 
-	public void set(BlockCoords blockCoords, ScriptType scriptType, int amount) {
+	public void set(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType, int amount) {
 		action(blockCoords, scriptType, p -> p.setAmount(amount));
 	}
 
-	public void add(BlockCoords blockCoords, ScriptType scriptType) {
+	public void add(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType) {
 		action(blockCoords, scriptType, p -> p.add());
 	}
 
-	public void subtract(BlockCoords blockCoords, ScriptType scriptType) {
+	public void subtract(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType) {
 		action(blockCoords, scriptType, p -> p.subtract());
 	}
 
-	private void action(BlockCoords blockCoords, ScriptType scriptType, Consumer<PlayerCountInfo> action) {
+	private void action(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType, @NotNull Consumer<PlayerCountInfo> action) {
 		Thread thread = new Thread(() -> {
 			try {
 				action.accept(getInfo(blockCoords, scriptType));
@@ -82,7 +85,8 @@ public class PlayerCount {
 		}
 	}
 
-	public PlayerCountInfo getInfo(BlockCoords blockCoords, ScriptType scriptType) {
+	@NotNull
+	public PlayerCountInfo getInfo(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType) {
 		String fullCoords = blockCoords.getFullCoords();
 		int hash = getHashCode(fullCoords, scriptType);
 		PlayerCountInfo info = StreamUtils.fOrElse(infos, p -> p.hashCode() == hash, null);
@@ -92,7 +96,8 @@ public class PlayerCount {
 		return info;
 	}
 
-	private static File getFile(UUID uuid) {
+	@NotNull
+	private static File getFile(@NotNull UUID uuid) {
 		String path = "json/playercount/" + uuid.toString() + ".json";
 		File file = new File(ScriptBlock.getInstance().getDataFolder(), path);
 		File parent = file.getParentFile();
@@ -102,7 +107,7 @@ public class PlayerCount {
 		return file;
 	}
 
-	private int getHashCode(String fullCoords, ScriptType scriptType) {
+	private int getHashCode(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
 		int hash = 1;
 		int prime = 31;
 		hash = prime * hash + fullCoords.hashCode();

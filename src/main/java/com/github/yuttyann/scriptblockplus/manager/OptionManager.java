@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.AbstractConstructor;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
@@ -54,27 +56,33 @@ public final class OptionManager extends AbstractConstructor<Option> {
 			OPTION_MANAGER.registerDefaults();
 		}
 
+		@NotNull
 		public static OptionManager getManager() {
 			return OPTION_MANAGER;
 		}
 
+		@NotNull
 		public static List<Option> getList() {
 			return UNMOD_OPTIONS;
 		}
 
+		@NotNull
 		public static String[] getNames() {
 			return StreamUtils.toArray(OPTIONS, o -> o.getName(), new String[OPTIONS.size()]);
 		}
 
+		@NotNull
 		public static String[] getSyntaxs() {
 			return StreamUtils.toArray(OPTIONS, o -> o.getSyntax(), new String[OPTIONS.size()]);
 		}
 
+		@NotNull
 		public static Option[] toArray() {
 			return OPTIONS.toArray(new Option[OPTIONS.size()]);
 		}
 	}
 
+	@NotNull
 	@Override
 	protected List<SBConstructor<? extends Option>> newList() {
 		return new ArrayList<>();
@@ -111,13 +119,14 @@ public final class OptionManager extends AbstractConstructor<Option> {
 		add(new Amount());
 	}
 
+	@NotNull
 	@Override
 	public Option[] newInstances() {
 		return newInstances(new Option[getConstructors().size()], InstanceType.SBINSTANCE);
 	}
 
 	@Override
-	public boolean add(SBConstructor<? extends Option> constructor) {
+	public boolean add(@NotNull SBConstructor<? extends Option> constructor) {
 		boolean result = super.add(constructor);
 		if (result) {
 			OptionList.OPTIONS.add(constructor.getInstance());
@@ -126,7 +135,7 @@ public final class OptionManager extends AbstractConstructor<Option> {
 	}
 
 	@Override
-	public boolean add(int index, SBConstructor<? extends Option> constructor) {
+	public boolean add(int index, @NotNull SBConstructor<? extends Option> constructor) {
 		boolean result = super.add(index, constructor);
 		if (result) {
 			OptionList.OPTIONS.add(index, constructor.getInstance());

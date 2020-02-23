@@ -7,16 +7,18 @@ import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
 
 public class EndInventory implements EndProcess {
 
+	@NotNull
 	@Override
 	public EndProcess newInstance() {
 		return new EndInventory();
 	}
 
 	@Override
-	public void success(SBRead sbRead) {
+	public void success(@NotNull SBRead sbRead) {
 		Player player = sbRead.getSBPlayer().getPlayer();
 		if (player.isOnline()) {
 			Utils.updateInventory(player);
@@ -24,7 +26,7 @@ public class EndInventory implements EndProcess {
 	}
 
 	@Override
-	public void failed(SBRead sbRead) {
+	public void failed(@NotNull SBRead sbRead) {
 		Player player = sbRead.getSBPlayer().getPlayer();
 		if (sbRead.has(ItemCost.KEY_ITEM)) {
 			ItemStack[] items = sbRead.get(ItemCost.KEY_ITEM);
