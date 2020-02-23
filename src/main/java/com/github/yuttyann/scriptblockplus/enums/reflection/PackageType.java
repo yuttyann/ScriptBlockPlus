@@ -45,7 +45,6 @@ public enum PackageType {
 			this.name = name;
 		}
 
-		@NotNull
 		@Override
 		public String toString() {
 			return name;
@@ -253,7 +252,6 @@ public enum PackageType {
 		CACHE.clear();
 	}
 
-	@NotNull
 	@Override
 	public String toString() {
 		return path;
