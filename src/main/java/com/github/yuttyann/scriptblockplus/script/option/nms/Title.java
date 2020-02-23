@@ -10,6 +10,8 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Title extends BaseOption {
 
@@ -19,11 +21,13 @@ public class Title extends BaseOption {
 	static {
 		Class<?> enumTitleActionClass = null;
 		Class<?> iChatBaseComponentClass = null;
-		try {
-			enumTitleActionClass = PackageType.NMS.getClass(NMSHelper.getEnumTitleActionName());
-			iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		if (Utils.isCraftBukkit() && (!Utils.isCBXXXorLater("1.12"))) {
+			try {
+				enumTitleActionClass = PackageType.NMS.getClass(NMSHelper.getEnumTitleActionName());
+				iChatBaseComponentClass = PackageType.NMS.getClass("IChatBaseComponent");
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 		TITLE_PARAMS = new Class<?>[] { enumTitleActionClass, iChatBaseComponentClass };
 		TIMES_PARAMS = new Class<?>[] { enumTitleActionClass, iChatBaseComponentClass, int.class, int.class, int.class };
@@ -33,6 +37,7 @@ public class Title extends BaseOption {
 		super("title", "@title:");
 	}
 
+	@NotNull
 	@Override
 	public Option newInstance() {
 		return new Title();
@@ -40,6 +45,9 @@ public class Title extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
+		if (!Utils.isCBXXXorLater("1.12") && !Utils.isCraftBukkit()) {
+			throw new UnsupportedOperationException();
+		}
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String title = StringUtils.replaceColorCode(array[0], true);
 		String subtitle = StringUtils.replaceColorCode(array[1], true);
@@ -48,7 +56,7 @@ public class Title extends BaseOption {
 		int fadeOut = 10;
 		if (array.length == 3) {
 			String[] times = StringUtils.split(array[2], "-");
-			if (times != null && times.length == 3) {
+			if (times.length == 3) {
 				fadeIn = Integer.parseInt(times[0]);
 				stay = Integer.parseInt(times[1]);
 				fadeOut = Integer.parseInt(times[2]);
@@ -58,7 +66,7 @@ public class Title extends BaseOption {
 		return true;
 	}
 
-	private void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
+	private void sendTitle(@NotNull Player player, @Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
 		if (Utils.isCBXXXorLater("1.12")) {
 			player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		} else {
@@ -87,7 +95,7 @@ public class Title extends BaseOption {
 		}
 	}
 
-	private void setTime(Class<?> titleActionClass, Player player, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
+	private void setTime(@NotNull Class<?> titleActionClass, @NotNull Player player, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
 		Constructor<?> packetConstructor = PackageType.NMS.getConstructor("PacketPlayOutTitle", TIMES_PARAMS);
 		Object enumTIMES = NMSHelper.getEnumField(titleActionClass, "TIMES");
 		Object packetPlayOutTimes = packetConstructor.newInstance(enumTIMES, null, fadeIn, stay, fadeOut);
