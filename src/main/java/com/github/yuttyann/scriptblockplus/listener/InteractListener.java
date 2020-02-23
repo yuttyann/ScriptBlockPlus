@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.listener;
 
 import java.util.function.Consumer;
 
+import com.github.yuttyann.scriptblockplus.listener.nms.SBVector;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -25,7 +26,6 @@ import com.github.yuttyann.scriptblockplus.event.ScriptBlockEditEvent;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.nms.MovingPosition;
 import com.github.yuttyann.scriptblockplus.listener.nms.NMSWorld;
-import com.github.yuttyann.scriptblockplus.listener.nms.Vec3D;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -38,21 +38,13 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class InteractListener implements Listener {
 
+	private static final double R = 0.017453292D;
 	private static final String KEY_FLAG = PlayerData.createRandomId("InteractFlag");
-
-	private static final float I = 0.017453292F;
-	private static final float[] B = new float[65536];
-
-	static {
-		for (int i = 0; i < 65536; ++i) {
-			B[i] = (float) Math.sin((double) i * 3.141592653589793D * 2D / 65536D);
-		}
-	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerAnimationEvent(PlayerAnimationEvent event) {
 		Player player = event.getPlayer();
-		if (event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
+		if (!Utils.isCraftBukkit() || event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
 			return;
 		}
 		ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
@@ -66,16 +58,16 @@ public class InteractListener implements Listener {
 		double z = location.getZ();
 		float pitch = location.getPitch();
 		float yaw = location.getYaw();
-		float f1 = cos(-yaw * I - (float) Math.PI);
-		float f2 = sin(-yaw * I - (float) Math.PI);
-		float f3 = -cos(-pitch * I);
-		float f4 = sin(-pitch * I);
+		float f1 = (float) Math.cos((-yaw * R) - Math.PI);
+		float f2 = (float) Math.sin((-yaw * R) - Math.PI);
+		float f3 = (float) -Math.cos(-pitch * R);
+		float f4 = (float) Math.sin(-pitch * R);
 		float f5 = f2 * f3;
 		float f6 = f1 * f3;
 		double r = 4.5D;
-		Vec3D vec3d1 = new Vec3D(x, y, z);
-		Vec3D vec3d2 = vec3d1.add(f5 * r, f4 * r, f6 * r);
-		MovingPosition movingPosition = new NMSWorld(location.getWorld()).rayTrace(vec3d1, vec3d2);
+		SBVector vector1 = new SBVector(x, y, z);
+		SBVector vector2 = vector1.add(f5 * r, f4 * r, f6 * r);
+		MovingPosition movingPosition = new NMSWorld(location.getWorld()).rayTrace(vector1, vector2);
 		ItemStack item = ItemUtils.getItemInMainHand(player);
 		if (movingPosition == null) {
 			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR, item, null, null);
@@ -95,15 +87,13 @@ public class InteractListener implements Listener {
 			return;
 		}
 		Player player = event.getPlayer();
-		if (player.getGameMode() == GameMode.ADVENTURE) {
+		if (Utils.isCraftBukkit() && player.getGameMode() == GameMode.ADVENTURE) {
 			if (action.name().startsWith("LEFT_CLICK_")) {
 				return;
 			}
-			if (action == Action.RIGHT_CLICK_BLOCK) {
-				ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
-				if (!objectMap.has(KEY_FLAG) || !objectMap.getBoolean(KEY_FLAG)) {
-					objectMap.put(KEY_FLAG, true);
-				}
+			ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
+			if (action == Action.RIGHT_CLICK_BLOCK && (!objectMap.has(KEY_FLAG) || !objectMap.getBoolean(KEY_FLAG))) {
+				objectMap.put(KEY_FLAG, true);
 			}
 		}
 		callEvent(event, new BlockInteractEvent(event, null, false));
@@ -231,13 +221,5 @@ public class InteractListener implements Listener {
 		} catch (Exception e) {
 			return ScriptType.INTERACT;
 		}
-	}
-
-	private float sin(float a) {
-		return B[(int) (a * 10430.378F) & '\uffff'];
-	}
-
-	private float cos(float a) {
-		return B[(int) (a * 10430.378F + 16384.0F) & '\uffff'];
 	}
 }
