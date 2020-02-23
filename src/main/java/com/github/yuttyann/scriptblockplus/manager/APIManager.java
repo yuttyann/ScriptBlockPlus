@@ -6,6 +6,8 @@ import java.util.Objects;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
@@ -23,32 +25,32 @@ public final class APIManager implements ScriptBlockAPI {
 
 	private ScriptBlock plugin;
 
-	public APIManager(ScriptBlock plugin) {
+	public APIManager(@NotNull ScriptBlock plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean scriptRead(Player player, Location location, ScriptType scriptType, int index) {
+	public boolean scriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index) {
 		return new ScriptRead(player, location, new ScriptListener(plugin, scriptType)).read(index);
 	}
 
 	@Override
-	public int indexOfOption(Class<? extends BaseOption> option) {
+	public int indexOfOption(@NotNull Class<? extends BaseOption> option) {
 		return OptionList.getManager().indexOf(option);
 	}
 
 	@Override
-	public void addOption(Class<? extends BaseOption> option) {
+	public void addOption(@NotNull Class<? extends BaseOption> option) {
 		OptionList.getManager().add(option);
 	}
 
 	@Override
-	public void addOption(int index, Class<? extends BaseOption> option) {
+	public void addOption(int index, @NotNull Class<? extends BaseOption> option) {
 		OptionList.getManager().add(index, option);
 	}
 
 	@Override
-	public void removeOption(Class<? extends BaseOption> option) {
+	public void removeOption(@NotNull Class<? extends BaseOption> option) {
 		OptionList.getManager().remove(option);
 	}
 
@@ -58,22 +60,22 @@ public final class APIManager implements ScriptBlockAPI {
 	}
 
 	@Override
-	public int indexOfEndProcess(Class<? extends EndProcess> endProcess) {
+	public int indexOfEndProcess(@NotNull Class<? extends EndProcess> endProcess) {
 		return EndProcessManager.getInstance().indexOf(endProcess);
 	}
 
 	@Override
-	public void addEndProcess(Class<? extends EndProcess> endProcess) {
+	public void addEndProcess(@NotNull Class<? extends EndProcess> endProcess) {
 		EndProcessManager.getInstance().add(endProcess);
 	}
 
 	@Override
-	public void addEndProcess(int index, Class<? extends EndProcess> endProcess) {
+	public void addEndProcess(int index, @NotNull Class<? extends EndProcess> endProcess) {
 		EndProcessManager.getInstance().add(index, endProcess);
 	}
 
 	@Override
-	public void removeEndProcess(Class<? extends EndProcess> endProcess) {
+	public void removeEndProcess(@NotNull Class<? extends EndProcess> endProcess) {
 		EndProcessManager.getInstance().remove(endProcess);
 	}
 
@@ -82,22 +84,23 @@ public final class APIManager implements ScriptBlockAPI {
 		EndProcessManager.getInstance().remove(index);
 	}
 
+	@NotNull
 	@Override
-	public SBEdit getSBEdit(Location location, ScriptType scriptType) {
-		return new ScEdit(location, scriptType);
+	public SBEdit getSBEdit(@NotNull Location location, @NotNull ScriptType scriptType) {
+		return new SEdit(location, scriptType);
 	}
 
-	private class ScEdit implements SBEdit {
+	private class SEdit implements SBEdit {
 
 		private final ScriptEdit scriptEdit;
 
-		public ScEdit(Location location, ScriptType scriptType) {
+		public SEdit(@NotNull Location location, @NotNull ScriptType scriptType) {
 			this.scriptEdit = new ScriptEdit(scriptType);
 			setLocation(location);
 		}
 
 		@Override
-		public void setLocation(Location location) {
+		public void setLocation(@NotNull Location location) {
 			scriptEdit.setLocation(location);
 		}
 
@@ -111,47 +114,49 @@ public final class APIManager implements ScriptBlockAPI {
 			return scriptEdit.checkPath();
 		}
 
+		@NotNull
 		@Override
 		public ScriptType getScriptType() {
 			return scriptEdit.getScriptType();
 		}
 
 		@Override
-		public void create(Player player, String script) {
+		public void create(@NotNull Player player, @NotNull String script) {
 			scriptEdit.create(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null, script);
 		}
 
 		@Override
-		public void add(Player player, String script) {
+		public void add(@NotNull Player player, @NotNull String script) {
 			scriptEdit.add(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null, script);
 		}
 
 		@Override
-		public void remove(Player player) {
+		public void remove(@NotNull Player player) {
 			scriptEdit.remove(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null);
 		}
 
 		@Override
-		public void view(Player player) {
+		public void view(@NotNull Player player) {
 			scriptEdit.view(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null);
 		}
 	}
 
+	@NotNull
 	@Override
-	public SBFile getSBFile(Location location, ScriptType scriptType) {
-		return new ScFile(location, scriptType);
+	public SBFile getSBFile(@Nullable Location location, @NotNull ScriptType scriptType) {
+		return new SFile(location, scriptType);
 	}
 
-	private class ScFile implements SBFile {
+	private class SFile implements SBFile {
 
 		private final ScriptData scriptData;
 
-		public ScFile(Location location, ScriptType scriptType) {
+		public SFile(@Nullable Location location, @NotNull ScriptType scriptType) {
 			this.scriptData = new ScriptData(location, scriptType);
 		}
 
 		@Override
-		public void setLocation(Location location) {
+		public void setLocation(@Nullable Location location) {
 			scriptData.setLocation(location);
 		}
 
@@ -165,26 +170,37 @@ public final class APIManager implements ScriptBlockAPI {
 			return scriptData.checkPath();
 		}
 
+		@NotNull
+		@Override
+		public String getScriptPath() {
+			return scriptData.getScriptPath();
+		}
+
+		@NotNull
 		@Override
 		public ScriptType getScriptType() {
 			return scriptData.getScriptType();
 		}
 
+		@Nullable
 		@Override
 		public Location getLocation() {
 			return scriptData.getLocation();
 		}
 
+		@Nullable
 		@Override
 		public String getAuthor() {
 			return scriptData.getAuthor();
 		}
 
+		@NotNull
 		@Override
-		public List<String> getAuthors(boolean isName) {
-			return scriptData.getAuthors(isName);
+		public List<String> getAuthors(boolean isMinecraftID) {
+			return scriptData.getAuthors(isMinecraftID);
 		}
 
+		@Nullable
 		@Override
 		public String getLastEdit() {
 			return scriptData.getLastEdit();
@@ -195,28 +211,29 @@ public final class APIManager implements ScriptBlockAPI {
 			return scriptData.getAmount();
 		}
 
+		@NotNull
 		@Override
 		public List<String> getScripts() {
 			return scriptData.getScripts();
 		}
 
 		@Override
-		public boolean copyScripts(Location target, boolean overwrite) {
+		public boolean copyScripts(@NotNull Location target, boolean overwrite) {
 			return scriptData.copyScripts(target, overwrite);
 		}
 
 		@Override
-		public void setAuthor(OfflinePlayer player) {
+		public void setAuthor(@NotNull OfflinePlayer player) {
 			scriptData.setAuthor(player);
 		}
 
 		@Override
-		public void addAuthor(OfflinePlayer player) {
+		public void addAuthor(@NotNull OfflinePlayer player) {
 			scriptData.addAuthor(player);
 		}
 
 		@Override
-		public void removeAuthor(OfflinePlayer player) {
+		public void removeAuthor(@NotNull OfflinePlayer player) {
 			scriptData.removeAuthor(player);
 		}
 
@@ -226,7 +243,7 @@ public final class APIManager implements ScriptBlockAPI {
 		}
 
 		@Override
-		public void setLastEdit(String time) {
+		public void setLastEdit(@NotNull String time) {
 			scriptData.setLastEdit(time);
 		}
 
@@ -246,27 +263,27 @@ public final class APIManager implements ScriptBlockAPI {
 		}
 
 		@Override
-		public void setScripts(List<String> scripts) {
+		public void setScripts(@NotNull List<String> scripts) {
 			scriptData.setScripts(scripts);
 		}
 
 		@Override
-		public void setScript(int index, String script) {
+		public void setScript(int index, @NotNull String script) {
 			scriptData.setScript(index, script);
 		}
 
 		@Override
-		public void addScript(String script) {
+		public void addScript(@NotNull String script) {
 			scriptData.addScript(script);
 		}
 
 		@Override
-		public void addScript(int index, String script) {
+		public void addScript(int index, @NotNull String script) {
 			scriptData.addScript(index, script);
 		}
 
 		@Override
-		public void removeScript(String script) {
+		public void removeScript(@NotNull String script) {
 			scriptData.removeScript(script);
 		}
 
