@@ -53,7 +53,7 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 	private EquipSlot fromEquipmentSlot(@NotNull PlayerInteractEvent event) {
 		if (Utils.isCBXXXorLater("1.9")) {
 			try {
-				return EquipSlot.fromEquipmentSlot(event.getHand());
+				return EquipSlot.getHand(event);
 			} catch (Exception e) { }
 		}
 		return EquipSlot.HAND;

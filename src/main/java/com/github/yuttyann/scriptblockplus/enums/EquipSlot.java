@@ -15,11 +15,11 @@ public enum EquipSlot {
 	public static final Class<?> BUKKIT_ES_CLASS;
 
 	static {
-		if (Utils.isCBXXXorLater("1.9")) {
-			BUKKIT_ES_CLASS = org.bukkit.inventory.EquipmentSlot.class;
-		} else {
-			BUKKIT_ES_CLASS = null;
-		}
+		Class<?> clazz = null;
+		try {
+			clazz = Class.forName("org.bukkit.inventory.EquipmentSlot");
+		} catch (ClassNotFoundException e) { }
+		BUKKIT_ES_CLASS = clazz;
 	}
 
 	@NotNull
