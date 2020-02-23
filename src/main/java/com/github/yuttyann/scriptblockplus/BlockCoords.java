@@ -13,6 +13,10 @@ import org.jetbrains.annotations.Nullable;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
+/**
+ * ScriptBlockPlus 座標管理クラス
+ * @author yuttyann44581
+ */
 public class BlockCoords extends Location {
 
 	private String coords, fullCoords;
@@ -23,36 +27,6 @@ public class BlockCoords extends Location {
 
 	public BlockCoords(@Nullable final World world, final double x, final double y, final double z) {
 		super(world, x, y, z);
-	}
-
-	@Override
-	public void setWorld(@Nullable World world) {
-		super.setWorld(world);
-	}
-
-	@Override
-	public void setX(double x) {
-		super.setX(x);
-	}
-
-	@Override
-	public void setY(double y) {
-		super.setY(y);
-	}
-
-	@Override
-	public void setZ(double z) {
-		super.setZ(z);
-	}
-
-	@Override
-	public void setYaw(float yaw) {
-		super.setYaw(yaw);
-	}
-
-	@Override
-	public void setPitch(float pitch) {
-		super.setPitch(pitch);
 	}
 
 	@Override
@@ -109,26 +83,50 @@ public class BlockCoords extends Location {
 		return (BlockCoords) super.zero();
 	}
 
+	/**
+	 * 座標を文字列として取得する
+	 * @return ワールド名を除いた文字列(x, y, z)
+	 */
 	@NotNull
 	public String getCoords() {
 		return getCoords(this);
 	}
 
+	/**
+	 * 座標を文字列として取得する
+	 * @return ワールド名を含めた文字列(world, x, y, z)
+	 */
 	@NotNull
 	public String getFullCoords() {
 		return getFullCoords(this);
 	}
 
+	/**
+	 * 座標を文字列として取得する
+	 * @param location
+	 * @return ワールド名を除いた文字列(x, y, z)
+	 */
 	@NotNull
 	public static String getCoords(@NotNull Location location) {
 		return location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ();
 	}
 
+	/**
+	 * 座標を文字列として取得する
+	 * @param location
+	 * @return ワールド名を含めた文字列(world, x, y, z)
+	 */
 	@NotNull
 	public static String getFullCoords(@NotNull Location location) {
 		return location.getWorld().getName() + ", " + getCoords(location);
 	}
 
+	/**
+	 * 座標の文字列からインスタンスを生成する
+	 * @param world
+	 * @param coords
+	 * @return blockcoords
+	 */
 	@NotNull
 	public static BlockCoords fromString(@NotNull World world, @NotNull String coords) {
 		String[] array = StringUtils.split(coords, ",");
@@ -141,6 +139,11 @@ public class BlockCoords extends Location {
 		return new BlockCoords(world, x, y, z);
 	}
 
+	/**
+	 * 座標の文字列からインスタンスを生成する
+	 * @param coords
+	 * @return blockcoords
+	 */
 	@NotNull
 	public static BlockCoords fromString(@NotNull String fullCoords) {
 		String[] array = StringUtils.split(fullCoords, ",");
@@ -154,8 +157,8 @@ public class BlockCoords extends Location {
 		return new BlockCoords(world, x, y, z);
 	}
 
-	@Override
 	@NotNull
+	@Override
 	public BlockCoords clone() {
 		BlockCoords blockCoords = new BlockCoords(this);
 		blockCoords.coords = this.coords;
@@ -163,6 +166,10 @@ public class BlockCoords extends Location {
 		return blockCoords;
 	}
 
+	/**
+	 * 編集不可の座標クラスを取得する
+	 * @return blockcoords(編集不可)
+	 */
 	@NotNull
 	public BlockCoords unmodifiable() {
 		BlockCoords blockCoords = new UnmodifiableBlockCoords(this);
@@ -171,6 +178,10 @@ public class BlockCoords extends Location {
 		return blockCoords;
 	}
 
+	/**
+	 * 編集不可の座標クラスを取得する
+	 * @return location(編集不可)
+	 */
 	@NotNull
 	public static Location unmodifiableLocation(@NotNull Location location) {
 		return new UnmodifiableBlockCoords(location);
@@ -263,9 +274,9 @@ public class BlockCoords extends Location {
 		}
 	}
 
-	@Override
-	@Utility
 	@NotNull
+	@Utility
+	@Override
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("world", getWorld().getName());
