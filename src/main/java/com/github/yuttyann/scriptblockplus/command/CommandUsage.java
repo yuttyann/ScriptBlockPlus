@@ -5,28 +5,34 @@ import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class CommandUsage {
 
-	private List<CommandData> usages;
+	private final List<CommandData> usages = new ArrayList<CommandData>();
 
-	public final void setUsage(CommandData... args) {
-		usages = new ArrayList<CommandData>(args.length);
+	public final void setUsage(@Nullable CommandData... args) {
+		if (args == null) {
+			return;
+		}
+		usages.clear();
 		StreamUtils.forEach(args, usages::add);
 	}
 
-	public final void addUsage(CommandData... args) {
-		if (usages != null) {
-			StreamUtils.forEach(args, usages::add);
+	public final void addUsage(@Nullable CommandData... args) {
+		if (args == null) {
+			return;
 		}
+		StreamUtils.forEach(args, usages::add);
 	}
 
-	protected final void sendUsage(BaseCommand baseCommand, CommandSender sender, Command command) {
-		if (usages == null || usages.isEmpty()) {
+	protected final void sendUsage(@NotNull BaseCommand baseCommand, @NotNull CommandSender sender, @NotNull Command command) {
+		if (usages.isEmpty()) {
 			return;
 		}
 		List<CommandData> list = new ArrayList<>(usages.size());
@@ -39,12 +45,12 @@ public abstract class CommandUsage {
 		if (baseCommand.isAliases() && command.getAliases().size() > 0) {
 			commandName = command.getAliases().get(0).toLowerCase();
 		}
-		sender.sendMessage("§d========== " + baseCommand.getName() + " Commands ==========");
+		sender.sendMessage("§d========== " + baseCommand.getCommandName() + " Commands ==========");
 		String prefix = "§b/" + commandName + " ";
 		StreamUtils.fForEach(list, c -> c.hasMessage(), c -> sender.sendMessage(text(c, prefix)));
 	}
 
-	private String text(CommandData commandData, String prefix) {
+	private String text(@NotNull CommandData commandData, @NotNull String prefix) {
 		return commandData.isPrefix() ? prefix + commandData.getMessage() : commandData.getMessage();
 	}
 }

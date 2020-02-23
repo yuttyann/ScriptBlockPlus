@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -16,54 +18,59 @@ public class CommandData {
 
 	private List<String> permissions = new ArrayList<>();
 
-	public CommandData(String message, boolean isPrefix) {
+	public CommandData(@Nullable String message, boolean isPrefix) {
 		this(message, isPrefix, (String) null);
 	}
 
-	public CommandData(String message, String... permission) {
+	public CommandData(@Nullable String message, @Nullable String... permission) {
 		this(message, true, permission);
 	}
 
-	public CommandData(String message, boolean isPrefix, String... permission) {
+	public CommandData(@Nullable String message, boolean isPrefix, @Nullable String... permission) {
 		setMessage(message);
 		setPrefix(isPrefix);
 		addPermission(permission);
 	}
 
-	public CommandData setMessage(String message) {
+	@NotNull
+	public CommandData setMessage(@Nullable String message) {
 		this.message = message;
 		return this;
 	}
 
+	@NotNull
 	public CommandData setPrefix(boolean isPrefix) {
 		this.isPrefix = isPrefix;
 		return this;
 	}
 
-	public CommandData addPermission(String... permission) {
+	@NotNull
+	public CommandData addPermission(@Nullable String... permission) {
 		if (permission != null && permission.length > 0) {
 			StreamUtils.forEach(permission, permissions::add);
 		}
 		return this;
 	}
 
+	@NotNull
 	public String getMessage() {
 		return message;
+	}
+
+	@NotNull
+	public List<String> getPermissions() {
+		return permissions;
 	}
 
 	public boolean isPrefix() {
 		return isPrefix;
 	}
 
-	public List<String> getPermissions() {
-		return permissions;
-	}
-
 	public final boolean hasMessage() {
 		return StringUtils.isNotEmpty(message);
 	}
 
-	public boolean hasPermission(CommandSender sender) {
+	public boolean hasPermission(@NotNull CommandSender sender) {
 		if (permissions == null || permissions.size() == 0) {
 			return true;
 		}
