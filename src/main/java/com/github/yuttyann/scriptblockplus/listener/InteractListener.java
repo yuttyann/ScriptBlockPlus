@@ -70,7 +70,7 @@ public class InteractListener implements Listener {
 		MovingPosition movingPosition = new NMSWorld(location.getWorld()).rayTrace(vector1, vector2);
 		ItemStack item = ItemUtils.getItemInMainHand(player);
 		if (movingPosition == null) {
-			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR, item, null, null);
+			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR, item, null, BlockFace.SOUTH);
 			callEvent(interactEvent, new BlockInteractEvent(interactEvent, EquipSlot.HAND, true));
 		} else {
 			Block block = movingPosition.getHitBlock();
