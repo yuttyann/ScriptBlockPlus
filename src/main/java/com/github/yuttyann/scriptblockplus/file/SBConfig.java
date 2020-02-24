@@ -32,9 +32,6 @@ public final class SBConfig {
 
 	public static void reloadConfig() {
 		YamlConfig yaml = Files.getConfig();
-		if (yaml == null) {
-			throw new NullPointerException();
-		}
 		put(yaml, "UpdateChecker", true);
 		put(yaml, "AutoDownload", true);
 		put(yaml, "OpenChangeLog", true);
@@ -49,9 +46,6 @@ public final class SBConfig {
 
 	public static void reloadLang() {
 		YamlConfig yaml = Files.getLang();
-		if (yaml == null) {
-			throw new NullPointerException();
-		}
 		put(yaml, "BlockSelector");
 		put(yaml, "ScriptEditor");
 		put(yaml, "ToolCommandMessage");
