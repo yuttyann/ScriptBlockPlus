@@ -68,12 +68,12 @@ public final class OptionManager extends AbstractConstructor<Option> {
 
 		@NotNull
 		public static String[] getNames() {
-			return StreamUtils.toArray(OPTIONS, o -> o.getName(), new String[OPTIONS.size()]);
+			return StreamUtils.toArray(OPTIONS, Option::getName, new String[OPTIONS.size()]);
 		}
 
 		@NotNull
 		public static String[] getSyntaxs() {
-			return StreamUtils.toArray(OPTIONS, o -> o.getSyntax(), new String[OPTIONS.size()]);
+			return StreamUtils.toArray(OPTIONS, Option::getSyntax, new String[OPTIONS.size()]);
 		}
 
 		@NotNull

@@ -17,14 +17,14 @@ import org.jetbrains.annotations.Nullable;
 
 public interface SBPlayer extends CommandSender {
 
-	@Nullable
+	@NotNull
 	public static SBPlayer fromPlayer(@NotNull OfflinePlayer player) {
-		return player == null ? null : fromUUID(player.getUniqueId());
+		return fromUUID(player.getUniqueId());
 	}
 
-	@Nullable
+	@NotNull
 	public static SBPlayer fromUUID(@NotNull UUID uuid) {
-		return uuid == null ? null : BaseSBPlayer.getSBPlayer(uuid);
+		return BaseSBPlayer.getSBPlayer(uuid);
 	}
 
 	@Nullable
@@ -53,7 +53,7 @@ public interface SBPlayer extends CommandSender {
 
 	public boolean isOnline();
 
-	@Nullable
+	@NotNull
 	public Region getRegion();
 
 	@NotNull

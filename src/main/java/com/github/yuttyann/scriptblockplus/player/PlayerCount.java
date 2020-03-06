@@ -56,7 +56,7 @@ public class PlayerCount {
 		return gson.fromJson(json, PlayerCount.class);
 	}
 
-	public void set(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType, int amount) {
+	public void set(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType, final int amount) {
 		action(blockCoords, scriptType, p -> p.setAmount(amount));
 	}
 

@@ -42,7 +42,7 @@ public class PlayerCountInfo {
 		}
 	}
 
-	public int getAmount() {
+	public synchronized int getAmount() {
 		return amount;
 	}
 

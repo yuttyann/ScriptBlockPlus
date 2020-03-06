@@ -58,11 +58,11 @@ public class ScriptInteractListener extends ScriptListener {
 
 	private boolean isPowered(Block block) {
 		Object data = block.getState().getData();
-		return data instanceof Redstone ? ((Redstone) data).isPowered() : false;
+		return data instanceof Redstone && ((Redstone) data).isPowered();
 	}
 
 	private boolean isOpen(Block block) {
 		Object data = block.getState().getData();
-		return data instanceof Openable ? ((Openable) data).isOpen() : false;
+		return data instanceof Openable && ((Openable) data).isOpen();
 	}
 }
