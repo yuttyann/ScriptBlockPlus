@@ -1,4 +1,4 @@
-# ScriptBlockPlus Java8【MC 1.15対応】Readme
+# ScriptBlockPlus Java8【MC 1.15.2対応】Readme
 [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 <br>
 このプラグインは yuttyann44581 によって作成されています。
@@ -11,7 +11,9 @@
 <br>
 配布サイト: http://file.yuttyann44581.net/
 <br>
-紹介ページ(更新停止): https://bit.ly/2CP8Bzs
+【新】紹介ページ(著者 ポテト氏): https://mcpoteton.com/mcplugin-scriptblockplus
+<br>
+[旧]紹介ページ(更新停止): https://bit.ly/2CP8Bzs
 <br>
 オプションの記述方法と詳細: https://github.com/yuttyann/ScriptBlockPlus/wiki/オプションの記述方法と詳細
 <br>
