@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
+import com.github.yuttyann.scriptblockplus.player.PlayerCount;
+import com.github.yuttyann.scriptblockplus.player.PlayerCountInfo;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Location;
 
@@ -105,8 +109,10 @@ public final class ScriptEdit {
 			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
 			return;
 		}
+		PlayerCountInfo info = sbPlayer.getPlayerCount().getInfo(new BlockCoords(location), getScriptType());
 		Utils.sendMessage(sbPlayer, "Author: " + getAuthors());
 		Utils.sendMessage(sbPlayer, "LastEdit: " + scriptData.getLastEdit());
+		Utils.sendMessage(sbPlayer, "Execute: " + info.getAmount());
 		for (String script : scripts) {
 			Utils.sendMessage(sbPlayer, "- " + script);
 		}
