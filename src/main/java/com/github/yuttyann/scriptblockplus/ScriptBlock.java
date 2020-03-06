@@ -100,7 +100,7 @@ public class ScriptBlock extends JavaPlugin {
 
 	/**
 	 * 最新のバージョンが存在するか確認する
-	 * @param CommandSender 送信先
+	 * @param sender 送信先
 	 * @param latestMessage 更新メッセージを表示するかどうか
 	 */
 	public void checkUpdate(@Nullable CommandSender sender, boolean latestMessage) {
