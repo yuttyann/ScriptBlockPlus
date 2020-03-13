@@ -155,14 +155,14 @@ public final class Utils {
 	@Nullable
 	public static OfflinePlayer getOfflinePlayer(@NotNull UUID uuid) {
 		OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-		return player == null || !player.hasPlayedBefore() ? null : player;
+		return !player.hasPlayedBefore() ? null : player;
 	}
 
 	@Nullable
 	public static String getName(@NotNull UUID uuid) {
 		try {
 			OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-			return player == null || !player.hasPlayedBefore() ? NameFetcher.getName(uuid) : player.getName();
+			return !player.hasPlayedBefore() ? NameFetcher.getName(uuid) : player.getName();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -181,22 +181,22 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public boolean hasPermission(@NotNull String permission) {
-		return isOnline() ? player.hasPermission(permission) : false;
+		return isOnline() && player.hasPermission(permission);
 	}
 
 	@Override
 	public boolean hasPermission(@NotNull Permission permission) {
-		return isOnline() ? player.hasPermission(permission) : false;
+		return isOnline() && player.hasPermission(permission);
 	}
 
 	@Override
 	public boolean isPermissionSet(@NotNull String permission) {
-		return isOnline() ? player.isPermissionSet(permission) : false;
+		return isOnline() && player.isPermissionSet(permission);
 	}
 
 	@Override
 	public boolean isPermissionSet(@NotNull Permission permission) {
-		return isOnline() ? player.isPermissionSet(permission) : false;
+		return isOnline() && player.isPermissionSet(permission);
 	}
 
 	@Override

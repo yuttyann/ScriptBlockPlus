@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,9 +28,8 @@ import org.jetbrains.annotations.Nullable;
 
 public final class FileUtils {
 
-	@Nullable
 	public static InputStream getResource(@NotNull Plugin plugin, @NotNull String filePath) {
-		if (plugin == null || StringUtils.isEmpty(filePath)) {
+		if (StringUtils.isEmpty(filePath)) {
 			return null;
 		}
 		try {
@@ -48,7 +46,7 @@ public final class FileUtils {
 	}
 
 	public static void copyFileFromPlugin(@NotNull Plugin plugin, @NotNull File targetFile, @NotNull String sourceFilePath) {
-		if (targetFile == null || StringUtils.isEmpty(sourceFilePath)) {
+		if (StringUtils.isEmpty(sourceFilePath)) {
 			return;
 		}
 		File parent = targetFile.getParentFile();
@@ -69,15 +67,13 @@ public final class FileUtils {
 				writer.write(line);
 				writer.newLine();
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public static void copyDirectory(@NotNull File sourceFile, @NotNull File targetFile, @NotNull Predicate<File> filter) {
-		if (targetFile == null || !isExists(sourceFile) || isEmpty(sourceFile)) {
+		if (!isExists(sourceFile) || isEmpty(sourceFile)) {
 			return;
 		}
 		if (!targetFile.exists()) {
@@ -102,8 +98,6 @@ public final class FileUtils {
 					writer.write(line);
 					writer.newLine();
 				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -121,8 +115,6 @@ public final class FileUtils {
 				BufferedWriter writer = new BufferedWriter(osw)
         	) {
 			writer.write(source);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -138,8 +130,6 @@ public final class FileUtils {
 			byte[] data = new byte[(int) file.length()];
 			bis.read(data);
 			return new String(data, charset);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -157,8 +147,6 @@ public final class FileUtils {
 			while ((length = is.read(bytes)) != -1) {
 				fos.write(bytes, 0, length);
 			}
-		} catch (MalformedURLException e) {
-			throw e;
 		} catch (IOException e) {
 			throw e;
 		}
@@ -167,8 +155,6 @@ public final class FileUtils {
 	public static void saveFile(@NotNull File file, @NotNull Object value) throws IOException {
 		try (OutputStream os = new FileOutputStream(file); ObjectOutputStream oos = new ObjectOutputStream(os)) {
 			oos.writeObject(value);
-		} catch (FileNotFoundException e) {
-			throw e;
 		} catch (IOException e) {
 			throw e;
 		}
@@ -178,11 +164,7 @@ public final class FileUtils {
 	public static <T> T loadFile(@NotNull File file) throws IOException, ClassNotFoundException {
 		try (InputStream is = new FileInputStream(file); ObjectInputStream ois = new ObjectInputStream(is))  {
 			return (T) ois.readObject();
-		} catch (FileNotFoundException e) {
-			throw e;
-		} catch (IOException e) {
-			throw e;
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException | IOException e) {
 			throw e;
 		}
 	}
@@ -207,7 +189,7 @@ public final class FileUtils {
 		return array == null || array.length == 0;
 	}
 
-	public static boolean isExists(@NotNull File file) {
+	public static boolean isExists(@Nullable File file) {
 		return file != null && file.exists();
 	}
 
