@@ -40,13 +40,6 @@ public final class Files {
 		loadLang(PATH_LANGS, "lang");
 		SBConfig.reloadLang();
 
-		if (Utils.isCBXXXorLater("1.13")) {
-			try {
-				new APIVersion(ScriptBlock.getInstance()).update();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
 		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
 
 		searchKeys();

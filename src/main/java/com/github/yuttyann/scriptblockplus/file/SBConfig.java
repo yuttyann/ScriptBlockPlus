@@ -32,7 +32,7 @@ public final class SBConfig {
 
 	public static void reloadConfig() {
 		YamlConfig yaml = Files.getConfig();
-		put(yaml, "API-Version", "auto");
+		put(yaml, "SBP-API-Version", true);
 		put(yaml, "UpdateChecker", true);
 		put(yaml, "AutoDownload", true);
 		put(yaml, "OpenChangeLog", true);
@@ -117,9 +117,8 @@ public final class SBConfig {
 		return Collections.unmodifiableMap(DATAS);
 	}
 
-	@NotNull
-	public static String getAPIVersion() {
-		return get("API-Version");
+	public static boolean isSBPAPIVersion() {
+		return get("SBP-API-Version");
 	}
 
 	public static boolean isUpdateChecker() {
