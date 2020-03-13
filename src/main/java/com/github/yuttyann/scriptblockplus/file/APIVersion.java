@@ -40,12 +40,14 @@ public final class APIVersion {
     private static final String[] FIELD_NAMES = { "apiVersion" };
 
     private Plugin plugin;
-    private String apiVersion;
+    private String apiVersion = null;
 
     public APIVersion(@NotNull Plugin plugin) {
         this.plugin = plugin;
-        String[] version = StringUtils.split(Utils.getServerVersion(), ".");
-        this.apiVersion = version.length > 2 ? version[0] + "." + version[1] : Utils.getServerVersion();
+        if (SBConfig.isSBPAPIVersion()) {
+            String[] version = StringUtils.split(Utils.getServerVersion(), ".");
+            this.apiVersion = version.length > 2 ? version[0] + "." + version[1] : Utils.getServerVersion();
+        }
     }
 
     @NotNull
@@ -65,5 +67,6 @@ public final class APIVersion {
                 }
             }
         }
+        Utils.sendMessage("[ScriptBlockPlus] API version " + plugin.getDescription().getAPIVersion());
     }
 }

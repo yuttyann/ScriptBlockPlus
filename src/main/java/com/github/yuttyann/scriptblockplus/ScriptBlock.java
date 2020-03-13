@@ -47,13 +47,6 @@ public class ScriptBlock extends JavaPlugin {
 		}
 
 		Files.reload();
-		if (Utils.isCBXXXorLater("1.13") && SBConfig.isSBPAPIVersion()) {
-			APIVersion apiVersion = new APIVersion(ScriptBlock.getInstance());
-			apiVersion.update();
-			if (StringUtils.isNotEmpty(apiVersion.getAPIVersion())) {
-				Utils.sendMessage("[ScriptBlockPlus] API version " + apiVersion.getAPIVersion());
-			}
-		}
 		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setPlayer(p).setOnline(true));
 
 		if (!HookPlugins.hasVault()) {

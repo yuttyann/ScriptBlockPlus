@@ -40,8 +40,8 @@ public final class Files {
 		loadLang(PATH_LANGS, "lang");
 		SBConfig.reloadLang();
 
+		new APIVersion(ScriptBlock.getInstance()).update();
 		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
-
 		searchKeys();
 	}
 
