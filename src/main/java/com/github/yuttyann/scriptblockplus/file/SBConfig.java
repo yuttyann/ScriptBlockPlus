@@ -32,6 +32,7 @@ public final class SBConfig {
 
 	public static void reloadConfig() {
 		YamlConfig yaml = Files.getConfig();
+		put(yaml, "API-Version", "auto");
 		put(yaml, "UpdateChecker", true);
 		put(yaml, "AutoDownload", true);
 		put(yaml, "OpenChangeLog", true);
@@ -116,6 +117,11 @@ public final class SBConfig {
 		return Collections.unmodifiableMap(DATAS);
 	}
 
+	@NotNull
+	public static String getAPIVersion() {
+		return get("API-Version");
+	}
+
 	public static boolean isUpdateChecker() {
 		return get("UpdateChecker");
 	}
@@ -128,6 +134,7 @@ public final class SBConfig {
 		return get("OpenChangeLog");
 	}
 
+	@NotNull
 	public static String getLanguage() {
 		return get("Language");
 	}
