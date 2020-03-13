@@ -2,6 +2,8 @@ package com.github.yuttyann.scriptblockplus;
 
 import java.util.List;
 
+import com.github.yuttyann.scriptblockplus.file.APIVersion;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -45,6 +47,13 @@ public class ScriptBlock extends JavaPlugin {
 		}
 
 		Files.reload();
+		if (Utils.isCBXXXorLater("1.13") && SBConfig.isSBPAPIVersion()) {
+			APIVersion apiVersion = new APIVersion(ScriptBlock.getInstance());
+			apiVersion.update();
+			if (StringUtils.isNotEmpty(apiVersion.getAPIVersion())) {
+				Utils.sendMessage("[ScriptBlockPlus] API version " + apiVersion.getAPIVersion());
+			}
+		}
 		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setPlayer(p).setOnline(true));
 
 		if (!HookPlugins.hasVault()) {
@@ -64,7 +73,6 @@ public class ScriptBlock extends JavaPlugin {
 		mapManager = new MapManager(this);
 		mapManager.loadAllScripts();
 		mapManager.loadCooldown();
-
 		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 
 		getServer().getPluginManager().registerEvents(new InteractListener(), this);
