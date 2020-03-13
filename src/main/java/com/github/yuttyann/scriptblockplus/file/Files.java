@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collections;
@@ -8,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -38,6 +40,13 @@ public final class Files {
 		loadLang(PATH_LANGS, "lang");
 		SBConfig.reloadLang();
 
+		if (Utils.isCBXXXorLater("1.13")) {
+			try {
+				new APIVersion(ScriptBlock.getInstance()).update();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
 		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
 
 		searchKeys();
