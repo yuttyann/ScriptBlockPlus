@@ -1,18 +1,5 @@
 package com.github.yuttyann.scriptblockplus.file;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.jetbrains.annotations.NotNull;
-
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.yaml.UTF8Config;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
@@ -21,6 +8,14 @@ import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.google.common.base.Charsets;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public final class Files {
 
@@ -38,19 +33,26 @@ public final class Files {
 		loadLang(PATH_LANGS, "lang");
 		SBConfig.reloadLang();
 
-		new APIVersion(ScriptBlock.getInstance()).update();
 		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
 		searchKeys();
+
+		/* 今後の対策のための機能、必要になったら実装します。
+		if (SBConfig.isSBPAPIVersion() && Utils.isCBXXXorLater("1.13")) {
+			APIVersion apiVersion = new APIVersion(ScriptBlock.getInstance());
+			apiVersion.update();
+			Utils.sendMessage("[ScriptBlockPlus] API version " + apiVersion.get());
+		}
+		*/
 	}
 
 	public static void searchKeys() {
 		YamlConfig config = getConfig();
 		if (config.getFile().exists()) {
-			sendKeyMessages(config, PATH_CONFIG);
+			sendNotKeyMessages(config, PATH_CONFIG);
 		}
 		YamlConfig lang = getLang();
 		if (lang.getFile().exists()) {
-			sendKeyMessages(lang, "lang/" + lang.getFileName());
+			sendNotKeyMessages(lang, "lang/" + lang.getFileName());
 		}
 	}
 
@@ -104,7 +106,7 @@ public final class Files {
 		return yaml;
 	}
 
-	private static void sendKeyMessages(@NotNull YamlConfig yaml, @NotNull String path) {
+	private static void sendNotKeyMessages(@NotNull YamlConfig yaml, @NotNull String path) {
 		String filePath = StringUtils.replace(yaml.getFolderPath(), "\\", "/");
 		InputStream is = FileUtils.getResource(ScriptBlock.getInstance(), path);
 		YamlConfiguration config = UTF8Config.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8));

@@ -1,11 +1,5 @@
 ﻿# ScriptBlockPlus v${project.version} Config #
 
-## ===== SBP-API-Versionの設定 ===== ##
-# [true -> 有効 | false -> 無効]
-# "plugin.yml"の"api-version"を自動で設定します。
-# 1.13以降のサーバーにて正常な動作を行わせる為の設定です。
-SBP-API-Version: true
-
 ## ===== 自動アップデートの設定 ===== ##
 # [true -> 有効 | false -> 無効]
 # 確認メッセージは"OP"にしか表示されません。

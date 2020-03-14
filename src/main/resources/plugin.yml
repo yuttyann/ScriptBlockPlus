@@ -1,10 +1,10 @@
-# api-version: auto
 name: ${project.name}
 main: com.github.yuttyann.scriptblockplus.ScriptBlock
 version: ${project.version}
 description: ${project.description}
 author: yuttyann44581
 website: ${project.url}
+api-version: 1.13
 softdepend: [ScriptBlock, Vault, PlaceholderAPI]
 
 commands:
