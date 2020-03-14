@@ -21,6 +21,9 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
+/*
+　情報量が多すぎるのと、綺麗には見えないため今後作り直す予定です。
+ */
 public final class SBConfig {
 
 	private static final Map<String, Object> DATAS = new HashMap<>();
