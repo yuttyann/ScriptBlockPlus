@@ -51,7 +51,7 @@ public class RayTrace {
                 Object[] args = { vec3d1, vec3d2, false };
                 if (Utils.isCBXXXorLater("1.13")) {
                     Enum<?> NEVER = PackageType.NMS.getEnumValueOf("FluidCollisionOption", "NEVER");
-                    args = new Object[] {vec3d1, vec3d2, NEVER, false, false};
+                    args = new Object[] { vec3d1, vec3d2, NEVER, false, false };
                 }
                 Object nmsWorld = PackageType.CB.invokeMethod(world, "CraftWorld", "getHandle");
                 Object rayTrace = PackageType.NMS.invokeMethod(nmsWorld, "World", "rayTrace", args);
