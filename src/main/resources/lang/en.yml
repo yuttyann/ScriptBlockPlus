@@ -63,12 +63,12 @@ ExportEndMessage: '&bOutput of BukkitAPI''s Sound is complete.'
 # %filename% : Downloaded file name
 # %filepath% : File save destination
 # %filesize% : File capacity
-UpdateDownloadEndMessage: '&6Download completed!|File name: %filename%|~File size: %filesize%|~File path: %filepath%'
+UpdateDownloadEndMessage: '&6Download completed!|~&6File name: %filename%|~&6File size: %filesize%|~&6File path: %filepath%'
 
 # %pluginname%    : Name of the updated plugin
 # %latestversion% : Latest version
 # %details%       : update information
-UpdateCheckMessage: '&bNew version available!|~v%latestversion% the latest ver.|~Name: %pluginname%|~☆Change log☆|~%details%'
+UpdateCheckMessage: '&bNew version available!|~&bv%latestversion% the latest ver.|~&bName: %pluginname%|~&b☆Change log☆|~&b&b%details%'
 
 # There are no variables
 ErrorUpdateMessage: '&cError occured while checking new version.'
