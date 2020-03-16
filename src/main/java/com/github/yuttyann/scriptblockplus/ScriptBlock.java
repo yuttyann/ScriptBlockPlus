@@ -38,7 +38,7 @@ public class ScriptBlock extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		if (!Utils.isCBXXXorLater("1.8")) {
+		if (!Utils.isCBXXXorLater("1.9")) {
 			Utils.sendMessage("§cUnsupported Version: v" + Utils.getServerVersion());
 			getServer().getPluginManager().disablePlugin(this);
 			return;
