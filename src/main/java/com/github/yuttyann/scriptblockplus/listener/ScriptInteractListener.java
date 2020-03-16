@@ -7,12 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Openable;
 import org.bukkit.material.Redstone;
 import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.EquipSlot;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
@@ -30,7 +30,7 @@ public class ScriptInteractListener extends ScriptListener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockInteractEvent(BlockInteractEvent event) {
-		if (event.isInvalid() || event.getHand() != EquipSlot.HAND) {
+		if (event.isInvalid() || event.getHand() != EquipmentSlot.HAND) {
 			return;
 		}
 		Block block = event.getBlock();

@@ -10,11 +10,11 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.github.yuttyann.scriptblockplus.enums.EquipSlot;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class BlockInteractEvent extends PlayerEvent implements Cancellable {
@@ -25,38 +25,28 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 	private ItemStack item;
 	private Action action;
 	private BlockFace blockFace;
-	private EquipSlot hand;
+	private EquipmentSlot hand;
 	private boolean isAnimation;
 	private boolean isInvalid;
 	private boolean cancelled;
 
-	public BlockInteractEvent(@NotNull final PlayerInteractEvent event, @Nullable final EquipSlot hand, final boolean isAnimation) {
+	public BlockInteractEvent(@NotNull final PlayerInteractEvent event, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
 		this(event, event.getItem(), hand, isAnimation);
 	}
 
-	public BlockInteractEvent(@NotNull final PlayerInteractEvent event, @Nullable final ItemStack item, @Nullable final EquipSlot hand, final boolean isAnimation) {
+	public BlockInteractEvent(@NotNull final PlayerInteractEvent event, @Nullable final ItemStack item, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
 		this(event, event.getPlayer(), event.getClickedBlock(), item, event.getAction(), event.getBlockFace(), hand, isAnimation);
 	}
 
 	public BlockInteractEvent(@NotNull final PlayerInteractEvent event, @NotNull final Player player, @Nullable final Block block,
-			final ItemStack item, @NotNull final Action action, @NotNull final BlockFace blockFace, @Nullable final EquipSlot hand, final boolean isAnimation) {
+							  final ItemStack item, @NotNull final Action action, @NotNull final BlockFace blockFace, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
 		super(player);
 		this.block = block;
 		this.item = item;
 		this.action = action;
 		this.blockFace = blockFace;
-		this.hand = hand == null ? fromEquipmentSlot(event) : hand;
+		this.hand = hand == null ? event.getHand() : hand;
 		this.isAnimation = isAnimation;
-	}
-
-	@NotNull
-	private EquipSlot fromEquipmentSlot(@NotNull PlayerInteractEvent event) {
-		if (Utils.isCBXXXorLater("1.9")) {
-			try {
-				return EquipSlot.getHand(event);
-			} catch (Exception e) { }
-		}
-		return EquipSlot.HAND;
 	}
 
 	@Nullable
@@ -93,7 +83,7 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 	}
 
 	@NotNull
-	public EquipSlot getHand() {
+	public EquipmentSlot getHand() {
 		return hand;
 	}
 
