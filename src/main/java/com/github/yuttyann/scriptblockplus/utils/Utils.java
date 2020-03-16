@@ -14,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.block.CommandBlock;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -41,6 +42,10 @@ public final class Utils {
 
 	public static boolean isCraftBukkit() {
 		return Bukkit.getName().equals("CraftBukkit");
+	}
+
+	public static boolean isPaper() {
+		return Bukkit.getName().equals("Paper");
 	}
 
 	public static boolean isCBXXXorLater(@NotNull String version) {
@@ -82,16 +87,10 @@ public final class Utils {
 		sendMessage(Bukkit.getConsoleSender(), message);
 	}
 
-	public static void sendMessage(@Nullable CommandSender sender, @Nullable String message) {
+	public static void sendMessage(@NotNull CommandSender sender, @Nullable String message) {
 		if (StringUtils.isNotEmpty(message)) {
-			message = StringUtils.replace(message, "\\n", "|~");
-			String color = "";
-			for (String line : StringUtils.split(message, "|~")) {
-				sender.sendMessage(line = (color + line));
-				if (line.indexOf('§') > -1) {
-					color = StringUtils.getColors(line);
-				}
-			}
+			String replace = StringUtils.replace(message, "\\n", "|~");
+			StreamUtils.forEach(StringUtils.split(replace, "|~"), sender::sendMessage);
 		}
 	}
 
@@ -99,7 +98,7 @@ public final class Utils {
 	public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		boolean isCommandSelector = isCraftBukkit() && SBConfig.isCommandSelector();
+		boolean isCommandSelector = (isPaper() || isCraftBukkit()) && SBConfig.isCommandSelector();
 		if (isCommandSelector && (isCBXXXorLater("1.13") || CommandSelector.isCommandPattern(command))) {
 			if (sender instanceof SBPlayer) {
 				sender = ((SBPlayer) sender).getPlayer();
@@ -111,19 +110,13 @@ public final class Utils {
 					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
 				} else if (sender instanceof CommandMinecart) {
 					location = ((CommandMinecart) sender).getLocation().clone();
-				} else {
-					location = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
 				}
 			}
-			try {
+			if (location != null) {
 				return CommandSelector.getListener().executeCommand(sender, location, command);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return Bukkit.dispatchCommand(sender, command.startsWith("/") ? command.substring(1) : command);
 			}
-		} else {
-			return Bukkit.dispatchCommand(sender, command.startsWith("/") ? command.substring(1) : command);
 		}
+		return Bukkit.dispatchCommand(sender, command.startsWith("/") ? command.substring(1) : command);
 	}
 
 	@Nullable
@@ -146,10 +139,7 @@ public final class Utils {
 
 	@Nullable
 	public static Player getPlayer(@NotNull String name) {
-		if (StringUtils.isEmpty(name)) {
-			return null;
-		}
-		return StreamUtils.fOrElse(Bukkit.getOnlinePlayers(), p -> name.equals(p.getName()), null);
+		return StringUtils.isEmpty(name) ? null : StreamUtils.fOrElse(Bukkit.getOnlinePlayers(), p -> name.equals(p.getName()), null);
 	}
 
 	@Nullable
