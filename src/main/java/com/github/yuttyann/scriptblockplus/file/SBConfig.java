@@ -382,7 +382,7 @@ public final class SBConfig {
 	@Nullable
 	public static String getSelectorPos1Message(@NotNull Location pos1) {
 		String message = get("SelectorPos1Message");
-		message = replace(message, "%world%", pos1.getWorld());
+		message = replace(message, "%world%", pos1.getWorld() == null ? "null" : pos1.getWorld());
 		message = replace(message, "%coords%", BlockCoords.getCoords(pos1));
 		return replaceColorCode(message);
 	}
@@ -390,7 +390,7 @@ public final class SBConfig {
 	@Nullable
 	public static String getSelectorPos2Message(@NotNull Location pos2) {
 		String message = get("SelectorPos2Message");
-		message = replace(message, "%world%", pos2.getWorld());
+		message = replace(message, "%world%", pos2.getWorld() == null ? "null" : pos2.getWorld());
 		message = replace(message, "%coords%", BlockCoords.getCoords(pos2));
 		return replaceColorCode(message);
 	}
