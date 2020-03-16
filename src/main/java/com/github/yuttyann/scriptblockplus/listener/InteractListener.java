@@ -1,8 +1,20 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import java.util.function.Consumer;
-
-import com.github.yuttyann.scriptblockplus.listener.nms.SBVector;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
+import com.github.yuttyann.scriptblockplus.event.ScriptBlockEditEvent;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.listener.raytrace.RayResult;
+import com.github.yuttyann.scriptblockplus.listener.raytrace.RayTrace;
+import com.github.yuttyann.scriptblockplus.player.ObjectMap;
+import com.github.yuttyann.scriptblockplus.player.PlayerData;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
+import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,34 +29,19 @@ import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import com.github.yuttyann.scriptblockplus.enums.EquipSlot;
-import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
-import com.github.yuttyann.scriptblockplus.event.ScriptBlockEditEvent;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
-import com.github.yuttyann.scriptblockplus.listener.nms.MovingPosition;
-import com.github.yuttyann.scriptblockplus.listener.nms.NMSWorld;
-import com.github.yuttyann.scriptblockplus.player.ObjectMap;
-import com.github.yuttyann.scriptblockplus.player.PlayerData;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
-import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import java.util.function.Consumer;
 
 public class InteractListener implements Listener {
 
-	private static final double R = 0.017453292D;
 	private static final String KEY_FLAG = PlayerData.createRandomId("InteractFlag");
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerAnimationEvent(PlayerAnimationEvent event) {
 		Player player = event.getPlayer();
-		if (!Utils.isCraftBukkit() || event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
+		if (event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
 			return;
 		}
 		ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
@@ -52,31 +49,16 @@ public class InteractListener implements Listener {
 			objectMap.put(KEY_FLAG, false);
 			return;
 		}
-		Location location = player.getLocation();
-		double x = location.getX();
-		double y = location.getY() + player.getEyeHeight();
-		double z = location.getZ();
-		float pitch = location.getPitch();
-		float yaw = location.getYaw();
-		float f1 = (float) Math.cos((-yaw * R) - Math.PI);
-		float f2 = (float) Math.sin((-yaw * R) - Math.PI);
-		float f3 = (float) -Math.cos(-pitch * R);
-		float f4 = (float) Math.sin(-pitch * R);
-		float f5 = f2 * f3;
-		float f6 = f1 * f3;
-		double r = 4.5D;
-		SBVector vector1 = new SBVector(x, y, z);
-		SBVector vector2 = vector1.add(f5 * r, f4 * r, f6 * r);
-		MovingPosition movingPosition = new NMSWorld(location.getWorld()).rayTrace(vector1, vector2);
 		ItemStack item = ItemUtils.getItemInMainHand(player);
-		if (movingPosition == null) {
+		RayResult rayResult = new RayTrace(player.getWorld()).rayTrace(player, 4.5D);
+		if (rayResult == null) {
 			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR, item, null, BlockFace.SOUTH);
-			callEvent(interactEvent, new BlockInteractEvent(interactEvent, EquipSlot.HAND, true));
+			callEvent(interactEvent, new BlockInteractEvent(interactEvent, EquipmentSlot.HAND, true));
 		} else {
-			Block block = movingPosition.getHitBlock();
-			BlockFace blockFace = movingPosition.getBlockFace();
+			Block block = rayResult.getHitBlock();
+			BlockFace blockFace = rayResult.getHitBlockFace();
 			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, item, block, blockFace);
-			callEvent(interactEvent, new BlockInteractEvent(interactEvent, EquipSlot.HAND, true));
+			callEvent(interactEvent, new BlockInteractEvent(interactEvent, EquipmentSlot.HAND, true));
 		}
 	}
 
@@ -87,7 +69,7 @@ public class InteractListener implements Listener {
 			return;
 		}
 		Player player = event.getPlayer();
-		if (Utils.isCraftBukkit() && player.getGameMode() == GameMode.ADVENTURE) {
+		if (player.getGameMode() == GameMode.ADVENTURE) {
 			if (action.name().startsWith("LEFT_CLICK_")) {
 				return;
 			}
@@ -119,7 +101,7 @@ public class InteractListener implements Listener {
 	}
 
 	private boolean action(Player player, Action action, BlockInteractEvent event) {
-		if (event.getHand() != EquipSlot.HAND) {
+		if (event.getHand() != EquipmentSlot.HAND) {
 			return false;
 		}
 		boolean isAIR = isAIR(action);
@@ -131,22 +113,22 @@ public class InteractListener implements Listener {
 			CuboidRegion region = ((CuboidRegion) sbPlayer.getRegion());
 			toolAction(action, location
 			, left -> {
-				if (isSneaking || (!isAIR && !isSneaking)) {
-					if (isSneaking) {
-						region.setPos1((left = player.getLocation()).toVector());
-					} else if (!isAIR && !isSneaking) {
-						region.setPos1(left.toVector());
-					}
+				if (isSneaking) {
+					region.setPos1((left = player.getLocation()).toVector());
+				} else if (!isSneaking && !isAIR) {
+					region.setPos1((left.toVector()));
+				}
+				if (left != null) {
 					region.setWorld(left.getWorld());
 					Utils.sendMessage(sbPlayer, SBConfig.getSelectorPos1Message(left));
 				}
 			}, right -> {
-				if (isSneaking || (!isAIR && !isSneaking)) {
-					if (isSneaking) {
-						region.setPos2((right = player.getLocation()).toVector());
-					} else if (!isAIR && !isSneaking) {
-						region.setPos2(right.toVector());
-					}
+				if (isSneaking) {
+					region.setPos2((right = player.getLocation()).toVector());
+				} else if (!isSneaking && !isAIR) {
+					region.setPos2((right.toVector()));
+				}
+				if (right != null) {
 					region.setWorld(right.getWorld());
 					Utils.sendMessage(sbPlayer, SBConfig.getSelectorPos2Message(right));
 				}
@@ -155,18 +137,18 @@ public class InteractListener implements Listener {
 		} else if (ItemUtils.isScriptEditor(item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			toolAction(action, location
 			, left -> {
-				if (!isAIR && isSneaking) {
+				if (isSneaking && !isAIR) {
 					new ScriptEdit(ItemUtils.getScriptType(item)).remove(sbPlayer, left);
 				} else if (!isSneaking) {
 					item.setItemMeta(ItemUtils.getScriptEditor(getNextScriptType(item)).getItemMeta());
 					Utils.updateInventory(player);
 				}
 			}, right -> {
-				if (!isAIR && isSneaking) {
+				if (isSneaking && !isAIR) {
 					if (!sbPlayer.hasClipboard() || !sbPlayer.getClipboard().paste(right, true)) {
 						Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
 					}
-				} else if (!isAIR && !isSneaking) {
+				} else if (!isSneaking && !isAIR) {
 					new ScriptEdit(ItemUtils.getScriptType(item)).copy(sbPlayer, right);
 				}
 			});
