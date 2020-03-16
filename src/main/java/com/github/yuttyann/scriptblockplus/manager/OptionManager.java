@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.github.yuttyann.scriptblockplus.script.option.chat.Say;
+import com.github.yuttyann.scriptblockplus.script.option.chat.Server;
+import com.github.yuttyann.scriptblockplus.script.option.chat.Title;
+import com.github.yuttyann.scriptblockplus.script.option.chat.ToPlayer;
+import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
+import com.github.yuttyann.scriptblockplus.script.option.chat.Bypass;
+import com.github.yuttyann.scriptblockplus.script.option.chat.Command;
+import com.github.yuttyann.scriptblockplus.script.option.chat.Console;
 import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.AbstractConstructor;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.script.option.chat.Bypass;
-import com.github.yuttyann.scriptblockplus.script.option.chat.Command;
-import com.github.yuttyann.scriptblockplus.script.option.chat.Console;
-import com.github.yuttyann.scriptblockplus.script.option.chat.Say;
-import com.github.yuttyann.scriptblockplus.script.option.chat.Server;
-import com.github.yuttyann.scriptblockplus.script.option.chat.ToPlayer;
-import com.github.yuttyann.scriptblockplus.script.option.nms.ActionBar;
-import com.github.yuttyann.scriptblockplus.script.option.nms.Title;
 import com.github.yuttyann.scriptblockplus.script.option.other.Amount;
 import com.github.yuttyann.scriptblockplus.script.option.other.BlockType;
 import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;

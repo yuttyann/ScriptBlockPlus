@@ -106,9 +106,7 @@ public class Vx_x_Rx {
 			tileEntityCommand.setWorld(location.getWorld());
 			tileEntityCommand.setLocation(location);
 			Object commandListener = tileEntityCommand.getCommandBlock();
-			if (sender != null) {
-				tileEntityCommand.setName(sender.getName());
-			}
+			tileEntityCommand.setName(sender.getName());
 			return commandListener;
 		}
 	}

@@ -45,8 +45,6 @@ public final class NameFetcher {
 		try (InputStream is = FileUtils.getWebFile(url); InputStreamReader isr = new InputStreamReader(is); BufferedReader reader = new BufferedReader(isr)) {
 			String line = reader.readLine();
 			return StringUtils.isNotEmpty(line) ? (JsonObject) new Gson().fromJson(line, JsonObject.class) : null;
-		} catch (ProtocolException e) {
-			throw e;
 		} catch (IOException e) {
 			throw e;
 		}

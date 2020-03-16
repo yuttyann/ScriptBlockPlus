@@ -45,7 +45,7 @@ public final class APIVersion {
         this.apiVersion = apiVersion;
     }
 
-    @NotNull
+    @Nullable
     public String get() {
         return apiVersion;
     }

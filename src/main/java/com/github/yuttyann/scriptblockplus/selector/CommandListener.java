@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * コマンド実行 インターフェース
+ * 対応: Spigot、CraftBukkit、PaperMC
  * @author yuttyann44581
  */
 public interface CommandListener {

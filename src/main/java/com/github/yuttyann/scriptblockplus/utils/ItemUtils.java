@@ -78,15 +78,14 @@ public class ItemUtils {
 	}
 
 	@NotNull
-	@SuppressWarnings("deprecation")
 	public static ItemStack getItemInMainHand(Player player) {
 		PlayerInventory inventory = player.getInventory();
-		return Utils.isCBXXXorLater("1.9") ? inventory.getItemInMainHand() : inventory.getItemInHand();
+		return inventory.getItemInMainHand();
 	}
 
 	@NotNull
 	public static ItemStack getItemInOffHand(Player player) {
-		return Utils.isCBXXXorLater("1.9") ? player.getInventory().getItemInOffHand() : new ItemStack(Material.AIR);
+		return player.getInventory().getItemInOffHand();
 	}
 
 	@NotNull
