@@ -1,0 +1,27 @@
+package com.github.yuttyann.scriptblockplus.listener.raytrace;
+
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class RayResult {
+
+    private Block block;
+    private BlockFace blockFace;
+
+    public RayResult(@NotNull Block block, @Nullable BlockFace blockFace) {
+        this.block = block;
+        this.blockFace = blockFace == null ? BlockFace.SOUTH : blockFace;
+    }
+
+    @NotNull
+    public Block getHitBlock() {
+        return block;
+    }
+
+    @NotNull
+    public BlockFace getHitBlockFace() {
+        return blockFace;
+    }
+}
