@@ -1,42 +1,21 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.github.yuttyann.scriptblockplus.script.option.chat.Say;
-import com.github.yuttyann.scriptblockplus.script.option.chat.Server;
-import com.github.yuttyann.scriptblockplus.script.option.chat.Title;
-import com.github.yuttyann.scriptblockplus.script.option.chat.ToPlayer;
-import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
-import com.github.yuttyann.scriptblockplus.script.option.chat.Bypass;
-import com.github.yuttyann.scriptblockplus.script.option.chat.Command;
-import com.github.yuttyann.scriptblockplus.script.option.chat.Console;
-import org.jetbrains.annotations.NotNull;
-
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.AbstractConstructor;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.script.option.other.Amount;
-import com.github.yuttyann.scriptblockplus.script.option.other.BlockType;
-import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
-import com.github.yuttyann.scriptblockplus.script.option.other.Execute;
-import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
-import com.github.yuttyann.scriptblockplus.script.option.other.ItemHand;
-import com.github.yuttyann.scriptblockplus.script.option.other.PlaySound;
-import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
+import com.github.yuttyann.scriptblockplus.script.option.chat.*;
+import com.github.yuttyann.scriptblockplus.script.option.other.*;
 import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
 import com.github.yuttyann.scriptblockplus.script.option.time.Delay;
 import com.github.yuttyann.scriptblockplus.script.option.time.OldCooldown;
-import com.github.yuttyann.scriptblockplus.script.option.vault.Group;
-import com.github.yuttyann.scriptblockplus.script.option.vault.GroupAdd;
-import com.github.yuttyann.scriptblockplus.script.option.vault.GroupRemove;
-import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
-import com.github.yuttyann.scriptblockplus.script.option.vault.Perm;
-import com.github.yuttyann.scriptblockplus.script.option.vault.PermAdd;
-import com.github.yuttyann.scriptblockplus.script.option.vault.PermRemove;
+import com.github.yuttyann.scriptblockplus.script.option.vault.*;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public final class OptionManager extends AbstractConstructor<Option> {
 

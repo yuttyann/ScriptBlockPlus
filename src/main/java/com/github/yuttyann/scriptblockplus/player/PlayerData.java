@@ -1,14 +1,14 @@
 package com.github.yuttyann.scriptblockplus.player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public abstract class PlayerData implements SBPlayer {
 

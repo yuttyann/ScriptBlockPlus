@@ -1,12 +1,12 @@
 package com.github.yuttyann.scriptblockplus.region;
 
-import java.util.Objects;
-
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class CuboidRegion implements Region {
 

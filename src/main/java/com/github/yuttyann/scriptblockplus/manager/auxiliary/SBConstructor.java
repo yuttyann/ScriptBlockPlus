@@ -1,14 +1,13 @@
 package com.github.yuttyann.scriptblockplus.manager.auxiliary;
 
-import java.lang.reflect.Constructor;
-import java.util.Objects;
-
+import com.github.yuttyann.scriptblockplus.enums.InstanceType;
+import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.github.yuttyann.scriptblockplus.enums.InstanceType;
-import com.github.yuttyann.scriptblockplus.script.SBInstance;
+import java.lang.reflect.Constructor;
+import java.util.Objects;
 
 public final class SBConstructor<T> {
 

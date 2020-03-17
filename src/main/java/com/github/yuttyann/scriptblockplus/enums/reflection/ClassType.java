@@ -1,11 +1,11 @@
 package com.github.yuttyann.scriptblockplus.enums.reflection;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public enum ClassType {
 	BYTE(byte.class, Byte.class),

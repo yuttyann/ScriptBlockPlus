@@ -1,7 +1,15 @@
 package com.github.yuttyann.scriptblockplus;
 
-import java.util.List;
-
+import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
+import com.github.yuttyann.scriptblockplus.file.Files;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.listener.*;
+import com.github.yuttyann.scriptblockplus.manager.APIManager;
+import com.github.yuttyann.scriptblockplus.manager.MapManager;
+import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -9,22 +17,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-
-import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
-import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
-import com.github.yuttyann.scriptblockplus.listener.InteractListener;
-import com.github.yuttyann.scriptblockplus.listener.JoinQuitListener;
-import com.github.yuttyann.scriptblockplus.listener.ScriptBreakListener;
-import com.github.yuttyann.scriptblockplus.listener.ScriptInteractListener;
-import com.github.yuttyann.scriptblockplus.listener.ScriptWalkListener;
-import com.github.yuttyann.scriptblockplus.manager.APIManager;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ScriptBlock extends JavaPlugin {
 

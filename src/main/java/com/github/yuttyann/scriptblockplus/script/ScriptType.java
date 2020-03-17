@@ -1,15 +1,14 @@
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import org.apache.commons.lang.Validate;
+import org.bukkit.permissions.Permissible;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.permissions.Permissible;
-
-import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import org.jetbrains.annotations.NotNull;
 
 public final class ScriptType implements Comparable<ScriptType>, Serializable {
 

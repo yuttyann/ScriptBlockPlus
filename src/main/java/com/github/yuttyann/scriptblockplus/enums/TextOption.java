@@ -5,8 +5,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 public enum TextOption {
-	PLAYER("<player>"),
-	WORLD("<world>");
+	PLAYER("<player>"), WORLD("<world>");
 
 	private String name;
 

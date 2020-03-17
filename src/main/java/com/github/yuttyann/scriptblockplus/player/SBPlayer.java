@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.player;
 
-import java.util.UUID;
-
+import com.github.yuttyann.scriptblockplus.region.Region;
+import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -9,11 +9,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-
-import com.github.yuttyann.scriptblockplus.region.Region;
-import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public interface SBPlayer extends CommandSender {
 

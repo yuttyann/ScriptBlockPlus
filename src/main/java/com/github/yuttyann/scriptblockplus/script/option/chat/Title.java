@@ -22,9 +22,6 @@ public class Title extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		if (!Utils.isCBXXXorLater("1.12")) {
-			throw new UnsupportedOperationException();
-		}
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String title = StringUtils.replaceColorCode(array[0], true);
 		String subtitle = StringUtils.replaceColorCode(array[1], true);

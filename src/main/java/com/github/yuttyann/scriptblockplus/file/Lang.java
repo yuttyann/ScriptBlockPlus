@@ -1,13 +1,12 @@
 package com.github.yuttyann.scriptblockplus.file;
 
-import java.io.File;
-
-import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 public class Lang {
 

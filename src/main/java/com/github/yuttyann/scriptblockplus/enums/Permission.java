@@ -1,8 +1,7 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
-import org.bukkit.permissions.Permissible;
-
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 public enum Permission {

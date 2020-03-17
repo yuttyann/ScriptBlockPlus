@@ -1,13 +1,12 @@
 package com.github.yuttyann.scriptblockplus.manager.auxiliary;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class SBMap<T> implements Serializable {
 

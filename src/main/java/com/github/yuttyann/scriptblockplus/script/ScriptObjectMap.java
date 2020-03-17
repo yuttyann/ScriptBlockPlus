@@ -1,13 +1,13 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public abstract class ScriptObjectMap extends ScriptListener implements ObjectMap {
 

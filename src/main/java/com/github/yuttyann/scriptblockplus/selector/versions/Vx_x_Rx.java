@@ -1,23 +1,18 @@
 package com.github.yuttyann.scriptblockplus.selector.versions;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.Location;
-import org.bukkit.command.BlockCommandSender;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.ProxiedCommandSender;
-import org.bukkit.command.RemoteConsoleCommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.minecart.CommandMinecart;
-
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.selector.CommandListener;
 import com.github.yuttyann.scriptblockplus.selector.TileEntityCommand;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.Location;
+import org.bukkit.command.*;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.CommandMinecart;
 import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ScriptBlockPlus NMSコマンド実装クラス

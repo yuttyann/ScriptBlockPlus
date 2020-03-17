@@ -1,18 +1,17 @@
 package com.github.yuttyann.scriptblockplus.enums.reflection;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum PackageType {
 	NMS("net.minecraft.server." + getVersionName()),

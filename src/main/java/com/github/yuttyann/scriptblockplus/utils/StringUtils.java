@@ -1,16 +1,12 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
 
 public final class StringUtils {
 

@@ -1,13 +1,13 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
-import java.util.Objects;
-
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * オプション クラス
@@ -22,8 +22,8 @@ public abstract class Option implements SBInstance<Option> {
 
 	/**
 	 * コンストラクタ
-	 * @param name
-	 * @param syntax
+	 * @param name オプション名　[（例） example]
+	 * @param syntax オプション構文　[（例） @example: ]
 	 */
 	protected Option(@NotNull String name, @NotNull String syntax) {
 		this.name = Objects.requireNonNull(name);

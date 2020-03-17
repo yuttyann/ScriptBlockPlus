@@ -1,5 +1,11 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,12 +14,6 @@ import java.net.ProtocolException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import org.apache.commons.lang.Validate;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class NameFetcher {
 

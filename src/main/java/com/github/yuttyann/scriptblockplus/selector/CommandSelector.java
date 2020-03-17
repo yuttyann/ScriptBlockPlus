@@ -1,11 +1,11 @@
 package com.github.yuttyann.scriptblockplus.selector;
 
-import java.util.regex.Pattern;
-
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.selector.versions.Vx_x_Rx;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.regex.Pattern;
 
 public final class CommandSelector {
 

@@ -1,16 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file.yaml;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.util.logging.Level;
-
+import com.google.common.base.Charsets;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -22,7 +12,8 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
-import com.google.common.base.Charsets;
+import java.io.*;
+import java.util.logging.Level;
 
 public final class UTF8Config extends YamlConfiguration {
 

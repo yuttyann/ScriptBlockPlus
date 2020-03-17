@@ -1,16 +1,15 @@
 package com.github.yuttyann.scriptblockplus.region;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-
-import com.github.yuttyann.scriptblockplus.BlockCoords;
-import org.jetbrains.annotations.NotNull;
 
 public final class CuboidRegionBlocks {
 

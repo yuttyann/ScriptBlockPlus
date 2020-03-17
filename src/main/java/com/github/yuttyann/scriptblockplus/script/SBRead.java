@@ -1,13 +1,12 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import java.util.List;
-
-import org.bukkit.Location;
-import org.bukkit.plugin.Plugin;
-
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import org.bukkit.Location;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public interface SBRead extends ObjectMap {
 

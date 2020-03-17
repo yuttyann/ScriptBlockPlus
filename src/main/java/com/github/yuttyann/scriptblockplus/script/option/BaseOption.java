@@ -1,13 +1,5 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -16,7 +8,14 @@ import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * ベースオプション クラス
@@ -28,8 +27,8 @@ public abstract class BaseOption extends Option {
 
 	/**
 	 * コンストラクタ
-	 * @param name
-	 * @param syntax
+	 * @param name オプション名　[（例） example]
+	 * @param syntax オプション構文　[（例） @example: ]
 	 */
 	public BaseOption(@NotNull String name, @NotNull String syntax) {
 		super(name, syntax);

@@ -1,13 +1,12 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.jetbrains.annotations.NotNull;
-
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 public enum ActionType {
 	CREATE, ADD, REMOVE, VIEW;
