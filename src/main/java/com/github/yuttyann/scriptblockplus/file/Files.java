@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.file;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.file.config.ConfigKeys;
 import com.github.yuttyann.scriptblockplus.file.yaml.UTF8Config;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
@@ -28,10 +29,8 @@ public final class Files {
 
 	public static void reload() {
 		loadFile(PATH_CONFIG, true);
-		SBConfig.reloadConfig();
-
 		loadLang(PATH_LANGS, "lang");
-		SBConfig.reloadLang();
+		ConfigKeys.reload();
 
 		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
 		searchKeys();
@@ -93,7 +92,7 @@ public final class Files {
 
 	@NotNull
 	private static YamlConfig loadLang(@NotNull String filePath, @NotNull String dirPath) {
-		String language = SBConfig.getLanguage();
+		String language = SBConfig.LANGUAGE.get();
 		if (StringUtils.isEmpty(language) || "default".equalsIgnoreCase(language)) {
 			language = DEFAULT_LANGUAGE;
 		}
