@@ -17,7 +17,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class ScriptBlock extends JavaPlugin {
 		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setPlayer(p).setOnline(true));
 
 		if (!HookPlugins.hasVault()) {
-			Utils.sendMessage(SBConfig.getNotVaultMessage());
+			SBConfig.NOT_VAULT.send(true);
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -54,7 +53,7 @@ public class ScriptBlock extends JavaPlugin {
 		}
 
 		updater = new Updater(this);
-		checkUpdate(null, false); // 非同期
+		checkUpdate(Bukkit.getConsoleSender(), false); // 非同期
 
 		mapManager = new MapManager(this);
 		mapManager.loadAllScripts();
@@ -97,17 +96,17 @@ public class ScriptBlock extends JavaPlugin {
 	 * @param sender 送信先
 	 * @param latestMessage 更新メッセージを表示するかどうか
 	 */
-	public void checkUpdate(@Nullable CommandSender sender, boolean latestMessage) {
+	public void checkUpdate(@NotNull CommandSender sender, boolean latestMessage) {
 		new Thread(() -> {
 			try {
 				// updater.debug(true, true);
 				updater.init();
 				updater.load();
 				if (!updater.execute(sender) && latestMessage) {
-					Utils.sendMessage(sender, SBConfig.getNotLatestPluginMessage());
+					SBConfig.NOT_LATEST_PLUGIN.send(sender, true);
 				}
 			} catch (Exception e) {
-				Utils.sendMessage(SBConfig.getErrorUpdateMessage());
+				SBConfig.ERROR_UPDATE.send(true);;
 			}
 		}).start();
 	}

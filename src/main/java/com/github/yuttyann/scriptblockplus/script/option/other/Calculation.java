@@ -45,7 +45,7 @@ public class Calculation extends BaseOption {
 		}
 		if (array.length > 3) {
 			String message = StringUtils.createString(array, 3);
-			message = StringUtils.replaceColorCode(message, true);
+			message = StringUtils.replaceColor(message, true);
 			message = StringUtils.replace(message, "%value1%", String.valueOf(value1));
 			message = StringUtils.replace(message, "%value2%", String.valueOf(value2));
 			message = StringUtils.replace(message, "%operator%", operator);

@@ -62,8 +62,8 @@ public final class ScriptEdit {
 		scriptData.setScripts(Arrays.asList(script));
 		scriptData.save();
 		mapManager.addCoords(location, scriptType);
-		Utils.sendMessage(sbPlayer, SBConfig.getScriptCreateMessage(scriptType));
-		Utils.sendMessage(SBConfig.getConsoleScriptCreateMessage(sbPlayer.getName(), scriptType, location));
+		SBConfig.SCRIPT_CREATE.replace(scriptType.getType()).send(sbPlayer, true);
+		SBConfig.CONSOLE_SCRIPT_CREATE.replace(values(sbPlayer.getName(), scriptType, location)).console(true);
 	}
 
 	public void add(@NotNull SBPlayer sbPlayer, @Nullable Location location, @NotNull String script) {
@@ -71,7 +71,7 @@ public final class ScriptEdit {
 		sbPlayer.setActionType(null);
 		location = location == null ? scriptData.getLocation() : setLocation(location);
 		if (!scriptData.checkPath()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer, true);
 			return;
 		}
 		scriptData.addAuthor(sbPlayer.getUniqueId());
@@ -79,8 +79,8 @@ public final class ScriptEdit {
 		scriptData.addScript(script);
 		scriptData.save();
 		mapManager.removeTimes(location, scriptType);
-		Utils.sendMessage(sbPlayer, SBConfig.getScriptAddMessage(scriptType));
-		Utils.sendMessage(SBConfig.getConsoleScriptAddMessage(sbPlayer.getName(), scriptType, location));
+		SBConfig.SCRIPT_ADD.replace(scriptType.getType()).send(sbPlayer, true);
+		SBConfig.CONSOLE_SCRIPT_ADD.replace(values(sbPlayer.getName(), scriptType, location)).console(true);
 	}
 
 	public void remove(@NotNull SBPlayer sbPlayer, @Nullable Location location) {
@@ -88,14 +88,14 @@ public final class ScriptEdit {
 		sbPlayer.setActionType(null);
 		location = location == null ? scriptData.getLocation() : setLocation(location);
 		if (!scriptData.checkPath()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer, true);
 			return;
 		}
 		scriptData.remove();
 		scriptData.save();
 		mapManager.removeCoords(location, scriptType);
-		Utils.sendMessage(sbPlayer, SBConfig.getScriptRemoveMessage(scriptType));
-		Utils.sendMessage(SBConfig.getConsoleScriptRemoveMessage(sbPlayer.getName(), scriptType, location));
+		SBConfig.SCRIPT_REMOVE.replace(scriptType.getType()).send(sbPlayer, true);
+		SBConfig.CONSOLE_SCRIPT_REMOVE.replace(values(sbPlayer.getName(), scriptType, location)).console(true);
 	}
 
 	public void view(@NotNull SBPlayer sbPlayer, @Nullable Location location) {
@@ -103,7 +103,7 @@ public final class ScriptEdit {
 		sbPlayer.setActionType(null);
 		location = location == null ? scriptData.getLocation() : setLocation(location);
 		if (!scriptData.checkPath() || scripts.isEmpty()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer, true);
 			return;
 		}
 		PlayerCountInfo info = sbPlayer.getPlayerCount().getInfo(new BlockCoords(location), getScriptType());
@@ -113,7 +113,7 @@ public final class ScriptEdit {
 		for (String script : scripts) {
 			Utils.sendMessage(sbPlayer, "- " + script);
 		}
-		Utils.sendMessage(SBConfig.getConsoleScriptViewMessage(sbPlayer.getName(), scriptType, location));
+		SBConfig.CONSOLE_SCRIPT_VIEW.replace(values(sbPlayer.getName(), scriptType, location)).console(true);
 	}
 
 	@NotNull
@@ -144,6 +144,11 @@ public final class ScriptEdit {
 		scriptData.remove();
 		mapManager.removeCoords(location, scriptType);
 		return true;
+	}
+
+	@NotNull
+	static Object[] values(@NotNull String name, @NotNull ScriptType scriptType, @NotNull Location location) {
+		return new Object[] { name, scriptType.getType(), location.getWorld().getName(), BlockCoords.getCoords(location) };
 	}
 
 	private class Clipboard implements SBClipboard {
@@ -192,13 +197,13 @@ public final class ScriptEdit {
 				return false;
 			}
 			if (scriptData == null || !scriptData.checkPath()) {
-				Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
+				SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer, true);
 				return false;
 			}
 			this.sbPlayer = sbPlayer;
 			sbPlayer.setClipboard(this);
-			Utils.sendMessage(sbPlayer, SBConfig.getScriptCopyMessage(scriptType));
-			Utils.sendMessage(SBConfig.getConsoleScriptCopyMessage(sbPlayer.getName(), scriptType, scriptData.getLocation()));
+			SBConfig.SCRIPT_COPY.replace(scriptType.getType()).send(sbPlayer, true);
+			SBConfig.CONSOLE_SCRIPT_REMOVE.replace(values(sbPlayer.getName(), scriptType, scriptData.getLocation())).console(true);
 			return true;
 		}
 
@@ -226,8 +231,8 @@ public final class ScriptEdit {
 			scriptData.setScripts(new ArrayList<>(scripts));
 			scriptData.save();
 			ScriptBlock.getInstance().getMapManager().addCoords(location, scriptType);
-			Utils.sendMessage(sbPlayer, SBConfig.getScriptPasteMessage(scriptType));
-			Utils.sendMessage(SBConfig.getConsoleScriptPasteMessage(sbPlayer.getName(), scriptType, location));
+			SBConfig.SCRIPT_PASTE.replace(scriptType.getType()).send(sbPlayer, true);
+			SBConfig.CONSOLE_SCRIPT_PASTE.replace(values(sbPlayer.getName(), scriptType, scriptData.getLocation())).console(true);
 			return true;
 		}
 

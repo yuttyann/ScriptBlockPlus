@@ -1,14 +1,5 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
@@ -17,7 +8,14 @@ import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class ScriptBreakListener extends ScriptListener {
@@ -44,7 +42,7 @@ public class ScriptBreakListener extends ScriptListener {
 				return;
 			}
 			if (!SBPermission.has(player, ScriptType.BREAK, false)) {
-				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
+				SBConfig.NOT_PERMISSION.send(player, true);
 				return;
 			}
 			new ScriptRead(player, location, this).read(0);

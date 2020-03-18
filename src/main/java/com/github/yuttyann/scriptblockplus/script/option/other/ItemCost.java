@@ -6,7 +6,6 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -43,7 +42,7 @@ public class ItemCost extends BaseOption {
 		int damage = itemData.length > 1 ? Integer.parseInt(itemData[1]) : 0;
 		int amount = Integer.parseInt(array[1]);
 		String create = array.length > 2 ? StringUtils.createString(array, 2) : null;
-		String itemName = StringUtils.replaceColorCode(create, false);
+		String itemName = StringUtils.replaceColor(create, false);
 
 		Player player = getPlayer();
 		PlayerInventory inventory = player.getInventory();
@@ -58,7 +57,8 @@ public class ItemCost extends BaseOption {
 			}
 		}
 		if (result > 0) {
-			Utils.sendMessage(player, SBConfig.getErrorItemMessage(type, amount, damage, itemName));
+			String typeName = type == null ? "null" : type.name();
+			SBConfig.ERROR_ITEM.replace(typeName, amount, damage, itemName).send(player, true);
 			return false;
 		}
 		inventory.setContents(items);
@@ -79,7 +79,7 @@ public class ItemCost extends BaseOption {
 		return copy;
 	}
 
-	private boolean equalItems(@Nullable ItemStack item, @Nullable String itemName, @NotNull Material type, int damage) {
+	private boolean equalItems(@Nullable ItemStack item, @Nullable String itemName, @Nullable Material type, int damage) {
 		if (item == null || item.getType() != type || ItemUtils.getDamage(item) != damage) {
 			return false;
 		}

@@ -1,5 +1,13 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
+import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
+import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -11,16 +19,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Openable;
 import org.bukkit.material.Redstone;
 import org.jetbrains.annotations.NotNull;
-
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
-import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
-import com.github.yuttyann.scriptblockplus.script.ScriptRead;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
-import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 public class ScriptInteractListener extends ScriptListener {
 
@@ -41,13 +39,13 @@ public class ScriptInteractListener extends ScriptListener {
 			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, action);
 			Bukkit.getPluginManager().callEvent(interactEvent);
 			if (interactEvent.isCancelled()
-					|| action == Action.LEFT_CLICK_BLOCK && !SBConfig.isLeftClick()
-					|| action == Action.RIGHT_CLICK_BLOCK && !SBConfig.isRightClick()
+					|| action == Action.LEFT_CLICK_BLOCK && !SBConfig.ACTIONS_INTERACT_LEFT.toBool()
+					|| action == Action.RIGHT_CLICK_BLOCK && !SBConfig.ACTIONS_INTERACT_RIGHT.toBool()
 					|| isPowered(block) || isOpen(block)) {
 				return;
 			}
 			if (!SBPermission.has(player, ScriptType.INTERACT, false)) {
-				Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
+				SBConfig.NOT_PERMISSION.send(player, true);
 				return;
 			}
 			ScriptRead scriptRead = new ScriptRead(player, location, this);

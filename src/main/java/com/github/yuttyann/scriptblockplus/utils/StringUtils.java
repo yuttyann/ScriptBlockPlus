@@ -46,10 +46,7 @@ public final class StringUtils {
 	}
 
 	@NotNull
-	public static String[] split(@Nullable String source, @Nullable String delimiter) {
-		if (isEmpty(source) || isEmpty(delimiter)) {
-			return new String[] { source };
-		}
+	public static String[] split(@NotNull String source, @NotNull String delimiter) {
 		int start = 0;
 		int end = source.indexOf(delimiter, start);
 		List<String> result = new LinkedList<>();
@@ -67,24 +64,24 @@ public final class StringUtils {
 		return isEmpty(source) ? source : source.replace(search, replace);
 	}
 
-	@Nullable
-	public static String replaceColorCode(@Nullable String source, boolean randomColor) {
+	@NotNull
+	public static String replaceColor(@Nullable String source, boolean randomColor) {
 		if (randomColor) {
 			ChatColor color = ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16)));
 			source = replace(source, "&rc", color::toString);
 		}
-		return isEmpty(source) ? source : ChatColor.translateAlternateColorCodes('&', source);
+		return isEmpty(source) ? "" : ChatColor.translateAlternateColorCodes('&', source);
 	}
 
-	@Nullable
-	public static String replace(@Nullable String source, @Nullable String search, @Nullable String replace) {
+	@NotNull
+	public static String replace(@Nullable String source, @NotNull String search, @Nullable String replace) {
 		return replace(source, search, () -> replace == null ? "" : replace);
 	}
 
-	@Nullable
-	public static String replace(@Nullable String source, @Nullable String search, @NotNull ReplaceValue replace) {
-		if (isEmpty(source) || isEmpty(search)) {
-			return source;
+	@NotNull
+	public static String replace(@Nullable String source, @NotNull String search, @NotNull ReplaceValue replace) {
+		if (isEmpty(source)) {
+			return "";
 		}
 		int start = 0;
 		int end = source.indexOf(search, start);

@@ -5,7 +5,6 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +29,7 @@ public class Cooldown extends BaseOption {
 			short hour = (short) (temp / 3600);
 			byte minute = (byte) (temp % 3600 / 60);
 			byte second = (byte) (temp % 3600 % 60);
-			Utils.sendMessage(getPlayer(), SBConfig.getActiveCooldownMessage(hour, minute, second));
+			SBConfig.ACTIVE_COOLDOWN.replace(hour, minute, second).send(getSBPlayer(), true);
 			return false;
 		}
 		int second = Integer.parseInt(getOptionValue());

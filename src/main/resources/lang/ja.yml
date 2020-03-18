@@ -4,7 +4,7 @@
 
 
 ## ===== Commands ===== ##
-# 変数はありません
+# プレースホルダはありません
 ToolCommandMessage: 'tool - 実行者に補助ツールを配布します。'
 ReloadCommandMessage: 'reload - 全てのファイルの再読み込みを行います。'
 BackupCommandMessage: 'backup - スクリプトデータのバックアップを作成します。'
@@ -22,7 +22,7 @@ SelectorRemoveCommandMessage: 'selector remove - 選択範囲のスクリプト�
 # &(code) : カラーコード(以降の項目全て対象)
 
 ## ===== BlockSelector ===== ##
-# 変数はありません
+# プレースホルダはありません
 BlockSelector:
 - '&aこのツールは、範囲選択をサポートします。'
 - '&6左クリック: &eブロックを選択範囲の始点に指定します。'
@@ -31,7 +31,7 @@ BlockSelector:
 - '&6シフト+右クリック: &e現在位置を選択範囲の終点に指定します。'
 
 ## ===== ScriptEditor ===== ##
-# %scripttype% : スクリプトの種類
+# プレースホルダはありません
 ScriptEditor:
 - '&aこのツールは、スクリプトの編集をサポートします。'
 - '&6左クリック: &eツールの対象を切り替えます。'
@@ -42,7 +42,7 @@ ScriptEditor:
 # |~, \n : 改行(以降の項目全て対象)
 
 ## ===== Messages ===== ##
-# 変数はありません
+# プレースホルダはありません
 NotVaultMessage: '&cVaultが導入されていないため、プラグインを無効化します。'
 SenderNoPlayerMessage: '&cコマンドはゲーム内から実行してください。'
 NotPermissionMessage: '&cパーミッションが無いため、実行できません。'
@@ -70,7 +70,7 @@ UpdateDownloadEndMessage: '&6ダウンロードが終了しました。|~&6フ�
 # %details%       : 更新内容
 UpdateCheckMessage: '&b最新のバージョンを検出しました。|~&bv%latestversion%にアップデートしてください。|~&bプラグイン名: %pluginname%|~&b☆アップデート内容☆|~&b%details%'
 
-# 変数はありません
+# プレースホルダはありません
 ErrorUpdateMessage: '&cアップデートに失敗しました。'
 
 # %scripttype% : スクリプトの種類
@@ -80,7 +80,7 @@ ScriptCreateMessage: '&aブロック"%scripttype%"のスクリプトを作成し
 ScriptAddMessage: '&aブロック"%scripttype%"にスクリプトを追加しました。'
 ScriptRemoveMessage: '&cブロック"%scripttype%"のスクリプトを削除しました。'
 
-# 変数はありません
+# プレースホルダはありません
 NotSelectionMessage: '&cBlockSelectorで座標を選択してください。'
 
 # %world%  : ワールドの名前
@@ -97,7 +97,7 @@ SelectorRemoveMessage: '&cブロック(%blockcount%)"%scripttype%"のスクリ�
 # %cause%  : 発生原因
 OptionFailedToExecuteMessage: '&cオプション"%option%"の実行に失敗しました。|~発生原因: %cause%'
 
-# 変数はありません
+# プレースホルダはありません
 ActiveDelayMessage: '&c遅延したスクリプトが実行されるまで、再度実行することはできません。'
 
 # %hour%   : 時
@@ -108,7 +108,7 @@ ActiveCooldownMessage: '&cクールダウン終了まで、%hour%時間%minute%�
 # %actiontype% : アクションの種類
 SuccActionDataMessage: '&aアクション"%actiontype%"を選択しました。'
 
-# 変数はありません
+# プレースホルダはありません
 ErrorActionDataMessage: '&c既にアクションが選択されています。'
 ErrorScriptCheckMessage: '&c入力されたスクリプトが正しくありません。'
 ErrorScriptFileCheckMessage: '&cスクリプトが見つかりません。'

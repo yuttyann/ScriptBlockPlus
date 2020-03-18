@@ -78,7 +78,7 @@ public final class SBMap<T> implements Serializable {
 
 	public boolean containsKey(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
 		Map<String, T> map = sbMap.get(scriptType);
-		return map == null ? false : map.containsKey(fullCoords);
+		return map != null && map.containsKey(fullCoords);
 	}
 
 	@NotNull

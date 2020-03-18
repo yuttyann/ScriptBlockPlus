@@ -1,11 +1,5 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerMoveEvent;
-
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
@@ -14,7 +8,11 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class ScriptWalkListener extends ScriptListener {
@@ -39,7 +37,7 @@ public class ScriptWalkListener extends ScriptListener {
 				return;
 			}
 			if (!SBPermission.has(sbPlayer, ScriptType.WALK, false)) {
-				Utils.sendMessage(sbPlayer, SBConfig.getNotPermissionMessage());
+				SBConfig.NOT_PERMISSION.send(player, true);
 				return;
 			}
 			new ScriptRead(player, blockCoords, this).read(0);

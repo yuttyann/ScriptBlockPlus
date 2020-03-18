@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockEditEvent;
@@ -120,7 +121,7 @@ public class InteractListener implements Listener {
 				}
 				if (left != null) {
 					region.setWorld(left.getWorld());
-					Utils.sendMessage(sbPlayer, SBConfig.getSelectorPos1Message(left));
+					SBConfig.SELECTOR_POS1.replace(left.getWorld().getName(), BlockCoords.getCoords(left)).send(sbPlayer, true);
 				}
 			}, right -> {
 				if (isSneaking) {
@@ -130,7 +131,7 @@ public class InteractListener implements Listener {
 				}
 				if (right != null) {
 					region.setWorld(right.getWorld());
-					Utils.sendMessage(sbPlayer, SBConfig.getSelectorPos2Message(right));
+					SBConfig.SELECTOR_POS2.replace(right.getWorld().getName(), BlockCoords.getCoords(right)).send(sbPlayer, true);
 				}
 			});
 			return true;
@@ -146,7 +147,7 @@ public class InteractListener implements Listener {
 			}, right -> {
 				if (isSneaking && !isAIR) {
 					if (!sbPlayer.hasClipboard() || !sbPlayer.getClipboard().paste(right, true)) {
-						Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
+						SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer, true);
 					}
 				} else if (!isSneaking && !isAIR) {
 					new ScriptEdit(ItemUtils.getScriptType(item)).copy(sbPlayer, right);

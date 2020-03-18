@@ -1,8 +1,8 @@
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
+import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import org.bukkit.entity.Player;
 
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
@@ -33,7 +33,7 @@ public class Perm extends BaseOption {
 
 		Player player = getPlayer();
 		if (!has(vaultPermission, world, player, permission)) {
-			Utils.sendMessage(player, SBConfig.getNotPermissionMessage());
+			SBConfig.NOT_PERMISSION.send(player, true);
 			return false;
 		}
 		return true;

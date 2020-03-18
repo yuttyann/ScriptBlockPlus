@@ -1,14 +1,12 @@
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
-import org.bukkit.entity.Player;
-
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.entity.Player;
 
 public class MoneyCost extends BaseOption {
 
@@ -37,7 +35,7 @@ public class MoneyCost extends BaseOption {
 			return true;
 		}
 		double result = cost - vaultEconomy.getBalance(player);
-		Utils.sendMessage(player, SBConfig.getErrorCostMessage(cost, result));
+		SBConfig.ERROR_COST.replace(cost, result).send(player, true);
 		return false;
 	}
 }

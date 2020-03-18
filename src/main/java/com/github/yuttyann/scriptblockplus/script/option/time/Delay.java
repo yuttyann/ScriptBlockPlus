@@ -1,13 +1,11 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import org.bukkit.Bukkit;
-
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 public class Delay extends BaseOption implements Runnable {
@@ -32,9 +30,9 @@ public class Delay extends BaseOption implements Runnable {
 	@Override
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
-		unSaveExec = array.length > 1 ? Boolean.valueOf(array[1]) : false;
+		unSaveExec = array.length > 1 && Boolean.parseBoolean(array[1]);
 		if (containsDelay()) {
-			Utils.sendMessage(getPlayer(), SBConfig.getActiveDelayMessage());
+			SBConfig.ACTIVE_DELAY.send(getSBPlayer(), true);
 		} else {
 			putDelay();
 			Bukkit.getScheduler().runTaskLater(getPlugin(), this, Long.parseLong(array[0]));

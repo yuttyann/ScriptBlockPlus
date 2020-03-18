@@ -179,7 +179,9 @@ public abstract class BaseOption extends Option {
 			return isValid();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Utils.sendMessage(getSBPlayer(), SBConfig.getOptionFailedToExecuteMessage(this, e));
+			String message = e.getMessage() == null ? "" : " \"" + e.getMessage() + "\"";
+			String cause = message.getClass().getSimpleName() + message;
+			SBConfig.OPTION_FAILED_TO_EXECUTE.replace(message, cause).send(getSBPlayer(), true);
 		}
 		return false;
 	}

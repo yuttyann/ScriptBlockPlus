@@ -56,19 +56,19 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	public CommandData[] getUsages() {
 		String[] typeNodes = SBPermission.getNodes(true);
 		return new CommandData[] {
-				new CommandData(SBConfig.getToolCommandMessage(), Permission.COMMAND_TOOL.getNode()),
-				new CommandData(SBConfig.getReloadCommandMessage(), Permission.COMMAND_RELOAD.getNode()),
-				new CommandData(SBConfig.getBackupCommandMessage(), Permission.COMMAND_BACKUP.getNode()),
-				new CommandData(SBConfig.getCheckVerCommandMessage(), Permission.COMMAND_CHECKVER.getNode()),
-				new CommandData(SBConfig.getDataMigrCommandMessage(), Permission.COMMAND_DATAMIGR.getNode()),
-				new CommandData(SBConfig.getExportCommandMessage(), Permission.COMMAND_EXPORT.getNode()),
-				new CommandData(SBConfig.getCreateCommandMessage(), typeNodes),
-				new CommandData(SBConfig.getAddCommandMessage(), typeNodes),
-				new CommandData(SBConfig.getRemoveCommandMessage(), typeNodes),
-				new CommandData(SBConfig.getViewCommandMessage(), typeNodes),
-				new CommandData(SBConfig.getRunCommandMessage(), typeNodes),
-				new CommandData(SBConfig.getSelectorPasteCommandMessage(), Permission.COMMAND_SELECTOR.getNode()),
-				new CommandData(SBConfig.getSelectorRemoveCommandMessage(), Permission.COMMAND_SELECTOR.getNode())
+				new CommandData(SBConfig.TOOL_COMMAND.get(), Permission.COMMAND_TOOL.getNode()),
+				new CommandData(SBConfig.RELOAD_COMMAND.get(), Permission.COMMAND_RELOAD.getNode()),
+				new CommandData(SBConfig.BACKUP_COMMAND.get(), Permission.COMMAND_BACKUP.getNode()),
+				new CommandData(SBConfig.CHECKVER_COMMAND.get(), Permission.COMMAND_CHECKVER.getNode()),
+				new CommandData(SBConfig.DATAMIGR_COMMAND.get(), Permission.COMMAND_DATAMIGR.getNode()),
+				new CommandData(SBConfig.EXPORT_COMMAND.get(), Permission.COMMAND_EXPORT.getNode()),
+				new CommandData(SBConfig.CREATE_COMMAND.get(), typeNodes),
+				new CommandData(SBConfig.ADD_COMMAND.get(), typeNodes),
+				new CommandData(SBConfig.REMOVE_COMMAND.get(), typeNodes),
+				new CommandData(SBConfig.VIEW_COMMAND.get(), typeNodes),
+				new CommandData(SBConfig.RUN_COMMAND.get(), typeNodes),
+				new CommandData(SBConfig.SELECTOR_PASTE_COMMAND.get(), Permission.COMMAND_SELECTOR.getNode()),
+				new CommandData(SBConfig.SELECTOR_REMOVE_COMMAND.get(), Permission.COMMAND_SELECTOR.getNode())
 		};
 	}
 
@@ -116,12 +116,12 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		boolean isSound = args[1].equalsIgnoreCase("sound");
 		String type = isSound ? "Sound" : "Material";
-		Utils.sendMessage(sender, SBConfig.getExportStartMessage(type));
+		Utils.sendMessage(sender, SBConfig.EXPORT_START.replace(type).toString(true));
 		new Thread(() -> {
 			String version = Utils.getServerVersion();
 			File file = new File(getPlugin().getDataFolder(), "export/" + type.toLowerCase() + "_v" + version + "_.txt");
 			write(file, isSound ? Sound.values() : Material.values());
-			Utils.sendMessage(sender, SBConfig.getExportEndMessage(type));
+			Utils.sendMessage(sender, SBConfig.EXPORT_END.replace(type).toString(true));
 		}).start();
 		return true;
 	}
@@ -153,7 +153,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		player.getInventory().addItem(ItemUtils.getBlockSelector());
 		player.getInventory().addItem(ItemUtils.getScriptEditor(ScriptType.INTERACT));
 		Utils.updateInventory(player);
-		Utils.sendMessage(player, SBConfig.getGiveToolMessage());
+		SBConfig.GIVE_TOOL.send(player, true);
 		return true;
 	}
 
@@ -166,7 +166,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		PackageType.clear();
 		setUsage(getUsages());
 		ScriptBlock.getInstance().getMapManager().loadAllScripts();
-		Utils.sendMessage(sender, SBConfig.getAllFileReloadMessage());
+		SBConfig.ALL_FILE_RELOAD.send(sender, true);
 		return true;
 	}
 
@@ -177,13 +177,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		File dataFolder = Files.getConfig().getDataFolder();
 		File scripts = new File(dataFolder, "scripts");
 		if (!scripts.exists() || FileUtils.isEmpty(scripts)) {
-			Utils.sendMessage(sender, SBConfig.getErrorScriptsBackupMessage());
+			SBConfig.ERROR_SCRIPTS_BACKUP.send(sender, true);
 			return true;
 		}
 		File backup = new File(scripts, "backup");
 		String formatTime = Utils.getFormatTime("yyyy-MM-dd HH-mm-ss");
 		FileUtils.copyDirectory(scripts, new File(backup, "scripts " + formatTime), File::isDirectory);
-		Utils.sendMessage(sender, SBConfig.getScriptsBackupMessage());
+		SBConfig.SCRIPTS_BACKUP.send(sender, true);
 		return true;
 	}
 
@@ -204,11 +204,11 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		File walkFile = new File(path + "walk_Scripts.yml");
 		Player player = (Player) sender;
 		if (!walkFile.exists() && !interactFile.exists()) {
-			Utils.sendMessage(player, SBConfig.getNotScriptBlockFileMessage());
+			SBConfig.NOT_SCRIPT_BLOCK_FILE.send(sender, true);
 		} else {
 			String time = Utils.getFormatTime();
 			String uuid = player.getUniqueId().toString();
-			Utils.sendMessage(player, SBConfig.getDataMigrStartMessage());
+			SBConfig.DATAMIGR_START.send(sender, true);
 			new Thread(() -> {
 				if (interactFile.exists()) {
 					saveScript(uuid, time, YamlConfig.load(getPlugin(), interactFile, false), ScriptType.INTERACT);
@@ -216,7 +216,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 				if (walkFile.exists()) {
 					saveScript(uuid, time, YamlConfig.load(getPlugin(), walkFile, false), ScriptType.WALK);
 				}
-				Utils.sendMessage(player, SBConfig.getDataMigrEndMessage());
+				SBConfig.DATAMIGR_END.send(sender, true);
 			}).start();
 		}
 		return true;
@@ -268,20 +268,21 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
 		if (sbPlayer.hasScriptLine() || sbPlayer.hasActionType()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getErrorActionDataMessage());
+			SBConfig.ERROR_ACTION_DATA.send(sbPlayer, true);
 			return true;
 		}
 		if (args.length > 2) {
 			String script = StringUtils.createString(args, 2).trim();
 			if (!checkScript(script)) {
-				Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptCheckMessage());
+				SBConfig.ERROR_SCRIPT_CHECK.send(sbPlayer, true);
 				return true;
 			}
 			sbPlayer.setScriptLine(script);
 		}
 		ActionType actionType = ActionType.valueOf(args[1].toUpperCase());
 		sbPlayer.setActionType(actionType.getKey(scriptType));
-		Utils.sendMessage(sbPlayer, SBConfig.getSuccActionDataMessage(scriptType, actionType));
+		String type = scriptType.getType() + "-" + actionType.name().toLowerCase();
+		SBConfig.SUCCESS_ACTION_DATA.replace(type).send(sbPlayer, true);
 		return true;
 	}
 
@@ -292,7 +293,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		Player player = (Player) sender;
 		Region region = SBPlayer.fromPlayer(player).getRegion();
 		if (!region.hasPositions()) {
-			Utils.sendMessage(player, SBConfig.getNotSelectionMessage());
+			SBConfig.NOT_SELECTION.send(sender, true);
 			return true;
 		}
 		StringBuilder builder = new StringBuilder();
@@ -312,11 +313,15 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			scriptEdit.save();
 		}
 		if (builder.length() == 0) {
-			Utils.sendMessage(player, SBConfig.getErrorScriptFileCheckMessage());
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender, true);
 		} else {
 			String types = builder.toString();
-			Utils.sendMessage(player, SBConfig.getSelectorRemoveMessage(types, regionBlocks));
-			Utils.sendMessage(SBConfig.getConsoleSelectorRemoveMessage(types, regionBlocks));
+			String count = "" + regionBlocks.getCount();
+			String world = regionBlocks.getWorld().getName();
+			String min = BlockCoords.getCoords(regionBlocks.getMinimumPoint());
+			String max = BlockCoords.getCoords(regionBlocks.getMaximumPoint());
+			SBConfig.SELECTOR_REMOVE.replace(types, count).send(player, true);
+			SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, count, world, min, max).console(true);
 		}
 		return true;
 	}
@@ -327,12 +332,12 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
 		if (!sbPlayer.hasClipboard()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender, true);
 			return true;
 		}
 		Region region = sbPlayer.getRegion();
 		if (!region.hasPositions()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getNotSelectionMessage());
+			SBConfig.NOT_SELECTION.send(sender, true);
 			return true;
 		}
 		boolean pasteonair = args.length > 2 && Boolean.parseBoolean(args[2]);
@@ -347,8 +352,14 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		clipboard.save();
 		sbPlayer.setClipboard(null);
-		Utils.sendMessage(sbPlayer, SBConfig.getSelectorPasteMessage(clipboard.getScriptType(), regionBlocks));
-		Utils.sendMessage(SBConfig.getConsoleSelectorPasteMessage(clipboard.getScriptType(), regionBlocks));
+
+		String type = clipboard.getScriptType().getType();
+		String count = "" + regionBlocks.getCount();
+		String world = regionBlocks.getWorld().getName();
+		String min = BlockCoords.getCoords(regionBlocks.getMinimumPoint());
+		String max = BlockCoords.getCoords(regionBlocks.getMaximumPoint());
+		SBConfig.SELECTOR_PASTE.replace(type, count).send(sbPlayer, true);
+		SBConfig.CONSOLE_SELECTOR_PASTE.replace(type, count, world, min, max).console(true);
 		return true;
 	}
 

@@ -44,7 +44,7 @@ public class ItemUtils {
 		ItemStack item = new ItemStack(Material.STICK);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§dBlock Selector");
-		meta.setLore(SBConfig.getBlockSelectorLore());
+		meta.setLore(SBConfig.BLOCK_SELECTOR.toListAddColor());
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -54,7 +54,7 @@ public class ItemUtils {
 		ItemStack item = new ItemStack(Material.BLAZE_ROD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§dScript Editor§6[Mode: " + scriptType.name() + "]");
-		meta.setLore(SBConfig.getScriptEditorLore(scriptType));
+		meta.setLore(SBConfig.SCRIPT_EDITOR.toListAddColor());
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -103,6 +103,16 @@ public class ItemUtils {
 	@Nullable
 	public static String getName(@Nullable ItemStack item, @Nullable String def) {
 		if (item == null || item.getType() == Material.AIR) {
+			return def;
+		}
+		ItemMeta meta = item.getItemMeta();
+		return meta == null ? def : meta.hasDisplayName() ? meta.getDisplayName() : def;
+	}
+
+	@NotNull
+	public static String getName(@NotNull ItemStack item) {
+		String def = item.getType().name();
+		if (item.getType() == Material.AIR) {
 			return def;
 		}
 		ItemMeta meta = item.getItemMeta();

@@ -12,7 +12,6 @@ import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -24,7 +23,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ScriptRead extends ScriptObjectMap implements SBRead {
+import static com.github.yuttyann.scriptblockplus.script.ScriptEdit.values;
+
+public class
+ScriptRead extends ScriptObjectMap implements SBRead {
 
 	protected SBPlayer sbPlayer;
 	protected List<String> scripts;
@@ -100,13 +102,13 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 	public boolean read(int index) {
 		Validate.notNull(sbPlayer.getPlayer(), "Player cannot be null");
 		if (!scriptData.checkPath()) {
-			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptFileCheckMessage());
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer, true);
 			return false;
 		}
 		List<Option> options = OptionList.getList();
 		if (!sort(scriptData.getScripts(), options)) {
-			Utils.sendMessage(sbPlayer, SBConfig.getErrorScriptMessage(scriptType));
-			Utils.sendMessage(SBConfig.getConsoleErrorScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
+			SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptType.getType()).send(sbPlayer, true);
+			SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(values(sbPlayer.getName(), scriptType, blockCoords)).console(true);
 			return false;
 		}
 		for (scriptIndex = index; scriptIndex < scripts.size(); scriptIndex++) {
@@ -129,23 +131,23 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 		}
 		executeEndProcess(e -> e.success(this));
 		getSBPlayer().getPlayerCount().add(blockCoords, scriptType);
-		Utils.sendMessage(SBConfig.getConsoleSuccScriptExecMessage(sbPlayer.getName(), scriptType, blockCoords));
+		SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(values(sbPlayer.getName(), scriptType, blockCoords)).console(true);
 		return true;
 	}
 
 	protected void executeEndProcess(@NotNull Consumer<EndProcess> action) {
 		try {
-			EndProcessManager.getInstance().forEach(e -> action.accept(e));
+			EndProcessManager.getInstance().forEach(action);
 		} finally {
 			clear();
 		}
 	}
 
 	protected boolean hasPermission(@NotNull Option option) {
-		if (!SBConfig.isOptionPermission() || Permission.has(sbPlayer, option.getPermissionNode())) {
+		if (!SBConfig.OPTION_PERMISSION.toBool() || Permission.has(sbPlayer, option.getPermissionNode())) {
 			return true;
 		}
-		Utils.sendMessage(sbPlayer, SBConfig.getNotPermissionMessage());
+		SBConfig.NOT_PERMISSION.send(sbPlayer, true);
 		return false;
 	}
 
@@ -154,9 +156,9 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 			List<String> parse = new ArrayList<>();
 			List<String> result = parse;
 			StreamUtils.mForEach(scripts, this::getScripts, parse::addAll);
-			if (SBConfig.isSortScripts()) {
+			if (SBConfig.SORT_SCRIPTS.toBool()) {
 				List<String> list = (result = new ArrayList<>(parse.size()));
-				options.forEach(o -> StreamUtils.fForEach(parse, s -> o.isOption(s), list::add));
+				options.forEach(o -> StreamUtils.fForEach(parse, o::isOption, list::add));
 			}
 			this.scripts = Collections.unmodifiableList(result);
 			return true;

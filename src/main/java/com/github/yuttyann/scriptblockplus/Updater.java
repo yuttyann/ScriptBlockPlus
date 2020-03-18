@@ -5,6 +5,7 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -94,11 +95,7 @@ public final class Updater {
 	}
 
 	public void debug(boolean isUpperVersion, boolean isError) throws Exception {
-		try {
-			load();
-		} catch (Exception e) {
-			throw e;
-		}
+		load();
 		this.isUpperVersion = isUpperVersion;
 		if (isError) {
 			sendErrorMessage(Bukkit.getConsoleSender());
@@ -159,7 +156,7 @@ public final class Updater {
 	}
 
 	public boolean execute(@Nullable CommandSender sender) {
-		if (SBConfig.isUpdateChecker() && isUpperVersion) {
+		if (SBConfig.UPDATE_CHECKER.toBool() && isUpperVersion) {
 			if (sender == null) {
 				sender = Bukkit.getConsoleSender();
 			}
@@ -167,10 +164,10 @@ public final class Updater {
 			File dataFolder = Files.getConfig().getDataFolder();
 			File logFile = new File(dataFolder, "update/ChangeLog.txt");
 			boolean logEquals = !logFile.exists() || !textEquals(changeLogURL, logFile);
-			if (SBConfig.isAutoDownload()) {
+			if (SBConfig.AUTO_DOWNLOAD.toBool()) {
 				File jarFile = new File(dataFolder, "update/jar/" + getJarName());
 				try {
-					Utils.sendMessage(SBConfig.getUpdateDownloadStartMessage());
+					SBConfig.UPDATE_DOWNLOAD_START.send(true);
 					FileUtils.fileDownload(changeLogURL, logFile);
 					FileUtils.fileDownload(downloadURL, jarFile);
 				} catch (IOException e) {
@@ -179,11 +176,11 @@ public final class Updater {
 					if (!isUpdateError && jarFile.exists()) {
 						String fileName = jarFile.getName();
 						String filePath = StringUtils.replace(jarFile.getPath(), "\\", "/");
-						Utils.sendMessage(SBConfig.getUpdateDownloadEndMessage(fileName, filePath, getSize(jarFile.length())));
+						SBConfig.UPDATE_DOWNLOAD_END.replace(fileName, filePath, getSize(jarFile.length())).send(true);
 					}
 				}
 			}
-			if (SBConfig.isOpenChangeLog() && !isUpdateError && logEquals) {
+			if (SBConfig.OPEN_CHANGE_LOG.toBool() && !isUpdateError && logEquals) {
 				Desktop desktop = Desktop.getDesktop();
 				try {
 					desktop.open(logFile);
@@ -198,13 +195,19 @@ public final class Updater {
 
 	public void sendCheckMessage(@NotNull CommandSender sender) {
 		if (isUpperVersion && !isUpdateError && sender.isOp()) {
-			Utils.sendMessage(sender, SBConfig.getUpdateCheckMessages(pluginName, latestVersion, details));
+			StrBuilder builder = new StrBuilder(details.size());
+			for (int i = 0; i < details.size(); i++) {
+				boolean isTree = details.get(i).startsWith("$");
+				String info = StringUtils.removeStart(details.get(i), "$");
+				builder.append(isTree ? "  - " : "・").append(info).append(i == (details.size() - 1) ? "" : "|~");
+			}
+			SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, builder.toString()).send(sender, true);
 		}
 	}
 
 	public void sendErrorMessage(@NotNull CommandSender sender) {
 		if (!isUpdateError && (isUpdateError = true)) {
-			Utils.sendMessage(sender, SBConfig.getErrorUpdateMessage());
+			SBConfig.ERROR_UPDATE.send(sender, true);
 		}
 	}
 
