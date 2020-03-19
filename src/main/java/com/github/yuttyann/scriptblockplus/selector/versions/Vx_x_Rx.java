@@ -39,7 +39,7 @@ public class Vx_x_Rx {
 		return listener;
 	}
 
-	private final class CommandBlock implements CommandListener {
+	private static final class CommandBlock implements CommandListener {
 
 		private final Vx_x_Rx vx_x_Rx;
 
