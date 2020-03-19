@@ -28,11 +28,9 @@ public final class Files {
 	public static final String PATH_LANGS = "langs/{code}.yml";
 
 	public static void reload() {
-		loadFile(PATH_CONFIG, true);
-		ConfigKeys.reload(getConfig());
-
-		loadLang(PATH_LANGS, "lang");
-		ConfigKeys.reload(getLang());
+		ConfigKeys.clear();
+		ConfigKeys.reload(loadFile(PATH_CONFIG, true));
+		ConfigKeys.reload(loadLang(PATH_LANGS, "lang"));
 
 		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
 		searchKeys();
