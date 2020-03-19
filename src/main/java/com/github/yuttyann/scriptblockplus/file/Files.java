@@ -29,8 +29,10 @@ public final class Files {
 
 	public static void reload() {
 		loadFile(PATH_CONFIG, true);
+		ConfigKeys.reload(getConfig());
+
 		loadLang(PATH_LANGS, "lang");
-		ConfigKeys.reload();
+		ConfigKeys.reload(getLang());
 
 		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
 		searchKeys();
