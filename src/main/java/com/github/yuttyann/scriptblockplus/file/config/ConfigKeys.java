@@ -5,21 +5,22 @@ import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class ConfigKeys {
 
     private static final Set<ConfigData> DATAS = new HashSet<>();
 
-    public static void reload() {
-        if (DATAS.size() > 0) {
-            DATAS.clear();
-        }
-        for (YamlConfig value : Files.getFiles().values()) {
-            for (String key : value.getKeys(true)) {
-                DATAS.add(new ConfigData(key, value.get(key)));
-            }
+    public static void clear() {
+        DATAS.clear();
+    }
+
+    public static void reload(YamlConfig yaml) {
+        for (String key : yaml.getKeys(true)) {
+            DATAS.add(new ConfigData(key, yaml.get(key)));
         }
     }
 
