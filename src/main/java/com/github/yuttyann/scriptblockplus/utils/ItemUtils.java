@@ -67,13 +67,13 @@ public class ItemUtils {
 		return isItem(item, Material.BLAZE_ROD, s -> s.startsWith("§dScript Editor§6[Mode: ") && s.endsWith("]"));
 	}
 
-	@Nullable
+	@NotNull
 	public static ScriptType getScriptType(@Nullable ItemStack item) {
 		if (isScriptEditor(item)) {
-			String name = StringUtils.removeStart(ItemUtils.getName(item, null), "§dScript Editor§6[Mode: ");
+			String name = StringUtils.removeStart(ItemUtils.getName(item, ""), "§dScript Editor§6[Mode: ");
 			return ScriptType.valueOf(name.substring(0, name.length() - 1));
 		}
-		return null;
+		return ScriptType.INTERACT;
 	}
 
 	@NotNull
@@ -92,17 +92,16 @@ public class ItemUtils {
 		return new ItemStack[] { getItemInMainHand(player), getItemInOffHand(player) };
 	}
 
-	public static void setName(@Nullable ItemStack item, @NotNull String name) {
-		if (item != null && StringUtils.isNotEmpty(name)) {
-			ItemMeta itemMeta = item.getItemMeta();
-			itemMeta.setDisplayName(name);
-			item.setItemMeta(itemMeta);
-		}
+	public static void setName(@NotNull ItemStack item, @NotNull String name) {
+		ItemMeta itemMeta = item.getItemMeta();
+		itemMeta.setDisplayName(name);
+		item.setItemMeta(itemMeta);
 	}
 
-	@Nullable
-	public static String getName(@Nullable ItemStack item, @Nullable String def) {
-		if (item == null || item.getType() == Material.AIR) {
+	@NotNull
+	public static String getName(@NotNull ItemStack item, @Nullable String def) {
+		def = def == null ? item.getType().name() : def;
+		if (item.getType() == Material.AIR) {
 			return def;
 		}
 		ItemMeta meta = item.getItemMeta();
@@ -111,15 +110,14 @@ public class ItemUtils {
 
 	@NotNull
 	public static String getName(@NotNull ItemStack item) {
-		String def = item.getType().name();
-		if (item.getType() == Material.AIR) {
-			return def;
-		}
-		ItemMeta meta = item.getItemMeta();
-		return meta == null ? def : meta.hasDisplayName() ? meta.getDisplayName() : def;
+		return getName(item, item.getType().name());
 	}
 
-	public static boolean isItem(@Nullable ItemStack item, @NotNull Material material, @NotNull Predicate<String> name) {
-		return item != null && item.getType() == material && name.test(getName(item, Material.AIR.name()));
+	public static boolean isItem(@Nullable ItemStack item, @Nullable Material type, @NotNull String name) {
+		return isItem(item, type, name::equals);
+	}
+
+	public static boolean isItem(@Nullable ItemStack item, @Nullable Material type, @NotNull Predicate<String> name) {
+		return item != null && type != null && item.getType() == type && name.test(getName(item));
 	}
 }
