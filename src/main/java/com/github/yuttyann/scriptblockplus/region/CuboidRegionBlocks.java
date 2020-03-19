@@ -17,6 +17,8 @@ public final class CuboidRegionBlocks {
 	private final Location min;
 	private final Location max;
 
+	private int count = -1;
+
 	public CuboidRegionBlocks(@NotNull Region region) {
 		this.world = Objects.requireNonNull(region.getWorld());
 		this.min = Objects.requireNonNull(region.getMinimumPoint());
@@ -39,9 +41,12 @@ public final class CuboidRegionBlocks {
 	}
 
 	public int getCount() {
-		int[] count = { 0 };
-		forEach(b -> count[0]++);
-		return count[0];
+		if (count == -1) {
+			int[] count = { 0 };
+			forEach(b -> count[0]++);
+			this.count = count[0];
+		}
+		return count;
 	}
 
 	@NotNull
