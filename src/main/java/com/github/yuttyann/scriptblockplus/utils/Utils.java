@@ -77,15 +77,10 @@ public final class Utils {
 		return new SimpleDateFormat(pattern).format(new Date());
 	}
 
-	public static void sendColorMessage(@Nullable String message) {
-		sendColorMessage(Bukkit.getConsoleSender(), message);
-	}
-
 	public static void sendColorMessage(@NotNull CommandSender sender, @Nullable String message) {
-		if (StringUtils.isNotEmpty(message)) {
-			String replace = StringUtils.replace(message, "\\n", "|~");
-			StreamUtils.forEach(StringUtils.split(replace, "|~"), s -> sender.sendMessage(StringUtils.replaceColor(s, true)));
-		}
+		String replace = StringUtils.replace(message, "\\n", "|~");
+		String[] array = StringUtils.split(replace, "|~");
+		StreamUtils.forEach(array, s -> sender.sendMessage(StringUtils.replaceColor(s, true)));
 	}
 
 	@SuppressWarnings("deprecation")

@@ -77,6 +77,7 @@ public abstract class AbstractConstructor<T> {
 		return remove(indexOf(clazz));
 	}
 
+	@SuppressWarnings("unchecked")
 	public final boolean remove(@NotNull SBInstance<? extends T> sbInstance) {
 		return remove(indexOf((Class<? extends T>) sbInstance.getClass()));
 	}
@@ -97,12 +98,11 @@ public abstract class AbstractConstructor<T> {
 
 	@NotNull
 	public T[] newInstances(@NotNull T[] array, @NotNull InstanceType instanceType) {
-		T[] instances = array;
 		int i = 0;
 		for (SBConstructor<? extends T> constructor : getConstructors()) {
-			instances[i++] = constructor.newInstance(instanceType);
+			array[i++] = constructor.newInstance(instanceType);
 		}
-		return instances;
+		return array;
 	}
 
 	@Nullable

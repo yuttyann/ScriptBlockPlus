@@ -49,7 +49,7 @@ public class Calculation extends BaseOption {
 			message = StringUtils.replace(message, "%value1%", String.valueOf(value1));
 			message = StringUtils.replace(message, "%value2%", String.valueOf(value2));
 			message = StringUtils.replace(message, "%operator%", operator);
-			Utils.sendMessage(getPlayer(), message);
+			Utils.sendColorMessage(getSBPlayer(), message);
 		}
 		return false;
 	}

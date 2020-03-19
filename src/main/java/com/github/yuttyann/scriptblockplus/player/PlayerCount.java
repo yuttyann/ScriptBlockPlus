@@ -9,6 +9,7 @@ import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,8 +87,8 @@ public class PlayerCount {
 	}
 
 	@NotNull
-	public PlayerCountInfo getInfo(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType) {
-		String fullCoords = blockCoords.getFullCoords();
+	public PlayerCountInfo getInfo(@NotNull Location location, @NotNull ScriptType scriptType) {
+		String fullCoords = BlockCoords.getFullCoords(location);
 		int hash = getHashCode(fullCoords, scriptType);
 		PlayerCountInfo info = StreamUtils.fOrElse(infos, p -> p.hashCode() == hash, null);
 		if (info == null) {

@@ -21,10 +21,7 @@ public abstract class ScriptObjectMap extends ScriptListener implements ObjectMa
 
 	@Override
 	public void put(@NotNull String key, @Nullable Object value) {
-		Map<String, Object> map = OBJECT_MAP.get(ramdomId);
-		if (map == null) {
-			OBJECT_MAP.put(ramdomId, map = new HashMap<>());
-		}
+		Map<String, Object> map = OBJECT_MAP.computeIfAbsent(ramdomId, k -> new HashMap<>());
 		map.put(key, value);
 	}
 

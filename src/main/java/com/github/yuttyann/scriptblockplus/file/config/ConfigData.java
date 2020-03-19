@@ -37,6 +37,6 @@ public class ConfigData {
 
     @Override
     public int hashCode() {
-        return key.hashCode();
+        return Objects.hash(key, value);
     }
 }

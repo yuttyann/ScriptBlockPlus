@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +19,7 @@ public class ToPlayer extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		Utils.sendMessage(getPlayer(), StringUtils.replaceColor(getOptionValue(), true));
+		Utils.sendColorMessage(getPlayer(), getOptionValue());
 		return true;
 	}
 }
