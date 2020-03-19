@@ -18,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public final class APIManager implements ScriptBlockAPI {
 
@@ -83,24 +82,18 @@ public final class APIManager implements ScriptBlockAPI {
 		EndProcessManager.getInstance().remove(index);
 	}
 
-	@NotNull
 	@Override
-	public SBEdit getSBEdit(@NotNull Location location, @NotNull ScriptType scriptType) {
-		return new SEdit(location, scriptType);
+	@NotNull
+	public SBEdit getSBEdit(@NotNull ScriptType scriptType) {
+		return new SEdit(scriptType);
 	}
 
-	private class SEdit implements SBEdit {
+	private static class SEdit implements SBEdit {
 
 		private final ScriptEdit scriptEdit;
 
-		public SEdit(@NotNull Location location, @NotNull ScriptType scriptType) {
+		public SEdit(@NotNull ScriptType scriptType) {
 			this.scriptEdit = new ScriptEdit(scriptType);
-			setLocation(location);
-		}
-
-		@Override
-		public void setLocation(@NotNull Location location) {
-			scriptEdit.setLocation(location);
 		}
 
 		@Override
@@ -113,49 +106,49 @@ public final class APIManager implements ScriptBlockAPI {
 			return scriptEdit.checkPath();
 		}
 
-		@NotNull
 		@Override
+		@NotNull
 		public ScriptType getScriptType() {
 			return scriptEdit.getScriptType();
 		}
 
 		@Override
-		public void create(@NotNull Player player, @NotNull String script) {
-			scriptEdit.create(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null, script);
+		public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
+			scriptEdit.create(SBPlayer.fromUUID(player.getUniqueId()), location, script);
 		}
 
 		@Override
-		public void add(@NotNull Player player, @NotNull String script) {
-			scriptEdit.add(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null, script);
+		public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
+			scriptEdit.add(SBPlayer.fromUUID(player.getUniqueId()), location, script);
 		}
 
 		@Override
-		public void remove(@NotNull Player player) {
-			scriptEdit.remove(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null);
+		public void remove(@NotNull Player player, @NotNull Location location) {
+			scriptEdit.remove(SBPlayer.fromUUID(player.getUniqueId()), location);
 		}
 
 		@Override
-		public void view(@NotNull Player player) {
-			scriptEdit.view(SBPlayer.fromUUID(Objects.requireNonNull(player).getUniqueId()), null);
+		public void view(@NotNull Player player, @NotNull Location location) {
+			scriptEdit.view(SBPlayer.fromUUID(player.getUniqueId()), location);
 		}
 	}
 
-	@NotNull
 	@Override
-	public SBFile getSBFile(@Nullable Location location, @NotNull ScriptType scriptType) {
+	@NotNull
+	public SBFile getSBFile(@NotNull Location location, @NotNull ScriptType scriptType) {
 		return new SFile(location, scriptType);
 	}
 
-	private class SFile implements SBFile {
+	private static class SFile implements SBFile {
 
 		private final ScriptData scriptData;
 
-		public SFile(@Nullable Location location, @NotNull ScriptType scriptType) {
+		public SFile(@NotNull Location location, @NotNull ScriptType scriptType) {
 			this.scriptData = new ScriptData(location, scriptType);
 		}
 
 		@Override
-		public void setLocation(@Nullable Location location) {
+		public void setLocation(@NotNull Location location) {
 			scriptData.setLocation(location);
 		}
 
@@ -169,38 +162,38 @@ public final class APIManager implements ScriptBlockAPI {
 			return scriptData.checkPath();
 		}
 
-		@NotNull
 		@Override
+		@NotNull
 		public String getScriptPath() {
 			return scriptData.getScriptPath();
 		}
 
-		@NotNull
 		@Override
+		@NotNull
 		public ScriptType getScriptType() {
 			return scriptData.getScriptType();
 		}
 
-		@Nullable
 		@Override
+		@Nullable
 		public Location getLocation() {
 			return scriptData.getLocation();
 		}
 
-		@Nullable
 		@Override
+		@Nullable
 		public String getAuthor() {
 			return scriptData.getAuthor();
 		}
 
-		@NotNull
 		@Override
+		@NotNull
 		public List<String> getAuthors(boolean isMinecraftID) {
 			return scriptData.getAuthors(isMinecraftID);
 		}
 
-		@Nullable
 		@Override
+		@Nullable
 		public String getLastEdit() {
 			return scriptData.getLastEdit();
 		}
@@ -210,8 +203,8 @@ public final class APIManager implements ScriptBlockAPI {
 			return scriptData.getAmount();
 		}
 
-		@NotNull
 		@Override
+		@NotNull
 		public List<String> getScripts() {
 			return scriptData.getScripts();
 		}

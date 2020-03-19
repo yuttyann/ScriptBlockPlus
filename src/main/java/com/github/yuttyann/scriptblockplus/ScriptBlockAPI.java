@@ -101,21 +101,13 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * スクリプトの編集クラスを取得する</br>
-	 * @param location 座標
 	 * @param scriptType スクリプトの種類
 	 * @return SBEdit
 	 */
 	@NotNull
-	public SBEdit getSBEdit(@NotNull Location location, @NotNull ScriptType scriptType);
+	public SBEdit getSBEdit(@NotNull ScriptType scriptType);
 
 	public interface SBEdit {
-
-		/**
-		 * スクリプトの座標を設定する</br>
-		 * ただし、別の座標に切り替える機能であり保存場所を変更するわけではない
-		 * @param location 座標
-		 */
-		public void setLocation(@NotNull Location location);
 
 		/**
 		 * 変更を保存する
@@ -138,28 +130,32 @@ public interface ScriptBlockAPI {
 		/**
 		 * 指定座標にスクリプトを作成する
 		 * @param player プレイヤー
+		 * @param location 座標
 		 * @param script スクリプト
 		 */
-		public void create(@NotNull Player player, @NotNull String script);
+		public void create(@NotNull Player player, @NotNull Location location, @NotNull String script);
 
 		/**
 		 * 指定座標にスクリプト追加する
 		 * @param player プレイヤー
+		 * @param location 座標
 		 * @param script スクリプト
 		 */
-		public void add(@NotNull Player player, @NotNull String script);
+		public void add(@NotNull Player player, @NotNull Location location, @NotNull String script);
 
 		/**
 		 * 指定座標のスクリプトを削除する
 		 * @param player プレイヤー
+		 * @param location 座標
 		 */
-		public void remove(@NotNull Player player);
+		public void remove(@NotNull Player player, @NotNull Location location);
 
 		/**
 		 * 指定座標のスクリプトの情報を表示する
 		 * @param player プレイヤー
+		 * @param location 座標
 		 */
-		public void view(@NotNull Player player);
+		public void view(@NotNull Player player, @NotNull Location location);
 	}
 
 	/**
@@ -168,7 +164,7 @@ public interface ScriptBlockAPI {
 	 * @param scriptType スクリプトの種類
 	 * @return SBFile
 	 */
-	public SBFile getSBFile(@Nullable Location location, @NotNull ScriptType scriptType);
+	public SBFile getSBFile(@NotNull Location location, @NotNull ScriptType scriptType);
 
 	public interface SBFile {
 
@@ -177,7 +173,7 @@ public interface ScriptBlockAPI {
 		 * ただし、別の座標に切り替える機能であり保存場所を変更するわけではない
 		 * @param location 座標
 		 */
-		public void setLocation(@Nullable Location location);
+		public void setLocation(@NotNull Location location);
 
 		/**
 		 * 変更を保存する
