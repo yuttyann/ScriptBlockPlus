@@ -171,11 +171,11 @@ public final class SBConfig {
 	});
 
 	public static final CustomText CONSOLE_SELECTOR_PASTE = customStringKey("ConsoleSelectorPasteMessage", "", c -> {
-		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
+		c.setReplaceKeys("%scripttype%", "%blockcount%", "%world%", "%mincoords%", "%maxcoords%");
 	});
 
 	public static final CustomText CONSOLE_SELECTOR_REMOVE = customStringKey("ConsoleSelectorRemoveMessage", "", c -> {
-		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
+		c.setReplaceKeys("%scripttype%", "%blockcount%", "%world%", "%mincoords%", "%maxcoords%");
 	});
 
 	public static final CustomText CONSOLE_SUCCESS_SCRIPT_EXECUTE = customStringKey("ConsoleSuccScriptExecMessage", "", c -> {
