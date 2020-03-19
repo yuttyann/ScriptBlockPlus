@@ -2,9 +2,7 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -25,17 +23,21 @@ public class BlockType extends BaseOption {
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), ",");
 		Block block = getLocation().getBlock();
-		return StreamUtils.anyMatch(array, s -> equals(block, s));
+		for (String type : array) {
+			if (equals(block, type)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
-	private boolean equals(@NotNull Block block, @NotNull String blockType) {
+	private boolean equals(@NotNull Block block, @NotNull String blockType) throws IllegalAccessException {
 		if (StringUtils.isEmpty(blockType)) {
 			return false;
 		}
 		String[] array = StringUtils.split(blockType, ":");
 		if (Calculation.REALNUMBER_PATTERN.matcher(array[0]).matches()) {
-			Utils.sendMessage(getPlayer(), "§cNumerical values can not be used");
-			return false;
+			throw new IllegalAccessException("Numerical values can not be used");
 		}
 		Material type = Material.getMaterial(array[0]);
 		if (type == null || !type.isBlock()) {
