@@ -34,11 +34,13 @@ public class ConfigKey<T> {
     }
 
     @SuppressWarnings("unchecked")
+    @NotNull
     public List<String> toList() {
         T t = get();
         return t instanceof List ? (List<String>) t : new ArrayList<>();
     }
 
+    @NotNull
     public List<String> toListAddColor() {
         List<String> list = toList();
         for (int i = 0; i < list.size(); i++) {
@@ -55,11 +57,11 @@ public class ConfigKey<T> {
         return Boolean.parseBoolean(String.valueOf(get()));
     }
 
-    public void send(boolean isReplaceColor) {
-        send(Bukkit.getConsoleSender(), isReplaceColor);
+    public void send() {
+        send(Bukkit.getConsoleSender());
     }
 
-    public void send(@Nullable CommandSender sender, boolean isReplaceColor) {
-        Utils.sendMessage(sender, isReplaceColor ? replaceColor(toString(), true) : toString());
+    public void send(@NotNull CommandSender sender) {
+        Utils.sendColorMessage(sender, toString());
     }
 }

@@ -28,6 +28,7 @@ public class CustomText {
         this.value = def;
     }
 
+    @NotNull
     public CustomText set() {
         synchronized(this) {
             this.value = getConfigData(key).getValue(def);
@@ -76,17 +77,17 @@ public class CustomText {
         return temp;
     }
 
-    public void send(boolean isReplaceColor) {
-        send(Bukkit.getConsoleSender(), isReplaceColor);
+    public void send() {
+        send(Bukkit.getConsoleSender());
     }
 
-    public void send(@NotNull CommandSender sender, boolean isReplaceColor) {
-        Utils.sendMessage(sender, toString(isReplaceColor));
+    public void send(@NotNull CommandSender sender) {
+        Utils.sendColorMessage(sender, toString());
     }
 
-    public void console(boolean isReplaceColor) {
+    public void console() {
         if (SBConfig.CONSOLE_LOG.toBool()) {
-            send(isReplaceColor);
+            send();
         }
     }
 }
