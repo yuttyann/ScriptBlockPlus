@@ -67,8 +67,7 @@ public final class StringUtils {
 	@NotNull
 	public static String replaceColor(@Nullable String source, boolean randomColor) {
 		if (randomColor) {
-			ChatColor color = ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16)));
-			source = replace(source, "&rc", color::toString);
+			source = replace(source, "&rc", ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16))).toString());
 		}
 		return isEmpty(source) ? "" : ChatColor.translateAlternateColorCodes('&', source);
 	}
