@@ -29,7 +29,7 @@ public class Cooldown extends BaseOption {
 			short hour = (short) (temp / 3600);
 			byte minute = (byte) (temp % 3600 / 60);
 			byte second = (byte) (temp % 3600 % 60);
-			SBConfig.ACTIVE_COOLDOWN.replace(hour, minute, second).send(getSBPlayer(), true);
+			SBConfig.ACTIVE_COOLDOWN.replace(hour, minute, second).send(getSBPlayer());
 			return false;
 		}
 		int second = Integer.parseInt(getOptionValue());

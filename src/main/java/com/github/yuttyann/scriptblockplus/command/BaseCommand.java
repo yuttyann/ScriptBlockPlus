@@ -84,7 +84,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 		boolean has = permission.has(sender);
 		if (!has) {
 			isIgnoreUsage = true;
-			SBConfig.NOT_PERMISSION.send(sender, true);
+			SBConfig.NOT_PERMISSION.send(sender);
 		}
 		return has;
 	}
@@ -93,7 +93,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 		if (sender instanceof Player) {
 			return true;
 		}
-		SBConfig.SENDER_NO_PLAYER.send(sender, true);
+		SBConfig.SENDER_NO_PLAYER.send(sender);
 		isIgnoreUsage = true;
 		return false;
 	}

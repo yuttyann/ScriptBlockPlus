@@ -20,6 +20,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.*;
 import com.google.common.base.Charsets;
+import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -29,10 +30,7 @@ import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public final class ScriptBlockPlusCommand extends BaseCommand {
 
@@ -116,12 +114,12 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		boolean isSound = args[1].equalsIgnoreCase("sound");
 		String type = isSound ? "Sound" : "Material";
-		Utils.sendMessage(sender, SBConfig.EXPORT_START.replace(type).toString(true));
+		SBConfig.EXPORT_START.replace(type).send(sender);
 		new Thread(() -> {
 			String version = Utils.getServerVersion();
 			File file = new File(getPlugin().getDataFolder(), "export/" + type.toLowerCase() + "_v" + version + "_.txt");
 			write(file, isSound ? Sound.values() : Material.values());
-			Utils.sendMessage(sender, SBConfig.EXPORT_END.replace(type).toString(true));
+			SBConfig.EXPORT_END.replace(type).send(sender);
 		}).start();
 		return true;
 	}
@@ -153,7 +151,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		player.getInventory().addItem(ItemUtils.getBlockSelector());
 		player.getInventory().addItem(ItemUtils.getScriptEditor(ScriptType.INTERACT));
 		Utils.updateInventory(player);
-		SBConfig.GIVE_TOOL.send(player, true);
+		SBConfig.GIVE_TOOL.send(player);
 		return true;
 	}
 
@@ -166,7 +164,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		PackageType.clear();
 		setUsage(getUsages());
 		ScriptBlock.getInstance().getMapManager().loadAllScripts();
-		SBConfig.ALL_FILE_RELOAD.send(sender, true);
+		SBConfig.ALL_FILE_RELOAD.send(sender);
 		return true;
 	}
 
@@ -177,13 +175,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		File dataFolder = Files.getConfig().getDataFolder();
 		File scripts = new File(dataFolder, "scripts");
 		if (!scripts.exists() || FileUtils.isEmpty(scripts)) {
-			SBConfig.ERROR_SCRIPTS_BACKUP.send(sender, true);
+			SBConfig.ERROR_SCRIPTS_BACKUP.send(sender);
 			return true;
 		}
 		File backup = new File(scripts, "backup");
 		String formatTime = Utils.getFormatTime("yyyy-MM-dd HH-mm-ss");
 		FileUtils.copyDirectory(scripts, new File(backup, "scripts " + formatTime), File::isDirectory);
-		SBConfig.SCRIPTS_BACKUP.send(sender, true);
+		SBConfig.SCRIPTS_BACKUP.send(sender);
 		return true;
 	}
 
@@ -204,11 +202,11 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		File walkFile = new File(path + "walk_Scripts.yml");
 		Player player = (Player) sender;
 		if (!walkFile.exists() && !interactFile.exists()) {
-			SBConfig.NOT_SCRIPT_BLOCK_FILE.send(sender, true);
+			SBConfig.NOT_SCRIPT_BLOCK_FILE.send(sender);
 		} else {
 			String time = Utils.getFormatTime();
 			String uuid = player.getUniqueId().toString();
-			SBConfig.DATAMIGR_START.send(sender, true);
+			SBConfig.DATAMIGR_START.send(sender);
 			new Thread(() -> {
 				if (interactFile.exists()) {
 					saveScript(uuid, time, YamlConfig.load(getPlugin(), interactFile, false), ScriptType.INTERACT);
@@ -216,16 +214,16 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 				if (walkFile.exists()) {
 					saveScript(uuid, time, YamlConfig.load(getPlugin(), walkFile, false), ScriptType.WALK);
 				}
-				SBConfig.DATAMIGR_END.send(sender, true);
+				SBConfig.DATAMIGR_END.send(sender);
 			}).start();
 		}
 		return true;
 	}
 
 	private void saveScript(@NotNull String uuid, @NotNull String time, @NotNull YamlConfig scriptFile, @NotNull ScriptType scriptType) {
-		ScriptData scriptData = new ScriptData(null, scriptType);
+		ScriptData scriptData = new ScriptData(scriptType);
 		for (String world : scriptFile.getKeys()) {
-			World tWorld = Utils.getWorld(world);
+			World tWorld = Objects.requireNonNull(Utils.getWorld(world));
 			for (String coords : scriptFile.getKeys(world)) {
 				List<String> scripts = scriptFile.getStringList(world + "." + coords);
 				if (scripts.size() > 0 && scripts.get(0).startsWith("Author:")) {
@@ -268,13 +266,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
 		if (sbPlayer.hasScriptLine() || sbPlayer.hasActionType()) {
-			SBConfig.ERROR_ACTION_DATA.send(sbPlayer, true);
+			SBConfig.ERROR_ACTION_DATA.send(sbPlayer);
 			return true;
 		}
 		if (args.length > 2) {
 			String script = StringUtils.createString(args, 2).trim();
 			if (!checkScript(script)) {
-				SBConfig.ERROR_SCRIPT_CHECK.send(sbPlayer, true);
+				SBConfig.ERROR_SCRIPT_CHECK.send(sbPlayer);
 				return true;
 			}
 			sbPlayer.setScriptLine(script);
@@ -282,7 +280,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		ActionType actionType = ActionType.valueOf(args[1].toUpperCase());
 		sbPlayer.setActionType(actionType.getKey(scriptType));
 		String type = scriptType.getType() + "-" + actionType.name().toLowerCase();
-		SBConfig.SUCCESS_ACTION_DATA.replace(type).send(sbPlayer, true);
+		SBConfig.SUCCESS_ACTION_DATA.replace(type).send(sbPlayer);
 		return true;
 	}
 
@@ -293,35 +291,30 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		Player player = (Player) sender;
 		Region region = SBPlayer.fromPlayer(player).getRegion();
 		if (!region.hasPositions()) {
-			SBConfig.NOT_SELECTION.send(sender, true);
+			SBConfig.NOT_SELECTION.send(sender);
 			return true;
 		}
-		StringBuilder builder = new StringBuilder();
 		CuboidRegionBlocks regionBlocks = new CuboidRegionBlocks(region);
 		Set<Block> blocks = regionBlocks.getBlocks();
+		StrBuilder builder = new StrBuilder();
 		for (ScriptType scriptType : ScriptType.values()) {
 			if (!Files.getScriptFile(scriptType).exists()) {
 				continue;
 			}
-			boolean isFirst = true;
 			ScriptEdit scriptEdit = new ScriptEdit(scriptType);
 			for (Block block : blocks) {
-				if (scriptEdit.lightRemove(block.getLocation()) && isFirst && !(isFirst = false)) {
+				if (scriptEdit.lightRemove(block.getLocation()) && builder.indexOf(scriptType.getType()) == -1) {
 					builder.append(builder.length() == 0 ? "" : ", ").append(scriptType.getType());
 				}
 			}
 			scriptEdit.save();
 		}
 		if (builder.length() == 0) {
-			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender, true);
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
 		} else {
 			String types = builder.toString();
-			String count = "" + regionBlocks.getCount();
-			String world = regionBlocks.getWorld().getName();
-			String min = BlockCoords.getCoords(regionBlocks.getMinimumPoint());
-			String max = BlockCoords.getCoords(regionBlocks.getMaximumPoint());
-			SBConfig.SELECTOR_REMOVE.replace(types, count).send(player, true);
-			SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, count, world, min, max).console(true);
+			SBConfig.SELECTOR_REMOVE.replace(types, regionBlocks.getCount()).send(player);
+			SBConfig.CONSOLE_SELECTOR_REMOVE.replace(args(types, regionBlocks)).console();
 		}
 		return true;
 	}
@@ -330,37 +323,39 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!hasPermission(sender, Permission.COMMAND_SELECTOR)) {
 			return false;
 		}
+		boolean pasteonair = args.length > 2 && Boolean.parseBoolean(args[2]);
+		boolean overwrite = args.length > 3 && Boolean.parseBoolean(args[3]);
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
 		if (!sbPlayer.hasClipboard()) {
-			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender, true);
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
 			return true;
 		}
 		Region region = sbPlayer.getRegion();
 		if (!region.hasPositions()) {
-			SBConfig.NOT_SELECTION.send(sender, true);
+			SBConfig.NOT_SELECTION.send(sender);
 			return true;
 		}
-		boolean pasteonair = args.length > 2 && Boolean.parseBoolean(args[2]);
-		boolean overwrite = args.length > 3 && Boolean.parseBoolean(args[3]);
-		SBClipboard clipboard = sbPlayer.getClipboard();
 		CuboidRegionBlocks regionBlocks = new CuboidRegionBlocks(region);
+		SBClipboard clipboard = sbPlayer.getClipboard();
+		sbPlayer.setClipboard(null);
 		for (Block block : regionBlocks.getBlocks()) {
 			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
 				continue;
 			}
-			clipboard.lightPaste(block.getLocation(), overwrite, false);
+			clipboard.lightPaste(block.getLocation(), overwrite);
 		}
 		clipboard.save();
-		sbPlayer.setClipboard(null);
+		String scriptType = clipboard.getScriptType().getType();
+		SBConfig.SELECTOR_PASTE.replace(scriptType, regionBlocks.getCount()).send(sbPlayer);
+		SBConfig.CONSOLE_SELECTOR_PASTE.replace(args(scriptType, regionBlocks)).console();
+		return true;
+	}
 
-		String type = clipboard.getScriptType().getType();
-		String count = "" + regionBlocks.getCount();
+	private Object[] args(@NotNull String scriptType, @NotNull CuboidRegionBlocks regionBlocks) {
 		String world = regionBlocks.getWorld().getName();
 		String min = BlockCoords.getCoords(regionBlocks.getMinimumPoint());
 		String max = BlockCoords.getCoords(regionBlocks.getMaximumPoint());
-		SBConfig.SELECTOR_PASTE.replace(type, count).send(sbPlayer, true);
-		SBConfig.CONSOLE_SELECTOR_PASTE.replace(type, count, world, min, max).console(true);
-		return true;
+		return new Object[] { scriptType, regionBlocks.getCount(), world, min, max };
 	}
 
 	@Override

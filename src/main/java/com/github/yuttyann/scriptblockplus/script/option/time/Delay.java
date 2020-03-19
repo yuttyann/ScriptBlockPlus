@@ -32,7 +32,7 @@ public class Delay extends BaseOption implements Runnable {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		unSaveExec = array.length > 1 && Boolean.parseBoolean(array[1]);
 		if (containsDelay()) {
-			SBConfig.ACTIVE_DELAY.send(getSBPlayer(), true);
+			SBConfig.ACTIVE_DELAY.send(getSBPlayer());
 		} else {
 			putDelay();
 			Bukkit.getScheduler().runTaskLater(getPlugin(), this, Long.parseLong(array[0]));

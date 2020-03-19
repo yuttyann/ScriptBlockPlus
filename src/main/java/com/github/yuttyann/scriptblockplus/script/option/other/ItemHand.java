@@ -12,8 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 public class ItemHand extends BaseOption {
 
 	public ItemHand() {
@@ -43,16 +41,17 @@ public class ItemHand extends BaseOption {
 		ItemStack[] items = ItemUtils.getHandItems(player);
 		if (!StreamUtils.anyMatch(items, i -> checkItem(i, itemName, type, amount, damage))) {
 			String typeName = type == null ? "null" : type.name();
-			SBConfig.ERROR_HAND.replace(typeName, amount, damage, itemName).send(player, true);
+			String itemTypeName = StringUtils.isEmpty(itemName) ? typeName : itemName;
+			SBConfig.ERROR_HAND.replace(typeName, amount, damage, itemTypeName).send(player);
 			return false;
 		}
 		return true;
 	}
 
-	private boolean checkItem(@Nullable ItemStack item, @Nullable String itemName, @Nullable Material type, int amount, int damage) {
-		if (item == null || item.getType() != type || item.getAmount() < amount || ItemUtils.getDamage(item) != damage) {
+	private boolean checkItem(@Nullable ItemStack item, @NotNull String itemName, @Nullable Material type, int amount, int damage) {
+		if (item == null || item.getAmount() < amount || ItemUtils.getDamage(item) != damage) {
 			return false;
 		}
-		return itemName == null || Objects.equals(ItemUtils.getName(item, null), itemName);
+		return ItemUtils.isItem(item, type, StringUtils.isEmpty(itemName) ? item.getType().name() : itemName);
 	}
 }

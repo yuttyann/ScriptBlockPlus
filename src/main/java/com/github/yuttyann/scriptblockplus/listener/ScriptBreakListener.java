@@ -42,7 +42,7 @@ public class ScriptBreakListener extends ScriptListener {
 				return;
 			}
 			if (!SBPermission.has(player, ScriptType.BREAK, false)) {
-				SBConfig.NOT_PERMISSION.send(player, true);
+				SBConfig.NOT_PERMISSION.send(player);
 				return;
 			}
 			new ScriptRead(player, location, this).read(0);

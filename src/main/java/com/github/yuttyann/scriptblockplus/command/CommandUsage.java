@@ -36,7 +36,7 @@ public abstract class CommandUsage {
 		List<CommandData> list = new ArrayList<>(usages.size());
 		StreamUtils.fForEach(usages, c -> c.hasPermission(sender), list::add);
 		if (list.isEmpty()) {
-			SBConfig.NOT_PERMISSION.send(sender, true);
+			SBConfig.NOT_PERMISSION.send(sender);
 			return;
 		}
 		String commandName = command.getName();

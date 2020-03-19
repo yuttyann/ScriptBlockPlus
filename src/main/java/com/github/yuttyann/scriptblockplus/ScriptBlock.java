@@ -33,7 +33,7 @@ public class ScriptBlock extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		if (!Utils.isCBXXXorLater("1.9")) {
-			Utils.sendMessage("§cUnsupported Version: v" + Utils.getServerVersion());
+			Bukkit.getConsoleSender().sendMessage("§cUnsupported Version: v" + Utils.getServerVersion());
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -42,7 +42,7 @@ public class ScriptBlock extends JavaPlugin {
 		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setPlayer(p).setOnline(true));
 
 		if (!HookPlugins.hasVault()) {
-			SBConfig.NOT_VAULT.send(true);
+			SBConfig.NOT_VAULT.send();
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -103,10 +103,10 @@ public class ScriptBlock extends JavaPlugin {
 				updater.init();
 				updater.load();
 				if (!updater.execute(sender) && latestMessage) {
-					SBConfig.NOT_LATEST_PLUGIN.send(sender, true);
+					SBConfig.NOT_LATEST_PLUGIN.send(sender);
 				}
 			} catch (Exception e) {
-				SBConfig.ERROR_UPDATE.send(true);;
+				SBConfig.ERROR_UPDATE.send();
 			}
 		}).start();
 	}

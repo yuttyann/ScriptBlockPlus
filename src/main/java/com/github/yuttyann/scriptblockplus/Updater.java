@@ -167,7 +167,7 @@ public final class Updater {
 			if (SBConfig.AUTO_DOWNLOAD.toBool()) {
 				File jarFile = new File(dataFolder, "update/jar/" + getJarName());
 				try {
-					SBConfig.UPDATE_DOWNLOAD_START.send(true);
+					SBConfig.UPDATE_DOWNLOAD_START.send();
 					FileUtils.fileDownload(changeLogURL, logFile);
 					FileUtils.fileDownload(downloadURL, jarFile);
 				} catch (IOException e) {
@@ -176,7 +176,7 @@ public final class Updater {
 					if (!isUpdateError && jarFile.exists()) {
 						String fileName = jarFile.getName();
 						String filePath = StringUtils.replace(jarFile.getPath(), "\\", "/");
-						SBConfig.UPDATE_DOWNLOAD_END.replace(fileName, filePath, getSize(jarFile.length())).send(true);
+						SBConfig.UPDATE_DOWNLOAD_END.replace(fileName, filePath, getSize(jarFile.length())).send();
 					}
 				}
 			}
@@ -201,13 +201,13 @@ public final class Updater {
 				String info = StringUtils.removeStart(details.get(i), "$");
 				builder.append(isTree ? "  - " : "・").append(info).append(i == (details.size() - 1) ? "" : "|~");
 			}
-			SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, builder.toString()).send(sender, true);
+			SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, builder.toString()).send(sender);
 		}
 	}
 
 	public void sendErrorMessage(@NotNull CommandSender sender) {
 		if (!isUpdateError && (isUpdateError = true)) {
-			SBConfig.ERROR_UPDATE.send(sender, true);
+			SBConfig.ERROR_UPDATE.send(sender);
 		}
 	}
 

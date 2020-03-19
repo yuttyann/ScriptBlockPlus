@@ -31,7 +31,7 @@ public class Group extends BaseOption {
 
 		Player player = getPlayer();
 		if (!vaultPermission.playerInGroup(world, player, group)) {
-			SBConfig.ERROR_GROUP.replace(getOptionValue()).send(player, true);
+			SBConfig.ERROR_GROUP.replace(getOptionValue()).send(player);
 			return false;
 		}
 		return true;

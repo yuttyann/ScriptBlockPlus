@@ -54,7 +54,7 @@ public abstract class BaseOption extends Option {
 
 	/**
 	 * SBプレイヤーを取得する
-	 * @return SBプレイヤー
+	 * @return SBPlayer
 	 */
 	@NotNull
 	protected final SBPlayer getSBPlayer() {
@@ -168,7 +168,7 @@ public abstract class BaseOption extends Option {
 
 	/**
 	 * オプションを実行する
-	 * @param sbRead
+	 * @param sbRead スクリプト読み込みクラス
 	 * @return 実行が成功したかどうか
 	 */
 	@Override
@@ -179,16 +179,15 @@ public abstract class BaseOption extends Option {
 			return isValid();
 		} catch (Exception e) {
 			e.printStackTrace();
-			String message = e.getMessage() == null ? "" : " \"" + e.getMessage() + "\"";
-			String cause = message.getClass().getSimpleName() + message;
-			SBConfig.OPTION_FAILED_TO_EXECUTE.replace(message, cause).send(getSBPlayer(), true);
+			String cause = e.getClass().getSimpleName() + (e.getMessage() == null ? "" : " \"" + e.getMessage() + "\"");
+			SBConfig.OPTION_FAILED_TO_EXECUTE.replace(getName(), cause).send(getSBPlayer());
 		}
 		return false;
 	}
 
 	/**
 	 * コンソールからコマンドを実行する
-	 * @param command
+	 * @param command コマンド
 	 * @return 実行が成功したかどうか
 	 */
 	protected final boolean executeConsoleCommand(@NotNull String command) {
@@ -197,9 +196,9 @@ public abstract class BaseOption extends Option {
 
 	/**
 	 * プレイヤーからコマンドを実行する
-	 * @param player
-	 * @param command
-	 * @param isBypass
+	 * @param player プレイヤー
+	 * @param command コマンド
+	 * @param isBypass 権限を無視して実行するかどうか
 	 * @return 実行が成功したかどうか
 	 */
 	protected final boolean executeCommand(@NotNull Player player, @NotNull String command, boolean isBypass) {

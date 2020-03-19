@@ -13,8 +13,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 public class ItemCost extends BaseOption {
 
 	public static final String KEY_ITEM = PlayerData.createRandomId("ItemCost");
@@ -58,7 +56,8 @@ public class ItemCost extends BaseOption {
 		}
 		if (result > 0) {
 			String typeName = type == null ? "null" : type.name();
-			SBConfig.ERROR_ITEM.replace(typeName, amount, damage, itemName).send(player, true);
+			String itemTypeName = StringUtils.isEmpty(itemName) ? typeName : itemName;
+			SBConfig.ERROR_ITEM.replace(typeName, amount, damage, itemTypeName).send(player);
 			return false;
 		}
 		inventory.setContents(items);
@@ -74,15 +73,15 @@ public class ItemCost extends BaseOption {
 	private ItemStack[] copyItems(@NotNull ItemStack[] items) {
 		ItemStack[] copy = new ItemStack[items.length];
 		for (int i = 0; i < copy.length; i++) {
-			copy[i] = items[i] == null ? null : items[i].clone();
+			copy[i] = items[i] == null ? new ItemStack(Material.AIR) : items[i].clone();
 		}
 		return copy;
 	}
 
-	private boolean equalItems(@Nullable ItemStack item, @Nullable String itemName, @Nullable Material type, int damage) {
-		if (item == null || item.getType() != type || ItemUtils.getDamage(item) != damage) {
+	private boolean equalItems(@Nullable ItemStack item, @NotNull String itemName, @Nullable Material type, int damage) {
+		if (item == null || ItemUtils.getDamage(item) != damage) {
 			return false;
 		}
-		return itemName == null || Objects.equals(ItemUtils.getName(item, null), itemName);
+		return ItemUtils.isItem(item, type, StringUtils.isEmpty(itemName) ? item.getType().name() : itemName);
 	}
 }

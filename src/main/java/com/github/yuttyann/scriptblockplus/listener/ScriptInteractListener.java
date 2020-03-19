@@ -45,7 +45,7 @@ public class ScriptInteractListener extends ScriptListener {
 				return;
 			}
 			if (!SBPermission.has(player, ScriptType.INTERACT, false)) {
-				SBConfig.NOT_PERMISSION.send(player, true);
+				SBConfig.NOT_PERMISSION.send(player);
 				return;
 			}
 			ScriptRead scriptRead = new ScriptRead(player, location, this);

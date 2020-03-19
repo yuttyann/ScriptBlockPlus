@@ -16,17 +16,15 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.github.yuttyann.scriptblockplus.script.ScriptEdit.values;
+import static com.github.yuttyann.scriptblockplus.script.ScriptEdit.args;
 
-public class
-ScriptRead extends ScriptObjectMap implements SBRead {
+public class ScriptRead extends ScriptObjectMap implements SBRead {
 
 	protected SBPlayer sbPlayer;
 	protected List<String> scripts;
@@ -102,13 +100,13 @@ ScriptRead extends ScriptObjectMap implements SBRead {
 	public boolean read(int index) {
 		Validate.notNull(sbPlayer.getPlayer(), "Player cannot be null");
 		if (!scriptData.checkPath()) {
-			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer, true);
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
 			return false;
 		}
 		List<Option> options = OptionList.getList();
 		if (!sort(scriptData.getScripts(), options)) {
-			SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptType.getType()).send(sbPlayer, true);
-			SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(values(sbPlayer.getName(), scriptType, blockCoords)).console(true);
+			SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptType.getType()).send(sbPlayer);
+			SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(args(sbPlayer.getName(), scriptType, blockCoords)).console();
 			return false;
 		}
 		for (scriptIndex = index; scriptIndex < scripts.size(); scriptIndex++) {
@@ -131,7 +129,7 @@ ScriptRead extends ScriptObjectMap implements SBRead {
 		}
 		executeEndProcess(e -> e.success(this));
 		getSBPlayer().getPlayerCount().add(blockCoords, scriptType);
-		SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(values(sbPlayer.getName(), scriptType, blockCoords)).console(true);
+		SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(args(sbPlayer.getName(), scriptType, blockCoords)).console();
 		return true;
 	}
 
@@ -147,7 +145,7 @@ ScriptRead extends ScriptObjectMap implements SBRead {
 		if (!SBConfig.OPTION_PERMISSION.toBool() || Permission.has(sbPlayer, option.getPermissionNode())) {
 			return true;
 		}
-		SBConfig.NOT_PERMISSION.send(sbPlayer, true);
+		SBConfig.NOT_PERMISSION.send(sbPlayer);
 		return false;
 	}
 
@@ -168,21 +166,19 @@ ScriptRead extends ScriptObjectMap implements SBRead {
 		return false;
 	}
 
-	@Nullable
+	@NotNull
 	protected List<String> getScripts(@NotNull String script) {
 		try {
 			return StringUtils.getScripts(script);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
-	@NotNull
-	private Location setCenter(@NotNull Location location) {
+	private void setCenter(@NotNull Location location) {
 		location.setX(location.getBlockX() + 0.5D);
 		location.setY(location.getBlockY() + 0.5D);
 		location.setZ(location.getBlockZ() + 0.5D);
-		return location;
 	}
 }

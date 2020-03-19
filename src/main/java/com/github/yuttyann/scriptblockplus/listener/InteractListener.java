@@ -105,7 +105,7 @@ public class InteractListener implements Listener {
 		if (event.getHand() != EquipmentSlot.HAND) {
 			return false;
 		}
-		boolean isAIR = isAIR(action);
+		boolean isAIR = action.name().endsWith("_CLICK_AIR");
 		boolean isSneaking = player.isSneaking();
 		ItemStack item = event.getItem();
 		Location location = event.getLocation();
@@ -121,7 +121,7 @@ public class InteractListener implements Listener {
 				}
 				if (left != null) {
 					region.setWorld(left.getWorld());
-					SBConfig.SELECTOR_POS1.replace(left.getWorld().getName(), BlockCoords.getCoords(left)).send(sbPlayer, true);
+					SBConfig.SELECTOR_POS1.replace(region.getName(), BlockCoords.getCoords(left)).send(sbPlayer);
 				}
 			}, right -> {
 				if (isSneaking) {
@@ -131,7 +131,7 @@ public class InteractListener implements Listener {
 				}
 				if (right != null) {
 					region.setWorld(right.getWorld());
-					SBConfig.SELECTOR_POS2.replace(right.getWorld().getName(), BlockCoords.getCoords(right)).send(sbPlayer, true);
+					SBConfig.SELECTOR_POS2.replace(region.getName(), BlockCoords.getCoords(right)).send(sbPlayer);
 				}
 			});
 			return true;
@@ -147,10 +147,10 @@ public class InteractListener implements Listener {
 			}, right -> {
 				if (isSneaking && !isAIR) {
 					if (!sbPlayer.hasClipboard() || !sbPlayer.getClipboard().paste(right, true)) {
-						SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer, true);
+						SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
 					}
 				} else if (!isSneaking && !isAIR) {
-					new ScriptEdit(ItemUtils.getScriptType(item)).copy(sbPlayer, right);
+					new ScriptEdit(ItemUtils.getScriptType(item)).clipboard(sbPlayer, right).copy();
 				}
 			});
 			return true;
@@ -192,10 +192,6 @@ public class InteractListener implements Listener {
 			break;
 		default:
 		}
-	}
-
-	private boolean isAIR(Action action) {
-		return action.name().endsWith("_CLICK_AIR");
 	}
 
 	private ScriptType getNextScriptType(ItemStack item) {

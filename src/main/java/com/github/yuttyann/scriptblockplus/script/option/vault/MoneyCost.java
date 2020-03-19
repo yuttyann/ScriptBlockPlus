@@ -35,7 +35,7 @@ public class MoneyCost extends BaseOption {
 			return true;
 		}
 		double result = cost - vaultEconomy.getBalance(player);
-		SBConfig.ERROR_COST.replace(cost, result).send(player, true);
+		SBConfig.ERROR_COST.replace(cost, result).send(player);
 		return false;
 	}
 }

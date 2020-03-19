@@ -37,7 +37,7 @@ public class ScriptWalkListener extends ScriptListener {
 				return;
 			}
 			if (!SBPermission.has(sbPlayer, ScriptType.WALK, false)) {
-				SBConfig.NOT_PERMISSION.send(player, true);
+				SBConfig.NOT_PERMISSION.send(player);
 				return;
 			}
 			new ScriptRead(player, blockCoords, this).read(0);
