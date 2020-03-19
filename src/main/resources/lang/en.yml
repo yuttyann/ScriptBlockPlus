@@ -95,7 +95,7 @@ SelectorRemoveMessage: '&cScriptblock "%scripttype%" has been removed from selec
 
 # %option% : Name of the option where the error occurred
 # %cause%  : Cause of error
-OptionFailedToExecuteMessage: '&cError occured while executing script "%option%"|~Possible reason: %cause%'
+OptionFailedToExecuteMessage: '&cError occured while executing script "%option%"|~&cPossible reason: %cause%'
 
 # There are no variables
 ActiveDelayMessage: '&cThis scriptblock is in delay, you cant use it now.'

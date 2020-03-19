@@ -95,7 +95,7 @@ SelectorRemoveMessage: '&c脚本种类"%scripttype%"已通过BlockSelector移除
 
 # %option% : 脚本名称
 # %cause%  : 错误发生原因
-OptionFailedToExecuteMessage: '&c脚本"%option%"执行失败|~可能的原因: %cause%'
+OptionFailedToExecuteMessage: '&c脚本"%option%"执行失败|~&c可能的原因: %cause%'
 
 # 沒有變數
 ActiveDelayMessage: '&c该脚本在延迟中 你暂时不能使用'

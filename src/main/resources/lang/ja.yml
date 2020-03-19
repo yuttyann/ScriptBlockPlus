@@ -95,7 +95,7 @@ SelectorRemoveMessage: '&cブロック(%blockcount%)"%scripttype%"のスクリ�
 
 # %option% : オプション名
 # %cause%  : 発生原因
-OptionFailedToExecuteMessage: '&cオプション"%option%"の実行に失敗しました。|~発生原因: %cause%'
+OptionFailedToExecuteMessage: '&cオプション"%option%"の実行に失敗しました。|~&c発生原因: %cause%'
 
 # プレースホルダはありません
 ActiveDelayMessage: '&c遅延したスクリプトが実行されるまで、再度実行することはできません。'
