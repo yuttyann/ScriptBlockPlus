@@ -33,23 +33,29 @@ public final class ScriptData implements Cloneable {
 
 	private ScriptData() {}
 
-	public ScriptData(@Nullable Location location, @NotNull ScriptType scriptType) {
+	public ScriptData(@NotNull ScriptType scriptType) {
+		this.scriptType = scriptType;
+		this.scriptFile = Files.getScriptFile(scriptType);
+		this.isUnmodifiableLocation = false;
+	}
+
+	public ScriptData(@NotNull Location location, @NotNull ScriptType scriptType) {
 		this(location, scriptType, false);
 	}
 
-	public ScriptData(@Nullable Location location, @NotNull ScriptType scriptType, boolean isUnmodifiableLocation) {
+	public ScriptData(@NotNull Location location, @NotNull ScriptType scriptType, boolean isUnmodifiableLocation) {
 		setLocation(location);
 		this.scriptType = scriptType;
 		this.scriptFile = Files.getScriptFile(scriptType);
 		this.isUnmodifiableLocation = isUnmodifiableLocation;
 	}
 
-	public void setLocation(@Nullable Location location) {
+	public void setLocation(@NotNull Location location) {
 		if (isUnmodifiableLocation) {
 			throw new UnsupportedOperationException();
 		}
 		this.location = location;
-		this.scriptPath = location == null ? "" : createPath(location);
+		this.scriptPath = createPath(location);
 	}
 
 	public void save() {
@@ -65,7 +71,7 @@ public final class ScriptData implements Cloneable {
 		return scriptPath;
 	}
 
-	@Nullable
+	@NotNull
 	public Location getLocation() {
 		return location;
 	}
