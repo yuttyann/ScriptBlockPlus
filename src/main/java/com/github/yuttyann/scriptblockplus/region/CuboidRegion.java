@@ -15,7 +15,7 @@ public class CuboidRegion implements Region {
 	private Vector pos2;
 
 	public void setWorld(@Nullable World world) {
-		if (!Objects.equals(this.world, world)) {
+		if (this.world != null && !Objects.equals(this.world, world)) {
 			setPos1(null);
 			setPos2(null);
 		}
@@ -34,6 +34,12 @@ public class CuboidRegion implements Region {
 	@Override
 	public World getWorld() {
 		return world;
+	}
+
+	@NotNull
+	@Override
+	public String getName() {
+		return world == null ? "null" : world.getName();
 	}
 
 	@NotNull

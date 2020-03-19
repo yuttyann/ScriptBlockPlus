@@ -10,6 +10,9 @@ public interface Region {
 	@Nullable
 	public World getWorld();
 
+	@Nullable
+	public String getName();
+
 	@NotNull
 	public Location getMinimumPoint();
 
