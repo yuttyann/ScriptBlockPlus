@@ -20,6 +20,10 @@ public final class SBMap<T> implements Serializable {
 		this.sbMap = initialCapacity > 0 ? new HashMap<>(initialCapacity) : new HashMap<>();
 	}
 
+	public void clear() {
+		sbMap.clear();
+	}
+
 	public int size() {
 		return sbMap.size();
 	}
@@ -28,33 +32,15 @@ public final class SBMap<T> implements Serializable {
 		return sbMap.isEmpty();
 	}
 
-	public void clear() {
-		sbMap.clear();
+	@Nullable
+	public T get(@NotNull ScriptType scriptType, @NotNull String fullCoords) {
+		return sbMap.computeIfAbsent(scriptType, k -> new HashMap<>()).get(fullCoords);
 	}
 
 	@Nullable
-	public Map<String, T> get(@NotNull ScriptType key) {
-		return sbMap.get(key);
-	}
-
-	@Nullable
-	public T get(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
-		Map<String, T> map = get(scriptType);
-		return map == null ? null : map.get(fullCoords);
-	}
-
-	@Nullable
-	public Map<String, T> put(@NotNull ScriptType key, @Nullable Map<String, T> value) {
-		return sbMap.put(key, value);
-	}
-
-	@Nullable
-	public T put(@NotNull String fullCoords, @NotNull ScriptType scriptType, T value) {
-		Map<String, T> map = get(scriptType);
-		if (map == null) {
-			sbMap.put(scriptType, map = new HashMap<>());
-		}
-		return map.put(fullCoords, value);
+	public T put(@NotNull ScriptType scriptType, @NotNull String fullCoords, T value) {
+		Map<String, T> map = sbMap.get(scriptType);
+		return map == null ? null : map.put(fullCoords, value);
 	}
 
 	@Nullable
@@ -63,22 +49,24 @@ public final class SBMap<T> implements Serializable {
 	}
 
 	@Nullable
-	public Map<String, T> remove(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
-		Map<String, T> map = get(scriptType);
-		if (map != null) {
-			map.remove(fullCoords);
-			return sbMap.put(scriptType, map);
-		}
-		return null;
+	public T remove(@NotNull ScriptType scriptType, @NotNull String fullCoords) {
+		return sbMap.computeIfAbsent(scriptType, k -> new HashMap<>()).remove(fullCoords);
+	}
+
+	public boolean has(@NotNull ScriptType scriptType) {
+		return sbMap.get(scriptType) != null;
+	}
+
+	public boolean has(@NotNull ScriptType scriptType, @NotNull String fullCoords) {
+		return get(scriptType, fullCoords) != null;
 	}
 
 	public boolean containsKey(@NotNull ScriptType scriptType) {
 		return sbMap.containsKey(scriptType);
 	}
 
-	public boolean containsKey(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
-		Map<String, T> map = sbMap.get(scriptType);
-		return map != null && map.containsKey(fullCoords);
+	public boolean containsKey(@NotNull ScriptType scriptType, @NotNull String fullCoords) {
+		return sbMap.computeIfAbsent(scriptType, k -> new HashMap<>()).containsKey(fullCoords);
 	}
 
 	@NotNull
