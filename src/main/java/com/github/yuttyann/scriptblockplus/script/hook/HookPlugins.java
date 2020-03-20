@@ -1,9 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.hook;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class HookPlugins {
 
@@ -11,11 +8,6 @@ public class HookPlugins {
 	private static Boolean hasPlaceholderAPI;
 	private static VaultEconomy vaultEconomy;
 	private static VaultPermission vaultPermission;
-
-	@Nullable
-	public static <T extends Plugin> T getPlugin(@NotNull String name) {
-		return (T) Bukkit.getPluginManager().getPlugin(name);
-	}
 
 	public static boolean hasVault() {
 		if (hasVault == null) {
