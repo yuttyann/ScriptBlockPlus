@@ -19,9 +19,7 @@ public class ConfigKeys {
     }
 
     public static void reload(YamlConfig yaml) {
-        for (String key : yaml.getKeys(true)) {
-            DATAS.add(new ConfigData(key, yaml.get(key)));
-        }
+        yaml.getKeys(true).forEach(s -> DATAS.add(new ConfigData(s, yaml.get(s))));
     }
 
     @NotNull
@@ -35,8 +33,8 @@ public class ConfigKeys {
     }
 
     @NotNull
-    public static CustomText customStringKey(@NotNull String key, @Nullable String def, @NotNull Consumer<CustomText> action) {
-        CustomText text = new CustomText(key, def);
+    public static CustomKey customStringKey(@NotNull String key, @Nullable String def, @NotNull Consumer<CustomKey> action) {
+        CustomKey text = new CustomKey(key, def);
         action.accept(text);
         return text;
     }
