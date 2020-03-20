@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.file;
 
 import com.github.yuttyann.scriptblockplus.file.config.ConfigKey;
-import com.github.yuttyann.scriptblockplus.file.config.CustomText;
+import com.github.yuttyann.scriptblockplus.file.config.CustomKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,125 +64,125 @@ public final class SBConfig {
 
 
 	// CustomText Values
-	public static final CustomText EXPORT_START = customStringKey("ExportStartMessage", "", c -> {
+	public static final CustomKey EXPORT_START = customStringKey("ExportStartMessage", "", c -> {
 		c.setReplaceKeys("%name%");
 	});
 
-	public static final CustomText EXPORT_END = customStringKey("ExportEndMessage", "", c -> {
+	public static final CustomKey EXPORT_END = customStringKey("ExportEndMessage", "", c -> {
 		c.setReplaceKeys("%name%");
 	});
 
-	public static final CustomText UPDATE_DOWNLOAD_END = customStringKey("UpdateDownloadEndMessage", "", c -> {
+	public static final CustomKey UPDATE_DOWNLOAD_END = customStringKey("UpdateDownloadEndMessage", "", c -> {
 		c.setReplaceKeys("%filename%", "%filepath%", "%filesize%");
 	});
 
-	public static final CustomText UPDATE_CHECK = customStringKey("UpdateDownloadEndMessage", "", c -> {
+	public static final CustomKey UPDATE_CHECK = customStringKey("UpdateDownloadEndMessage", "", c -> {
 		c.setReplaceKeys("%pluginname%", "%pluginname%", "%details%");
 	});
 
-	public static final CustomText SCRIPT_COPY = customStringKey("ScriptCopyMessage", "", c -> {
+	public static final CustomKey SCRIPT_COPY = customStringKey("ScriptCopyMessage", "", c -> {
 		c.setReplaceKeys("%scripttype%");
 	});
-	public static final CustomText SCRIPT_PASTE = customStringKey("ScriptPasteMessage", "", c -> {
+	public static final CustomKey SCRIPT_PASTE = customStringKey("ScriptPasteMessage", "", c -> {
 		c.setReplaceKeys("%scripttype%");
 	});
-	public static final CustomText SCRIPT_CREATE = customStringKey("ScriptCreateMessage", "", c -> {
-		c.setReplaceKeys("%scripttype%");
-	});
-
-	public static final CustomText SCRIPT_ADD = customStringKey("ScriptAddMessage", "", c -> {
+	public static final CustomKey SCRIPT_CREATE = customStringKey("ScriptCreateMessage", "", c -> {
 		c.setReplaceKeys("%scripttype%");
 	});
 
-	public static final CustomText SCRIPT_REMOVE = customStringKey("ScriptRemoveMessage", "", c -> {
+	public static final CustomKey SCRIPT_ADD = customStringKey("ScriptAddMessage", "", c -> {
 		c.setReplaceKeys("%scripttype%");
 	});
 
-	public static final CustomText SELECTOR_POS1 = customStringKey("SelectorPos1Message", "", c -> {
+	public static final CustomKey SCRIPT_REMOVE = customStringKey("ScriptRemoveMessage", "", c -> {
+		c.setReplaceKeys("%scripttype%");
+	});
+
+	public static final CustomKey SELECTOR_POS1 = customStringKey("SelectorPos1Message", "", c -> {
 		c.setReplaceKeys("%world%", "%coords%");
 	});
 
-	public static final CustomText SELECTOR_POS2 = customStringKey("SelectorPos2Message", "", c -> {
+	public static final CustomKey SELECTOR_POS2 = customStringKey("SelectorPos2Message", "", c -> {
 		c.setReplaceKeys("%world%", "%coords%");
 	});
 
-	public static final CustomText SELECTOR_PASTE = customStringKey("SelectorPasteMessage", "", c -> {
+	public static final CustomKey SELECTOR_PASTE = customStringKey("SelectorPasteMessage", "", c -> {
 		c.setReplaceKeys("%scripttype%", "%blockcount%");
 	});
 
-	public static final CustomText SELECTOR_REMOVE = customStringKey("SelectorRemoveMessage", "", c -> {
+	public static final CustomKey SELECTOR_REMOVE = customStringKey("SelectorRemoveMessage", "", c -> {
 		c.setReplaceKeys("%scripttype%", "%blockcount%");
 	});
 
-	public static final CustomText OPTION_FAILED_TO_EXECUTE = customStringKey("OptionFailedToExecuteMessage", "", c -> {
+	public static final CustomKey OPTION_FAILED_TO_EXECUTE = customStringKey("OptionFailedToExecuteMessage", "", c -> {
 		c.setReplaceKeys("%option%", "%cause%");
 	});
 
-	public static final CustomText ACTIVE_COOLDOWN = customStringKey("ActiveCooldownMessage", "", c -> {
+	public static final CustomKey ACTIVE_COOLDOWN = customStringKey("ActiveCooldownMessage", "", c -> {
 		c.setReplaceKeys("%hour%", "%minute%", "%second%");
 	});
 
-	public static final CustomText SUCCESS_ACTION_DATA = customStringKey("SuccActionDataMessage", "", c -> {
+	public static final CustomKey SUCCESS_ACTION_DATA = customStringKey("SuccActionDataMessage", "", c -> {
 		c.setReplaceKeys("%actiontype%");
 	});
 
-	public static final CustomText ERROR_SCRIPT_EXECUTE = customStringKey("ErrorScriptExecMessage", "", c -> {
+	public static final CustomKey ERROR_SCRIPT_EXECUTE = customStringKey("ErrorScriptExecMessage", "", c -> {
 		c.setReplaceKeys("%scripttype%");
 	});
 
-	public static final CustomText ERROR_GROUP = customStringKey("ErrorGroupMessage", "", c -> {
+	public static final CustomKey ERROR_GROUP = customStringKey("ErrorGroupMessage", "", c -> {
 		c.setReplaceKeys("%group%");
 	});
 
-	public static final CustomText ERROR_HAND = customStringKey("ErrorHandMessage", "", c -> {
+	public static final CustomKey ERROR_HAND = customStringKey("ErrorHandMessage", "", c -> {
 		c.setReplaceKeys("%material%", "%amount%", "%damage%", "%itemname%");
 	});
 
-	public static final CustomText ERROR_ITEM = customStringKey("ErrorItemMessage", "", c -> {
+	public static final CustomKey ERROR_ITEM = customStringKey("ErrorItemMessage", "", c -> {
 		c.setReplaceKeys("%material%", "%amount%", "%damage%", "%itemname%");
 	});
 
-	public static final CustomText ERROR_COST = customStringKey("ErrorCostMessage", "", c -> {
+	public static final CustomKey ERROR_COST = customStringKey("ErrorCostMessage", "", c -> {
 		c.setReplaceKeys("%cost%", "%result%");
 	});
 
-	public static final CustomText CONSOLE_SCRIPT_COPY = customStringKey("ConsoleScriptCopyMessage", "", c -> {
+	public static final CustomKey CONSOLE_SCRIPT_COPY = customStringKey("ConsoleScriptCopyMessage", "", c -> {
 		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
 	});
 
-	public static final CustomText CONSOLE_SCRIPT_PASTE = customStringKey("ConsoleScriptPasteMessage", "", c -> {
+	public static final CustomKey CONSOLE_SCRIPT_PASTE = customStringKey("ConsoleScriptPasteMessage", "", c -> {
 		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
 	});
 
-	public static final CustomText CONSOLE_SCRIPT_CREATE = customStringKey("ConsoleScriptCreateMessage", "", c -> {
+	public static final CustomKey CONSOLE_SCRIPT_CREATE = customStringKey("ConsoleScriptCreateMessage", "", c -> {
 		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
 	});
 
-	public static final CustomText CONSOLE_SCRIPT_ADD = customStringKey("ConsoleScriptAddMessage", "", c -> {
+	public static final CustomKey CONSOLE_SCRIPT_ADD = customStringKey("ConsoleScriptAddMessage", "", c -> {
 		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
 	});
 
-	public static final CustomText CONSOLE_SCRIPT_REMOVE = customStringKey("ConsoleScriptRemoveMessage", "", c -> {
+	public static final CustomKey CONSOLE_SCRIPT_REMOVE = customStringKey("ConsoleScriptRemoveMessage", "", c -> {
 		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
 	});
 
-	public static final CustomText CONSOLE_SCRIPT_VIEW = customStringKey("ConsoleScriptViewMessage", "", c -> {
+	public static final CustomKey CONSOLE_SCRIPT_VIEW = customStringKey("ConsoleScriptViewMessage", "", c -> {
 		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
 	});
 
-	public static final CustomText CONSOLE_SELECTOR_PASTE = customStringKey("ConsoleSelectorPasteMessage", "", c -> {
+	public static final CustomKey CONSOLE_SELECTOR_PASTE = customStringKey("ConsoleSelectorPasteMessage", "", c -> {
 		c.setReplaceKeys("%scripttype%", "%blockcount%", "%world%", "%mincoords%", "%maxcoords%");
 	});
 
-	public static final CustomText CONSOLE_SELECTOR_REMOVE = customStringKey("ConsoleSelectorRemoveMessage", "", c -> {
+	public static final CustomKey CONSOLE_SELECTOR_REMOVE = customStringKey("ConsoleSelectorRemoveMessage", "", c -> {
 		c.setReplaceKeys("%scripttype%", "%blockcount%", "%world%", "%mincoords%", "%maxcoords%");
 	});
 
-	public static final CustomText CONSOLE_SUCCESS_SCRIPT_EXECUTE = customStringKey("ConsoleSuccScriptExecMessage", "", c -> {
+	public static final CustomKey CONSOLE_SUCCESS_SCRIPT_EXECUTE = customStringKey("ConsoleSuccScriptExecMessage", "", c -> {
 		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
 	});
 
-	public static final CustomText CONSOLE_ERROR_SCRIPT_EXECUTE = customStringKey("ConsoleErrorScriptExecMessage", "", c -> {
+	public static final CustomKey CONSOLE_ERROR_SCRIPT_EXECUTE = customStringKey("ConsoleErrorScriptExecMessage", "", c -> {
 		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
 	});
 }
