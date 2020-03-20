@@ -39,6 +39,11 @@
       <url>https://repo.md-5.net/content/groups/public</url>
     </repository>
     <repository>
+      <id>spigot-repo</id>
+      <name>Spigot Maven Repository</name>
+      <url>https://hub.spigotmc.org/nexus/content/groups/public</url>
+    </repository>
+    <repository>
       <id>vault-repo</id>
       <name>Vault Repository</name>
       <url>http://nexus.hc.to/content/repositories/pub_releases</url>
