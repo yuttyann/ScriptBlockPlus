@@ -22,9 +22,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return byte
 	 */
-	@Nullable
 	public default byte getByte(@NotNull String key) {
-		return get(key, byte.class);
+		return get(key, (byte) 0);
 	}
 
 	/**
@@ -32,9 +31,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return short
 	 */
-	@Nullable
 	public default short getShort(@NotNull String key) {
-		return get(key, short.class);
+		return get(key, (short) 0);
 	}
 
 	/**
@@ -42,9 +40,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return int
 	 */
-	@Nullable
 	public default int getInt(@NotNull String key) {
-		return get(key, int.class);
+		return get(key, 0);
 	}
 
 	/**
@@ -52,9 +49,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return long
 	 */
-	@Nullable
 	public default long getLong(@NotNull String key) {
-		return get(key, long.class);
+		return get(key, 0L);
 	}
 
 	/**
@@ -62,9 +58,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return char
 	 */
-	@Nullable
 	public default char getChar(@NotNull String key) {
-		return get(key, char.class);
+		return get(key, '\u0000');
 	}
 
 	/**
@@ -72,9 +67,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return float
 	 */
-	@Nullable
 	public default float getFloat(@NotNull String key) {
-		return get(key, float.class);
+		return get(key, 0.0F);
 	}
 
 	/**
@@ -82,9 +76,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return double
 	 */
-	@Nullable
 	public default double getDouble(@NotNull String key) {
-		return get(key, double.class);
+		return get(key, 0.0D);
 	}
 
 	/**
@@ -92,9 +85,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return byte
 	 */
-	@Nullable
 	public default boolean getBoolean(@NotNull String key) {
-		return get(key, boolean.class);
+		return get(key, false);
 	}
 
 	/**
@@ -102,9 +94,8 @@ public interface ObjectMap {
 	 * @param key キー
 	 * @return String
 	 */
-	@Nullable
 	public default String getString(@NotNull String key) {
-		return get(key, String.class);
+		return get(key, "");
 	}
 
 	/**
@@ -118,12 +109,13 @@ public interface ObjectMap {
 	/**
 	 * マップの「キー」に対応した「値」を取得する
 	 * @param key キー
-	 * @param classOfT キャストするクラス
+	 * @param def デフォルトの値
 	 * @return Object
 	 */
-	@Nullable
-	public default <T> T get(@NotNull String key, @Nullable Class<T> classOfT) {
-		return classOfT == null ? get(key) : (T) get(key);
+	@NotNull
+	public default <T> T get(@NotNull String key, @NotNull T def) {
+		T t = get(key);
+		return t == null ? def : t;
 	}
 
 	/**
@@ -133,17 +125,6 @@ public interface ObjectMap {
 	 */
 	@Nullable
 	public <T> T remove(String key);
-
-	/**
-	 * マップの「キー」と、それに対応した「値」を削除する
-	 * @param key キー
-	 * @param classOfT キャストするクラス
-	 * @return Object
-	 */
-	@Nullable
-	public default <T> T remove(@NotNull String key, @Nullable Class<T> classOfT) {
-		return classOfT == null ? remove(key) : (T) remove(key);
-	}
 
 	/**
 	 * 指定された「キー」に要素が存在するのか確認する
