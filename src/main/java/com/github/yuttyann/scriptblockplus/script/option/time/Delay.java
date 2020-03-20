@@ -31,10 +31,12 @@ public class Delay extends BaseOption implements Runnable {
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		unSaveExec = array.length > 1 && Boolean.parseBoolean(array[1]);
-		if (containsDelay()) {
+		if (!unSaveExec && getMapManager().containsDelay(getUniqueId(), getScriptType(), getFullCoords())) {
 			SBConfig.ACTIVE_DELAY.send(getSBPlayer());
 		} else {
-			putDelay();
+			if (!unSaveExec) {
+				getMapManager().putDelay(getUniqueId(), getScriptType(), getFullCoords());
+			}
 			Bukkit.getScheduler().runTaskLater(getPlugin(), this, Long.parseLong(array[0]));
 		}
 		return false;
@@ -42,30 +44,13 @@ public class Delay extends BaseOption implements Runnable {
 
 	@Override
 	public void run() {
-		removeDelay();
+		if (!unSaveExec) {
+			getMapManager().removeDelay(getUniqueId(), getScriptType(), getFullCoords());
+		}
 		if (getSBPlayer().isOnline()) {
 			getSBRead().read(getScriptIndex() + 1);
 		} else {
 			EndProcessManager.getInstance().forEach(e -> e.failed(getSBRead()));
 		}
-	}
-
-	private void putDelay() {
-		if (!unSaveExec) {
-			getMapManager().putDelay(getUniqueId(), getFullCoords(), getScriptType());
-		}
-	}
-
-	private void removeDelay() {
-		if (!unSaveExec) {
-			getMapManager().removeDelay(getUniqueId(), getFullCoords(), getScriptType());
-		}
-	}
-
-	private boolean containsDelay() {
-		if (!unSaveExec) {
-			return getMapManager().containsDelay(getUniqueId(), getFullCoords(), getScriptType());
-		}
-		return false;
 	}
 }
