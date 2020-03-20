@@ -19,7 +19,7 @@
 <br>
 API、Eventの使い方: https://github.com/yuttyann/ScriptBlockPlus/wiki/APIの取得方法
 <br>
-言語ファイルの追加方法: https://github.com/yuttyann/ScriptBlockPlus/wiki/言語ファイルの追加方法
+新しい言語ファイルの追加方法: https://github.com/yuttyann/ScriptBlockPlus/wiki/新しい言語ファイルの追加方法
 <br>
 <br>
 変更点が多い場合や誤差程度場合のコミットメッセージをバージョン表記のみにすることがあります。
