@@ -50,7 +50,7 @@ public abstract class PlayerData implements SBPlayer {
 		return objectMap;
 	}
 
-	private class ObjMap implements ObjectMap {
+	private static class ObjMap implements ObjectMap {
 
 		private final Map<String, Object> objectMap;
 
@@ -63,14 +63,16 @@ public abstract class PlayerData implements SBPlayer {
 			objectMap.put(key, value);
 		}
 
-		@Nullable
+		@SuppressWarnings("unchecked")
 		@Override
+		@Nullable
 		public <T> T get(@NotNull String key) {
 			return (T) objectMap.get(key);
 		}
 
-		@Nullable
+		@SuppressWarnings("unchecked")
 		@Override
+		@Nullable
 		public <T> T remove(@NotNull String key) {
 			return (T) objectMap.remove(key);
 		}

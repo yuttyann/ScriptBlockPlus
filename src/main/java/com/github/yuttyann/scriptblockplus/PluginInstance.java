@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +34,9 @@ public final class PluginInstance {
 		return INSTANCES.entrySet();
 	}
 
-	@Nullable
+	@SuppressWarnings("unchecked")
+	@NotNull
 	public static <T extends JavaPlugin> T get(@NotNull Class<? extends JavaPlugin> key) {
-		return (T) INSTANCES.get(key);
+		return (T) Objects.requireNonNull(INSTANCES.get(key));
 	}
 }

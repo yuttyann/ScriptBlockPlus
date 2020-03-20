@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 
 public final class FileUtils {
 
+	@Nullable
 	public static InputStream getResource(@NotNull Plugin plugin, @NotNull String filePath) {
 		if (StringUtils.isEmpty(filePath)) {
 			return null;
@@ -147,6 +148,7 @@ public final class FileUtils {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@NotNull
 	public static <T> T loadFile(@NotNull File file) throws IOException, ClassNotFoundException {
 		try (InputStream is = new FileInputStream(file); ObjectInputStream ois = new ObjectInputStream(is))  {

@@ -25,15 +25,17 @@ public abstract class ScriptObjectMap extends ScriptListener implements ObjectMa
 		map.put(key, value);
 	}
 
-	@Nullable
+	@SuppressWarnings("unchecked")
 	@Override
+	@Nullable
 	public <T> T get(@NotNull String key) {
 		Map<String, Object> map = OBJECT_MAP.get(ramdomId);
 		return map == null ? null : (T) map.get(key);
 	}
 
-	@Nullable
+	@SuppressWarnings("unchecked")
 	@Override
+	@Nullable
 	public <T> T remove(@NotNull String key) {
 		Map<String, Object> map = OBJECT_MAP.get(ramdomId);
 		return map == null ? null : (T) map.remove(key);
