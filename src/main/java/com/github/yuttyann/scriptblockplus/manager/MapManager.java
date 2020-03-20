@@ -93,23 +93,23 @@ public final class MapManager {
 		}
 	}
 
-	public void putDelay(@NotNull UUID uuid, @NotNull String fullCoords, @NotNull ScriptType scriptType) {
-		Set<UUID> set = delays.get(fullCoords, scriptType);
+	public void putDelay(@NotNull UUID uuid, @NotNull ScriptType scriptType, @NotNull String fullCoords) {
+		Set<UUID> set = delays.get(scriptType, fullCoords);
 		if (set == null) {
-			delays.put(fullCoords, scriptType, set = new HashSet<>());
+			delays.put(scriptType, fullCoords, set = new HashSet<>());
 		}
 		set.add(uuid);
 	}
 
-	public void removeDelay(@NotNull UUID uuid, @NotNull String fullCoords, @NotNull ScriptType scriptType) {
-		Set<UUID> set = delays.get(fullCoords, scriptType);
+	public void removeDelay(@NotNull UUID uuid, @NotNull ScriptType scriptType, @NotNull String fullCoords) {
+		Set<UUID> set = delays.get(scriptType, fullCoords);
 		if (set != null) {
 			set.remove(uuid);
 		}
 	}
 
-	public boolean containsDelay(@NotNull UUID uuid, @NotNull String fullCoords, @NotNull ScriptType scriptType) {
-		Set<UUID> set = delays.get(fullCoords, scriptType);
+	public boolean containsDelay(@NotNull UUID uuid, @NotNull ScriptType scriptType, @NotNull String fullCoords) {
+		Set<UUID> set = delays.get(scriptType, fullCoords);
 		return set != null && set.contains(uuid);
 	}
 
@@ -119,7 +119,7 @@ public final class MapManager {
 		if (set != null) {
 			set.add(fullCoords);
 		}
-		removeTimes(fullCoords, scriptType);
+		removeTimes(scriptType, fullCoords);
 	}
 
 	public void removeCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
@@ -128,7 +128,7 @@ public final class MapManager {
 		if (set != null) {
 			set.remove(fullCoords);
 		}
-		removeTimes(fullCoords, scriptType);
+		removeTimes(scriptType, fullCoords);
 	}
 
 	public boolean containsCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
@@ -138,11 +138,11 @@ public final class MapManager {
 	}
 
 	public void removeTimes(@NotNull Location location, @NotNull ScriptType scriptType) {
-		removeTimes(BlockCoords.getFullCoords(location), scriptType);
+		removeTimes(scriptType, BlockCoords.getFullCoords(location));
 	}
 
-	public void removeTimes(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
-		delays.remove(fullCoords, scriptType);
+	public void removeTimes(@NotNull ScriptType scriptType, @NotNull String fullCoords) {
+		delays.remove(scriptType, fullCoords);
 		Set<TimeData> set = new HashSet<>();
 		for (TimeData timeData : cooldowns) {
 			ScriptType tScriptType = timeData.getScriptType();

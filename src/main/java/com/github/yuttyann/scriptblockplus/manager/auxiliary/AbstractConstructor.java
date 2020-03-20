@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public abstract class AbstractConstructor<T> {
@@ -100,7 +101,7 @@ public abstract class AbstractConstructor<T> {
 	public T[] newInstances(@NotNull T[] array, @NotNull InstanceType instanceType) {
 		int i = 0;
 		for (SBConstructor<? extends T> constructor : getConstructors()) {
-			array[i++] = constructor.newInstance(instanceType);
+			array[i++] = Objects.requireNonNull(constructor.newInstance(instanceType));
 		}
 		return array;
 	}

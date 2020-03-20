@@ -22,16 +22,19 @@ public final class SBConstructor<T> {
 		this.sbInstance = Objects.requireNonNull(sbInstance);
 	}
 
+	@SuppressWarnings("unchecked")
 	@NotNull
 	public Class<? extends T> getDeclaringClass() {
 		return sbInstance == null ? constructor.getDeclaringClass() : (Class<? extends T>) sbInstance.getClass();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Nullable
 	public T getInstance() {
 		return sbInstance == null ? newInstance(InstanceType.REFLECTION) : (T) sbInstance;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Nullable
 	public T newInstance(@NotNull InstanceType instanceType) {
 		switch (instanceType) {
@@ -40,7 +43,7 @@ public final class SBConstructor<T> {
 		case REFLECTION:
 			try {
 				if (constructor == null) {
-					constructor = getConstructor(getDeclaringClass());
+					constructor = Objects.requireNonNull(getConstructor(getDeclaringClass()));
 				}
 				T t = constructor.newInstance(ArrayUtils.EMPTY_OBJECT_ARRAY);
 				if (!(t instanceof SBInstance)) {
