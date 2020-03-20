@@ -34,9 +34,9 @@ public class ConfigKeys {
 
     @NotNull
     public static CustomKey customStringKey(@NotNull String key, @Nullable String def, @NotNull Consumer<CustomKey> action) {
-        CustomKey text = new CustomKey(key, def);
-        action.accept(text);
-        return text;
+        CustomKey customKey = new CustomKey(key, def);
+        action.accept(customKey);
+        return customKey;
     }
 
     @NotNull
