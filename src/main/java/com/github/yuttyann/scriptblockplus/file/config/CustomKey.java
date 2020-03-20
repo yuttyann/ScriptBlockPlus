@@ -14,7 +14,7 @@ import java.util.Objects;
 import static com.github.yuttyann.scriptblockplus.file.config.ConfigKeys.getConfigData;
 import static com.github.yuttyann.scriptblockplus.utils.StringUtils.replaceColor;
 
-public class CustomText {
+public class CustomKey {
 
     private final String key;
 
@@ -22,14 +22,14 @@ public class CustomText {
     private String def;
     private String[] keyNames = {};
 
-    CustomText(@NotNull String key, @Nullable String def) {
+    CustomKey(@NotNull String key, @Nullable String def) {
         this.key = key;
         this.def = def;
         this.value = def;
     }
 
     @NotNull
-    public CustomText set() {
+    public CustomKey set() {
         synchronized(this) {
             this.value = getConfigData(key).getValue(def);
         }
@@ -37,13 +37,13 @@ public class CustomText {
     }
 
     @NotNull
-    public CustomText setReplaceKeys(@NotNull String... keyNames) {
+    public CustomKey setReplaceKeys(@NotNull String... keyNames) {
         this.keyNames = keyNames;
         return this;
     }
 
     @NotNull
-    public CustomText replace(@NotNull Object... replaces) {
+    public CustomKey replace(@NotNull Object... replaces) {
         if (replaces.length != keyNames.length) {
             throw new IllegalArgumentException("Size are not equal.");
         }
@@ -57,7 +57,7 @@ public class CustomText {
     }
 
     @NotNull
-    public CustomText stripColor() {
+    public CustomKey stripColor() {
         if (Objects.equals(value, def)) {
             set();
         }
