@@ -18,7 +18,7 @@ public class ConfigKeys {
         DATAS.clear();
     }
 
-    public static void reload(YamlConfig yaml) {
+    public static void reload(@NotNull YamlConfig yaml) {
         yaml.getKeys(true).forEach(s -> DATAS.add(new ConfigData(s, yaml.get(s))));
     }
 
