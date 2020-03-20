@@ -4,7 +4,7 @@
 
 
 ## ===== 帮助页 ===== ##
-# 沒有變數
+# 沒有佔位符
 ToolCommandMessage: 'tool - 获得脚本编辑工具'
 ReloadCommandMessage: 'reload - 重载插件'
 BackupCommandMessage: 'backup - 备份脚本数据'
@@ -22,7 +22,7 @@ SelectorRemoveCommandMessage: 'selector remove - 移除选区内的脚本方块'
 # &(code) : 可以使用彩色代码
 
 ## ===== 方块选择器物品设定 ===== ##
-# 沒有變數
+# 沒有佔位符
 BlockSelector:
 - '&a这是一个可以选择方块区域的工具'
 - '&6左键点击: &e选择区域的起点'
@@ -42,7 +42,7 @@ ScriptEditor:
 # |~ \n : 改行
 
 ## ===== 消息设定 ===== ##
-# 沒有變數
+# 沒有佔位符
 NotVaultMessage: '&cVault经济插件前置未找到'
 SenderNoPlayerMessage: '&c控制台不能这么做'
 NotPermissionMessage: '&c你没有权限'
@@ -70,7 +70,7 @@ UpdateDownloadEndMessage: '&6新更新下载完成|~&6文件名: %filename%|~&6�
 # %details%       : 更新内容
 UpdateCheckMessage: '&b新版本插件可用|~&bv%latestversion% 最新版本|~&b插件名: %pluginname%|~&b☆更新内容☆|~&b%details%'
 
-# 沒有變數
+# 沒有佔位符
 ErrorUpdateMessage: '&c查询更新失败，可能是国内网络导致的，建议去这个中文搬运帖查看更新http://www.mcbbs.net/thread-691900-1-1.html'
 
 # %scripttype% : 脚本种类
@@ -80,7 +80,7 @@ ScriptCreateMessage: '&a创建一个种类是"%scripttype%"的脚本'
 ScriptAddMessage: '&a添加一个种类是"%scripttype%"的脚本'
 ScriptRemoveMessage: '&c删除一个种类是"%scripttype%"的脚本'
 
-# 沒有變數
+# 沒有佔位符
 NotSelectionMessage: '&cBlockSelector坐标范围未选择'
 
 # %world%  : 世界名
@@ -97,7 +97,7 @@ SelectorRemoveMessage: '&c脚本种类"%scripttype%"已通过BlockSelector移除
 # %cause%  : 错误发生原因
 OptionFailedToExecuteMessage: '&c脚本"%option%"执行失败|~&c可能的原因: %cause%'
 
-# 沒有變數
+# 沒有佔位符
 ActiveDelayMessage: '&c该脚本在延迟中 你暂时不能使用'
 
 # %hour%   : 时
@@ -108,7 +108,7 @@ ActiveCooldownMessage: '&c脚本还在冷却中 [%hour%时%minute%分%second%秒
 # %clicktype% : 点击种类
 SuccActionDataMessage: '&a脚本种类"%clicktype%"的设定已选定。请点击需要生效的方块'
 
-# 沒有變數
+# 沒有佔位符
 ErrorActionDataMessage: '&c设定出现错误'
 ErrorScriptCheckMessage: '&c脚本输入错误！'
 ErrorScriptFileCheckMessage: '&c无脚本'

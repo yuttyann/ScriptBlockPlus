@@ -4,7 +4,7 @@
 
 
 ## ===== HELP PAGE ===== ##
-# There are no variables
+# There are no placeholders
 ToolCommandMessage: 'tool - get the scriptblock editor'
 ReloadCommandMessage: 'reload - reload the plugin'
 BackupCommandMessage: 'backup - make a backup of the script data'
@@ -22,7 +22,7 @@ SelectorRemoveCommandMessage: 'selector remove - remove scriptblock for selected
 # &(code) : you can use color code
 
 ## ===== BLOCK SELECTOR ===== ##
-# There are no variables
+# There are no placeholders
 BlockSelector:
 - '&aThis tool supports range selection.'
 - '&6Left-click: &eSpecify the block as Pos1.'
@@ -42,7 +42,7 @@ ScriptEditor:
 # |~, \n : change the line
 
 ## ===== MESSAGES ===== ##
-# There are no variables
+# There are no placeholders
 NotVaultMessage: '&cVault not found!'
 SenderNoPlayerMessage: '&cYou cannot do this as console.'
 NotPermissionMessage: '&cYou dont have permission to do this.'
@@ -70,7 +70,7 @@ UpdateDownloadEndMessage: '&6Download completed!|~&6File name: %filename%|~&6Fil
 # %details%       : update information
 UpdateCheckMessage: '&bNew version available!|~&bv%latestversion% the latest ver.|~&bName: %pluginname%|~&b☆Change log☆|~&b&b%details%'
 
-# There are no variables
+# There are no placeholders
 ErrorUpdateMessage: '&cError occured while checking new version.'
 
 # %scripttype% : Type of script
@@ -80,7 +80,7 @@ ScriptCreateMessage: '&aCreate a "%scripttype%" type scriptblock.'
 ScriptAddMessage: '&aAdd script to a "%scripttype%" type scriptblock.'
 ScriptRemoveMessage: '&cRemove a "%scripttype%" type scriptblock.'
 
-# There are no variables
+# There are no placeholders
 NotSelectionMessage: '&cBlockSelector area not selected.'
 
 # %world%  : name of the world
@@ -97,7 +97,7 @@ SelectorRemoveMessage: '&cScriptblock "%scripttype%" has been removed from selec
 # %cause%  : Cause of error
 OptionFailedToExecuteMessage: '&cError occured while executing script "%option%"|~&cPossible reason: %cause%'
 
-# There are no variables
+# There are no placeholders
 ActiveDelayMessage: '&cThis scriptblock is in delay, you cant use it now.'
 
 # %hour%   : hour
@@ -111,7 +111,7 @@ SuccActionDataMessage: '&aActiontype "%actiontype%" selected.'
 # %actiontype% : Type of action
 SuccEditDataMessage: '&aScriptblock type "%actiontype%" selected, please click a block to add it on.'
 
-# There are no variables
+# There are no placeholders
 ErrorActionDataMessage: '&cInvaild setting.'
 ErrorScriptCheckMessage: '&cInvaild script.'
 ErrorScriptFileCheckMessage: '&cNo script file.'
