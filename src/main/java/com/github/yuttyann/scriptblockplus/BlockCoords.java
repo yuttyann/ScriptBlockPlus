@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * ScriptBlockPlus 座標管理クラス
@@ -102,7 +103,7 @@ public class BlockCoords extends Location {
 
 	/**
 	 * 座標を文字列として取得する
-	 * @param location
+	 * @param location 座標
 	 * @return ワールド名を除いた文字列(x, y, z)
 	 */
 	@NotNull
@@ -112,19 +113,19 @@ public class BlockCoords extends Location {
 
 	/**
 	 * 座標を文字列として取得する
-	 * @param location
+	 * @param location 座標
 	 * @return ワールド名を含めた文字列(world, x, y, z)
 	 */
 	@NotNull
 	public static String getFullCoords(@NotNull Location location) {
-		return location.getWorld().getName() + ", " + getCoords(location);
+		return Objects.requireNonNull(location.getWorld()).getName() + ", " + getCoords(location);
 	}
 
 	/**
 	 * 座標の文字列からインスタンスを生成する
-	 * @param world
-	 * @param coords
-	 * @return blockcoords
+	 * @param world ワールド名
+	 * @param coords ワールド名を除いた文字列(x, y, z)
+	 * @return BlockCoords
 	 */
 	@NotNull
 	public static BlockCoords fromString(@NotNull World world, @NotNull String coords) {
@@ -132,16 +133,16 @@ public class BlockCoords extends Location {
 		if (array.length != 3) {
 			throw new IllegalArgumentException();
 		}
-		double x = Double.parseDouble(array[1]);
-		double y = Double.parseDouble(array[2]);
-		double z = Double.parseDouble(array[3]);
+		double x = Double.parseDouble(array[0]);
+		double y = Double.parseDouble(array[1]);
+		double z = Double.parseDouble(array[2]);
 		return new BlockCoords(world, x, y, z);
 	}
 
 	/**
 	 * 座標の文字列からインスタンスを生成する
-	 * @param coords
-	 * @return blockcoords
+	 * @param fullCoords ワールド名を含めた文字列(world, x, y, z)
+	 * @return BlockCoords
 	 */
 	@NotNull
 	public static BlockCoords fromString(@NotNull String fullCoords) {
@@ -156,10 +157,10 @@ public class BlockCoords extends Location {
 		return new BlockCoords(world, x, y, z);
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public BlockCoords clone() {
-		BlockCoords blockCoords = new BlockCoords(this);
+		BlockCoords blockCoords = new BlockCoords(super.clone());
 		blockCoords.coords = this.coords;
 		blockCoords.fullCoords = this.fullCoords;
 		return blockCoords;
@@ -167,7 +168,7 @@ public class BlockCoords extends Location {
 
 	/**
 	 * 編集不可の座標クラスを取得する
-	 * @return blockcoords(編集不可)
+	 * @return BlockCoords(編集不可)
 	 */
 	@NotNull
 	public BlockCoords unmodifiable() {
@@ -179,7 +180,7 @@ public class BlockCoords extends Location {
 
 	/**
 	 * 編集不可の座標クラスを取得する
-	 * @return location(編集不可)
+	 * @return Location(編集不可)
 	 */
 	@NotNull
 	public static Location unmodifiableLocation(@NotNull Location location) {
@@ -223,62 +224,72 @@ public class BlockCoords extends Location {
 		}
 
 		@Override
-		public BlockCoords setDirection(Vector vector) {
+		@NotNull
+		public BlockCoords setDirection(@NotNull Vector vector) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public BlockCoords add(Location vec) {
+		@NotNull
+		public BlockCoords add(@NotNull Location vec) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public BlockCoords add(Vector vec) {
+		@NotNull
+		public BlockCoords add(@NotNull Vector vec) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
+		@NotNull
 		public BlockCoords add(double x, double y, double z) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public BlockCoords subtract(Location vec) {
+		@NotNull
+		public BlockCoords subtract(@NotNull Location vec) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public BlockCoords subtract(Vector vec) {
+		@NotNull
+		public BlockCoords subtract(@NotNull Vector vec) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
+		@NotNull
 		public BlockCoords subtract(double x, double y, double z) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
+		@NotNull
 		public BlockCoords multiply(double m) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
+		@NotNull
 		public BlockCoords zero() {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
+		@NotNull
 		public BlockCoords clone() {
 			return unmodifiable();
 		}
 	}
 
-	@NotNull
-	@Utility
 	@Override
+	@Utility
+	@NotNull
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("world", getWorld().getName());
+		map.put("world", Objects.requireNonNull(getWorld()).getName());
 		map.put("x", getX());
 		map.put("y", getY());
 		map.put("z", getZ());
