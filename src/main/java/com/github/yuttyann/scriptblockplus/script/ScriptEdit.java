@@ -180,7 +180,7 @@ public final class ScriptEdit {
 			}
 			sbPlayer.setClipboard(this);
 			SBConfig.SCRIPT_COPY.replace(scriptType.getType()).send(sbPlayer);
-			SBConfig.CONSOLE_SCRIPT_REMOVE.replace(args(sbPlayer.getName(), scriptType, scriptData.getLocation())).console();
+			SBConfig.CONSOLE_SCRIPT_COPY.replace(args(sbPlayer.getName(), scriptType, scriptData.getLocation())).console();
 			return true;
 		}
 
