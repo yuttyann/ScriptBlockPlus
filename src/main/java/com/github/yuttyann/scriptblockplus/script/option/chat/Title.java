@@ -23,8 +23,8 @@ public class Title extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
-		String title = StringUtils.replaceColor(array[0] + "", true);
-		String subtitle = StringUtils.replaceColor(array.length > 1 ? array[1] : "", true);
+		String title = StringUtils.setColor(array[0] + "", true);
+		String subtitle = StringUtils.setColor(array.length > 1 ? array[1] : "", true);
 		int fadeIn = 10;
 		int stay = 40;
 		int fadeOut = 10;

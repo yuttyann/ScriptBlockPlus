@@ -19,6 +19,6 @@ public class Command extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		return executeCommand(getPlayer(), StringUtils.replaceColor(getOptionValue(), true), false);
+		return executeCommand(getPlayer(), StringUtils.setColor(getOptionValue(), true), false);
 	}
 }

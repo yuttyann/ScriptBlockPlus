@@ -28,7 +28,7 @@ public class ActionBar extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
-		String message = StringUtils.replaceColor(array[0], true);
+		String message = StringUtils.setColor(array[0], true);
 
 		if (array.length > 1) {
 			int stay = Integer.parseInt(array[1]);

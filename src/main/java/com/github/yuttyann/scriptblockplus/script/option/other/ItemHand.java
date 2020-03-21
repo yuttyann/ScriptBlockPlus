@@ -35,7 +35,7 @@ public class ItemHand extends BaseOption {
 		int damage = itemData.length > 1 ? Integer.parseInt(itemData[1]) : 0;
 		int amount = Integer.parseInt(array[1]);
 		String create = array.length > 2 ? StringUtils.createString(array, 2) : null;
-		String itemName = StringUtils.replaceColor(create, false);
+		String itemName = StringUtils.setColor(create, false);
 
 		Player player = getPlayer();
 		ItemStack[] items = ItemUtils.getHandItems(player);

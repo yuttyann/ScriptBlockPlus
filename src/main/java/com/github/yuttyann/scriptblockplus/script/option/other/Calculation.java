@@ -44,10 +44,9 @@ public class Calculation extends BaseOption {
 			return true;
 		}
 		if (array.length > 3) {
-			String message = StringUtils.createString(array, 3);
-			message = StringUtils.replaceColor(message, true);
-			message = StringUtils.replace(message, "%value1%", String.valueOf(value1));
-			message = StringUtils.replace(message, "%value2%", String.valueOf(value2));
+			String message = StringUtils.setColor(StringUtils.createString(array, 3), true);
+			message = StringUtils.replace(message, "%value1%", value1);
+			message = StringUtils.replace(message, "%value2%", value2);
 			message = StringUtils.replace(message, "%operator%", operator);
 			Utils.sendColorMessage(getSBPlayer(), message);
 		}
