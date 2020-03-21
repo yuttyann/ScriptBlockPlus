@@ -4,20 +4,18 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
-public class CustomKey {
+public class CustomKey implements Cloneable {
 
     private final String key;
 
     private String value;
     private String def;
     private String[] keyNames = {};
+    private boolean isClone = false;
 
     CustomKey(@NotNull String key, @Nullable String def) {
         this.key = key;
@@ -25,15 +23,12 @@ public class CustomKey {
         this.value = def;
     }
 
-    @NotNull
     public CustomKey set() {
-        synchronized(this) {
-            this.value = ConfigKeys.getConfigData(key).getValue(def);
-        }
-        return this;
+        CustomKey customKey = clone();
+        customKey.value = ConfigKeys.getConfigData(customKey.key).getValue(customKey.def);
+        return customKey;
     }
 
-    @NotNull
     public CustomKey setReplaceKeys(@NotNull String... keyNames) {
         this.keyNames = keyNames;
         return this;
@@ -44,34 +39,21 @@ public class CustomKey {
         if (replaces.length != keyNames.length) {
             throw new IllegalArgumentException("Size are not equal.");
         }
-        if (Objects.equals(value, def)) {
-            set();
-        }
+        CustomKey customKey = set();
         for (int i = 0; i < replaces.length; i++) {
-            this.value = StringUtils.replace(this.value, keyNames[i], replaces[i]);
+            customKey.value = StringUtils.replace(customKey.value, customKey.keyNames[i], replaces[i]);
         }
-        return this;
-    }
-
-    @NotNull
-    public CustomKey stripColor() {
-        if (Objects.equals(value, def)) {
-            set();
-        }
-        this.value = ChatColor.stripColor(value);
-        return this;
+        return customKey;
     }
 
     @Override
     public String toString() {
-        return toString(false);
+        return isClone ? value : set().value;
     }
 
     @NotNull
-    public String toString(boolean isReplaceColor) {
-        String temp = isReplaceColor ?  StringUtils.setColor(value, true) : value;
-        set();
-        return temp;
+    public String toStringAddColor() {
+        return StringUtils.setColor(toString(), true);
     }
 
     public void send() {
@@ -86,5 +68,14 @@ public class CustomKey {
         if (SBConfig.CONSOLE_LOG.toBool()) {
             send();
         }
+    }
+
+    @Override
+    public CustomKey clone() {
+        CustomKey customKey = new CustomKey(key, def);
+        customKey.value = value;
+        customKey.keyNames = keyNames;
+        customKey.isClone = true;
+        return customKey;
     }
 }
