@@ -63,12 +63,12 @@ ExportEndMessage: '&bBukkitAPI"%name%"输出完成。'
 # %filename% : 文件名
 # %filepath% : 文件路径
 # %filesize% : 文件大小
-UpdateDownloadEndMessage: '&6新更新下载完成|~&6文件名: %filename%|~&6文件大小: %filesize%|~&6文件路径: %filepath%'
+UpdateDownloadEndMessage: '&6新更新下载完成|~文件名: %filename%|~文件大小: %filesize%|~文件路径: %filepath%'
 
 # %pluginname%    : 插件名
 # %latestversion% : 最新版本
 # %details%       : 更新内容
-UpdateCheckMessage: '&b新版本插件可用|~&bv%latestversion% 最新版本|~&b插件名: %pluginname%|~&b☆更新内容☆|~&b%details%'
+UpdateCheckMessage: '&b新版本插件可用|~v%latestversion% 最新版本|~插件名: %pluginname%|~☆更新内容☆|~%details%'
 
 # 沒有佔位符
 ErrorUpdateMessage: '&c查询更新失败，可能是国内网络导致的，建议去这个中文搬运帖查看更新http://www.mcbbs.net/thread-691900-1-1.html'

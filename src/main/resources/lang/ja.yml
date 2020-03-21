@@ -63,12 +63,12 @@ ExportEndMessage: '&bBukkitAPIの"%name%"の出力が完了しました。'
 # %filename% : ファイル名
 # %filepath% : ファイルパス
 # %filesize% : ファイルサイズ
-UpdateDownloadEndMessage: '&6ダウンロードが終了しました。|~&6ファイル名: %filename%|~&6ファイルサイズ: %filesize%|~&6ファイルパス: %filepath%'
+UpdateDownloadEndMessage: '&6ダウンロードが終了しました。|~ファイル名: %filename%|~ファイルサイズ: %filesize%|~ファイルパス: %filepath%'
 
 # %pluginname%    : プラグイン名
 # %latestversion% : 最新バージョン
 # %details%       : 更新内容
-UpdateCheckMessage: '&b最新のバージョンを検出しました。|~&bv%latestversion%にアップデートしてください。|~&bプラグイン名: %pluginname%|~&b☆アップデート内容☆|~&b%details%'
+UpdateCheckMessage: '&b最新のバージョンを検出しました。|~v%latestversion%にアップデートしてください。|~プラグイン名: %pluginname%|~☆アップデート内容☆|~%details%'
 
 # プレースホルダはありません
 ErrorUpdateMessage: '&cアップデートに失敗しました。'
