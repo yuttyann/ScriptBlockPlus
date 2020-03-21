@@ -78,9 +78,14 @@ public final class Utils {
 	}
 
 	public static void sendColorMessage(@NotNull CommandSender sender, @Nullable String message) {
-		String replace = StringUtils.replace(message, "\\n", "|~");
-		String[] array = StringUtils.split(replace, "|~");
-		StreamUtils.forEach(array, s -> sender.sendMessage(StringUtils.replaceColor(s, true)));
+		message = StringUtils.setColor(StringUtils.replace(message, "\\n", "|~"), true);
+		String color = "";
+		for (String line : StringUtils.split(message, "|~")) {
+			sender.sendMessage(line = (color + line));
+			if (line.indexOf('§') > -1) {
+				color = StringUtils.getColors(line);
+			}
+		}
 	}
 
 	@SuppressWarnings("deprecation")
