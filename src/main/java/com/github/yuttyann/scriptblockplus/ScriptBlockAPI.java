@@ -28,7 +28,7 @@ public interface ScriptBlockAPI {
 	public boolean scriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index);
 
 	/**
-	 * オプションの位置を取得する</br>
+	 * オプションの位置を取得する<br/>
 	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
 	 * @return 位置
@@ -36,14 +36,14 @@ public interface ScriptBlockAPI {
 	public int indexOfOption(@NotNull Class<? extends BaseOption> option);
 
 	/**
-	 * オプションを追加する</br>
+	 * オプションを追加する<br/>
 	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
 	 */
 	public void addOption(@NotNull Class<? extends BaseOption> option);
 
 	/**
-	 * 指定した位置にオプションを追加する</br>
+	 * 指定した位置にオプションを追加する<br/>
 	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param index 位置
 	 * @param option オプションクラス
@@ -51,7 +51,7 @@ public interface ScriptBlockAPI {
 	public void addOption(int index, @NotNull Class<? extends BaseOption> option);
 
 	/**
-	 * オプションを削除する</br>
+	 * オプションを削除する<br/>
 	 * 指定するクラスには"BaseOption"を継承してください
 	 * @param option オプションクラス
 	 */
@@ -64,7 +64,7 @@ public interface ScriptBlockAPI {
 	public void removeOption(int scriptIndex);
 
 	/**
-	 * スクリプトの終了処理の位置を取得する</br>
+	 * スクリプトの終了処理の位置を取得する<br/>
 	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param endProcess 終了処理クラス
 	 * @return 位置
@@ -72,14 +72,14 @@ public interface ScriptBlockAPI {
 	public int indexOfEndProcess(@NotNull Class<? extends EndProcess> endProcess);
 
 	/**
-	 * スクリプトの終了処理を追加する</br>
+	 * スクリプトの終了処理を追加する<br/>
 	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param endProcess 終了処理クラス
 	 */
 	public void addEndProcess(@NotNull Class<? extends EndProcess> endProcess);
 
 	/**
-	 * 指定した位置にスクリプトの終了処理を追加する</br>
+	 * 指定した位置にスクリプトの終了処理を追加する<br/>
 	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param index 位置
 	 * @param endProcess 終了処理クラス
@@ -87,7 +87,7 @@ public interface ScriptBlockAPI {
 	public void addEndProcess(int index, @NotNull Class<? extends EndProcess> endProcess);
 
 	/**
-	 * スクリプトの終了処理を削除する</br>
+	 * スクリプトの終了処理を削除する<br/>
 	 * 指定するクラスには"EndProcess"を実装してください
 	 * @param endProcess 終了処理クラス
 	 */
@@ -100,7 +100,7 @@ public interface ScriptBlockAPI {
 	public void removeEndProcess(int index);
 
 	/**
-	 * スクリプトの編集クラスを取得する</br>
+	 * スクリプトの編集クラスを取得する<br/>
 	 * @param scriptType スクリプトの種類
 	 * @return SBEdit
 	 */
@@ -159,7 +159,7 @@ public interface ScriptBlockAPI {
 	}
 
 	/**
-	 * スクリプトのファイルクラスを取得する</br>
+	 * スクリプトのファイルクラスを取得する<br/>
 	 * @param location 座標
 	 * @param scriptType スクリプトの種類
 	 * @return SBFile
@@ -169,7 +169,7 @@ public interface ScriptBlockAPI {
 	public interface SBFile {
 
 		/**
-		 * スクリプトの座標を設定する</br>
+		 * スクリプトの座標を設定する<br/>
 		 * ただし、別の座標に切り替える機能であり保存場所を変更するわけではない
 		 * @param location 座標
 		 */
@@ -257,7 +257,7 @@ public interface ScriptBlockAPI {
 		public void setAuthor(@NotNull OfflinePlayer player);
 
 		/**
-		 * スクリプトの作者を追加する</br>
+		 * スクリプトの作者を追加する<br/>
 		 * 同じ作者は追加されません
 		 * @param player 作者
 		 */
