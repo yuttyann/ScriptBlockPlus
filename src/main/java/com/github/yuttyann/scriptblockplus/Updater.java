@@ -5,7 +5,6 @@ import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -156,7 +155,7 @@ public final class Updater {
 	}
 
 	public boolean execute(@Nullable CommandSender sender) {
-		if (SBConfig.UPDATE_CHECKER.toBool() && isUpperVersion) {
+		if (SBConfig.UPDATE_CHECKER.get() && isUpperVersion) {
 			if (sender == null) {
 				sender = Bukkit.getConsoleSender();
 			}
@@ -164,7 +163,7 @@ public final class Updater {
 			File dataFolder = Files.getConfig().getDataFolder();
 			File logFile = new File(dataFolder, "update/ChangeLog.txt");
 			boolean logEquals = !logFile.exists() || !textEquals(changeLogURL, logFile);
-			if (SBConfig.AUTO_DOWNLOAD.toBool()) {
+			if (SBConfig.AUTO_DOWNLOAD.get()) {
 				File jarFile = new File(dataFolder, "update/jar/" + getJarName());
 				try {
 					SBConfig.UPDATE_DOWNLOAD_START.send();
@@ -180,7 +179,7 @@ public final class Updater {
 					}
 				}
 			}
-			if (SBConfig.OPEN_CHANGE_LOG.toBool() && !isUpdateError && logEquals) {
+			if (SBConfig.OPEN_CHANGE_LOG.get() && !isUpdateError && logEquals) {
 				Desktop desktop = Desktop.getDesktop();
 				try {
 					desktop.open(logFile);
@@ -195,13 +194,7 @@ public final class Updater {
 
 	public void sendCheckMessage(@NotNull CommandSender sender) {
 		if (isUpperVersion && !isUpdateError && sender.isOp()) {
-			StrBuilder builder = new StrBuilder(details.size());
-			for (int i = 0; i < details.size(); i++) {
-				boolean isTree = details.get(i).startsWith("$");
-				String info = StringUtils.removeStart(details.get(i), "$");
-				builder.append(isTree ? "  - " : "・").append(info).append(i == (details.size() - 1) ? "" : "|~");
-			}
-			SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, builder.toString()).send(sender);
+			SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(sender);
 		}
 	}
 

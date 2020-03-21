@@ -22,8 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.github.yuttyann.scriptblockplus.script.ScriptEdit.args;
-
 public class ScriptRead extends ScriptObjectMap implements SBRead {
 
 	protected SBPlayer sbPlayer;
@@ -105,8 +103,8 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 		}
 		List<Option> options = OptionList.getList();
 		if (!sort(scriptData.getScripts(), options)) {
-			SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptType.getType()).send(sbPlayer);
-			SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(args(sbPlayer.getName(), scriptType, blockCoords)).console();
+			SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptType).send(sbPlayer);
+			SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(sbPlayer.getName(), scriptType, blockCoords).console();
 			return false;
 		}
 		for (scriptIndex = index; scriptIndex < scripts.size(); scriptIndex++) {
@@ -129,7 +127,7 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 		}
 		executeEndProcess(e -> e.success(this));
 		getSBPlayer().getPlayerCount().add(blockCoords, scriptType);
-		SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(args(sbPlayer.getName(), scriptType, blockCoords)).console();
+		SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(sbPlayer.getName(), scriptType, blockCoords).console();
 		return true;
 	}
 
@@ -142,7 +140,7 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 	}
 
 	protected boolean hasPermission(@NotNull Option option) {
-		if (!SBConfig.OPTION_PERMISSION.toBool() || Permission.has(sbPlayer, option.getPermissionNode())) {
+		if (!SBConfig.OPTION_PERMISSION.get() || Permission.has(sbPlayer, option.getPermissionNode())) {
 			return true;
 		}
 		SBConfig.NOT_PERMISSION.send(sbPlayer);
@@ -154,7 +152,7 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 			List<String> parse = new ArrayList<>();
 			List<String> result = parse;
 			StreamUtils.mForEach(scripts, this::getScripts, parse::addAll);
-			if (SBConfig.SORT_SCRIPTS.toBool()) {
+			if (SBConfig.SORT_SCRIPTS.get()) {
 				List<String> list = (result = new ArrayList<>(parse.size()));
 				options.forEach(o -> StreamUtils.fForEach(parse, o::isOption, list::add));
 			}

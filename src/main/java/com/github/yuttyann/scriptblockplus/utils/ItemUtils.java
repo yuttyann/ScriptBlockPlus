@@ -11,6 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class ItemUtils {
@@ -39,12 +41,17 @@ public class ItemUtils {
 		return item.getDurability();
 	}
 
+	public static Material getMaterial(String name) {
+		Material type = Material.getMaterial(name.toUpperCase());
+		return type == null ? Material.AIR : type;
+	}
+
 	@NotNull
 	public static ItemStack getBlockSelector() {
 		ItemStack item = new ItemStack(Material.STICK);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§dBlock Selector");
-		meta.setLore(SBConfig.BLOCK_SELECTOR.toListAddColor());
+		meta.setLore(setListColor(SBConfig.BLOCK_SELECTOR.get()));
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -54,9 +61,18 @@ public class ItemUtils {
 		ItemStack item = new ItemStack(Material.BLAZE_ROD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§dScript Editor§6[Mode: " + scriptType.name() + "]");
-		meta.setLore(SBConfig.SCRIPT_EDITOR.toListAddColor());
+		meta.setLore(setListColor(SBConfig.SCRIPT_EDITOR.get()));
 		item.setItemMeta(meta);
 		return item;
+	}
+
+	@NotNull
+	private static List<String> setListColor(List<String> list) {
+		list = new ArrayList<>(list);
+		for (int i = 0; i < list.size(); i++) {
+			list.set(i, StringUtils.setColor(list.get(i), true));
+		}
+		return list;
 	}
 
 	public static boolean isBlockSelector(@Nullable ItemStack item) {

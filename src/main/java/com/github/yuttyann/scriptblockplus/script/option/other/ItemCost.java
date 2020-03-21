@@ -36,7 +36,7 @@ public class ItemCost extends BaseOption {
 		if (Calculation.REALNUMBER_PATTERN.matcher(itemData[0]).matches()) {
 			throw new IllegalAccessException("Numerical values can not be used");
 		}
-		Material type = Material.getMaterial(itemData[0].toUpperCase());
+		Material type = ItemUtils.getMaterial(itemData[0]);
 		int damage = itemData.length > 1 ? Integer.parseInt(itemData[1]) : 0;
 		int amount = Integer.parseInt(array[1]);
 		String create = array.length > 2 ? StringUtils.createString(array, 2) : null;
@@ -55,9 +55,7 @@ public class ItemCost extends BaseOption {
 			}
 		}
 		if (result > 0) {
-			String typeName = type == null ? "null" : type.name();
-			String itemTypeName = StringUtils.isEmpty(itemName) ? typeName : itemName;
-			SBConfig.ERROR_ITEM.replace(typeName, amount, damage, itemTypeName).send(player);
+			SBConfig.ERROR_ITEM.replace(type, amount, damage, itemName).send(player);
 			return false;
 		}
 		inventory.setContents(items);

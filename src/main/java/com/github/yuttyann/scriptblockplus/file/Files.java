@@ -29,8 +29,8 @@ public final class Files {
 
 	public static void reload() {
 		ConfigKeys.clear();
-		ConfigKeys.reload(loadFile(PATH_CONFIG, true));
-		ConfigKeys.reload(loadLang(PATH_LANGS, "lang"));
+		ConfigKeys.load(loadFile(PATH_CONFIG, true));
+		ConfigKeys.load(loadLang(PATH_LANGS, "lang"));
 
 		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
 		searchKeys();

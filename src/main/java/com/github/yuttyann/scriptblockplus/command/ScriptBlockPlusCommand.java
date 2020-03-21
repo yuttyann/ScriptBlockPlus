@@ -314,7 +314,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		} else {
 			String types = builder.toString();
 			SBConfig.SELECTOR_REMOVE.replace(types, regionBlocks.getCount()).send(player);
-			SBConfig.CONSOLE_SELECTOR_REMOVE.replace(args(types, regionBlocks)).console();
+			SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, regionBlocks).console();
 		}
 		return true;
 	}
@@ -347,15 +347,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		clipboard.save();
 		String scriptType = clipboard.getScriptType().getType();
 		SBConfig.SELECTOR_PASTE.replace(scriptType, regionBlocks.getCount()).send(sbPlayer);
-		SBConfig.CONSOLE_SELECTOR_PASTE.replace(args(scriptType, regionBlocks)).console();
+		SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptType, regionBlocks).console();
 		return true;
-	}
-
-	private Object[] args(@NotNull String scriptType, @NotNull CuboidRegionBlocks regionBlocks) {
-		String world = regionBlocks.getWorld().getName();
-		String min = BlockCoords.getCoords(regionBlocks.getMinimumPoint());
-		String max = BlockCoords.getCoords(regionBlocks.getMaximumPoint());
-		return new Object[] { scriptType, regionBlocks.getCount(), world, min, max };
 	}
 
 	@Override

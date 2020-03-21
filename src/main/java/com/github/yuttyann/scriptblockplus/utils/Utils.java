@@ -92,7 +92,7 @@ public final class Utils {
 	public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		boolean isCommandSelector = (isPaper() || isCraftBukkit()) && SBConfig.COMMAND_SELECTOR.toBool();
+		boolean isCommandSelector = (isPaper() || isCraftBukkit()) && SBConfig.COMMAND_SELECTOR.get();
 		if (isCommandSelector && (isCBXXXorLater("1.13") || CommandSelector.isCommandPattern(command))) {
 			if (sender instanceof SBPlayer) {
 				sender = ((SBPlayer) sender).getPlayer();
