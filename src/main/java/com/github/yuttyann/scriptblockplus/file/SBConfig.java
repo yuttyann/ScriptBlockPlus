@@ -76,8 +76,8 @@ public final class SBConfig {
 		c.setReplaceKeys("%filename%", "%filepath%", "%filesize%");
 	});
 
-	public static final CustomKey UPDATE_CHECK = customStringKey("UpdateDownloadEndMessage", "", c -> {
-		c.setReplaceKeys("%pluginname%", "%pluginname%", "%details%");
+	public static final CustomKey UPDATE_CHECK = customStringKey("UpdateCheckMessage", "", c -> {
+		c.setReplaceKeys("%pluginname%", "%latestversion%", "%details%");
 	});
 
 	public static final CustomKey SCRIPT_COPY = customStringKey("ScriptCopyMessage", "", c -> {
