@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -62,8 +61,8 @@ public final class ScriptEdit {
 		scriptData.setScripts(Collections.singletonList(script));
 		scriptData.save();
 		mapManager.addCoords(location, scriptType);
-		SBConfig.SCRIPT_CREATE.replace(scriptType.getType()).send(sbPlayer);
-		SBConfig.CONSOLE_SCRIPT_CREATE.replace(args(sbPlayer.getName(), scriptType, location)).console();
+		SBConfig.SCRIPT_CREATE.replace(scriptType).send(sbPlayer);
+		SBConfig.CONSOLE_SCRIPT_CREATE.replace(sbPlayer.getName(), scriptType, location).console();
 	}
 
 	public void add(@NotNull SBPlayer sbPlayer, @NotNull Location location, @NotNull String script) {
@@ -79,8 +78,8 @@ public final class ScriptEdit {
 		scriptData.addScript(script);
 		scriptData.save();
 		mapManager.removeTimes(location, scriptType);
-		SBConfig.SCRIPT_ADD.replace(scriptType.getType()).send(sbPlayer);
-		SBConfig.CONSOLE_SCRIPT_ADD.replace(args(sbPlayer.getName(), scriptType, location)).console();
+		SBConfig.SCRIPT_ADD.replace(scriptType).send(sbPlayer);
+		SBConfig.CONSOLE_SCRIPT_ADD.replace(sbPlayer.getName(), scriptType, location).console();
 	}
 
 	public void remove(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
@@ -94,8 +93,8 @@ public final class ScriptEdit {
 		scriptData.remove();
 		scriptData.save();
 		mapManager.removeCoords(location, scriptType);
-		SBConfig.SCRIPT_REMOVE.replace(scriptType.getType()).send(sbPlayer);
-		SBConfig.CONSOLE_SCRIPT_REMOVE.replace(args(sbPlayer.getName(), scriptType, location)).console();
+		SBConfig.SCRIPT_REMOVE.replace(scriptType).send(sbPlayer);
+		SBConfig.CONSOLE_SCRIPT_REMOVE.replace(sbPlayer.getName(), scriptType, location).console();
 	}
 
 	public boolean lightRemove(@NotNull Location location) {
@@ -123,18 +122,13 @@ public final class ScriptEdit {
 		for (String script : scriptData.getScripts()) {
 			sbPlayer.sendMessage("- " + script);
 		}
-		SBConfig.CONSOLE_SCRIPT_VIEW.replace(args(sbPlayer.getName(), scriptType, location)).console();
+		SBConfig.CONSOLE_SCRIPT_VIEW.replace(sbPlayer.getName(), scriptType, location).console();
 	}
 
 	@NotNull
 	public SBClipboard clipboard(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		scriptData.setLocation(location);
 		return new Clipboard(sbPlayer, scriptData);
-	}
-
-	@NotNull
-	static Object[] args(@NotNull String name, @NotNull ScriptType scriptType, @NotNull Location location) {
-		return new Object[] { name, scriptType.getType(), location.getWorld().getName(), BlockCoords.getCoords(location) };
 	}
 
 	private static class Clipboard implements SBClipboard {
@@ -179,8 +173,8 @@ public final class ScriptEdit {
 				return false;
 			}
 			sbPlayer.setClipboard(this);
-			SBConfig.SCRIPT_COPY.replace(scriptType.getType()).send(sbPlayer);
-			SBConfig.CONSOLE_SCRIPT_COPY.replace(args(sbPlayer.getName(), scriptType, scriptData.getLocation())).console();
+			SBConfig.SCRIPT_COPY.replace(scriptType).send(sbPlayer);
+			SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), scriptType, scriptData.getLocation()).console();
 			return true;
 		}
 
@@ -202,8 +196,8 @@ public final class ScriptEdit {
 			scriptData.setScripts(scripts);
 			scriptData.save();
 			mapManager.addCoords(location, scriptType);
-			SBConfig.SCRIPT_PASTE.replace(scriptType.getType()).send(sbPlayer);
-			SBConfig.CONSOLE_SCRIPT_PASTE.replace(args(sbPlayer.getName(), scriptType, scriptData.getLocation())).console();
+			SBConfig.SCRIPT_PASTE.replace(scriptType).send(sbPlayer);
+			SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), scriptType, scriptData.getLocation()).console();
 			return true;
 		}
 
