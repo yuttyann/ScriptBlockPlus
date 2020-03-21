@@ -65,16 +65,31 @@ public final class StringUtils {
 	}
 
 	@NotNull
-	public static String replaceColor(@Nullable String source, boolean randomColor) {
-		if (randomColor) {
-			source = replace(source, "&rc", ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16))).toString());
+	public static String setColor(@Nullable String source, boolean isRandomColor) {
+		if (isRandomColor) {
+			source = replace(source, "&rc", ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16))));
 		}
 		return isEmpty(source) ? "" : ChatColor.translateAlternateColorCodes('&', source);
 	}
 
 	@NotNull
-	public static String replace(@Nullable String source, @NotNull String search, @Nullable String replace) {
-		return replace(source, search, () -> replace == null ? "" : replace);
+	public static String getColors(@NotNull String source) {
+		char[] chars = source.toCharArray();
+		StringBuilder builder = new StringBuilder(chars.length);
+		for (int i = 0; i < chars.length; i++) {
+			if (chars[i] != '§' || (i + 1) >= chars.length) {
+				continue;
+			}
+			if (ChatColor.getByChar(Character.toLowerCase(chars[i + 1])) != null) {
+				builder.append(chars[i++]).append(chars[i]);
+			}
+		}
+		return builder.toString();
+	}
+
+	@NotNull
+	public static String replace(@Nullable String source, @NotNull String search, @Nullable Object replace) {
+		return replace(source, search, () -> replace == null ? "" : replace.toString());
 	}
 
 	@NotNull
