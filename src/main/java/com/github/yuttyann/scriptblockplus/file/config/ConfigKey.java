@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file.config;
 
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -8,9 +9,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.github.yuttyann.scriptblockplus.file.config.ConfigKeys.getConfigData;
-import static com.github.yuttyann.scriptblockplus.utils.StringUtils.replaceColor;
 
 public class ConfigKey<T> {
 
@@ -25,7 +23,7 @@ public class ConfigKey<T> {
 
     @Nullable
     public T get() {
-        return getConfigData(key).getValue(def);
+        return ConfigKeys.getConfigData(key).getValue(def);
     }
 
     @NotNull
@@ -44,7 +42,7 @@ public class ConfigKey<T> {
     public List<String> toListAddColor() {
         List<String> list = toList();
         for (int i = 0; i < list.size(); i++) {
-            list.set(i, replaceColor(list.get(i), true));
+            list.set(i, StringUtils.setColor(list.get(i), true));
         }
         return list;
     }

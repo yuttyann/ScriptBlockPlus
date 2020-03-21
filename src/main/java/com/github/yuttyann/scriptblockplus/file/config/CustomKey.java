@@ -11,9 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-import static com.github.yuttyann.scriptblockplus.file.config.ConfigKeys.getConfigData;
-import static com.github.yuttyann.scriptblockplus.utils.StringUtils.replaceColor;
-
 public class CustomKey {
 
     private final String key;
@@ -31,7 +28,7 @@ public class CustomKey {
     @NotNull
     public CustomKey set() {
         synchronized(this) {
-            this.value = getConfigData(key).getValue(def);
+            this.value = ConfigKeys.getConfigData(key).getValue(def);
         }
         return this;
     }
@@ -51,7 +48,7 @@ public class CustomKey {
             set();
         }
         for (int i = 0; i < replaces.length; i++) {
-            this.value = StringUtils.replace(this.value, keyNames[i], String.valueOf(replaces[i]));
+            this.value = StringUtils.replace(this.value, keyNames[i], replaces[i]);
         }
         return this;
     }
@@ -72,7 +69,7 @@ public class CustomKey {
 
     @NotNull
     public String toString(boolean isReplaceColor) {
-        String temp = isReplaceColor ?  replaceColor(value, true) : value;
+        String temp = isReplaceColor ?  StringUtils.setColor(value, true) : value;
         set();
         return temp;
     }
