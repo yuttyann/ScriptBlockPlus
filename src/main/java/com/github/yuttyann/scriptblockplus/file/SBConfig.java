@@ -1,17 +1,31 @@
 package com.github.yuttyann.scriptblockplus.file;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.config.ConfigKey;
-import com.github.yuttyann.scriptblockplus.file.config.CustomKey;
+import com.github.yuttyann.scriptblockplus.file.config.ReplaceKey;
+import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
+import org.apache.commons.lang.text.StrBuilder;
+import org.bukkit.Location;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import static com.github.yuttyann.scriptblockplus.file.config.ConfigKeys.*;
+import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 
 public final class SBConfig {
 
-	// Boolean Values
-	public static final ConfigKey<Boolean> SBP_API_VERSION = booleanKey("SBP-API-Version", true);
+	// List Keys
+	public static final ConfigKey<List<String>> BLOCK_SELECTOR = stringListKey("BlockSelector", new ArrayList<>());
+	public static final ConfigKey<List<String>> SCRIPT_EDITOR = stringListKey("ScriptEditor", new ArrayList<>());
+
+
+	// Boolean Keys
+	// public static final ConfigKey<Boolean> SBP_API_VERSION = booleanKey("SBP-API-Version", true);
 	public static final ConfigKey<Boolean> UPDATE_CHECKER = booleanKey("UpdateChecker", true);
 	public static final ConfigKey<Boolean> AUTO_DOWNLOAD = booleanKey("AutoDownload", true);
 	public static final ConfigKey<Boolean> OPEN_CHANGE_LOG = booleanKey("OpenChangeLog", true);
@@ -23,7 +37,7 @@ public final class SBConfig {
 	public static final ConfigKey<Boolean> ACTIONS_INTERACT_RIGHT = booleanKey("Actions.InteractRight", true);
 
 
-	// String Values
+	// String Keys
 	public static final ConfigKey<String> LANGUAGE = stringKey("Language", "en");
 	public static final ConfigKey<String> TOOL_COMMAND = stringKey("ToolCommandMessage", "");
 	public static final ConfigKey<String> RELOAD_COMMAND = stringKey("ReloadCommandMessage", "");
@@ -58,131 +72,222 @@ public final class SBConfig {
 	public static final ConfigKey<String> ERROR_SCRIPT_FILE_CHECK = stringKey("ErrorScriptFileCheckMessage", "");
 
 
-	// List Values
-	public static final ConfigKey<List<String>> BLOCK_SELECTOR = stringListKey("BlockSelector", new ArrayList<>());
-	public static final ConfigKey<List<String>> SCRIPT_EDITOR = stringListKey("ScriptEditor", new ArrayList<>());
+	// Functions (Private)
+	@SuppressWarnings("unchecked")
+	private static Function<ReplaceKey, String> FUNCTION_UPDATE_CHECK =  r -> {
+		String s = r.get();
+		s = replace(s, "%pluginname%", r.getArg(0, String.class));
+		s = replace(s, "%latestversion%", r.getArg(1, String.class));
+		if (s.contains("%details%")) {
+			List<String> l = r.getArg(2, List.class);
+			StrBuilder b = new StrBuilder(l.size());
+			for (int i = 0; i < l.size(); i++) {
+				boolean isTree = l.get(i).startsWith("$");
+				String info = removeStart(l.get(i), "$");
+				b.append(isTree ? "  - " : "・").append(info).append(i == (l.size() - 1) ? "" : "|~");
+			}
+			s = replace(s, "%details%", b.toString());
+		}
+		return s;
+	};
 
+	private static Function<ReplaceKey, String> FUNCTION_SCRIPT_TYPE = r -> {
+		return replace(r.get(), "%scripttype%", r.getArg(0, ScriptType.class).getType());
+	};
 
-	// CustomText Values
-	public static final CustomKey EXPORT_START = customStringKey("ExportStartMessage", "", c -> {
-		c.setReplaceKeys("%name%");
-	});
+	private static Function<ReplaceKey, String> FUNCTION_OPTION_FAILED = r -> {
+		Throwable t = r.getArg(1, Throwable.class);
+		String s = r.get();
+		s = replace(s, "%option%", r.getArg(0, Option.class).getName());
+		s = replace(s, "%cause%", t.getClass().getSimpleName() + (t.getMessage() == null ? "" : " \"" + t.getMessage() + "\""));
+		return s;
+	};
 
-	public static final CustomKey EXPORT_END = customStringKey("ExportEndMessage", "", c -> {
-		c.setReplaceKeys("%name%");
-	});
+	private static Function<ReplaceKey, String> FUNCTION_ITEM = r -> {
+		Material m = r.getArg(0, Material.class);
+		String n = r.getArg(3, String.class);
+		String s = r.get();
+		s = replace(s, "%material%", String.valueOf(m));
+		s = replace(s, "%amount%", r.getArg(1, Integer.class));
+		s = replace(s, "%damage%", r.getArg(2, Integer.class));
+		s = replace(s, "%itemname%", isEmpty(n) ? String.valueOf(m) : n);
+		return s;
+	};
 
-	public static final CustomKey UPDATE_DOWNLOAD_END = customStringKey("UpdateDownloadEndMessage", "", c -> {
-		c.setReplaceKeys("%filename%", "%filepath%", "%filesize%");
-	});
+	private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SCRIPT = r -> {
+		Location l = r.getArg(2, Location.class);
+		String s = r.get();
+		s = replace(s, "%player%", r.getArg(0, String.class));
+		s = replace(s, "%scripttype%", r.getArg(1, ScriptType.class).getType());
+		s = replace(s, "%world%", l.getWorld().getName());
+		s = replace(s, "%coords%", BlockCoords.getCoords(l));
+		return s;
+	};
 
-	public static final CustomKey UPDATE_CHECK = customStringKey("UpdateCheckMessage", "", c -> {
-		c.setReplaceKeys("%pluginname%", "%latestversion%", "%details%");
-	});
+	private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SELECTOR = r -> {
+		CuboidRegionBlocks c = r.getArg(1, CuboidRegionBlocks.class);
+		String s = r.get();
+		s = replace(s, "%scripttype%", r.getArg(0, String.class));
+		s = replace(s, "%blockcount%", c.getCount());
+		s = replace(s, "%world%", c.getWorld().getName());
+		s = replace(s, "%mincoords%", BlockCoords.getCoords(c.getMinimumPoint()));
+		s = replace(s, "%maxcoords%", BlockCoords.getCoords(c.getMinimumPoint()));
+		return s;
+	};
 
-	public static final CustomKey SCRIPT_COPY = customStringKey("ScriptCopyMessage", "", c -> {
-		c.setReplaceKeys("%scripttype%");
-	});
-	public static final CustomKey SCRIPT_PASTE = customStringKey("ScriptPasteMessage", "", c -> {
-		c.setReplaceKeys("%scripttype%");
-	});
-	public static final CustomKey SCRIPT_CREATE = customStringKey("ScriptCreateMessage", "", c -> {
-		c.setReplaceKeys("%scripttype%");
-	});
+	// ReplaceKey Keys
+	/**
+	 * Parameter: {@link String} name
+	 */
+	public static final ReplaceKey EXPORT_START = replaceKey(stringKey("ExportStartMessage", ""), "%name%");
 
-	public static final CustomKey SCRIPT_ADD = customStringKey("ScriptAddMessage", "", c -> {
-		c.setReplaceKeys("%scripttype%");
-	});
+	/**
+	 * Parameter: {@link String} name
+	 */
+	public static final ReplaceKey EXPORT_END = replaceKey(stringKey("ExportEndMessage", ""), "%name%");
 
-	public static final CustomKey SCRIPT_REMOVE = customStringKey("ScriptRemoveMessage", "", c -> {
-		c.setReplaceKeys("%scripttype%");
-	});
+	/**
+	 * Parameter: {@link String} fileName, {@link String} filePath, {@link String} fileSize
+	 */
+	public static final ReplaceKey UPDATE_DOWNLOAD_END = replaceKey(stringKey("UpdateDownloadEndMessage", ""), "%filename%", "%filepath%", "%filesize%");
 
-	public static final CustomKey SELECTOR_POS1 = customStringKey("SelectorPos1Message", "", c -> {
-		c.setReplaceKeys("%world%", "%coords%");
-	});
+	/**
+	 * Parameter: {@link String} pluginName, {@link String} latestVersion, {@link List<String>} details
+	 */
+	public static final ReplaceKey UPDATE_CHECK = replaceKey(stringKey("UpdateCheckMessage", ""), FUNCTION_UPDATE_CHECK);
 
-	public static final CustomKey SELECTOR_POS2 = customStringKey("SelectorPos2Message", "", c -> {
-		c.setReplaceKeys("%world%", "%coords%");
-	});
+	/**
+	 * Parameter: {@link ScriptType} scriptType
+	 */
+	public static final ReplaceKey SCRIPT_COPY = replaceKey(stringKey("ScriptCopyMessage", ""), FUNCTION_SCRIPT_TYPE);
 
-	public static final CustomKey SELECTOR_PASTE = customStringKey("SelectorPasteMessage", "", c -> {
-		c.setReplaceKeys("%scripttype%", "%blockcount%");
-	});
+	/**
+	 * Parameter: {@link ScriptType} scriptType
+	 */
+	public static final ReplaceKey SCRIPT_PASTE = replaceKey(stringKey("ScriptPasteMessage", ""), FUNCTION_SCRIPT_TYPE);
 
-	public static final CustomKey SELECTOR_REMOVE = customStringKey("SelectorRemoveMessage", "", c -> {
-		c.setReplaceKeys("%scripttype%", "%blockcount%");
-	});
+	/**
+	 * Parameter: {@link ScriptType} scriptType
+	 */
+	public static final ReplaceKey SCRIPT_CREATE = replaceKey(stringKey("ScriptCreateMessage", ""), FUNCTION_SCRIPT_TYPE);
 
-	public static final CustomKey OPTION_FAILED_TO_EXECUTE = customStringKey("OptionFailedToExecuteMessage", "", c -> {
-		c.setReplaceKeys("%option%", "%cause%");
-	});
+	/**
+	 * Parameter: {@link ScriptType} scriptType
+	 */
+	public static final ReplaceKey SCRIPT_ADD = replaceKey(stringKey("ScriptAddMessage", ""), FUNCTION_SCRIPT_TYPE);
 
-	public static final CustomKey ACTIVE_COOLDOWN = customStringKey("ActiveCooldownMessage", "", c -> {
-		c.setReplaceKeys("%hour%", "%minute%", "%second%");
-	});
+	/**
+	 * Parameter: {@link ScriptType} scriptType
+	 */
+	public static final ReplaceKey SCRIPT_REMOVE = replaceKey(stringKey("ScriptRemoveMessage", ""), FUNCTION_SCRIPT_TYPE);
 
-	public static final CustomKey SUCCESS_ACTION_DATA = customStringKey("SuccActionDataMessage", "", c -> {
-		c.setReplaceKeys("%actiontype%");
-	});
+	/**
+	 * Parameter: {@link String} world, {@link String} coords
+	 */
+	public static final ReplaceKey SELECTOR_POS1 = replaceKey(stringKey("SelectorPos1Message", ""), "%world%", "%coords%");
 
-	public static final CustomKey ERROR_SCRIPT_EXECUTE = customStringKey("ErrorScriptExecMessage", "", c -> {
-		c.setReplaceKeys("%scripttype%");
-	});
+	/**
+	 * Parameter: {@link String} world, {@link String} coords
+	 */
+	public static final ReplaceKey SELECTOR_POS2 = replaceKey(stringKey("SelectorPos2Message", ""), "%world%", "%coords%");
 
-	public static final CustomKey ERROR_GROUP = customStringKey("ErrorGroupMessage", "", c -> {
-		c.setReplaceKeys("%group%");
-	});
+	/**
+	 * Parameter: {@link String} scriptType, {@link Integer} blockCount
+	 */
+	public static final ReplaceKey SELECTOR_PASTE = replaceKey(stringKey("SelectorPasteMessage", ""), "%scripttype%", "%blockcount%");
 
-	public static final CustomKey ERROR_HAND = customStringKey("ErrorHandMessage", "", c -> {
-		c.setReplaceKeys("%material%", "%amount%", "%damage%", "%itemname%");
-	});
+	/**
+	 * Parameter: {@link String} scriptType, {@link Integer} blockCount
+	 */
+	public static final ReplaceKey SELECTOR_REMOVE = replaceKey(stringKey("SelectorRemoveMessage", ""), "%scripttype%", "%blockcount%");
 
-	public static final CustomKey ERROR_ITEM = customStringKey("ErrorItemMessage", "", c -> {
-		c.setReplaceKeys("%material%", "%amount%", "%damage%", "%itemname%");
-	});
+	/**
+	 * Parameter: {@link Option} option, {@link Throwable} throwable
+	 */
+	public static final ReplaceKey OPTION_FAILED_TO_EXECUTE = replaceKey(stringKey("OptionFailedToExecuteMessage", ""), FUNCTION_OPTION_FAILED);
 
-	public static final CustomKey ERROR_COST = customStringKey("ErrorCostMessage", "", c -> {
-		c.setReplaceKeys("%cost%", "%result%");
-	});
+	/**
+	 * Parameter: {@link Integer} hour, {@link Integer} minute, {@link Integer} second
+	 */
+	public static final ReplaceKey ACTIVE_COOLDOWN = replaceKey(stringKey("ActiveCooldownMessage", ""), "%hour%", "%minute%", "%second%");
 
-	public static final CustomKey CONSOLE_SCRIPT_COPY = customStringKey("ConsoleScriptCopyMessage", "", c -> {
-		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
-	});
+	/**
+	 * Parameter: {@link String} scriptType-actionType
+	 */
+	public static final ReplaceKey SUCCESS_ACTION_DATA = replaceKey(stringKey("SuccActionDataMessage", ""), "%actiontype%");
 
-	public static final CustomKey CONSOLE_SCRIPT_PASTE = customStringKey("ConsoleScriptPasteMessage", "", c -> {
-		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
-	});
+	/**
+	 * Parameter: {@link ScriptType} scriptType
+	 */
+	public static final ReplaceKey ERROR_SCRIPT_EXECUTE = replaceKey(stringKey("ErrorScriptExecMessage", ""), FUNCTION_SCRIPT_TYPE);
 
-	public static final CustomKey CONSOLE_SCRIPT_CREATE = customStringKey("ConsoleScriptCreateMessage", "", c -> {
-		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
-	});
+	/**
+	 * Parameter: {@link String} group
+	 */
+	public static final ReplaceKey ERROR_GROUP = replaceKey(stringKey("ErrorGroupMessage", ""), "%group%");
 
-	public static final CustomKey CONSOLE_SCRIPT_ADD = customStringKey("ConsoleScriptAddMessage", "", c -> {
-		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
-	});
+	/**
+	 * Parameter: {@link Material} type, {@link Integer} amount, {@link Integer} damage, {@link String} itemName
+	 */
+	public static final ReplaceKey ERROR_HAND = replaceKey(stringKey("ErrorHandMessage", ""), FUNCTION_ITEM);
 
-	public static final CustomKey CONSOLE_SCRIPT_REMOVE = customStringKey("ConsoleScriptRemoveMessage", "", c -> {
-		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
-	});
+	/**
+	 * Parameter: {@link Material} type, {@link Integer} amount, {@link Integer} damage, {@link String} itemName
+	 */
+	public static final ReplaceKey ERROR_ITEM = replaceKey(stringKey("ErrorItemMessage", ""), FUNCTION_ITEM);
 
-	public static final CustomKey CONSOLE_SCRIPT_VIEW = customStringKey("ConsoleScriptViewMessage", "", c -> {
-		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
-	});
+	/**
+	 * Parameter: {@link Double} cost, {@link Double} result
+	 */
+	public static final ReplaceKey ERROR_COST = replaceKey(stringKey("ErrorCostMessage", ""), "%cost%", "%result%");
 
-	public static final CustomKey CONSOLE_SELECTOR_PASTE = customStringKey("ConsoleSelectorPasteMessage", "", c -> {
-		c.setReplaceKeys("%scripttype%", "%blockcount%", "%world%", "%mincoords%", "%maxcoords%");
-	});
+	/**
+	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 */
+	public static final ReplaceKey CONSOLE_SCRIPT_COPY = replaceKey(stringKey("ConsoleScriptCopyMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
-	public static final CustomKey CONSOLE_SELECTOR_REMOVE = customStringKey("ConsoleSelectorRemoveMessage", "", c -> {
-		c.setReplaceKeys("%scripttype%", "%blockcount%", "%world%", "%mincoords%", "%maxcoords%");
-	});
+	/**
+	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 */
+	public static final ReplaceKey CONSOLE_SCRIPT_PASTE = replaceKey(stringKey("ConsoleScriptPasteMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
-	public static final CustomKey CONSOLE_SUCCESS_SCRIPT_EXECUTE = customStringKey("ConsoleSuccScriptExecMessage", "", c -> {
-		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
-	});
+	/**
+	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 */
+	public static final ReplaceKey CONSOLE_SCRIPT_CREATE = replaceKey(stringKey("ConsoleScriptCreateMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
-	public static final CustomKey CONSOLE_ERROR_SCRIPT_EXECUTE = customStringKey("ConsoleErrorScriptExecMessage", "", c -> {
-		c.setReplaceKeys("%player%", "%scripttype%", "%world%", "%coords%");
-	});
+	/**
+	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 */
+	public static final ReplaceKey CONSOLE_SCRIPT_ADD = replaceKey(stringKey("ConsoleScriptAddMessage", ""), FUNCTION_CONSOLE_SCRIPT);
+
+	/**
+	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 */
+	public static final ReplaceKey CONSOLE_SCRIPT_REMOVE = replaceKey(stringKey("ConsoleScriptRemoveMessage", ""), FUNCTION_CONSOLE_SCRIPT);
+
+	/**
+	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 */
+	public static final ReplaceKey CONSOLE_SCRIPT_VIEW = replaceKey(stringKey("ConsoleScriptViewMessage", ""), FUNCTION_CONSOLE_SCRIPT);
+
+	/**
+	 * Parameter: {@link ScriptType} scriptType, {@link CuboidRegionBlocks} regionBlocks
+	 */
+	public static final ReplaceKey CONSOLE_SELECTOR_PASTE = replaceKey(stringKey("ConsoleSelectorPasteMessage", ""), FUNCTION_CONSOLE_SELECTOR);
+
+	/**
+	 * Parameter: {@link ScriptType} scriptType, {@link CuboidRegionBlocks} regionBlocks
+	 */
+	public static final ReplaceKey CONSOLE_SELECTOR_REMOVE = replaceKey(stringKey("ConsoleSelectorRemoveMessage", ""), FUNCTION_CONSOLE_SELECTOR);
+
+	/**
+	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 */
+	public static final ReplaceKey CONSOLE_SUCCESS_SCRIPT_EXECUTE = replaceKey(stringKey("ConsoleSuccScriptExecMessage", ""), FUNCTION_CONSOLE_SCRIPT);
+
+	/**
+	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 */
+	public static final ReplaceKey CONSOLE_ERROR_SCRIPT_EXECUTE = replaceKey(stringKey("ConsoleErrorScriptExecMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 }
