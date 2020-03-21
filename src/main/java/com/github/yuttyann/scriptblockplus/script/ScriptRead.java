@@ -60,8 +60,8 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 	public List<String> getScripts() {
 		return scripts;
 	}
-	@NotNull
 
+	@NotNull
 	@Override
 	public String getOptionValue() {
 		return optionValue;
