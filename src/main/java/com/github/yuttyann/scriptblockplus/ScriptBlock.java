@@ -2,7 +2,7 @@ package com.github.yuttyann.scriptblockplus;
 
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.*;
 import com.github.yuttyann.scriptblockplus.manager.APIManager;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
