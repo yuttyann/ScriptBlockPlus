@@ -6,9 +6,8 @@ import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
 import com.github.yuttyann.scriptblockplus.region.Region;
@@ -17,7 +16,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.utils.*;
 import com.google.common.base.Charsets;
 import org.apache.commons.lang.text.StrBuilder;
@@ -54,19 +53,19 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	public CommandData[] getUsages() {
 		String[] typeNodes = SBPermission.getNodes(true);
 		return new CommandData[] {
-				new CommandData(SBConfig.TOOL_COMMAND.get(), Permission.COMMAND_TOOL.getNode()),
-				new CommandData(SBConfig.RELOAD_COMMAND.get(), Permission.COMMAND_RELOAD.getNode()),
-				new CommandData(SBConfig.BACKUP_COMMAND.get(), Permission.COMMAND_BACKUP.getNode()),
-				new CommandData(SBConfig.CHECKVER_COMMAND.get(), Permission.COMMAND_CHECKVER.getNode()),
-				new CommandData(SBConfig.DATAMIGR_COMMAND.get(), Permission.COMMAND_DATAMIGR.getNode()),
-				new CommandData(SBConfig.EXPORT_COMMAND.get(), Permission.COMMAND_EXPORT.getNode()),
-				new CommandData(SBConfig.CREATE_COMMAND.get(), typeNodes),
-				new CommandData(SBConfig.ADD_COMMAND.get(), typeNodes),
-				new CommandData(SBConfig.REMOVE_COMMAND.get(), typeNodes),
-				new CommandData(SBConfig.VIEW_COMMAND.get(), typeNodes),
-				new CommandData(SBConfig.RUN_COMMAND.get(), typeNodes),
-				new CommandData(SBConfig.SELECTOR_PASTE_COMMAND.get(), Permission.COMMAND_SELECTOR.getNode()),
-				new CommandData(SBConfig.SELECTOR_REMOVE_COMMAND.get(), Permission.COMMAND_SELECTOR.getNode())
+				new CommandData(SBConfig.TOOL_COMMAND.getValue(), Permission.COMMAND_TOOL.getNode()),
+				new CommandData(SBConfig.RELOAD_COMMAND.getValue(), Permission.COMMAND_RELOAD.getNode()),
+				new CommandData(SBConfig.BACKUP_COMMAND.getValue(), Permission.COMMAND_BACKUP.getNode()),
+				new CommandData(SBConfig.CHECKVER_COMMAND.getValue(), Permission.COMMAND_CHECKVER.getNode()),
+				new CommandData(SBConfig.DATAMIGR_COMMAND.getValue(), Permission.COMMAND_DATAMIGR.getNode()),
+				new CommandData(SBConfig.EXPORT_COMMAND.getValue(), Permission.COMMAND_EXPORT.getNode()),
+				new CommandData(SBConfig.CREATE_COMMAND.getValue(), typeNodes),
+				new CommandData(SBConfig.ADD_COMMAND.getValue(), typeNodes),
+				new CommandData(SBConfig.REMOVE_COMMAND.getValue(), typeNodes),
+				new CommandData(SBConfig.VIEW_COMMAND.getValue(), typeNodes),
+				new CommandData(SBConfig.RUN_COMMAND.getValue(), typeNodes),
+				new CommandData(SBConfig.SELECTOR_PASTE_COMMAND.getValue(), Permission.COMMAND_SELECTOR.getNode()),
+				new CommandData(SBConfig.SELECTOR_REMOVE_COMMAND.getValue(), Permission.COMMAND_SELECTOR.getNode())
 		};
 	}
 
@@ -399,7 +398,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 						StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 					} else if (equals(args[1], "create", "add")) {
 						String prefix = args[args.length - 1].toLowerCase();
-						String[] answers = OptionList.getSyntaxs();
+						String[] answers = OptionManager.getSyntaxs();
 						Arrays.sort(answers);
 						StreamUtils.fForEach(answers, s -> s.startsWith(prefix), s -> empty.add(s.trim()));
 					}
@@ -432,10 +431,9 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	private boolean checkScript(String scriptLine) {
 		try {
-			List<Option> options = OptionList.getList();
-			List<String> scripts = StringUtils.getScripts(scriptLine);
 			int[] success = { 0 };
-			scripts.forEach(s -> StreamUtils.fForEach(options, o -> o.isOption(s), o -> success[0]++));
+			List<String> scripts = StringUtils.getScripts(scriptLine);
+			StreamUtils.fForEach(scripts, s -> OptionManager.get(s) != null, o -> success[0]++);
 			if (success[0] == 0 || success[0] != scripts.size()) {
 				return false;
 			}
