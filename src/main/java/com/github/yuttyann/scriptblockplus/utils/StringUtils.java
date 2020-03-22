@@ -140,8 +140,8 @@ public final class StringUtils {
 		return builder.toString();
 	}
 
-	@Nullable
-	public static String removeStart(@Nullable String source, @Nullable  String prefix) {
+	@NotNull
+	public static String removeStart(@NotNull String source, @NotNull String prefix) {
 		return isNotEmpty(prefix) ? (startsWith(source, prefix) ? source.substring(prefix.length()) : source) : source;
 	}
 
