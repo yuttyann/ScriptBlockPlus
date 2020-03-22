@@ -15,42 +15,42 @@ public interface SBRead extends ObjectMap {
 	 * @return プラグイン
 	 */
 	@NotNull
-	public Plugin getPlugin();
+	Plugin getPlugin();
 
 	/**
 	 * SBPlayerを取得する
 	 * @return SBPlayer
 	 */
 	@NotNull
-	public SBPlayer getSBPlayer();
+	SBPlayer getSBPlayer();
 
 	/**
 	 * スクリプトのリストを取得する
 	 * @return スクリプトのリスト
 	 */
 	@NotNull
-	public List<String> getScripts();
+	List<String> getScripts();
 
 	/**
 	 * オプションの値を取得する
 	 * @return オプションの値
 	 */
 	@NotNull
-	public String getOptionValue();
+	String getOptionValue();
 
 	/**
 	 * 座標文字列を取得する
 	 * @return ワールド名を除いた文字列(x, y, z)
 	 */
 	@NotNull
-	public String getCoords();
+	String getCoords();
 
 	/**
 	 * 座標文字列を取得する
 	 * @return ワールド名を含めた文字列(world, x, y, z)
 	 */
 	@NotNull
-	public String getFullCoords();
+	String getFullCoords();
 
 	/**
 	 * 座標を取得する</br>
@@ -58,31 +58,31 @@ public interface SBRead extends ObjectMap {
 	 * @return スクリプトの座標
 	 */
 	@NotNull
-	public Location getLocation();
+	Location getLocation();
 
 	/**
 	 * スクリプトの種類を取得する
 	 * @return スクリプトの種類
 	 */
 	@NotNull
-	public ScriptType getScriptType();
+	ScriptType getScriptType();
 
 	/**
 	 * スクリプトの管理クラスを取得する
 	 * @return スクリプトの管理クラス
 	 */
 	@NotNull
-	public ScriptData getScriptData();
+	ScriptData getScriptData();
 
 	/**
 	 * スクリプト読み込むの進行度を取得する
 	 * @return 進行度
 	 */
-	public int getScriptIndex();
+	int getScriptIndex();
 
 	/**
 	 * スクリプトを実行する
 	 * @param index 開始位置
 	 */
-	public boolean read(int index);
+	boolean read(int index);
 }
