@@ -11,8 +11,8 @@ public class Bypass extends BaseOption {
 		super("bypass", "@bypass ");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Bypass();
 	}

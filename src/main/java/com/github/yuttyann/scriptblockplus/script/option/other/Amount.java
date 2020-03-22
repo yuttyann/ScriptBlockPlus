@@ -11,8 +11,8 @@ public class Amount extends BaseOption {
 		super("amount", "@amount:");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Amount();
 	}

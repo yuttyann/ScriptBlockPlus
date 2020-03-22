@@ -19,8 +19,8 @@ public class ActionBar extends BaseOption {
 		super("actionbar", "@actionbar:");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new ActionBar();
 	}

@@ -1,12 +1,13 @@
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class MoneyCost extends BaseOption {
 
@@ -17,6 +18,7 @@ public class MoneyCost extends BaseOption {
 	}
 
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new MoneyCost();
 	}

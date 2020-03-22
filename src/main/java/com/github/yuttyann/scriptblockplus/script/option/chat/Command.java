@@ -11,8 +11,8 @@ public class Command extends BaseOption {
 		super("command", "@command ");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Command();
 	}

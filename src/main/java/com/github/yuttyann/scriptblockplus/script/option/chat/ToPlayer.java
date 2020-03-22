@@ -11,8 +11,8 @@ public class ToPlayer extends BaseOption {
 		super("toplayer", "@player ");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new ToPlayer();
 	}

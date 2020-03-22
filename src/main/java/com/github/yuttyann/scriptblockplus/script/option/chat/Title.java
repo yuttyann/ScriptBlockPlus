@@ -14,8 +14,8 @@ public class Title extends BaseOption {
 		super("title", "@title:");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Title();
 	}

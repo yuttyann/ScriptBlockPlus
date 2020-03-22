@@ -11,8 +11,8 @@ public class Console extends BaseOption {
 		super("console", "@console ");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Console();
 	}

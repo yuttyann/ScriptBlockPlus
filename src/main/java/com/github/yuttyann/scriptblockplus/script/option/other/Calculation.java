@@ -27,8 +27,8 @@ public class Calculation extends BaseOption {
 		super("calculation", "@calc:");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Calculation();
 	}

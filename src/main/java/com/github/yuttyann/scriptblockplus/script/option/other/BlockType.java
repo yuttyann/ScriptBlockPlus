@@ -13,8 +13,8 @@ public class BlockType extends BaseOption {
 		super("blocktype", "@blocktype:");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new BlockType();
 	}

@@ -7,6 +7,7 @@ import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 public class PermAdd extends BaseOption {
 
@@ -15,6 +16,7 @@ public class PermAdd extends BaseOption {
 	}
 
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Perm();
 	}

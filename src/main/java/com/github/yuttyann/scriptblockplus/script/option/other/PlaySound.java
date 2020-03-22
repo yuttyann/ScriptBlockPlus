@@ -15,8 +15,8 @@ public class PlaySound extends BaseOption {
 		super("sound", "@sound:");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new PlaySound();
 	}

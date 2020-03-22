@@ -10,8 +10,8 @@ public class Say extends BaseOption {
 		super("say", "@say ");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Say();
 	}

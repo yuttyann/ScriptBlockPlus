@@ -17,8 +17,8 @@ public class Execute extends BaseOption {
 		super("execute", "@execute:");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Execute();
 	}

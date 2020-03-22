@@ -13,8 +13,8 @@ public class Server extends BaseOption {
 		super("server", "@server ");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Server();
 	}

@@ -1,14 +1,14 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import org.bukkit.event.block.Action;
-
 import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.bukkit.event.block.Action;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ScriptAction extends BaseOption {
 
@@ -18,8 +18,8 @@ public class ScriptAction extends BaseOption {
 		super("scriptaction", "@scriptaction:");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new ScriptAction();
 	}
@@ -31,7 +31,10 @@ public class ScriptAction extends BaseOption {
 		return StreamUtils.allMatch(array, s -> equals(action, s));
 	}
 
-	private boolean equals(@NotNull Action action, @NotNull String actionType) {
+	private boolean equals(@Nullable Action action, @NotNull String actionType) {
+		if (action == null) {
+			return false;
+		}
 		if (actionType.equalsIgnoreCase("shift")) {
 			return getPlayer().isSneaking();
 		}
