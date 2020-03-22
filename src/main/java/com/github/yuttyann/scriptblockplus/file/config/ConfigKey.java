@@ -1,14 +1,32 @@
 package com.github.yuttyann.scriptblockplus.file.config;
 
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public interface ConfigKey<T> {
+
+    @NotNull
+    Optional<T> get();
+
+    @NotNull
+    default T getValue() {
+        return get().orElseThrow(NullPointerException::new);
+    }
+
+    default void ifPresentAndTrue(@NotNull Consumer<T> action) {
+        T value = get().orElse(null);
+        if (value instanceof Boolean && !((Boolean) value)) {
+            return;
+        }
+        if (value != null) {
+            action.accept(value);
+        }
+    }
 
     default void send() {
         send(Bukkit.getConsoleSender());
@@ -19,13 +37,6 @@ public interface ConfigKey<T> {
     }
 
     default void console() {
-        SBConfig.CONSOLE_LOG.action(s -> send());
+        SBConfig.CONSOLE_LOG.ifPresentAndTrue(s -> send());
     }
-
-    default void action(@NotNull Consumer<T> action) {
-        action.accept(get());
-    }
-
-    @NotNull
-    T get();
 }

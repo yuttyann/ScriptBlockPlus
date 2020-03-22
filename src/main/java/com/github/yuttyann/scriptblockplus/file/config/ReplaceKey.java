@@ -3,13 +3,15 @@ package com.github.yuttyann.scriptblockplus.file.config;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class ReplaceKey implements ConfigKey<String> {
 
     private final ConfigKey<String> configKey;
     private final String[] replaceKeys;
 
-    protected String result = null;
     protected Object[] args = {};
+    protected String result = null;
 
     public ReplaceKey(@NotNull ConfigKey<String> configKey, @NotNull String... replaceKeys) {
         this.configKey = configKey;
@@ -23,7 +25,7 @@ public class ReplaceKey implements ConfigKey<String> {
 
     @Override
     @NotNull
-    public String get() {
+    public Optional<String> get() {
         return configKey.get();
     }
 
@@ -38,8 +40,8 @@ public class ReplaceKey implements ConfigKey<String> {
             throw new IllegalArgumentException("Size are not equal.");
         }
         ReplaceKey replaceKey = new ReplaceKey(configKey, replaceKeys);
-        replaceKey.result = replaceKey.configKey.get();
         replaceKey.args = replaces;
+        replaceKey.result = replaceKey.configKey.getValue();
         for (int i = 0; i < replaces.length; i++) {
             replaceKey.result = StringUtils.replace(replaceKey.result, replaceKey.replaceKeys[i], replaceKey.args[i]);
         }
@@ -48,6 +50,6 @@ public class ReplaceKey implements ConfigKey<String> {
 
     @Override
     public String toString() {
-        return result == null ? get() : result;
+        return result == null ? configKey.toString() : result;
     }
 }

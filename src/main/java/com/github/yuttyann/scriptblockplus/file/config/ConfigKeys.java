@@ -3,7 +3,10 @@ package com.github.yuttyann.scriptblockplus.file.config;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class ConfigKeys {
@@ -34,7 +37,7 @@ public class ConfigKeys {
     }
 
     @NotNull
-    public static <T> CustomKey<T> customKey(@NotNull Function<ConfigAdapter<T>, T> function) {
+    public static <T> ConfigKey<T> customKey(@NotNull Function<ConfigAdapter<T>, T> function) {
         return new CustomKey<>(new ConfigAdapter<>(NODE), function);
     }
 
@@ -45,15 +48,15 @@ public class ConfigKeys {
 
     @NotNull
     public static ReplaceKey replaceKey(@NotNull ConfigKey<String> configKey, @NotNull Function<ReplaceKey, String> function) {
-        return new FunctionReplaceKey(configKey, function);
+        return new FunctionalReplaceKey(configKey, function);
     }
 
     private static class ElementKey<T> implements ConfigKey<T> {
 
-        private final String key;
         private final ConfigAdapter<T> adapter;
 
-        private T def;
+        private final String key;
+        private final T def;
 
         private ElementKey(@NotNull ConfigAdapter<T> adapter, @NotNull String key, @NotNull T def) {
             this.adapter = adapter;
@@ -63,13 +66,13 @@ public class ConfigKeys {
 
         @Override
         @NotNull
-        public T get() {
-            return adapter.get(key, def);
+        public Optional<T> get() {
+            return Optional.of(adapter.get(key, def));
         }
 
         @Override
         public String toString() {
-            return get().toString();
+            return getValue().toString();
         }
     }
 
@@ -85,26 +88,21 @@ public class ConfigKeys {
 
         @Override
         @NotNull
-        public T get() {
-            return function.apply(adapter);
-        }
-
-        @NotNull
-        public T get(@NotNull String key, @NotNull T def) {
-            return adapter.get(key, def);
+        public Optional<T> get() {
+            return Optional.ofNullable(function.apply(adapter));
         }
 
         @Override
         public String toString() {
-            return get().toString();
+            return String.valueOf(get().orElse(null));
         }
     }
 
-    private static class FunctionReplaceKey extends ReplaceKey {
+    private static class FunctionalReplaceKey extends ReplaceKey {
 
         private final Function<ReplaceKey, String> function;
 
-        private FunctionReplaceKey(@NotNull ConfigKey<String> configKey, @NotNull Function<ReplaceKey, String> function) {
+        private FunctionalReplaceKey(@NotNull ConfigKey<String> configKey, @NotNull Function<ReplaceKey, String> function) {
             super(configKey);
             this.function = function;
         }
@@ -112,7 +110,7 @@ public class ConfigKeys {
         @Override
         @NotNull
         public ReplaceKey replace(@NotNull Object... replaces) {
-            FunctionReplaceKey replaceKey = new FunctionReplaceKey(getConfigKey(), function);
+            FunctionalReplaceKey replaceKey = new FunctionalReplaceKey(getConfigKey(), function);
             replaceKey.args = replaces;
             replaceKey.result = replaceKey.function.apply(replaceKey);
             return replaceKey;
