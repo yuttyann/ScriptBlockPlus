@@ -3,13 +3,13 @@ package com.github.yuttyann.scriptblockplus.script;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.TextOption;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -101,28 +101,22 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
 			return false;
 		}
-		List<Option> options = OptionList.getList();
-		if (!sort(scriptData.getScripts(), options)) {
+		if (!sort(scriptData.getScripts())) {
 			SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptType).send(sbPlayer);
 			SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(sbPlayer.getName(), scriptType, blockCoords).console();
 			return false;
 		}
 		for (scriptIndex = index; scriptIndex < scripts.size(); scriptIndex++) {
+			if (!sbPlayer.isOnline()) {
+				executeEndProcess(e -> e.failed(this));
+				return false;
+			}
 			String script = scripts.get(scriptIndex);
-			for (Option option : options) {
-				if (!option.isOption(script)) {
-					continue;
-				}
-				if (!sbPlayer.isOnline()) {
-					executeEndProcess(e -> e.failed(this));
-					return false;
-				}
-				optionValue = TextOption.replaceAll(option.getValue(script), getSBPlayer());
-				Option instance = option.newInstance();
-				if (!hasPermission(option) || !instance.callOption(this)) {
-					executeEndProcess(e -> { if (!instance.isFailedIgnore()) e.failed(this); });
-					return false;
-				}
+			Option option = OptionManager.newInstance(script);
+			optionValue = TextOption.replaceAll(option.getValue(script), getSBPlayer());
+			if (!hasPermission(option) || !option.callOption(this)) {
+				executeEndProcess(e -> { if (!option.isFailedIgnore()) e.failed(this); });
+				return false;
 			}
 		}
 		executeEndProcess(e -> e.success(this));
@@ -140,23 +134,19 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 	}
 
 	protected boolean hasPermission(@NotNull Option option) {
-		if (!SBConfig.OPTION_PERMISSION.get() || Permission.has(sbPlayer, option.getPermissionNode())) {
+		if (!SBConfig.OPTION_PERMISSION.getValue() || Permission.has(sbPlayer, option.getPermissionNode())) {
 			return true;
 		}
 		SBConfig.NOT_PERMISSION.send(sbPlayer);
 		return false;
 	}
 
-	protected boolean sort(@NotNull List<String> scripts, @NotNull List<Option> options) {
+	protected boolean sort(@NotNull List<String> scripts) {
 		try {
 			List<String> parse = new ArrayList<>();
-			List<String> result = parse;
 			StreamUtils.mForEach(scripts, this::getScripts, parse::addAll);
-			if (SBConfig.SORT_SCRIPTS.get()) {
-				List<String> list = (result = new ArrayList<>(parse.size()));
-				options.forEach(o -> StreamUtils.fForEach(parse, o::isOption, list::add));
-			}
-			this.scripts = Collections.unmodifiableList(result);
+			SBConfig.SORT_SCRIPTS.ifPresentAndTrue(s -> OptionManager.sort(parse));
+			this.scripts = Collections.unmodifiableList(parse);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
