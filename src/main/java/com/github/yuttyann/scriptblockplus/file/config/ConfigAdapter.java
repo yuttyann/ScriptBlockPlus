@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.file.config;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -13,9 +14,14 @@ public class ConfigAdapter<T> {
     }
 
     @SuppressWarnings("unchecked")
+    @Nullable
+    public T get(@NotNull String key) {
+        return (T) map.get(key);
+    }
+
     @NotNull
     public T get(@NotNull String key, @NotNull T def) {
-        Object value = map.get(key);
-        return value == null ? def : (T) value;
+        T value = get(key);
+        return value == null ? def : value;
     }
 }
