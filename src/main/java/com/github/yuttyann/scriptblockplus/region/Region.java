@@ -8,16 +8,16 @@ import org.jetbrains.annotations.Nullable;
 public interface Region {
 
 	@Nullable
-	public World getWorld();
+	World getWorld();
 
 	@Nullable
-	public String getName();
+	String getName();
 
 	@NotNull
-	public Location getMinimumPoint();
+	Location getMinimumPoint();
 
 	@NotNull
-	public Location getMaximumPoint();
+	Location getMaximumPoint();
 
-	public boolean hasPositions();
+	boolean hasPositions();
 }

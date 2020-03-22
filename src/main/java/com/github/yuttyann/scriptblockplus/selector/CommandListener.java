@@ -18,5 +18,5 @@ public interface CommandListener {
 	 * @param command コマンド
 	 * @return 実行が成功したかどうか
 	 */
-	public boolean executeCommand(@NotNull CommandSender sender, @NotNull Location location, @NotNull String command);
+	boolean executeCommand(@NotNull CommandSender sender, @NotNull Location location, @NotNull String command);
 }

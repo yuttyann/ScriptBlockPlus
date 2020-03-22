@@ -13,17 +13,17 @@ public interface EndProcess extends SBInstance<EndProcess> {
 	 * @return EndProcess
 	 */
 	@NotNull
-	public default EndProcess newInstance() {
+	default EndProcess newInstance() {
 		return EndProcessManager.getInstance().newInstance(this, InstanceType.REFLECTION);
 	}
 
 	/**
 	 * スクリプト実行成功時の処理
 	 */
-	public void success(@NotNull SBRead sbRead);
+	void success(@NotNull SBRead sbRead);
 
 	/**
 	 * スクリプト実行失敗時の処理
 	 */
-	public void failed(@NotNull SBRead sbRead);
+	void failed(@NotNull SBRead sbRead);
 }

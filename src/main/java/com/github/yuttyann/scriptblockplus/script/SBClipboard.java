@@ -6,13 +6,13 @@ import org.jetbrains.annotations.NotNull;
 public interface SBClipboard {
 
 	@NotNull
-	public ScriptType getScriptType();
+	ScriptType getScriptType();
 
-	public void save();
+	void save();
 
-	public boolean copy();
+	boolean copy();
 
-	public boolean paste(@NotNull Location location, boolean overwrite);
+	boolean paste(@NotNull Location location, boolean overwrite);
 
-	public boolean lightPaste(@NotNull Location location, boolean overwrite);
+	boolean lightPaste(@NotNull Location location, boolean overwrite);
 }

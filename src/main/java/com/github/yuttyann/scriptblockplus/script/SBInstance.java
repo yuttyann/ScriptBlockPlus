@@ -5,5 +5,5 @@ import org.jetbrains.annotations.NotNull;
 public interface SBInstance<T> {
 
 	@NotNull
-	public T newInstance();
+	T newInstance();
 }
