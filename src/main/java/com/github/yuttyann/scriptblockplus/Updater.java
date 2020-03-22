@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus;
 
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -23,7 +23,6 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class Updater {
@@ -51,55 +50,8 @@ public final class Updater {
 	}
 
 	@NotNull
-	public String getPluginName() {
-		return pluginName;
-	}
-
-	@NotNull
-	public String getPluginVersion() {
-		return pluginVersion;
-	}
-
-	@NotNull
 	public String getJarName() {
 		return pluginName + " v" + latestVersion + ".jar";
-	}
-
-	@NotNull
-	public String getLatestVersion() {
-		return latestVersion;
-	}
-
-	@NotNull
-	public String getDownloadURL() {
-		return downloadURL;
-	}
-
-	@NotNull
-	public String getChangeLogURL() {
-		return changeLogURL;
-	}
-
-	@NotNull
-	public List<String> getDetails() {
-		return Collections.unmodifiableList(details);
-	}
-
-	public boolean isUpdateError() {
-		return isUpdateError;
-	}
-
-	public boolean isUpperVersion() {
-		return isUpperVersion;
-	}
-
-	public void debug(boolean isUpperVersion, boolean isError) throws Exception {
-		load();
-		this.isUpperVersion = isUpperVersion;
-		if (isError) {
-			sendErrorMessage(Bukkit.getConsoleSender());
-		}
-		execute(null);
 	}
 
 	public void init() {
@@ -155,7 +107,7 @@ public final class Updater {
 	}
 
 	public boolean execute(@Nullable CommandSender sender) {
-		if (SBConfig.UPDATE_CHECKER.get() && isUpperVersion) {
+		if (SBConfig.UPDATE_CHECKER.getValue() && isUpperVersion) {
 			if (sender == null) {
 				sender = Bukkit.getConsoleSender();
 			}
@@ -163,7 +115,7 @@ public final class Updater {
 			File dataFolder = Files.getConfig().getDataFolder();
 			File logFile = new File(dataFolder, "update/ChangeLog.txt");
 			boolean logEquals = !logFile.exists() || !textEquals(changeLogURL, logFile);
-			if (SBConfig.AUTO_DOWNLOAD.get()) {
+			if (SBConfig.AUTO_DOWNLOAD.getValue()) {
 				File jarFile = new File(dataFolder, "update/jar/" + getJarName());
 				try {
 					SBConfig.UPDATE_DOWNLOAD_START.send();
@@ -179,7 +131,7 @@ public final class Updater {
 					}
 				}
 			}
-			if (SBConfig.OPEN_CHANGE_LOG.get() && !isUpdateError && logEquals) {
+			if (SBConfig.OPEN_CHANGE_LOG.getValue() && !isUpdateError && logEquals) {
 				Desktop desktop = Desktop.getDesktop();
 				try {
 					desktop.open(logFile);
