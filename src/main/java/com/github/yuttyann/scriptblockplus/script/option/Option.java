@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager.OptionList;
+import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
 import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -13,12 +13,14 @@ import java.util.Objects;
  * オプション クラス
  * @author yuttyann44581
  */
-public abstract class Option implements SBInstance<Option> {
+public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
 	private static final String PERMISSION_PREFIX = "scriptblockplus.option.";
 
 	private final String name;
 	private final String syntax;
+
+	private int ordinal = -1;
 
 	/**
 	 * コンストラクタ
@@ -34,10 +36,10 @@ public abstract class Option implements SBInstance<Option> {
 	 * インスタンスを生成する
 	 * @return Option
 	 */
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
-		return OptionList.getManager().newInstance(this, InstanceType.REFLECTION);
+		return new SBConstructor<>(this.getClass()).newInstance(InstanceType.REFLECTION);
 	}
 
 	/**
@@ -56,6 +58,14 @@ public abstract class Option implements SBInstance<Option> {
 	@NotNull
 	public final String getSyntax() {
 		return syntax;
+	}
+
+	/**
+	 * オプションの序数を取得します（オプションの順番により変動）
+	 * @return 序数
+	 */
+	public int ordinal() {
+		return ordinal;
 	}
 
 	/**
@@ -95,10 +105,15 @@ public abstract class Option implements SBInstance<Option> {
 
 	/**
 	 * オプションを実行する</br>
-	 * @param sbRead
+	 * @param sbRead スクリプト読み込みクラス
 	 * @return 実行が成功したかどうか
 	 */
 	public abstract boolean callOption(@NotNull SBRead sbRead);
+
+	@Override
+	public int compareTo(@NotNull Option another) {
+		return Integer.compare(this.ordinal, another.ordinal);
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -120,6 +135,6 @@ public abstract class Option implements SBInstance<Option> {
 
 	@Override
 	public String toString() {
-		return "Option{name: " + name + ", syntax: " + syntax + "}";
+		return "Option{name='" + name + '\'' + ", syntax='" + syntax + '\'' + '}';
 	}
 }
