@@ -4,7 +4,6 @@ import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -106,19 +105,19 @@ public abstract class AbstractConstructor<T> {
 		return array;
 	}
 
-	@Nullable
+	@NotNull
 	public T newInstance(@NotNull T t, @NotNull InstanceType instanceType) {
 		return newInstance(t.getClass(), instanceType);
 	}
 
-	@Nullable
+	@NotNull
 	public T newInstance(@NotNull Class<?> clazz, @NotNull InstanceType instanceType) {
 		for (SBConstructor<? extends T> constructor : getConstructors()) {
 			if (constructor.getDeclaringClass().equals(clazz)) {
-				return constructor.newInstance(instanceType);
+				return Objects.requireNonNull(constructor.newInstance(instanceType));
 			}
 		}
-		return null;
+		throw new NullPointerException(clazz.getName() + " does not exist");
 	}
 
 	public final void forEach(@NotNull Consumer<? super T> action) {
