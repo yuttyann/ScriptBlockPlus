@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
 import org.apache.commons.lang.Validate;
@@ -92,7 +92,7 @@ public final class Utils {
 	public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		boolean isCommandSelector = (isPaper() || isCraftBukkit()) && SBConfig.COMMAND_SELECTOR.get();
+		boolean isCommandSelector = (isPaper() || isCraftBukkit()) && SBConfig.COMMAND_SELECTOR.getValue();
 		if (isCommandSelector && (isCBXXXorLater("1.13") || CommandSelector.isCommandPattern(command))) {
 			if (sender instanceof SBPlayer) {
 				sender = ((SBPlayer) sender).getPlayer();

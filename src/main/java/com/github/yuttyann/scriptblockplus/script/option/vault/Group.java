@@ -1,12 +1,13 @@
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class Group extends BaseOption {
 
@@ -15,6 +16,7 @@ public class Group extends BaseOption {
 	}
 
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Group();
 	}

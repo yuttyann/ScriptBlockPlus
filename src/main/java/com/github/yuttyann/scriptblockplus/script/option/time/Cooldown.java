@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -16,8 +16,8 @@ public class Cooldown extends BaseOption {
 		super("cooldown", "@cooldown:");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Cooldown();
 	}
@@ -37,7 +37,7 @@ public class Cooldown extends BaseOption {
 		return true;
 	}
 
-	private class Task extends BukkitRunnable {
+	private static class Task extends BukkitRunnable {
 
 		TimeData timeData;
 

@@ -3,7 +3,7 @@ package com.github.yuttyann.scriptblockplus.listener;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
@@ -39,8 +39,8 @@ public class ScriptInteractListener extends ScriptListener {
 			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, action);
 			Bukkit.getPluginManager().callEvent(interactEvent);
 			if (interactEvent.isCancelled()
-					|| action == Action.LEFT_CLICK_BLOCK && !SBConfig.ACTIONS_INTERACT_LEFT.get()
-					|| action == Action.RIGHT_CLICK_BLOCK && !SBConfig.ACTIONS_INTERACT_RIGHT.get()
+					|| action == Action.LEFT_CLICK_BLOCK && !SBConfig.ACTIONS_INTERACT_LEFT.getValue()
+					|| action == Action.RIGHT_CLICK_BLOCK && !SBConfig.ACTIONS_INTERACT_RIGHT.getValue()
 					|| isPowered(block) || isOpen(block)) {
 				return;
 			}

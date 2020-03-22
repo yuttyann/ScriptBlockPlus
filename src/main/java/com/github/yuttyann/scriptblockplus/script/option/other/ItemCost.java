@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -23,8 +23,8 @@ public class ItemCost extends BaseOption {
 		super("itemcost", "$item:");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new ItemCost();
 	}

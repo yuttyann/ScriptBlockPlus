@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
@@ -15,6 +15,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -49,7 +50,7 @@ public abstract class BaseOption extends Option {
 	 */
 	@NotNull
 	protected final Player getPlayer() {
-		return getSBPlayer().getPlayer();
+		return Objects.requireNonNull(getSBPlayer().getPlayer());
 	}
 
 	/**

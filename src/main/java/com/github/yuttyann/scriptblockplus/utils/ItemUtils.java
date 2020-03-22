@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
@@ -51,7 +51,7 @@ public class ItemUtils {
 		ItemStack item = new ItemStack(Material.STICK);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§dBlock Selector");
-		meta.setLore(setListColor(SBConfig.BLOCK_SELECTOR.get()));
+		meta.setLore(setListColor(SBConfig.BLOCK_SELECTOR.getValue()));
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -61,7 +61,7 @@ public class ItemUtils {
 		ItemStack item = new ItemStack(Material.BLAZE_ROD);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§dScript Editor§6[Mode: " + scriptType.name() + "]");
-		meta.setLore(setListColor(SBConfig.SCRIPT_EDITOR.get()));
+		meta.setLore(setListColor(SBConfig.SCRIPT_EDITOR.getValue()));
 		item.setItemMeta(meta);
 		return item;
 	}

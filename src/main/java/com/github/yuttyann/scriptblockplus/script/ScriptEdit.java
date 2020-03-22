@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.player.PlayerCountInfo;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;

@@ -4,7 +4,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockEditEvent;
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.raytrace.RayResult;
 import com.github.yuttyann.scriptblockplus.listener.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;

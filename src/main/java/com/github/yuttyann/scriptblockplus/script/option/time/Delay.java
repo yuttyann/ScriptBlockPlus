@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import com.github.yuttyann.scriptblockplus.file.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -16,8 +16,8 @@ public class Delay extends BaseOption implements Runnable {
 		super("delay", "@delay:");
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public Option newInstance() {
 		return new Delay();
 	}
