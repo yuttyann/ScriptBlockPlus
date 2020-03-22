@@ -29,13 +29,13 @@ public final class SBConstructor<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nullable
+	@NotNull
 	public T getInstance() {
 		return sbInstance == null ? newInstance(InstanceType.REFLECTION) : (T) sbInstance;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nullable
+	@NotNull
 	public T newInstance(@NotNull InstanceType instanceType) {
 		switch (instanceType) {
 		case SBINSTANCE:
@@ -56,9 +56,8 @@ public final class SBConstructor<T> {
 			} catch (IllegalArgumentException | ReflectiveOperationException e) {
 				e.printStackTrace();
 			}
-			return null;
 		}
-		return null;
+		throw new NullPointerException("Constructor not found.");
 	}
 
 	@Nullable
