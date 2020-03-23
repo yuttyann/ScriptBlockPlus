@@ -4,153 +4,141 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * ScriptBlockPlus ObjectMap インターフェース</br>
+ * ScriptBlockPlus ObjectMap インターフェース
  * @author yuttyann44581
  */
 public interface ObjectMap {
 
 	/**
-	 * マップに「キー」と、それに対応した「値」を登録する</br>
-	 * すでに登録されている場合は要素を上書きします
+	 * 指定された値と指定されたキーをこのマップで関連付けます。
 	 * @param key キー
 	 * @param value 値
 	 */
-	public void put(@NotNull String key, @Nullable Object value);
+	void put(@NotNull String key, @Nullable Object value);
 
 	/**
-	 * マップの「キー」に対応した「値」を取得する
+	 * 指定されたキーがマップされている値を{@link Byte}にキャストして返します。
 	 * @param key キー
-	 * @return byte
+	 * @return 指定されたキーがマップされている値 ({@link Byte})
 	 */
-	public default byte getByte(@NotNull String key) {
+	default byte getByte(@NotNull String key) {
 		return get(key, (byte) 0);
 	}
 
 	/**
-	 * マップの「キー」に対応した「値」を取得する
+	 * 指定されたキーがマップされている値を{@link Short}にキャストして返します。
 	 * @param key キー
-	 * @return short
+	 * @return 指定されたキーがマップされている値 ({@link Short})
 	 */
-	public default short getShort(@NotNull String key) {
+	default short getShort(@NotNull String key) {
 		return get(key, (short) 0);
 	}
 
 	/**
-	 * マップの「キー」に対応した「値」を取得する
+	 * 指定されたキーがマップされている値を{@link Integer}にキャストして返します。
 	 * @param key キー
-	 * @return int
+	 * @return 指定されたキーがマップされている値 ({@link Integer})
 	 */
-	public default int getInt(@NotNull String key) {
+	default int getInt(@NotNull String key) {
 		return get(key, 0);
 	}
 
 	/**
-	 * マップの「キー」に対応した「値」を取得する
+	 * 指定されたキーがマップされている値を{@link Long}にキャストして返します。
 	 * @param key キー
-	 * @return long
+	 * @return 指定されたキーがマップされている値 ({@link Long})
 	 */
-	public default long getLong(@NotNull String key) {
+	default long getLong(@NotNull String key) {
 		return get(key, 0L);
 	}
 
 	/**
-	 * マップの「キー」に対応した「値」を取得する
+	 * 指定されたキーがマップされている値を{@link Character}にキャストして返します。
 	 * @param key キー
-	 * @return char
+	 * @return 指定されたキーがマップされている値 ({@link Character})
 	 */
-	public default char getChar(@NotNull String key) {
+	default char getChar(@NotNull String key) {
 		return get(key, '\u0000');
 	}
 
 	/**
-	 * マップの「キー」に対応した「値」を取得する
+	 * 指定されたキーがマップされている値を{@link Float}にキャストして返します。
 	 * @param key キー
-	 * @return float
+	 * @return 指定されたキーがマップされている値 ({@link Float})
 	 */
-	public default float getFloat(@NotNull String key) {
+	default float getFloat(@NotNull String key) {
 		return get(key, 0.0F);
 	}
 
 	/**
-	 * マップの「キー」に対応した「値」を取得する
+	 * 指定されたキーがマップされている値を{@link Double}にキャストして返します。
 	 * @param key キー
-	 * @return double
+	 * @return 指定されたキーがマップされている値 ({@link Double})
 	 */
-	public default double getDouble(@NotNull String key) {
+	default double getDouble(@NotNull String key) {
 		return get(key, 0.0D);
 	}
 
 	/**
-	 * マップの「キー」に対応した「値」を取得する
+	 * 指定されたキーがマップされている値を{@link Boolean}にキャストして返します。
 	 * @param key キー
-	 * @return byte
+	 * @return 指定されたキーがマップされている値 ({@link Boolean})
 	 */
-	public default boolean getBoolean(@NotNull String key) {
+	default boolean getBoolean(@NotNull String key) {
 		return get(key, false);
 	}
 
 	/**
-	 * マップの「キー」に対応した「値」を取得する
+	 * 指定されたキーがマップされている値を{@link String}にキャストして返します。
 	 * @param key キー
-	 * @return String
+	 * @return 指定されたキーがマップされている値 ({@link String})
 	 */
-	public default String getString(@NotNull String key) {
+	@NotNull
+	default String getString(@NotNull String key) {
 		return get(key, "");
 	}
 
 	/**
-	 * マップの「キー」に対応した「値」を取得する
+	 * 指定されたキーがマップされている値を返します。
+	 * <br/>
+	 * このマップにそのキーのマッピングが含まれていない場合はnullを返します。
 	 * @param key キー
-	 * @return Object
+	 * @return 指定されたキーがマップされている値（含まれていない場合はnull）
 	 */
 	@Nullable
-	public <T> T get(@NotNull String key);
+	<T> T get(@NotNull String key);
 
 	/**
-	 * マップの「キー」に対応した「値」を取得する
+	 * 指定されたキーがマップされている値を返します。
+	 * <br/>
+	 * このマップにそのキーのマッピングが含まれていない場合はotherを返します。
 	 * @param key キー
-	 * @param def デフォルトの値
-	 * @return Object
+	 * @param other その他
+	 * @return 指定されたキーがマップされている値（含まれていない場合はother）
 	 */
 	@NotNull
-	public default <T> T get(@NotNull String key, @NotNull T def) {
+	default <T> T get(@NotNull String key, @NotNull T other) {
 		T t = get(key);
-		return t == null ? def : t;
+		return t == null ? other : t;
 	}
 
 	/**
-	 * マップの「キー」と、それに対応した「値」を削除する
+	 * このマップからキーのマッピングを削除します。
 	 * @param key キー
-	 * @return Object
 	 */
-	@Nullable
-	public <T> T remove(String key);
+	void remove(String key);
 
 	/**
-	 * 指定された「キー」に要素が存在するのか確認する
+	 * 指定されたキーに値がマップされている場合にtrueを返します。
 	 * @param key キー
-	 * @return 要素が存在するかどうか
+	 * @return 指定されたキーに値がマップされている場合はtrue
 	 */
-	public default boolean has(@NotNull String key) {
+	default boolean has(@NotNull String key) {
 		return get(key) != null;
 	}
 
 	/**
-	 * 指定された「キー」が存在するか確認する
-	 * @param key キー
-	 * @return キー が存在するかどうか
+	 * マップからマッピングをすべて削除します。
 	 */
-	public boolean containsKey(@NotNull String key);
-
-	/**
-	 * 指定された「値」が存在するか確認する
-	 * @param value 値
-	 * @return 値 が存在するかどうか
-	 */
-	public boolean containsValue(@NotNull Object value);
-
-	/**
-	 * 全ての要素を削除する
-	 */
-	public void clear();
+	void clear();
 }

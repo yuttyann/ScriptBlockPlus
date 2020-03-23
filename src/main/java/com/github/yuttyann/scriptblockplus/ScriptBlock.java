@@ -39,7 +39,7 @@ public class ScriptBlock extends JavaPlugin {
 		}
 
 		Files.reload();
-		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setPlayer(p).setOnline(true));
+		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setOnline(true));
 
 		if (!HookPlugins.hasVault()) {
 			SBConfig.NOT_VAULT.send();
@@ -67,12 +67,13 @@ public class ScriptBlock extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ScriptWalkListener(this), this);
 	}
 
+
+
 	@Override
 	public void onDisable() {
 		if (mapManager != null) {
 			mapManager.saveCooldown();
 		}
-		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setPlayer(p).setOnline(false));
 	}
 
 	@Override
@@ -92,14 +93,13 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	/**
-	 * 最新のバージョンが存在するか確認する
+	 * 最新のバージョンが存在するか確認します。
 	 * @param sender 送信先
-	 * @param latestMessage 更新メッセージを表示するかどうか
+	 * @param latestMessage trueの場合は送信先にアップデートのメッセージを表示します。
 	 */
 	public void checkUpdate(@NotNull CommandSender sender, boolean latestMessage) {
 		new Thread(() -> {
 			try {
-				// updater.debug(true, true);
 				updater.init();
 				updater.load();
 				if (!updater.execute(sender) && latestMessage) {

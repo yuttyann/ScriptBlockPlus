@@ -36,7 +36,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * プラグインを取得する
+	 * プラグインを取得します。
 	 * @return プラグイン
 	 */
 	@NotNull
@@ -45,7 +45,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * プレイヤーを取得する
+	 * プレイヤーを取得します。
 	 * @return プレイヤー
 	 */
 	@NotNull
@@ -54,7 +54,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * SBプレイヤーを取得する
+	 * SBPlayerを取得します。
 	 * @return SBPlayer
 	 */
 	@NotNull
@@ -63,8 +63,8 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * UUIDを取得する
-	 * @return UUID
+	 * UUIDを取得します。
+	 * @return プレイヤーのUUID
 	 */
 	@NotNull
 	protected final UUID getUniqueId() {
@@ -72,7 +72,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * オプションの値を取得する
+	 * オプションの値を取得します。
 	 * @return オプションの値
 	 */
 	@NotNull
@@ -81,8 +81,8 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * 座標文字列を取得する
-	 * @return ワールド名を除いた、文字列(x, y, z)
+	 * ワールド名を除いた文字列の座標を取得します。
+	 * @return ワールド名を除いた文字列(x, y, z)
 	 */
 	@NotNull
 	protected final String getCoords() {
@@ -90,8 +90,8 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * 座標文字列を取得する
-	 * @return ワールド名を含めた、文字列(world, x, y, z)
+	 * ワールド名を含めた文字列の座標を取得します。
+	 * @return ワールド名を含めた文字列(world, x, y, z)
 	 */
 	@NotNull
 	protected final String getFullCoords() {
@@ -99,8 +99,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * 座標を取得する</br>
-	 * ※座標変更不可
+	 * 編集不可な座標を取得します。
 	 * @return スクリプトの座標
 	 */
 	@NotNull
@@ -109,7 +108,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * マップの管理クラスを取得する
+	 * マップの管理クラスを取得します。
 	 * @return マップの管理クラス
 	 */
 	@NotNull
@@ -118,7 +117,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * スクリプトのリストを取得する
+	 * スクリプトのリストを取得します。
 	 * @return スクリプトのリスト
 	 */
 	@NotNull
@@ -127,7 +126,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * スクリプトの種類を取得する
+	 * スクリプトの種類を取得します。
 	 * @return スクリプトの種類
 	 */
 	@NotNull
@@ -136,7 +135,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * スクリプトの実行クラスを取得する
+	 * スクリプトの実行クラスを取得します。
 	 * @return スクリプトの実行クラス
 	 */
 	@NotNull
@@ -145,8 +144,8 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * スクリプトの管理クラスを取得する
-	 * @return スクリプトの管理クラス
+	 * スクリプトのデータクラスを取得します。
+	 * @return スクリプトのデータクラス。
 	 */
 	@NotNull
 	protected final ScriptData getScriptData() {
@@ -154,7 +153,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * スクリプト読み込むの進行度を取得する
+	 * スクリプトを何番目まで実行したのか取得します。
 	 * @return 進行度
 	 */
 	protected final int getScriptIndex() {
@@ -162,15 +161,15 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * オプションの処理を実行する
-	 * @return 実行が成功したかどうか
+	 * オプションの処理を実行します
+	 * @return 実行に成功した場合はtrue
 	 */
 	protected abstract boolean isValid() throws Exception;
 
 	/**
-	 * オプションを実行する
-	 * @param sbRead スクリプト読み込みクラス
-	 * @return 実行が成功したかどうか
+	 * オプションを実行します。
+	 * @param sbRead スクリプトの実行クラス
+	 * @return 実行に成功した場合はtrue
 	 */
 	@Override
 	@Deprecated
@@ -186,20 +185,20 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * コンソールからコマンドを実行する
+	 * コンソールからコマンドを実行します。
 	 * @param command コマンド
-	 * @return 実行が成功したかどうか
+	 * @return 実行に成功した場合はtrue
 	 */
 	protected final boolean executeConsoleCommand(@NotNull String command) {
 		return Utils.dispatchCommand(Bukkit.getConsoleSender(), getLocation(), command);
 	}
 
 	/**
-	 * プレイヤーからコマンドを実行する
+	 * プレイヤーからコマンドを実行します。
 	 * @param player プレイヤー
 	 * @param command コマンド
-	 * @param isBypass 権限を無視して実行するかどうか
-	 * @return 実行が成功したかどうか
+	 * @param isBypass trueの場合は権限を無視し、falseの場合は権限を無視せず実行します。
+	 * @return 実行に成功した場合はtrue
 	 */
 	protected final boolean executeCommand(@NotNull Player player, @NotNull String command, boolean isBypass) {
 		Location location = getLocation();

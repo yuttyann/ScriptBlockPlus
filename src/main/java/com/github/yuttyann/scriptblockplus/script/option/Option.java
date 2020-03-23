@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
- * オプション クラス
+ * オプションクラス
  * @author yuttyann44581
  */
 public abstract class Option implements SBInstance<Option>, Comparable<Option> {
@@ -33,8 +33,8 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	/**
-	 * インスタンスを生成する
-	 * @return Option
+	 * インスタンスを生成します。
+	 * @return Optionのインスタンス
 	 */
 	@Override
 	@NotNull
@@ -43,7 +43,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	/**
-	 * オプション名を取得する
+	 * オプション名を取得します。
 	 * @return オプション名
 	 */
 	@NotNull
@@ -52,7 +52,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	/**
-	 * 構文を取得する
+	 * 構文を取得します。
 	 * @return 構文
 	 */
 	@NotNull
@@ -69,8 +69,8 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	/**
-	 * パーミッションノードを取得する
-	 * @return パーミッション
+	 * パーミッションノードを取得します。
+	 * @return パーミッションノード
 	 */
 	@NotNull
 	public final String getPermissionNode() {
@@ -78,8 +78,8 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	/**
-	 * スクリプトからオプションの値を取得
-	 * @return 値
+	 * スクリプトからオプションの値を取得します。
+	 * @return オプションの値
 	 */
 	@NotNull
 	public final String getValue(@NotNull String script) {
@@ -87,26 +87,25 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	/**
-	 * スクリプトがオプションなのかどうかチェックする
-	 * @return オプションなのかどうか
+	 * スクリプトがオプションなのかどうか確認します。
+	 * @return オプションだった場合はtrue
 	 */
 	public final boolean isOption(@NotNull String script) {
 		return StringUtils.isNotEmpty(script) && script.startsWith(syntax);
 	}
 
 	/**
-	 * 失敗時に終了処理を無視するかどうか</br>
-	 * 戻り値が true の場合は無視します
-	 * @return 無視するかどうか
+	 * 失敗時に終了処理を無視します（デフォルトはfalseです）
+	 * @return trueの場合は終了処理を実行し、falseの場合は無視します。
 	 */
 	public boolean isFailedIgnore() {
 		return false;
 	}
 
 	/**
-	 * オプションを実行する</br>
-	 * @param sbRead スクリプト読み込みクラス
-	 * @return 実行が成功したかどうか
+	 * オプションを実行します。
+	 * @param sbRead スクリプトの実行クラス
+	 * @return 実行に成功した場合はtrue
 	 */
 	public abstract boolean callOption(@NotNull SBRead sbRead);
 

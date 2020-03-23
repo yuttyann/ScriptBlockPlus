@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * ScriptBlockPlus 座標管理クラス
+ * ScriptBlockPlus 座標クラス
  * @author yuttyann44581
  */
 public class BlockCoords extends Location {
@@ -84,7 +84,7 @@ public class BlockCoords extends Location {
 	}
 
 	/**
-	 * 座標を文字列として取得する
+	 * 文字列の座標を取得します。
 	 * @return ワールド名を除いた文字列(x, y, z)
 	 */
 	@NotNull
@@ -93,7 +93,7 @@ public class BlockCoords extends Location {
 	}
 
 	/**
-	 * 座標を文字列として取得する
+	 * 文字列の座標を取得します。
 	 * @return ワールド名を含めた文字列(world, x, y, z)
 	 */
 	@NotNull
@@ -102,7 +102,7 @@ public class BlockCoords extends Location {
 	}
 
 	/**
-	 * 座標を文字列として取得する
+	 * 文字列の座標を取得します。
 	 * @param location 座標
 	 * @return ワールド名を除いた文字列(x, y, z)
 	 */
@@ -112,7 +112,7 @@ public class BlockCoords extends Location {
 	}
 
 	/**
-	 * 座標を文字列として取得する
+	 * 文字列の座標を取得します。
 	 * @param location 座標
 	 * @return ワールド名を含めた文字列(world, x, y, z)
 	 */
@@ -122,7 +122,7 @@ public class BlockCoords extends Location {
 	}
 
 	/**
-	 * 座標の文字列からインスタンスを生成する
+	 * 文字列の座標からBlockCoordsを生成します。
 	 * @param world ワールド名
 	 * @param coords ワールド名を除いた文字列(x, y, z)
 	 * @return BlockCoords
@@ -140,9 +140,9 @@ public class BlockCoords extends Location {
 	}
 
 	/**
-	 * 座標の文字列からインスタンスを生成する
+	 * 座標の文字列からインスタンスを生成します。
 	 * @param fullCoords ワールド名を含めた文字列(world, x, y, z)
-	 * @return BlockCoords
+	 * @return 座標
 	 */
 	@NotNull
 	public static BlockCoords fromString(@NotNull String fullCoords) {
@@ -167,8 +167,8 @@ public class BlockCoords extends Location {
 	}
 
 	/**
-	 * 編集不可の座標クラスを取得する
-	 * @return BlockCoords(編集不可)
+	 * 編集不可のBlockCoordsを取得します。
+	 * @return 編集不可なBlockCoords
 	 */
 	@NotNull
 	public BlockCoords unmodifiable() {
@@ -179,8 +179,8 @@ public class BlockCoords extends Location {
 	}
 
 	/**
-	 * 編集不可の座標クラスを取得する
-	 * @return Location(編集不可)
+	 * 編集不可のLocationを取得します。
+	 * @return 編集不可なLocation
 	 */
 	@NotNull
 	public static Location unmodifiableLocation(@NotNull Location location) {

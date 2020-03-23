@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 public interface EndProcess extends SBInstance<EndProcess> {
 
 	/**
-	 * インスタンスを生成する
-	 * @return EndProcess
+	 * インスタンスを生成します。
+	 * @return EndProcessのインスタンス
 	 */
 	@NotNull
 	default EndProcess newInstance() {
@@ -18,12 +18,12 @@ public interface EndProcess extends SBInstance<EndProcess> {
 	}
 
 	/**
-	 * スクリプト実行成功時の処理
+	 * スクリプトの実行が最後まで成功した場合に呼び出されます。
 	 */
 	void success(@NotNull SBRead sbRead);
 
 	/**
-	 * スクリプト実行失敗時の処理
+	 * スクリプトの実行が途中で失敗した場合に呼び出されます。
 	 */
 	void failed(@NotNull SBRead sbRead);
 }
