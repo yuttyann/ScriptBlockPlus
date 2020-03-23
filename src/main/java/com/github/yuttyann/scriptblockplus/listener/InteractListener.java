@@ -32,6 +32,7 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -50,7 +51,7 @@ public class InteractListener implements Listener {
 			objectMap.put(KEY_FLAG, false);
 			return;
 		}
-		ItemStack item = ItemUtils.getItemInMainHand(player);
+		ItemStack item = player.getInventory().getItemInMainHand();
 		RayResult rayResult = new RayTrace(player.getWorld()).rayTrace(player, 4.5D);
 		if (rayResult == null) {
 			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR, item, null, BlockFace.SOUTH);
@@ -89,7 +90,7 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	private void callEvent(PlayerInteractEvent interactEvent, BlockInteractEvent blockInteractEvent) {
+	private void callEvent(@NotNull PlayerInteractEvent interactEvent, @NotNull BlockInteractEvent blockInteractEvent) {
 		Player player = interactEvent.getPlayer();
 		ItemStack item = interactEvent.getItem();
 		blockInteractEvent.setInvalid(action(player, blockInteractEvent.getAction(), blockInteractEvent));
@@ -101,22 +102,22 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	private boolean action(Player player, Action action, BlockInteractEvent event) {
-		if (event.getHand() != EquipmentSlot.HAND) {
+	private boolean action(@NotNull Player player, @NotNull Action action, @NotNull BlockInteractEvent event) {
+		Location location = event.getLocation();
+		if (event.getHand() != EquipmentSlot.HAND || location == null) {
 			return false;
 		}
+		ItemStack item = event.getItem();
+		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
 		boolean isAIR = action.name().endsWith("_CLICK_AIR");
 		boolean isSneaking = player.isSneaking();
-		ItemStack item = event.getItem();
-		Location location = event.getLocation();
-		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
 		if (ItemUtils.isBlockSelector(item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
 			CuboidRegion region = ((CuboidRegion) sbPlayer.getRegion());
-			toolAction(action, location
+			tool(action, location
 			, left -> {
 				if (isSneaking) {
 					region.setPos1((left = player.getLocation()).toVector());
-				} else if (!isSneaking && !isAIR) {
+				} else if (!isAIR) {
 					region.setPos1((left.toVector()));
 				}
 				if (left != null) {
@@ -126,7 +127,7 @@ public class InteractListener implements Listener {
 			}, right -> {
 				if (isSneaking) {
 					region.setPos2((right = player.getLocation()).toVector());
-				} else if (!isSneaking && !isAIR) {
+				} else if (!isAIR) {
 					region.setPos2((right.toVector()));
 				}
 				if (right != null) {
@@ -136,7 +137,7 @@ public class InteractListener implements Listener {
 			});
 			return true;
 		} else if (ItemUtils.isScriptEditor(item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
-			toolAction(action, location
+			tool(action, location
 			, left -> {
 				if (isSneaking && !isAIR) {
 					new ScriptEdit(ItemUtils.getScriptType(item)).remove(sbPlayer, left);
@@ -146,7 +147,7 @@ public class InteractListener implements Listener {
 				}
 			}, right -> {
 				if (isSneaking && !isAIR) {
-					if (!sbPlayer.hasClipboard() || !sbPlayer.getClipboard().paste(right, true)) {
+					if (!sbPlayer.getClipboard().isPresent() || !sbPlayer.getClipboard().get().paste(right, true)) {
 						SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
 					}
 				} else if (!isSneaking && !isAIR) {
@@ -154,8 +155,8 @@ public class InteractListener implements Listener {
 				}
 			});
 			return true;
-		} else if (!isAIR && sbPlayer.hasActionType()) {
-			String[] array = StringUtils.split(sbPlayer.getActionType(), "_");
+		} else if (!isAIR && sbPlayer.getActionType().isPresent()) {
+			String[] array = StringUtils.split(sbPlayer.getActionType().get(), "_");
 			ScriptBlockEditEvent editEvent = new ScriptBlockEditEvent(player, location.getBlock(), array);
 			Bukkit.getPluginManager().callEvent(editEvent);
 			if (editEvent.isCancelled()) {
@@ -164,10 +165,10 @@ public class InteractListener implements Listener {
 			ScriptEdit scriptEdit = new ScriptEdit(editEvent.getScriptType());
 			switch (editEvent.getActionType()) {
 			case CREATE:
-				scriptEdit.create(sbPlayer, location, sbPlayer.getScriptLine());
+				scriptEdit.create(sbPlayer, location);
 				return true;
 			case ADD:
-				scriptEdit.add(sbPlayer, location, sbPlayer.getScriptLine());
+				scriptEdit.add(sbPlayer, location);
 				return true;
 			case REMOVE:
 				scriptEdit.remove(sbPlayer, location);
@@ -180,7 +181,7 @@ public class InteractListener implements Listener {
 		return isAIR;
 	}
 
-	private void toolAction(Action action, Location location, Consumer<Location> left, Consumer<Location> right) {
+	private void tool(@NotNull Action action, @NotNull Location location, @NotNull Consumer<Location> left, @NotNull Consumer<Location> right) {
 		switch (action) {
 		case LEFT_CLICK_AIR:
 		case LEFT_CLICK_BLOCK:
@@ -194,7 +195,8 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	private ScriptType getNextScriptType(ItemStack item) {
+	@NotNull
+	private ScriptType getNextScriptType(@NotNull ItemStack item) {
 		try {
 			return ScriptType.valueOf(ItemUtils.getScriptType(item).ordinal() + 1);
 		} catch (Exception e) {
