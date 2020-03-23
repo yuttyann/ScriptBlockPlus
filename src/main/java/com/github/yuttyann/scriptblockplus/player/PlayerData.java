@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class PlayerData implements SBPlayer {
@@ -20,33 +21,15 @@ public abstract class PlayerData implements SBPlayer {
 	private static final String KEY_OLDFULLCOORDS = createRandomId("OldFullCoords");
 
 
-	private final ObjectMap objectMap = new ObjMap();
+	private final ObjectMap objectMap;
 
-	PlayerData() { }
-
-	@NotNull
-	@Override
-	public Region getRegion() {
-		CuboidRegion region = getObjectMap().get(KEY_REGION);
-		if (region == null) {
-			getObjectMap().put(KEY_REGION, region = new CuboidRegion());
-		}
-		return region;
+	PlayerData() {
+		this.objectMap = new ObjMap();
 	}
 
 	@NotNull
 	@Override
-	public PlayerCount getPlayerCount() {
-		PlayerCount playerCount = getObjectMap().get(KEY_PLAYERCOUNT);
-		if (playerCount == null) {
-			getObjectMap().put(KEY_PLAYERCOUNT, playerCount = new PlayerCount(getUniqueId()));
-		}
-		return playerCount;
-	}
-
-	@NotNull
-	@Override
-	public ObjectMap getObjectMap() {
+	public final ObjectMap getObjectMap() {
 		return objectMap;
 	}
 
@@ -70,21 +53,9 @@ public abstract class PlayerData implements SBPlayer {
 			return (T) objectMap.get(key);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
-		@Nullable
-		public <T> T remove(@NotNull String key) {
-			return (T) objectMap.remove(key);
-		}
-
-		@Override
-		public boolean containsKey(@NotNull String key) {
-			return objectMap.containsKey(key);
-		}
-
-		@Override
-		public boolean containsValue(@NotNull Object value) {
-			return objectMap.containsValue(value);
+		public void remove(@NotNull String key) {
+			objectMap.remove(key);
 		}
 
 		@Override
@@ -94,19 +65,28 @@ public abstract class PlayerData implements SBPlayer {
 	}
 
 	@Override
+	@NotNull
+	public Region getRegion() {
+		CuboidRegion region = getObjectMap().get(KEY_REGION);
+		if (region == null) {
+			getObjectMap().put(KEY_REGION, region = new CuboidRegion());
+		}
+		return region;
+	}
+
+	@Override
+	@NotNull
+	public PlayerCount getPlayerCount() {
+		PlayerCount playerCount = getObjectMap().get(KEY_PLAYERCOUNT);
+		if (playerCount == null) {
+			getObjectMap().put(KEY_PLAYERCOUNT, playerCount = new PlayerCount(getUniqueId()));
+		}
+		return playerCount;
+	}
+
+	@Override
 	public void setClipboard(@Nullable SBClipboard clipboard) {
 		getObjectMap().put(KEY_CLIPBOARD, clipboard);
-	}
-
-	@Nullable
-	@Override
-	public SBClipboard getClipboard() {
-		return getObjectMap().get(KEY_CLIPBOARD);
-	}
-
-	@Override
-	public boolean hasClipboard() {
-		return getObjectMap().has(KEY_CLIPBOARD);
 	}
 
 	@Override
@@ -114,31 +94,9 @@ public abstract class PlayerData implements SBPlayer {
 		getObjectMap().put(KEY_SCRIPTLINE, scriptLine);
 	}
 
-	@Nullable
-	@Override
-	public String getScriptLine() {
-		return getObjectMap().getString(KEY_SCRIPTLINE);
-	}
-
-	@Override
-	public boolean hasScriptLine() {
-		return getObjectMap().has(KEY_SCRIPTLINE);
-	}
-
 	@Override
 	public void setActionType(@Nullable String actionType) {
 		getObjectMap().put(KEY_CLICKACTION, actionType);
-	}
-
-	@Nullable
-	@Override
-	public String getActionType() {
-		return getObjectMap().getString(KEY_CLICKACTION);
-	}
-
-	@Override
-	public boolean hasActionType() {
-		return getObjectMap().has(KEY_CLICKACTION);
 	}
 
 	@Override
@@ -146,15 +104,28 @@ public abstract class PlayerData implements SBPlayer {
 		getObjectMap().put(KEY_OLDFULLCOORDS, fullCoords);
 	}
 
-	@Nullable
 	@Override
-	public String getOldFullCoords() {
-		return getObjectMap().getString(KEY_OLDFULLCOORDS);
+	@NotNull
+	public Optional<SBClipboard> getClipboard() {
+		return Optional.ofNullable(getObjectMap().get(KEY_CLIPBOARD));
 	}
 
 	@Override
-	public boolean hasOldFullCoords() {
-		return getObjectMap().has(KEY_OLDFULLCOORDS);
+	@NotNull
+	public Optional<String> getScriptLine() {
+		return Optional.ofNullable(getObjectMap().get(KEY_SCRIPTLINE));
+	}
+
+	@Override
+	@NotNull
+	public Optional<String> getActionType() {
+		return Optional.ofNullable(getObjectMap().get(KEY_CLICKACTION));
+	}
+
+	@Override
+	@NotNull
+	public Optional<String> getOldFullCoords() {
+		return Optional.ofNullable(getObjectMap().get(KEY_OLDFULLCOORDS));
 	}
 
 	public static String createRandomId(@NotNull String key) {
