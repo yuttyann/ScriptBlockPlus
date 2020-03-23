@@ -3,16 +3,18 @@ package com.github.yuttyann.scriptblockplus.script;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.player.PlayerCountInfo;
+import com.github.yuttyann.scriptblockplus.player.PlayerCount;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public final class ScriptEdit {
 
@@ -30,8 +32,8 @@ public final class ScriptEdit {
 		scriptData.save();
 	}
 
-	public boolean checkPath() {
-		return scriptData.checkPath();
+	public boolean hasPath() {
+		return scriptData.hasPath();
 	}
 
 	@NotNull
@@ -52,54 +54,77 @@ public final class ScriptEdit {
 		return builder.toString();
 	}
 
-	public void create(@NotNull SBPlayer sbPlayer, @NotNull Location location, @NotNull String script) {
-		sbPlayer.setScriptLine(null);
-		sbPlayer.setActionType(null);
+	public void create(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
+		try {
+			Player player = Objects.requireNonNull(sbPlayer.getPlayer());
+			sbPlayer.getScriptLine().ifPresent(s -> create(player, location, s));
+		} finally {
+			sbPlayer.setScriptLine(null);
+			sbPlayer.setActionType(null);
+		}
+	}
+
+	public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
 		scriptData.setLocation(location);
-		scriptData.setAuthor(sbPlayer.getUniqueId());
+		scriptData.setAuthor(player.getUniqueId());
 		scriptData.setLastEdit();
 		scriptData.setScripts(Collections.singletonList(script));
 		scriptData.save();
 		mapManager.addCoords(location, scriptType);
-		SBConfig.SCRIPT_CREATE.replace(scriptType).send(sbPlayer);
-		SBConfig.CONSOLE_SCRIPT_CREATE.replace(sbPlayer.getName(), scriptType, location).console();
+		SBConfig.SCRIPT_CREATE.replace(scriptType).send(player);
+		SBConfig.CONSOLE_SCRIPT_CREATE.replace(player.getName(), scriptType, location).console();
 	}
 
-	public void add(@NotNull SBPlayer sbPlayer, @NotNull Location location, @NotNull String script) {
-		sbPlayer.setScriptLine(null);
-		sbPlayer.setActionType(null);
+	public void add(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
+		try {
+			Player player = Objects.requireNonNull(sbPlayer.getPlayer());
+			sbPlayer.getScriptLine().ifPresent(s -> add(player, location, s));
+		} finally {
+			sbPlayer.setScriptLine(null);
+			sbPlayer.setActionType(null);
+		}
+	}
+
+	public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
 		scriptData.setLocation(location);
-		if (!scriptData.checkPath()) {
-			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
+		if (!scriptData.hasPath()) {
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
-		scriptData.addAuthor(sbPlayer.getUniqueId());
+		scriptData.addAuthor(player.getUniqueId());
 		scriptData.setLastEdit();
 		scriptData.addScript(script);
 		scriptData.save();
 		mapManager.removeTimes(location, scriptType);
-		SBConfig.SCRIPT_ADD.replace(scriptType).send(sbPlayer);
-		SBConfig.CONSOLE_SCRIPT_ADD.replace(sbPlayer.getName(), scriptType, location).console();
+		SBConfig.SCRIPT_ADD.replace(scriptType).send(player);
+		SBConfig.CONSOLE_SCRIPT_ADD.replace(player.getName(), scriptType, location).console();
 	}
 
 	public void remove(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
-		sbPlayer.setScriptLine(null);
-		sbPlayer.setActionType(null);
+		try {
+			remove(Objects.requireNonNull(sbPlayer.getPlayer()), location);
+		} finally {
+			sbPlayer.setScriptLine(null);
+			sbPlayer.setActionType(null);
+		}
+	}
+
+	public void remove(@NotNull Player player, @NotNull Location location) {
 		scriptData.setLocation(location);
-		if (!scriptData.checkPath()) {
-			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
+		if (!scriptData.hasPath()) {
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
 		scriptData.remove();
 		scriptData.save();
 		mapManager.removeCoords(location, scriptType);
-		SBConfig.SCRIPT_REMOVE.replace(scriptType).send(sbPlayer);
-		SBConfig.CONSOLE_SCRIPT_REMOVE.replace(sbPlayer.getName(), scriptType, location).console();
+		SBConfig.SCRIPT_REMOVE.replace(scriptType).send(player);
+		SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), scriptType, location).console();
 	}
 
 	public boolean lightRemove(@NotNull Location location) {
 		scriptData.setLocation(location);
-		if (!scriptData.checkPath()) {
+		if (!scriptData.hasPath()) {
 			return false;
 		}
 		scriptData.remove();
@@ -108,21 +133,28 @@ public final class ScriptEdit {
 	}
 
 	public void view(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
-		sbPlayer.setScriptLine(null);
-		sbPlayer.setActionType(null);
+		try {
+			view(Objects.requireNonNull(sbPlayer.getPlayer()), location);
+		} finally {
+			sbPlayer.setScriptLine(null);
+			sbPlayer.setActionType(null);
+		}
+	}
+
+	public void view(@NotNull Player player, @NotNull Location location) {
 		scriptData.setLocation(location);
-		if (!scriptData.checkPath()) {
-			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
+		if (!scriptData.hasPath()) {
+			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
-		PlayerCountInfo info = sbPlayer.getPlayerCount().getInfo(location, getScriptType());
-		sbPlayer.sendMessage("Author: " + getAuthors());
-		sbPlayer.sendMessage("LastEdit: " + scriptData.getLastEdit());
-		sbPlayer.sendMessage("Execute: " + info.getAmount());
+		PlayerCount playerCount = SBPlayer.fromPlayer(player).getPlayerCount();
+		player.sendMessage("Author: " + getAuthors());
+		player.sendMessage("LastEdit: " + scriptData.getLastEdit());
+		player.sendMessage("Execute: " + playerCount.getInfo(location, getScriptType()).getAmount());
 		for (String script : scriptData.getScripts()) {
-			sbPlayer.sendMessage("- " + script);
+			player.sendMessage("- " + script);
 		}
-		SBConfig.CONSOLE_SCRIPT_VIEW.replace(sbPlayer.getName(), scriptType, location).console();
+		SBConfig.CONSOLE_SCRIPT_VIEW.replace(player.getName(), scriptType, location).console();
 	}
 
 	@NotNull
@@ -166,45 +198,51 @@ public final class ScriptEdit {
 
 		@Override
 		public boolean copy() {
-			sbPlayer.setScriptLine(null);
-			sbPlayer.setActionType(null);
-			if (!scriptData.checkPath()) {
-				SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
-				return false;
+			try {
+				if (!scriptData.hasPath()) {
+					SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
+					return false;
+				}
+				sbPlayer.setClipboard(this);
+				SBConfig.SCRIPT_COPY.replace(scriptType).send(sbPlayer);
+				SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), scriptType, scriptData.getLocation()).console();
+			} finally {
+				sbPlayer.setScriptLine(null);
+				sbPlayer.setActionType(null);
 			}
-			sbPlayer.setClipboard(this);
-			SBConfig.SCRIPT_COPY.replace(scriptType).send(sbPlayer);
-			SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), scriptType, scriptData.getLocation()).console();
 			return true;
 		}
 
 		@Override
 		public boolean paste(@NotNull Location location, boolean overwrite) {
-			sbPlayer.setClipboard(null);
-			sbPlayer.setScriptLine(null);
-			sbPlayer.setActionType(null);
-			scriptData.setLocation(location);
-			if (scriptData.checkPath() && !overwrite) {
-				return false;
+			try {
+				scriptData.setLocation(location);
+				if (scriptData.hasPath() && !overwrite) {
+					return false;
+				}
+				scriptData.setAuthor(author);
+				scriptData.addAuthor(sbPlayer.getOfflinePlayer());
+				scriptData.setLastEdit(Utils.getFormatTime());
+				if (amount > 0) {
+					scriptData.setAmount(amount);
+				}
+				scriptData.setScripts(scripts);
+				scriptData.save();
+				mapManager.addCoords(location, scriptType);
+				SBConfig.SCRIPT_PASTE.replace(scriptType).send(sbPlayer);
+				SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), scriptType, scriptData.getLocation()).console();
+			} finally {
+				sbPlayer.setClipboard(null);
+				sbPlayer.setScriptLine(null);
+				sbPlayer.setActionType(null);
 			}
-			scriptData.setAuthor(author);
-			scriptData.addAuthor(sbPlayer.getOfflinePlayer());
-			scriptData.setLastEdit(Utils.getFormatTime());
-			if (amount > 0) {
-				scriptData.setAmount(amount);
-			}
-			scriptData.setScripts(scripts);
-			scriptData.save();
-			mapManager.addCoords(location, scriptType);
-			SBConfig.SCRIPT_PASTE.replace(scriptType).send(sbPlayer);
-			SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), scriptType, scriptData.getLocation()).console();
 			return true;
 		}
 
 		@Override
 		public boolean lightPaste(@NotNull Location location, boolean overwrite) {
 			scriptData.setLocation(location);
-			if (scriptData.checkPath() && !overwrite) {
+			if (scriptData.hasPath() && !overwrite) {
 				return false;
 			}
 			scriptData.setAuthor(author);
