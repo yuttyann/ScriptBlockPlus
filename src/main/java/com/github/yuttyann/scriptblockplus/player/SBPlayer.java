@@ -12,80 +12,73 @@ import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface SBPlayer extends CommandSender {
 
 	@NotNull
-	public static SBPlayer fromPlayer(@NotNull OfflinePlayer player) {
+	static SBPlayer fromPlayer(@NotNull OfflinePlayer player) {
 		return fromUUID(player.getUniqueId());
 	}
 
 	@NotNull
-	public static SBPlayer fromUUID(@NotNull UUID uuid) {
+	static SBPlayer fromUUID(@NotNull UUID uuid) {
 		return BaseSBPlayer.getSBPlayer(uuid);
 	}
 
+	boolean isOnline();
+
 	@Nullable
-	public Player getPlayer();
+	Player getPlayer();
 
 	@NotNull
-	public OfflinePlayer getOfflinePlayer();
-
-	@Nullable
-	public PlayerInventory getInventory();
+	OfflinePlayer getOfflinePlayer();
 
 	@NotNull
-	public UUID getUniqueId();
-
-	@Nullable
-	public World getWorld();
-
-	@Nullable
-	public Location getLocation();
-
-	@Nullable
-	public ItemStack getItemInMainHand();
-
-	@Nullable
-	public ItemStack getItemInOffHand();
-
-	public boolean isOnline();
+	PlayerInventory getInventory();
 
 	@NotNull
-	public Region getRegion();
+	UUID getUniqueId();
 
 	@NotNull
-	public PlayerCount getPlayerCount();
+	World getWorld();
 
 	@NotNull
-	public ObjectMap getObjectMap();
-
-	public void setClipboard(@Nullable SBClipboard clipboard);
+	Location getLocation();
 
 	@Nullable
-	public SBClipboard getClipboard();
-
-	public boolean hasClipboard();
-
-	public void setScriptLine(@Nullable String scriptLine);
+	ItemStack getItemInMainHand();
 
 	@Nullable
-	public String getScriptLine();
+	ItemStack getItemInOffHand();
 
-	public boolean hasScriptLine();
+	@NotNull
+	Region getRegion();
 
-	public void setActionType(@Nullable String actionType);
+	@NotNull
+	PlayerCount getPlayerCount();
 
-	@Nullable
-	public String getActionType();
+	@NotNull
+	ObjectMap getObjectMap();
 
-	public boolean hasActionType();
+	void setClipboard(@Nullable SBClipboard clipboard);
 
-	public void setOldFullCoords(@Nullable String fullCoords);
+	void setScriptLine(@Nullable String scriptLine);
 
-	@Nullable
-	public String getOldFullCoords();
+	void setActionType(@Nullable String actionType);
 
-	public boolean hasOldFullCoords();
+	void setOldFullCoords(@Nullable String fullCoords);
+
+	@NotNull
+	Optional<SBClipboard> getClipboard();
+
+	@NotNull
+	Optional<String> getScriptLine();
+
+	@NotNull
+	Optional<String> getActionType();
+
+	@NotNull
+	Optional<String> getOldFullCoords();
 }
