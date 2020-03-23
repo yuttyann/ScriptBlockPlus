@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -34,13 +33,16 @@ public class ActionBar extends BaseOption {
 			int stay = Integer.parseInt(array[1]);
 			new Task(stay, message).runTaskTimer(getPlugin(), 0, 1);
 		} else {
-			sendActionBar(getSBPlayer(), message);
+			sendActionBar(message);
 		}
 		return true;
 	}
 
-	private void sendActionBar(@NotNull SBPlayer sbPlayer, @NotNull String message) throws ReflectiveOperationException {
-		Player player = sbPlayer.getPlayer();
+	private void sendActionBar(@NotNull String message) throws ReflectiveOperationException {
+		if (!getSBPlayer().isOnline()) {
+			return;
+		}
+		Player player = getPlayer();
 		if (Utils.isCBXXXorLater("1.11")) {
 			executeCommand(player, "title " + player.getName() + " actionbar " + "{\"text\":\"" + message + "\"}", true);
 		} else if (Utils.isCraftBukkit() || Utils.isPaper()) {
@@ -76,11 +78,9 @@ public class ActionBar extends BaseOption {
 		public void run() {
 			try {
 				if (!getSBPlayer().isOnline() || tick++ >= stay) {
-					sendActionBar(getSBPlayer(), "");
 					cancel();
-				} else {
-					sendActionBar(getSBPlayer(), message);
 				}
+				sendActionBar(isCancelled() ? "" : message);
 			} catch (Exception e) {
 				cancel();
 			}

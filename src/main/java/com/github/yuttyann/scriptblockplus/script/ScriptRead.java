@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ScriptRead extends ScriptObjectMap implements SBRead {
+public class ScriptRead extends ScriptMap implements SBRead {
 
 	protected SBPlayer sbPlayer;
 	protected List<String> scripts;
@@ -43,8 +43,7 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 		if (!(location instanceof BlockCoords)) {
 			location = new BlockCoords(location);
 		}
-		setCenter(location);
-		this.blockCoords = ((BlockCoords) location).unmodifiable(); // 変更不可に設定
+		this.blockCoords = setCenter(((BlockCoords) location)).unmodifiable(); // 変更不可に設定
 	}
 
 	@NotNull
@@ -97,7 +96,7 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 	@Override
 	public boolean read(int index) {
 		Validate.notNull(sbPlayer.getPlayer(), "Player cannot be null");
-		if (!scriptData.checkPath()) {
+		if (!scriptData.hasPath()) {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
 			return false;
 		}
@@ -164,9 +163,11 @@ public class ScriptRead extends ScriptObjectMap implements SBRead {
 		return new ArrayList<>();
 	}
 
-	private void setCenter(@NotNull Location location) {
-		location.setX(location.getBlockX() + 0.5D);
-		location.setY(location.getBlockY() + 0.5D);
-		location.setZ(location.getBlockZ() + 0.5D);
+	@NotNull
+	private BlockCoords setCenter(@NotNull BlockCoords blockCoords) {
+		blockCoords.setX(blockCoords.getBlockX() + 0.5D);
+		blockCoords.setY(blockCoords.getBlockY() + 0.5D);
+		blockCoords.setZ(blockCoords.getBlockZ() + 0.5D);
+		return blockCoords;
 	}
 }

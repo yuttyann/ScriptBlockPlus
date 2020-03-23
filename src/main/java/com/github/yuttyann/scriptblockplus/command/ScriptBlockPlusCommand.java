@@ -73,7 +73,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	public boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		if (args.length == 1) {
 			if (equals(args[0], "tool")) {
-				return doTool(sender, args);
+				return doTool(sender);
 			} else if (equals(args[0], "reload")) {
 				return doReload(sender);
 			} else if (equals(args[0], "backup")) {
@@ -142,7 +142,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 	}
 
-	private boolean doTool(@NotNull CommandSender sender, @NotNull String[] args) {
+	private boolean doTool(@NotNull CommandSender sender) {
 		if (!hasPermission(sender, Permission.COMMAND_TOOL)) {
 			return false;
 		}
@@ -240,7 +240,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			}
 		}
 		scriptData.save();
-		ScriptBlock.getInstance().getMapManager().loadScripts(scriptFile, scriptType);
+		scriptData.reload();
 	}
 
 	private boolean doRun(@NotNull CommandSender sender, @NotNull String[] args) {
@@ -264,7 +264,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return false;
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
-		if (sbPlayer.hasScriptLine() || sbPlayer.hasActionType()) {
+		if (sbPlayer.getScriptLine().isPresent() || sbPlayer.getActionType().isPresent()) {
 			SBConfig.ERROR_ACTION_DATA.send(sbPlayer);
 			return true;
 		}
@@ -325,7 +325,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		boolean pasteonair = args.length > 2 && Boolean.parseBoolean(args[2]);
 		boolean overwrite = args.length > 3 && Boolean.parseBoolean(args[3]);
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
-		if (!sbPlayer.hasClipboard()) {
+		if (!sbPlayer.getClipboard().isPresent()) {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
 			return true;
 		}
@@ -335,7 +335,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return true;
 		}
 		CuboidRegionBlocks regionBlocks = new CuboidRegionBlocks(region);
-		SBClipboard clipboard = sbPlayer.getClipboard();
+		SBClipboard clipboard = sbPlayer.getClipboard().get();
 		sbPlayer.setClipboard(null);
 		for (Block block : regionBlocks.getBlocks()) {
 			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {

@@ -25,9 +25,7 @@ public class Title extends BaseOption {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String title = StringUtils.setColor(array[0] + "", true);
 		String subtitle = StringUtils.setColor(array.length > 1 ? array[1] : "", true);
-		int fadeIn = 10;
-		int stay = 40;
-		int fadeOut = 10;
+		int fadeIn = 10, stay = 40, fadeOut = 10;
 		if (array.length == 3) {
 			String[] times = StringUtils.split(array[2], "-");
 			if (times.length == 3) {

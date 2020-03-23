@@ -62,11 +62,11 @@ public class PlayerCount {
 	}
 
 	public void add(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType) {
-		action(blockCoords, scriptType, p -> p.add());
+		action(blockCoords, scriptType, PlayerCountInfo::add);
 	}
 
 	public void subtract(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType) {
-		action(blockCoords, scriptType, p -> p.subtract());
+		action(blockCoords, scriptType, PlayerCountInfo::subtract);
 	}
 
 	private void action(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType, @NotNull Consumer<PlayerCountInfo> action) {

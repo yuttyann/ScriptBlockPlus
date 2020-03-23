@@ -9,8 +9,6 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-
 public abstract class ScriptBlockEvent extends PlayerEvent implements Cancellable {
 
 	private static final HandlerList HANDLERS = new HandlerList();
@@ -28,8 +26,8 @@ public abstract class ScriptBlockEvent extends PlayerEvent implements Cancellabl
 		super(player);
 		this.block = block;
 		this.location = block.getLocation();
-		this.mainHand = ItemUtils.getItemInMainHand(player);
-		this.offHand = ItemUtils.getItemInOffHand(player);
+		this.mainHand = player.getInventory().getItemInMainHand();
+		this.offHand = player.getInventory().getItemInOffHand();
 	}
 
 	@NotNull

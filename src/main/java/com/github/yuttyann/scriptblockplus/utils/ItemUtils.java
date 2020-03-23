@@ -93,19 +93,9 @@ public class ItemUtils {
 	}
 
 	@NotNull
-	public static ItemStack getItemInMainHand(Player player) {
-		PlayerInventory inventory = player.getInventory();
-		return inventory.getItemInMainHand();
-	}
-
-	@NotNull
-	public static ItemStack getItemInOffHand(Player player) {
-		return player.getInventory().getItemInOffHand();
-	}
-
-	@NotNull
 	public static ItemStack[] getHandItems(Player player) {
-		return new ItemStack[] { getItemInMainHand(player), getItemInOffHand(player) };
+		PlayerInventory inventory = player.getInventory();
+		return new ItemStack[] { inventory.getItemInMainHand(), inventory.getItemInOffHand() };
 	}
 
 	public static void setName(@NotNull ItemStack item, @NotNull String name) {
