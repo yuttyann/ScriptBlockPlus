@@ -62,12 +62,12 @@ public final class ScriptData implements Cloneable {
 		scriptFile.save();
 	}
 
-	public boolean checkPath() {
+	public boolean hasPath() {
 		return scriptPath != null && scriptFile.contains(scriptPath);
 	}
 
 	@NotNull
-	public String getScriptPath() {
+	public String getPath() {
 		return scriptPath;
 	}
 
@@ -177,12 +177,12 @@ public final class ScriptData implements Cloneable {
 
 	public void subtractAmount(int amount) {
 		int result = getAmount() - amount;
-		scriptFile.set(scriptPath + KEY_AMOUNT, result >= 0 ? result : 0);
+		scriptFile.set(scriptPath + KEY_AMOUNT, Math.max(result, 0));
 	}
 
 	public boolean copyScripts(@NotNull Location target, boolean overwrite) {
 		ScriptData targetData = new ScriptData(target, scriptType);
-		if (location.equals(target) || !checkPath() || (targetData.checkPath() && !overwrite)) {
+		if (location.equals(target) || !hasPath() || (targetData.hasPath() && !overwrite)) {
 			return false;
 		}
 		targetData.setAuthor(getAuthor());
@@ -243,7 +243,7 @@ public final class ScriptData implements Cloneable {
 		return scriptData;
 	}
 
-	private String createPath(@Nullable Location location) {
+	private String createPath(@NotNull Location location) {
 		return location.getWorld().getName() + "." + BlockCoords.getCoords(location);
 	}
 }
