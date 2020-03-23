@@ -1,12 +1,5 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
@@ -15,6 +8,13 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class JoinQuitListener implements Listener {
@@ -29,8 +29,8 @@ public class JoinQuitListener implements Listener {
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		BaseSBPlayer sbPlayer = plugin.fromPlayer(player);
-		sbPlayer.setPlayer(player).setOnline(true);
-		if (!sbPlayer.hasOldFullCoords()) {
+		sbPlayer.setOnline(true);
+		if (!sbPlayer.getOldFullCoords().isPresent()) {
 			BlockCoords blockCoords = new BlockCoords(player.getLocation());
 			sbPlayer.setOldFullCoords(blockCoords.subtract(0.0D, 1.0D, 0.0D).getFullCoords());
 		}
@@ -41,7 +41,7 @@ public class JoinQuitListener implements Listener {
 		// ItemCost アイテム返却
 		ObjectMap objectMap = sbPlayer.getObjectMap();
 		if (objectMap.has(ItemCost.KEY_ITEM_PLAYER)) {
-			player.getInventory().setContents(objectMap.get(ItemCost.KEY_ITEM_PLAYER));
+			player.getInventory().setContents(objectMap.get(ItemCost.KEY_ITEM_PLAYER, new ItemStack[0]));
 			objectMap.remove(ItemCost.KEY_ITEM_PLAYER);
 			Utils.updateInventory(player);
 		}

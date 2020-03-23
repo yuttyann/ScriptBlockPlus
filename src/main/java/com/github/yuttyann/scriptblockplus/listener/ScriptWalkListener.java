@@ -26,7 +26,7 @@ public class ScriptWalkListener extends ScriptListener {
 		Player player = event.getPlayer();
 		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
 		BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation()).subtract(0.0D, 1.0D, 0.0D);
-		if (blockCoords.getFullCoords().equals(sbPlayer.getOldFullCoords())) {
+		if (blockCoords.getFullCoords().equals(sbPlayer.getOldFullCoords().orElse(null))) {
 			return;
 		}
 		sbPlayer.setOldFullCoords(blockCoords.getFullCoords());
