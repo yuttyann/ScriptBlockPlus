@@ -1,7 +1,5 @@
 package com.github.yuttyann.scriptblockplus.player;
 
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -42,82 +40,79 @@ public final class BaseSBPlayer extends PlayerData {
 		return PLAYERS;
 	}
 
-	@NotNull
-	public BaseSBPlayer setPlayer(@Nullable Player player) {
-		Objects.requireNonNull(player);
-		synchronized(this) {
-			this.player = player.getUniqueId().equals(uuid) ? player : null;
-		}
-		return this;
-	}
-
 	public void setOnline(boolean isOnline) {
-		this.isOnline = isOnline;
-	}
-
-	@NotNull
-	@Override
-	public Server getServer() {
-		return isOnline() ? player.getServer() : Bukkit.getServer();
-	}
-
-	@Nullable
-	@Override
-	public synchronized Player getPlayer() {
-		return !isOnline() ? null : player == null ? player = Bukkit.getPlayer(uuid) : player;
-	}
-
-	@NotNull
-	@Override
-	public OfflinePlayer getOfflinePlayer() {
-		return isOnline() ? player : Utils.getOfflinePlayer(uuid);
-	}
-
-	@Nullable
-	@Override
-	public PlayerInventory getInventory() {
-		return isOnline() ? player.getInventory() : null;
-	}
-
-	@NotNull
-	@Override
-	public String getName() {
-		return getOfflinePlayer().getName();
-	}
-
-	@NotNull
-	@Override
-	public UUID getUniqueId() {
-		return uuid;
-	}
-
-	@Nullable
-	@Override
-	public World getWorld() {
-		return isOnline() ? player.getLocation().getWorld() : null;
-	}
-
-	@Nullable
-	@Override
-	public Location getLocation() {
-		return isOnline() ? player.getLocation() : null;
-	}
-
-	@Nullable
-	@Override
-	public ItemStack getItemInMainHand() {
-		return isOnline() ? ItemUtils.getItemInMainHand(player) : null;
-	}
-
-	@Nullable
-	@Override
-	public ItemStack getItemInOffHand() {
-		return isOnline() ? ItemUtils.getItemInOffHand(player) : null;
+		synchronized(this) {
+			if (this.isOnline = isOnline) {
+				this.player = Bukkit.getPlayer(uuid);
+			} else {
+				this.player = null;
+			}
+		}
 	}
 
 	@Override
 	public boolean isOnline() {
 		return player != null && isOnline;
+	}
+
+	@Override
+	@NotNull
+	public Server getServer() {
+		return player.getServer();
+	}
+
+	@Override
+	@Nullable
+	public synchronized Player getPlayer() {
+		return isOnline() ? player : Bukkit.getPlayer(uuid);
+	}
+
+	@Override
+	@NotNull
+	public synchronized OfflinePlayer getOfflinePlayer() {
+		return isOnline() ? player : Bukkit.getOfflinePlayer(uuid);
+	}
+
+	@Override
+	@NotNull
+	public PlayerInventory getInventory() {
+		return player.getInventory();
+	}
+
+	@Override
+	@NotNull
+	public String getName() {
+		return Objects.requireNonNull(getOfflinePlayer().getName());
+	}
+
+	@Override
+	@NotNull
+	public UUID getUniqueId() {
+		return uuid;
+	}
+
+	@Override
+	@NotNull
+	public World getWorld() {
+		return player.getWorld();
+	}
+
+	@Override
+	@NotNull
+	public Location getLocation() {
+		return player.getLocation();
+	}
+
+	@Override
+	@NotNull
+	public ItemStack getItemInMainHand() {
+		return player.getInventory().getItemInMainHand();
+	}
+
+	@Override
+	@NotNull
+	public ItemStack getItemInOffHand() {
+		return player.getInventory().getItemInOffHand();
 	}
 
 	@Override
@@ -132,72 +127,72 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public void sendMessage(@NotNull String message) {
-		if (isOnline()) player.sendMessage(message);
+		player.sendMessage(message);
 	}
 
 	@Override
 	public void sendMessage(@NotNull String[] messages) {
-		if (isOnline()) player.sendMessage(messages);
+		player.sendMessage(messages);
 	}
 
-	@Nullable
 	@Override
+	@NotNull
 	public PermissionAttachment addAttachment(@NotNull Plugin plugin) {
-		return isOnline() ? player.addAttachment(plugin) : null;
+		return player.addAttachment(plugin);
 	}
 
-	@Nullable
 	@Override
+	@Nullable
 	public PermissionAttachment addAttachment(@NotNull Plugin plugin, int value) {
-		return isOnline() ? player.addAttachment(plugin, value) : null;
+		return player.addAttachment(plugin, value);
 	}
 
-	@Nullable
 	@Override
+	@NotNull
 	public PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String permission, boolean value) {
-		return isOnline() ? player.addAttachment(plugin, permission, value) : null;
+		return player.addAttachment(plugin, permission, value);
 	}
 
-	@Nullable
 	@Override
+	@Nullable
 	public PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String permission, boolean value, int ticks) {
-		return isOnline() ? player.addAttachment(plugin, permission, value, ticks) : null;
+		return player.addAttachment(plugin, permission, value, ticks);
 	}
 
-	@Nullable
 	@Override
+	@NotNull
 	public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-		return isOnline() ? player.getEffectivePermissions() : null;
+		return player.getEffectivePermissions();
 	}
 
 	@Override
 	public boolean hasPermission(@NotNull String permission) {
-		return isOnline() && player.hasPermission(permission);
+		return player.hasPermission(permission);
 	}
 
 	@Override
 	public boolean hasPermission(@NotNull Permission permission) {
-		return isOnline() && player.hasPermission(permission);
+		return player.hasPermission(permission);
 	}
 
 	@Override
 	public boolean isPermissionSet(@NotNull String permission) {
-		return isOnline() && player.isPermissionSet(permission);
+		return player.isPermissionSet(permission);
 	}
 
 	@Override
 	public boolean isPermissionSet(@NotNull Permission permission) {
-		return isOnline() && player.isPermissionSet(permission);
+		return player.isPermissionSet(permission);
 	}
 
 	@Override
 	public void recalculatePermissions() {
-		if (isOnline()) player.recalculatePermissions();
+		player.recalculatePermissions();
 	}
 
 	@Override
 	public void removeAttachment(@NotNull PermissionAttachment attachment) {
-		if (isOnline()) player.removeAttachment(attachment);
+		player.removeAttachment(attachment);
 	}
 
 	@Override
@@ -212,6 +207,6 @@ public final class BaseSBPlayer extends PlayerData {
 
 	@Override
 	public String toString() {
-		return "SBPlayer{uuid=" + uuid + ", name=" + getName() + "}";
+		return "BaseSBPlayer{uuid=" + uuid + ", player=" + player + ", isOnline=" + isOnline + '}';
 	}
 }
