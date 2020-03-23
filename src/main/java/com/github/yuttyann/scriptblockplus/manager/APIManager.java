@@ -6,7 +6,6 @@ import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -64,8 +63,8 @@ public final class APIManager implements ScriptBlockAPI {
 		}
 
 		@Override
-		public boolean checkPath() {
-			return scriptEdit.checkPath();
+		public boolean hasPath() {
+			return scriptEdit.hasPath();
 		}
 
 		@Override
@@ -76,22 +75,22 @@ public final class APIManager implements ScriptBlockAPI {
 
 		@Override
 		public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-			scriptEdit.create(SBPlayer.fromUUID(player.getUniqueId()), location, script);
+			scriptEdit.create(player, location, script);
 		}
 
 		@Override
 		public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-			scriptEdit.add(SBPlayer.fromUUID(player.getUniqueId()), location, script);
+			scriptEdit.add(player, location, script);
 		}
 
 		@Override
 		public void remove(@NotNull Player player, @NotNull Location location) {
-			scriptEdit.remove(SBPlayer.fromUUID(player.getUniqueId()), location);
+			scriptEdit.remove(player, location);
 		}
 
 		@Override
 		public void view(@NotNull Player player, @NotNull Location location) {
-			scriptEdit.view(SBPlayer.fromUUID(player.getUniqueId()), location);
+			scriptEdit.view(player, location);
 		}
 	}
 
@@ -120,14 +119,14 @@ public final class APIManager implements ScriptBlockAPI {
 		}
 
 		@Override
-		public boolean checkPath() {
-			return scriptData.checkPath();
+		public boolean hasPath() {
+			return scriptData.hasPath();
 		}
 
 		@Override
 		@NotNull
-		public String getScriptPath() {
-			return scriptData.getScriptPath();
+		public String getPath() {
+			return scriptData.getPath();
 		}
 
 		@Override
