@@ -34,13 +34,13 @@ public final class APIManager implements ScriptBlockAPI {
 	}
 
 	@Override
-	public void addOption(@NotNull OptionPriority priority, @NotNull Class<? extends BaseOption> option) {
-		OptionManager.register(priority, new SBConstructor<>(option).newInstance(InstanceType.SBINSTANCE));
+	public void registerOption(@NotNull OptionPriority priority, @NotNull Class<? extends BaseOption> option) {
+		OptionManager.register(priority, option);
 	}
 
 	@Override
-	public void addEndProcess(@NotNull Class<? extends EndProcess> endProcess) {
-		EndProcessManager.getInstance().add(endProcess);
+	public void registerEndProcess(@NotNull Class<? extends EndProcess> endProcess) {
+		EndProcessManager.register(endProcess);
 	}
 
 	@Override

@@ -29,21 +29,21 @@ public interface ScriptBlockAPI {
 	boolean scriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index);
 
 	/**
-	 * 指定した優先位置にオプションを追加します。
+	 * 指定した追加位置にオプションを登録します。
 	 * <br/>
 	 * 指定するクラスには"BaseOption"を継承してください。
-	 * @param priority 追加優先度
-	 * @param option オプションクラス
+	 * @param priority 追加位置の優先度
+	 * @param option オプションのクラス
 	 */
-	void addOption(@NotNull OptionPriority priority, @NotNull Class<? extends BaseOption> option);
+	void registerOption(@NotNull OptionPriority priority, @NotNull Class<? extends BaseOption> option);
 
 	/**
-	 * スクリプトの終了処理を追加します。
+	 * エンドプロセスを登録します。
 	 * <br/>
 	 * 指定するクラスには"EndProcess"を実装してください。
-	 * @param endProcess 終了処理クラス
+	 * @param endProcess エンドプロセスのクラス
 	 */
-	void addEndProcess(@NotNull Class<? extends EndProcess> endProcess);
+	void registerEndProcess(@NotNull Class<? extends EndProcess> endProcess);
 
 
 	/**
