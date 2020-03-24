@@ -1,50 +1,45 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
-import com.github.yuttyann.scriptblockplus.manager.auxiliary.AbstractConstructor;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndInventory;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndMoneyCost;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public final class EndProcessManager extends AbstractConstructor<EndProcess> {
+public final class EndProcessManager {
 
-	private static final EndProcessManager END_PROCESS_MANAGER;
+	private static final List<SBConstructor<? extends EndProcess>> ENDPROCESS_LIST = new ArrayList<>();
 
 	static {
-		END_PROCESS_MANAGER = new EndProcessManager();
-		END_PROCESS_MANAGER.registerDefaults();
+		ENDPROCESS_LIST.add(new SBConstructor<>(new EndInventory()));
+		ENDPROCESS_LIST.add(new SBConstructor<>(new EndMoneyCost()));
 	}
 
-	private EndProcessManager() {
-		// EndProcessManager
+	public static void register(@NotNull Class<? extends EndProcess> endProcess) {
+		ENDPROCESS_LIST.add(new SBConstructor<EndProcess>(endProcess));
 	}
 
-	@NotNull
-	public static EndProcessManager getInstance() {
-		return END_PROCESS_MANAGER;
-	}
-
-	@NotNull
-	@Override
-	protected List<SBConstructor<? extends EndProcess>> newList() {
-		return new ArrayList<>();
-	}
-
-	@Override
-	public void registerDefaults() {
-		getConstructors().clear();
-		add(new EndInventory());
-		add(new EndMoneyCost());
+	public static void forEach(@NotNull Consumer<EndProcess> action) {
+		EndProcess[] array = new EndProcess[ENDPROCESS_LIST.size()];
+		for (int i = 0; i < ENDPROCESS_LIST.size(); i++) {
+			array[i] = ENDPROCESS_LIST.get(i).newInstance(InstanceType.SBINSTANCE);
+		}
+		StreamUtils.forEach(array, action);
 	}
 
 	@NotNull
-	@Override
-	public EndProcess[] newInstances() {
-		return newInstances(new EndProcess[getConstructors().size()], InstanceType.SBINSTANCE);
+	public static EndProcess newInstance(@NotNull Class<? extends EndProcess> endProcess, @NotNull InstanceType instanceType) {
+		for (SBConstructor<? extends EndProcess> constructor : ENDPROCESS_LIST) {
+			if (constructor.getDeclaringClass().equals(endProcess)) {
+				return constructor.newInstance(instanceType);
+			}
+		}
+		throw new NullPointerException(endProcess.getName() + " does not exist");
 	}
 }
