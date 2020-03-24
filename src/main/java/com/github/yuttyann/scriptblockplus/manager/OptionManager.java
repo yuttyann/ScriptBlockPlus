@@ -1,6 +1,9 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
+import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
+import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.chat.*;
 import com.github.yuttyann.scriptblockplus.script.option.other.*;
@@ -14,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 public final class OptionManager {
@@ -50,8 +54,9 @@ public final class OptionManager {
         OPTION_MAP.updateOrdinal();
     }
 
-    public static void register(@NotNull OptionPriority priority, @NotNull Option option) {
-        OPTION_MAP.put(priority, option.getSyntax(), option);
+    public static void register(@NotNull OptionPriority priority, @NotNull Class<? extends BaseOption> option) {
+        Option instance = new SBConstructor<>(option).newInstance(InstanceType.REFLECTION);
+        OPTION_MAP.put(priority, instance.getSyntax(), instance);
         OPTION_MAP.updateOrdinal();
     }
 
@@ -64,9 +69,28 @@ public final class OptionManager {
         return Objects.requireNonNull(get(syntax)).newInstance();
     }
 
+    @NotNull
+    public static Option newInstance(@NotNull Class<? extends Option> option, @NotNull InstanceType instanceType) {
+        for (Entry<String, Option> entry : OPTION_MAP.entrySet()) {
+            if (!option.equals(entry.getValue().getClass())) {
+                continue;
+            }
+            if (instanceType == InstanceType.REFLECTION) {
+                return new SBConstructor<>(option).newInstance(InstanceType.REFLECTION);
+            }
+            return entry.getValue().newInstance();
+        }
+        throw new NullPointerException(option.getName() + " does not exist");
+    }
+
     @Nullable
     public static Option get(@NotNull String syntax) {
         return OPTION_MAP.get(OPTION_MAP.list.indexOf(syntax::startsWith));
+    }
+
+    @NotNull
+    public static List<Option> getList() {
+        return Collections.unmodifiableList(OPTION_MAP.values());
     }
 
     @NotNull
@@ -79,11 +103,6 @@ public final class OptionManager {
         return StreamUtils.toArray(OPTION_MAP.values(), Option::getSyntax, new String[OPTION_MAP.size()]);
     }
 
-    @NotNull
-    public static List<Option> getList() {
-        return Collections.unmodifiableList(OPTION_MAP.values());
-    }
-
     private static class PriorityMap extends LinkedHashMap<String, Option> {
 
         private final StringList list = new StringList();
@@ -93,6 +112,11 @@ public final class OptionManager {
             return super.get(list.get(index));
         }
 
+        @Override
+        public Option get(Object key) {
+            return super.get(key);
+        }
+
         @Nullable
         public Option put(@NotNull Option option) {
             return put(option.getSyntax(), option);
@@ -100,29 +124,29 @@ public final class OptionManager {
 
         @Override
         @Nullable
-        public Option put(String syntax, Option option) {
-            list.add(syntax);
-            return super.put(syntax, option);
+        public Option put(@NotNull String key, @NotNull Option value) {
+            list.add(key);
+            return super.put(key, value);
         }
 
         @Nullable
-        public Option put(@NotNull OptionPriority priority, String syntax, Option option) {
+        public Option put(@NotNull OptionPriority priority, @NotNull String key, @NotNull Option value) {
             switch (priority) {
                 case LAST:
-                    list.addLast(syntax);
+                    list.addLast(key);
                     break;
                 case LOWEST:
                 case LOW:
                 case NORMAL:
                 case HIGH:
                 case HIGHEST:
-                    list.add(list.indexOf(priority.getSyntax()) + 1, syntax);
+                    list.add(list.indexOf(priority.getSyntax()) + 1, key);
                     break;
                 case TOP:
-                    list.addFirst(syntax);
+                    list.addFirst(key);
                     break;
             }
-            return super.put(syntax, option);
+            return super.put(key, value);
         }
 
         @Override
