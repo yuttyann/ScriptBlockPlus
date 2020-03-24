@@ -20,7 +20,6 @@ public abstract class PlayerData implements SBPlayer {
 	private static final String KEY_PLAYERCOUNT = createRandomId("PlayerCount");
 	private static final String KEY_OLDFULLCOORDS = createRandomId("OldFullCoords");
 
-
 	private final ObjectMap objectMap;
 
 	PlayerData() {
