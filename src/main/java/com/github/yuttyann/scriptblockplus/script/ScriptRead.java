@@ -126,7 +126,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
 	protected void executeEndProcess(@NotNull Consumer<EndProcess> action) {
 		try {
-			EndProcessManager.getInstance().forEach(action);
+			EndProcessManager.forEach(action);
 		} finally {
 			clear();
 		}

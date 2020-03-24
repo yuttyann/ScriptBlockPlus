@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
-import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -39,7 +39,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	@Override
 	@NotNull
 	public Option newInstance() {
-		return new SBConstructor<>(this.getClass()).newInstance(InstanceType.REFLECTION);
+		return OptionManager.newInstance(this.getClass(), InstanceType.REFLECTION);
 	}
 
 	/**

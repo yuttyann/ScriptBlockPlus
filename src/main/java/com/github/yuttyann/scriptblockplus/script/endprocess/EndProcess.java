@@ -14,7 +14,7 @@ public interface EndProcess extends SBInstance<EndProcess> {
 	 */
 	@NotNull
 	default EndProcess newInstance() {
-		return EndProcessManager.getInstance().newInstance(this, InstanceType.REFLECTION);
+		return EndProcessManager.newInstance(this.getClass(), InstanceType.REFLECTION);
 	}
 
 	/**
