@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public final class Updater {
 
@@ -185,8 +186,9 @@ public final class Updater {
 		}
 	}
 
+	@NotNull
 	private Document getDocument(@NotNull String name) throws ParserConfigurationException, SAXException, IOException {
 		InputStream is = FileUtils.getWebFile("https://xml.yuttyann44581.net/uploads/" + name + ".xml");
-		return is == null ? null : DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
+		return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(Objects.requireNonNull(is));
 	}
 }

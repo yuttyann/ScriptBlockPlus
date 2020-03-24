@@ -28,10 +28,10 @@ public class ScriptInteractListener extends ScriptListener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockInteractEvent(BlockInteractEvent event) {
-		if (event.isInvalid() || event.getHand() != EquipmentSlot.HAND) {
+		Block block = event.getBlock();
+		if (event.isInvalid() || event.getHand() != EquipmentSlot.HAND || block == null) {
 			return;
 		}
-		Block block = event.getBlock();
 		Location location = block.getLocation();
 		if (mapManager.containsCoords(location, scriptType)) {
 			Player player = event.getPlayer();
