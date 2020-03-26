@@ -1,4 +1,4 @@
-ScriptBlockPlus [Java8 MC1.9-1.15.2]
+ScriptBlockPlus [Java8 MC1.9-1.15.2] ![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)
 ==========
 概要
 --------------------------------------------------
@@ -13,23 +13,23 @@ ScriptBlockPlus [Java8 MC1.9-1.15.2]
 対応プラットフォーム
 -----------
 一部プラットフォームでの動作は確認できませんが、`BukkitAPIを実装しているのであれば基本的に動作します。`  
-**以下動作を確認したプラットフォームの一覧です。**
-- [CraftBukkit](https://www.spigotmc.org/)
-- [Spigot](https://www.spigotmc.org/)
-- [PaperMC](https://papermc.io/)
-- [CatServer](http://catserver.moe/)
+**★以下動作を確認済みのプラットフォーム一覧★**  
+・[CraftBukkit](https://www.spigotmc.org/)  
+・[Spigot](https://www.spigotmc.org/)  
+・[PaperMC](https://papermc.io/)  
+・[CatServer](http://catserver.moe/)  
 
 ### 機能制限
 ※最新のMCバージョンを使用している場合には(セレクターの機能以外)制限は掛かりません。  
 古いMCバージョンで`CraftBukkit`、`Spigot`、`PaperMC`以外のプラットフォームを使用した場合に制限が掛かります。  
 (今後どのプラットフォームで動作させるのかを決めるフィルター機能を`YAML`形式で実装する予定です。)  
-**以下制限一覧です。**
-- アドベンチャーモードの左クリック判定の制限[v1.9-1.13.1]
-  - 判定が本来のクリック判定ではなく疑似的に再現した判定になります。
-- オプション`@actionbar`の制限[v1.9-1.11]
-  - BukkitAPIに実装されていないため利用はできません。
-- コマンドのセレクターの制限[ALL]
-  - NMSに依存しているためセレクターの利用はできません。
+**★以下機能制限の一覧★**  
+・アドベンチャーモードの左クリック判定の制限[v1.9-1.13.1]  
+　- 判定が本来のクリック判定ではなく疑似的に再現した判定になります。  
+・オプション`@actionbar`の制限[v1.9-1.11]  
+　- BukkitAPIに実装されていないため利用はできません。  
+・コマンドのセレクターの制限[ALL]  
+　- NMSに依存しているためセレクターの利用はできません。  
 
 プラグイン記事
 -----------
