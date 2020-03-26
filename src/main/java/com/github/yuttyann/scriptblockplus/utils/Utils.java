@@ -34,12 +34,8 @@ public final class Utils {
 		return SERVER_VERSION;
 	}
 
-	public static boolean isCraftBukkit() {
-		return Bukkit.getName().equals("CraftBukkit");
-	}
-
-	public static boolean isPaper() {
-		return Bukkit.getName().equals("Paper");
+	public static boolean isPlatform() {
+		return SBConfig.PLATFORMS.getValue().contains(Bukkit.getName());
 	}
 
 	public static boolean isCBXXXorLater(@NotNull String version) {
@@ -92,14 +88,13 @@ public final class Utils {
 	public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		boolean isCommandSelector = (isPaper() || isCraftBukkit()) && SBConfig.COMMAND_SELECTOR.getValue();
+		boolean isCommandSelector = (isPlatform()) && SBConfig.COMMAND_SELECTOR.getValue();
 		if (isCommandSelector && (isCBXXXorLater("1.13") || CommandSelector.isCommandPattern(command))) {
-			if (sender instanceof SBPlayer) {
-				sender = ((SBPlayer) sender).getPlayer();
-			}
 			if (location == null) {
 				if (sender instanceof Player) {
 					location = ((Player) sender).getLocation().clone();
+				} else if (sender instanceof SBPlayer) {
+					location = ((SBPlayer) sender).getLocation().clone();
 				} else if (sender instanceof BlockCommandSender) {
 					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
 				} else if (sender instanceof CommandMinecart) {
@@ -129,17 +124,6 @@ public final class Utils {
 	@SuppressWarnings("deprecation")
 	public static void updateInventory(@NotNull Player player) {
 		player.updateInventory();
-	}
-
-	@Nullable
-	public static Player getPlayer(@NotNull String name) {
-		return StringUtils.isEmpty(name) ? null : StreamUtils.fOrElse(Bukkit.getOnlinePlayers(), p -> name.equals(p.getName()), null);
-	}
-
-	@Nullable
-	public static OfflinePlayer getOfflinePlayer(@NotNull UUID uuid) {
-		OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-		return !player.hasPlayedBefore() ? null : player;
 	}
 
 	@Nullable

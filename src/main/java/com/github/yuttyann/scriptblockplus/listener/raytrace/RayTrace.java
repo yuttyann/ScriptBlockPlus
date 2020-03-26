@@ -27,10 +27,10 @@ public class RayTrace {
     public RayResult rayTrace(Player player, double distance) {
         if (Utils.isCBXXXorLater("1.13.2")) {
             RayTraceResult rayTraceResult = player.rayTraceBlocks(distance, FluidCollisionMode.NEVER);
-            if (rayTraceResult != null) {
+            if (rayTraceResult != null && rayTraceResult.getHitBlock() != null) {
                 return new RayResult(rayTraceResult.getHitBlock(), rayTraceResult.getHitBlockFace());
             }
-        } else if (Utils.isPaper() || Utils.isCraftBukkit()) {
+        } else if (Utils.isPlatform()) {
             Location location = player.getLocation();
             double x = location.getX();
             double y = location.getY() + player.getEyeHeight();

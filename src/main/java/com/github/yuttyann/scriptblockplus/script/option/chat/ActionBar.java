@@ -45,7 +45,7 @@ public class ActionBar extends BaseOption {
 		Player player = getPlayer();
 		if (Utils.isCBXXXorLater("1.11")) {
 			executeCommand(player, "title " + player.getName() + " actionbar " + "{\"text\":\"" + message + "\"}", true);
-		} else if (Utils.isCraftBukkit() || Utils.isPaper()) {
+		} else if (Utils.isPlatform()) {
 			String chatSerializer = "IChatBaseComponent$ChatSerializer";
 			Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
 			Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
