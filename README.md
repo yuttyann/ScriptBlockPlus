@@ -1,4 +1,4 @@
-ScriptBlockPlus [Java8 MC1.9-1.15.2] ![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)
+ScriptBlockPlus [Java8 MC1.9-1.15.2] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 ŠT—v
 --------------------------------------------------
