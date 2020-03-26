@@ -18,6 +18,7 @@ import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 public final class SBConfig {
 
 	// List Keys
+	public static final ConfigKey<List<String>> PLATFORMS = stringListKey("Platforms", new ArrayList<>());
 	public static final ConfigKey<List<String>> BLOCK_SELECTOR = stringListKey("BlockSelector", new ArrayList<>());
 	public static final ConfigKey<List<String>> SCRIPT_EDITOR = stringListKey("ScriptEditor", new ArrayList<>());
 
