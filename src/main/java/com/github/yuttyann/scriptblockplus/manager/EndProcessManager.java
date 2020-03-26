@@ -5,7 +5,6 @@ import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndInventory;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndMoneyCost;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,11 +25,7 @@ public final class EndProcessManager {
 	}
 
 	public static void forEach(@NotNull Consumer<EndProcess> action) {
-		EndProcess[] array = new EndProcess[ENDPROCESS_LIST.size()];
-		for (int i = 0; i < ENDPROCESS_LIST.size(); i++) {
-			array[i] = ENDPROCESS_LIST.get(i).newInstance(InstanceType.SBINSTANCE);
-		}
-		StreamUtils.forEach(array, action);
+		ENDPROCESS_LIST.forEach(c -> action.accept(c.newInstance(InstanceType.SBINSTANCE)));
 	}
 
 	@NotNull
