@@ -33,6 +33,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -103,11 +104,11 @@ public class InteractListener implements Listener {
 	}
 
 	private boolean action(@NotNull Player player, @NotNull Action action, @NotNull BlockInteractEvent event) {
-		Location location = event.getLocation();
-		if (event.getHand() != EquipmentSlot.HAND || location == null) {
+		if (event.getHand() != EquipmentSlot.HAND) {
 			return false;
 		}
 		ItemStack item = event.getItem();
+		Location location = event.getLocation();
 		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
 		boolean isAIR = action.name().endsWith("_CLICK_AIR");
 		boolean isSneaking = player.isSneaking();
@@ -155,7 +156,7 @@ public class InteractListener implements Listener {
 				}
 			});
 			return true;
-		} else if (!isAIR && sbPlayer.getActionType().isPresent()) {
+		} else if (!isAIR && sbPlayer.getActionType().isPresent() && location != null) {
 			String[] array = StringUtils.split(sbPlayer.getActionType().get(), "_");
 			ScriptBlockEditEvent editEvent = new ScriptBlockEditEvent(player, location.getBlock(), array);
 			Bukkit.getPluginManager().callEvent(editEvent);
@@ -178,10 +179,10 @@ public class InteractListener implements Listener {
 				return true;
 			}
 		}
-		return isAIR;
+		return false;
 	}
 
-	private void tool(@NotNull Action action, @NotNull Location location, @NotNull Consumer<Location> left, @NotNull Consumer<Location> right) {
+	private void tool(@NotNull Action action, @Nullable Location location, @NotNull Consumer<Location> left, @NotNull Consumer<Location> right) {
 		switch (action) {
 		case LEFT_CLICK_AIR:
 		case LEFT_CLICK_BLOCK:
