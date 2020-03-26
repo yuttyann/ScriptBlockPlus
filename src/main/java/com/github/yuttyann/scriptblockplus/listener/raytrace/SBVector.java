@@ -37,17 +37,4 @@ public class SBVector extends Vector {
         }
         return null;
     }
-
-    @Nullable
-    public static SBVector fromNMSVec3D(@NotNull Object nmsVec3D) {
-        try {
-            double x = PackageType.NMS.getField("Vec3D", "x").getDouble(nmsVec3D);
-            double y = PackageType.NMS.getField("Vec3D", "y").getDouble(nmsVec3D);
-            double z = PackageType.NMS.getField("Vec3D", "z").getDouble(nmsVec3D);
-            return new SBVector(x, y, z);
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }

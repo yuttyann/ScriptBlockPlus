@@ -76,7 +76,7 @@ public class Calculation extends BaseOption {
 		}
 		if (variable.startsWith("%player_ping_") && variable.endsWith("%")) {
 			variable = variable.substring("%player_ping_".length(), variable.length() - 1);
-			Player target = Utils.getPlayer(variable);
+			Player target = Bukkit.getPlayer(variable);
 			if (target == null) {
 				return 0.0D;
 			}
