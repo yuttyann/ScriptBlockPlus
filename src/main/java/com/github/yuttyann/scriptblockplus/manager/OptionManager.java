@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.manager;
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
-import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.chat.*;
 import com.github.yuttyann.scriptblockplus.script.option.other.*;
@@ -22,7 +21,7 @@ import java.util.function.Predicate;
 
 public final class OptionManager {
 
-    private static final PriorityMap OPTION_MAP = new PriorityMap();
+    private static final IndexedLinkedMap OPTION_MAP = new IndexedLinkedMap();
 
     static {
         OPTION_MAP.put(new ScriptAction());
@@ -54,19 +53,28 @@ public final class OptionManager {
         OPTION_MAP.updateOrdinal();
     }
 
-    public static void register(@NotNull OptionPriority priority, @NotNull Class<? extends BaseOption> option) {
-        Option instance = new SBConstructor<>(option).newInstance(InstanceType.REFLECTION);
+    public static void register(@NotNull OptionPriority priority, @NotNull SBConstructor<Option> option) {
+        Option instance = option.newInstance(InstanceType.REFLECTION);
         OPTION_MAP.put(priority, instance.getSyntax(), instance);
         OPTION_MAP.updateOrdinal();
     }
 
     public static void sort(@NotNull List<String> scripts) {
-        scripts.sort(Comparator.comparingInt(s1 -> OPTION_MAP.list.indexOf(s1::startsWith)));
+        scripts.sort(Comparator.comparingInt(s1 -> OPTION_MAP.indexOf(s1::startsWith)));
+    }
+
+    public static boolean has(@NotNull String syntax) {
+        int index = OPTION_MAP.indexOf(syntax::startsWith);
+        return index >= 0 && index < OPTION_MAP.list.size();
     }
 
     @NotNull
-    public static Option newInstance(@NotNull String syntax) {
-        return Objects.requireNonNull(get(syntax)).newInstance();
+    public static Option get(@NotNull String syntax) {
+        Option value = OPTION_MAP.get(OPTION_MAP.indexOf(syntax::startsWith));
+        if (value == null) {
+            throw new NullPointerException("Option does not exist.");
+        }
+        return value;
     }
 
     @NotNull
@@ -83,19 +91,9 @@ public final class OptionManager {
         throw new NullPointerException(option.getName() + " does not exist");
     }
 
-    @Nullable
-    public static Option get(@NotNull String syntax) {
-        return OPTION_MAP.get(OPTION_MAP.list.indexOf(syntax::startsWith));
-    }
-
     @NotNull
     public static List<Option> getList() {
         return Collections.unmodifiableList(OPTION_MAP.values());
-    }
-
-    @NotNull
-    public static String[] getNames() {
-        return StreamUtils.toArray(OPTION_MAP.values(), Option::getName, new String[OPTION_MAP.size()]);
     }
 
     @NotNull
@@ -103,30 +101,30 @@ public final class OptionManager {
         return StreamUtils.toArray(OPTION_MAP.values(), Option::getSyntax, new String[OPTION_MAP.size()]);
     }
 
-    private static class PriorityMap extends LinkedHashMap<String, Option> {
+    private static class IndexedLinkedMap extends LinkedHashMap<String, Option> {
 
-        private final StringList list = new StringList();
+        private final LinkedList<String> list = new LinkedList<>();
+
+        public int indexOf(@NotNull Predicate<String> filter) {
+            int index = 0;
+            for (String s : list) {
+                if (filter.test(s)) {
+                    return index;
+                }
+                index++;
+            }
+            return -1;
+        }
 
         @Nullable
         public Option get(int index) {
-            return super.get(list.get(index));
-        }
-
-        @Override
-        public Option get(Object key) {
-            return super.get(key);
+            return index >= 0 && index < list.size() ? super.get(list.get(index)) : null;
         }
 
         @Nullable
         public Option put(@NotNull Option option) {
-            return put(option.getSyntax(), option);
-        }
-
-        @Override
-        @Nullable
-        public Option put(@NotNull String key, @NotNull Option value) {
-            list.add(key);
-            return super.put(key, value);
+            list.add(option.getSyntax());
+            return super.put(option.getSyntax(), option);
         }
 
         @Nullable
@@ -150,6 +148,12 @@ public final class OptionManager {
         }
 
         @Override
+        @Deprecated
+        public Option put(String key, Option value) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
         @NotNull
         public List<Option> values() {
             List<Option> list = new ArrayList<>(super.values());
@@ -163,25 +167,11 @@ public final class OptionManager {
                 field.setAccessible(true);
                 int index = 0;
                 for (String syntax : list) {
-                    field.setInt(get(syntax), index++);
+                    field.setInt(super.get(syntax), index++);
                 }
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    private static class StringList extends LinkedList<String> {
-
-        public int indexOf(@NotNull Predicate<String> filter) {
-            int index = 0;
-            for (String s : this) {
-                if (filter.test(s)) {
-                    return index;
-                }
-                index++;
-            }
-            return -1;
         }
     }
 }
