@@ -433,7 +433,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		try {
 			int[] success = { 0 };
 			List<String> scripts = StringUtils.getScripts(scriptLine);
-			StreamUtils.fForEach(scripts, s -> OptionManager.get(s) != null, o -> success[0]++);
+			StreamUtils.fForEach(scripts, OptionManager::has, o -> success[0]++);
 			if (success[0] == 0 || success[0] != scripts.size()) {
 				return false;
 			}

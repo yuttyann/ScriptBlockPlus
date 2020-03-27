@@ -6,10 +6,10 @@ import com.github.yuttyann.scriptblockplus.enums.TextOption;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -111,7 +111,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
 				return false;
 			}
 			String script = scripts.get(scriptIndex);
-			Option option = OptionManager.newInstance(script);
+			Option option = OptionManager.get(script).newInstance();
 			optionValue = TextOption.replaceAll(option.getValue(script), getSBPlayer());
 			if (!hasPermission(option) || !option.callOption(this)) {
 				executeEndProcess(e -> { if (!option.isFailedIgnore()) e.failed(this); });
