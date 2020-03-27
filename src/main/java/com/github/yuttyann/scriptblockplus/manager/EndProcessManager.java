@@ -20,8 +20,8 @@ public final class EndProcessManager {
 		ENDPROCESS_LIST.add(new SBConstructor<>(new EndMoneyCost()));
 	}
 
-	public static void register(@NotNull Class<? extends EndProcess> endProcess) {
-		ENDPROCESS_LIST.add(new SBConstructor<EndProcess>(endProcess));
+	public static void register(@NotNull SBConstructor<EndProcess> endProcess) {
+		ENDPROCESS_LIST.add(endProcess);
 	}
 
 	public static void forEach(@NotNull Consumer<EndProcess> action) {

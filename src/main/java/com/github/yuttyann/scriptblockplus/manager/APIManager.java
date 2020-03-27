@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
-import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
@@ -35,12 +34,12 @@ public final class APIManager implements ScriptBlockAPI {
 
 	@Override
 	public void registerOption(@NotNull OptionPriority priority, @NotNull Class<? extends BaseOption> option) {
-		OptionManager.register(priority, option);
+		OptionManager.register(priority, new SBConstructor<>(option));
 	}
 
 	@Override
 	public void registerEndProcess(@NotNull Class<? extends EndProcess> endProcess) {
-		EndProcessManager.register(endProcess);
+		EndProcessManager.register(new SBConstructor<>(endProcess));
 	}
 
 	@Override
