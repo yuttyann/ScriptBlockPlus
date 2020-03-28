@@ -34,19 +34,14 @@
 
   <repositories>
     <repository>
-      <id>bukkit-repo</id>
-      <name>Craft Bukkit Maven Repository</name>
-      <url>https://repo.md-5.net/content/groups/public</url>
+      <id>jitpack.io</id>
+      <name>Jitpack Repository</name>
+      <url>https://jitpack.io</url>
     </repository>
     <repository>
       <id>spigot-repo</id>
-      <name>Spigot Maven Repository</name>
-      <url>https://hub.spigotmc.org/nexus/content/groups/public</url>
-    </repository>
-    <repository>
-      <id>vault-repo</id>
-      <name>Vault Repository</name>
-      <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+      <name>Spigot Repository</name>
+      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
     <repository>
       <id>placeholder-repo</id>
@@ -59,12 +54,14 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.15-R0.1-SNAPSHOT</version>
+      <version>1.15.2-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>net.milkbowl.vault</groupId>
+      <groupId>com.github.MilkBowl</groupId>
       <artifactId>VaultAPI</artifactId>
       <version>1.7</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>me.clip</groupId>
