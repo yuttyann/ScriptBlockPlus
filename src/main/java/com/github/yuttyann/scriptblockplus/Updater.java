@@ -107,7 +107,7 @@ public final class Updater {
 
 	public boolean execute(@NotNull CommandSender sender) {
 		if (SBConfig.UPDATE_CHECKER.getValue() && isUpperVersion) {
-			if (!isUpdateError && sender.isOp()) {
+			if (!isUpdateError) {
 				SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(sender);
 			}
 			File dataFolder = Files.getConfig().getDataFolder();
