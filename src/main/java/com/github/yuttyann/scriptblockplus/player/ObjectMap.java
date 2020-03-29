@@ -100,9 +100,10 @@ public interface ObjectMap {
 
 	/**
 	 * 指定されたキーがマップされている値を返します。
-	 * <br/>
+	 * <p>
 	 * このマップにそのキーのマッピングが含まれていない場合はnullを返します。
 	 * @param key キー
+	 * @param <T> 戻り値の型
 	 * @return 指定されたキーがマップされている値（含まれていない場合はnull）
 	 */
 	@Nullable
@@ -110,10 +111,11 @@ public interface ObjectMap {
 
 	/**
 	 * 指定されたキーがマップされている値を返します。
-	 * <br/>
+	 * <p>
 	 * このマップにそのキーのマッピングが含まれていない場合はotherを返します。
 	 * @param key キー
 	 * @param other その他
+	 * @param <T> 戻り値の型
 	 * @return 指定されたキーがマップされている値（含まれていない場合はother）
 	 */
 	@NotNull
