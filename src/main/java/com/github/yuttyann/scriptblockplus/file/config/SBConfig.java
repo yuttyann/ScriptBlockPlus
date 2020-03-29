@@ -152,7 +152,7 @@ public final class SBConfig {
 	public static final ReplaceKey UPDATE_DOWNLOAD_END = replaceKey(stringKey("UpdateDownloadEndMessage", ""), "%filename%", "%filepath%", "%filesize%");
 
 	/**
-	 * Parameter: {@link String} pluginName, {@link String} latestVersion, {@link List<String>} details
+	 * Parameter: {@link String} pluginName, {@link String} latestVersion, {@link List} details
 	 */
 	public static final ReplaceKey UPDATE_CHECK = replaceKey(stringKey("UpdateCheckMessage", ""), FUNCTION_UPDATE_CHECK);
 
