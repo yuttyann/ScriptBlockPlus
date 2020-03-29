@@ -18,25 +18,21 @@ public final class StringUtils {
 		int length = script.length();
 		char[] chars = script.toCharArray();
 		if (chars[0] != '[' || chars[length - 1] != ']') {
-			return Arrays.asList(script);
+			return Collections.singletonList(script);
 		}
 		List<String> result = new ArrayList<>();
 		int start = 0, end = 0;
 		for (int i = 0, j = 0, k = 0; i < length; i++) {
-			switch (chars[i]) {
-			case '[':
+			if (chars[i] == '[') {
 				start++;
 				if (j++ == 0) {
 					k = i;
 				}
-				continue;
-			case ']':
+			} else if (chars[i] == ']') {
 				end++;
 				if (--j == 0) {
 					result.add(script.substring(k + 1, i));
 				}
-				continue;
-			default:
 			}
 		}
 		if (start != end) {
@@ -67,7 +63,8 @@ public final class StringUtils {
 	@NotNull
 	public static String setColor(@Nullable String source, boolean isRandomColor) {
 		if (isRandomColor) {
-			source = replace(source, "&rc", ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16))));
+			ChatColor color = ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16)));
+			source = replace(replace(source, "&rc", color), "§rc", color);
 		}
 		return isEmpty(source) ? "" : ChatColor.translateAlternateColorCodes('&', source);
 	}

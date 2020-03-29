@@ -74,7 +74,8 @@ public final class Utils {
 	}
 
 	public static void sendColorMessage(@NotNull CommandSender sender, @Nullable String message) {
-		message = StringUtils.setColor(StringUtils.replace(message, "\\n", "|~"), true);
+		message = StringUtils.setColor(message, true);
+		message = StringUtils.replace(message, "\\n", "|~");
 		String color = "";
 		for (String line : StringUtils.split(message, "|~")) {
 			sender.sendMessage(line = (color + line));

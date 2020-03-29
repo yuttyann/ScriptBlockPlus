@@ -15,8 +15,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.ScoreboardManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Calculation extends BaseOption {
@@ -63,11 +65,7 @@ public class Calculation extends BaseOption {
 	private double getValue(@NotNull Player player, @NotNull String variable) throws Exception {
 		if (variable.startsWith("%player_others_in_range_") && variable.endsWith("%")) {
 			variable = variable.substring("%player_others_in_range_".length(), variable.length() - 1);
-			int i = 10;
-			try {
-				i = Integer.parseInt(variable);
-			} catch (NumberFormatException e) {}
-			return getNearbyOthers(player, i);
+			return getNearbyOthers(player, Integer.parseInt(variable));
 		}
 		if (variable.startsWith("%player_count_") && variable.endsWith("%")) {
 			variable = variable.substring("%player_count_".length(), variable.length() - 1);
@@ -85,11 +83,12 @@ public class Calculation extends BaseOption {
 		}
 		if (variable.startsWith("%server_online_") && variable.endsWith("%")) {
 			variable = variable.substring("%server_online_".length(), variable.length() - 1);
-			return Utils.getWorld(variable).getPlayers().size();
+			return Objects.requireNonNull(Utils.getWorld(variable)).getPlayers().size();
 		}
 		if (variable.startsWith("%objective_score_") && variable.endsWith("%")) {
 			variable = variable.substring("%objective_score_".length(), variable.length() - 1);
-			Objective objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(variable);
+			ScoreboardManager scoreboardManager = Objects.requireNonNull(Bukkit.getScoreboardManager());
+			Objective objective = scoreboardManager.getMainScoreboard().getObjective(variable);
 			return objective == null ? 0.0D : getScore(objective, player).getScore();
 		}
 		switch (variable) {
@@ -116,11 +115,11 @@ public class Calculation extends BaseOption {
 		case "%player_bed_z%":
 			return player.getBedSpawnLocation() == null ? 0.0D : player.getBedSpawnLocation().getBlockZ();
 		case "%player_compass_x%":
-			return player.getCompassTarget() == null ? 0.0D : player.getCompassTarget().getBlockX();
+			return player.getCompassTarget().getBlockX();
 		case "%player_compass_y%":
-			return player.getCompassTarget() == null ? 0.0D : player.getCompassTarget().getBlockY();
+			return player.getCompassTarget().getBlockY();
 		case "%player_compass_z%":
-			return player.getCompassTarget() == null ? 0.0D : player.getCompassTarget().getBlockZ();
+			return player.getCompassTarget().getBlockZ();
 		case "%player_gamemode%":
 			@SuppressWarnings("deprecation")
 			int value = player.getGameMode().getValue();
@@ -166,9 +165,9 @@ public class Calculation extends BaseOption {
 		case "%player_ticks_lived%":
 			return player.getTicksLived();
 		case "%player_seconds_lived%":
-			return (player.getTicksLived() * 20);
+			return player.getTicksLived() * 20D;
 		case "%player_minutes_lived%":
-			return ((player.getTicksLived() * 20) / 60);
+			return (player.getTicksLived() * 20D) / 60D;
 		case "%player_total_exp%":
 			return player.getTotalExperience();
 		case "%player_walk_speed%":
@@ -177,24 +176,29 @@ public class Calculation extends BaseOption {
 			VaultEconomy vaultEconomy = HookPlugins.getVaultEconomy();
 			return vaultEconomy.isEnabled() ? vaultEconomy.getBalance(player) : 0.0D;
 		default:
-			if (HookPlugins.hasPlaceholderAPI()) {
-				String version = PlaceholderAPIPlugin.getInstance().getDescription().getVersion();
-				if (Utils.isUpperVersion("2.8.8", version)) {
-					return Double.parseDouble(PlaceholderAPI.setPlaceholders((OfflinePlayer) getPlayer(), variable));
-				} else {
-					@SuppressWarnings("deprecation")
-					double result = Double.parseDouble(PlaceholderAPI.setPlaceholders(getPlayer(), variable));
-					return result;
-				}
-			}
-			return 0.0D;
+			return Double.parseDouble(setPlaceholders(getPlayer(), variable));
 		}
+	}
+
+	@NotNull
+	public static String setPlaceholders(@NotNull Player player, @NotNull String variable) {
+		if (HookPlugins.hasPlaceholderAPI()) {
+			String version = PlaceholderAPIPlugin.getInstance().getDescription().getVersion();
+			if (Utils.isUpperVersion("2.8.8", version)) {
+				return PlaceholderAPI.setPlaceholders((OfflinePlayer) player, variable);
+			} else {
+				@SuppressWarnings("deprecation")
+				String result = PlaceholderAPI.setPlaceholders(player, variable);
+				return result;
+			}
+		}
+		return variable;
 	}
 
 	private int getNearbyOthers(@NotNull Player player, int distance) {
 		int count = 0;
 		int result = distance * distance;
-		for (Player p : player.getLocation().getWorld().getPlayers()) {
+		for (Player p : Objects.requireNonNull(player.getLocation().getWorld()).getPlayers()) {
 			if (player != p && player.getLocation().distanceSquared(p.getLocation()) <= result) {
 				count++;
 			}
@@ -202,6 +206,7 @@ public class Calculation extends BaseOption {
 		return count;
 	}
 
+	@NotNull
 	private Score getScore(@NotNull Objective objective, @NotNull Player player) {
 		return objective.getScore(player.getName());
 	}
