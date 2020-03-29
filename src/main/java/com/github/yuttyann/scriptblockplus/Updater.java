@@ -5,11 +5,9 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -107,28 +105,29 @@ public final class Updater {
 		isUpperVersion = Utils.getVersionInt(latestVersion) > Utils.getVersionInt(pluginVersion);
 	}
 
-	public boolean execute(@Nullable CommandSender sender) {
+	public boolean execute(@NotNull CommandSender sender) {
 		if (SBConfig.UPDATE_CHECKER.getValue() && isUpperVersion) {
-			if (sender == null) {
-				sender = Bukkit.getConsoleSender();
+			if (!isUpdateError && sender.isOp()) {
+				SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(sender);
 			}
-			sendCheckMessage(sender);
 			File dataFolder = Files.getConfig().getDataFolder();
 			File logFile = new File(dataFolder, "update/ChangeLog.txt");
-			boolean logEquals = !logFile.exists() || !textEquals(changeLogURL, logFile);
+			boolean logEquals = !logFile.exists() || !logEquals(changeLogURL, logFile);
 			if (SBConfig.AUTO_DOWNLOAD.getValue()) {
 				File jarFile = new File(dataFolder, "update/jar/" + getJarName());
 				try {
-					SBConfig.UPDATE_DOWNLOAD_START.send();
+					SBConfig.UPDATE_DOWNLOAD_START.send(sender);
 					FileUtils.fileDownload(changeLogURL, logFile);
 					FileUtils.fileDownload(downloadURL, jarFile);
 				} catch (IOException e) {
-					sendErrorMessage(sender);
+					if (!isUpdateError && (isUpdateError = true)) {
+						SBConfig.ERROR_UPDATE.send(sender);
+					}
 				} finally {
 					if (!isUpdateError && jarFile.exists()) {
 						String fileName = jarFile.getName();
 						String filePath = StringUtils.replace(jarFile.getPath(), "\\", "/");
-						SBConfig.UPDATE_DOWNLOAD_END.replace(fileName, filePath, getSize(jarFile.length())).send();
+						SBConfig.UPDATE_DOWNLOAD_END.replace(fileName, filePath, getSize(jarFile.length())).send(sender);
 					}
 				}
 			}
@@ -145,28 +144,17 @@ public final class Updater {
 		return false;
 	}
 
-	public void sendCheckMessage(@NotNull CommandSender sender) {
-		if (isUpperVersion && !isUpdateError && sender.isOp()) {
-			SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(sender);
-		}
-	}
-
-	public void sendErrorMessage(@NotNull CommandSender sender) {
-		if (!isUpdateError && (isUpdateError = true)) {
-			SBConfig.ERROR_UPDATE.send(sender);
-		}
-	}
-
 	private String getSize(long length) {
-		if (1024 > length) {
+		double b = 1024D;
+		if (b > length) {
 			return length + " Byte";
 		}
-		double size = 1024 * 1024 > length ? length / 1024 : length / 1024 / 1024;
-		String unit = 1024 * 1024 > length ? " KB" : " MB";
+		String unit = b * b > length ? " KB" : " MB";
+		double size = unit.endsWith("KB") ? length / b : length / b / b;
 		return new BigDecimal(size).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue() + unit;
 	}
 
-	private boolean textEquals(@NotNull String url, @NotNull File file) {
+	private boolean logEquals(@NotNull String url, @NotNull File file) {
 		if (!file.exists()) {
 			return false;
 		}
