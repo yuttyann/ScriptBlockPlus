@@ -1,12 +1,11 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 public class PlaySound extends BaseOption {

@@ -1,14 +1,13 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 public class ScriptListener implements Listener {
 

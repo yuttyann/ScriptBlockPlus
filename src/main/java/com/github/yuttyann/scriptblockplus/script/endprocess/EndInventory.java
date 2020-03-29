@@ -1,12 +1,11 @@
 package com.github.yuttyann.scriptblockplus.script.endprocess;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class EndInventory implements EndProcess {

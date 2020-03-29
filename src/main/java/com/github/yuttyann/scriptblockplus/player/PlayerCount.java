@@ -78,8 +78,8 @@ public class PlayerCount {
 				e.printStackTrace();
 			}
 		});
-		thread.start();
 		try {
+			thread.start();
 			thread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();

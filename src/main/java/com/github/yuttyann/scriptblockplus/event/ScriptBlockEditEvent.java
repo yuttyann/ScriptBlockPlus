@@ -1,11 +1,10 @@
 package com.github.yuttyann.scriptblockplus.event;
 
+import com.github.yuttyann.scriptblockplus.enums.ActionType;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import com.github.yuttyann.scriptblockplus.enums.ActionType;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
 
 public class ScriptBlockEditEvent extends ScriptBlockEvent {
 

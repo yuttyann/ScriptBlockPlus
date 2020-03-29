@@ -1,10 +1,9 @@
 package com.github.yuttyann.scriptblockplus.selector;
 
-import org.bukkit.Location;
-import org.bukkit.World;
-
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
 public final class TileEntityCommand {

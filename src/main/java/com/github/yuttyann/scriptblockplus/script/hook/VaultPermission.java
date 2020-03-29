@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.hook;
 
 import net.milkbowl.vault.permission.Permission;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

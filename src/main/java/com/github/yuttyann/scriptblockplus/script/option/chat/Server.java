@@ -1,10 +1,9 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
-import org.bukkit.Bukkit;
-
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 public class Server extends BaseOption {
