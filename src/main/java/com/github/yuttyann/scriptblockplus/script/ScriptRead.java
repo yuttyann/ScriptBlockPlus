@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.script;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.enums.TextOption;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
@@ -10,7 +9,7 @@ import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
@@ -20,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ScriptRead extends ScriptMap implements SBRead {
@@ -43,7 +43,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
 		if (!(location instanceof BlockCoords)) {
 			location = new BlockCoords(location);
 		}
-		this.blockCoords = setCenter(((BlockCoords) location)).unmodifiable(); // 変更不可に設定
+		this.blockCoords = setCenter(((BlockCoords) location)).unmodifiable();
 	}
 
 	@NotNull
@@ -112,7 +112,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
 			}
 			String script = scripts.get(scriptIndex);
 			Option option = OptionManager.get(script).newInstance();
-			optionValue = TextOption.replaceAll(option.getValue(script), getSBPlayer());
+			optionValue = setPlaceholders(option.getValue(script), getSBPlayer());
 			if (!hasPermission(option) || !option.callOption(this)) {
 				executeEndProcess(e -> { if (!option.isFailedIgnore()) e.failed(this); });
 				return false;
@@ -124,7 +124,14 @@ public class ScriptRead extends ScriptMap implements SBRead {
 		return true;
 	}
 
-	protected void executeEndProcess(@NotNull Consumer<EndProcess> action) {
+	@NotNull
+	protected final String setPlaceholders(@NotNull String source, @NotNull SBPlayer sbPlayer) {
+		source = StringUtils.replace(source, "<player>", sbPlayer.getName());
+		source = StringUtils.replace(source, "<world>", sbPlayer.getWorld().getName());
+		return Calculation.setPlaceholders(Objects.requireNonNull(sbPlayer.getPlayer()), source);
+	}
+
+	protected final void executeEndProcess(@NotNull Consumer<EndProcess> action) {
 		try {
 			EndProcessManager.forEach(action);
 		} finally {
@@ -132,7 +139,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
 		}
 	}
 
-	protected boolean hasPermission(@NotNull Option option) {
+	protected final boolean hasPermission(@NotNull Option option) {
 		if (!SBConfig.OPTION_PERMISSION.getValue() || Permission.has(sbPlayer, option.getPermissionNode())) {
 			return true;
 		}
@@ -140,27 +147,19 @@ public class ScriptRead extends ScriptMap implements SBRead {
 		return false;
 	}
 
-	protected boolean sort(@NotNull List<String> scripts) {
+	protected final boolean sort(@NotNull List<String> scripts) {
 		try {
 			List<String> parse = new ArrayList<>();
-			StreamUtils.mForEach(scripts, this::getScripts, parse::addAll);
+			for (String script : scripts) {
+				parse.addAll(StringUtils.getScripts(script));
+			}
 			SBConfig.SORT_SCRIPTS.ifPresentAndTrue(s -> OptionManager.sort(parse));
 			this.scripts = Collections.unmodifiableList(parse);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
-		return false;
-	}
-
-	@NotNull
-	protected List<String> getScripts(@NotNull String script) {
-		try {
-			return StringUtils.getScripts(script);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		}
-		return new ArrayList<>();
 	}
 
 	@NotNull
