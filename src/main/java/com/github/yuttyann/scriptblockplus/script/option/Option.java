@@ -79,6 +79,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
 	/**
 	 * スクリプトからオプションの値を取得します。
+	 * @param script スクリプト
 	 * @return オプションの値
 	 */
 	@NotNull
@@ -88,6 +89,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
 	/**
 	 * スクリプトがオプションなのかどうか確認します。
+	 * @param script スクリプト
 	 * @return オプションだった場合はtrue
 	 */
 	public final boolean isOption(@NotNull String script) {

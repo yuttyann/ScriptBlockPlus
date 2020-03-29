@@ -162,6 +162,7 @@ public abstract class BaseOption extends Option {
 
 	/**
 	 * オプションの処理を実行します
+	 * @throws Exception オプションの例外処理
 	 * @return 実行に成功した場合はtrue
 	 */
 	protected abstract boolean isValid() throws Exception;

@@ -20,6 +20,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * ScriptBlockPlus Main
+ * @author yuttyann44581
+ */
 public class ScriptBlock extends JavaPlugin {
 
 	private Updater updater;
@@ -53,7 +57,7 @@ public class ScriptBlock extends JavaPlugin {
 		}
 
 		updater = new Updater(this);
-		checkUpdate(Bukkit.getConsoleSender(), false); // 非同期
+		checkUpdate(Bukkit.getConsoleSender(), false);
 
 		mapManager = new MapManager(this);
 		mapManager.loadAllScripts();
@@ -98,7 +102,7 @@ public class ScriptBlock extends JavaPlugin {
 	 * @param latestMessage trueの場合は送信先にアップデートのメッセージを表示します。
 	 */
 	public void checkUpdate(@NotNull CommandSender sender, boolean latestMessage) {
-		new Thread(() -> {
+		Thread thread = new Thread(() -> {
 			try {
 				updater.init();
 				updater.load();
@@ -106,26 +110,50 @@ public class ScriptBlock extends JavaPlugin {
 					SBConfig.NOT_LATEST_PLUGIN.send(sender);
 				}
 			} catch (Exception e) {
-				SBConfig.ERROR_UPDATE.send();
+				SBConfig.ERROR_UPDATE.send(sender);
 			}
-		}).start();
+		});
+		try {
+			thread.start();
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
+	/**
+	 * APIを取得します。
+	 * @return ScriptBlockAPI
+	 */
 	@NotNull
 	public ScriptBlockAPI getAPI() {
 		return scriptAPI == null ? scriptAPI = new APIManager(this) : scriptAPI;
 	}
 
+
+	/**
+	 * MapManagerを取得します。
+	 * @return MapManager
+	 */
 	@NotNull
 	public MapManager getMapManager() {
 		return mapManager;
 	}
 
+	/**
+	 * BaseSBPlayerを取得します。
+	 * @param player プレイヤー
+	 * @return SBPlayerの実装クラス
+	 */
 	@NotNull
 	public BaseSBPlayer fromPlayer(@NotNull OfflinePlayer player) {
 		return (BaseSBPlayer) SBPlayer.fromPlayer(player);
 	}
 
+	/**
+	 * ScriptBlockのインスタンスを取得します。
+	 * @return メインクラス
+	 */
 	@NotNull
 	public static ScriptBlock getInstance() {
 		return PluginInstance.get(ScriptBlock.class);

@@ -82,6 +82,7 @@ public interface SBRead extends ObjectMap {
 	/**
 	 * スクリプトを実行します。
 	 * @param index 開始位置
+	 * @return 実行に成功した場合はtrue
 	 */
 	boolean read(int index);
 }

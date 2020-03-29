@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * ScriptBlockPlus APIインターフェース
+ * ScriptBlockPlus API
  * @author yuttyann44581
  */
 public interface ScriptBlockAPI {
@@ -30,7 +30,7 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * 指定した追加位置にオプションを登録します。
-	 * <br/>
+	 * <p>
 	 * 指定するクラスには"BaseOption"を継承してください。
 	 * @param priority 追加位置の優先度
 	 * @param option オプションのクラス
@@ -39,7 +39,7 @@ public interface ScriptBlockAPI {
 
 	/**
 	 * エンドプロセスを登録します。
-	 * <br/>
+	 * <p>
 	 * 指定するクラスには"EndProcess"を実装してください。
 	 * @param endProcess エンドプロセスのクラス
 	 */
@@ -117,7 +117,7 @@ public interface ScriptBlockAPI {
 
 		/**
 		 * スクリプトの対象を、指定した座標のスクリプトに切り替えます。
-		 * <br/>
+		 * <p>
 		 * 別の座標の情報を参照する機能なので、保存場所を変えるわけではありません。
 		 * @param location 座標
 		 */
