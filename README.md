@@ -12,7 +12,7 @@ ScriptBlockPlus [Java8 MC1.9-1.15.2] [![](https://jitpack.io/v/yuttyann/ScriptBl
 
 対応プラットフォーム
 -----------
-**`BukkitAPIを実装しているのであれば`** 基本的に動作します。  
+**[`BukkitAPI`](https://hub.spigotmc.org/javadocs/bukkit/overview-summary.html)を実装しているのであれば**基本的に動作します。  
 ――――――――――――――――――――――――――――――――――  
 **★以下動作を確認済みのプラットフォーム一覧★**  
 ・[CraftBukkit](https://www.spigotmc.org/)  
