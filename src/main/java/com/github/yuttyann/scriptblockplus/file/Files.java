@@ -31,7 +31,7 @@ public final class Files {
 	public static void reload() {
 		ConfigKeys.clear();
 		ConfigKeys.load(loadFile(PATH_CONFIG, true));
-		ConfigKeys.load(loadLang(PATH_LANGS, "lang"));
+		ConfigKeys.load(loadLang());
 
 		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
 		searchKeys();
@@ -92,12 +92,13 @@ public final class Files {
 	}
 
 	@NotNull
-	private static YamlConfig loadLang(@NotNull String filePath, @NotNull String dirPath) {
+	private static YamlConfig loadLang() {
 		String language = SBConfig.LANGUAGE.getValue();
 		if (StringUtils.isEmpty(language) || "default".equalsIgnoreCase(language)) {
 			language = DEFAULT_LANGUAGE;
 		}
-		return putFile(filePath, new Lang(ScriptBlock.getInstance(), language).load(filePath, dirPath));
+		Lang lang = new Lang(ScriptBlock.getInstance(), language);
+		return putFile(Files.PATH_LANGS, lang.load(Files.PATH_LANGS, "lang"));
 	}
 
 	@NotNull
@@ -109,6 +110,9 @@ public final class Files {
 	private static void sendNotKeyMessages(@NotNull YamlConfig yaml, @NotNull String path) {
 		String filePath = StringUtils.replace(yaml.getFolderPath(), "\\", "/");
 		InputStream is = FileUtils.getResource(ScriptBlock.getInstance(), path);
+		if (is == null) {
+			return;
+		}
 		YamlConfiguration config = UTF8Config.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8));
 		Set<String> keys = yaml.getKeys(true);
 		for (String key : config.getKeys(true)) {
