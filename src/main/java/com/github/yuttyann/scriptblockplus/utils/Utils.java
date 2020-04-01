@@ -89,7 +89,7 @@ public final class Utils {
 	public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		boolean isCommandSelector = (isPlatform()) && SBConfig.COMMAND_SELECTOR.getValue();
+		boolean isCommandSelector = isPlatform() && SBConfig.COMMAND_SELECTOR.getValue();
 		if (isCommandSelector && (isCBXXXorLater("1.13") || CommandSelector.isCommandPattern(command))) {
 			if (location == null) {
 				if (sender instanceof Player) {
