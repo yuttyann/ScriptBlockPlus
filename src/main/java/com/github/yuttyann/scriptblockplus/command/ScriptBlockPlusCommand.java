@@ -16,7 +16,6 @@ import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.utils.*;
 import com.google.common.base.Charsets;
 import org.apache.commons.lang.text.StrBuilder;
@@ -25,7 +24,6 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -51,7 +49,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 	@NotNull
 	@Override
 	public CommandData[] getUsages() {
-		String[] typeNodes = SBPermission.getNodes(true);
+		String[] typeNodes = Permission.getTypeNodes(true);
 		return new CommandData[] {
 				new CommandData(SBConfig.TOOL_COMMAND.getValue(), Permission.COMMAND_TOOL.getNode()),
 				new CommandData(SBConfig.RELOAD_COMMAND.getValue(), Permission.COMMAND_RELOAD.getNode()),
@@ -114,32 +112,28 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		boolean isSound = args[1].equalsIgnoreCase("sound");
 		String type = isSound ? "Sound" : "Material";
 		SBConfig.EXPORT_START.replace(type).send(sender);
-		new Thread(() -> {
-			String version = Utils.getServerVersion();
-			File file = new File(getPlugin().getDataFolder(), "export/" + type.toLowerCase() + "_v" + version + "_.txt");
-			write(file, isSound ? Sound.values() : Material.values());
-			SBConfig.EXPORT_END.replace(type).send(sender);
-		}).start();
-		return true;
-	}
-
-	private void write(@NotNull File file, @NotNull Enum<?>[] values) {
+		String path = "export/" + type.toLowerCase() + "_v" + Utils.getServerVersion() + "_.txt";
+		File file = new File(getPlugin().getDataFolder(), path);
 		File parent = file.getParentFile();
 		if (!parent.exists()) {
 			parent.mkdirs();
 		}
-		try (
+		new Thread(() -> {
+			try (
 				OutputStream os = new FileOutputStream(file);
-				OutputStreamWriter osw = new OutputStreamWriter(os, Charsets.UTF_8);
-				BufferedWriter writer = new BufferedWriter(osw)
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, Charsets.UTF_8))
 			) {
-			for (Enum<?> t : values) {
-				writer.write(t.name());
-				writer.newLine();
+				for (Enum<?> t : isSound ? Sound.values() : Material.values()) {
+					writer.write(t.name());
+					writer.newLine();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				SBConfig.EXPORT_END.replace(type).send(sender);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		}).start();
+		return true;
 	}
 
 	private boolean doTool(@NotNull CommandSender sender) {
@@ -245,7 +239,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	private boolean doRun(@NotNull CommandSender sender, @NotNull String[] args) {
 		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
-		if (!isPlayer(sender) || !SBPermission.has(sender, scriptType, true)) {
+		if (!isPlayer(sender) || !Permission.has(sender, scriptType, true)) {
 			return false;
 		}
 		Player player = (Player) sender;
@@ -260,7 +254,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	private boolean setAction(@NotNull CommandSender sender, @NotNull String[] args) {
 		ScriptType scriptType = ScriptType.valueOf(args[0].toUpperCase());
-		if (!isPlayer(sender) || !SBPermission.has(sender, scriptType, true)) {
+		if (!isPlayer(sender) || !Permission.has(sender, scriptType, true)) {
 			return false;
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
@@ -270,7 +264,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		if (args.length > 2) {
 			String script = StringUtils.createString(args, 2).trim();
-			if (!checkScript(script)) {
+			if (!isScripts(script)) {
 				SBConfig.ERROR_SCRIPT_CHECK.send(sbPlayer);
 				return true;
 			}
@@ -370,7 +364,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			} else if (equals(args[0], ScriptType.types())) {
-				if (SBPermission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
+				if (Permission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
 					String prefix = args[1].toLowerCase();
 					String[] answers = new String[] { "create", "add", "remove", "view", "run" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
@@ -390,7 +384,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			} else if (equals(args[0], ScriptType.types())) {
-				if (SBPermission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
+				if (Permission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
 					if (args.length == 3 && equals(args[1], "run")) {
 						List<World> worlds = Bukkit.getWorlds();
 						String prefix = args[args.length - 1].toLowerCase();
@@ -415,21 +409,17 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		set.add(hasPermission(sender, Permission.COMMAND_DATAMIGR, "datamigr"));
 		set.add(hasPermission(sender, Permission.COMMAND_EXPORT, "export"));
 
-		StreamUtils.fForEach(ScriptType.values(), s -> hasPermission(sender, s), s -> set.add(s.getType()));
+		StreamUtils.fForEach(ScriptType.values(), s -> Permission.has(sender, s, true), s -> set.add(s.getType()));
 
 		set.add(hasPermission(sender, Permission.COMMAND_SELECTOR, "selector"));
 		return set;
-	}
-
-	private boolean hasPermission(Permissible permissible, ScriptType scriptType) {
-		return SBPermission.has(permissible, scriptType, true);
 	}
 
 	private String hasPermission(CommandSender sender, Permission permission, String name) {
 		return StringUtils.isNotEmpty(permission.getNode()) && permission.has(sender) ? name : null;
 	}
 
-	private boolean checkScript(String scriptLine) {
+	private boolean isScripts(String scriptLine) {
 		try {
 			int[] success = { 0 };
 			List<String> scripts = StringUtils.getScripts(scriptLine);
