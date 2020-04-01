@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.player;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.google.common.base.Charsets;
 import com.google.gson.Gson;
@@ -13,8 +12,7 @@ import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,9 +39,17 @@ public class PlayerCount {
 	}
 
 	public void save() throws IOException {
-		Gson gson = new Gson();
-		String json = gson.toJson(this);
-		FileUtils.write(getFile(uuid), json, Charsets.UTF_8);
+		File file = getFile(uuid);
+		File parent = file.getParentFile();
+		if (!parent.exists()) {
+			parent.mkdirs();
+		}
+		try (
+			FileOutputStream fos = new FileOutputStream(file);
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, Charsets.UTF_8))
+		) {
+			writer.write(new Gson().toJson(this));
+		}
 	}
 
 	@Nullable
@@ -52,9 +58,15 @@ public class PlayerCount {
 		if (!file.exists()) {
 			return null;
 		}
-		Gson gson = new Gson();
-		String json = FileUtils.readToString(getFile(uuid), Charsets.UTF_8);
-		return gson.fromJson(json, PlayerCount.class);
+		File parent = file.getParentFile();
+		if (!parent.exists()) {
+			parent.mkdirs();
+		}
+		try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
+			byte[] data = new byte[(int) file.length()];
+			bis.read(data);
+			return new Gson().fromJson(new String(data, Charsets.UTF_8), PlayerCount.class);
+		}
 	}
 
 	public void set(@NotNull BlockCoords blockCoords, @NotNull ScriptType scriptType, final int amount) {
@@ -97,6 +109,14 @@ public class PlayerCount {
 		return info;
 	}
 
+	private int getHashCode(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
+		int hash = 1;
+		int prime = 31;
+		hash = prime * hash + fullCoords.hashCode();
+		hash = prime * hash + scriptType.hashCode();
+		return hash;
+	}
+
 	@NotNull
 	private static File getFile(@NotNull UUID uuid) {
 		String path = "json/playercount/" + uuid.toString() + ".json";
@@ -106,13 +126,5 @@ public class PlayerCount {
 			parent.mkdirs();
 		}
 		return file;
-	}
-
-	private int getHashCode(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
-		int hash = 1;
-		int prime = 31;
-		hash = prime * hash + fullCoords.hashCode();
-		hash = prime * hash + scriptType.hashCode();
-		return hash;
 	}
 }
