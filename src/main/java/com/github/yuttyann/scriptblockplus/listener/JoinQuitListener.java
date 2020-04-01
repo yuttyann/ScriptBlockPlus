@@ -4,7 +4,6 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -49,8 +48,8 @@ public class JoinQuitListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		SBPlayer sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
-		((BaseSBPlayer) sbPlayer).setOnline(false);
+		BaseSBPlayer sbPlayer = plugin.fromPlayer(event.getPlayer());
+		sbPlayer.setOnline(false);
 		sbPlayer.setScriptLine(null);
 		sbPlayer.setActionType(null);
 		sbPlayer.setClipboard(null);
