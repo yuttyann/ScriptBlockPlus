@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +26,8 @@ public enum Permission {
 	TOOL_BLOCKSELECTOR("scriptblockplus.tool.blockselector"),
 	TOOL_SCRIPTEDITOR("scriptblockplus.tool.scripteditor");
 
+	private static final String SBP_PREFIX = "scriptblockplus.";
+
 	private final String node;
 
 	private Permission(@NotNull String node) {
@@ -47,5 +50,19 @@ public enum Permission {
 
 	public static boolean has(@NotNull Permissible permissible, @NotNull String permission) {
 		return StringUtils.isNotEmpty(permission) && permissible.hasPermission(permission);
+	}
+
+	public static boolean has(@NotNull Permissible permissible, @NotNull ScriptType scriptType, boolean isCMDorUse) {
+		return Permission.has(permissible, getTypeNode(scriptType, isCMDorUse));
+	}
+
+	@NotNull
+	public static String[] getTypeNodes(boolean isCMDorUse) {
+		return ScriptType.toArray(t -> getTypeNode(t, isCMDorUse), new String[ScriptType.size()]);
+	}
+
+	@NotNull
+	public static String getTypeNode(@NotNull ScriptType scriptType, boolean isCMDorUse) {
+		return isCMDorUse ? SBP_PREFIX + "command." + scriptType.getType() : SBP_PREFIX + scriptType.getType() + ".use";
 	}
 }
