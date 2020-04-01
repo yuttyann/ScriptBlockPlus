@@ -28,6 +28,8 @@ public class YamlConfig {
 			"[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
 	);
 
+	private static final String SEPARATOR = File.separator;
+
 	private final Plugin plugin;
 	private final File file;
 
@@ -100,7 +102,7 @@ public class YamlConfig {
 	@NotNull
 	public final String getFolderPath() {
 		String path = StringUtils.removeStart(getPath(), getDataFolder().getPath());
-		return path.startsWith("\\") ? path.substring(1, path.length()) : path;
+		return path.startsWith(SEPARATOR) ? path.substring(1) : path;
 	}
 
 	public final boolean exists() {
@@ -119,7 +121,7 @@ public class YamlConfig {
 		yaml = new UTF8Config();
 		try {
 			yaml.load(file);
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException ignored) {
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
