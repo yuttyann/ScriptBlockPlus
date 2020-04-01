@@ -11,6 +11,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/**
+ * ScriptBlockPlus CuboidRegionBlocks クラス
+ * @author yuttyann44581
+ */
 public final class CuboidRegionBlocks {
 
 	private final World world;

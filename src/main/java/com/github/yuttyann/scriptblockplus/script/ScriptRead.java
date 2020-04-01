@@ -22,6 +22,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * ScriptBlockPlus ScriptRead クラス
+ * @author yuttyann44581
+ */
 public class ScriptRead extends ScriptMap implements SBRead {
 
 	protected SBPlayer sbPlayer;

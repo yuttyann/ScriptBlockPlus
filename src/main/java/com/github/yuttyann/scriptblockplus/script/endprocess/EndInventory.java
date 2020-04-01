@@ -8,6 +8,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus EndInventory エンドプロセスクラス
+ * @author yuttyann44581
+ */
 public class EndInventory implements EndProcess {
 
 	@NotNull

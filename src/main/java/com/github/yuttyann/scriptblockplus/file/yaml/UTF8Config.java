@@ -15,6 +15,10 @@ import org.yaml.snakeyaml.representer.Representer;
 import java.io.*;
 import java.util.logging.Level;
 
+/**
+ * ScriptBlockPlus UTF8Config クラス
+ * @author bukkit(source), yuttyann44581
+ */
 public final class UTF8Config extends YamlConfiguration {
 
 	private final DumperOptions yamlOptions = new DumperOptions();
@@ -78,7 +82,7 @@ public final class UTF8Config extends YamlConfiguration {
 		UTF8Config yaml = new UTF8Config();
 		try {
 			yaml.load(file);
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException ignored) {
 		} catch (IOException | InvalidConfigurationException e) {
 			Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, e);
 		}

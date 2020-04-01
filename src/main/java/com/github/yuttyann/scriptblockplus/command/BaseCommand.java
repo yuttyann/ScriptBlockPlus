@@ -16,6 +16,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ScriptBlockPlus BaseCommand コマンドクラス
+ * @author yuttyann44581
+ */
 public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 
 	private Plugin plugin;

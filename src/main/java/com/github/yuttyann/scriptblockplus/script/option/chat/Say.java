@@ -4,6 +4,10 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus Say オプションクラス
+ * @author yuttyann44581
+ */
 public class Say extends BaseOption {
 
 	public Say() {

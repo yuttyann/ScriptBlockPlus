@@ -9,6 +9,10 @@ import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus VaultEconomy クラス
+ * @author yuttyann44581
+ */
 public final class VaultEconomy {
 
 	private Economy economy;

@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * ScriptBlockPlus EndProcessManager クラス
+ * @author yuttyann44581
+ */
 public final class EndProcessManager {
 
 	private static final List<SBConstructor<? extends EndProcess>> ENDPROCESS_LIST = new ArrayList<>();

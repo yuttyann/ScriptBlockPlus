@@ -10,6 +10,10 @@ import org.bukkit.event.block.Action;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus ScriptAction オプションクラス
+ * @author yuttyann44581
+ */
 public class ScriptAction extends BaseOption {
 
 	public static final String KEY_ENUM_ACTION = PlayerData.createRandomId("EnumAction");

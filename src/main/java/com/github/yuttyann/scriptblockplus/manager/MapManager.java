@@ -16,6 +16,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * ScriptBlockPlus MapManager クラス
+ * @author yuttyann44581
+ */
 public final class MapManager {
 
 	private ScriptBlock plugin;

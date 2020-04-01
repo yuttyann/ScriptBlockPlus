@@ -19,6 +19,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
+/**
+ * ScriptBlockPlus Files クラス
+ * @author yuttyann44581
+ */
 public final class Files {
 
 	private static final Map<String, YamlConfig> FILES = new HashMap<>();

@@ -7,6 +7,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * ScriptBlockPlus ClassType 列挙型
+ * @author yuttyann44581
+ */
 public enum ClassType {
 	BYTE(byte.class, Byte.class),
 	SHORT(short.class, Short.class),

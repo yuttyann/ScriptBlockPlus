@@ -13,6 +13,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * ScriptBlockPlus BaseSBPlayer クラス
+ * @author yuttyann44581
+ */
 public final class BaseSBPlayer extends PlayerData {
 
 	private static final Map<UUID, SBPlayer> PLAYERS = new HashMap<>(64);

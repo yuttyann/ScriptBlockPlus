@@ -21,6 +21,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/**
+ * ScriptBlockPlus Calculation オプションクラス
+ * @author yuttyann44581
+ */
 public class Calculation extends BaseOption {
 
 	static final Pattern REALNUMBER_PATTERN = Pattern.compile("^-?(0|[1-9]\\d*)(\\.\\d+|)$");

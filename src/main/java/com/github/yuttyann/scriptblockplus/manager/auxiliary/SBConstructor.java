@@ -9,6 +9,11 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.Objects;
 
+/**
+ * ScriptBlockPlus SBConstructor クラス
+ * @param <T> コンストラクタの型
+ * @author yuttyann44581
+ */
 public final class SBConstructor<T> {
 
 	private SBInstance<? extends T> sbInstance;

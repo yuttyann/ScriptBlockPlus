@@ -10,6 +10,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * ScriptBlockPlus TimeData クラス
+ * @author yuttyann44581
+ */
 public final class TimeData {
 
 	protected int second;

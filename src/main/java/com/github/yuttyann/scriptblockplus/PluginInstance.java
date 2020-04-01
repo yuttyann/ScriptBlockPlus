@@ -9,6 +9,10 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * ScriptBlockPlus PluginInstance クラス
+ * @author yuttyann44581
+ */
 public final class PluginInstance {
 
 	private static final Map<Class<? extends JavaPlugin>, JavaPlugin> INSTANCES = new HashMap<>();

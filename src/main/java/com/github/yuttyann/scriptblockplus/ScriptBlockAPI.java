@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * ScriptBlockPlus API
+ * ScriptBlockPlus ScriptBlockAPI インターフェース
  * @author yuttyann44581
  */
 public interface ScriptBlockAPI {
@@ -21,7 +21,7 @@ public interface ScriptBlockAPI {
 	/**
 	 * 指定した位置からスクリプトを実行します。
 	 * @param player プレイヤー
-	 * @param location 座標
+	 * @param location スクリプトの座標
 	 * @param scriptType スクリプトの種類
 	 * @param index 開始位置
 	 * @return 実行が成功した場合はtrue
@@ -77,7 +77,7 @@ public interface ScriptBlockAPI {
 		/**
 		 * 指定した座標にスクリプトを作成します。
 		 * @param player プレイヤー
-		 * @param location 座標
+		 * @param location スクリプトの座標
 		 * @param script スクリプト
 		 */
 		void create(@NotNull Player player, @NotNull Location location, @NotNull String script);
@@ -85,7 +85,7 @@ public interface ScriptBlockAPI {
 		/**
 		 * 指定した座標にスクリプト追加します。
 		 * @param player プレイヤー
-		 * @param location 座標
+		 * @param location スクリプトの座標
 		 * @param script スクリプト
 		 */
 		void add(@NotNull Player player, @NotNull Location location, @NotNull String script);
@@ -93,21 +93,21 @@ public interface ScriptBlockAPI {
 		/**
 		 * 指定した座標のスクリプトを削除します。
 		 * @param player プレイヤー
-		 * @param location 座標
+		 * @param location スクリプトの座標
 		 */
 		void remove(@NotNull Player player, @NotNull Location location);
 
 		/**
 		 * 指定した座標のスクリプトの情報を表示します。
 		 * @param player プレイヤー
-		 * @param location 座標
+		 * @param location スクリプトの座標
 		 */
 		void view(@NotNull Player player, @NotNull Location location);
 	}
 
 	/**
 	 * スクリプトのファイルクラスを取得します。
-	 * @param location 座標
+	 * @param location スクリプトの座標
 	 * @param scriptType スクリプトの種類
 	 * @return スクリプトのファイルクラス
 	 */
@@ -119,7 +119,7 @@ public interface ScriptBlockAPI {
 		 * スクリプトの対象を、指定した座標のスクリプトに切り替えます。
 		 * <p>
 		 * 別の座標の情報を参照する機能なので、保存場所を変えるわけではありません。
-		 * @param location 座標
+		 * @param location スクリプトの座標
 		 */
 		void setLocation(@NotNull Location location);
 
@@ -142,18 +142,18 @@ public interface ScriptBlockAPI {
 		String getPath();
 
 		/**
+		 * スクリプトの座標を取得します。
+		 * @return スクリプトの座標
+		 */
+		@Nullable
+		Location getLocation();
+
+		/**
 		 * スクリプトの種類を取得します。
 		 * @return スクリプトの種類
 		 */
 		@NotNull
 		ScriptType getScriptType();
-
-		/**
-		 * スクリプトの座標を取得します。
-		 * @return 座標
-		 */
-		@Nullable
-		Location getLocation();
 
 		/**
 		 * スクリプトの作者を取得します。

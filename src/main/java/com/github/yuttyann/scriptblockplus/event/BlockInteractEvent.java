@@ -15,6 +15,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus BlockInteractEvent イベントクラス
+ * @author yuttyann44581
+ */
 public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 
 	private static final HandlerList HANDLERS = new HandlerList();

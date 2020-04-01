@@ -10,6 +10,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ScriptBlockPlus CommandUsage クラス
+ * @author yuttyann44581
+ */
 public abstract class CommandUsage {
 
 	private final List<CommandData> usages = new ArrayList<CommandData>();

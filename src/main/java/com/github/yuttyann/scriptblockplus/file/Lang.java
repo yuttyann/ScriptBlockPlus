@@ -8,6 +8,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
+/**
+ * ScriptBlockPlus Lang クラス
+ * @author yuttyann44581
+ */
 public class Lang {
 
 	private static final String DEFAULT_LANGUAGE = "en";

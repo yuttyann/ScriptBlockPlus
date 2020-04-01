@@ -12,6 +12,10 @@ import java.net.URLConnection;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+/**
+ * ScriptBlockPlus FileUtils クラス
+ * @author yuttyann44581
+ */
 public final class FileUtils {
 
 	@Nullable

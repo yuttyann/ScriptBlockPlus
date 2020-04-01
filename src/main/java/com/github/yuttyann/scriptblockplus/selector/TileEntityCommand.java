@@ -6,6 +6,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus TileEntityCommand NMSクラス
+ * @author yuttyann44581
+ */
 public final class TileEntityCommand {
 
 	private final Object tileEntityCommand;

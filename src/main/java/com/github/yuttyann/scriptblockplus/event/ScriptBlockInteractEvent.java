@@ -5,6 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus ScriptBlockInteractEvent イベントクラス
+ * @author yuttyann44581
+ */
 public class ScriptBlockInteractEvent extends TriggerEvent {
 
 	private boolean isLeftClick;

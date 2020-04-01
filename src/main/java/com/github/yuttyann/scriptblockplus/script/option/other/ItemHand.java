@@ -12,6 +12,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus ItemHand オプションクラス
+ * @author yuttyann44581
+ */
 public class ItemHand extends BaseOption {
 
 	public ItemHand() {

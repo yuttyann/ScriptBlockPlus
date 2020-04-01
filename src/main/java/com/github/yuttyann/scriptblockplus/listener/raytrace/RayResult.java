@@ -5,6 +5,10 @@ import org.bukkit.block.BlockFace;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus RayResult クラス
+ * @author yuttyann44581
+ */
 public class RayResult {
 
     private Block block;

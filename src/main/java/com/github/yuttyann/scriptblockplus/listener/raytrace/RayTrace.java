@@ -13,6 +13,10 @@ import org.bukkit.util.RayTraceResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus RayTrace クラス
+ * @author yuttyann44581
+ */
 public class RayTrace {
 
     private static final double R = 0.017453292D;

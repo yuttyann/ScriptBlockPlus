@@ -8,6 +8,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus Title オプションクラス
+ * @author yuttyann44581
+ */
 public class Title extends BaseOption {
 
 	public Title() {

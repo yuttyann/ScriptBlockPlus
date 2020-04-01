@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * ScriptBlockPlus ConfigKeys クラス
+ * @author yuttyann44581
+ */
 public class ConfigKeys {
 
     private static final Map<String, Object> NODE = new HashMap<>();

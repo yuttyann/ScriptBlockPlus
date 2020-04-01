@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * ScriptBlockPlus BlockCoords
+ * ScriptBlockPlus BlockCoords クラス
  * @author yuttyann44581
  */
 public class BlockCoords extends Location {

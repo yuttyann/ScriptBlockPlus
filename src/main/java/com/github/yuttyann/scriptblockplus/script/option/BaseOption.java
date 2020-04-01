@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * ベースオプション クラス
+ * ScriptBlockPlus BaseOption オプションクラス
  * @author yuttyann44581
  */
 public abstract class BaseOption extends Option {
@@ -162,7 +162,7 @@ public abstract class BaseOption extends Option {
 
 	/**
 	 * オプションの処理を実行します
-	 * @throws Exception オプションの例外処理
+	 * @throws Exception オプションの処理内で例外が発生した時にスローされます。
 	 * @return 実行に成功した場合はtrue
 	 */
 	protected abstract boolean isValid() throws Exception;

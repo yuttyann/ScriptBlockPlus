@@ -9,6 +9,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus ScriptListener クラス
+ * @author yuttyann44581
+ */
 public class ScriptListener implements Listener {
 
 	protected final Plugin plugin;

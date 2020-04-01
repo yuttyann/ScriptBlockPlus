@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * ScriptBlockPlus ScriptData クラス
+ * @author yuttyann44581
+ */
 public final class ScriptData implements Cloneable {
 
 	// Keys

@@ -20,6 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * ScriptBlockPlus Utils クラス
+ * @author yuttyann44581
+ */
 public final class Utils {
 
 	private static final String SERVER_VERSION = getServerVersion();

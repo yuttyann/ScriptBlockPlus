@@ -24,6 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * ScriptBlockPlus Updater クラス
+ * @author yuttyann44581
+ */
 public final class Updater {
 
 	private final Plugin plugin;

@@ -13,6 +13,10 @@ import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus ItemCost オプションクラス
+ * @author yuttyann44581
+ */
 public class ItemCost extends BaseOption {
 
 	public static final String KEY_ITEM = PlayerData.createRandomId("ItemCost");

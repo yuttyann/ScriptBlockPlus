@@ -9,6 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * ScriptBlockPlus ScriptMap クラス
+ * @author yuttyann44581
+ */
 abstract class ScriptMap extends ScriptListener implements ObjectMap {
 
 	private static final Map<UUID, Map<String, Object>> OBJECT_MAP = new HashMap<>();

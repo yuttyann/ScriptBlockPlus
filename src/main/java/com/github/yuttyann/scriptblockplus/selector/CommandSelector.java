@@ -7,6 +7,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
 
+/**
+ * ScriptBlockPlus CommandSelector クラス
+ * @author yuttyann44581
+ */
 public final class CommandSelector {
 
 	@Deprecated

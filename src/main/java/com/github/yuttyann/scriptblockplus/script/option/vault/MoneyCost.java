@@ -9,6 +9,10 @@ import com.github.yuttyann.scriptblockplus.script.option.Option;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus MoneyCost オプションクラス
+ * @author yuttyann44581
+ */
 public class MoneyCost extends BaseOption {
 
 	public static final String KEY_COST = PlayerData.createRandomId("MoneyCost");

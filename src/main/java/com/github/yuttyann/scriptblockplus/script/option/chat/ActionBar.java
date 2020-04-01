@@ -12,6 +12,10 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+/**
+ * ScriptBlockPlus ActionBar オプションクラス
+ * @author yuttyann44581
+ */
 public class ActionBar extends BaseOption {
 
 	public ActionBar() {

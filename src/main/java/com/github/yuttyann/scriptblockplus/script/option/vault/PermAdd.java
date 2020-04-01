@@ -8,6 +8,10 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus PermAdd オプションクラス
+ * @author yuttyann44581
+ */
 public class PermAdd extends BaseOption {
 
 	public PermAdd() {

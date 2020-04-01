@@ -5,6 +5,10 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus Amount オプションクラス
+ * @author yuttyann44581
+ */
 public class Amount extends BaseOption {
 
 	public Amount() {

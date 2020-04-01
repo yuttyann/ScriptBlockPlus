@@ -6,6 +6,10 @@ import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus EndMoneyCost エンドプロセスクラス
+ * @author yuttyann44581
+ */
 public class EndMoneyCost implements EndProcess {
 
 	@NotNull

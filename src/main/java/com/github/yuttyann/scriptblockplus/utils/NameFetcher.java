@@ -10,11 +10,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.ProtocolException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * ScriptBlockPlus NameFetcher クラス
+ * @author yuttyann44581
+ */
 public final class NameFetcher {
 
 	private static final String URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
@@ -26,12 +30,12 @@ public final class NameFetcher {
 	}
 
 	@NotNull
-	public static String getName(@NotNull UUID uuid) throws ProtocolException, IOException {
+	public static String getName(@NotNull UUID uuid) throws IOException {
 		Validate.notNull(uuid, "Command cannot be null");
 		String name = CACHE.get(uuid);
 		if (name == null) {
 			JsonObject json = getJsonObject(URL + StringUtils.replace(uuid.toString(), "-", ""));
-			String errorMessage = json.get("errorMessage").getAsString();
+			String errorMessage = Objects.requireNonNull(json).get("errorMessage").getAsString();
 			if (StringUtils.isNotEmpty(errorMessage)) {
 				throw new IllegalStateException(errorMessage);
 			}
@@ -41,12 +45,14 @@ public final class NameFetcher {
 	}
 
 	@Nullable
-	public static JsonObject getJsonObject(@NotNull String url) throws ProtocolException, IOException {
-		try (InputStream is = FileUtils.getWebFile(url); InputStreamReader isr = new InputStreamReader(is); BufferedReader reader = new BufferedReader(isr)) {
+	public static JsonObject getJsonObject(@NotNull String url) throws IOException {
+		InputStream is = FileUtils.getWebFile(url);
+		if (is == null) {
+			return null;
+		}
+		try (InputStreamReader isr = new InputStreamReader(is); BufferedReader reader = new BufferedReader(isr)) {
 			String line = reader.readLine();
-			return StringUtils.isNotEmpty(line) ? (JsonObject) new Gson().fromJson(line, JsonObject.class) : null;
-		} catch (IOException e) {
-			throw e;
+			return StringUtils.isNotEmpty(line) ? new Gson().fromJson(line, JsonObject.class) : null;
 		}
 	}
 }

@@ -8,6 +8,10 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus Delay オプションクラス
+ * @author yuttyann44581
+ */
 public class Delay extends BaseOption implements Runnable {
 
 	private boolean unSaveExec;

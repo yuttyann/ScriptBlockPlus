@@ -24,6 +24,10 @@ import java.lang.reflect.Field;
 　|　　
 　|　　@author yuttyann44581
  */
+/**
+ * ScriptBlockPlus APIVersion クラス
+ * @author yuttyann44581
+ */
 public final class APIVersion {
 
     private static final String[] FIELD_NAMES = { "apiVersion" };

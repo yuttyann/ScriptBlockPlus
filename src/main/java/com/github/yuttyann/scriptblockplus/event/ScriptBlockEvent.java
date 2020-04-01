@@ -9,6 +9,10 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus ScriptBlockEvent イベントクラス
+ * @author yuttyann44581
+ */
 public abstract class ScriptBlockEvent extends PlayerEvent implements Cancellable {
 
 	private static final HandlerList HANDLERS = new HandlerList();

@@ -2,6 +2,10 @@ package com.github.yuttyann.scriptblockplus.script.hook;
 
 import org.bukkit.Bukkit;
 
+/**
+ * ScriptBlockPlus HookPlugins クラス
+ * @author yuttyann44581
+ */
 public class HookPlugins {
 
 	private static Boolean hasVault;

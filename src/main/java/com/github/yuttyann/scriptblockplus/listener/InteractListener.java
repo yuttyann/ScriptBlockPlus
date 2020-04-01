@@ -37,6 +37,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+/**
+ * ScriptBlockPlus InteractListener クラス
+ * @author yuttyann44581
+ */
 public class InteractListener implements Listener {
 
 	private static final String KEY_FLAG = PlayerData.createRandomId("InteractFlag");

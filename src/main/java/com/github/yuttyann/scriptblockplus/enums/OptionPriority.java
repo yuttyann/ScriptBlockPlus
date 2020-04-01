@@ -9,6 +9,10 @@ import com.github.yuttyann.scriptblockplus.script.option.time.Delay;
 import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus OptionPriority 列挙型
+ * @author yuttyann44581
+ */
 public enum OptionPriority {
 
     /**

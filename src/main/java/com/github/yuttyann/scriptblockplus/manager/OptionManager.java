@@ -19,6 +19,10 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 
+/**
+ * ScriptBlockPlus OptionManager クラス
+ * @author yuttyann44581
+ */
 public final class OptionManager {
 
     private static final IndexedLinkedMap OPTION_MAP = new IndexedLinkedMap();

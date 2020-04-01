@@ -10,11 +10,16 @@ import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static com.github.yuttyann.scriptblockplus.file.config.ConfigKeys.*;
 import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 
+/**
+ * ScriptBlockPlus SBConfig クラス
+ * @author yuttyann44581
+ */
 public final class SBConfig {
 
 	// List Keys
@@ -118,7 +123,7 @@ public final class SBConfig {
 		String s = r.getValue();
 		s = replace(s, "%player%", r.getArg(0, String.class));
 		s = replace(s, "%scripttype%", r.getArg(1, ScriptType.class).getType());
-		s = replace(s, "%world%", l.getWorld().getName());
+		s = replace(s, "%world%", Objects.requireNonNull(l.getWorld()).getName());
 		s = replace(s, "%coords%", BlockCoords.getCoords(l));
 		return s;
 	};
@@ -152,7 +157,7 @@ public final class SBConfig {
 	public static final ReplaceKey UPDATE_DOWNLOAD_END = replaceKey(stringKey("UpdateDownloadEndMessage", ""), "%filename%", "%filepath%", "%filesize%");
 
 	/**
-	 * Parameter: {@link String} pluginName, {@link String} latestVersion, {@link List} details
+	 * Parameter: {@link String} pluginName, {@link String} latestVersion, {@link List}&lt;{@link String}&gt; details
 	 */
 	public static final ReplaceKey UPDATE_CHECK = replaceKey(stringKey("UpdateCheckMessage", ""), FUNCTION_UPDATE_CHECK);
 

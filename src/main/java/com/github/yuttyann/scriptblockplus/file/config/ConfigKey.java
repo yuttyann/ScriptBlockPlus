@@ -8,6 +8,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+/**
+ * ScriptBlockPlus ConfigKey インターフェース
+ * @param <T> 値の型
+ * @author yuttyann44581
+ */
 public interface ConfigKey<T> {
 
     @NotNull

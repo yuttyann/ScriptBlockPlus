@@ -29,6 +29,10 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.util.*;
 
+/**
+ * ScriptBlockPlus ScriptBlockPlusCommand コマンドクラス
+ * @author yuttyann44581
+ */
 public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	public ScriptBlockPlusCommand(@NotNull ScriptBlock plugin) {

@@ -6,6 +6,10 @@ import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus EndProcess インターフェース
+ * @author yuttyann44581
+ */
 public interface EndProcess extends SBInstance<EndProcess> {
 
 	/**

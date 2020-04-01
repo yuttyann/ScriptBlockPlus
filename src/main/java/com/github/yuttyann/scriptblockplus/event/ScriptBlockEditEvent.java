@@ -6,6 +6,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus ScriptBlockEditEvent イベントクラス
+ * @author yuttyann44581
+ */
 public class ScriptBlockEditEvent extends ScriptBlockEvent {
 
 	private final ScriptType scriptType;

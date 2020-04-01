@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * ScriptBlockPlus Main
+ * ScriptBlockPlus ScriptBlock メインクラス
  * @author yuttyann44581
  */
 public class ScriptBlock extends JavaPlugin {

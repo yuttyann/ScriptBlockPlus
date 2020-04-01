@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * ScriptBlockPlus NMSコマンド実装クラス
+ * ScriptBlockPlus Vx_x_Rx NMSクラス
  * @author yuttyann44581
  */
 public class Vx_x_Rx {
@@ -103,7 +103,7 @@ public class Vx_x_Rx {
 			throw new IllegalArgumentException("Cannot make " + sender + " a vanilla command listener");
 		} else {
 			TileEntityCommand tileEntityCommand = new TileEntityCommand();
-			tileEntityCommand.setWorld(location.getWorld());
+			tileEntityCommand.setWorld(Objects.requireNonNull(location.getWorld()));
 			tileEntityCommand.setLocation(location);
 			Object commandListener = tileEntityCommand.getCommandBlock();
 			tileEntityCommand.setName(sender.getName());

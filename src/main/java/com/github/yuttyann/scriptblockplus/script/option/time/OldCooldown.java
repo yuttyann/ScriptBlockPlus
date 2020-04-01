@@ -7,6 +7,10 @@ import com.github.yuttyann.scriptblockplus.script.option.Option;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus OldCooldown オプションクラス
+ * @author yuttyann44581
+ */
 public class OldCooldown extends BaseOption {
 
 	public OldCooldown() {

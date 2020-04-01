@@ -13,6 +13,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * ScriptBlockPlus PackageType 列挙型
+ * @author yuttyann44581
+ */
 public enum PackageType {
 	NMS("net.minecraft.server." + getVersionName()),
 	CB("org.bukkit.craftbukkit." + getVersionName()),

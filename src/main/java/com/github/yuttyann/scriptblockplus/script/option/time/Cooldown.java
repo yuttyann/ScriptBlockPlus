@@ -10,6 +10,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * ScriptBlockPlus Cooldown オプションクラス
+ * @author yuttyann44581
+ */
 public class Cooldown extends BaseOption {
 
 	public Cooldown() {

@@ -5,6 +5,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus TriggerEvent イベントクラス
+ * @author yuttyann44581
+ */
 public abstract class TriggerEvent extends ScriptBlockEvent {
 
 	private boolean cancelled;

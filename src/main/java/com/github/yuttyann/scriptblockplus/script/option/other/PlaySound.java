@@ -8,6 +8,10 @@ import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus PlaySound オプションクラス
+ * @author yuttyann44581
+ */
 public class PlaySound extends BaseOption {
 
 	public PlaySound() {

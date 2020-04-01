@@ -12,6 +12,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * ScriptBlockPlus BlockIterator クラス
+ * @author bukkit(source), yuttyann44581
+ */
 public class BlockIterator implements Iterator<BlockIterator.BData> {
 
     private final double maxDistance;

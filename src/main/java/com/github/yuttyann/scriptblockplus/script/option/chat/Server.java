@@ -6,6 +6,10 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus Server オプションクラス
+ * @author yuttyann44581
+ */
 public class Server extends BaseOption {
 
 	public Server() {

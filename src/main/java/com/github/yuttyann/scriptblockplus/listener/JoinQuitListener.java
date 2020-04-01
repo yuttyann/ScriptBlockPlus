@@ -16,6 +16,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus JoinQuitListener クラス
+ * @author yuttyann44581
+ */
 public class JoinQuitListener implements Listener {
 
 	private ScriptBlock plugin;

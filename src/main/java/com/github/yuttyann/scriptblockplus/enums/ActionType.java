@@ -8,6 +8,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * ScriptBlockPlus ActionType 列挙型
+ * @author yuttyann44581
+ */
 public enum ActionType {
 	CREATE, ADD, REMOVE, VIEW;
 

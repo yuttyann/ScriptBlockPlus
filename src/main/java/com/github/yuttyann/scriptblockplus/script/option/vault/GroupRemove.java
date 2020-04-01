@@ -8,6 +8,10 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus GroupRemove オプションクラス
+ * @author yuttyann44581
+ */
 public class GroupRemove extends BaseOption {
 
 	public GroupRemove() {

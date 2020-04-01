@@ -8,6 +8,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * ScriptBlockPlus SBRead インターフェース
+ * @author yuttyann44581
+ */
 public interface SBRead extends ObjectMap {
 
 	/**

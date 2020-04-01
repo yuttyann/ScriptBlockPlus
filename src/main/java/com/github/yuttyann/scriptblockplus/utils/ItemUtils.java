@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * ScriptBlockPlus ItemUtils クラス
+ * @author yuttyann44581
+ */
 public class ItemUtils {
 
 	@SuppressWarnings("deprecation")

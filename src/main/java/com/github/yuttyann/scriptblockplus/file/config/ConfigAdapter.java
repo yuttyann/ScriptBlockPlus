@@ -5,6 +5,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
+/**
+ * ScriptBlockPlus ConfigAdapter クラス
+ * @param <T> 値の型
+ * @author yuttyann44581
+ */
 public class ConfigAdapter<T> {
 
     private final Map<String, Object> map;

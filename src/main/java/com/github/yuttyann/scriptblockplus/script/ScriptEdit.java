@@ -16,6 +16,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * ScriptBlockPlus ScriptEdit クラス
+ * @author yuttyann44581
+ */
 public final class ScriptEdit {
 
 	private ScriptType scriptType;
@@ -183,6 +187,12 @@ public final class ScriptEdit {
 			this.author = this.scriptData.getAuthor();
 			this.scripts = new ArrayList<>(this.scriptData.getScripts());
 			this.scriptType = this.scriptData.getScriptType();
+		}
+
+		@Override
+		@NotNull
+		public Location getLocation() {
+			return scriptData.getLocation();
 		}
 
 		@NotNull

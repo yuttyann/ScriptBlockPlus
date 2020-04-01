@@ -5,6 +5,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+/**
+ * ScriptBlockPlus ReplaceKey クラス
+ * @author yuttyann44581
+ */
 public class ReplaceKey implements ConfigKey<String> {
 
     private final ConfigKey<String> configKey;

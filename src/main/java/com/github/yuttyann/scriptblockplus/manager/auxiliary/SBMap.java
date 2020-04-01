@@ -8,6 +8,11 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * ScriptBlockPlus SBMap クラス
+ * @param <T> 値の型
+ * @author yuttyann44581
+ */
 public final class SBMap<T> implements Serializable {
 
 	private Map<ScriptType, Map<String, T>> sbMap;

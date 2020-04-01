@@ -22,6 +22,10 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
+/**
+ * ScriptBlockPlus YamlConfig クラス
+ * @author yuttyann44581
+ */
 public class YamlConfig {
 
 	private static final Pattern UUID_PATTERN = Pattern.compile(

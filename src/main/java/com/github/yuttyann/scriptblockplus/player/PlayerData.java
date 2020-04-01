@@ -11,6 +11,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * ScriptBlockPlus PlayerData クラス
+ * @author yuttyann44581
+ */
 public abstract class PlayerData implements SBPlayer {
 
 	private static final String KEY_REGION = createRandomId("CuboidRegion");

@@ -7,6 +7,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus BlockType オプションクラス
+ * @author yuttyann44581
+ */
 public class BlockType extends BaseOption {
 
 	public BlockType() {

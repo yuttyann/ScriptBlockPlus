@@ -8,6 +8,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * ScriptBlockPlus StringUtils クラス
+ * @author yuttyann44581
+ */
 public final class StringUtils {
 
 	private static final Random RANDOM = new Random();

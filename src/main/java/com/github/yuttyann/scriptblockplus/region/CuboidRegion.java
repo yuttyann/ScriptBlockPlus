@@ -8,6 +8,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+/**
+ * ScriptBlockPlus CuboidRegion クラス
+ * @author yuttyann44581
+ */
 public class CuboidRegion implements Region {
 
 	private World world;

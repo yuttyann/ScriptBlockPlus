@@ -19,6 +19,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/**
+ * ScriptBlockPlus APIManager クラス
+ * @author yuttyann44581
+ */
 public final class APIManager implements ScriptBlockAPI {
 
 	private ScriptBlock plugin;
@@ -129,15 +133,15 @@ public final class APIManager implements ScriptBlockAPI {
 		}
 
 		@Override
-		@NotNull
-		public ScriptType getScriptType() {
-			return scriptData.getScriptType();
-		}
-
-		@Override
 		@Nullable
 		public Location getLocation() {
 			return scriptData.getLocation();
+		}
+
+		@Override
+		@NotNull
+		public ScriptType getScriptType() {
+			return scriptData.getScriptType();
 		}
 
 		@Override

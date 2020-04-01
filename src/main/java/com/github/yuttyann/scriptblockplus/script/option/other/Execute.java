@@ -10,6 +10,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus Execute オプションクラス
+ * @author yuttyann44581
+ */
 public class Execute extends BaseOption {
 
 	public Execute() {

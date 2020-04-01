@@ -5,6 +5,10 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus SBVector クラス
+ * @author yuttyann44581
+ */
 public class SBVector extends Vector {
 
     public static final SBVector ZERO = new SBVector(0.0D, 0.0D, 0.0D);

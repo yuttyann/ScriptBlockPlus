@@ -5,6 +5,10 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus Permission 列挙型
+ * @author yuttyann44581
+ */
 public enum Permission {
 	COMMAND_TOOL("scriptblockplus.command.tool"),
 	COMMAND_RELOAD("scriptblockplus.command.reload"),

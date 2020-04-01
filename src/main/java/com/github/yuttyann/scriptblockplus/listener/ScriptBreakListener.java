@@ -17,6 +17,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus ScriptBreakListener クラス
+ * @author yuttyann44581
+ */
 public class ScriptBreakListener extends ScriptListener {
 
 	public ScriptBreakListener(@NotNull ScriptBlock plugin) {

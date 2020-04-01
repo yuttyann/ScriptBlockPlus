@@ -15,6 +15,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus ScriptWalkListener クラス
+ * @author yuttyann44581
+ */
 public class ScriptWalkListener extends ScriptListener {
 
 	public ScriptWalkListener(@NotNull ScriptBlock plugin) {

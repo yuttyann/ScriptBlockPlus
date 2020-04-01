@@ -20,6 +20,10 @@ import org.bukkit.material.Openable;
 import org.bukkit.material.Redstone;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus ScriptInteractListener クラス
+ * @author yuttyann44581
+ */
 public class ScriptInteractListener extends ScriptListener {
 
 	public ScriptInteractListener(@NotNull ScriptBlock plugin) {

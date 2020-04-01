@@ -9,6 +9,10 @@ import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus VaultPermission クラス
+ * @author yuttyann44581
+ */
 public final class VaultPermission {
 
 	private String name;

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
- * オプションクラス
+ * ScriptBlockPlus Option オプションクラス
  * @author yuttyann44581
  */
 public abstract class Option implements SBInstance<Option>, Comparable<Option> {

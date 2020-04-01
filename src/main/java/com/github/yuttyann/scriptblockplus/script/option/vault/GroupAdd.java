@@ -8,6 +8,10 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus GroupAdd オプションクラス
+ * @author yuttyann44581
+ */
 public class GroupAdd extends BaseOption {
 
 	public GroupAdd() {
