@@ -7,10 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public final class FileUtils {
@@ -41,48 +40,47 @@ public final class FileUtils {
 		if (!parent.exists()) {
 			parent.mkdirs();
 		}
+		InputStream is = getResource(plugin, sourceFilePath);
+		if (is == null) {
+			return;
+		}
 		try (
-				InputStream is = getResource(plugin, sourceFilePath); InputStreamReader isr = new InputStreamReader(is, Charsets.UTF_8);
-				OutputStream os = new FileOutputStream(targetFile); OutputStreamWriter osw = new OutputStreamWriter(os, Charsets.UTF_8);
-				BufferedReader reader = new BufferedReader(isr); BufferedWriter writer = new BufferedWriter(osw)
-			) {
-			boolean isFirst = true;
+			FileOutputStream os = new FileOutputStream(targetFile);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, Charsets.UTF_8))
+		) {
 			String line;
 			while ((line = reader.readLine()) != null) {
-				if (isFirst && !(isFirst = false)) {
-					line = removeBom(line);
-				}
 				writer.write(line);
 				writer.newLine();
 			}
-		} catch (IOException e) {
+			is.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	public static void copyDirectory(@NotNull File sourceFile, @NotNull File targetFile, @NotNull Predicate<File> filter) {
-		if (!isExists(sourceFile) || isEmpty(sourceFile)) {
+		if (isEmpty(sourceFile)) {
 			return;
 		}
 		if (!targetFile.exists()) {
 			targetFile.mkdirs();
 		}
-		for (File file : sourceFile.listFiles()) {
+		for (File file : Objects.requireNonNull(sourceFile.listFiles())) {
 			if (filter.test(file)) {
 				continue;
 			}
 			File copy = new File(targetFile, file.getName());
 			try (
-					InputStream is = new FileInputStream(file); InputStreamReader isr = new InputStreamReader(is, Charsets.UTF_8);
-					FileOutputStream fos = new FileOutputStream(copy); OutputStreamWriter osw = new OutputStreamWriter(fos, Charsets.UTF_8);
-					BufferedReader reader = new BufferedReader(isr); BufferedWriter writer = new BufferedWriter(osw)
-				) {
-				boolean isFirst = true;
+				InputStream is = new FileInputStream(file);
+				FileOutputStream fos = new FileOutputStream(copy);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, Charsets.UTF_8))
+			) {
 				String line;
 				while ((line = reader.readLine()) != null) {
-					if (isFirst && !(isFirst = false)) {
-						line = removeBom(line);
-					}
 					writer.write(line);
 					writer.newLine();
 				}
@@ -92,74 +90,42 @@ public final class FileUtils {
 		}
 	}
 
-	public static void write(@NotNull File file, @NotNull String source, @NotNull Charset charset) throws IOException {
-		File parent = file.getParentFile();
-		if (!parent.exists()) {
-			parent.mkdirs();
-		}
-		try (
-				FileOutputStream fos = new FileOutputStream(file);
-				OutputStreamWriter osw = new OutputStreamWriter(fos, charset);
-				BufferedWriter writer = new BufferedWriter(osw)
-        	) {
-			writer.write(source);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@NotNull
-	public static String readToString(@NotNull File file, @NotNull Charset charset) throws IOException {
-		File parent = file.getParentFile();
-		if (!parent.exists()) {
-			parent.mkdirs();
-		}
-		try (FileInputStream fis = new FileInputStream(file); BufferedInputStream bis = new BufferedInputStream(fis)) {
-			byte[] data = new byte[(int) file.length()];
-			bis.read(data);
-			return new String(data, charset);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return "";
-	}
-
 	public static void fileDownload(@NotNull String url, @NotNull File file) throws IOException {
 		File parent = file.getParentFile();
 		if (!parent.exists()) {
 			parent.mkdirs();
 		}
-		try (InputStream is = getWebFile(url); FileOutputStream fos = new FileOutputStream(file)) {
+		try (
+			InputStream is = getWebFile(url);
+			FileOutputStream fos = new FileOutputStream(file)
+		) {
+			if (is == null) {
+				return;
+			}
 			byte[] bytes = new byte[1024];
 			int length;
 			while ((length = is.read(bytes)) != -1) {
 				fos.write(bytes, 0, length);
 			}
-		} catch (IOException e) {
-			throw e;
 		}
 	}
 
 	public static void saveFile(@NotNull File file, @NotNull Object value) throws IOException {
-		try (OutputStream os = new FileOutputStream(file); ObjectOutputStream oos = new ObjectOutputStream(os)) {
-			oos.writeObject(value);
-		} catch (IOException e) {
-			throw e;
+		try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file))) {
+			os.writeObject(value);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@NotNull
 	public static <T> T loadFile(@NotNull File file) throws IOException, ClassNotFoundException {
-		try (InputStream is = new FileInputStream(file); ObjectInputStream ois = new ObjectInputStream(is))  {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 			return (T) ois.readObject();
-		} catch (ClassNotFoundException | IOException e) {
-			throw e;
 		}
 	}
 
 	@Nullable
-	public static InputStream getWebFile(@NotNull String url) throws MalformedURLException, IOException {
+	public static InputStream getWebFile(@NotNull String url) throws IOException {
 		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 		connection.setRequestMethod("GET");
 		connection.setAllowUserInteraction(false);
@@ -176,17 +142,5 @@ public final class FileUtils {
 	public static boolean isEmpty(@NotNull File file) {
 		String[] array = file.list();
 		return array == null || array.length == 0;
-	}
-
-	public static boolean isExists(@Nullable File file) {
-		return file != null && file.exists();
-	}
-
-	@NotNull
-	private static String removeBom(@NotNull String source) {
-		if (source.startsWith("\uFEFF")) {
-			return source.substring(1);
-		}
-		return source;
 	}
 }
