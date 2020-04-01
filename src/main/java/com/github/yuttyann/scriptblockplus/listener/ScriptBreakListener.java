@@ -6,7 +6,6 @@ import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -41,7 +40,7 @@ public class ScriptBreakListener extends ScriptListener {
 			if (breakEvent.isCancelled()) {
 				return;
 			}
-			if (!SBPermission.has(player, ScriptType.BREAK, false)) {
+			if (!Permission.has(player, ScriptType.BREAK, false)) {
 				SBConfig.NOT_PERMISSION.send(player);
 				return;
 			}

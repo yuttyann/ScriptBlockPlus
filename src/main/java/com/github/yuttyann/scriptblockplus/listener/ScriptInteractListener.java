@@ -1,12 +1,12 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -44,7 +44,7 @@ public class ScriptInteractListener extends ScriptListener {
 					|| isPowered(block) || isOpen(block)) {
 				return;
 			}
-			if (!SBPermission.has(player, ScriptType.INTERACT, false)) {
+			if (!Permission.has(player, ScriptType.INTERACT, false)) {
 				SBConfig.NOT_PERMISSION.send(player);
 				return;
 			}

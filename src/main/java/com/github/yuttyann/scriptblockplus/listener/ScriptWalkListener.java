@@ -2,12 +2,12 @@ package com.github.yuttyann.scriptblockplus.listener;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.ScriptType.SBPermission;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,7 +36,7 @@ public class ScriptWalkListener extends ScriptListener {
 			if (walkEvent.isCancelled()) {
 				return;
 			}
-			if (!SBPermission.has(sbPlayer, ScriptType.WALK, false)) {
+			if (!Permission.has(sbPlayer, ScriptType.WALK, false)) {
 				SBConfig.NOT_PERMISSION.send(player);
 				return;
 			}
