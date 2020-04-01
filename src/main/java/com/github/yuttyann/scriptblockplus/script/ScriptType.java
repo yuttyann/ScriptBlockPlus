@@ -1,37 +1,16 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.apache.commons.lang.Validate;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 
 public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
 	private static final Map<String, ScriptType> TYPES = new LinkedHashMap<>();
-
-	public static final class SBPermission {
-
-		private static final String PREFIX = "scriptblockplus.";
-
-		public static boolean has(@NotNull Permissible permissible, @NotNull ScriptType scriptType, boolean isCMDorUse) {
-			return Permission.has(permissible, getNode(scriptType, isCMDorUse));
-		}
-
-		@NotNull
-		public static String[] getNodes(boolean isCMDorUse) {
-			return StreamUtils.toArray(TYPES.values(), t -> getNode(t, isCMDorUse), new String[TYPES.size()]);
-		}
-
-		@NotNull
-		public static String getNode(@NotNull ScriptType scriptType, boolean isCMDorUse) {
-			return isCMDorUse ? PREFIX + "command." + scriptType.type : PREFIX + scriptType.type + ".use";
-		}
-	}
 
 	// Default Types
 	public static final ScriptType INTERACT = new ScriptType("interact");
@@ -103,17 +82,22 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
 	@NotNull
 	public static String[] types() {
-		return StreamUtils.toArray(TYPES.values(), t -> t.type, new String[TYPES.size()]);
+		return toArray(t -> t.type, new String[TYPES.size()]);
 	}
 
 	@NotNull
 	public static String[] names() {
-		return StreamUtils.toArray(TYPES.values(), t -> t.name, new String[TYPES.size()]);
+		return toArray(t -> t.name, new String[TYPES.size()]);
 	}
 
 	@NotNull
 	public static ScriptType[] values() {
-		return TYPES.values().toArray(new ScriptType[TYPES.size()]);
+		return TYPES.values().toArray(new ScriptType[size()]);
+	}
+
+	@NotNull
+	public static <T> T[] toArray(@NotNull Function<ScriptType, T> mapper, @NotNull T[] array) {
+		return StreamUtils.toArray(TYPES.values(), mapper, array);
 	}
 
 	@NotNull
