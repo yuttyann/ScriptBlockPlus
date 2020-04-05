@@ -77,17 +77,17 @@ public final class Files {
 
 	@NotNull
 	public static YamlConfig getScriptFile(@NotNull ScriptType scriptType) {
-		YamlConfig yaml = FILES.get(scriptType.getType());
+		YamlConfig yaml = FILES.get(scriptType.type());
 		if (yaml == null) {
-			FILES.put(scriptType.getType(), yaml = loadScript(scriptType));
+			FILES.put(scriptType.type(), yaml = loadScript(scriptType));
 		}
 		return yaml;
 	}
 
 	@NotNull
 	private static YamlConfig loadScript(@NotNull ScriptType scriptType) {
-		YamlConfig yaml = loadFile("scripts/" + scriptType.getType() + ".yml", false);
-		return putFile(scriptType.getType(), yaml);
+		YamlConfig yaml = loadFile("scripts/" + scriptType.type() + ".yml", false);
+		return putFile(scriptType.type(), yaml);
 	}
 
 	@NotNull

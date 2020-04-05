@@ -276,8 +276,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		ActionType actionType = ActionType.valueOf(args[1].toUpperCase());
 		sbPlayer.setActionType(actionType.getKey(scriptType));
-		String type = scriptType.getType() + "-" + actionType.name().toLowerCase();
-		SBConfig.SUCCESS_ACTION_DATA.replace(type).send(sbPlayer);
+		SBConfig.SUCCESS_ACTION_DATA.replace(scriptType.type() + "-" + actionType.name().toLowerCase()).send(sbPlayer);
 		return true;
 	}
 
@@ -300,8 +299,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			}
 			ScriptEdit scriptEdit = new ScriptEdit(scriptType);
 			for (Block block : blocks) {
-				if (scriptEdit.lightRemove(block.getLocation()) && builder.indexOf(scriptType.getType()) == -1) {
-					builder.append(builder.length() == 0 ? "" : ", ").append(scriptType.getType());
+				if (scriptEdit.lightRemove(block.getLocation()) && builder.indexOf(scriptType.type()) == -1) {
+					builder.append(builder.length() == 0 ? "" : ", ").append(scriptType.type());
 				}
 			}
 			scriptEdit.save();
@@ -342,7 +341,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			clipboard.lightPaste(block.getLocation(), overwrite);
 		}
 		clipboard.save();
-		String scriptType = clipboard.getScriptType().getType();
+		String scriptType = clipboard.getScriptType().type();
 		SBConfig.SELECTOR_PASTE.replace(scriptType, regionBlocks.getCount()).send(sbPlayer);
 		SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptType, regionBlocks).console();
 		return true;
@@ -413,7 +412,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		set.add(hasPermission(sender, Permission.COMMAND_DATAMIGR, "datamigr"));
 		set.add(hasPermission(sender, Permission.COMMAND_EXPORT, "export"));
 
-		StreamUtils.fForEach(ScriptType.values(), s -> Permission.has(sender, s, true), s -> set.add(s.getType()));
+		StreamUtils.fForEach(ScriptType.values(), s -> Permission.has(sender, s, true), s -> set.add(s.type()));
 
 		set.add(hasPermission(sender, Permission.COMMAND_SELECTOR, "selector"));
 		return set;

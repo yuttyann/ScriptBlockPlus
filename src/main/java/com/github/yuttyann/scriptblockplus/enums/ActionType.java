@@ -33,7 +33,7 @@ public enum ActionType {
 		if (I.get() != ScriptType.size()) {
 			reload();
 		}
-		return TYPES.toArray(new String[TYPES.size()]);
+		return TYPES.toArray(new String[0]);
 	}
 
 	private static void reload() {

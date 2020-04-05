@@ -71,8 +71,6 @@ public class ScriptBlock extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ScriptWalkListener(this), this);
 	}
 
-
-
 	@Override
 	public void onDisable() {
 		if (mapManager != null) {

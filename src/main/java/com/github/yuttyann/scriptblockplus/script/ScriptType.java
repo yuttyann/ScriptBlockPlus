@@ -46,7 +46,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	 * @return スクリプトの種類名
 	 */
 	@NotNull
-	public String getType() {
+	public String type() {
 		return type;
 	}
 
@@ -96,6 +96,10 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 		return Integer.compare(ordinal, another.ordinal);
 	}
 
+	/**
+	 * スクリプトの種類の数を取得します。
+	 * @return スクリプトの種類の数
+	 */
 	public static int size() {
 		return TYPES.size();
 	}
@@ -124,7 +128,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	 */
 	@NotNull
 	public static ScriptType[] values() {
-		return TYPES.values().toArray(new ScriptType[size()]);
+		return TYPES.values().toArray(new ScriptType[0]);
 	}
 
 	/**

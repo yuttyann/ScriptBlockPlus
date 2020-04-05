@@ -56,7 +56,7 @@ public final class StringUtils {
 			end = source.indexOf(delimiter, start);
 		}
 		result.add(source.substring(start));
-		return result.toArray(new String[result.size()]);
+		return result.toArray(new String[0]);
 	}
 
 	@Nullable

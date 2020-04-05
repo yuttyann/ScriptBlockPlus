@@ -67,6 +67,6 @@ public enum Permission {
 
 	@NotNull
 	public static String getTypeNode(@NotNull ScriptType scriptType, boolean isCMDorUse) {
-		return isCMDorUse ? SBP_PREFIX + "command." + scriptType.getType() : SBP_PREFIX + scriptType.getType() + ".use";
+		return isCMDorUse ? SBP_PREFIX + "command." + scriptType.type() : SBP_PREFIX + scriptType.type() + ".use";
 	}
 }

@@ -96,7 +96,7 @@ public final class SBConfig {
 	};
 
 	private static Function<ReplaceKey, String> FUNCTION_SCRIPT_TYPE = r -> {
-		return replace(r.getValue(), "%scripttype%", r.getArg(0, ScriptType.class).getType());
+		return replace(r.getValue(), "%scripttype%", r.getArg(0, ScriptType.class).type());
 	};
 
 	private static Function<ReplaceKey, String> FUNCTION_OPTION_FAILED = r -> {
@@ -122,7 +122,7 @@ public final class SBConfig {
 		Location l = r.getArg(2, Location.class);
 		String s = r.getValue();
 		s = replace(s, "%player%", r.getArg(0, String.class));
-		s = replace(s, "%scripttype%", r.getArg(1, ScriptType.class).getType());
+		s = replace(s, "%scripttype%", r.getArg(1, ScriptType.class).type());
 		s = replace(s, "%world%", Objects.requireNonNull(l.getWorld()).getName());
 		s = replace(s, "%coords%", BlockCoords.getCoords(l));
 		return s;
