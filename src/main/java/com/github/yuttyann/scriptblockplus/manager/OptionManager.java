@@ -37,6 +37,10 @@ public final class OptionManager {
         OPTION_MAP.put(new ItemHand());
         OPTION_MAP.put(new ItemCost());
         OPTION_MAP.put(new MoneyCost());
+        OPTION_MAP.put(new GroupAdd());
+        OPTION_MAP.put(new GroupRemove());
+        OPTION_MAP.put(new PermAdd());
+        OPTION_MAP.put(new PermRemove());
         OPTION_MAP.put(new Say());
         OPTION_MAP.put(new Server());
         OPTION_MAP.put(new ToPlayer());
@@ -46,10 +50,6 @@ public final class OptionManager {
         OPTION_MAP.put(new Bypass());
         OPTION_MAP.put(new Command());
         OPTION_MAP.put(new Console());
-        OPTION_MAP.put(new GroupAdd());
-        OPTION_MAP.put(new GroupRemove());
-        OPTION_MAP.put(new PermAdd());
-        OPTION_MAP.put(new PermRemove());
         OPTION_MAP.put(new Execute());
         OPTION_MAP.put(new Amount());
         OPTION_MAP.updateOrdinal();

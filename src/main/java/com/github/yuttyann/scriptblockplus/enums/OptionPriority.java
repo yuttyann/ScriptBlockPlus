@@ -5,8 +5,8 @@ import com.github.yuttyann.scriptblockplus.script.option.other.Amount;
 import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
 import com.github.yuttyann.scriptblockplus.script.option.other.Execute;
 import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
-import com.github.yuttyann.scriptblockplus.script.option.time.Delay;
 import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
+import com.github.yuttyann.scriptblockplus.script.option.vault.PermRemove;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -31,14 +31,14 @@ public enum OptionPriority {
     LOW(new Console().getSyntax()),
 
     /**
-     * 優先位置: {@link MoneyCost} の後ろ
+     * 優先位置: {@link PermRemove} の後ろ
      */
-    NORMAL(new MoneyCost().getSyntax()),
+    NORMAL(new PermRemove().getSyntax()),
 
     /**
-     * 優先位置: {@link Delay} の後ろ
+     * 優先位置: {@link MoneyCost} の後ろ
      */
-    HIGH(new Delay().getSyntax()),
+    HIGH(new MoneyCost().getSyntax()),
 
     /**
      * 優先位置: {@link Calculation} の後ろ
