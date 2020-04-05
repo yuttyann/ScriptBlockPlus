@@ -94,7 +94,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	 */
 	@NotNull
 	public final String getValue(@NotNull String script) {
-		return StringUtils.removeStart(script, syntax);
+		return StringUtils.isNotEmpty(script) ? script.substring(length) : "";
 	}
 
 	/**
@@ -103,7 +103,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	 * @return オプションだった場合はtrue
 	 */
 	public final boolean isOption(@NotNull String script) {
-		if (StringUtils.isEmpty(script) || !script.startsWith(syntax) || script.length() < length) {
+		if (script.length() < length || !script.startsWith(syntax)) {
 			return false;
 		}
 		return script.substring(0, length).equals(syntax);
