@@ -20,6 +20,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	private final String name;
 	private final String syntax;
 
+	private int length;
 	private int ordinal = -1;
 
 	/**
@@ -30,6 +31,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	protected Option(@NotNull String name, @NotNull String syntax) {
 		this.name = Objects.requireNonNull(name);
 		this.syntax = Objects.requireNonNull(syntax);
+		this.length = this.syntax.length();
 	}
 
 	/**
@@ -58,6 +60,14 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	@NotNull
 	public final String getSyntax() {
 		return syntax;
+	}
+
+	/**
+	 * 構文の文字列の長さを取得します。
+	 * @return 構文の文字列の長さ
+	 */
+	public int length() {
+		return length;
 	}
 
 	/**
@@ -93,7 +103,10 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	 * @return オプションだった場合はtrue
 	 */
 	public final boolean isOption(@NotNull String script) {
-		return StringUtils.isNotEmpty(script) && script.startsWith(syntax);
+		if (StringUtils.isEmpty(script) || !script.startsWith(syntax) || script.length() < length) {
+			return false;
+		}
+		return script.substring(0, length).equals(syntax);
 	}
 
 	/**
