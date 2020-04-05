@@ -16,8 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.Map.Entry;
-import java.util.function.Predicate;
 
 /**
  * ScriptBlockPlus OptionManager クラス
@@ -64,17 +62,16 @@ public final class OptionManager {
     }
 
     public static void sort(@NotNull List<String> scripts) {
-        scripts.sort(Comparator.comparingInt(s1 -> OPTION_MAP.indexOf(s1::startsWith)));
+        scripts.sort(Comparator.comparingInt(s1 -> get(s1).ordinal()));
     }
 
     public static boolean has(@NotNull String syntax) {
-        int index = OPTION_MAP.indexOf(syntax::startsWith);
-        return index >= 0 && index < OPTION_MAP.list.size();
+        return StreamUtils.fOrElse(OPTION_MAP.sValues(), o -> o.isOption(syntax), null) != null;
     }
 
     @NotNull
     public static Option get(@NotNull String syntax) {
-        Option value = OPTION_MAP.get(OPTION_MAP.indexOf(syntax::startsWith));
+        Option value = StreamUtils.fOrElse(OPTION_MAP.sValues(), o -> o.isOption(syntax), null);
         if (value == null) {
             throw new NullPointerException("Option does not exist.");
         }
@@ -83,14 +80,14 @@ public final class OptionManager {
 
     @NotNull
     public static Option newInstance(@NotNull Class<? extends Option> option, @NotNull InstanceType instanceType) {
-        for (Entry<String, Option> entry : OPTION_MAP.entrySet()) {
-            if (!option.equals(entry.getValue().getClass())) {
+        for (Option value : OPTION_MAP.sValues()) {
+            if (!option.equals(value.getClass())) {
                 continue;
             }
             if (instanceType == InstanceType.REFLECTION) {
                 return new SBConstructor<>(option).newInstance(InstanceType.REFLECTION);
             }
-            return entry.getValue().newInstance();
+            return value.newInstance();
         }
         throw new NullPointerException(option.getName() + " does not exist");
     }
@@ -108,22 +105,6 @@ public final class OptionManager {
     private static class IndexedLinkedMap extends LinkedHashMap<String, Option> {
 
         private final LinkedList<String> list = new LinkedList<>();
-
-        public int indexOf(@NotNull Predicate<String> filter) {
-            int index = 0;
-            for (String s : list) {
-                if (filter.test(s)) {
-                    return index;
-                }
-                index++;
-            }
-            return -1;
-        }
-
-        @Nullable
-        public Option get(int index) {
-            return index >= 0 && index < list.size() ? super.get(list.get(index)) : null;
-        }
 
         @Nullable
         public Option put(@NotNull Option option) {
@@ -163,6 +144,11 @@ public final class OptionManager {
             List<Option> list = new ArrayList<>(super.values());
             list.sort(Option::compareTo);
             return list;
+        }
+
+        @NotNull
+        private Collection<Option> sValues() {
+            return super.values();
         }
 
         private void updateOrdinal() {
