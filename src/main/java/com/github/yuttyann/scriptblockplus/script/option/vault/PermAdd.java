@@ -21,7 +21,7 @@ public class PermAdd extends BaseOption {
 	@Override
 	@NotNull
 	public Option newInstance() {
-		return new Perm();
+		return new PermAdd();
 	}
 
 	@Override
