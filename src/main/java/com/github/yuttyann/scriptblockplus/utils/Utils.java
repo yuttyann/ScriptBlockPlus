@@ -15,10 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * ScriptBlockPlus Utils クラス
@@ -124,6 +121,13 @@ public final class Utils {
 			}
 		}
 		return world;
+	}
+
+	@NotNull
+	public static Set<OfflinePlayer> getAllPlayers() {
+		Set<OfflinePlayer> players = new HashSet<>(Bukkit.getOnlinePlayers());
+		Collections.addAll(players, Bukkit.getOfflinePlayers());
+		return players;
 	}
 
 	@SuppressWarnings("deprecation")
