@@ -144,7 +144,9 @@ public class ScriptRead extends ScriptMap implements SBRead {
 	}
 
 	protected final boolean hasPermission(@NotNull Option option) {
-		if (!SBConfig.OPTION_PERMISSION.getValue() || Permission.has(sbPlayer, option.getPermissionNode())) {
+		if (!SBConfig.OPTION_PERMISSION.getValue()
+				|| Permission.has(sbPlayer, Option.PERMISSION_ALL)
+				|| Permission.has(sbPlayer, option.getPermissionNode())) {
 			return true;
 		}
 		SBConfig.NOT_PERMISSION.send(sbPlayer);
@@ -160,7 +162,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
 			SBConfig.SORT_SCRIPTS.ifPresentAndTrue(s -> OptionManager.sort(parse));
 			this.scripts = Collections.unmodifiableList(parse);
 			return true;
-		} catch (Exception e) {
+		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 			return false;
 		}

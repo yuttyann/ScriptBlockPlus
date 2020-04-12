@@ -15,7 +15,8 @@ import java.util.Objects;
  */
 public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
-	private static final String PERMISSION_PREFIX = "scriptblockplus.option.";
+	public static final String PERMISSION_PREFIX = "scriptblockplus.option.";
+	public static final String PERMISSION_ALL = PERMISSION_PREFIX + "*";
 
 	private final String name;
 	private final String syntax;
