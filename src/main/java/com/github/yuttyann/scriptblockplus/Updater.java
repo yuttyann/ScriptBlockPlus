@@ -130,7 +130,7 @@ public final class Updater {
 				} finally {
 					if (!isUpdateError && jarFile.exists()) {
 						String fileName = jarFile.getName();
-						String filePath = StringUtils.replace(jarFile.getPath(), "\\", "/");
+						String filePath = StringUtils.replace(jarFile.getPath(), File.separator, "/");
 						SBConfig.UPDATE_DOWNLOAD_END.replace(fileName, filePath, getSize(jarFile.length())).send(sender);
 					}
 				}

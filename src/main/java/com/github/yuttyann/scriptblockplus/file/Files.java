@@ -15,6 +15,7 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
@@ -112,7 +113,7 @@ public final class Files {
 	}
 
 	private static void sendNotKeyMessages(@NotNull YamlConfig yaml, @NotNull String path) {
-		String filePath = StringUtils.replace(yaml.getFolderPath(), "\\", "/");
+		String filePath = StringUtils.replace(yaml.getFolderPath(), File.separator, "/");
 		InputStream is = FileUtils.getResource(ScriptBlock.getInstance(), path);
 		if (is == null) {
 			return;
