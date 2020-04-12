@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.script;
 
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus SBClipboard インターフェース
@@ -14,7 +13,7 @@ public interface SBClipboard {
 	 * スクリプトの座標を取得します。
 	 * @return スクリプトの座標
 	 */
-	@Nullable
+	@NotNull
 	Location getLocation();
 
 	/**

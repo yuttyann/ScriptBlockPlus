@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -45,7 +46,8 @@ public class ItemUtils {
 		return item.getDurability();
 	}
 
-	public static Material getMaterial(String name) {
+	@NotNull
+	public static Material getMaterial(@NotNull String name) {
 		Material type = Material.getMaterial(name.toUpperCase());
 		return type == null ? Material.AIR : type;
 	}
@@ -53,7 +55,7 @@ public class ItemUtils {
 	@NotNull
 	public static ItemStack getBlockSelector() {
 		ItemStack item = new ItemStack(Material.STICK);
-		ItemMeta meta = item.getItemMeta();
+		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
 		meta.setDisplayName("§dBlock Selector");
 		meta.setLore(setListColor(SBConfig.BLOCK_SELECTOR.getValue()));
 		item.setItemMeta(meta);
@@ -63,7 +65,7 @@ public class ItemUtils {
 	@NotNull
 	public static ItemStack getScriptEditor(@NotNull ScriptType scriptType) {
 		ItemStack item = new ItemStack(Material.BLAZE_ROD);
-		ItemMeta meta = item.getItemMeta();
+		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
 		meta.setDisplayName("§dScript Editor§6[Mode: " + scriptType.name() + "]");
 		meta.setLore(setListColor(SBConfig.SCRIPT_EDITOR.getValue()));
 		item.setItemMeta(meta);
@@ -93,7 +95,7 @@ public class ItemUtils {
 			String name = StringUtils.removeStart(ItemUtils.getName(item, ""), "§dScript Editor§6[Mode: ");
 			return ScriptType.valueOf(name.substring(0, name.length() - 1));
 		}
-		return ScriptType.INTERACT;
+		return ScriptType.valueOf(0);
 	}
 
 	@NotNull
@@ -103,9 +105,9 @@ public class ItemUtils {
 	}
 
 	public static void setName(@NotNull ItemStack item, @NotNull String name) {
-		ItemMeta itemMeta = item.getItemMeta();
-		itemMeta.setDisplayName(name);
-		item.setItemMeta(itemMeta);
+		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());;
+		meta.setDisplayName(name);
+		item.setItemMeta(meta);
 	}
 
 	@NotNull

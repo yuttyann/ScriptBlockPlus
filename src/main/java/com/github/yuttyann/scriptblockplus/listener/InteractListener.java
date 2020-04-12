@@ -205,7 +205,7 @@ public class InteractListener implements Listener {
 		try {
 			return ScriptType.valueOf(ItemUtils.getScriptType(item).ordinal() + 1);
 		} catch (Exception e) {
-			return ScriptType.INTERACT;
+			return ScriptType.valueOf(0);
 		}
 	}
 }

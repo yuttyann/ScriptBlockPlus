@@ -29,7 +29,7 @@ public final class SBConfig {
 
 
 	// Boolean Keys
-	// public static final ConfigKey<Boolean> SBP_API_VERSION = booleanKey("SBP-API-Version", true);
+	/* public static final ConfigKey<Boolean> SBP_API_VERSION = booleanKey("SBP-API-Version", true); */
 	public static final ConfigKey<Boolean> UPDATE_CHECKER = booleanKey("UpdateChecker", true);
 	public static final ConfigKey<Boolean> AUTO_DOWNLOAD = booleanKey("AutoDownload", true);
 	public static final ConfigKey<Boolean> OPEN_CHANGE_LOG = booleanKey("OpenChangeLog", true);
