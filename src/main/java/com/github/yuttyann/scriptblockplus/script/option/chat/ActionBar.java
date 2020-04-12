@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.stream.Collectors;
 
 /**
  * ScriptBlockPlus ActionBar オプションクラス
@@ -61,7 +63,8 @@ public class ActionBar extends BaseOption {
 			Class<?> packetClass = PackageType.NMS.getClass("Packet");
 			PackageType.NMS.getMethod("PlayerConnection", "sendPacket", packetClass).invoke(connection, packet);
 		} else {
-			throw new UnsupportedOperationException("Unsupported server. | Supported Servers <PaperMC, CraftBukkit, Spigot>");
+			String platforms = SBConfig.PLATFORMS.getValue().stream().map(String::valueOf).collect(Collectors.joining(", "));
+			throw new UnsupportedOperationException("Unsupported server. | Supported Servers <" + platforms + ">");
 		}
 	}
 
