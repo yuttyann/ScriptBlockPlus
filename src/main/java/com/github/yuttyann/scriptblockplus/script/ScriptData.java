@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -11,10 +12,10 @@ import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -34,8 +35,6 @@ public final class ScriptData implements Cloneable {
 	private YamlConfig scriptFile;
 	private ScriptType scriptType;
 	private boolean isUnmodifiableLocation;
-
-	private ScriptData() {}
 
 	public ScriptData(@NotNull ScriptType scriptType) {
 		this.scriptType = scriptType;
@@ -77,7 +76,7 @@ public final class ScriptData implements Cloneable {
 
 	@NotNull
 	public Location getLocation() {
-		return location;
+		return Objects.requireNonNull(location, "Location cannot be null");
 	}
 
 	@NotNull
@@ -90,9 +89,9 @@ public final class ScriptData implements Cloneable {
 		return scriptType;
 	}
 
-	@Nullable
+	@NotNull
 	public String getAuthor() {
-		return scriptFile.getString(scriptPath + KEY_AUTHOR);
+		return Objects.toString(scriptFile.getString(scriptPath + KEY_AUTHOR), "null");
 	}
 
 	@NotNull
@@ -107,9 +106,9 @@ public final class ScriptData implements Cloneable {
 		return list;
 	}
 
-	@Nullable
+	@NotNull
 	public String getLastEdit() {
-		return scriptFile.getString(scriptPath + KEY_LASTEDIT);
+		return Objects.toString(scriptFile.getString(scriptPath + KEY_LASTEDIT), "null");
 	}
 
 	public int getAmount() {
@@ -228,6 +227,8 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void remove() {
+		BlockCoords blockCoords = new BlockCoords(location);
+		Utils.getAllPlayers().forEach(p -> SBPlayer.fromPlayer(p).getPlayerCount().set(blockCoords, scriptType, 0));
 		scriptFile.set(scriptPath, null);
 	}
 
@@ -235,19 +236,26 @@ public final class ScriptData implements Cloneable {
 		ScriptBlock.getInstance().getMapManager().loadScripts(scriptFile, scriptType);
 	}
 
+	@Override
+	@NotNull
 	public ScriptData clone() {
-		ScriptData scriptData = new ScriptData();
-		if (this.location != null) {
-			scriptData.location = this.location.clone();
+		try {
+			ScriptData scriptData = (ScriptData) super.clone();
+			if (this.location != null) {
+				scriptData.location = this.location.clone();
+			}
+			scriptData.scriptPath = this.scriptPath;
+			scriptData.scriptFile = this.scriptFile;
+			scriptData.scriptType = this.scriptType;
+			scriptData.isUnmodifiableLocation = this.isUnmodifiableLocation;
+			return scriptData;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return new ScriptData(location, scriptType, isUnmodifiableLocation);
 		}
-		scriptData.scriptPath = this.scriptPath;
-		scriptData.scriptFile = this.scriptFile;
-		scriptData.scriptType = this.scriptType;
-		scriptData.isUnmodifiableLocation = this.isUnmodifiableLocation;
-		return scriptData;
 	}
 
 	private String createPath(@NotNull Location location) {
-		return location.getWorld().getName() + "." + BlockCoords.getCoords(location);
+		return Objects.requireNonNull(location.getWorld()).getName() + "." + BlockCoords.getCoords(location);
 	}
 }
