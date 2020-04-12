@@ -66,11 +66,11 @@ public final class StringUtils {
 
 	@NotNull
 	public static String setColor(@Nullable String source, boolean isRandomColor) {
+		source = isEmpty(source) ? "" : ChatColor.translateAlternateColorCodes('&', source);
 		if (isRandomColor) {
-			ChatColor color = ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16)));
-			source = replace(replace(source, "&rc", color), "§rc", color);
+			source = replace(source, "§rc", ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16))));
 		}
-		return isEmpty(source) ? "" : ChatColor.translateAlternateColorCodes('&', source);
+		return source;
 	}
 
 	@NotNull
@@ -90,11 +90,6 @@ public final class StringUtils {
 
 	@NotNull
 	public static String replace(@Nullable String source, @NotNull String search, @Nullable Object replace) {
-		return replace(source, search, () -> replace == null ? "" : replace.toString());
-	}
-
-	@NotNull
-	public static String replace(@Nullable String source, @NotNull String search, @NotNull ReplaceValue replace) {
 		if (isEmpty(source)) {
 			return "";
 		}
@@ -103,33 +98,15 @@ public final class StringUtils {
 		if (end == -1) {
 			return source;
 		}
+		String value = replace == null ? "" : replace.toString();
 		int searchLength = search.length();
-		int replaceLength = source.length() - replace.length();
-		replaceLength = Math.max(replaceLength, 0);
+		int replaceLength = Math.max(source.length() - value.length(), 0);
 		StrBuilder builder = new StrBuilder(source.length() + replaceLength);
 		while (end != -1) {
-			builder.append(source.substring(start, end)).append(replace.asString());
-			start = end + searchLength;
-			end = source.indexOf(search, start);
+			builder.append(source.substring(start, end)).append(value);
+			end = source.indexOf(search, start = end + searchLength);
 		}
-		builder.append(source.substring(start));
-		return builder.toString();
-	}
-
-	public interface ReplaceValue {
-
-		@Nullable
-		Object value();
-
-		@NotNull
-		default String asString() {
-			Object obj = value();
-			return obj == null ? "" : obj.toString();
-		}
-
-		default int length() {
-			return asString().length();
-		}
+		return builder.append(source.substring(start)).toString();
 	}
 
 	@NotNull
@@ -154,7 +131,7 @@ public final class StringUtils {
 		return !isEmpty(source);
 	}
 
-	public static boolean isNotEmpty(@Nullable String[] sources) {
+	public static boolean isNotEmpty(@NotNull String[] sources) {
 		return !isEmpty(sources);
 	}
 
@@ -162,7 +139,7 @@ public final class StringUtils {
 		return source == null || source.length() == 0;
 	}
 
-	public static boolean isEmpty(@Nullable String[] sources) {
+	public static boolean isEmpty(@NotNull String[] sources) {
 		return StreamUtils.anyMatch(sources, StringUtils::isEmpty);
 	}
 }
