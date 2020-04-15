@@ -4,6 +4,8 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
+import com.github.yuttyann.scriptblockplus.player.PlayerCount;
+import com.github.yuttyann.scriptblockplus.player.PlayerCountInfo;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -227,9 +229,17 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void remove() {
-		BlockCoords blockCoords = new BlockCoords(location);
-		Utils.getAllPlayers().forEach(p -> SBPlayer.fromPlayer(p).getPlayerCount().set(blockCoords, scriptType, 0));
 		scriptFile.set(scriptPath, null);
+	}
+
+	public void initCount(BlockCoords blockCoords) {
+		for (OfflinePlayer player : Utils.getAllPlayers()) {
+			PlayerCount playerCount = SBPlayer.fromPlayer(player).getPlayerCount();
+			PlayerCountInfo playerCountInfo = playerCount.getInfo(blockCoords, scriptType);
+			if (playerCountInfo.getAmount() > 0) {
+				playerCount.remove(playerCountInfo);
+			}
+		}
 	}
 
 	public void reload() {
