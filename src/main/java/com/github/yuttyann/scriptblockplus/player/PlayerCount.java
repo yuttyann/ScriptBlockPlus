@@ -102,6 +102,23 @@ public class PlayerCount {
 		}
 	}
 
+	public void remove(@NotNull PlayerCountInfo playerCountInfo) {
+		Thread thread = new Thread(() -> {
+			try {
+				infos.remove(playerCountInfo);
+				save();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		try {
+			thread.start();
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@NotNull
 	public PlayerCountInfo getInfo(@NotNull Location location, @NotNull ScriptType scriptType) {
 		String fullCoords = BlockCoords.getFullCoords(location);
