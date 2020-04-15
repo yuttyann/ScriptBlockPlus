@@ -27,14 +27,14 @@ public final class UTF8Config extends YamlConfiguration {
 
 	@NotNull
 	public String saveToString() {
-        yamlOptions.setIndent(options().indent());
-        yamlOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        yamlRepresenter.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        String header = buildHeader();
-        String dump = yaml.dump(getValues(false));
-        if (dump.equals(BLANK_CONFIG)) {
-            dump = "";
-        }
+		yamlOptions.setIndent(options().indent());
+		yamlOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+		yamlRepresenter.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+		String header = buildHeader();
+		String dump = yaml.dump(getValues(false));
+		if (dump.equals(BLANK_CONFIG)) {
+			dump = "";
+		}
 		return header + dump;
 	}
 
