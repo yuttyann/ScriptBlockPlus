@@ -128,7 +128,6 @@ public class ScriptBlock extends JavaPlugin {
 		return scriptAPI == null ? scriptAPI = new APIManager(this) : scriptAPI;
 	}
 
-
 	/**
 	 * MapManagerを取得します。
 	 * @return MapManager
