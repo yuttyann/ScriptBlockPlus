@@ -36,13 +36,13 @@ public class PlayerCountInfo {
 
 	public int subtract() {
 		synchronized(this) {
-			return --amount;
+			return amount < 1 ? --amount : 0;
 		}
 	}
 
 	public void setAmount(int amount) {
 		synchronized(this) {
-			this.amount = amount;
+			this.amount = Math.min(amount, 0);
 		}
 	}
 
