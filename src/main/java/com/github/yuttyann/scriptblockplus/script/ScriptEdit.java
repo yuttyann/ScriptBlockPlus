@@ -7,7 +7,6 @@ import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.player.PlayerCount;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * ScriptBlockPlus ScriptEdit クラス
@@ -52,11 +52,7 @@ public final class ScriptEdit {
 		if (authors.size() < 2) {
 			return authors.size() == 1 ? authors.get(0) : "null";
 		}
-		StrBuilder builder = new StrBuilder().append("[");
-		for (int i = 0; i < authors.size(); i++) {
-			builder.append(authors.get(i)).append(i == (authors.size() - 1) ? "]" : ", ");
-		}
-		return builder.toString();
+		return authors.stream().collect(Collectors.joining(", ", "[", "]"));
 	}
 
 	public void create(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
