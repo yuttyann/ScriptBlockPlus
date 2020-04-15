@@ -10,7 +10,6 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -140,10 +139,9 @@ public final class ScriptData implements Cloneable {
 
 	public void addAuthor(@NotNull UUID uuid) {
 		List<String> authors = getAuthors(false);
-		String uuidToString = uuid.toString();
-		if (!authors.contains(uuidToString)) {
-			String value = authors.size() > 0 ? getAuthor() + ", " + uuidToString : uuidToString;
-			scriptFile.set(scriptPath + KEY_AUTHOR, value);
+		String id = uuid.toString();
+		if (!authors.contains(id)) {
+			scriptFile.set(scriptPath + KEY_AUTHOR, authors.size() > 0 ? getAuthor() + ", " + id : id);
 		}
 	}
 
@@ -153,14 +151,10 @@ public final class ScriptData implements Cloneable {
 
 	public void removeAuthor(@NotNull UUID uuid) {
 		List<String> authors = getAuthors(false);
-		String uuidToString = uuid.toString();
-		if (authors.size() > 0 && authors.contains(uuidToString)) {
-			authors.remove(uuidToString);
-			StrBuilder builder = new StrBuilder();
-			for (int i = 0; i < authors.size(); i++) {
-				builder.append(authors.get(i)).append(i == (authors.size() - 1) ? "" : ", ");
-			}
-			scriptFile.set(scriptPath + KEY_AUTHOR, builder.toString());
+		String id = uuid.toString();
+		if (authors.size() > 0 && authors.contains(id)) {
+			authors.remove(id);
+			scriptFile.set(scriptPath + KEY_AUTHOR, String.join(", ", authors));
 		}
 	}
 
