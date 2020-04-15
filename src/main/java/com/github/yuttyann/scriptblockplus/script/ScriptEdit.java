@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -73,6 +74,7 @@ public final class ScriptEdit {
 		scriptData.setAuthor(player.getUniqueId());
 		scriptData.setLastEdit();
 		scriptData.setScripts(Collections.singletonList(script));
+		scriptData.initCount(new BlockCoords(location));
 		scriptData.save();
 		mapManager.addCoords(location, scriptType);
 		SBConfig.SCRIPT_CREATE.replace(scriptType).send(player);
@@ -119,6 +121,7 @@ public final class ScriptEdit {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
+		scriptData.initCount(new BlockCoords(location));
 		scriptData.remove();
 		scriptData.save();
 		mapManager.removeCoords(location, scriptType);
@@ -131,6 +134,7 @@ public final class ScriptEdit {
 		if (!scriptData.hasPath()) {
 			return false;
 		}
+		scriptData.initCount(new BlockCoords(location));
 		scriptData.remove();
 		mapManager.removeCoords(location, scriptType);
 		return true;
@@ -230,6 +234,7 @@ public final class ScriptEdit {
 				if (scriptData.hasPath() && !overwrite) {
 					return false;
 				}
+				scriptData.initCount(new BlockCoords(location));
 				scriptData.setAuthor(author);
 				scriptData.addAuthor(sbPlayer.getOfflinePlayer());
 				scriptData.setLastEdit(Utils.getFormatTime());
@@ -240,7 +245,7 @@ public final class ScriptEdit {
 				scriptData.save();
 				mapManager.addCoords(location, scriptType);
 				SBConfig.SCRIPT_PASTE.replace(scriptType).send(sbPlayer);
-				SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), scriptType, scriptData.getLocation()).console();
+				SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), scriptType, location).console();
 			} finally {
 				sbPlayer.setClipboard(null);
 				sbPlayer.setScriptLine(null);
@@ -255,6 +260,7 @@ public final class ScriptEdit {
 			if (scriptData.hasPath() && !overwrite) {
 				return false;
 			}
+			scriptData.initCount(new BlockCoords(location));
 			scriptData.setAuthor(author);
 			scriptData.addAuthor(sbPlayer.getUniqueId());
 			if (amount > 0) {
