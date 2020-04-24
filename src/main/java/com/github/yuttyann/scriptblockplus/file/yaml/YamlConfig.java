@@ -215,9 +215,9 @@ public class YamlConfig {
 		return yaml.getString(path);
 	}
 
-	@Nullable
-	public String getString(@NotNull String path, String def) {
-		return yaml.getString(path, def);
+	@NotNull
+	public String getString(@NotNull String path, @NotNull String def) {
+		return Objects.requireNonNull(yaml.getString(path, def));
 	}
 
 	@Nullable
@@ -225,20 +225,20 @@ public class YamlConfig {
 		return yaml.get(path);
 	}
 
-	@Nullable
-	public Object get(@NotNull String path, Object def) {
-		return yaml.get(path, def);
+	@NotNull
+	public Object get(@NotNull String path, @NotNull Object def) {
+		return Objects.requireNonNull(yaml.get(path, def));
 	}
 
 	@Nullable
 	public UUID getUUID(@NotNull String path) {
-		Object def = getDefault(path);
-		return getUUID(path, def == null ? null : UUID.fromString(def.toString()));
+		String val = getString(path);
+		return val == null ? null : UUID.fromString(val);
 	}
 
-	@Nullable
-	public UUID getUUID(@NotNull String path, UUID def) {
-		Object val = get(path, def);
+	@NotNull
+	public UUID getUUID(@NotNull String path, @NotNull UUID def) {
+		Object val = yaml.get(path, def);
 		return val == null ? def : UUID.fromString(val.toString());
 	}
 
@@ -247,9 +247,9 @@ public class YamlConfig {
 		return yaml.getColor(path);
 	}
 
-	@Nullable
-	public Color getColor(@NotNull String path, Color def) {
-		return yaml.getColor(path, def);
+	@NotNull
+	public Color getColor(@NotNull String path, @NotNull Color def) {
+		return Objects.requireNonNull(yaml.getColor(path, def));
 	}
 
 	@Nullable
@@ -257,9 +257,9 @@ public class YamlConfig {
 		return yaml.getItemStack(path);
 	}
 
-	@Nullable
-	public ItemStack getItemStack(@NotNull String path, ItemStack def) {
-		return yaml.getItemStack(path, def);
+	@NotNull
+	public ItemStack getItemStack(@NotNull String path, @NotNull ItemStack def) {
+		return Objects.requireNonNull(yaml.getItemStack(path, def));
 	}
 
 	@Nullable
@@ -267,9 +267,9 @@ public class YamlConfig {
 		return yaml.getVector(path);
 	}
 
-	@Nullable
-	public Vector getVector(@NotNull String path, Vector def) {
-		return yaml.getVector(path, def);
+	@NotNull
+	public Vector getVector(@NotNull String path, @NotNull Vector def) {
+		return Objects.requireNonNull(yaml.getVector(path, def));
 	}
 
 	@NotNull
