@@ -33,6 +33,7 @@ public final class APIVersion {
     private static final String[] FIELD_NAMES = { "apiVersion" };
 
     private static final String DEFAULT_API_VERSION;
+
     static {
         String[] version = StringUtils.split(Utils.getServerVersion(), ".");
         DEFAULT_API_VERSION = version.length > 2 ? version[0] + "." + version[1] : Utils.getServerVersion();

@@ -92,7 +92,7 @@ public final class ScriptData implements Cloneable {
 
 	@NotNull
 	public String getAuthor() {
-		return Objects.toString(scriptFile.getString(scriptPath + KEY_AUTHOR), "null");
+		return scriptFile.getString(scriptPath + KEY_AUTHOR, "null");
 	}
 
 	@NotNull
@@ -109,7 +109,7 @@ public final class ScriptData implements Cloneable {
 
 	@NotNull
 	public String getLastEdit() {
-		return Objects.toString(scriptFile.getString(scriptPath + KEY_LASTEDIT), "null");
+		return scriptFile.getString(scriptPath + KEY_LASTEDIT, "null");
 	}
 
 	public int getAmount() {

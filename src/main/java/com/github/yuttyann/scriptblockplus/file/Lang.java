@@ -50,9 +50,6 @@ public class Lang {
 	}
 
 	private boolean isExists(@NotNull String filePath) {
-		if (StringUtils.isNotEmpty(filePath)) {
-			return FileUtils.getResource(plugin, filePath) != null;
-		}
-		return false;
+		return StringUtils.isNotEmpty(filePath) && FileUtils.getResource(plugin, filePath) != null;
 	}
 }
