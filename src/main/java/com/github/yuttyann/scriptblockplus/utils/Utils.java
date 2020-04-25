@@ -9,6 +9,7 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.CommandMinecart;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +26,12 @@ public final class Utils {
 
 	private static final String SERVER_VERSION = getServerVersion();
 	private static final Map<String, Boolean> VC_CACHE = new HashMap<>();
+
+
+	@NotNull
+	public static String getPluginName(Plugin plugin) {
+		return plugin.getName() + " v" + plugin.getDescription().getVersion();
+	}
 
 	@NotNull
 	public static String getServerVersion() {
