@@ -283,6 +283,11 @@ public interface ScriptBlockAPI {
 		void clearScripts();
 
 		/**
+		 * 全てのプレイヤーの実行回数を削除します。
+		 */
+		void clearCounts();
+
+		/**
 		 * 全ての設定を削除します。
 		 */
 		void remove();
