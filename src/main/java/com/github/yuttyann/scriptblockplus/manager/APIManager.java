@@ -249,6 +249,11 @@ public final class APIManager implements ScriptBlockAPI {
 		}
 
 		@Override
+		public void clearCounts() {
+			scriptData.clearCounts();
+		}
+
+		@Override
 		public void remove() {
 			scriptData.remove();
 		}
