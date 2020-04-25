@@ -222,18 +222,18 @@ public final class ScriptData implements Cloneable {
 		scriptFile.set(scriptPath + KEY_SCRIPTS, null);
 	}
 
-	public void remove() {
-		scriptFile.set(scriptPath, null);
-	}
-
-	public void initCount(BlockCoords blockCoords) {
+	public void clearCounts() {
 		for (OfflinePlayer player : Utils.getAllPlayers()) {
 			PlayerCount playerCount = SBPlayer.fromPlayer(player).getPlayerCount();
-			PlayerCountInfo playerCountInfo = playerCount.getInfo(blockCoords, scriptType);
+			PlayerCountInfo playerCountInfo = playerCount.getInfo(location, scriptType);
 			if (playerCountInfo.getAmount() > 0) {
 				playerCount.remove(playerCountInfo);
 			}
 		}
+	}
+
+	public void remove() {
+		scriptFile.set(scriptPath, null);
 	}
 
 	public void reload() {
