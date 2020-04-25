@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public final class CommandSelector {
 
 	@Deprecated
-	private static final Pattern COMMAND_PATTERN = Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)\\])?$");
+	private static final Pattern COMMAND_PATTERN = Pattern.compile("^@([parf])(?:\\[([\\w=,!-]*)])?$");
 
 	private static final CommandListener COMMAND_LISTENER;
 

@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -70,7 +69,7 @@ public final class ScriptEdit {
 		scriptData.setAuthor(player.getUniqueId());
 		scriptData.setLastEdit();
 		scriptData.setScripts(Collections.singletonList(script));
-		scriptData.initCount(new BlockCoords(location));
+		scriptData.clearCounts();
 		scriptData.save();
 		mapManager.addCoords(location, scriptType);
 		SBConfig.SCRIPT_CREATE.replace(scriptType).send(player);
@@ -117,8 +116,8 @@ public final class ScriptEdit {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
-		scriptData.initCount(new BlockCoords(location));
 		scriptData.remove();
+		scriptData.clearCounts();
 		scriptData.save();
 		mapManager.removeCoords(location, scriptType);
 		SBConfig.SCRIPT_REMOVE.replace(scriptType).send(player);
@@ -130,8 +129,8 @@ public final class ScriptEdit {
 		if (!scriptData.hasPath()) {
 			return false;
 		}
-		scriptData.initCount(new BlockCoords(location));
 		scriptData.remove();
+		scriptData.clearCounts();
 		mapManager.removeCoords(location, scriptType);
 		return true;
 	}
@@ -195,8 +194,8 @@ public final class ScriptEdit {
 			return scriptData.getLocation();
 		}
 
-		@NotNull
 		@Override
+		@NotNull
 		public ScriptType getScriptType() {
 			return scriptType;
 		}
@@ -230,7 +229,6 @@ public final class ScriptEdit {
 				if (scriptData.hasPath() && !overwrite) {
 					return false;
 				}
-				scriptData.initCount(new BlockCoords(location));
 				scriptData.setAuthor(author);
 				scriptData.addAuthor(sbPlayer.getOfflinePlayer());
 				scriptData.setLastEdit(Utils.getFormatTime());
@@ -238,6 +236,7 @@ public final class ScriptEdit {
 					scriptData.setAmount(amount);
 				}
 				scriptData.setScripts(scripts);
+				scriptData.clearCounts();
 				scriptData.save();
 				mapManager.addCoords(location, scriptType);
 				SBConfig.SCRIPT_PASTE.replace(scriptType).send(sbPlayer);
@@ -256,7 +255,6 @@ public final class ScriptEdit {
 			if (scriptData.hasPath() && !overwrite) {
 				return false;
 			}
-			scriptData.initCount(new BlockCoords(location));
 			scriptData.setAuthor(author);
 			scriptData.addAuthor(sbPlayer.getUniqueId());
 			if (amount > 0) {
@@ -264,6 +262,7 @@ public final class ScriptEdit {
 			}
 			scriptData.setLastEdit(Utils.getFormatTime("yyyy/MM/dd HH:mm:ss"));
 			scriptData.setScripts(scripts);
+			scriptData.clearCounts();
 			mapManager.addCoords(location, scriptType);
 			return true;
 		}

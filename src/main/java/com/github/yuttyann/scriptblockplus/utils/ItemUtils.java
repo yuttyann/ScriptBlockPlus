@@ -105,7 +105,7 @@ public class ItemUtils {
 	}
 
 	public static void setName(@NotNull ItemStack item, @NotNull String name) {
-		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());;
+		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
 		meta.setDisplayName(name);
 		item.setItemMeta(meta);
 	}

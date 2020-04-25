@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.command.CommandSender;
@@ -67,40 +68,35 @@ public final class Updater {
 	}
 
 	public void load() throws Exception {
-		Document document = getDocument(pluginName);
-		Element root = document.getDocumentElement();
-		NodeList rootChildren = root.getChildNodes();
+		NodeList rootChildren = getDocument(pluginName).getDocumentElement().getChildNodes();
 		for (int i = 0; i < rootChildren.getLength(); i++) {
-			Node node = rootChildren.item(i);
-			if (node.getNodeType() != Node.ELEMENT_NODE) {
+			Node uNode = rootChildren.item(i);
+			if (uNode.getNodeType() != Node.ELEMENT_NODE) {
 				continue;
 			}
-			Element element = (Element) node;
-			if (element.getNodeName().equals("update")) {
-				latestVersion = element.getAttribute("version");
+			if (uNode.getNodeName().equals("update")) {
+				latestVersion = ((Element) uNode).getAttribute("version");
 			}
-			NodeList updateChildren = node.getChildNodes();
+			NodeList updateChildren = uNode.getChildNodes();
 			for (int j = 0; j < updateChildren.getLength(); j++) {
-				Node updateNode = updateChildren.item(j);
-				if (updateNode.getNodeType() != Node.ELEMENT_NODE) {
+				Node cNode = updateChildren.item(j);
+				if (cNode.getNodeType() != Node.ELEMENT_NODE) {
 					continue;
 				}
-				element = (Element) updateNode;
-				switch (element.getNodeName()) {
+				switch (cNode.getNodeName()) {
 				case "download":
-					downloadURL = element.getAttribute("url");
+					downloadURL = ((Element) cNode).getAttribute("url");
 					break;
 				case "changelog":
-					changeLogURL = element.getAttribute("url");
+					changeLogURL = ((Element) cNode).getAttribute("url");
 					break;
 				case "details":
-					NodeList detailsChildren = updateNode.getChildNodes();
+					NodeList detailsChildren = cNode.getChildNodes();
 					details = new ArrayList<>(detailsChildren.getLength());
 					for (int k = 0; k < detailsChildren.getLength(); k++) {
-						Node detailsNode = detailsChildren.item(k);
-						if (detailsNode.getNodeType() == Node.ELEMENT_NODE) {
-							element = (Element) detailsNode;
-							details.add(element.getAttribute("info"));
+						Node dNode = detailsChildren.item(k);
+						if (dNode.getNodeType() == Node.ELEMENT_NODE) {
+							details.add(((Element) dNode).getAttribute("info"));
 						}
 					}
 				}
@@ -111,12 +107,10 @@ public final class Updater {
 
 	public boolean execute(@NotNull CommandSender sender) {
 		if (SBConfig.UPDATE_CHECKER.getValue() && isUpperVersion) {
-			if (!isUpdateError) {
-				SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(sender);
-			}
 			File dataFolder = Files.getConfig().getDataFolder();
 			File logFile = new File(dataFolder, "update/ChangeLog.txt");
 			boolean logEquals = !logFile.exists() || !logEquals(changeLogURL, logFile);
+			StreamUtils.filter(sender, s -> !isUpdateError, s -> SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(s));
 			if (SBConfig.AUTO_DOWNLOAD.getValue()) {
 				File jarFile = new File(dataFolder, "update/jar/" + getJarName());
 				try {
