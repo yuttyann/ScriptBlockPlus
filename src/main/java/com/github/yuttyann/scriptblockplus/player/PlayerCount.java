@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
@@ -23,6 +24,8 @@ import java.util.function.Consumer;
  * @author yuttyann44581
  */
 public class PlayerCount {
+
+	private static final String THREAD_NAME = "PlayerCount Thread : " + Utils.getPluginName(ScriptBlock.getInstance());
 
 	@SerializedName("uuid")
 	@Expose
@@ -95,6 +98,8 @@ public class PlayerCount {
 			}
 		});
 		try {
+			thread.setName(THREAD_NAME);
+			thread.setPriority(Thread.MAX_PRIORITY);
 			thread.start();
 			thread.join();
 		} catch (InterruptedException e) {
@@ -112,6 +117,8 @@ public class PlayerCount {
 			}
 		});
 		try {
+			thread.setName(THREAD_NAME);
+			thread.setPriority(Thread.MAX_PRIORITY);
 			thread.start();
 			thread.join();
 		} catch (InterruptedException e) {

@@ -62,8 +62,8 @@ public class ScriptBlock extends JavaPlugin {
 		mapManager = new MapManager(this);
 		mapManager.loadAllScripts();
 		mapManager.loadCooldown();
-		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 
+		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 		getServer().getPluginManager().registerEvents(new InteractListener(), this);
 		getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
 		getServer().getPluginManager().registerEvents(new ScriptInteractListener(this), this);
@@ -108,10 +108,13 @@ public class ScriptBlock extends JavaPlugin {
 					SBConfig.NOT_LATEST_PLUGIN.send(sender);
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				SBConfig.ERROR_UPDATE.send(sender);
 			}
 		});
 		try {
+			thread.setName("Update Thread : " + Utils.getPluginName(this));
+			thread.setPriority(Thread.MIN_PRIORITY);
 			thread.start();
 			thread.join();
 		} catch (InterruptedException e) {
