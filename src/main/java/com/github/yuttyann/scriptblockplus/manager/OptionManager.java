@@ -122,6 +122,7 @@ public final class OptionManager {
                 case LOW:
                 case NORMAL:
                 case HIGH:
+                case VERY_HIGH:
                 case HIGHEST:
                     list.add(list.indexOf(priority.getSyntax()) + 1, key);
                     break;
