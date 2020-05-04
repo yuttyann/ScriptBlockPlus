@@ -113,13 +113,12 @@ public class InteractListener implements Listener {
 			return false;
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
-		ItemStack item = event.getItem();
 		Location location = event.getLocation();
 		boolean isAIR = action.name().endsWith("_CLICK_AIR");
-		boolean isSneaking = player.isSneaking();
-		if(ItemAction.run(item, player, action, location, isAIR, isSneaking)) {
+		if(ItemAction.run(event.getItem(), player, action, location, isAIR, player.isSneaking())) {
 			return true;
-		} else if (!isAIR && sbPlayer.getActionType().isPresent() && location != null) {
+		}
+		if (!isAIR && sbPlayer.getActionType().isPresent() && location != null) {
 			String[] array = StringUtils.split(sbPlayer.getActionType().get(), "_");
 			ScriptBlockEditEvent editEvent = new ScriptBlockEditEvent(player, location.getBlock(), array);
 			Bukkit.getPluginManager().callEvent(editEvent);
