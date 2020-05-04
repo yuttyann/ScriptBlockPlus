@@ -26,6 +26,7 @@ public final class SBConfig {
 	public static final ConfigKey<List<String>> PLATFORMS = stringListKey("Platforms", new ArrayList<>());
 	public static final ConfigKey<List<String>> BLOCK_SELECTOR = stringListKey("BlockSelector", new ArrayList<>());
 	public static final ConfigKey<List<String>> SCRIPT_EDITOR = stringListKey("ScriptEditor", new ArrayList<>());
+	public static final ConfigKey<List<String>> SCRIPT_VIEWER = stringListKey("ScriptViewer", new ArrayList<>());
 
 
 	// Boolean Keys
@@ -70,6 +71,8 @@ public final class SBConfig {
 	public static final ConfigKey<String> UPDATE_DOWNLOAD_START = stringKey("UpdateDownloadStartMessage", "");
 	public static final ConfigKey<String> ERROR_UPDATE = stringKey("ErrorUpdateMessage", "");
 	public static final ConfigKey<String> NOT_SELECTION = stringKey("NotSelectionMessage", "");
+	public static final ConfigKey<String> SCRIPT_VIEWER_START = stringKey("ScriptViewerStartMessage", "");
+	public static final ConfigKey<String> SCRIPT_VIEWER_STOP = stringKey("ScriptViewerStopMessage", "");
 	public static final ConfigKey<String> ACTIVE_DELAY = stringKey("ActiveDelayMessage", "");
 	public static final ConfigKey<String> ERROR_ACTION_DATA = stringKey("ErrorActionDataMessage", "");
 	public static final ConfigKey<String> ERROR_SCRIPT_CHECK = stringKey("ErrorScriptCheckMessage", "");

@@ -31,8 +31,9 @@ public class ScriptBreakListener extends ScriptListener {
 	public void onBlockBreakEvent(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		ItemStack item = player.getInventory().getItemInMainHand();
-		if (ItemUtils.isBlockSelector(item) && Permission.TOOL_BLOCKSELECTOR.has(player)
-				|| ItemUtils.isScriptEditor(item) && Permission.TOOL_SCRIPTEDITOR.has(player)) {
+		if (ItemUtils.isBlockSelector(item) && Permission.TOOL_BLOCK_SELECTOR.has(player)
+				|| ItemUtils.isScriptEditor(item) && Permission.TOOL_SCRIPT_EDITOR.has(player)
+					|| ItemUtils.isScriptViewer(item) && Permission.TOOL_SCRIPT_VIEWER.has(player)) {
 			event.setCancelled(true);
 			return;
 		}

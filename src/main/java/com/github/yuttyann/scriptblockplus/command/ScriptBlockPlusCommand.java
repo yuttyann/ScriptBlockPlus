@@ -147,6 +147,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		Player player = (Player) sender;
 		player.getInventory().addItem(ItemUtils.getBlockSelector());
 		player.getInventory().addItem(ItemUtils.getScriptEditor(ScriptType.INTERACT));
+		player.getInventory().addItem(ItemUtils.getScriptViewer());
 		Utils.updateInventory(player);
 		SBConfig.GIVE_TOOL.send(player);
 		return true;

@@ -73,6 +73,16 @@ public class ItemUtils {
 	}
 
 	@NotNull
+	public static ItemStack getScriptViewer() {
+		ItemStack item = new ItemStack(Material.valueOf(Utils.isCBXXXorLater("1.13") ? "CLOCK" : "WATCH"));
+		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
+		meta.setDisplayName("§dScript Viewer");
+		meta.setLore(setListColor(SBConfig.SCRIPT_VIEWER.getValue()));
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	@NotNull
 	private static List<String> setListColor(List<String> list) {
 		list = new ArrayList<>(list);
 		for (int i = 0; i < list.size(); i++) {
@@ -87,6 +97,10 @@ public class ItemUtils {
 
 	public static boolean isScriptEditor(@Nullable ItemStack item) {
 		return isItem(item, Material.BLAZE_ROD, s -> s.startsWith("§dScript Editor§6[Mode: ") && s.endsWith("]"));
+	}
+
+	public static boolean isScriptViewer(@Nullable ItemStack item) {
+		return isItem(item, Material.valueOf(Utils.isCBXXXorLater("1.13") ? "CLOCK" : "WATCH"), s -> s.startsWith("§dScript Viewer"));
 	}
 
 	@NotNull

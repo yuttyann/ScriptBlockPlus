@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.listener.item.action.ScriptEditor;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +39,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 		this.ordinal = scriptType == null ? TYPES.size() : scriptType.ordinal;
 		if (scriptType == null) {
 			TYPES.put(name, this);
+			new ScriptEditor(this).put();
 		}
 	}
 

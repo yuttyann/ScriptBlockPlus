@@ -27,8 +27,9 @@ public enum Permission {
 	BREAK_USE("scriptblockplus.break.use"),
 	WALK_USE("scriptblockplus.walk.use"),
 	*/
-	TOOL_BLOCKSELECTOR("scriptblockplus.tool.blockselector"),
-	TOOL_SCRIPTEDITOR("scriptblockplus.tool.scripteditor");
+	TOOL_BLOCK_SELECTOR("scriptblockplus.tool.blockselector"),
+	TOOL_SCRIPT_EDITOR("scriptblockplus.tool.scripteditor"),
+	TOOL_SCRIPT_VIEWER("scriptblockplus.tool.scriptviewer");
 
 	private static final String SBP_PREFIX = "scriptblockplus.";
 
