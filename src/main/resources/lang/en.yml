@@ -3,7 +3,7 @@
 # There may be some mistakes in grammar
 
 
-## ===== HELP PAGE ===== ##
+## ===== Commands ===== ##
 # There are no placeholders
 ToolCommandMessage: 'tool - get the scriptblock editor'
 ReloadCommandMessage: 'reload - reload the plugin'
@@ -21,27 +21,34 @@ SelectorRemoveCommandMessage: 'selector remove - remove scriptblock for selected
 
 # &(code) : you can use color code
 
-## ===== BLOCK SELECTOR ===== ##
+## ===== BlockSelector ===== ##
 # There are no placeholders
 BlockSelector:
 - '&aThis tool supports range selection.'
 - '&6Left-click: &eSpecify the block as Pos1.'
-- '&6Left-click: &eSpecify the block as Pos2.'
+- '&6Right-click: &eSpecify the block as Pos2.'
 - '&6Shift+Leftclick: &eSpecify Player as Pos1.'
-- '&6Shift+Leftclick: &eSpecify Player as Pos1.'
+- '&6Shift+Rightclick: &eSpecify Player as Pos1.'
 
-## ===== SCRIPT EDITOR ===== ##
+## ===== ScriptEditor ===== ##
 # %scripttype% : Type of script
 ScriptEditor:
 - '&aThis tool supports script editing.'
 - '&6Left-click: &eChange the target of the tool.'
-- '&6Left-click: &eCopy the script.'
+- '&6Right-click: &eCopy the script.'
 - '&6Shift+Leftclick: &eDelete the script.'
-- '&6Shift+Leftclick: &ePaste the script.'
+- '&6Shift+Rightclick: &ePaste the script.'
+
+## ===== ScriptViewer ===== ##
+# There are no placeholders
+ScriptViewer:
+- '&aThis tool supports script checking.'
+- '&6Left-click: &eStart searching for surrounding scripts.'
+- '&6Right-click: &eStop searching for surrounding scripts.'
 
 # |~, \n : change the line
 
-## ===== MESSAGES ===== ##
+## ===== Messages ===== ##
 # There are no placeholders
 NotVaultMessage: '&cVault not found!'
 SenderNoPlayerMessage: '&cYou cannot do this as console.'
@@ -82,6 +89,10 @@ ScriptRemoveMessage: '&cRemove a "%scripttype%" type scriptblock.'
 
 # There are no placeholders
 NotSelectionMessage: '&cBlockSelector area not selected.'
+
+# There are no placeholders
+ScriptViewerStartMessage: '&aSearch for surrounding scripts has started.'
+ScriptViewerStopMessage: '&cSearch for surrounding scripts has stopped.'
 
 # %world%  : name of the world
 # %coords% : Coordinate(x, y, z)

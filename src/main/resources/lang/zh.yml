@@ -3,7 +3,7 @@
 # 本配置源语言为日本语，可能存在翻译不准确的地方
 
 
-## ===== 帮助页 ===== ##
+## ===== Commands ===== ##
 # 沒有佔位符
 ToolCommandMessage: 'tool - 获得脚本编辑工具'
 ReloadCommandMessage: 'reload - 重载插件'
@@ -21,7 +21,7 @@ SelectorRemoveCommandMessage: 'selector remove - 移除选区内的脚本方块'
 
 # &(code) : 可以使用彩色代码
 
-## ===== 方块选择器物品设定 ===== ##
+## ===== BlockSelector ===== ##
 # 沒有佔位符
 BlockSelector:
 - '&a这是一个可以选择方块区域的工具'
@@ -30,7 +30,7 @@ BlockSelector:
 - '&6Shift+左键点击: &e将当前位置设置为区域的起点'
 - '&6Shift+右键点击: &e将当前位置设置为区域的结束点'
 
-## ===== 脚本编辑器物品设定 ===== ##
+## ===== ScriptEditor ===== ##
 # %scripttype% : 脚本种类
 ScriptEditor:
 - '&a这是一个可以复制并粘贴脚本的工具'
@@ -39,9 +39,16 @@ ScriptEditor:
 - '&6Shift+左键点击: &e删除脚本'
 - '&6Shift+右键点击: &e粘贴脚本'
 
+## ===== ScriptViewer ===== ##
+# %scripttype% : 脚本种类
+ScriptViewer:
+- '&a該工具支持腳本檢查。'
+- '&6左键点击: &e開始搜索周圍的腳本。'
+- '&6右键点击: &e停止搜索周圍的腳本。'
+
 # |~ \n : 改行
 
-## ===== 消息设定 ===== ##
+## ===== Messages ===== ##
 # 沒有佔位符
 NotVaultMessage: '&cVault经济插件前置未找到'
 SenderNoPlayerMessage: '&c控制台不能这么做'
@@ -82,6 +89,10 @@ ScriptRemoveMessage: '&c删除一个种类是"%scripttype%"的脚本'
 
 # 沒有佔位符
 NotSelectionMessage: '&cBlockSelector坐标范围未选择'
+
+# 沒有佔位符
+ScriptViewerStartMessage: '&a開始搜索周圍的腳本。'
+ScriptViewerStopMessage: '&c對周圍腳本的搜索已停止。'
 
 # %world%  : 世界名
 # %coords% : 坐标(x, y, z)

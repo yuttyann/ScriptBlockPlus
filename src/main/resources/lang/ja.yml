@@ -39,6 +39,13 @@ ScriptEditor:
 - '&6シフト+左クリック: &eスクリプトの削除を行います。'
 - '&6シフト+右クリック: &eスクリプトのペーストを行います。'
 
+## ===== ScriptViewer ===== ##
+# プレースホルダはありません
+ScriptViewer:
+- '&aこのツールは、スクリプトのチェックをサポートします。'
+- '&6左クリック: &e周囲のスクリプトの検索を開始します。'
+- '&6右クリック: &e周囲のスクリプトの検索を停止します。'
+
 # |~, \n : 改行(以降の項目全て対象)
 
 ## ===== Messages ===== ##
@@ -82,6 +89,10 @@ ScriptRemoveMessage: '&cブロック"%scripttype%"のスクリプトを削除し
 
 # プレースホルダはありません
 NotSelectionMessage: '&cBlockSelectorで座標を選択してください。'
+
+# プレースホルダはありません
+ScriptViewerStartMessage: '&a周囲のスクリプトの検索を開始しました。'
+ScriptViewerStopMessage: '&c周囲のスクリプトの検索を停止しました。'
 
 # %world%  : ワールドの名前
 # %coords% : 座標(x, y, z)
