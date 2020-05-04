@@ -13,11 +13,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author yuttyann44581
  */
 public enum ActionType {
-	CREATE, ADD, REMOVE, VIEW;
+	CREATE,
+	ADD,
+	REMOVE,
+	VIEW;
 
 	private static final Set<String> TYPES = new HashSet<>();
-
-	private static AtomicInteger I = new AtomicInteger(ScriptType.size());
+	private static final AtomicInteger I = new AtomicInteger(ScriptType.size());
 
 	static {
 		reload();

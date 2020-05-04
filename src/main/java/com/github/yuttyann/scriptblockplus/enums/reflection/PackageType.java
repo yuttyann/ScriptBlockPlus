@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * ScriptBlockPlus PackageType 列挙型
@@ -40,9 +41,12 @@ public enum PackageType {
 	CB_UTIL(CB, "util");
 
 	private enum RType {
-		CLASS("class_"), FIELD("field_"), METHOD("method_"), CONSTRUCTOR("constructor_");
+		CLASS("class_"),
+		FIELD("field_"),
+		METHOD("method_"),
+		CONSTRUCTOR("constructor_");
 
-		private String name;
+		private final String name;
 
 		private RType(@NotNull String name) {
 			this.name = name;
@@ -77,7 +81,7 @@ public enum PackageType {
 
 	public void setFieldValue(boolean declared, @NotNull String className, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {
 		if (StringUtils.isEmpty(className)) {
-			className = instance.getClass().getSimpleName();
+			className = Objects.requireNonNull(instance).getClass().getSimpleName();
 		}
 		getField(declared, className, fieldName).set(instance, value);
 	}
@@ -111,7 +115,7 @@ public enum PackageType {
 
 	public Object invokeMethod(boolean declared, @Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Object... arguments) throws ReflectiveOperationException {
 		if (StringUtils.isEmpty(className)) {
-			className = instance.getClass().getSimpleName();
+			className = Objects.requireNonNull(instance).getClass().getSimpleName();
 		}
 		if (arguments == null) {
 			arguments = ArrayUtils.EMPTY_OBJECT_ARRAY;
@@ -202,10 +206,7 @@ public enum PackageType {
 
 	public Enum<?> getEnumValueOf(@NotNull String className, @NotNull String name) throws IllegalArgumentException, ReflectiveOperationException {
 		Class<?> clazz = getClass(className);
-		if (clazz != null && clazz.isEnum()) {
-			return (Enum<?>) getMethod(className, "valueOf", String.class).invoke(null, name);
-		}
-		return null;
+		return clazz.isEnum() ? (Enum<?>) getMethod(className, "valueOf", String.class).invoke(null, name) : null;
 	}
 
 	private String createKey(@NotNull RType rType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {

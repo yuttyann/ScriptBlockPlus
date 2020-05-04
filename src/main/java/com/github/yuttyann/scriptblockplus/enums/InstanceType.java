@@ -5,5 +5,6 @@ package com.github.yuttyann.scriptblockplus.enums;
  * @author yuttyann44581
  */
 public enum InstanceType {
-	SBINSTANCE, REFLECTION
+	SBINSTANCE,
+	REFLECTION
 }

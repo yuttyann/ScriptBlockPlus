@@ -110,8 +110,8 @@ public class Calculation extends BaseOption {
 				if (!Utils.isPlatform()) {
 					return 0;
 				}
-				Object handle = player.getClass().getMethod("getHandle").invoke(player);
-				return handle.getClass().getField("ping").get(handle);
+				Object handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
+				return PackageType.NMS.getField("EntityPlayer", "ping").getInt(handle);
 			case "%player_x%":
 				return player.getLocation().getBlockX();
 			case "%player_y%":

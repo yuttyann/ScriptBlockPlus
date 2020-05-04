@@ -21,8 +21,8 @@ public final class CommandSelector {
 	static {
 		Vx_x_Rx nmsVx_x_Rx;
 		try {
-			String pacageName = Vx_x_Rx.class.getPackage().getName();
-			String className = pacageName + "." + PackageType.getVersionName();
+			String packageName = Vx_x_Rx.class.getPackage().getName();
+			String className = packageName + "." + PackageType.getVersionName();
 			nmsVx_x_Rx = (Vx_x_Rx) Class.forName(className).newInstance();
 		} catch (Exception e) {
 			nmsVx_x_Rx = new Vx_x_Rx();
