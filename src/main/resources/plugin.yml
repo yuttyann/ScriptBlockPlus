@@ -56,6 +56,7 @@ permissions:
     children:
       scriptblockplus.tool.blockselector: true
       scriptblockplus.tool.scripteditor: true
+      scriptblockplus.tool.scriptviewer: true
   scriptblockplus.command.tool:
     default: false
   scriptblockplus.command.reload:
@@ -85,4 +86,6 @@ permissions:
   scriptblockplus.tool.blockselector:
     default: false
   scriptblockplus.tool.scripteditor:
+    default: false
+  scriptblockplus.tool.scriptviewer:
     default: false
