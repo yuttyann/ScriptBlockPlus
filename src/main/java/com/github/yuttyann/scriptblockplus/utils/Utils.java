@@ -82,13 +82,15 @@ public final class Utils {
 	}
 
 	public static void sendColorMessage(@NotNull CommandSender sender, @Nullable String message) {
-		message = StringUtils.setColor(message, true);
-		message = StringUtils.replace(message, "\\n", "|~");
-		String color = "";
-		for (String line : StringUtils.split(message, "|~")) {
-			sender.sendMessage(line = (color + line));
-			if (line.indexOf('§') > -1) {
-				color = StringUtils.getColors(line);
+		if (StringUtils.isNotEmpty(message)) {
+			message = StringUtils.setColor(message, true);
+			message = StringUtils.replace(message, "\\n", "|~");
+			String color = "";
+			for (String line : StringUtils.split(message, "|~")) {
+				sender.sendMessage(line = (color + line));
+				if (line.indexOf('§') > -1) {
+					color = StringUtils.getColors(line);
+				}
 			}
 		}
 	}
