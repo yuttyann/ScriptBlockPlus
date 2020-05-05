@@ -4,7 +4,7 @@
 # [true -> 有効 | false -> 無効]
 # 確認メッセージは"OP"にしか表示されません。
 # 最新バージョンを確認するかどうか。
-UpdateChecker: true
+UpdateChecker: false
 
 # 前提 "UpdateChecker: true"
 # 最新のプラグインをダウンロードするかどうか。
