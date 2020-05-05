@@ -2,8 +2,8 @@ package com.github.yuttyann.scriptblockplus.script.hook;
 
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.NotNull;
@@ -15,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class VaultPermission {
 
-	private String name;
-	private Permission permission;
+	private final Permission permission;
+	private final String name;
 
 	private VaultPermission(@Nullable Permission permission) {
 		this.permission = permission;
@@ -40,70 +40,80 @@ public final class VaultPermission {
 		return permission != null && permission.isEnabled();
 	}
 
+	@NotNull
+	public String getName() {
+		return name;
+	}
+
 	@Nullable
-	public String getPrimaryGroup(@NotNull Player player) {
+	public String getPrimaryGroup(@NotNull OfflinePlayer player) {
 		return permission.getPrimaryGroup(null, player);
 	}
 
 	@Nullable
-	public String getPrimaryGroup(@Nullable String world, @NotNull Player player) {
+	public String getPrimaryGroup(@Nullable String world, @NotNull OfflinePlayer player) {
 		return permission.getPrimaryGroup(world, player);
 	}
 
-	public boolean playerInGroup(@Nullable Player player, @NotNull String group) {
+	public boolean playerInGroup(@Nullable OfflinePlayer player, @NotNull String group) {
 		return permission.playerInGroup(null, player, group);
 	}
 
-	public boolean playerInGroup(@Nullable String world, @NotNull Player player, @NotNull String group) {
+	public boolean playerInGroup(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String group) {
 		return permission.playerInGroup(world, player, group);
 	}
 
-	public boolean playerAddGroup(@NotNull Player player, @NotNull String group) {
+	public boolean playerAddGroup(@NotNull OfflinePlayer player, @NotNull String group) {
 		return permission.playerAddGroup(null, player, group);
 	}
 
-	public boolean playerAddGroup(@Nullable String world, @NotNull Player player, @NotNull String group) {
+	public boolean playerAddGroup(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String group) {
 		return permission.playerAddGroup(world, player, group);
 	}
 
-	public boolean playerRemoveGroup(@NotNull Player player, @NotNull String group) {
+	public boolean playerRemoveGroup(@NotNull OfflinePlayer player, @NotNull String group) {
 		return permission.playerRemoveGroup(null, player, group);
 	}
 
-	public boolean playerRemoveGroup(@Nullable String world, @NotNull Player player, @NotNull String group) {
+	public boolean playerRemoveGroup(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String group) {
 		return permission.playerRemoveGroup(world, player, group);
 	}
 
-	public boolean playerAdd(@NotNull Player player, @NotNull String permission) {
+	public boolean playerAdd(@NotNull OfflinePlayer player, @NotNull String permission) {
 		return this.permission.playerAdd(null, player, permission);
 	}
 
-	public boolean playerAdd(@Nullable String world, @NotNull Player player, @NotNull String permission) {
+	public boolean playerAdd(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
+		if (isSuperPerms()) {
+			return playerHas(player, permission);
+		}
 		return this.permission.playerAdd(world, player, permission);
 	}
 
-	public boolean playerRemove(@NotNull Player player, @NotNull String permission) {
+	public boolean playerRemove(@NotNull OfflinePlayer player, @NotNull String permission) {
 		return this.permission.playerRemove(null, player, permission);
 	}
 
-	public boolean playerRemove(@Nullable String world, @NotNull Player player, @NotNull String permission) {
+	public boolean playerRemove(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
+		if (isSuperPerms()) {
+			return playerRemove(player, permission);
+		}
 		return this.permission.playerRemove(world, player, permission);
 	}
 
-	public boolean playerHas(@NotNull Player player, @NotNull String permission) {
+	public boolean playerHas(@NotNull OfflinePlayer player, @NotNull String permission) {
 		return this.permission.playerHas(null, player, permission);
 	}
 
-	public boolean playerHas(@Nullable String world, @NotNull Player player, @NotNull String permission) {
+	public boolean playerHas(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
+		if (isSuperPerms()) {
+			return playerHas(player, permission);
+		}
 		return this.permission.playerHas(world, player, permission);
 	}
 
 	public boolean has(@NotNull CommandSender sender, @NotNull String permission) {
 		return this.permission.has(sender, permission);
-	}
-
-	public boolean has(@NotNull Player player, @NotNull String permission) {
-		return this.permission.has(player, permission);
 	}
 
 	public boolean isSuperPerms() {

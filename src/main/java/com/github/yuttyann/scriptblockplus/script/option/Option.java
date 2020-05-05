@@ -21,8 +21,8 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	private final String name;
 	private final String syntax;
 
-	private int length;
-	private int ordinal = -1;
+	private final int length;
+	private final int ordinal = -1;
 
 	/**
 	 * コンストラクタ

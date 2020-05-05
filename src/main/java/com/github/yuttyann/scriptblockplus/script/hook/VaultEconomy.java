@@ -15,10 +15,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class VaultEconomy {
 
-	private Economy economy;
+	private final Economy economy;
+	private final String name;
 
 	private VaultEconomy(@Nullable Economy economy) {
 		this.economy = economy;
+		this.name = economy == null ? "None" : economy.getName();
 	}
 
 	@NotNull
@@ -36,6 +38,11 @@ public final class VaultEconomy {
 
 	public boolean isEnabled() {
 		return economy != null && economy.isEnabled();
+	}
+
+	@NotNull
+	public String getName() {
+		return name;
 	}
 
 	public double getBalance(@NotNull OfflinePlayer player) {

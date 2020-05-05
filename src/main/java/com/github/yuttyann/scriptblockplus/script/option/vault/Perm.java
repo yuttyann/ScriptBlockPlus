@@ -36,17 +36,10 @@ public class Perm extends BaseOption {
 		String permission = array.length > 1 ? array[1] : array[0];
 
 		Player player = getPlayer();
-		if (!has(vaultPermission, world, player, permission)) {
+		if (!vaultPermission.playerHas(world, player, permission)) {
 			SBConfig.NOT_PERMISSION.send(player);
 			return false;
 		}
 		return true;
-	}
-
-	private boolean has(VaultPermission vaultPermission, String world, Player player, String permission) {
-		if (world == null) {
-			return vaultPermission.has(player, permission);
-		}
-		return !vaultPermission.isSuperPerms() && vaultPermission.playerHas(world, player, permission);
 	}
 }

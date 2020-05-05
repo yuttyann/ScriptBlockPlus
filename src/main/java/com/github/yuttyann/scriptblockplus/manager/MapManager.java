@@ -22,15 +22,15 @@ import java.util.*;
  */
 public final class MapManager {
 
-	private ScriptBlock plugin;
-	private SBMap<Set<UUID>> delays;
-	private Set<TimeData> cooldowns;
-	private Map<ScriptType, Set<String>> scriptCoords;
+	private final ScriptBlock plugin;
+	private final Set<TimeData> cooldowns;
+	private final SBMap<Set<UUID>> delays;
+	private final Map<ScriptType, Set<String>> scriptCoords;
 
 	public MapManager(ScriptBlock plugin) {
 		this.plugin = plugin;
-		this.delays = new SBMap<>();
 		this.cooldowns = new HashSet<>();
+		this.delays = new SBMap<>();
 		this.scriptCoords = new HashMap<>();
 	}
 
@@ -58,7 +58,7 @@ public final class MapManager {
 	}
 
 	public void loadScripts(@NotNull YamlConfig scriptFile, @NotNull ScriptType scriptType) {
-		Set<String> set = new HashSet<String>(scriptCoords.size());
+		Set<String> set = new HashSet<>(scriptCoords.size());
 		scriptFile.getKeys().forEach(w -> scriptFile.getKeys(w).forEach(c -> set.add(w + ", " + c)));
 		scriptCoords.put(scriptType, set);
 	}
@@ -90,7 +90,7 @@ public final class MapManager {
 				Set<Map<String, Object>> set = FileUtils.loadFile(cooldownFile);
 				set.forEach(TimeData::deserialize);
 			} catch (Exception e) {
-				cooldowns = new HashSet<>();
+				cooldowns.clear();
 			} finally {
 				cooldownFile.delete();
 			}

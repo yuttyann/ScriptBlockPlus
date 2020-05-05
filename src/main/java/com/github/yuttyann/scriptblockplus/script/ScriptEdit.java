@@ -3,7 +3,7 @@ package com.github.yuttyann.scriptblockplus.script;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.player.PlayerCount;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
  */
 public final class ScriptEdit {
 
-	private ScriptType scriptType;
-	private ScriptData scriptData;
-	private MapManager mapManager;
+	private final ScriptType scriptType;
+	private final ScriptData scriptData;
+	private final MapManager mapManager;
 
 	public ScriptEdit(@NotNull ScriptType scriptType) {
 		this.scriptType = scriptType;
