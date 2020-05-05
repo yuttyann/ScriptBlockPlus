@@ -3,12 +3,13 @@ ScriptBlockPlus [Java8 MC1.9-1.15.2] [![](https://jitpack.io/v/yuttyann/ScriptBl
 概要
 --------------------------------------------------
 [ScriptBlock](https://dev.bukkit.org/projects/scriptblock)の機能を引き継ぎ、新機能追加や改善を施したプラグインです。  
-また、開発者向けに[API](https://github.com/yuttyann/ScriptBlockPlus/wiki/API%E3%81%AE%E5%8F%96%E5%BE%97%E6%96%B9%E6%B3%95)も公開しています。  
+また、開発者向けに[API](https://github.com/yuttyann/ScriptBlockPlus/wiki/API%E3%81%AE%E5%8F%96%E5%BE%97%E6%96%B9%E6%B3%95)を公開しています。  
 
 導入
 -----------
 [Releases](https://github.com/yuttyann/ScriptBlockPlus/releases)または[Yuttyann Files](https://file.yuttyann44581.net/)から`ScriptBlockPlus`のダウンロードを行ってください。  
-その後前提プラグインである[Vault](https://dev.bukkit.org/projects/vault)をダウンロードして`plugins`フォルダへ保存すれば完了です。  
+その後前提プラグインである[`Vault`](https://dev.bukkit.org/projects/vault)(v1.7.1以降推奨)をダウンロードを行い`plugins`フォルダへ保存すれば完了です。  
+また、必須ではないですが[`PlaceholderAPI`](https://www.spigotmc.org/resources/placeholderapi.6245/)の導入を行うことで機能拡張が可能です。  
 
 対応プラットフォーム
 -----------
