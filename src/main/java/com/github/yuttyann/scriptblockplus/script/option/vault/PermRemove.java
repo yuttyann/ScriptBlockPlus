@@ -5,7 +5,6 @@ import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,18 +32,7 @@ public class PermRemove extends BaseOption {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		String world = array.length > 1 ? array[0] : null;
 		String permission = array.length > 1 ? array[1] : array[0];
-
-		Player player = getPlayer();
-		if (has(vaultPermission, world, player, permission)) {
-			vaultPermission.playerRemove(world, player, permission);
-		}
+		vaultPermission.playerRemove(world, getPlayer(), permission);
 		return true;
-	}
-
-	private boolean has(VaultPermission vaultPermission, String world, Player player, String permission) {
-		if (world == null) {
-			return vaultPermission.has(player, permission);
-		}
-		return vaultPermission.playerHas(world, player, permission);
 	}
 }
