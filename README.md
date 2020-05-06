@@ -39,4 +39,5 @@ ScriptBlockPlus [Java8 MC1.9-1.15.2] [![](https://jitpack.io/v/yuttyann/ScriptBl
 -----------
 **[Github]** [記事一覧](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91) **[日本語 - API、オプション、コマンドの詳細等]**  
 **[MCBBS]** [フォーラム](https://www.mcbbs.net/thread-691900-1-1.html) **[中国語 - 使い方や機能の紹介]**  
+**[SpigotMC]** [フォーラム](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/) **[英語 - 使い方や機能の紹介]**  
 **[MCPoteton]** [【プラグイン紹介】ScriptBlockPlus【～1.15.2対応】](https://mcpoteton.com/mcplugin-scriptblockplus) **[日本語 - 使い方や機能の紹介]**  
