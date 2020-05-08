@@ -5,7 +5,7 @@
 
 ## ===== Commands ===== ##
 # There are no placeholders
-ToolCommandMessage: 'tool - get the scriptblock editor'
+ToolCommandMessage: 'tool - get the scriptblock tools'
 ReloadCommandMessage: 'reload - reload the plugin'
 BackupCommandMessage: 'backup - make a backup of the script data'
 CheckVerCommandMessage: 'checkver - check new version'
