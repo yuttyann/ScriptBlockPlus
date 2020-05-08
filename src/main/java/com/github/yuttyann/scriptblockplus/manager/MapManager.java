@@ -1,19 +1,15 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBMap;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.option.time.TimeData;
-import com.github.yuttyann.scriptblockplus.utils.FileUtils;
+import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -22,14 +18,10 @@ import java.util.*;
  */
 public final class MapManager {
 
-	private final ScriptBlock plugin;
-	private final Set<TimeData> cooldowns;
 	private final SBMap<Set<UUID>> delays;
 	private final Map<ScriptType, Set<String>> scriptCoords;
 
-	public MapManager(ScriptBlock plugin) {
-		this.plugin = plugin;
-		this.cooldowns = new HashSet<>();
+	public MapManager() {
 		this.delays = new SBMap<>();
 		this.scriptCoords = new HashMap<>();
 	}
@@ -37,11 +29,6 @@ public final class MapManager {
 	@NotNull
 	public SBMap<Set<UUID>> getDelays() {
 		return delays;
-	}
-
-	@NotNull
-	public Set<TimeData> getCooldowns() {
-		return cooldowns;
 	}
 
 	@NotNull
@@ -61,40 +48,6 @@ public final class MapManager {
 		Set<String> set = new HashSet<>(scriptCoords.size());
 		scriptFile.getKeys().forEach(w -> scriptFile.getKeys(w).forEach(c -> set.add(w + ", " + c)));
 		scriptCoords.put(scriptType, set);
-	}
-
-	public void saveCooldown() {
-		if (cooldowns.size() > 0) {
-			File cooldownFile = new File(plugin.getDataFolder(), "scripts/cooldown.dat");
-			Set<Map<String, Object>> set = new HashSet<>();
-			try {
-				cooldowns.forEach(t -> set.add(t.serialize()));
-			} catch (Exception e) {
-				set.clear();
-			} finally {
-				if (set.size() > 0) {
-					try {
-						FileUtils.saveFile(cooldownFile, set);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-	}
-
-	public void loadCooldown() {
-		File cooldownFile = new File(plugin.getDataFolder(), "scripts/cooldown.dat");
-		if (cooldownFile.exists()) {
-			try {
-				Set<Map<String, Object>> set = FileUtils.loadFile(cooldownFile);
-				set.forEach(TimeData::deserialize);
-			} catch (Exception e) {
-				cooldowns.clear();
-			} finally {
-				cooldownFile.delete();
-			}
-		}
 	}
 
 	public void putDelay(@NotNull UUID uuid, @NotNull ScriptType scriptType, @NotNull String fullCoords) {
@@ -123,7 +76,7 @@ public final class MapManager {
 		if (set != null) {
 			set.add(fullCoords);
 		}
-		removeTimes(scriptType, fullCoords);
+		TimerOption.removeAll(fullCoords, scriptType);
 	}
 
 	public void removeCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
@@ -132,28 +85,12 @@ public final class MapManager {
 		if (set != null) {
 			set.remove(fullCoords);
 		}
-		removeTimes(scriptType, fullCoords);
+		TimerOption.removeAll(fullCoords, scriptType);
 	}
 
 	public boolean containsCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
 		String fullCoords = BlockCoords.getFullCoords(location);
 		Set<String> set = scriptCoords.get(scriptType);
 		return set != null && set.contains(fullCoords);
-	}
-
-	public void removeTimes(@NotNull Location location, @NotNull ScriptType scriptType) {
-		removeTimes(scriptType, BlockCoords.getFullCoords(location));
-	}
-
-	public void removeTimes(@NotNull ScriptType scriptType, @NotNull String fullCoords) {
-		delays.remove(scriptType, fullCoords);
-		Set<TimeData> set = new HashSet<>();
-		for (TimeData timeData : cooldowns) {
-			ScriptType tScriptType = timeData.getScriptType();
-			if ((tScriptType == null || tScriptType == scriptType) && timeData.getFullCoords().equals(fullCoords)) {
-				set.add(timeData);
-			}
-		}
-		set.forEach(cooldowns::remove);
 	}
 }
