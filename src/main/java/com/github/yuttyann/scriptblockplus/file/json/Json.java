@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+/**
+ * ScriptBlockPlus Json クラス
+ * @author yuttyann44581
+ */
 public abstract class Json<T> {
 
     private static final String THREAD_NAME = "Json Thread : " + Utils.getPluginName(ScriptBlock.getInstance());
@@ -25,14 +29,13 @@ public abstract class Json<T> {
 
     @SerializedName("infos")
     @Expose
-    protected List<T> infos = null;
+    protected List<T> list = null;
 
     protected Json(@NotNull UUID uuid) {
         this.uuid = uuid;
         try {
-            @SuppressWarnings("unchecked")
             Json<T> json = (Json<T>) load(getClass().getSimpleName(), uuid);
-            this.infos = json == null ? new ArrayList<>() : json.infos;
+            this.list = json == null ? new ArrayList<>() : json.list;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,7 +77,7 @@ public abstract class Json<T> {
     public void remove(@NotNull T t) {
         Thread thread = new Thread(() -> {
             try {
-                infos.remove(t);
+                list.remove(t);
                 save();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -109,12 +112,7 @@ public abstract class Json<T> {
 
     @NotNull
     private File getFile(@NotNull String folder, @NotNull UUID uuid) {
-        String path = "json/" + folder + "/" + uuid.toString() + ".json";
-        File file = new File(ScriptBlock.getInstance().getDataFolder(), path);
-        File parent = file.getParentFile();
-        if (!parent.exists()) {
-            parent.mkdirs();
-        }
-        return file;
+        String path = "json/" + folder.toLowerCase() + "/" + uuid.toString() + ".json";
+        return new File(ScriptBlock.getInstance().getDataFolder(), path);
     }
 }

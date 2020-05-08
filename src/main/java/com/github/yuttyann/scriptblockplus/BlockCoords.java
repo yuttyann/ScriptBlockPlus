@@ -27,6 +27,8 @@ public class BlockCoords extends Location {
 
 	public BlockCoords(@Nullable final World world, final double x, final double y, final double z) {
 		super(world, x, y, z);
+		this.coords = getCoords(this);
+		this.fullCoords = getFullCoords(this);
 	}
 
 	@Override
@@ -89,7 +91,7 @@ public class BlockCoords extends Location {
 	 */
 	@NotNull
 	public String getCoords() {
-		return getCoords(this);
+		return coords;
 	}
 
 	/**
@@ -98,7 +100,7 @@ public class BlockCoords extends Location {
 	 */
 	@NotNull
 	public String getFullCoords() {
-		return getFullCoords(this);
+		return fullCoords;
 	}
 
 	/**

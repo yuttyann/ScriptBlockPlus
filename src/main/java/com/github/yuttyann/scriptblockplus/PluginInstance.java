@@ -38,7 +38,6 @@ public final class PluginInstance {
 		return INSTANCES.entrySet();
 	}
 
-	@SuppressWarnings("unchecked")
 	@NotNull
 	public static <T extends JavaPlugin> T get(@NotNull Class<? extends JavaPlugin> key) {
 		return (T) Objects.requireNonNull(INSTANCES.get(key));

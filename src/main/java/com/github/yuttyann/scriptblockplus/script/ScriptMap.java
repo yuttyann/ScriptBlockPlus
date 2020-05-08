@@ -28,7 +28,6 @@ abstract class ScriptMap extends ScriptListener implements ObjectMap {
 		OBJECT_MAP.computeIfAbsent(ramdomId, k -> new HashMap<>()).put(key, value);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public <T> T get(@NotNull String key) {

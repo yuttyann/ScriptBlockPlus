@@ -20,14 +20,14 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
 	private final String name;
 	private final String syntax;
-
 	private final int length;
-	private final int ordinal = -1;
+
+	private int ordinal = -1;
 
 	/**
 	 * コンストラクタ
-	 * @param name オプション名　[（例） example]
-	 * @param syntax オプション構文　[（例） @example: ]
+	 * @param name オプション名　[(例) example]
+	 * @param syntax オプション構文　[(例) @example: ]
 	 */
 	protected Option(@NotNull String name, @NotNull String syntax) {
 		this.name = Objects.requireNonNull(name);

@@ -20,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 public class ItemCost extends BaseOption {
 
 	public static final String KEY_ITEM = PlayerData.createRandomId("ItemCost");
-
 	public static final String KEY_ITEM_PLAYER = PlayerData.createRandomId("ItemCost_Player");
 
 	public ItemCost() {

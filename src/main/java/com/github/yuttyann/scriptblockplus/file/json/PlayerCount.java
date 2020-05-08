@@ -35,9 +35,9 @@ public class PlayerCount extends Json<PlayerCountInfo> {
 	public PlayerCountInfo getInfo(@NotNull Location location, @NotNull ScriptType scriptType) {
 		String fullCoords = BlockCoords.getFullCoords(location);
 		int hash = Objects.hash(fullCoords, scriptType);
-		PlayerCountInfo info = StreamUtils.fOrElse(infos, p -> p.hashCode() == hash, null);
+		PlayerCountInfo info = StreamUtils.fOrElse(list, p -> p.hashCode() == hash, null);
 		if (info == null) {
-			infos.add(info = new PlayerCountInfo(fullCoords, scriptType));
+			list.add(info = new PlayerCountInfo(fullCoords, scriptType));
 		}
 		return info;
 	}

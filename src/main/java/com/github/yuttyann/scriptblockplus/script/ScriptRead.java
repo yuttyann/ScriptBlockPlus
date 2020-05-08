@@ -47,7 +47,10 @@ public class ScriptRead extends ScriptMap implements SBRead {
 		if (!(location instanceof BlockCoords)) {
 			location = new BlockCoords(location);
 		}
-		this.blockCoords = setCenter(((BlockCoords) location)).unmodifiable();
+		location.setX(location.getBlockX() + 0.5D);
+		location.setY(location.getBlockY() + 0.5D);
+		location.setZ(location.getBlockZ() + 0.5D);
+		this.blockCoords = ((BlockCoords) location).unmodifiable();
 	}
 
 	@NotNull
@@ -166,13 +169,5 @@ public class ScriptRead extends ScriptMap implements SBRead {
 			e.printStackTrace();
 			return false;
 		}
-	}
-
-	@NotNull
-	private BlockCoords setCenter(@NotNull BlockCoords blockCoords) {
-		blockCoords.setX(blockCoords.getBlockX() + 0.5D);
-		blockCoords.setY(blockCoords.getBlockY() + 0.5D);
-		blockCoords.setZ(blockCoords.getBlockZ() + 0.5D);
-		return blockCoords;
 	}
 }

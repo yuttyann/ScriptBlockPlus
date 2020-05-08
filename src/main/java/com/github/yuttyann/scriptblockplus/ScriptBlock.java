@@ -44,13 +44,12 @@ public class ScriptBlock extends JavaPlugin {
 		}
 
 		Files.reload();
-		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setOnline(true));
-
 		if (!HookPlugins.hasVault()) {
 			SBConfig.NOT_VAULT.send();
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
+		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setOnline(true));
 
 		Plugin plugin = getServer().getPluginManager().getPlugin("ScriptBlock");
 		if (plugin != null) {
@@ -60,9 +59,8 @@ public class ScriptBlock extends JavaPlugin {
 		updater = new Updater(this);
 		checkUpdate(Bukkit.getConsoleSender(), false);
 
-		mapManager = new MapManager(this);
+		mapManager = new MapManager();
 		mapManager.loadAllScripts();
-		mapManager.loadCooldown();
 
 		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 		getServer().getPluginManager().registerEvents(new InteractListener(), this);
@@ -70,13 +68,6 @@ public class ScriptBlock extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ScriptInteractListener(this), this);
 		getServer().getPluginManager().registerEvents(new ScriptBreakListener(this), this);
 		getServer().getPluginManager().registerEvents(new ScriptWalkListener(this), this);
-	}
-
-	@Override
-	public void onDisable() {
-		if (mapManager != null) {
-			mapManager.saveCooldown();
-		}
 	}
 
 	@Override
