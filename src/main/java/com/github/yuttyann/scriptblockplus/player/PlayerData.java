@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.player;
 
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
@@ -23,6 +24,7 @@ public abstract class PlayerData implements SBPlayer {
 	private static final String KEY_SCRIPTLINE = createRandomId("ScriptLine");
 	private static final String KEY_CLICKACTION = createRandomId("ClickAction");
 	private static final String KEY_PLAYERCOUNT = createRandomId("PlayerCount");
+	private static final String KEY_PLAYERTEMP = createRandomId("PlayerTemp");
 	private static final String KEY_OLDFULLCOORDS = createRandomId("OldFullCoords");
 
 	private final ObjectMap objectMap;
@@ -50,7 +52,6 @@ public abstract class PlayerData implements SBPlayer {
 			objectMap.put(key, value);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		@Nullable
 		public <T> T get(@NotNull String key) {
@@ -86,6 +87,16 @@ public abstract class PlayerData implements SBPlayer {
 			getObjectMap().put(KEY_PLAYERCOUNT, playerCount = new PlayerCount(getUniqueId()));
 		}
 		return playerCount;
+	}
+
+	@Override
+	@NotNull
+	public PlayerTemp getPlayerTemp() {
+		PlayerTemp playerTemp = getObjectMap().get(KEY_PLAYERTEMP);
+		if (playerTemp == null) {
+			getObjectMap().put(KEY_PLAYERTEMP, playerTemp = new PlayerTemp(getUniqueId()));
+		}
+		return playerTemp;
 	}
 
 	@Override
