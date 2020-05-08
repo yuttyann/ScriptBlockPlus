@@ -1,17 +1,19 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import org.bukkit.scheduler.BukkitRunnable;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * ScriptBlockPlus OldCooldown オプションクラス
  * @author yuttyann44581
  */
-public class OldCooldown extends BaseOption {
+public class OldCooldown extends TimerOption {
 
 	public OldCooldown() {
 		super("oldcooldown", "@oldcooldown:");
@@ -25,50 +27,24 @@ public class OldCooldown extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		int temp = getSecond();
-		if (temp > 0) {
-			short hour = (short) (temp / 3600);
-			byte minute = (byte) (temp % 3600 / 60);
-			byte second = (byte) (temp % 3600 % 60);
-			SBConfig.ACTIVE_COOLDOWN.replace(hour, minute, second).send(getSBPlayer());
+		if (inCooldown()) {
 			return false;
 		}
-		int second = Integer.parseInt(getOptionValue());
-		new Task(second, getScriptIndex(), getFullCoords()).runTaskTimer();
+		long value = Integer.parseInt(getOptionValue()) * 1000L;
+		long[] params = new long[] { System.currentTimeMillis(), value, 0L };
+		params[2] = params[0] + params[1];
+
+		PlayerTemp temp = getSBPlayer().getPlayerTemp();
+		temp.getInfo().getTimerTemp().add(new TimerTemp(params, getFullCoords(), getScriptType()));
+		temp.save();
 		return true;
 	}
 
-	private static class Task extends BukkitRunnable {
-
-		TimeData timeData;
-
-		Task(@NotNull TimeData timeData) {
-			this.timeData = timeData;
-		}
-
-		Task(int second, int scriptIndex, @NotNull String fullCoords) {
-			this.timeData = new TimeData(second + 1, scriptIndex, fullCoords);
-		}
-
-		void runTaskTimer() {
-			ScriptBlock.getInstance().getMapManager().getCooldowns().add(timeData);
-			runTaskTimer(ScriptBlock.getInstance(), 0, 20L);
-		}
-
-		@Override
-		public void run() {
-			if (--timeData.second <= 0) {
-				ScriptBlock.getInstance().getMapManager().getCooldowns().remove(timeData);
-				cancel();
-			}
-		}
-	}
-
-	void deserialize(@NotNull TimeData timeData) {
-		new Task(timeData).runTaskTimer();
-	}
-
-	private int getSecond() {
-		return TimeData.getSecond(TimeData.hashCode(getScriptIndex(), true, getFullCoords(), null, null));
+	@Override
+	@NotNull
+	protected Optional<TimerTemp> getTimerTemp() {
+		Set<TimerTemp> set = getSBPlayer().getPlayerTemp().getInfo().getTimerTemp();
+		int hash = Objects.hash(true, getFullCoords(), getScriptType());
+		return Optional.ofNullable(StreamUtils.fOrElse(set, t -> t.hashCode() == hash, null));
 	}
 }
