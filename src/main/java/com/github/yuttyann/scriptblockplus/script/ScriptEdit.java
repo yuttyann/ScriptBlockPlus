@@ -1,10 +1,12 @@
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
+import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -96,7 +98,7 @@ public final class ScriptEdit {
 		scriptData.setLastEdit();
 		scriptData.addScript(script);
 		scriptData.save();
-		mapManager.removeTimes(location, scriptType);
+		TimerOption.removeAll(BlockCoords.getFullCoords(location), scriptType);
 		SBConfig.SCRIPT_ADD.replace(scriptType).send(player);
 		SBConfig.CONSOLE_SCRIPT_ADD.replace(player.getName(), scriptType, location).console();
 	}
@@ -168,6 +170,7 @@ public final class ScriptEdit {
 
 	private static class Clipboard implements SBClipboard {
 
+		private final SBPlayer sbPlayer;
 		private final ScriptData scriptData;
 		private final MapManager mapManager;
 
@@ -175,8 +178,6 @@ public final class ScriptEdit {
 		private final String author;
 		private final List<String> scripts;
 		private final ScriptType scriptType;
-
-		private SBPlayer sbPlayer;
 
 		private Clipboard(@NotNull SBPlayer sbPlayer, @NotNull ScriptData scriptData) {
 			this.sbPlayer = sbPlayer;
