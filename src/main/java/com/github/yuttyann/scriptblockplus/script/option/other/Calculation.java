@@ -66,7 +66,7 @@ public class Calculation extends BaseOption {
 			return Double.parseDouble(source);
 		}
 		if (source.startsWith("%player_count_") && source.endsWith("%")) {
-			source = source.substring("%player__".length(), source.length() - 1);
+			source = source.substring("%player_count_".length(), source.length() - 1);
 			String[] array = StringUtils.split(source, "/");
 			if (array.length < 1 || array.length > 2) {
 				return 0;
