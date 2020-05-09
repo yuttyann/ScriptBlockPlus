@@ -5,31 +5,31 @@ import com.github.yuttyann.scriptblockplus.file.json.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * ScriptBlockPlus PlayerData クラス
  * @author yuttyann44581
  */
-public abstract class PlayerData implements SBPlayer {
+public abstract class PlayerMap implements SBPlayer {
 
-	private static final String KEY_REGION = createRandomId("CuboidRegion");
-	private static final String KEY_CLIPBOARD = createRandomId("ClipBoard");
-	private static final String KEY_SCRIPTLINE = createRandomId("ScriptLine");
-	private static final String KEY_CLICKACTION = createRandomId("ClickAction");
-	private static final String KEY_PLAYERCOUNT = createRandomId("PlayerCount");
-	private static final String KEY_PLAYERTEMP = createRandomId("PlayerTemp");
-	private static final String KEY_OLDFULLCOORDS = createRandomId("OldFullCoords");
+	private static final String KEY_REGION = Utils.randomUUID();
+	private static final String KEY_CLIPBOARD = Utils.randomUUID();
+	private static final String KEY_SCRIPTLINE = Utils.randomUUID();
+	private static final String KEY_CLICKACTION = Utils.randomUUID();
+	private static final String KEY_PLAYERCOUNT = Utils.randomUUID();
+	private static final String KEY_PLAYERTEMP = Utils.randomUUID();
+	private static final String KEY_OLDFULLCOORDS = Utils.randomUUID();
 
 	private final ObjectMap objectMap;
 
-	PlayerData() {
+	protected PlayerMap() {
 		this.objectMap = new ObjMap();
 	}
 
@@ -141,9 +141,5 @@ public abstract class PlayerData implements SBPlayer {
 	@NotNull
 	public Optional<String> getOldFullCoords() {
 		return Optional.ofNullable(getObjectMap().get(KEY_OLDFULLCOORDS));
-	}
-
-	public static String createRandomId(@NotNull String key) {
-		return key + "_" + UUID.randomUUID();
 	}
 }
