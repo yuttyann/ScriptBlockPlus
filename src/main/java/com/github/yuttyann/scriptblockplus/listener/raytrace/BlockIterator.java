@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * ScriptBlockPlus BlockIterator クラス
@@ -24,7 +25,7 @@ public class BlockIterator implements Iterator<BlockIterator.BData> {
 
     private boolean end = false;
 
-    private BData[] blockQueue = new BData[3];
+    private final BData[] blockQueue = new BData[3];
     {
         blockQueue[0] = new BData();
         blockQueue[1] = new BData();
@@ -51,7 +52,7 @@ public class BlockIterator implements Iterator<BlockIterator.BData> {
         }
     }
 
-    private int currentBlock = 0;
+    private int currentBlock;
     private int currentDistance = 0;
     private int maxDistanceInt;
 
@@ -170,7 +171,7 @@ public class BlockIterator implements Iterator<BlockIterator.BData> {
     }
 
     public BlockIterator(@NotNull Location location, double yOffset, int maxDistance) {
-        this(location.getWorld(), location.toVector(), location.getDirection(), yOffset, maxDistance);
+        this(Objects.requireNonNull(location.getWorld()), location.toVector(), location.getDirection(), yOffset, maxDistance);
     }
 
     public BlockIterator(@NotNull LivingEntity entity, int maxDistance) {

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class JoinQuitListener implements Listener {
 
-	private ScriptBlock plugin;
+	private final ScriptBlock plugin;
 
 	public JoinQuitListener(@NotNull ScriptBlock plugin) {
 		this.plugin = plugin;
@@ -43,9 +43,9 @@ public class JoinQuitListener implements Listener {
 
 		// ItemCost アイテム返却
 		ObjectMap objectMap = sbPlayer.getObjectMap();
-		if (objectMap.has(ItemCost.KEY_ITEM_PLAYER)) {
-			player.getInventory().setContents(objectMap.get(ItemCost.KEY_ITEM_PLAYER, new ItemStack[0]));
-			objectMap.remove(ItemCost.KEY_ITEM_PLAYER);
+		if (objectMap.has(ItemCost.KEY_PLAYER)) {
+			player.getInventory().setContents(objectMap.get(ItemCost.KEY_PLAYER, new ItemStack[0]));
+			objectMap.remove(ItemCost.KEY_PLAYER);
 			Utils.updateInventory(player);
 		}
 	}

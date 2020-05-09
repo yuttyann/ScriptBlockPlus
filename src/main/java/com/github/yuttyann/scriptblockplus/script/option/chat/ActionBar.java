@@ -70,10 +70,10 @@ public class ActionBar extends BaseOption {
 
 	private class Task extends BukkitRunnable {
 
-		final int stay;
-		final String message;
+		private final int stay;
+		private final String message;
 
-		int tick;
+		private int tick;
 
 		Task(int stay, @NotNull String message) {
 			this.tick = 0;

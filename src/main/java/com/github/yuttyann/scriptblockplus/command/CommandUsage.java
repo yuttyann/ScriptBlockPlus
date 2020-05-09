@@ -5,7 +5,6 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,18 +17,12 @@ public abstract class CommandUsage {
 
 	private final List<CommandData> usages = new ArrayList<CommandData>();
 
-	public final void setUsage(@Nullable CommandData... args) {
-		if (args == null) {
-			return;
-		}
+	public final void setUsage(@NotNull CommandData... args) {
 		usages.clear();
 		StreamUtils.forEach(args, usages::add);
 	}
 
-	public final void addUsage(@Nullable CommandData... args) {
-		if (args == null) {
-			return;
-		}
+	public final void addUsage(@NotNull CommandData... args) {
 		StreamUtils.forEach(args, usages::add);
 	}
 

@@ -53,7 +53,7 @@ public class ScriptInteractListener extends ScriptListener {
 				return;
 			}
 			ScriptRead scriptRead = new ScriptRead(player, location, this);
-			scriptRead.put(ScriptAction.KEY_ENUM_ACTION, action);
+			scriptRead.put(ScriptAction.KEY, action);
 			scriptRead.read(0);
 		}
 	}

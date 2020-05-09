@@ -1,11 +1,11 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.event.block.Action;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ScriptAction extends BaseOption {
 
-	public static final String KEY_ENUM_ACTION = PlayerData.createRandomId("EnumAction");
+	public static final String KEY = Utils.randomUUID();
 
 	public ScriptAction() {
 		super("scriptaction", "@scriptaction:");
@@ -30,7 +30,7 @@ public class ScriptAction extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		Action action = getSBRead().get(KEY_ENUM_ACTION);
+		Action action = getSBRead().get(KEY);
 		String[] array = StringUtils.split(getOptionValue(), ",");
 		return StreamUtils.allMatch(array, s -> equals(action, s));
 	}

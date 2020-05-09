@@ -4,7 +4,6 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
-import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
 import com.github.yuttyann.scriptblockplus.region.PlayerRegion;
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ScriptViewer extends ItemAction {
 
-    private static final String KEY_VIEWER = PlayerData.createRandomId("ScriptViewer");
+    private static final String KEY = Utils.randomUUID();
 
     static {
         new Task().runTaskTimer(ScriptBlock.getInstance(), 0L, 8L);
@@ -42,12 +41,12 @@ public class ScriptViewer extends ItemAction {
         switch (action) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
-                sbPlayer.getObjectMap().put(KEY_VIEWER, true);
+                sbPlayer.getObjectMap().put(KEY, true);
                 SBConfig.SCRIPT_VIEWER_START.send(player);
                 break;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
-                sbPlayer.getObjectMap().put(KEY_VIEWER, false);
+                sbPlayer.getObjectMap().put(KEY, false);
                 SBConfig.SCRIPT_VIEWER_STOP.send(player);
                 break;
             default:
@@ -61,7 +60,7 @@ public class ScriptViewer extends ItemAction {
         public void run() {
             MapManager mapManager = ScriptBlock.getInstance().getMapManager();
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (!SBPlayer.fromPlayer(player).getObjectMap().getBoolean(KEY_VIEWER)) {
+                if (!SBPlayer.fromPlayer(player).getObjectMap().getBoolean(KEY)) {
                     continue;
                 }
                 new CuboidRegionBlocks(new PlayerRegion(player, 15)).forEach(b -> {

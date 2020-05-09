@@ -9,11 +9,11 @@ import com.github.yuttyann.scriptblockplus.listener.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.listener.raytrace.RayResult;
 import com.github.yuttyann.scriptblockplus.listener.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
-import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -38,12 +38,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class InteractListener implements Listener {
 
+	private static final String KEY_FLAG = Utils.randomUUID();
+
 	static {
 		new BlockSelector().put();
 		new ScriptViewer().put();
 	}
-
-	private static final String KEY_FLAG = PlayerData.createRandomId("InteractFlag");
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerAnimationEvent(PlayerAnimationEvent event) {

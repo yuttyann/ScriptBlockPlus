@@ -1,12 +1,14 @@
 package com.github.yuttyann.scriptblockplus.script.endprocess;
 
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * ScriptBlockPlus EndInventory エンドプロセスクラス
@@ -22,24 +24,25 @@ public class EndInventory implements EndProcess {
 
 	@Override
 	public void success(@NotNull SBRead sbRead) {
-		Player player = sbRead.getSBPlayer().getPlayer();
-		if (player.isOnline()) {
-			Utils.updateInventory(player);
+		SBPlayer sbPlayer = sbRead.getSBPlayer();
+		if (sbPlayer.isOnline()) {
+			Utils.updateInventory(Objects.requireNonNull(sbPlayer.getPlayer()));
 		}
 	}
 
 	@Override
 	public void failed(@NotNull SBRead sbRead) {
-		Player player = sbRead.getSBPlayer().getPlayer();
-		if (sbRead.has(ItemCost.KEY_ITEM)) {
-			ItemStack[] items = sbRead.get(ItemCost.KEY_ITEM);
-			if (player.isOnline()) {
-				player.getInventory().setContents(items);
-				Utils.updateInventory(player);
+
+		if (sbRead.has(ItemCost.KEY_OPTION)) {
+			ItemStack[] items = sbRead.get(ItemCost.KEY_OPTION);
+			SBPlayer sbPlayer = sbRead.getSBPlayer();
+			if (sbPlayer.isOnline()) {
+				sbPlayer.getInventory().setContents(items);
+				Utils.updateInventory(Objects.requireNonNull(sbPlayer.getPlayer()));
 			} else {
 				ObjectMap objectMap = sbRead.getSBPlayer().getObjectMap();
-				if (!objectMap.has(ItemCost.KEY_ITEM_PLAYER)) {
-					objectMap.put(ItemCost.KEY_ITEM_PLAYER, items);
+				if (!objectMap.has(ItemCost.KEY_PLAYER)) {
+					objectMap.put(ItemCost.KEY_PLAYER, items);
 				}
 			}
 		}

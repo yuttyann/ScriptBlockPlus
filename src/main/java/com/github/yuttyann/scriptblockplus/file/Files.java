@@ -28,8 +28,6 @@ public final class Files {
 
 	private static final Map<String, YamlConfig> FILES = new HashMap<>();
 
-	private static final String DEFAULT_LANGUAGE = Locale.getDefault().getLanguage();
-
 	public static final String PATH_CONFIG = "config.yml";
 	public static final String PATH_LANGS = "langs/{code}.yml";
 
@@ -100,7 +98,7 @@ public final class Files {
 	private static YamlConfig loadLang() {
 		String language = SBConfig.LANGUAGE.getValue();
 		if (StringUtils.isEmpty(language) || "default".equalsIgnoreCase(language)) {
-			language = DEFAULT_LANGUAGE;
+			language = Locale.getDefault().getLanguage();
 		}
 		Lang lang = new Lang(ScriptBlock.getInstance(), language);
 		return putFile(Files.PATH_LANGS, lang.load(Files.PATH_LANGS, "lang"));

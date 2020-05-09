@@ -17,7 +17,7 @@ import java.util.*;
  * ScriptBlockPlus BaseSBPlayer クラス
  * @author yuttyann44581
  */
-public final class BaseSBPlayer extends PlayerData {
+public final class BaseSBPlayer extends PlayerMap {
 
 	private static final Map<UUID, SBPlayer> PLAYERS = new HashMap<>(64);
 

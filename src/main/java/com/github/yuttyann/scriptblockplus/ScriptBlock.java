@@ -26,14 +26,14 @@ import java.util.List;
  */
 public class ScriptBlock extends JavaPlugin {
 
-	{
-		new PluginInstance(ScriptBlock.class, this).put();
-	}
-
 	private Updater updater;
 	private MapManager mapManager;
 	private ScriptBlockAPI scriptAPI;
 	private ScriptBlockPlusCommand scriptBlockPlusCommand;
+
+	{
+		new PluginInstance(ScriptBlock.class, this).put();
+	}
 
 	@Override
 	public void onEnable() {

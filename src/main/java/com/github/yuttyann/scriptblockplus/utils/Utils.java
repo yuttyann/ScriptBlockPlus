@@ -27,6 +27,10 @@ public final class Utils {
 	private static final String SERVER_VERSION = getServerVersion();
 	private static final Map<String, Boolean> VC_CACHE = new HashMap<>();
 
+	@NotNull
+	public static String randomUUID() {
+		return UUID.randomUUID().toString();
+	}
 
 	@NotNull
 	public static String getPluginName(Plugin plugin) {

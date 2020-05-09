@@ -1,11 +1,11 @@
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.script.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MoneyCost extends BaseOption {
 
-	public static final String KEY_COST = PlayerData.createRandomId("MoneyCost");
+	public static final String KEY = Utils.randomUUID();
 
 	public MoneyCost() {
 		super("moneycost", "$cost:");
@@ -37,7 +37,7 @@ public class MoneyCost extends BaseOption {
 		double cost = Double.parseDouble(getOptionValue());
 		if (vaultEconomy.has(player, cost)) {
 			vaultEconomy.withdrawPlayer(player, cost);
-			getSBRead().put(KEY_COST, cost + (getSBRead().has(KEY_COST) ? getSBRead().getDouble(KEY_COST) : 0.0D));
+			getSBRead().put(KEY, cost + (getSBRead().has(KEY) ? getSBRead().getDouble(KEY) : 0.0D));
 			return true;
 		}
 		double result = cost - vaultEconomy.getBalance(player);

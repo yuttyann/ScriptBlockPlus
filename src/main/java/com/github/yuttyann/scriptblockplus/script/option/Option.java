@@ -26,8 +26,8 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
 	/**
 	 * コンストラクタ
-	 * @param name オプション名　[(例) example]
-	 * @param syntax オプション構文　[(例) @example: ]
+	 * @param name オプション名 例:"example"
+	 * @param syntax オプション構文 例:"@example: "
 	 */
 	protected Option(@NotNull String name, @NotNull String syntax) {
 		this.name = Objects.requireNonNull(name);

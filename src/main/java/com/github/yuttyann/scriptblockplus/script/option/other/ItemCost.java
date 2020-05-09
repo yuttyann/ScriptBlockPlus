@@ -1,11 +1,11 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.player.PlayerData;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ItemCost extends BaseOption {
 
-	public static final String KEY_ITEM = PlayerData.createRandomId("ItemCost");
-	public static final String KEY_ITEM_PLAYER = PlayerData.createRandomId("ItemCost_Player");
+	public static final String KEY_OPTION = Utils.randomUUID();
+	public static final String KEY_PLAYER = Utils.randomUUID();
 
 	public ItemCost() {
 		super("itemcost", "$item:");
@@ -47,8 +47,8 @@ public class ItemCost extends BaseOption {
 
 		Player player = getPlayer();
 		PlayerInventory inventory = player.getInventory();
-		if (!getSBRead().has(KEY_ITEM)) {
-			getSBRead().put(KEY_ITEM, copyItems(inventory.getContents()));
+		if (!getSBRead().has(KEY_OPTION)) {
+			getSBRead().put(KEY_OPTION, copyItems(inventory.getContents()));
 		}
 		ItemStack[] items = inventory.getContents();
 		int result = amount;
@@ -71,18 +71,19 @@ public class ItemCost extends BaseOption {
 		return oldAmount;
 	}
 
-	private ItemStack[] copyItems(@NotNull ItemStack[] items) {
-		ItemStack[] copy = new ItemStack[items.length];
-		for (int i = 0; i < copy.length; i++) {
-			copy[i] = items[i] == null ? new ItemStack(Material.AIR) : items[i].clone();
-		}
-		return copy;
-	}
-
 	private boolean equalItems(@Nullable ItemStack item, @NotNull String itemName, @Nullable Material type, int damage) {
 		if (item == null || ItemUtils.getDamage(item) != damage) {
 			return false;
 		}
 		return ItemUtils.isItem(item, type, StringUtils.isEmpty(itemName) ? item.getType().name() : itemName);
+	}
+
+	@NotNull
+	private ItemStack[] copyItems(ItemStack[] items) {
+		ItemStack[] copy = new ItemStack[items.length];
+		for (int i = 0; i < copy.length; i++) {
+			copy[i] = items[i] == null ? new ItemStack(Material.AIR) : items[i].clone();
+		}
+		return copy;
 	}
 }

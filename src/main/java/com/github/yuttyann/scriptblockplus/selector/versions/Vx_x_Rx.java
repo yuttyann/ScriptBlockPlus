@@ -12,8 +12,6 @@ import org.bukkit.entity.minecart.CommandMinecart;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -111,8 +109,6 @@ public class Vx_x_Rx {
 		}
 	}
 
-	private Map<Location, Object> cache_Vec3D = new HashMap<>(64);
-
 	@NotNull
 	private Object setVec3D(@NotNull Object wrapper, @NotNull Object vec3D) throws ReflectiveOperationException {
 		return PackageType.NMS.getMethod("CommandListenerWrapper", "a", PackageType.NMS.getClass("Vec3D")).invoke(wrapper, vec3D);
@@ -120,14 +116,9 @@ public class Vx_x_Rx {
 
 	@NotNull
 	private Object newVec3D(@NotNull Location location) throws ReflectiveOperationException {
-		if (cache_Vec3D.size() > 500) {
-			cache_Vec3D = new HashMap<>(64);
-		}
-		Object vec3D = cache_Vec3D.get(location);
-		if (vec3D == null) {
-			double x = location.getX(), y = location.getY(), z = location.getZ();
-			cache_Vec3D.put(location, vec3D = PackageType.NMS.newInstance("Vec3D", x, y, z));
-		}
-		return vec3D;
+		double x = location.getX();
+		double y = location.getY();
+		double z = location.getZ();
+		return PackageType.NMS.newInstance("Vec3D", x, y, z);
 	}
 }

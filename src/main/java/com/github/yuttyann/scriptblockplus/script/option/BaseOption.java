@@ -28,8 +28,8 @@ public abstract class BaseOption extends Option {
 
 	/**
 	 * コンストラクタ
-	 * @param name オプション名　[（例） example]
-	 * @param syntax オプション構文　[（例） @example: ]
+	 * @param name オプション名 例:"example"
+	 * @param syntax オプション構文 例:"@example: "
 	 */
 	public BaseOption(@NotNull String name, @NotNull String syntax) {
 		super(name, syntax);

@@ -38,7 +38,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 	@NotNull
 	public abstract String getCommandName();
 
-	@Nullable
+	@NotNull
 	public abstract CommandData[] getUsages();
 
 	public abstract boolean isAliases();
