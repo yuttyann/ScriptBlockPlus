@@ -32,7 +32,6 @@ public class EndInventory implements EndProcess {
 
 	@Override
 	public void failed(@NotNull SBRead sbRead) {
-
 		if (sbRead.has(ItemCost.KEY_OPTION)) {
 			ItemStack[] items = sbRead.get(ItemCost.KEY_OPTION);
 			SBPlayer sbPlayer = sbRead.getSBPlayer();
