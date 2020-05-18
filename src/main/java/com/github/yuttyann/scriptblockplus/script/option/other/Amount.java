@@ -24,8 +24,8 @@ public class Amount extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		ScriptData scriptData = getScriptData();
-		if (!scriptData.getScriptFile().contains("Amount")) {
-			scriptData.setAmount(Integer.parseInt(getOptionValue()));;
+		if (scriptData.getAmount() == -1) {
+			scriptData.setAmount(Integer.parseInt(getOptionValue()));
 		}
 		scriptData.subtractAmount(1);
 		if (scriptData.getAmount() <= 0) {
