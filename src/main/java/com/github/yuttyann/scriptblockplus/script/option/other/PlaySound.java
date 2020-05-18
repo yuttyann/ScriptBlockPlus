@@ -8,6 +8,8 @@ import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * ScriptBlockPlus PlaySound オプションクラス
  * @author yuttyann44581
@@ -65,7 +67,7 @@ public class PlaySound extends BaseOption {
 	private void playSound(@NotNull Sound soundType, int volume, int pitch, boolean playWorld) {
 		Location location = getLocation();
 		if (playWorld) {
-			location.getWorld().playSound(location, soundType, volume, pitch);
+			Objects.requireNonNull(location.getWorld()).playSound(location, soundType, volume, pitch);
 		} else if (getSBPlayer().isOnline()) {
 			getPlayer().playSound(location, soundType, volume, pitch);
 		}
