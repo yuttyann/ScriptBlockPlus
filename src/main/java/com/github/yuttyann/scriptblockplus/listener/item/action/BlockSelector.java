@@ -7,6 +7,8 @@ import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import org.bukkit.permissions.Permissible;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus BlockSelector クラス
@@ -16,6 +18,11 @@ public class BlockSelector extends ItemAction {
 
     public BlockSelector() {
         super(ItemUtils.getBlockSelector());
+    }
+
+    @Override
+    public boolean hasPermission(@NotNull Permissible permissible) {
+        return Permission.TOOL_BLOCK_SELECTOR.has(permissible);
     }
 
     @Override

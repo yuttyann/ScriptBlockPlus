@@ -9,6 +9,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,6 +23,11 @@ public class ScriptEditor extends ItemAction {
     public ScriptEditor(@NotNull ScriptType scriptType) {
         super(ItemUtils.getScriptEditor(scriptType));
         this.scriptType = scriptType;
+    }
+
+    @Override
+    public boolean hasPermission(@NotNull Permissible permissible) {
+        return Permission.TOOL_SCRIPT_EDITOR.has(permissible);
     }
 
     @Override

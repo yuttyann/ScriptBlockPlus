@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.listener.item.action;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
@@ -16,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,11 +30,16 @@ public class ScriptViewer extends ItemAction {
     private static final String KEY = Utils.randomUUID();
 
     static {
-        new Task().runTaskTimer(ScriptBlock.getInstance(), 0L, 8L);
+        new Task().runTaskTimer(ScriptBlock.getInstance(), 0L, 7L);
     }
 
     public ScriptViewer() {
         super(ItemUtils.getScriptViewer());
+    }
+
+    @Override
+    public boolean hasPermission(@NotNull Permissible permissible) {
+        return Permission.TOOL_SCRIPT_VIEWER.has(permissible);
     }
 
     @Override
@@ -67,17 +74,18 @@ public class ScriptViewer extends ItemAction {
                     Block block = b.getBlock(player.getWorld());
                     for (ScriptType scriptType : ScriptType.values()) {
                         if (mapManager.containsCoords(block.getLocation(), scriptType)) {
-                            spawnParticlesOnBlock(player, block, block.getType()== Material.AIR ? Color.AQUA : Color.LIME);
+                            spawnParticlesOnBlock(player, block, block.getType()== Material.AIR);
                         }
                     }
                 });
             }
         }
 
-        private void spawnParticlesOnBlock(@NotNull Player player, @NotNull Block block, @NotNull Color color) {
+        private void spawnParticlesOnBlock(@NotNull Player player, @NotNull Block block, boolean isAIR) {
             double x = block.getX();
             double y = block.getY();
             double z = block.getZ();
+            Color color = isAIR ? Color.AQUA : Color.LIME;
             if (Utils.isCBXXXorLater("1.13")) {
                 Particle.DustOptions dust = new Particle.DustOptions(color, 1);
                 player.spawnParticle(Particle.REDSTONE, x, y, z, 0, 0, 0, 0, dust);
