@@ -57,11 +57,7 @@ public class ActionBar extends BaseOption {
 			Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
 			Class<?>[] array = { PackageType.NMS.getClass("IChatBaseComponent"), byte.class };
 			Constructor<?> packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", array);
-			Object handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
-			Object connection = PackageType.NMS.getField("EntityPlayer", "playerConnection").get(handle);
-			Object packet = packetPlayOutChat.newInstance(component, (byte) 2);
-			Class<?> packetClass = PackageType.NMS.getClass("Packet");
-			PackageType.NMS.getMethod("PlayerConnection", "sendPacket", packetClass).invoke(connection, packet);
+			PackageType.sendPacket(player, packetPlayOutChat.newInstance(component, (byte) 2));
 		} else {
 			String platforms = SBConfig.PLATFORMS.getValue().stream().map(String::valueOf).collect(Collectors.joining(", "));
 			throw new UnsupportedOperationException("Unsupported server. | Supported Servers <" + platforms + ">");
