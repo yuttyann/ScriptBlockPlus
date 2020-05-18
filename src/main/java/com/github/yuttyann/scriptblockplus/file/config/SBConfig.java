@@ -80,7 +80,6 @@ public final class SBConfig {
 
 
 	// Functions (Private)
-	@SuppressWarnings("unchecked")
 	private static Function<ReplaceKey, String> FUNCTION_UPDATE_CHECK = r -> {
 		String s = r.getValue();
 		s = replace(s, "%pluginname%", r.getArg(0, String.class));
@@ -143,7 +142,7 @@ public final class SBConfig {
 	};
 
 
-	// ReplaceKey Keys
+	// Replace Keys
 	/**
 	 * Parameter: {@link String} name
 	 */
