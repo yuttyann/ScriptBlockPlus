@@ -26,7 +26,7 @@ SelectorRemoveCommandMessage: 'selector remove - 移除选区内的脚本方块'
 BlockSelector:
 - '&a这是一个可以选择方块区域的工具'
 - '&6左键点击: &e选择区域的起点'
-- '&6左键点击: &e选择区域的结束点'
+- '&6右键点击: &e选择区域的结束点'
 - '&6Shift+左键点击: &e将当前位置设置为区域的起点'
 - '&6Shift+右键点击: &e将当前位置设置为区域的结束点'
 
