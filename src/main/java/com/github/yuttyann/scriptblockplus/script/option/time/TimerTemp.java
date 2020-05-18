@@ -18,14 +18,14 @@ public class TimerTemp {
     private final String fullCoords;
     private final ScriptType scriptType;
 
-    protected TimerTemp(final long[] params, @NotNull String fullCoords, @NotNull ScriptType scriptType) {
+    public TimerTemp(final long[] params, @NotNull String fullCoords, @NotNull ScriptType scriptType) {
         this.params = params;
         this.uuid = null;
         this.fullCoords = fullCoords;
         this.scriptType = scriptType;
     }
 
-    protected TimerTemp(final long[] params, @NotNull UUID uuid, @NotNull String fullCoords, @NotNull ScriptType scriptType) {
+    public TimerTemp(final long[] params, @NotNull UUID uuid, @NotNull String fullCoords, @NotNull ScriptType scriptType) {
         this.params = params;
         this.uuid = uuid;
         this.fullCoords = fullCoords;
