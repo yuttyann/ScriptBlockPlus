@@ -57,7 +57,7 @@ public abstract class ItemAction {
 
     public abstract boolean run();
 
-    public static boolean run(@Nullable ItemStack item, @NotNull Player player, @NotNull Action action, @Nullable Location location, boolean isAIR, boolean isSneaking) {
+    public static synchronized boolean run(@Nullable ItemStack item, @NotNull Player player, @NotNull Action action, @Nullable Location location, boolean isAIR, boolean isSneaking) {
         if (item == null) {
             return false;
         }
