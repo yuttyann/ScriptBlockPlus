@@ -4,6 +4,8 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,10 +48,11 @@ public class Title extends BaseOption {
 		if (Utils.isCBXXXorLater("1.12")) {
 			player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		} else {
-			String name = player.getName();
-			executeCommand(player, "title " + name + " times " + fadeIn + " " + stay + " " + fadeOut, true);
-			executeCommand(player, "title " + name + " subtitle " + "{\"text\":\"" + subtitle + "\"}", true);
-			executeCommand(player, "title " + name + " title " + "{\"text\":\"" + title + "\"}", true);
+			String prefix = "title " + player.getName();
+			CommandSender sender = Bukkit.getConsoleSender();
+			Bukkit.dispatchCommand(sender, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
+			Bukkit.dispatchCommand(sender, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
+			Bukkit.dispatchCommand(sender, prefix + " title {\"text\":\"" + title + "\"}");
 		}
 	}
 }
