@@ -113,7 +113,7 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public int getAmount() {
-		return scriptFile.getInt(scriptPath + KEY_AMOUNT, 0);
+		return scriptFile.getInt(scriptPath + KEY_AMOUNT, -1);
 	}
 
 	@NotNull
