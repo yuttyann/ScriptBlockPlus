@@ -34,7 +34,7 @@ public abstract class Json<T> {
     protected Json(@NotNull UUID uuid) {
         this.uuid = uuid;
         try {
-            Json<T> json = (Json<T>) load(getClass().getSimpleName(), uuid);
+            Json<T> json = (Json<T>) load(uuid);
             this.list = json == null ? new ArrayList<>() : json.list;
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,7 +42,7 @@ public abstract class Json<T> {
     }
 
     public void save() throws IOException {
-        File file = getFile(getClass().getSimpleName(), uuid);
+        File file = getFile(uuid);
         File parent = file.getParentFile();
         if (!parent.exists()) {
             parent.mkdirs();
@@ -94,8 +94,8 @@ public abstract class Json<T> {
     }
 
     @Nullable
-    private Json load(@NotNull String folder, @NotNull UUID uuid) throws IOException {
-        File file = getFile(folder, uuid);
+    private Json load(@NotNull UUID uuid) throws IOException {
+        File file = getFile(uuid);
         if (!file.exists()) {
             return null;
         }
@@ -111,8 +111,8 @@ public abstract class Json<T> {
     }
 
     @NotNull
-    private File getFile(@NotNull String folder, @NotNull UUID uuid) {
-        String path = "json/" + folder.toLowerCase() + "/" + uuid.toString() + ".json";
+    public final File getFile(@NotNull UUID uuid) {
+        String path = "json/" + getClass().getSimpleName().toLowerCase() + "/" + uuid.toString() + ".json";
         return new File(ScriptBlock.getInstance().getDataFolder(), path);
     }
 }
