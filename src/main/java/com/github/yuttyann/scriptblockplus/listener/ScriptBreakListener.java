@@ -4,9 +4,9 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -30,10 +29,7 @@ public class ScriptBreakListener extends ScriptListener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
 		Player player = event.getPlayer();
-		ItemStack item = player.getInventory().getItemInMainHand();
-		if (ItemUtils.isBlockSelector(item) && Permission.TOOL_BLOCK_SELECTOR.has(player)
-				|| ItemUtils.isScriptEditor(item) && Permission.TOOL_SCRIPT_EDITOR.has(player)
-					|| ItemUtils.isScriptViewer(item) && Permission.TOOL_SCRIPT_VIEWER.has(player)) {
+		if (ItemAction.has(player, player.getInventory().getItemInMainHand(), true)) {
 			event.setCancelled(true);
 			return;
 		}
