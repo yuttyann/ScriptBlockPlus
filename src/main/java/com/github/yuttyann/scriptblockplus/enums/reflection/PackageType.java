@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -188,6 +189,13 @@ public enum PackageType {
 			CACHE.put(key, constructor);
 		}
 		return constructor;
+	}
+
+	public static void sendPacket(Player player, Object packet) throws ReflectiveOperationException {
+		Class<?> packetClass = PackageType.NMS.getClass("Packet");
+		Object handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
+		Object connection = PackageType.NMS.getField("EntityPlayer", "playerConnection").get(handle);
+		PackageType.NMS.getMethod("PlayerConnection", "sendPacket", packetClass).invoke(connection, packet);
 	}
 
 	public Class<?> getClass(@NotNull String className) throws IllegalArgumentException, ClassNotFoundException {
