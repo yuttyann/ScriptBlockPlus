@@ -102,7 +102,7 @@ public final class OptionManager {
         return StreamUtils.toArray(OPTION_MAP.values(), Option::getSyntax, new String[OPTION_MAP.size()]);
     }
 
-    private static class IndexedLinkedMap extends LinkedHashMap<String, Option> {
+    private static class IndexedLinkedMap extends HashMap<String, Option> {
 
         private final LinkedList<String> list = new LinkedList<>();
 
