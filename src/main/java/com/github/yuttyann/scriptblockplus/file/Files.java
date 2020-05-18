@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.file;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.event.FileReloadEvent;
 import com.github.yuttyann.scriptblockplus.file.config.ConfigKeys;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.yaml.UTF8Config;
@@ -13,6 +14,7 @@ import com.google.common.base.Charsets;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -28,8 +30,9 @@ public final class Files {
 
 	private static final Map<String, YamlConfig> FILES = new HashMap<>();
 
+	public static final String S = File.separator;
 	public static final String PATH_CONFIG = "config.yml";
-	public static final String PATH_LANGS = "langs/{code}.yml";
+	public static final String PATH_LANGS = "langs" + S + "{code}.yml";
 
 	public static void reload() {
 		ConfigKeys.clear();
@@ -39,23 +42,17 @@ public final class Files {
 		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
 		searchKeys();
 
-		/* 今後の対策のための機能、必要になったら実装します。
-		if (SBConfig.isSBPAPIVersion() && Utils.isCBXXXorLater("1.13")) {
-			APIVersion apiVersion = new APIVersion(ScriptBlock.getInstance());
-			apiVersion.update();
-			Utils.sendMessage("[ScriptBlockPlus] API version " + apiVersion.get());
-		}
-		*/
+		Bukkit.getPluginManager().callEvent(new FileReloadEvent());
 	}
 
 	public static void searchKeys() {
 		YamlConfig config = getConfig();
 		if (config.getFile().exists()) {
-			sendNotKeyMessages(config, PATH_CONFIG);
+			sendNotKeyMessages(ScriptBlock.getInstance(), config, PATH_CONFIG);
 		}
 		YamlConfig lang = getLang();
 		if (lang.getFile().exists()) {
-			sendNotKeyMessages(lang, "lang/" + lang.getFileName());
+			sendNotKeyMessages(ScriptBlock.getInstance(), lang, "lang" + S + lang.getFileName());
 		}
 	}
 
@@ -85,7 +82,7 @@ public final class Files {
 
 	@NotNull
 	private static YamlConfig loadScript(@NotNull ScriptType scriptType) {
-		YamlConfig yaml = loadFile("scripts/" + scriptType.type() + ".yml", false);
+		YamlConfig yaml = loadFile("scripts" + S + scriptType.type() + ".yml", false);
 		return putFile(scriptType.type(), yaml);
 	}
 
@@ -105,14 +102,14 @@ public final class Files {
 	}
 
 	@NotNull
-	private static YamlConfig putFile(@NotNull String name, @NotNull YamlConfig yaml) {
+	public static YamlConfig putFile(@NotNull String name, @NotNull YamlConfig yaml) {
 		FILES.put(name, yaml);
 		return yaml;
 	}
 
-	private static void sendNotKeyMessages(@NotNull YamlConfig yaml, @NotNull String path) {
-		String filePath = StringUtils.replace(yaml.getFolderPath(), File.separator, "/");
-		InputStream is = FileUtils.getResource(ScriptBlock.getInstance(), path);
+	public static void sendNotKeyMessages(@NotNull Plugin plugin, @NotNull YamlConfig yaml, @NotNull String path) {
+		String filePath = plugin.getName() + "/" + StringUtils.replace(yaml.getFolderPath(), S, "/");
+		InputStream is = FileUtils.getResource(plugin, path);
 		if (is == null) {
 			return;
 		}
