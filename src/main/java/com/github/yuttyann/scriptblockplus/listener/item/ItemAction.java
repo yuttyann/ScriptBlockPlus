@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,17 +33,26 @@ public abstract class ItemAction {
         this.item = item;
     }
 
+    public void put() {
+        ITEMS.add(this);
+    }
+
+    @NotNull
+    public Set<ItemAction> getItems() {
+        return ITEMS;
+    }
+
     @NotNull
     public ItemStack getItem() {
         return item.clone();
     }
 
-    public boolean equals(@NotNull ItemStack item) {
-        return ItemUtils.isItem(this.item, item.getType(), ItemUtils.getName(item));
+    public boolean hasPermission(@NotNull Permissible permissible) {
+        return true;
     }
 
-    public void put() {
-        ITEMS.add(this);
+    public boolean equals(@Nullable ItemStack item) {
+        return item != null && ItemUtils.isItem(this.item, item.getType(), ItemUtils.getName(item));
     }
 
     public abstract boolean run();
@@ -62,5 +72,10 @@ public abstract class ItemAction {
             return value.run();
         }
         return false;
+    }
+
+    public static boolean has(@NotNull Permissible permissible,  @Nullable ItemStack item, boolean permission) {
+        Optional<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).findFirst();
+        return itemAction.filter(i -> !permission || i.hasPermission(permissible)).isPresent();
     }
 }
