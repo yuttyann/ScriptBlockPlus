@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockEditEvent;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
@@ -11,7 +10,6 @@ import com.github.yuttyann.scriptblockplus.listener.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
@@ -97,13 +95,15 @@ public class InteractListener implements Listener {
 
 	private void callEvent(@NotNull PlayerInteractEvent interactEvent, @NotNull BlockInteractEvent blockInteractEvent) {
 		Player player = interactEvent.getPlayer();
-		ItemStack item = interactEvent.getItem();
-		blockInteractEvent.setInvalid(action(player, blockInteractEvent.getAction(), blockInteractEvent));
+		boolean action;
+		try {
+			action = action(player, blockInteractEvent.getAction(), blockInteractEvent);
+		} catch (Exception e) {
+			action = false;
+		}
+		blockInteractEvent.setInvalid(action);
 		Bukkit.getPluginManager().callEvent(blockInteractEvent);
-		if (blockInteractEvent.isCancelled()
-				|| ItemUtils.isBlockSelector(item) && Permission.TOOL_BLOCK_SELECTOR.has(player)
-					|| ItemUtils.isScriptEditor(item) && Permission.TOOL_SCRIPT_EDITOR.has(player)
-						|| ItemUtils.isScriptViewer(item) && Permission.TOOL_SCRIPT_VIEWER.has(player)) {
+		if (blockInteractEvent.isCancelled() || ItemAction.has(player, interactEvent.getItem(), true)) {
 			interactEvent.setCancelled(true);
 		}
 	}
@@ -123,6 +123,8 @@ public class InteractListener implements Listener {
 			ScriptBlockEditEvent editEvent = new ScriptBlockEditEvent(player, location.getBlock(), array);
 			Bukkit.getPluginManager().callEvent(editEvent);
 			if (editEvent.isCancelled()) {
+				sbPlayer.setScriptLine(null);
+				sbPlayer.setActionType(null);
 				return false;
 			}
 			ScriptEdit scriptEdit = new ScriptEdit(editEvent.getScriptType());

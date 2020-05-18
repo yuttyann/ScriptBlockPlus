@@ -12,10 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -58,8 +55,10 @@ public final class ScriptEdit {
 
 	public void create(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
-			Player player = Objects.requireNonNull(sbPlayer.getPlayer());
-			sbPlayer.getScriptLine().ifPresent(s -> create(player, location, s));
+			Optional<String> scriptLine = sbPlayer.getScriptLine();
+			if (scriptLine.isPresent() && sbPlayer.isOnline()) {
+				create(Objects.requireNonNull(sbPlayer.getPlayer()), location, scriptLine.get());
+			}
 		} finally {
 			sbPlayer.setScriptLine(null);
 			sbPlayer.setActionType(null);
@@ -80,8 +79,10 @@ public final class ScriptEdit {
 
 	public void add(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
-			Player player = Objects.requireNonNull(sbPlayer.getPlayer());
-			sbPlayer.getScriptLine().ifPresent(s -> add(player, location, s));
+			Optional<String> scriptLine = sbPlayer.getScriptLine();
+			if (scriptLine.isPresent() && sbPlayer.isOnline()) {
+				add(Objects.requireNonNull(sbPlayer.getPlayer()), location, scriptLine.get());
+			}
 		} finally {
 			sbPlayer.setScriptLine(null);
 			sbPlayer.setActionType(null);
@@ -105,7 +106,9 @@ public final class ScriptEdit {
 
 	public void remove(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
-			remove(Objects.requireNonNull(sbPlayer.getPlayer()), location);
+			if (sbPlayer.isOnline()) {
+				remove(Objects.requireNonNull(sbPlayer.getPlayer()), location);
+			}
 		} finally {
 			sbPlayer.setScriptLine(null);
 			sbPlayer.setActionType(null);
@@ -139,7 +142,9 @@ public final class ScriptEdit {
 
 	public void view(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
-			view(Objects.requireNonNull(sbPlayer.getPlayer()), location);
+			if (sbPlayer.isOnline()) {
+				view(Objects.requireNonNull(sbPlayer.getPlayer()), location);
+			}
 		} finally {
 			sbPlayer.setScriptLine(null);
 			sbPlayer.setActionType(null);
