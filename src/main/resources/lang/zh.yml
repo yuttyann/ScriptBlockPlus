@@ -42,9 +42,9 @@ ScriptEditor:
 ## ===== ScriptViewer ===== ##
 # %scripttype% : 脚本种类
 ScriptViewer:
-- '&a該工具支持腳本檢查。'
-- '&6左键点击: &e開始搜索周圍的腳本。'
-- '&6右键点击: &e停止搜索周圍的腳本。'
+- '&a该工具支持脚本检查。'
+- '&6左键点击: &e开始搜索周围的脚本。'
+- '&6右键点击: &e停止搜索周围的脚本。'
 
 # |~ \n : 改行
 
@@ -91,8 +91,8 @@ ScriptRemoveMessage: '&c删除一个种类是"%scripttype%"的脚本'
 NotSelectionMessage: '&cBlockSelector坐标范围未选择'
 
 # 沒有佔位符
-ScriptViewerStartMessage: '&a開始搜索周圍的腳本。'
-ScriptViewerStopMessage: '&c對周圍腳本的搜索已停止。'
+ScriptViewerStartMessage: '&a开始搜索周围的脚本。'
+ScriptViewerStopMessage: '&c对周围脚本的搜索已停止。'
 
 # %world%  : 世界名
 # %coords% : 坐标(x, y, z)
