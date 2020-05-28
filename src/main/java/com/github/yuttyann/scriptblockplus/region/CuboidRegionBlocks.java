@@ -71,7 +71,7 @@ public final class CuboidRegionBlocks {
 		}
 	}
 
-	public final class BlockPos {
+	public static final class BlockPos {
 
 		private int x;
 		private int y;
