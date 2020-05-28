@@ -190,7 +190,7 @@ public abstract class BaseOption extends Option {
 	 * @param command コマンド
 	 * @return 実行に成功した場合はtrue
 	 */
-	protected final boolean executeConsoleCommand(@NotNull String command) {
+	protected boolean executeConsoleCommand(@NotNull String command) {
 		return Utils.dispatchCommand(Bukkit.getConsoleSender(), getLocation(), command);
 	}
 
@@ -201,7 +201,7 @@ public abstract class BaseOption extends Option {
 	 * @param isBypass trueの場合は権限を無視し、falseの場合は権限を無視せず実行します。
 	 * @return 実行に成功した場合はtrue
 	 */
-	protected final boolean executeCommand(@NotNull Player player, @NotNull String command, boolean isBypass) {
+	protected boolean executeCommand(@NotNull Player player, @NotNull String command, boolean isBypass) {
 		Location location = getLocation();
 		if (!isBypass || player.isOp()) {
 			return Utils.dispatchCommand(player, location, command);
