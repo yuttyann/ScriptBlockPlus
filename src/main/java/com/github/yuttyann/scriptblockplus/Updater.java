@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus;
 
-import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -107,7 +106,7 @@ public final class Updater {
 
 	public boolean execute(@NotNull CommandSender sender) {
 		if (SBConfig.UPDATE_CHECKER.getValue() && isUpperVersion) {
-			File dataFolder = Files.getConfig().getDataFolder();
+			File dataFolder = plugin.getDataFolder();
 			File logFile = new File(dataFolder, "update/ChangeLog.txt");
 			boolean logEquals = !logFile.exists() || !logEquals(changeLogURL, logFile);
 			StreamUtils.filter(sender, s -> !isUpdateError, s -> SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(s));
