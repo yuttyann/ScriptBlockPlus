@@ -68,7 +68,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 	@Override
 	@NotNull
 	public final List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		List<String> completeList = new ArrayList<String>();
+		List<String> completeList = new ArrayList<>();
 		tabComplete(sender, command, label, args, completeList);
 		return completeList;
 	}
