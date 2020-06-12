@@ -17,7 +17,7 @@ import java.util.Set;
  * ScriptBlockPlus ItemAction クラス
  * @author yuttyann44581
  */
-public abstract class ItemAction {
+public abstract class ItemAction implements Cloneable {
 
     private static final Set<ItemAction> ITEMS = new HashSet<>();
 
@@ -30,21 +30,21 @@ public abstract class ItemAction {
     protected boolean isSneaking;
 
     public ItemAction(@NotNull ItemStack item) {
-        this.item = item;
+        this.item = new UnmodifiableItemStack(item);
     }
 
-    public void put() {
+    @NotNull
+    public static Set<ItemAction> getItems() {
+        return ITEMS;
+    }
+
+    public final void put() {
         ITEMS.add(this);
     }
 
     @NotNull
-    public Set<ItemAction> getItems() {
-        return ITEMS;
-    }
-
-    @NotNull
     public ItemStack getItem() {
-        return item.clone();
+        return item;
     }
 
     public boolean hasPermission(@NotNull Permissible permissible) {
@@ -55,6 +55,29 @@ public abstract class ItemAction {
         return item != null && ItemUtils.isItem(this.item, item.getType(), ItemUtils.getName(item));
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof ItemAction)) {
+            return false;
+        }
+        return equals(((ItemAction) obj).item);
+    }
+
+    @Override
+    public int hashCode() {
+        return item.hashCode();
+    }
+
+    @Override
+    @NotNull
+    public ItemAction clone() {
+        try {
+            return (ItemAction) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new Error(e);
+        }
+    }
+
     public abstract boolean run();
 
     public static synchronized boolean run(@Nullable ItemStack item, @NotNull Player player, @NotNull Action action, @Nullable Location location, boolean isAIR, boolean isSneaking) {
@@ -63,7 +86,7 @@ public abstract class ItemAction {
         }
         Optional<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).findFirst();
         if (itemAction.isPresent()) {
-            ItemAction value = itemAction.get();
+            ItemAction value = itemAction.get().clone();
             value.player = player;
             value.action = action;
             value.location = location;
@@ -74,7 +97,7 @@ public abstract class ItemAction {
         return false;
     }
 
-    public static boolean has(@NotNull Permissible permissible,  @Nullable ItemStack item, boolean permission) {
+    public static boolean has(@NotNull Permissible permissible, @Nullable ItemStack item, boolean permission) {
         Optional<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).findFirst();
         return itemAction.filter(i -> !permission || i.hasPermission(permissible)).isPresent();
     }
