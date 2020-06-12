@@ -22,10 +22,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerAnimationEvent;
-import org.bukkit.event.player.PlayerAnimationType;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -84,6 +81,13 @@ public class InteractListener implements Listener {
 			}
 		}
 		callEvent(event, new BlockInteractEvent(event, null, false));
+	}
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
+		if (event.getPlayer().getGameMode() == GameMode.ADVENTURE) {
+			SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().put(KEY_FLAG, true);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
