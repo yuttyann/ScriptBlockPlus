@@ -67,6 +67,10 @@ public final class Updater {
 	}
 
 	public void load() throws Exception {
+		if(!SBConfig.UPDATE_CHECKER.getValue()){
+		    isUpperVersion = false;
+		    return;
+		}
 		NodeList rootChildren = getDocument(pluginName).getDocumentElement().getChildNodes();
 		for (int i = 0; i < rootChildren.getLength(); i++) {
 			Node uNode = rootChildren.item(i);
