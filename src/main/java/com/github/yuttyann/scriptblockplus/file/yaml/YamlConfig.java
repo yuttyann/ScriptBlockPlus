@@ -393,12 +393,13 @@ public class YamlConfig {
 
 	@NotNull
 	public Set<String> getKeys(String path) {
-		return getConfigurationSection(path).getKeys(false);
+		return getKeys(path, false);
 	}
 
 	@NotNull
 	public Set<String> getKeys(String path, boolean deep) {
-		return getConfigurationSection(path).getKeys(deep);
+		Optional<ConfigurationSection> section = Optional.ofNullable(getConfigurationSection(path));
+		return section.map(c -> c.getKeys(deep)).orElseGet(HashSet::new);
 	}
 
 	@NotNull

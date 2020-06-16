@@ -106,39 +106,39 @@ public final class Updater {
 	}
 
 	public boolean execute(@NotNull CommandSender sender) {
-		if (SBConfig.UPDATE_CHECKER.getValue() && isUpperVersion) {
-			SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(sender);
-			File logFile = new File(plugin.getDataFolder(), "update/ChangeLog.txt");
-			boolean logEquals = !logFile.exists() || !logEquals(changeLogURL, logFile);
-			boolean downloadError = false;
-			if (SBConfig.AUTO_DOWNLOAD.getValue()) {
-				File jarFile = new File(plugin.getDataFolder(), "update/jar/" + getJarName());
-				try {
-					SBConfig.UPDATE_DOWNLOAD_START.send(sender);
-					FileUtils.fileDownload(changeLogURL, logFile);
-					FileUtils.fileDownload(downloadURL, jarFile);
-				} catch (IOException e) {
-					downloadError = true;
-					SBConfig.ERROR_UPDATE.send(sender);
-				} finally {
-					if (!downloadError && jarFile.exists()) {
-						String fileName = jarFile.getName();
-						String filePath = StringUtils.replace(jarFile.getPath(), File.separator, "/");
-						SBConfig.UPDATE_DOWNLOAD_END.replace(fileName, filePath, getSize(jarFile.length())).send(sender);
-					}
-				}
-			}
-			if (SBConfig.OPEN_CHANGE_LOG.getValue() && !downloadError && logEquals) {
-				Desktop desktop = Desktop.getDesktop();
-				try {
-					desktop.open(logFile);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			return true;
+		if (!SBConfig.UPDATE_CHECKER.getValue() || !isUpperVersion) {
+			return false;
 		}
-		return false;
+		SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(sender);
+		File logFile = new File(plugin.getDataFolder(), "update/ChangeLog.txt");
+		boolean logEquals = !logFile.exists() || !logEquals(changeLogURL, logFile);
+		boolean downloadError = false;
+		if (SBConfig.AUTO_DOWNLOAD.getValue()) {
+			File jarFile = new File(plugin.getDataFolder(), "update/jar/" + getJarName());
+			try {
+				SBConfig.UPDATE_DOWNLOAD_START.send(sender);
+				FileUtils.fileDownload(changeLogURL, logFile);
+				FileUtils.fileDownload(downloadURL, jarFile);
+			} catch (IOException e) {
+				downloadError = true;
+				SBConfig.ERROR_UPDATE.send(sender);
+			} finally {
+				if (jarFile.exists() && !downloadError) {
+					String fileName = jarFile.getName();
+					String filePath = StringUtils.replace(jarFile.getPath(), File.separator, "/");
+					SBConfig.UPDATE_DOWNLOAD_END.replace(fileName, filePath, getSize(jarFile.length())).send(sender);
+				}
+			}
+		}
+		if (SBConfig.OPEN_CHANGE_LOG.getValue() && logEquals && !downloadError) {
+			Desktop desktop = Desktop.getDesktop();
+			try {
+				desktop.open(logFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return true;
 	}
 
 	private String getSize(long length) {
@@ -156,10 +156,10 @@ public final class Updater {
 			return false;
 		}
 		try (
-				FileReader fr = new FileReader(file);
-				InputStream is = new URL(url).openStream(); InputStreamReader isr = new InputStreamReader(is);
-				BufferedReader reader1 = new BufferedReader(fr); BufferedReader reader2 = new BufferedReader(isr)
-			) {
+			FileReader fr = new FileReader(file);
+			InputStream is = new URL(url).openStream(); InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader reader1 = new BufferedReader(fr); BufferedReader reader2 = new BufferedReader(isr)
+		) {
 			while (reader1.ready() && reader2.ready()) {
 				if (!reader1.readLine().equals(reader2.readLine())) {
 					return false;
