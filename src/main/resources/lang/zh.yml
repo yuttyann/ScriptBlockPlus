@@ -116,8 +116,8 @@ ActiveDelayMessage: '&c该脚本在延迟中 你暂时不能使用'
 # %second% : 秒
 ActiveCooldownMessage: '&c脚本还在冷却中 [%hour%时%minute%分%second%秒]'
 
-# %clicktype% : 点击种类
-SuccActionDataMessage: '&a脚本种类"%clicktype%"的设定已选定。请点击需要生效的方块'
+# %actiontype% : 动作类型
+SuccActionDataMessage: '&a脚本种类"%actiontype%"的设定已选定。请点击需要生效的方块'
 
 # 沒有佔位符
 ErrorActionDataMessage: '&c设定出现错误'

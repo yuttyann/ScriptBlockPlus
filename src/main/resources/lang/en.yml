@@ -114,13 +114,10 @@ ActiveDelayMessage: '&cThis scriptblock is in delay, you cant use it now.'
 # %hour%   : hour
 # %minute% : minute
 # %second% : second
-ActiveCooldownMessage: '&cThis scriptblock is in cooldown [%hour%h %minute%m %second%s ]'
+ActiveCooldownMessage: '&cThis scriptblock is in cooldown [%hour%h %minute%m %second%s]'
 
 # %actiontype% : Type of action
 SuccActionDataMessage: '&aActiontype "%actiontype%" selected.'
-
-# %actiontype% : Type of action
-SuccEditDataMessage: '&aScriptblock type "%actiontype%" selected, please click a block to add it on.'
 
 # There are no placeholders
 ErrorActionDataMessage: '&cInvaild setting.'
