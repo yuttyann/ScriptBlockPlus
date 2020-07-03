@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
-import com.github.yuttyann.scriptblockplus.script.hook.HookPlugins;
-import com.github.yuttyann.scriptblockplus.script.hook.VaultPermission;
+import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
+import com.github.yuttyann.scriptblockplus.hook.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
