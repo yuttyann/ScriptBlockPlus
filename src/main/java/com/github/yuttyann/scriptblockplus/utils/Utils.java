@@ -103,13 +103,14 @@ public final class Utils {
 	public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		boolean isCommandSelector = isPlatform() && SBConfig.COMMAND_SELECTOR.getValue();
+		if (sender instanceof SBPlayer && ((SBPlayer) sender).isOnline()) {
+			sender = Objects.requireNonNull(((SBPlayer) sender).getPlayer());
+		}
+		boolean isCommandSelector = !command.startsWith("*") && SBConfig.COMMAND_SELECTOR.getValue() && isPlatform();
 		if (isCommandSelector && (isCBXXXorLater("1.13") || CommandSelector.isCommandPattern(command))) {
 			if (location == null) {
 				if (sender instanceof Player) {
 					location = ((Player) sender).getLocation().clone();
-				} else if (sender instanceof SBPlayer) {
-					location = ((SBPlayer) sender).getLocation().clone();
 				} else if (sender instanceof BlockCommandSender) {
 					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
 				} else if (sender instanceof CommandMinecart) {
@@ -120,7 +121,9 @@ public final class Utils {
 				return CommandSelector.getListener().executeCommand(sender, location, command);
 			}
 		}
-		return Bukkit.dispatchCommand(sender, command.startsWith("/") ? command.substring(1) : command);
+		command = command.startsWith("*") ? command.substring(1) : command;
+		command = command.startsWith("/") ? command.substring(1) : command;
+		return Bukkit.dispatchCommand(sender, command);
 	}
 
 	@Nullable
