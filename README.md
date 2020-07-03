@@ -38,10 +38,16 @@ ScriptBlockPlus [Java8 MC1.9-1.16.1] [![](https://jitpack.io/v/yuttyann/ScriptBl
 ・コマンドのセレクターの制限 **[ALL]**  
 　- NMSに依存しているためセレクターの利用はできません。  
 ――――――――――――――――――――――――――――――――――  
+**★一部プラグインのコマンドが実行できない問題★**  
+[コマンドセレクター](https://github.com/yuttyann/ScriptBlockPlus/blob/master/src/main/resources/config.yml#L39)を有効にしている場合に、一部プラグインのコマンドが実行できない問題が確認されています。  
+例えば、[LuckPerms](https://luckperms.net/)等のプラグインのコマンドを"@bypass"で実行しようとすると失敗します。  
+**v1.9.8**に対策として、コマンドのイニシャルに"*"を追加するとBukkitAPIを使用してコマンドを実行する機能を追加しました。  
+（例: "@bypass *lp info"、"@command *lp info"）  
+――――――――――――――――――――――――――――――――――  
 
 プラグイン記事
 -----------
 **[Github]** [記事一覧](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91) **[日本語 - API、オプション、コマンドの詳細等]**  
 **[MCBBS]** [フォーラム](https://www.mcbbs.net/thread-691900-1-1.html) **[中国語 - 使い方や機能の紹介]**  
 **[SpigotMC]** [フォーラム](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/) **[英語 - 使い方や機能の紹介]**  
-**[MCPoteton]** [【プラグイン紹介】ScriptBlockPlus【～1.15.2対応】](https://mcpoteton.com/mcplugin-scriptblockplus) **[日本語 - 使い方や機能の紹介]**  
+**[MCPoteton]** [ブログ](https://mcpoteton.com/mcplugin-scriptblockplus) **[日本語 - 使い方や機能の紹介]**  
