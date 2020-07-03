@@ -2,11 +2,11 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,16 +48,16 @@ public class ActionBar extends BaseOption {
 		if (!getSBPlayer().isOnline()) {
 			return;
 		}
-		Player player = getPlayer();
 		if (Utils.isCBXXXorLater("1.11")) {
-			executeCommand(player, "title " + player.getName() + " actionbar " + "{\"text\":\"" + message + "\"}", true);
+			SBPlayer sbPlayer = getSBPlayer();
+			executeCommand(sbPlayer, "*title " + sbPlayer.getName() + " actionbar " + "{\"text\":\"" + message + "\"}", true);
 		} else if (Utils.isPlatform()) {
 			String chatSerializer = "IChatBaseComponent$ChatSerializer";
 			Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
 			Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
 			Class<?>[] array = { PackageType.NMS.getClass("IChatBaseComponent"), byte.class };
 			Constructor<?> packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", array);
-			PackageType.sendPacket(player, packetPlayOutChat.newInstance(component, (byte) 2));
+			PackageType.sendPacket(getPlayer(), packetPlayOutChat.newInstance(component, (byte) 2));
 		} else {
 			String platforms = SBConfig.PLATFORMS.getValue().stream().map(String::valueOf).collect(Collectors.joining(", "));
 			throw new UnsupportedOperationException("Unsupported server. | Supported Servers <" + platforms + ">");

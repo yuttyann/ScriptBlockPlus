@@ -22,6 +22,6 @@ public class Say extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		return executeCommand(getPlayer(), "say " + getOptionValue(), true);
+		return executeCommand(getSBPlayer(), "*say " + getOptionValue(), true);
 	}
 }
