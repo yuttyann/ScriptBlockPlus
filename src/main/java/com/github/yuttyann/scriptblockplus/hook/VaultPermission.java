@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.script.hook;
+package com.github.yuttyann.scriptblockplus.hook;
 
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;

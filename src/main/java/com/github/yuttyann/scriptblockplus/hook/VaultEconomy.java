@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.script.hook;
+package com.github.yuttyann.scriptblockplus.hook;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
