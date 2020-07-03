@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.selector.versions;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.selector.CommandListener;
 import com.github.yuttyann.scriptblockplus.selector.TileEntityCommand;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -50,9 +49,6 @@ public class Vx_x_Rx {
 		@Override
 		public final boolean executeCommand(@NotNull CommandSender sender, @NotNull Location location, @NotNull String command) {
 			try {
-				if (sender instanceof SBPlayer) {
-					sender = Objects.requireNonNull(((SBPlayer) sender).getPlayer());
-				}
 				return vx_x_Rx.executeCommand(vx_x_Rx.getListener(sender, location), sender, location, command) > 0;
 			} catch (ReflectiveOperationException e) {
 				e.printStackTrace();
