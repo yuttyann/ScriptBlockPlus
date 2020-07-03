@@ -9,7 +9,9 @@ import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -196,22 +198,29 @@ public abstract class BaseOption extends Option {
 
 	/**
 	 * プレイヤーからコマンドを実行します。
-	 * @param player プレイヤー
+	 * @param sbPlayer プレイヤー
 	 * @param command コマンド
 	 * @param isBypass trueの場合は権限を無視し、falseの場合は権限を無視せず実行します。
 	 * @return 実行に成功した場合はtrue
 	 */
-	protected boolean executeCommand(@NotNull Player player, @NotNull String command, boolean isBypass) {
+	protected boolean executeCommand(@NotNull SBPlayer sbPlayer, @NotNull String command, boolean isBypass) {
+		World world = sbPlayer.getWorld();
 		Location location = getLocation();
-		if (!isBypass || player.isOp()) {
-			return Utils.dispatchCommand(player, location, command);
-		} else {
-			try {
-				player.setOp(true);
-				return Utils.dispatchCommand(player, location, command);
-			} finally {
-				player.setOp(false);
+		Boolean defaultValue = world.getGameRuleValue(GameRule.LOG_ADMIN_COMMANDS);
+		try {
+			world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, false);
+			if (!isBypass || sbPlayer.isOp()) {
+				return Utils.dispatchCommand(sbPlayer, location, command);
+			} else {
+				try {
+					sbPlayer.setOp(true);
+					return Utils.dispatchCommand(sbPlayer, location, command);
+				} finally {
+					sbPlayer.setOp(false);
+				}
 			}
+		} finally {
+			world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, defaultValue == null ? true : defaultValue);
 		}
 	}
 }
