@@ -9,9 +9,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -204,23 +202,16 @@ public abstract class BaseOption extends Option {
 	 * @return 実行に成功した場合はtrue
 	 */
 	protected boolean executeCommand(@NotNull SBPlayer sbPlayer, @NotNull String command, boolean isBypass) {
-		World world = sbPlayer.getWorld();
 		Location location = getLocation();
-		Boolean defaultValue = world.getGameRuleValue(GameRule.LOG_ADMIN_COMMANDS);
-		try {
-			world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, false);
-			if (!isBypass || sbPlayer.isOp()) {
+		if (!isBypass || sbPlayer.isOp()) {
+			return Utils.dispatchCommand(sbPlayer, location, command);
+		} else {
+			try {
+				sbPlayer.setOp(true);
 				return Utils.dispatchCommand(sbPlayer, location, command);
-			} else {
-				try {
-					sbPlayer.setOp(true);
-					return Utils.dispatchCommand(sbPlayer, location, command);
-				} finally {
-					sbPlayer.setOp(false);
-				}
+			} finally {
+				sbPlayer.setOp(false);
 			}
-		} finally {
-			world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, defaultValue == null ? true : defaultValue);
 		}
 	}
 }
