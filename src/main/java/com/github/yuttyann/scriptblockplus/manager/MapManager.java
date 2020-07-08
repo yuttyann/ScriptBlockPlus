@@ -59,38 +59,29 @@ public final class MapManager {
 	}
 
 	public void removeDelay(@NotNull UUID uuid, @NotNull ScriptType scriptType, @NotNull String fullCoords) {
-		Set<UUID> set = delays.get(scriptType, fullCoords);
-		if (set != null) {
-			set.remove(uuid);
-		}
+		Optional.ofNullable(delays.get(scriptType, fullCoords)).ifPresent(v -> v.remove(uuid));
 	}
 
 	public boolean containsDelay(@NotNull UUID uuid, @NotNull ScriptType scriptType, @NotNull String fullCoords) {
-		Set<UUID> set = delays.get(scriptType, fullCoords);
-		return set != null && set.contains(uuid);
+		Optional<Set<UUID>> value = Optional.ofNullable(delays.get(scriptType, fullCoords));
+		return value.isPresent() && value.get().contains(uuid);
 	}
 
 	public void addCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
 		String fullCoords = BlockCoords.getFullCoords(location);
-		Set<String> set = scriptCoords.get(scriptType);
-		if (set != null) {
-			set.add(fullCoords);
-		}
+		Optional<Set<String>> value = Optional.ofNullable(scriptCoords.get(scriptType));
+		value.ifPresent(v -> v.add(fullCoords));
 		TimerOption.removeAll(fullCoords, scriptType);
 	}
 
 	public void removeCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
 		String fullCoords = BlockCoords.getFullCoords(location);
-		Set<String> set = scriptCoords.get(scriptType);
-		if (set != null) {
-			set.remove(fullCoords);
-		}
+		Optional.ofNullable(scriptCoords.get(scriptType)).ifPresent(v -> v.remove(fullCoords));
 		TimerOption.removeAll(fullCoords, scriptType);
 	}
 
 	public boolean containsCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
-		String fullCoords = BlockCoords.getFullCoords(location);
-		Set<String> set = scriptCoords.get(scriptType);
-		return set != null && set.contains(fullCoords);
+		Optional<Set<String>> value = Optional.ofNullable(scriptCoords.get(scriptType));
+		return value.isPresent() && value.get().contains(BlockCoords.getFullCoords(location));
 	}
 }

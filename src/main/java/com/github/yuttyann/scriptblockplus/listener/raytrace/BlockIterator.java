@@ -17,7 +17,7 @@ import java.util.Objects;
  * ScriptBlockPlus BlockIterator クラス
  * @author bukkit(source), yuttyann44581
  */
-public class BlockIterator implements Iterator<BlockIterator.BData> {
+public class BlockIterator implements Iterator<BlockIterator.BlockData> {
 
     private final double maxDistance;
 
@@ -25,19 +25,19 @@ public class BlockIterator implements Iterator<BlockIterator.BData> {
 
     private boolean end = false;
 
-    private final BData[] blockQueue = new BData[3];
+    private final BlockData[] blockQueue = new BlockData[3];
     {
-        blockQueue[0] = new BData();
-        blockQueue[1] = new BData();
-        blockQueue[2] = new BData();
+        blockQueue[0] = new BlockData();
+        blockQueue[1] = new BlockData();
+        blockQueue[2] = new BlockData();
     }
 
-    public static class BData {
+    public static class BlockData {
 
         private Block b;
         private BlockFace f;
 
-        public BData put(@NotNull Block b, @NotNull BlockFace f) {
+        public BlockData put(@NotNull Block b, @NotNull BlockFace f) {
             this.b = b;
             this.f = f;
             return this;
@@ -228,12 +228,12 @@ public class BlockIterator implements Iterator<BlockIterator.BData> {
     }
 
     @NotNull
-    public BData next() {
+    public BlockData next() {
         scan();
         if (currentBlock <= -1) {
             throw new NoSuchElementException();
         } else {
-            BData t = blockQueue[currentBlock--];
+            BlockData t = blockQueue[currentBlock--];
             t.f = convert(t.f);
             return t;
         }

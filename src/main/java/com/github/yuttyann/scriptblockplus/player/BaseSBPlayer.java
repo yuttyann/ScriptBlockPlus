@@ -55,8 +55,8 @@ public final class BaseSBPlayer extends PlayerMap {
 	}
 
 	@Override
-	public boolean isOnline() {
-		return player != null && isOnline;
+	public synchronized boolean isOnline() {
+		return isOnline && player != null;
 	}
 
 	@Override

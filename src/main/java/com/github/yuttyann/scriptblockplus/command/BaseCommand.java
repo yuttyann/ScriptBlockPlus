@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.command;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ProxiedCommandSender;
@@ -11,7 +10,6 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +47,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 
 	@Override
 	public final boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		if (Utils.isCBXXXorLater("1.8.3") && sender instanceof ProxiedCommandSender) {
+		if (sender instanceof ProxiedCommandSender) {
 			CommandSender proxiedCommandSender = ((ProxiedCommandSender) sender).getCallee();
 			if (proxiedCommandSender instanceof Player) {
 				sender = proxiedCommandSender;
@@ -93,7 +91,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 		return has;
 	}
 
-	protected final boolean isPlayer(@Nullable CommandSender sender) {
+	protected final boolean isPlayer(@NotNull CommandSender sender) {
 		if (sender instanceof Player) {
 			return true;
 		}

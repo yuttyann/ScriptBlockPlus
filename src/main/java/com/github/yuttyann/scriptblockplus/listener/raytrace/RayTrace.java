@@ -73,10 +73,10 @@ public class RayTrace {
             // 互換性を保つため、"Raytrace"が使えない関係で"BlockIterator"を使用
             BlockIterator iterator = new BlockIterator(player, 5);
             while (iterator.hasNext()) {
-                BlockIterator.BData bData = iterator.next();
-                Block block = bData.getBlock();
+                BlockIterator.BlockData data = iterator.next();
+                Block block = data.getBlock();
                 if (block.getType() != Material.AIR && player.getEyeLocation().distanceSquared(block.getLocation()) <= 30.77) {
-                    return new RayResult(block, bData.getFace());
+                    return new RayResult(block, data.getFace());
                 }
             }
         }

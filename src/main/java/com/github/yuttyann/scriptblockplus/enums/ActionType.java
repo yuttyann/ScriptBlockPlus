@@ -19,7 +19,7 @@ public enum ActionType {
 	VIEW;
 
 	private static final Set<String> TYPES = new HashSet<>();
-	private static final AtomicInteger I = new AtomicInteger(ScriptType.size());
+	private static final AtomicInteger SIZE = new AtomicInteger(ScriptType.size());
 
 	static {
 		reload();
@@ -32,7 +32,7 @@ public enum ActionType {
 
 	@NotNull
 	public static String[] types() {
-		if (I.get() != ScriptType.size()) {
+		if (SIZE.get() != ScriptType.size()) {
 			reload();
 		}
 		return TYPES.toArray(new String[0]);
@@ -43,7 +43,7 @@ public enum ActionType {
 			TYPES.clear();
 			StreamUtils.forEach(ScriptType.values(), s -> StreamUtils.forEach(values(), c -> TYPES.add(c.getKey(s))));
 		} finally {
-			I.set(ScriptType.size());
+			SIZE.set(ScriptType.size());
 		}
 	}
 }

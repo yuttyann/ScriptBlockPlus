@@ -27,19 +27,16 @@ public final class SBConstructor<T> {
 		this.sbInstance = Objects.requireNonNull(sbInstance);
 	}
 
-	@SuppressWarnings("unchecked")
 	@NotNull
 	public Class<? extends T> getDeclaringClass() {
 		return sbInstance == null ? constructor.getDeclaringClass() : (Class<? extends T>) sbInstance.getClass();
 	}
 
-	@SuppressWarnings("unchecked")
 	@NotNull
 	public T getInstance() {
 		return sbInstance == null ? newInstance(InstanceType.REFLECTION) : (T) sbInstance;
 	}
 
-	@SuppressWarnings("unchecked")
 	@NotNull
 	public T newInstance(@NotNull InstanceType instanceType) {
 		switch (instanceType) {

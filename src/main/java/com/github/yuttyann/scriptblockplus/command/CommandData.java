@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * ScriptBlockPlus CommandData クラス
@@ -49,8 +50,9 @@ public class CommandData {
 
 	@NotNull
 	public CommandData addPermission(@Nullable String... permission) {
-		if (permission != null && permission.length > 0) {
-			StreamUtils.forEach(permission, permissions::add);
+		Optional<String[]> value = Optional.ofNullable(permission);
+		if (value.isPresent() && value.get().length > 0) {
+			StreamUtils.forEach(value.get(), permissions::add);
 		}
 		return this;
 	}

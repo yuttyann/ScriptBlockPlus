@@ -71,11 +71,8 @@ public final class OptionManager {
 
     @NotNull
     public static Option get(@NotNull String syntax) {
-        Option value = StreamUtils.fOrElse(OPTION_MAP.sValues(), o -> o.isOption(syntax), null);
-        if (value == null) {
-            throw new NullPointerException("Option does not exist.");
-        }
-        return value;
+        Optional<Option> value = Optional.ofNullable(StreamUtils.fOrElse(OPTION_MAP.sValues(), o -> o.isOption(syntax), null));
+        return value.orElseThrow(() -> new NullPointerException("Option does not exist."));
     }
 
     @NotNull
