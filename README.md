@@ -41,7 +41,7 @@ ScriptBlockPlus [Java8 MC1.9-1.16.1] [![](https://jitpack.io/v/yuttyann/ScriptBl
 **★一部プラグインのコマンドが実行できない問題★**  
 [`CommandSelector`](https://github.com/yuttyann/ScriptBlockPlus/blob/master/src/main/resources/config.yml#L39)を有効にしている場合に、一部プラグインのコマンドが実行できない問題が確認されています。  
 例えば、[`LuckPerms`](https://luckperms.net/)等のプラグインのコマンドを"**@bypass**、**@command**"で実行しようとすると失敗します。  
-**v1.9.8**に対策として、コマンドのイニシャルに"*"を追加するとBukkitAPIを使用してコマンドを実行する機能を追加しました。  
+**v1.9.8**から対策として、コマンドのイニシャルに"*"を追加するとBukkitAPIを使用してコマンドを実行する機能を追加しました。  
 （例: "@bypass *lp info"、"@command *lp info"）  
 ――――――――――――――――――――――――――――――――――  
 
