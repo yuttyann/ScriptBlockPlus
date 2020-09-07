@@ -15,6 +15,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class VaultPermission {
 
+	public static final boolean HAS = Bukkit.getPluginManager().isPluginEnabled("Vault");
+	public static final VaultPermission INSTANCE = VaultPermission.setupPermission();
+
 	private final Permission permission;
 	private final String name;
 

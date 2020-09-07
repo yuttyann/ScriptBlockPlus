@@ -1,8 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
-import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.hook.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -29,7 +28,7 @@ public class MoneyCost extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		VaultEconomy vaultEconomy = HookPlugins.getVaultEconomy();
+		VaultEconomy vaultEconomy = VaultEconomy.INSTANCE;
 		if (!vaultEconomy.isEnabled()) {
 			throw new UnsupportedOperationException();
 		}

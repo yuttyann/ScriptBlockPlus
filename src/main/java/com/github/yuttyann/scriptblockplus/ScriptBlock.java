@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus;
 
+import com.github.yuttyann.scriptblockplus.hook.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
@@ -8,7 +9,6 @@ import com.github.yuttyann.scriptblockplus.manager.APIManager;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -44,7 +44,7 @@ public class ScriptBlock extends JavaPlugin {
 		}
 
 		Files.reload();
-		if (!HookPlugins.hasVault()) {
+		if (!VaultEconomy.HAS) {
 			SBConfig.NOT_VAULT.send();
 			getServer().getPluginManager().disablePlugin(this);
 			return;

@@ -1,8 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
-import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.hook.VaultPermission;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -27,7 +26,7 @@ public class Perm extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		VaultPermission vaultPermission = HookPlugins.getVaultPermission();
+		VaultPermission vaultPermission = VaultPermission.INSTANCE;
 		if (!vaultPermission.isEnabled()) {
 			throw new UnsupportedOperationException();
 		}

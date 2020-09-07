@@ -15,6 +15,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class VaultEconomy {
 
+	public static final boolean HAS = VaultPermission.HAS;
+	public static final VaultEconomy INSTANCE = VaultEconomy.setupEconomy();
+
 	private final Economy economy;
 	private final String name;
 
