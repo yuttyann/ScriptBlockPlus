@@ -37,7 +37,6 @@ public final class SBConfig {
 	public static final ConfigKey<Boolean> CONSOLE_LOG = booleanKey("ConsoleLog", false);
 	public static final ConfigKey<Boolean> SORT_SCRIPTS = booleanKey("SortScripts", true);
 	public static final ConfigKey<Boolean> OPTION_PERMISSION = booleanKey("OptionPermission", false);
-	public static final ConfigKey<Boolean> COMMAND_SELECTOR = booleanKey("CommandSelector", false);
 	public static final ConfigKey<Boolean> ACTIONS_INTERACT_LEFT = booleanKey("Actions.InteractLeft", true);
 	public static final ConfigKey<Boolean> ACTIONS_INTERACT_RIGHT = booleanKey("Actions.InteractRight", true);
 

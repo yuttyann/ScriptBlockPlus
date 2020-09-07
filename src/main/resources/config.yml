@@ -21,8 +21,8 @@ OpenChangeLog: true
 Language: default
 
 ## ===== NMSを利用するプラットフォームの設定 ===== ##
-# /verで表示されたサーバー名を参照してください。
-# 例 This server is running <name> ...
+# 追加する場合は、"/ver"で表示されたサーバー名を参照してください。
+# 例: "This server is running <サーバー名> ..."
 # ※NMSが実装されていない環境では正常に動作しません。
 Platforms: [CraftBukkit, Paper, CatServer]
 
@@ -31,12 +31,6 @@ Platforms: [CraftBukkit, Paper, CatServer]
 # スクリプト実行時に推奨される順番通りにオプションを実行するかどうか。
 # 設定されている優先順にオプションを並び替えて最適な順番で実行します。
 SortScripts: true
-
-## ===== コマンドセレクターの設定 ===== ##
-# [true -> 有効 | false -> 無効]
-# コマンドブロックと同様のセレクターを使用するかどうか。
-# ※NMSを利用できない場合は、自動で無効化されます。
-CommandSelector: true
 
 ## ===== コンソールログの設定 ===== ##
 # [true -> 有効 | false -> 無効]
@@ -52,7 +46,6 @@ OptionPermission: false
 ## ===== スクリプト実行の設定 ===== ##
 # [true -> 有効 | false -> 無効]
 # "左"または"右"クリックからのスクリプトの実行を無効化するかどうか。
-# 無効化した場合"@scriptaction"の利用に影響が出る場合があります。
 Actions:
   # 左クリックの設定
   InteractLeft: true
