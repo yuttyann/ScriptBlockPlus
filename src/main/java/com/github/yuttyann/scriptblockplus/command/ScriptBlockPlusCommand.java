@@ -358,19 +358,19 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			if (equals(args[0], "export")) {
 				if (Permission.COMMAND_EXPORT.has(sender)) {
 					String prefix = args[1].toLowerCase();
-					String[] answers = new String[] { "sound", "material" };
+					String[] answers = { "sound", "material" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			} else if (equals(args[0], "selector")) {
 				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[1].toLowerCase();
-					String[] answers = new String[] { "paste", "remove" };
+					String[] answers = { "paste", "remove" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			} else if (equals(args[0], ScriptType.types())) {
 				if (Permission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
 					String prefix = args[1].toLowerCase();
-					String[] answers = new String[] { "create", "add", "remove", "view", "run" };
+					String[] answers = { "create", "add", "remove", "view", "run" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			}
@@ -378,13 +378,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			if (args.length == 3 && equals(args[0], "selector") && equals(args[1], "paste")) {
 				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[2].toLowerCase();
-					String[] answers = new String[] { "true", "false" };
+					String[] answers = { "true", "false" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			} else if (args.length == 4 && equals(args[0], "selector") && equals(args[1], "paste")) {
 				if (Permission.COMMAND_SELECTOR.has(sender)) {
 					String prefix = args[3].toLowerCase();
-					String[] answers = new String[] { "true", "false" };
+					String[] answers = { "true", "false" };
 					StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
 				}
 			} else if (equals(args[0], ScriptType.types())) {
@@ -405,25 +405,20 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 	}
 
-	private Set<String> setCommandPermissions(CommandSender sender, Set<String> set) {
-		set.add(hasPermission(sender, Permission.COMMAND_TOOL, "tool"));
-		set.add(hasPermission(sender, Permission.COMMAND_RELOAD, "reload"));
-		set.add(hasPermission(sender, Permission.COMMAND_BACKUP, "backup"));
-		set.add(hasPermission(sender, Permission.COMMAND_CHECKVER, "checkver"));
-		set.add(hasPermission(sender, Permission.COMMAND_DATAMIGR, "datamigr"));
-		set.add(hasPermission(sender, Permission.COMMAND_EXPORT, "export"));
-
+	@NotNull
+	private Set<String> setCommandPermissions(@NotNull CommandSender sender, @NotNull Set<String> set) {
+		StreamUtils.filter(set, s -> Permission.COMMAND_TOOL.has(sender), s -> s.add("tool"));
+		StreamUtils.filter(set, s -> Permission.COMMAND_RELOAD.has(sender), s -> s.add("reload"));
+		StreamUtils.filter(set, s -> Permission.COMMAND_BACKUP.has(sender), s -> s.add("backup"));
+		StreamUtils.filter(set, s -> Permission.COMMAND_CHECKVER.has(sender), s -> s.add("checkver"));
+		StreamUtils.filter(set, s -> Permission.COMMAND_DATAMIGR.has(sender), s -> s.add("datamigr"));
+		StreamUtils.filter(set, s -> Permission.COMMAND_EXPORT.has(sender), s -> s.add("export"));
+		StreamUtils.filter(set, s -> Permission.COMMAND_SELECTOR.has(sender), s -> s.add("selector"));
 		StreamUtils.fForEach(ScriptType.values(), s -> Permission.has(sender, s, true), s -> set.add(s.type()));
-
-		set.add(hasPermission(sender, Permission.COMMAND_SELECTOR, "selector"));
 		return set;
 	}
 
-	private String hasPermission(CommandSender sender, Permission permission, String name) {
-		return StringUtils.isNotEmpty(permission.getNode()) && permission.has(sender) ? name : null;
-	}
-
-	private boolean isScripts(String scriptLine) {
+	private boolean isScripts(@NotNull String scriptLine) {
 		try {
 			int[] success = { 0 };
 			List<String> scripts = StringUtils.getScripts(scriptLine);
