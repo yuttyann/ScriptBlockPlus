@@ -1,53 +1,53 @@
-ScriptBlockPlus [Java8 MC1.9-1.16.1] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+ScriptBlockPlus [Java8 MC1.9-1.16.2] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
-ŠT—v
+æ¦‚è¦
 --------------------------------------------------
-[ScriptBlock](https://dev.bukkit.org/projects/scriptblock)‚Ì‹@”\‚ğˆø‚«Œp‚¬AV‹@”\’Ç‰Á‚â‰ü‘P‚ğ{‚µ‚½ƒvƒ‰ƒOƒCƒ“‚Å‚·B  
-‚Ü‚½AŠJ”­ÒŒü‚¯‚É[API](https://github.com/yuttyann/ScriptBlockPlus/wiki/%5BJP%5D-API-Tutorial)‚ğŒöŠJ‚µ‚Ä‚¢‚Ü‚·B  
+[ScriptBlock](https://dev.bukkit.org/projects/scriptblock)ã®æ©Ÿèƒ½ã‚’å¼•ãç¶™ãã€æ–°æ©Ÿèƒ½è¿½åŠ ã‚„æ”¹å–„ã‚’æ–½ã—ãŸãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã§ã™ã€‚  
+ã¾ãŸã€é–‹ç™ºè€…å‘ã‘ã«[API](https://github.com/yuttyann/ScriptBlockPlus/wiki/%5BJP%5D-API-Tutorial)ã‚’å…¬é–‹ã—ã¦ã„ã¾ã™ã€‚  
 
-“±“ü
+å°å…¥
 -----------
-[Releases](https://github.com/yuttyann/ScriptBlockPlus/releases)‚Ü‚½‚Í[Yuttyann Files](https://file.yuttyann44581.net/)‚©‚ç`ScriptBlockPlus`‚Ìƒ_ƒEƒ“ƒ[ƒh‚ğs‚Á‚Ä‚­‚¾‚³‚¢B  
-‚»‚ÌŒã‘O’ñƒvƒ‰ƒOƒCƒ“‚Å‚ ‚é[`Vault`](https://dev.bukkit.org/projects/vault)(v1.7.1ˆÈ~„§)‚ğƒ_ƒEƒ“ƒ[ƒh‚ğs‚¢`plugins`ƒtƒHƒ‹ƒ_‚Ö•Û‘¶‚·‚ê‚ÎŠ®—¹‚Å‚·B  
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  
-**˜AŒgƒvƒ‰ƒOƒCƒ“iŠg’£‹@”\j**  
-E[PlaceholderAPI - ƒvƒŒ[ƒXƒzƒ‹ƒ_Šg’£](https://www.spigotmc.org/resources/placeholderapi.6245/)  
-E[ScriptEntityPlus - ƒGƒ“ƒeƒBƒeƒB‚ÉƒXƒNƒŠƒvƒg‚ğİ’è](https://github.com/yuttyann/ScriptEntityPlus)  
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  
+[Releases](https://github.com/yuttyann/ScriptBlockPlus/releases)ã¾ãŸã¯[Yuttyann Files](https://file.yuttyann44581.net/)ã‹ã‚‰`ScriptBlockPlus`ã®ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã‚’è¡Œã£ã¦ãã ã•ã„ã€‚  
+ãã®å¾Œå‰æãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã§ã‚ã‚‹[`Vault`](https://dev.bukkit.org/projects/vault)(v1.7.1ä»¥é™æ¨å¥¨)ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã‚’è¡Œã„`plugins`ãƒ•ã‚©ãƒ«ãƒ€ã¸ä¿å­˜ã™ã‚Œã°å®Œäº†ã§ã™ã€‚  
+â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•  
+**é€£æºãƒ—ãƒ©ã‚°ã‚¤ãƒ³ï¼ˆæ‹¡å¼µæ©Ÿèƒ½ï¼‰**  
+ãƒ»[PsudoCommands - ã‚»ãƒ¬ã‚¯ã‚¿ãƒ¼è¿½åŠ ](https://www.spigotmc.org/resources/psudocommands-add-the-target-selector-to-plugin-commands.56738/)  
+ãƒ»[PlaceholderAPI - ãƒ—ãƒ¬ãƒ¼ã‚¹ãƒ›ãƒ«ãƒ€æ‹¡å¼µ](https://www.spigotmc.org/resources/placeholderapi.6245/)  
+ãƒ»[ScriptEntityPlus - ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£ã«ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’è¨­å®š](https://github.com/yuttyann/ScriptEntityPlus)  
+â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•  
 
-‘Î‰ƒvƒ‰ƒbƒgƒtƒH[ƒ€
+å¯¾å¿œãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ 
 -----------
-**[`BukkitAPI`](https://hub.spigotmc.org/javadocs/bukkit/overview-summary.html)‚ğÀ‘•‚µ‚Ä‚¢‚é‚Ì‚Å‚ ‚ê‚Î**Šî–{“I‚É“®ì‚µ‚Ü‚·B  
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  
-**šˆÈ‰º“®ì‚ğŠm”FÏ‚İ‚Ìƒvƒ‰ƒbƒgƒtƒH[ƒ€ˆê——š**  
-E[CraftBukkit](https://www.spigotmc.org/)  
-E[Spigot](https://www.spigotmc.org/)  
-E[PaperMC](https://papermc.io/)  
-E[CatServer](http://catserver.moe/)  
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  
-### ‹@”\§ŒÀ
-ÅV‚ÌMCƒo[ƒWƒ‡ƒ“‚ğg—p‚µ‚Ä‚¢‚éê‡‚É‚Í **`ƒZƒŒƒNƒ^[‚Ì‹@”\`** ˆÈŠO§ŒÀ‚ÍŠ|‚©‚è‚Ü‚¹‚ñB  
-ŒÃ‚¢MCƒo[ƒWƒ‡ƒ“‚Å**NMS‚É‘Î‰‚µ‚½ƒvƒ‰ƒbƒgƒtƒH[ƒ€**ˆÈŠO‚ğ—˜—p‚µ‚½ê‡‚É§ŒÀ‚ªŠ|‚©‚è‚Ü‚·B  
-¦**‘Î‰ƒvƒ‰ƒbƒgƒtƒH[ƒ€‚Ì’Ç‰Á**‚Í[`config.yml`](https://github.com/yuttyann/ScriptBlockPlus/blob/master/src/main/resources/config.yml)‚Ì[`Platforms`](https://github.com/yuttyann/ScriptBlockPlus/blob/master/src/main/resources/config.yml#L27)‚Ås‚¦‚Ü‚·B  
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  
-**šˆÈ‰º‹@”\§ŒÀ‚Ìˆê——š**  
-EƒAƒhƒxƒ“ƒ`ƒƒ[ƒ‚[ƒh‚Ì¶ƒNƒŠƒbƒN”»’è‚Ì§ŒÀ **[v1.9-1.13.1]**  
-@- ”»’è‚ª–{—ˆ‚ÌƒNƒŠƒbƒN”»’è‚Å‚Í‚È‚­‹^—“I‚ÉÄŒ»‚µ‚½”»’è‚É‚È‚è‚Ü‚·B  
-EƒIƒvƒVƒ‡ƒ“ **`@actionbar`** ‚Ì§ŒÀ **[v1.9-1.11]**  
-@- BukkitAPI‚ÉÀ‘•‚³‚ê‚Ä‚¢‚È‚¢‚½‚ß—˜—p‚Í‚Å‚«‚Ü‚¹‚ñB  
-EƒRƒ}ƒ“ƒh‚ÌƒZƒŒƒNƒ^[‚Ì§ŒÀ **[ALL]**  
-@- NMS‚ÉˆË‘¶‚µ‚Ä‚¢‚é‚½‚ßƒZƒŒƒNƒ^[‚Ì—˜—p‚Í‚Å‚«‚Ü‚¹‚ñB  
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  
-**šˆê•”ƒvƒ‰ƒOƒCƒ“‚ÌƒRƒ}ƒ“ƒh‚ªÀs‚Å‚«‚È‚¢–â‘èš**  
-[`CommandSelector`](https://github.com/yuttyann/ScriptBlockPlus/blob/master/src/main/resources/config.yml#L39)‚ğ—LŒø‚É‚µ‚Ä‚¢‚éê‡‚ÉAˆê•”ƒvƒ‰ƒOƒCƒ“‚ÌƒRƒ}ƒ“ƒh‚ªÀs‚Å‚«‚È‚¢–â‘è‚ªŠm”F‚³‚ê‚Ä‚¢‚Ü‚·B  
-—á‚¦‚ÎA[`LuckPerms`](https://luckperms.net/)“™‚Ìƒvƒ‰ƒOƒCƒ“‚ÌƒRƒ}ƒ“ƒh‚ğ"**@bypass**A**@command**"‚ÅÀs‚µ‚æ‚¤‚Æ‚·‚é‚Æ¸”s‚µ‚Ü‚·B  
-**v1.9.8**‚©‚ç‘Îô‚Æ‚µ‚ÄAƒRƒ}ƒ“ƒh‚ÌƒCƒjƒVƒƒƒ‹‚É"*"‚ğ’Ç‰Á‚·‚é‚ÆBukkitAPI‚ğg—p‚µ‚ÄƒRƒ}ƒ“ƒh‚ğÀs‚·‚é‹@”\‚ğ’Ç‰Á‚µ‚Ü‚µ‚½B  
-i—á: "@bypass *lp info"A"@command *lp info"j  
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  
+**[`BukkitAPI`](https://hub.spigotmc.org/javadocs/bukkit/overview-summary.html)ã‚’å®Ÿè£…ã—ã¦ã„ã‚‹ã®ã§ã‚ã‚Œã°**åŸºæœ¬çš„ã«å‹•ä½œã—ã¾ã™ã€‚  
+â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•  
+**â˜…ä»¥ä¸‹å‹•ä½œã‚’ç¢ºèªæ¸ˆã¿ã®ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ä¸€è¦§â˜…**  
+ãƒ»[CraftBukkit](https://www.spigotmc.org/)  
+ãƒ»[Spigot](https://www.spigotmc.org/)  
+ãƒ»[PaperMC](https://papermc.io/)  
+ãƒ»[CatServer](http://catserver.moe/)  
+â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•  
+### æ©Ÿèƒ½åˆ¶é™
+æœ€æ–°ã®MCãƒãƒ¼ã‚¸ãƒ§ãƒ³ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹å ´åˆã«ã¯åˆ¶é™ã¯æ›ã‹ã‚Šã¾ã›ã‚“ã€‚  
+å¤ã„MCãƒãƒ¼ã‚¸ãƒ§ãƒ³ã§**NMSã«å¯¾å¿œã—ãŸãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ **ä»¥å¤–ã‚’åˆ©ç”¨ã—ãŸå ´åˆã«åˆ¶é™ãŒæ›ã‹ã‚Šã¾ã™ã€‚  
+â€»**å¯¾å¿œãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ã®è¿½åŠ **ã¯[`config.yml`](https://github.com/yuttyann/ScriptBlockPlus/blob/master/src/main/resources/config.yml)ã®[`Platforms`](https://github.com/yuttyann/ScriptBlockPlus/blob/master/src/main/resources/config.yml#L27)ã§è¡Œãˆã¾ã™ã€‚  
+â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•  
+**â˜…ä»¥ä¸‹æ©Ÿèƒ½åˆ¶é™ã®ä¸€è¦§â˜…**  
+ãƒ»ã‚¢ãƒ‰ãƒ™ãƒ³ãƒãƒ£ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã®å·¦ã‚¯ãƒªãƒƒã‚¯åˆ¤å®šã®åˆ¶é™ **[v1.9-1.13.1]**  
+ã€€- åˆ¤å®šãŒæœ¬æ¥ã®ã‚¯ãƒªãƒƒã‚¯åˆ¤å®šã§ã¯ãªãç–‘ä¼¼çš„ã«å†ç¾ã—ãŸåˆ¤å®šã«ãªã‚Šã¾ã™ã€‚  
+ãƒ»ã‚ªãƒ—ã‚·ãƒ§ãƒ³ **`@actionbar`** ã®åˆ¶é™ **[v1.9-1.11]**  
+ã€€- BukkitAPIã«å®Ÿè£…ã•ã‚Œã¦ã„ãªã„ãŸã‚åˆ©ç”¨ã¯ã§ãã¾ã›ã‚“ã€‚    
+â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•  
+**â˜…ä¸€éƒ¨ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®ã‚³ãƒãƒ³ãƒ‰ãŒå®Ÿè¡Œã§ããªã„å•é¡Œâ˜…**  
+ãƒ»**v2.0.0**ã«ã¦ä¿®æ­£ã„ãŸã—ã¾ã—ãŸã€‚  
+â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•  
 
-ƒvƒ‰ƒOƒCƒ“‹L–
+ãƒ—ãƒ©ã‚°ã‚¤ãƒ³è¨˜äº‹
 -----------
-**[Github]** [‹L–ˆê——](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91) **[“ú–{Œê - APIAƒIƒvƒVƒ‡ƒ“AƒRƒ}ƒ“ƒh‚ÌÚ×“™]**  
-**[MCBBS]** [ƒtƒH[ƒ‰ƒ€](https://www.mcbbs.net/thread-691900-1-1.html) **[’†‘Œê - g‚¢•û‚â‹@”\‚ÌĞ‰î]**  
-**[SpigotMC]** [ƒtƒH[ƒ‰ƒ€](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/) **[‰pŒê - g‚¢•û‚â‹@”\‚ÌĞ‰î]**  
-**[MCPoteton]** [ƒuƒƒO](https://mcpoteton.com/mcplugin-scriptblockplus) **[“ú–{Œê - g‚¢•û‚â‹@”\‚ÌĞ‰î]**  
+**[[Github, JP-ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã€ã‚³ãƒãƒ³ãƒ‰ã®è©³ç´°]](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91)**  
+**[[MCPoteton, JP-ä½¿ã„æ–¹ã¨æ©Ÿèƒ½ã®ç´¹ä»‹]](https://mcpoteton.com/mcplugin-scriptblockplus)**  
+**[[SpigotMC, EN-Explanation of the plugin]](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/)**  
+**[[MCBBS, ZH-æ’ä»¶è¯´æ˜]](https://www.mcbbs.net/thread-691900-1-1.html)**  
+â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•  
+**â˜…éå»ã®"README.md"ã®ä¸€è¦§â˜…**  
+**[[Readme.md, History]](https://github.com/yuttyann/ScriptBlockPlus/commits/master/README.md)**  
+â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•â€•  
