@@ -1,8 +1,11 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
+import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,6 +26,7 @@ public class Console extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		return executeConsoleCommand(StringUtils.setColor(getOptionValue(), true));
+		String command = StringUtils.setColor(getOptionValue(), true);
+		return LogAdmin.function(getSBPlayer().getWorld(), w -> Utils.dispatchCommand(Bukkit.getConsoleSender(), command));
 	}
 }

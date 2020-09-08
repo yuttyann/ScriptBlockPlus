@@ -1,11 +1,11 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
+import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,10 +49,11 @@ public class Title extends BaseOption {
 			player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		} else {
 			String prefix = "title " + player.getName();
-			CommandSender sender = Bukkit.getConsoleSender();
-			Bukkit.dispatchCommand(sender, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
-			Bukkit.dispatchCommand(sender, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
-			Bukkit.dispatchCommand(sender, prefix + " title {\"text\":\"" + title + "\"}");
+			LogAdmin.action(getSBPlayer().getWorld(), w -> {
+				Bukkit.dispatchCommand(player, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
+				Bukkit.dispatchCommand(player, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
+				Bukkit.dispatchCommand(player, prefix + " title {\"text\":\"" + title + "\"}");
+			});
 		}
 	}
 }

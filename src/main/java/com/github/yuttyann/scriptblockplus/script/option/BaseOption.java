@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -8,7 +9,6 @@ import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -186,15 +186,6 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * コンソールからコマンドを実行します。
-	 * @param command コマンド
-	 * @return 実行に成功した場合はtrue
-	 */
-	protected boolean executeConsoleCommand(@NotNull String command) {
-		return Utils.dispatchCommand(Bukkit.getConsoleSender(), getLocation(), command);
-	}
-
-	/**
 	 * プレイヤーからコマンドを実行します。
 	 * @param sbPlayer プレイヤー
 	 * @param command コマンド
@@ -202,16 +193,17 @@ public abstract class BaseOption extends Option {
 	 * @return 実行に成功した場合はtrue
 	 */
 	protected boolean executeCommand(@NotNull SBPlayer sbPlayer, @NotNull String command, boolean isBypass) {
-		Location location = getLocation();
-		if (!isBypass || sbPlayer.isOp()) {
-			return Utils.dispatchCommand(sbPlayer, location, command);
-		} else {
-			try {
-				sbPlayer.setOp(true);
-				return Utils.dispatchCommand(sbPlayer, location, command);
-			} finally {
-				sbPlayer.setOp(false);
+		return LogAdmin.function(sbPlayer.getWorld(), w -> {
+			if (!isBypass || sbPlayer.isOp()) {
+				return Utils.dispatchCommand(sbPlayer, command);
+			} else {
+				try {
+					sbPlayer.setOp(true);
+					return Utils.dispatchCommand(sbPlayer, command);
+				} finally {
+					sbPlayer.setOp(false);
+				}
 			}
-		}
+		});
 	}
 }

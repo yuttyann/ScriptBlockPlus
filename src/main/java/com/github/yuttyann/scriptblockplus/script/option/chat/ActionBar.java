@@ -1,17 +1,20 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
+import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +40,7 @@ public class ActionBar extends BaseOption {
 
 		if (array.length > 1) {
 			int stay = Integer.parseInt(array[1]);
-			new Task(stay, message).runTaskTimer(getPlugin(), 0, 1);
+			new Task(stay, message).runTaskTimer(getPlugin(), 0, 20);
 		} else {
 			sendActionBar(message);
 		}
@@ -45,19 +48,21 @@ public class ActionBar extends BaseOption {
 	}
 
 	private void sendActionBar(@NotNull String message) throws ReflectiveOperationException {
-		if (!getSBPlayer().isOnline()) {
+		Optional<Player> value = Optional.ofNullable(getSBPlayer().getPlayer());
+		if (!value.isPresent()) {
 			return;
 		}
+		Player player = value.get();
 		if (Utils.isCBXXXorLater("1.11")) {
-			SBPlayer sbPlayer = getSBPlayer();
-			executeCommand(sbPlayer, "*title " + sbPlayer.getName() + " actionbar " + "{\"text\":\"" + message + "\"}", true);
+			String command = "title " + player.getName() + " actionbar " + "{\"text\":\"" + message + "\"}";
+			LogAdmin.action(player.getWorld(), w -> Bukkit.dispatchCommand(player, command));
 		} else if (Utils.isPlatform()) {
 			String chatSerializer = "IChatBaseComponent$ChatSerializer";
 			Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
 			Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
 			Class<?>[] array = { PackageType.NMS.getClass("IChatBaseComponent"), byte.class };
 			Constructor<?> packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", array);
-			PackageType.sendPacket(getPlayer(), packetPlayOutChat.newInstance(component, (byte) 2));
+			PackageType.sendPacket(player, packetPlayOutChat.newInstance(component, (byte) 2));
 		} else {
 			String platforms = SBConfig.PLATFORMS.getValue().stream().map(String::valueOf).collect(Collectors.joining(", "));
 			throw new UnsupportedOperationException("Unsupported server. | Supported Servers <" + platforms + ">");
@@ -73,7 +78,7 @@ public class ActionBar extends BaseOption {
 
 		Task(int stay, @NotNull String message) {
 			this.tick = 0;
-			this.stay = stay + 1;
+			this.stay = stay;
 			this.message = message;
 		}
 
