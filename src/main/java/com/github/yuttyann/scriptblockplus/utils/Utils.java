@@ -1,14 +1,15 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
+import com.github.yuttyann.scriptblockplus.hook.PsudoCommand;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
 import org.apache.commons.lang.Validate;
-import org.bukkit.*;
-import org.bukkit.command.BlockCommandSender;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -99,30 +100,23 @@ public final class Utils {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
+	public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
 		if (sender instanceof SBPlayer && ((SBPlayer) sender).isOnline()) {
 			sender = Objects.requireNonNull(((SBPlayer) sender).getPlayer());
 		}
-		boolean isCommandSelector = !command.startsWith("*") && SBConfig.COMMAND_SELECTOR.getValue() && isPlatform();
-		if (isCommandSelector && (isCBXXXorLater("1.13") || CommandSelector.isCommandPattern(command))) {
-			if (location == null) {
-				if (sender instanceof Player) {
-					location = ((Player) sender).getLocation().clone();
-				} else if (sender instanceof BlockCommandSender) {
-					location = ((BlockCommandSender) sender).getBlock().getLocation().clone();
-				} else if (sender instanceof CommandMinecart) {
-					location = ((CommandMinecart) sender).getLocation().clone();
+		command = command.startsWith("/") ? command.substring(1) : command;
+		if (PsudoCommand.HAS) {
+			int succsess = 0;
+			List<StringBuilder> list = PsudoCommand.INSTANCE.build(sender, command);
+			for (StringBuilder builder : list) {
+				if (Bukkit.dispatchCommand(sender, builder.toString())) {
+					succsess++;
 				}
 			}
-			if (location != null) {
-				return CommandSelector.getListener().executeCommand(sender, location, command);
-			}
+			return list.size() == succsess;
 		}
-		command = command.startsWith("*") ? command.substring(1) : command;
-		command = command.startsWith("/") ? command.substring(1) : command;
 		return Bukkit.dispatchCommand(sender, command);
 	}
 
@@ -137,13 +131,6 @@ public final class Utils {
 			}
 		}
 		return world;
-	}
-
-	@NotNull
-	public static Set<OfflinePlayer> getAllPlayers() {
-		Set<OfflinePlayer> players = new HashSet<>(Bukkit.getOnlinePlayers());
-		Collections.addAll(players, Bukkit.getOfflinePlayers());
-		return players;
 	}
 
 	@SuppressWarnings("deprecation")
