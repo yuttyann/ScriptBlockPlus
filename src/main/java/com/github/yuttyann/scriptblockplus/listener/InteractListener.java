@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
+import com.github.yuttyann.scriptblockplus.event.BlockClickEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockEditEvent;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.listener.item.action.BlockSelector;
@@ -36,8 +36,8 @@ public class InteractListener implements Listener {
 	private static final String KEY_FLAG = Utils.randomUUID();
 
 	static {
-		new BlockSelector().put();
 		new ScriptViewer().put();
+		new BlockSelector().put();
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -55,12 +55,12 @@ public class InteractListener implements Listener {
 		RayResult rayResult = new RayTrace(player.getWorld()).rayTrace(player, 4.5D);
 		if (rayResult == null) {
 			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR, item, null, BlockFace.SOUTH);
-			callEvent(interactEvent, new BlockInteractEvent(interactEvent, EquipmentSlot.HAND, true));
+			callEvent(interactEvent, new BlockClickEvent(interactEvent, EquipmentSlot.HAND, true));
 		} else {
 			Block block = rayResult.getHitBlock();
 			BlockFace blockFace = rayResult.getHitBlockFace();
 			PlayerInteractEvent interactEvent = new PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, item, block, blockFace);
-			callEvent(interactEvent, new BlockInteractEvent(interactEvent, EquipmentSlot.HAND, true));
+			callEvent(interactEvent, new BlockClickEvent(interactEvent, EquipmentSlot.HAND, true));
 		}
 	}
 
@@ -80,7 +80,7 @@ public class InteractListener implements Listener {
 				objectMap.put(KEY_FLAG, true);
 			}
 		}
-		callEvent(event, new BlockInteractEvent(event, null, false));
+		callEvent(event, new BlockClickEvent(event, null, false));
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -97,7 +97,7 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	private void callEvent(@NotNull PlayerInteractEvent interactEvent, @NotNull BlockInteractEvent blockInteractEvent) {
+	private void callEvent(@NotNull PlayerInteractEvent interactEvent, @NotNull BlockClickEvent blockInteractEvent) {
 		Player player = interactEvent.getPlayer();
 		boolean action;
 		try {
@@ -112,7 +112,7 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	private boolean action(@NotNull Player player, @NotNull Action action, @NotNull BlockInteractEvent event) {
+	private boolean action(@NotNull Player player, @NotNull Action action, @NotNull BlockClickEvent event) {
 		if (event.getHand() != EquipmentSlot.HAND) {
 			return false;
 		}
@@ -122,30 +122,30 @@ public class InteractListener implements Listener {
 		if(ItemAction.run(event.getItem(), player, action, location, isAIR, player.isSneaking())) {
 			return true;
 		}
-		if (!isAIR && sbPlayer.getActionType().isPresent() && location != null) {
+		if (location != null && !isAIR && sbPlayer.getActionType().isPresent()) {
 			String[] array = StringUtils.split(sbPlayer.getActionType().get(), "_");
 			ScriptBlockEditEvent editEvent = new ScriptBlockEditEvent(player, location.getBlock(), array);
 			Bukkit.getPluginManager().callEvent(editEvent);
-			if (editEvent.isCancelled()) {
-				sbPlayer.setScriptLine(null);
-				sbPlayer.setActionType(null);
-				return false;
-			}
-			ScriptEdit scriptEdit = new ScriptEdit(editEvent.getScriptType());
-			switch (editEvent.getActionType()) {
-			case CREATE:
-				scriptEdit.create(sbPlayer, location);
-				return true;
-			case ADD:
-				scriptEdit.add(sbPlayer, location);
-				return true;
-			case REMOVE:
-				scriptEdit.remove(sbPlayer, location);
-				return true;
-			case VIEW:
-				scriptEdit.view(sbPlayer, location);
+			if (!editEvent.isCancelled()) {
+				ScriptEdit scriptEdit = new ScriptEdit(editEvent.getScriptType());
+				switch (editEvent.getActionType()) {
+					case CREATE:
+						scriptEdit.create(sbPlayer, location);
+						break;
+					case ADD:
+						scriptEdit.add(sbPlayer, location);
+						break;
+					case REMOVE:
+						scriptEdit.remove(sbPlayer, location);
+						break;
+					case VIEW:
+						scriptEdit.view(sbPlayer, location);
+						break;
+				}
 				return true;
 			}
+			sbPlayer.setScriptLine(null);
+			sbPlayer.setActionType(null);
 		}
 		return false;
 	}

@@ -16,10 +16,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * ScriptBlockPlus BlockInteractEvent イベントクラス
+ * ScriptBlockPlus BlockClickEvent イベントクラス
  * @author yuttyann44581
  */
-public class BlockInteractEvent extends PlayerEvent implements Cancellable {
+public class BlockClickEvent extends PlayerEvent implements Cancellable {
 
 	private static final HandlerList HANDLERS = new HandlerList();
 
@@ -32,16 +32,16 @@ public class BlockInteractEvent extends PlayerEvent implements Cancellable {
 	private boolean isInvalid;
 	private boolean cancelled;
 
-	public BlockInteractEvent(@NotNull final PlayerInteractEvent event, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
+	public BlockClickEvent(@NotNull final PlayerInteractEvent event, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
 		this(event, event.getItem(), hand, isAnimation);
 	}
 
-	public BlockInteractEvent(@NotNull final PlayerInteractEvent event, @Nullable final ItemStack item, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
+	public BlockClickEvent(@NotNull final PlayerInteractEvent event, @Nullable final ItemStack item, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
 		this(event, event.getPlayer(), event.getClickedBlock(), item, event.getAction(), event.getBlockFace(), hand, isAnimation);
 	}
 
-	public BlockInteractEvent(@NotNull final PlayerInteractEvent event, @NotNull final Player player, @Nullable final Block block,
-							  final ItemStack item, @NotNull final Action action, @NotNull final BlockFace blockFace, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
+	public BlockClickEvent(@NotNull final PlayerInteractEvent event, @NotNull final Player player, @Nullable final Block block,
+						   final ItemStack item, @NotNull final Action action, @NotNull final BlockFace blockFace, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
 		super(player);
 		this.block = block;
 		this.item = item;
