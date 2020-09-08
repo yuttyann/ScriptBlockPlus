@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.script.option.time;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -30,6 +31,11 @@ public class TimerTemp {
         this.uuid = uuid;
         this.fullCoords = fullCoords;
         this.scriptType = scriptType;
+    }
+
+    @Nullable
+    public UUID getUniqueId() {
+        return uuid;
     }
 
     public int getSecond() {
