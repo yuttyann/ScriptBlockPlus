@@ -27,9 +27,6 @@ public class BlockSelector extends ItemAction {
 
     @Override
     public boolean run() {
-        if (!Permission.TOOL_BLOCK_SELECTOR.has(player)) {
-            return false;
-        }
         SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
         CuboidRegion region = ((CuboidRegion) sbPlayer.getRegion());
         switch (action) {

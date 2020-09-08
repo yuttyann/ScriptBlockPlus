@@ -32,9 +32,6 @@ public class ScriptEditor extends ItemAction {
 
     @Override
     public boolean run() {
-        if (!Permission.TOOL_SCRIPT_EDITOR.has(player)) {
-            return false;
-        }
         SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
         switch (action) {
             case LEFT_CLICK_AIR:
