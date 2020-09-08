@@ -10,9 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -27,15 +25,23 @@ public abstract class Json<T> {
     @Expose
     protected final UUID uuid;
 
-    @SerializedName("infos")
+    @SerializedName("elements")
     @Expose
-    protected List<T> list = null;
+    protected List<T> list = new ArrayList<>();
+
+    @SerializedName("infos")
+    @Expose(serialize = false)
+    @Deprecated
+    protected List<T> oldList = null;
 
     protected Json(@NotNull UUID uuid) {
         this.uuid = uuid;
         try {
-            Json<T> json = (Json<T>) load(uuid);
-            this.list = json == null ? new ArrayList<>() : json.list;
+            Optional<Json<T>> value = Optional.ofNullable((Json<T>) load(uuid));
+            if (value.isPresent()) {
+                Json<T> json = value.get();
+                this.list = Optional.ofNullable(json.oldList).orElseGet(() -> json.list);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,7 +61,7 @@ public abstract class Json<T> {
         }
     }
 
-    protected void action(@Nullable T t, @NotNull Consumer<T> action) {
+    public void action(@Nullable T t, @NotNull Consumer<T> action) {
         Thread thread = new Thread(() -> {
             try {
                 action.accept(t);
@@ -114,5 +120,35 @@ public abstract class Json<T> {
     public final File getFile(@NotNull UUID uuid) {
         String path = "json/" + getClass().getSimpleName().toLowerCase() + "/" + uuid.toString() + ".json";
         return new File(ScriptBlock.getInstance().getDataFolder(), path);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Json)) {
+            return false;
+        }
+        Json<?> json = (Json<?>) obj;
+        return Objects.equals(uuid, json.uuid) && Objects.equals(list, json.list);
+    }
+
+    @Override
+    public int hashCode() {
+        return ("json/" + getClass().getSimpleName().toLowerCase() + "/" + uuid.toString() + ".json").hashCode();
+    }
+
+    @NotNull
+    public static List<UUID> getUniqueIdList(@NotNull Class<? extends Json> jsonClass) {
+        String path = "json/" + jsonClass.getSimpleName().toLowerCase();
+        File folder = new File(ScriptBlock.getInstance().getDataFolder(), path);
+        List<UUID> uuids = new ArrayList<>();
+        if (folder.exists()) {
+            for (String name : folder.list()) {
+                uuids.add(UUID.fromString(name.substring(0, name.lastIndexOf(".json"))));
+            }
+        }
+        return uuids;
     }
 }
