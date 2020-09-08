@@ -187,9 +187,9 @@ public class PsudoCommand {
             Class<?> commandUtils = Class.forName("me.zombie_striker.psudocommands.CommandUtils");
             return commandUtils.getMethod("getIntRelative", String.class, String.class, Entity.class);
         } catch (ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
+
     }
 
     @Nullable
@@ -198,8 +198,7 @@ public class PsudoCommand {
             Class<?> commandUtils = Class.forName("me.zombie_striker.psudocommands.CommandUtils");
             return commandUtils.getMethod("getTargets", CommandSender.class, String.class);
         } catch (ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 }
