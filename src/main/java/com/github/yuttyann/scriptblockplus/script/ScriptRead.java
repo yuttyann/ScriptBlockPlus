@@ -1,15 +1,16 @@
 package com.github.yuttyann.scriptblockplus.script;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.hook.Placeholder;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -119,23 +120,31 @@ public class ScriptRead extends ScriptMap implements SBRead {
 			}
 			String script = scripts.get(scriptIndex);
 			Option option = OptionManager.get(script).newInstance();
-			optionValue = setPlaceholders(option.getValue(script), getSBPlayer());
+			optionValue = setPlaceholders(getSBPlayer(), option.getValue(script));
 			if (!hasPermission(option) || !option.callOption(this)) {
 				executeEndProcess(e -> { if (!option.isFailedIgnore()) e.failed(this); });
 				return false;
 			}
 		}
 		executeEndProcess(e -> e.success(this));
-		getSBPlayer().getPlayerCount().add(blockCoords, scriptType);
+		new PlayerCount(sbPlayer.getUniqueId()).add(blockCoords, scriptType);
 		SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(sbPlayer.getName(), scriptType, blockCoords).console();
 		return true;
 	}
 
 	@NotNull
-	protected final String setPlaceholders(@NotNull String source, @NotNull SBPlayer sbPlayer) {
-		source = StringUtils.replace(source, "<player>", sbPlayer.getName());
-		source = StringUtils.replace(source, "<world>", sbPlayer.getWorld().getName());
-		return Calculation.setPlaceholders(Objects.requireNonNull(sbPlayer.getPlayer()), source);
+	protected final String setPlaceholders(@NotNull SBPlayer sbPlayer, @NotNull String source) {
+		Optional<Player> value = Optional.ofNullable(sbPlayer.getPlayer());
+		if (!value.isPresent()) {
+			return source;
+		}
+		Player player = value.get();
+		if (Placeholder.HAS) {
+			source = Placeholder.INSTANCE.set(player, source);
+		}
+		source = StringUtils.replace(source, "<player>", player.getName());
+		source = StringUtils.replace(source, "<world>", player.getWorld().getName());
+		return source;
 	}
 
 	protected final void executeEndProcess(@NotNull Consumer<EndProcess> action) {

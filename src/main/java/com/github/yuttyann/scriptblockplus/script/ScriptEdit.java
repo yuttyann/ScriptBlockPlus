@@ -12,7 +12,10 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -55,9 +58,10 @@ public final class ScriptEdit {
 
 	public void create(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
+			Optional<Player> player = Optional.ofNullable(sbPlayer.getPlayer());
 			Optional<String> scriptLine = sbPlayer.getScriptLine();
-			if (scriptLine.isPresent() && sbPlayer.isOnline()) {
-				create(Objects.requireNonNull(sbPlayer.getPlayer()), location, scriptLine.get());
+			if (scriptLine.isPresent() && player.isPresent()) {
+				create(player.get(), location, scriptLine.get());
 			}
 		} finally {
 			sbPlayer.setScriptLine(null);
@@ -79,9 +83,10 @@ public final class ScriptEdit {
 
 	public void add(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
+			Optional<Player> player = Optional.ofNullable(sbPlayer.getPlayer());
 			Optional<String> scriptLine = sbPlayer.getScriptLine();
-			if (scriptLine.isPresent() && sbPlayer.isOnline()) {
-				add(Objects.requireNonNull(sbPlayer.getPlayer()), location, scriptLine.get());
+			if (scriptLine.isPresent() && player.isPresent()) {
+				add(player.get(), location, scriptLine.get());
 			}
 		} finally {
 			sbPlayer.setScriptLine(null);
@@ -106,9 +111,7 @@ public final class ScriptEdit {
 
 	public void remove(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
-			if (sbPlayer.isOnline()) {
-				remove(Objects.requireNonNull(sbPlayer.getPlayer()), location);
-			}
+			Optional.ofNullable(sbPlayer.getPlayer()).ifPresent(p -> remove(p, location));
 		} finally {
 			sbPlayer.setScriptLine(null);
 			sbPlayer.setActionType(null);
@@ -142,9 +145,7 @@ public final class ScriptEdit {
 
 	public void view(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
-			if (sbPlayer.isOnline()) {
-				view(Objects.requireNonNull(sbPlayer.getPlayer()), location);
-			}
+			Optional.ofNullable(sbPlayer.getPlayer()).ifPresent(p -> view(p, location));
 		} finally {
 			sbPlayer.setScriptLine(null);
 			sbPlayer.setActionType(null);
@@ -157,7 +158,7 @@ public final class ScriptEdit {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
-		PlayerCount playerCount = SBPlayer.fromPlayer(player).getPlayerCount();
+		PlayerCount playerCount = new PlayerCount(player.getUniqueId());
 		player.sendMessage("Author: " + getAuthors());
 		player.sendMessage("LastEdit: " + scriptData.getLastEdit());
 		player.sendMessage("Execute: " + playerCount.getInfo(location, getScriptType()).getAmount());

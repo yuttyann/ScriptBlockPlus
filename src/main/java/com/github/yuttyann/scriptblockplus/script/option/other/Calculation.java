@@ -1,18 +1,15 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.hook.HookPlugins;
 import com.github.yuttyann.scriptblockplus.hook.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -73,7 +70,7 @@ public class Calculation extends BaseOption {
 			}
 			ScriptType scriptType = array.length == 1 ? getScriptType() : ScriptType.valueOf(array[0]);
 			BlockCoords blockCoords = BlockCoords.fromString(array.length == 1 ? array[0] : array[1]);
-			return getSBPlayer().getPlayerCount().getInfo(blockCoords, scriptType).getAmount();
+			return new PlayerCount(getUniqueId()).getInfo(blockCoords, scriptType).getAmount();
 		}
 		if (source.startsWith("%player_others_in_range_") && source.endsWith("%")) {
 			source = source.substring("%player_others_in_range_".length(), source.length() - 1);
@@ -105,7 +102,7 @@ public class Calculation extends BaseOption {
 				return Bukkit.getOfflinePlayers().length;
 			case "%player_count%":
 				BlockCoords fullCoords = BlockCoords.fromString(getFullCoords());
-				return getSBPlayer().getPlayerCount().getInfo(fullCoords, getScriptType()).getAmount();
+				return new PlayerCount(getUniqueId()).getInfo(fullCoords, getScriptType()).getAmount();
 			case "%player_ping%":
 				if (!Utils.isPlatform()) {
 					return 0;
@@ -183,27 +180,11 @@ public class Calculation extends BaseOption {
 			case "%player_walk_speed%":
 				return player.getWalkSpeed();
 			case "%vault_eco_balance%":
-				VaultEconomy vaultEconomy = HookPlugins.getVaultEconomy();
+				VaultEconomy vaultEconomy = VaultEconomy.INSTANCE;
 				return vaultEconomy.isEnabled() ? vaultEconomy.getBalance(player) : 0;
 			default:
-				String placeholder = setPlaceholders(getPlayer(), source);
-				return REALNUMBER_PATTERN.matcher(placeholder).matches() ? Double.parseDouble(placeholder) : placeholder;
+				return 0;
 		}
-	}
-
-	@NotNull
-	public static String setPlaceholders(@NotNull Player player, @NotNull String variable) {
-		if (HookPlugins.hasPlaceholderAPI()) {
-			String version = PlaceholderAPIPlugin.getInstance().getDescription().getVersion();
-			if (Utils.isUpperVersion("2.8.8", version)) {
-				return PlaceholderAPI.setPlaceholders((OfflinePlayer) player, variable);
-			} else {
-				@SuppressWarnings("deprecation")
-				String result = PlaceholderAPI.setPlaceholders(player, variable);
-				return result;
-			}
-		}
-		return variable;
 	}
 
 	private int getNearbyOthers(@NotNull Player player, int distance) {
