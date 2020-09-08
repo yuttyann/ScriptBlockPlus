@@ -2,7 +2,7 @@ package com.github.yuttyann.scriptblockplus.listener;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.event.BlockInteractEvent;
+import com.github.yuttyann.scriptblockplus.event.BlockClickEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -31,7 +31,7 @@ public class ScriptInteractListener extends ScriptListener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onBlockInteractEvent(BlockInteractEvent event) {
+	public void onBlockClickEvent(BlockClickEvent event) {
 		Block block = event.getBlock();
 		if (event.isInvalid() || event.getHand() != EquipmentSlot.HAND || block == null) {
 			return;
