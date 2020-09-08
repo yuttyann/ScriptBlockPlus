@@ -3,10 +3,10 @@ package com.github.yuttyann.scriptblockplus.script;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
+import com.github.yuttyann.scriptblockplus.file.json.Json;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountInfo;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -223,8 +223,8 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void clearCounts() {
-		for (OfflinePlayer player : Utils.getAllPlayers()) {
-			PlayerCount playerCount = SBPlayer.fromPlayer(player).getPlayerCount();
+		for (UUID uuid : Json.getUniqueIdList(PlayerCount.class)) {
+			PlayerCount playerCount = new PlayerCount(uuid);
 			PlayerCountInfo playerCountInfo = playerCount.getInfo(location, scriptType);
 			if (playerCountInfo.getAmount() > 0) {
 				playerCount.remove(playerCountInfo);
