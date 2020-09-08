@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
-import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
@@ -11,6 +10,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

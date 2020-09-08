@@ -1,9 +1,9 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
-import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
 import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
 import com.github.yuttyann.scriptblockplus.script.option.chat.*;
 import com.github.yuttyann.scriptblockplus.script.option.other.*;
 import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;

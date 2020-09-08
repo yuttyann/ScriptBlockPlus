@@ -120,7 +120,6 @@ public final class FileUtils {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@NotNull
 	public static <T> T loadFile(@NotNull File file) throws IOException, ClassNotFoundException {
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {

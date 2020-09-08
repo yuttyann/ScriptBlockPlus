@@ -27,7 +27,7 @@ public final class BaseSBPlayer extends PlayerMap {
 	private boolean isOnline;
 
 	private BaseSBPlayer(@NotNull UUID uuid) {
-		this.uuid = Objects.requireNonNull(uuid);
+		this.uuid = uuid;
 	}
 
 	@NotNull
@@ -46,11 +46,7 @@ public final class BaseSBPlayer extends PlayerMap {
 
 	public void setOnline(boolean isOnline) {
 		synchronized(this) {
-			if (this.isOnline = isOnline) {
-				this.player = Bukkit.getPlayer(uuid);
-			} else {
-				this.player = null;
-			}
+			this.player = (this.isOnline = isOnline) ? Bukkit.getPlayer(uuid) : null;
 		}
 	}
 
