@@ -1,7 +1,5 @@
 package com.github.yuttyann.scriptblockplus.player;
 
-import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
-import com.github.yuttyann.scriptblockplus.file.json.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
@@ -23,8 +21,6 @@ public abstract class PlayerMap implements SBPlayer {
 	private static final String KEY_CLIPBOARD = Utils.randomUUID();
 	private static final String KEY_SCRIPTLINE = Utils.randomUUID();
 	private static final String KEY_CLICKACTION = Utils.randomUUID();
-	private static final String KEY_PLAYERCOUNT = Utils.randomUUID();
-	private static final String KEY_PLAYERTEMP = Utils.randomUUID();
 	private static final String KEY_OLDFULLCOORDS = Utils.randomUUID();
 
 	private final ObjectMap objectMap;
@@ -77,26 +73,6 @@ public abstract class PlayerMap implements SBPlayer {
 			getObjectMap().put(KEY_REGION, region = new CuboidRegion());
 		}
 		return region;
-	}
-
-	@Override
-	@NotNull
-	public PlayerCount getPlayerCount() {
-		PlayerCount playerCount = getObjectMap().get(KEY_PLAYERCOUNT);
-		if (playerCount == null) {
-			getObjectMap().put(KEY_PLAYERCOUNT, playerCount = new PlayerCount(getUniqueId()));
-		}
-		return playerCount;
-	}
-
-	@Override
-	@NotNull
-	public PlayerTemp getPlayerTemp() {
-		PlayerTemp playerTemp = getObjectMap().get(KEY_PLAYERTEMP);
-		if (playerTemp == null) {
-			getObjectMap().put(KEY_PLAYERTEMP, playerTemp = new PlayerTemp(getUniqueId()));
-		}
-		return playerTemp;
 	}
 
 	@Override

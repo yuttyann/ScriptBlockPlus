@@ -1,7 +1,5 @@
 package com.github.yuttyann.scriptblockplus.player;
 
-import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
-import com.github.yuttyann.scriptblockplus.file.json.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import org.bukkit.Location;
@@ -113,20 +111,6 @@ public interface SBPlayer extends CommandSender {
 	 */
 	@NotNull
 	Region getRegion();
-
-	/**
-	 * スクリプトの実行回数記録クラスを取得します。
-	 * @return {@link PlayerCount}
-	 */
-	@NotNull
-    PlayerCount getPlayerCount();
-
-	/**
-	 * 一時データクラスを取得します。
-	 * @return {@link PlayerTemp}
-	 */
-	@NotNull
-	PlayerTemp getPlayerTemp();
 
 	/**
 	 * ObjectMapを取得します。
