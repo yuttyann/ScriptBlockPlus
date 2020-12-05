@@ -1,9 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
@@ -108,15 +106,6 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * マップの管理クラスを取得します。
-	 * @return マップの管理クラス
-	 */
-	@NotNull
-	protected final MapManager getMapManager() {
-		return ScriptBlock.getInstance().getMapManager();
-	}
-
-	/**
 	 * スクリプトのリストを取得します。
 	 * @return スクリプトのリスト
 	 */
@@ -193,7 +182,7 @@ public abstract class BaseOption extends Option {
 	 * @return 実行に成功した場合はtrue
 	 */
 	protected boolean executeCommand(@NotNull SBPlayer sbPlayer, @NotNull String command, boolean isBypass) {
-		return LogAdmin.function(sbPlayer.getWorld(), w -> {
+		return LogAdmin.function(sbPlayer.getWorld(), l -> {
 			if (!isBypass || sbPlayer.isOp()) {
 				return Utils.dispatchCommand(sbPlayer, command);
 			} else {

@@ -35,6 +35,7 @@ public class YamlConfig {
 	private final Plugin plugin;
 	private final File file;
 
+	private String innerPath;
 	private UTF8Config yaml;
 	private boolean isCopyFile;
 
@@ -69,6 +70,17 @@ public class YamlConfig {
 	public final YamlConfig setCopyFile(boolean isCopyFile) {
 		this.isCopyFile = isCopyFile;
 		return this;
+	}
+
+	@NotNull
+	public final YamlConfig setInnerPath(@NotNull String path) {
+		this.innerPath = path;
+		return this;
+	}
+
+	@Nullable
+	public final String getInnerPath() {
+		return innerPath;
 	}
 
 	@NotNull

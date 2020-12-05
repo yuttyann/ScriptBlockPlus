@@ -1,5 +1,6 @@
-package com.github.yuttyann.scriptblockplus.hook;
+package com.github.yuttyann.scriptblockplus.hook.plugin;
 
+import com.github.yuttyann.scriptblockplus.hook.HookPlugin;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -13,9 +14,8 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus VaultEconomy クラス
  * @author yuttyann44581
  */
-public final class VaultEconomy {
+public final class VaultEconomy extends HookPlugin {
 
-	public static final boolean HAS = VaultPermission.HAS;
 	public static final VaultEconomy INSTANCE = VaultEconomy.setupEconomy();
 
 	private final Economy economy;
@@ -24,6 +24,12 @@ public final class VaultEconomy {
 	private VaultEconomy(@Nullable Economy economy) {
 		this.economy = economy;
 		this.name = economy == null ? "None" : economy.getName();
+	}
+
+	@Override
+	@NotNull
+	public String getPluginName() {
+		return "Vault";
 	}
 
 	@NotNull

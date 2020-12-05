@@ -22,32 +22,32 @@ public enum OptionPriority {
     LAST(new Amount().getSyntax()),
 
     /**
-     * 優先位置: {@link Execute} の後ろ
+     * 優先位置: {@link Execute} の後
      */
     LOWEST(new Execute().getSyntax()),
 
     /**
-     * 優先位置: {@link Console} の後ろ
+     * 優先位置: {@link Console} の後
      */
     LOW(new Console().getSyntax()),
 
     /**
-     * 優先位置: {@link PermRemove} の後ろ
+     * 優先位置: {@link PermRemove} の後
      */
     NORMAL(new PermRemove().getSyntax()),
 
     /**
-     * 優先位置: {@link MoneyCost} の後ろ
+     * 優先位置: {@link MoneyCost} の後
      */
     HIGH(new MoneyCost().getSyntax()),
 
     /**
-     * 優先位置: {@link Delay} の後ろ
+     * 優先位置: {@link Delay} の後
      */
     VERY_HIGH(new Delay().getSyntax()),
 
     /**
-     * 優先位置: {@link Calculation} の後ろ
+     * 優先位置: {@link Calculation} の後
      */
     HIGHEST(new Calculation().getSyntax()),
 

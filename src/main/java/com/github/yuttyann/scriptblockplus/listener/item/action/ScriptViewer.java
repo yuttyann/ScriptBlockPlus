@@ -2,9 +2,9 @@ package com.github.yuttyann.scriptblockplus.listener.item.action;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
 import com.github.yuttyann.scriptblockplus.region.PlayerRegion;
@@ -65,7 +65,6 @@ public class ScriptViewer extends ItemAction {
 
         @Override
         public void run() {
-            MapManager mapManager = ScriptBlock.getInstance().getMapManager();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!SBPlayer.fromPlayer(player).getObjectMap().getBoolean(KEY)) {
                     continue;
@@ -73,7 +72,7 @@ public class ScriptViewer extends ItemAction {
                 new CuboidRegionBlocks(new PlayerRegion(player, 15)).forEach(b -> {
                     Block block = b.getBlock(player.getWorld());
                     for (ScriptType scriptType : ScriptType.values()) {
-                        if (mapManager.containsCoords(block.getLocation(), scriptType)) {
+                        if (Files.hasScriptCoords(block.getLocation(), scriptType)) {
                             spawnParticlesOnBlock(player, block, block.getType()== Material.AIR);
                         }
                     }

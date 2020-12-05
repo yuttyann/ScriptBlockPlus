@@ -24,7 +24,7 @@ public class Server extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		Bukkit.broadcastMessage(StringUtils.setColor(getOptionValue(), true));
+		Bukkit.broadcastMessage(StringUtils.setColor(getOptionValue()));
 		return true;
 	}
 }

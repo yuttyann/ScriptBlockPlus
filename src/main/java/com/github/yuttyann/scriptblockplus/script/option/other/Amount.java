@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
+import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -30,7 +31,7 @@ public class Amount extends BaseOption {
 		scriptData.subtractAmount(1);
 		if (scriptData.getAmount() <= 0) {
 			scriptData.remove();
-			getMapManager().removeCoords(getLocation(), getScriptType());
+			Files.removeScriptCoords(getLocation(), getScriptType());
 		}
 		scriptData.save();
 		return true;

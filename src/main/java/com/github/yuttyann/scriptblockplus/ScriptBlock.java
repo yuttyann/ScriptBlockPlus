@@ -1,12 +1,11 @@
 package com.github.yuttyann.scriptblockplus;
 
-import com.github.yuttyann.scriptblockplus.hook.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.*;
 import com.github.yuttyann.scriptblockplus.manager.APIManager;
-import com.github.yuttyann.scriptblockplus.manager.MapManager;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -27,13 +26,8 @@ import java.util.List;
 public class ScriptBlock extends JavaPlugin {
 
 	private Updater updater;
-	private MapManager mapManager;
 	private ScriptBlockAPI scriptAPI;
 	private ScriptBlockPlusCommand scriptBlockPlusCommand;
-
-	{
-		new PluginInstance(ScriptBlock.class, this).put();
-	}
 
 	@Override
 	public void onEnable() {
@@ -43,24 +37,23 @@ public class ScriptBlock extends JavaPlugin {
 			return;
 		}
 
-		Files.reload();
-		if (!VaultEconomy.HAS) {
-			SBConfig.NOT_VAULT.send();
-			getServer().getPluginManager().disablePlugin(this);
-			return;
-		}
-		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setOnline(true));
-
 		Plugin plugin = getServer().getPluginManager().getPlugin("ScriptBlock");
 		if (plugin != null) {
 			getServer().getPluginManager().disablePlugin(plugin);
 		}
 
+		Files.reload();
+		if (!VaultEconomy.INSTANCE.has()) {
+			SBConfig.NOT_VAULT.send();
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+
+		Files.loadAllScripts();
+		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setOnline(true));
+
 		updater = new Updater(this);
 		checkUpdate(Bukkit.getConsoleSender(), false);
-
-		mapManager = new MapManager();
-		mapManager.loadAllScripts();
 
 		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 		getServer().getPluginManager().registerEvents(new InteractListener(), this);
@@ -124,15 +117,6 @@ public class ScriptBlock extends JavaPlugin {
 	}
 
 	/**
-	 * MapManagerを取得します。
-	 * @return MapManager
-	 */
-	@NotNull
-	public MapManager getMapManager() {
-		return mapManager;
-	}
-
-	/**
 	 * BaseSBPlayerを取得します。
 	 * @param player プレイヤー
 	 * @return SBPlayerの実装クラス
@@ -148,6 +132,6 @@ public class ScriptBlock extends JavaPlugin {
 	 */
 	@NotNull
 	public static ScriptBlock getInstance() {
-		return PluginInstance.get(ScriptBlock.class);
+		return Utils.getPlugin(ScriptBlock.class);
 	}
 }

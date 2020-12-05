@@ -36,7 +36,7 @@ public class ActionBar extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
-		String message = StringUtils.setColor(array[0], true);
+		String message = StringUtils.setColor(array[0]);
 
 		if (array.length > 1) {
 			int stay = Integer.parseInt(array[1]);
@@ -55,7 +55,7 @@ public class ActionBar extends BaseOption {
 		Player player = value.get();
 		if (Utils.isCBXXXorLater("1.11")) {
 			String command = "title " + player.getName() + " actionbar " + "{\"text\":\"" + message + "\"}";
-			LogAdmin.action(player.getWorld(), w -> Bukkit.dispatchCommand(player, command));
+			LogAdmin.action(player.getWorld(), l -> Bukkit.dispatchCommand(player, command));
 		} else if (Utils.isPlatform()) {
 			String chatSerializer = "IChatBaseComponent$ChatSerializer";
 			Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);

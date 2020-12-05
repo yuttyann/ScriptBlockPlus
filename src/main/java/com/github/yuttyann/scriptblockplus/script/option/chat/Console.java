@@ -26,7 +26,7 @@ public class Console extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		String command = StringUtils.setColor(getOptionValue(), true);
-		return LogAdmin.function(getSBPlayer().getWorld(), w -> Utils.dispatchCommand(Bukkit.getConsoleSender(), command));
+		String command = StringUtils.setColor(getOptionValue());
+		return LogAdmin.function(getSBPlayer().getWorld(), l -> Utils.dispatchCommand(Bukkit.getConsoleSender(), command));
 	}
 }

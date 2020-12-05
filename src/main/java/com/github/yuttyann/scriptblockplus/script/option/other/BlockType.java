@@ -25,9 +25,8 @@ public class BlockType extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		String[] array = StringUtils.split(getOptionValue(), ",");
 		Block block = getLocation().getBlock();
-		for (String type : array) {
+		for (String type : StringUtils.split(getOptionValue(), ",")) {
 			if (equals(block, type)) {
 				return true;
 			}
@@ -47,8 +46,8 @@ public class BlockType extends BaseOption {
 		if (type == null || !type.isBlock()) {
 			return false;
 		}
-		byte data = array.length == 2 ? Byte.parseByte(array[1]) : 0;
-		return type == block.getType() && data == getData(block);
+		byte data = array.length == 2 ? Byte.parseByte(array[1]) : -1;
+		return type == block.getType() && (data == -1 || data == getData(block));
 	}
 
 	private byte getData(@NotNull Block block) {

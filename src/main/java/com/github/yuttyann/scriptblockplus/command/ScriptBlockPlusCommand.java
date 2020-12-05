@@ -161,7 +161,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		NameFetcher.clear();
 		PackageType.clear();
 		setUsage(getUsages());
-		ScriptBlock.getInstance().getMapManager().loadAllScripts();
+		Files.loadAllScripts();
 		SBConfig.ALL_FILE_RELOAD.send(sender);
 		return true;
 	}
@@ -170,7 +170,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!hasPermission(sender, Permission.COMMAND_BACKUP, false)) {
 			return false;
 		}
-		File dataFolder = Files.getConfig().getDataFolder();
+		File dataFolder = ScriptBlock.getInstance().getDataFolder();
 		File scripts = new File(dataFolder, "scripts");
 		if (!scripts.exists() || FileUtils.isEmpty(scripts)) {
 			SBConfig.ERROR_SCRIPTS_BACKUP.send(sender);

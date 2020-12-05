@@ -29,8 +29,8 @@ public class Title extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
-		String title = StringUtils.setColor(array[0] + "", true);
-		String subtitle = StringUtils.setColor(array.length > 1 ? array[1] : "", true);
+		String title = StringUtils.setColor(array[0] + "");
+		String subtitle = StringUtils.setColor(array.length > 1 ? array[1] : "");
 		int fadeIn = 10, stay = 40, fadeOut = 10;
 		if (array.length == 3) {
 			String[] times = StringUtils.split(array[2], "-");
@@ -49,7 +49,7 @@ public class Title extends BaseOption {
 			player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		} else {
 			String prefix = "title " + player.getName();
-			LogAdmin.action(getSBPlayer().getWorld(), w -> {
+			LogAdmin.action(getSBPlayer().getWorld(), l -> {
 				Bukkit.dispatchCommand(player, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
 				Bukkit.dispatchCommand(player, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
 				Bukkit.dispatchCommand(player, prefix + " title {\"text\":\"" + title + "\"}");

@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.FileReloadEvent;
 import com.github.yuttyann.scriptblockplus.file.config.ConfigKeys;
@@ -7,11 +8,13 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.yaml.UTF8Config;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.google.common.base.Charsets;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -29,30 +32,48 @@ import java.util.*;
 public final class Files {
 
 	private static final Map<String, YamlConfig> FILES = new HashMap<>();
+	private static final Map<ScriptType, Set<String>> SCRIPT_COORDS = new HashMap<>();
 
 	public static final String S = File.separator;
 	public static final String PATH_CONFIG = "config.yml";
 	public static final String PATH_LANGS = "langs" + S + "{code}.yml";
 
 	public static void reload() {
+		Plugin plugin = ScriptBlock.getInstance();
+
 		ConfigKeys.clear();
-		ConfigKeys.load(loadFile(PATH_CONFIG, true));
-		ConfigKeys.load(loadLang());
+		ConfigKeys.load(loadFile(plugin, PATH_CONFIG, true));
+		ConfigKeys.load(loadLang(plugin, PATH_LANGS));
 
 		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
-		searchKeys();
+		searchKeys(plugin, PATH_CONFIG, PATH_LANGS);
 
 		Bukkit.getPluginManager().callEvent(new FileReloadEvent());
 	}
 
-	public static void searchKeys() {
-		YamlConfig config = getConfig();
-		if (config.getFile().exists()) {
-			sendNotKeyMessages(ScriptBlock.getInstance(), config, PATH_CONFIG);
+	public static void searchKeys(@NotNull Plugin plugin, @NotNull String... paths) {
+		for (String path : paths) {
+			YamlConfig yaml = get(plugin, path);
+			if (yaml.exists()) {
+				Optional<String> filePath = Optional.ofNullable(yaml.getInnerPath());
+				sendNotKeyMessages(plugin, yaml, filePath.orElse(yaml.getFileName()));
+			}
 		}
-		YamlConfig lang = getLang();
-		if (lang.getFile().exists()) {
-			sendNotKeyMessages(ScriptBlock.getInstance(), lang, "lang" + S + lang.getFileName());
+	}
+
+	public static void sendNotKeyMessages(@NotNull Plugin plugin, @NotNull YamlConfig yaml, @NotNull String path) {
+		InputStream is = FileUtils.getResource(plugin, path);
+		if (is == null) {
+			return;
+		}
+		YamlConfiguration config = UTF8Config.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8));
+		String filePath = plugin.getName() + "/" + StringUtils.replace(yaml.getFolderPath(), S, "/");
+		Set<String> keys = yaml.getKeys(true);
+		for (String key : config.getKeys(true)) {
+			if (!keys.contains(key)) {
+				Object value = config.get(key) instanceof MemorySection ? "" : config.get(key);
+				Bukkit.getConsoleSender().sendMessage("§c[" + filePath + "] Key not found: §r" + key + ": " + value);
+			}
 		}
 	}
 
@@ -62,13 +83,8 @@ public final class Files {
 	}
 
 	@NotNull
-	public static YamlConfig getConfig() {
-		return FILES.get(PATH_CONFIG);
-	}
-
-	@NotNull
-	public static YamlConfig getLang() {
-		return FILES.get(PATH_LANGS);
+	public static YamlConfig get(@NotNull Plugin plugin, @NotNull String filePath) {
+		return FILES.get(plugin.getName() + "_" + filePath);
 	}
 
 	@NotNull
@@ -80,46 +96,61 @@ public final class Files {
 		return yaml;
 	}
 
-	@NotNull
-	private static YamlConfig loadScript(@NotNull ScriptType scriptType) {
-		YamlConfig yaml = loadFile("scripts" + S + scriptType.type() + ".yml", false);
-		return putFile(scriptType.type(), yaml);
+	public static void addScriptCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
+		String fullCoords = BlockCoords.getFullCoords(location);
+		Optional<Set<String>> value = Optional.ofNullable(SCRIPT_COORDS.get(scriptType));
+		value.ifPresent(v -> v.add(fullCoords));
+		TimerOption.removeAll(fullCoords, scriptType);
+	}
+
+	public static void removeScriptCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
+		String fullCoords = BlockCoords.getFullCoords(location);
+		Optional.ofNullable(SCRIPT_COORDS.get(scriptType)).ifPresent(v -> v.remove(fullCoords));
+		TimerOption.removeAll(fullCoords, scriptType);
+	}
+
+	public static boolean hasScriptCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
+		Optional<Set<String>> value = Optional.ofNullable(SCRIPT_COORDS.get(scriptType));
+		return value.isPresent() && value.get().contains(BlockCoords.getFullCoords(location));
+	}
+
+	public static void loadAllScripts() {
+		try {
+			StreamUtils.forEach(ScriptType.values(), s -> loadScripts(Files.getScriptFile(s), s));
+		} catch (Exception e) {
+			SCRIPT_COORDS.clear();
+		}
+	}
+
+	public static void loadScripts(@NotNull YamlConfig scriptFile, @NotNull ScriptType scriptType) {
+		Set<String> set = new HashSet<>(SCRIPT_COORDS.size());
+		scriptFile.getKeys().forEach(w -> scriptFile.getKeys(w).forEach(c -> set.add(w + ", " + c)));
+		SCRIPT_COORDS.put(scriptType, set);
 	}
 
 	@NotNull
-	private static YamlConfig loadFile(@NotNull String filePath, boolean isCopyFile) {
-		return putFile(filePath, YamlConfig.load(ScriptBlock.getInstance(), filePath, isCopyFile));
+	public static YamlConfig loadFile(@NotNull Plugin plugin, @NotNull String filePath, boolean isCopyFile) {
+		return putFile(plugin, filePath, YamlConfig.load(plugin, filePath, isCopyFile));
 	}
 
 	@NotNull
-	private static YamlConfig loadLang() {
+	public static YamlConfig loadLang(@NotNull Plugin plugin, @NotNull String filePath) {
 		String language = SBConfig.LANGUAGE.getValue();
 		if (StringUtils.isEmpty(language) || "default".equalsIgnoreCase(language)) {
 			language = Locale.getDefault().getLanguage();
 		}
-		Lang lang = new Lang(ScriptBlock.getInstance(), language);
-		return putFile(Files.PATH_LANGS, lang.load(Files.PATH_LANGS, "lang"));
+		return putFile(plugin, filePath, new Lang(plugin, language, filePath, "lang").load());
 	}
 
 	@NotNull
-	public static YamlConfig putFile(@NotNull String name, @NotNull YamlConfig yaml) {
-		FILES.put(name, yaml);
-		return yaml;
+	private static YamlConfig loadScript(@NotNull ScriptType scriptType) {
+		Plugin plugin = ScriptBlock.getInstance();
+		return loadFile(plugin, "scripts" + S + scriptType.type() + ".yml", false);
 	}
 
-	public static void sendNotKeyMessages(@NotNull Plugin plugin, @NotNull YamlConfig yaml, @NotNull String path) {
-		String filePath = plugin.getName() + "/" + StringUtils.replace(yaml.getFolderPath(), S, "/");
-		InputStream is = FileUtils.getResource(plugin, path);
-		if (is == null) {
-			return;
-		}
-		YamlConfiguration config = UTF8Config.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8));
-		Set<String> keys = yaml.getKeys(true);
-		for (String key : config.getKeys(true)) {
-			if (!keys.contains(key)) {
-				Object value = config.get(key) instanceof MemorySection ? "" : config.get(key);
-				Bukkit.getConsoleSender().sendMessage("§c[" + filePath + "] Key not found: §r" + key + ": " + value);
-			}
-		}
+	@NotNull
+	private static YamlConfig putFile(@NotNull Plugin plugin, @NotNull String name, @NotNull YamlConfig yaml) {
+		FILES.put(plugin.getName() + "_" + name, yaml);
+		return yaml;
 	}
 }

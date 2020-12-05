@@ -12,37 +12,50 @@ import java.io.File;
  * ScriptBlockPlus Lang クラス
  * @author yuttyann44581
  */
-public class Lang {
+public final class Lang {
 
 	private static final String DEFAULT_LANGUAGE = "en";
 
 	private final Plugin plugin;
 	private final String language;
+	private final String filePath;
+	private final String directory;
 
-	public Lang(@NotNull Plugin plugin, @NotNull String language) {
+	public Lang(@NotNull Plugin plugin, @NotNull String language, @NotNull String filePath, @NotNull String directory) {
 		this.plugin = plugin;
 		this.language = StringUtils.isEmpty(language) ? DEFAULT_LANGUAGE : language.toLowerCase();
+		this.filePath = filePath;
+		this.directory = directory;
 	}
 
 	@NotNull
-	public final String getLanguage() {
+	public String getLanguage() {
 		return language;
 	}
 
 	@NotNull
-	public final YamlConfig load(@NotNull String filePath, @NotNull String dirPath) {
-		return YamlConfig.load(plugin, getFile(filePath, dirPath), false);
+	public YamlConfig load() {
+		return YamlConfig.load(plugin, getFile(), false).setInnerPath(getPath());
 	}
 
 	@NotNull
-	private File getFile(@NotNull String filePath, @NotNull String dirPath) {
-		String path = dirPath + "/" + language + ".yml";
+	public String getPath() {
+		String path = directory + "/" + language + ".yml";
 		String code = isExists(path) ? language : DEFAULT_LANGUAGE;
-		filePath = StringUtils.replace(filePath, "{code}", code);
+		String filePath = StringUtils.replace(this.filePath, "{code}", code);
+		File file = new File(plugin.getDataFolder(), filePath);
+		return !file.exists() && !code.equals(language) ? directory + "/" + code + ".yml" : path;
+	}
+
+	@NotNull
+	public File getFile() {
+		String path = directory + "/" + language + ".yml";
+		String code = isExists(path) ? language : DEFAULT_LANGUAGE;
+		String filePath = StringUtils.replace(this.filePath, "{code}", code);
 		File file = new File(plugin.getDataFolder(), filePath);
 		if (!file.exists()) {
 			if (!code.equals(language)) {
-				path = dirPath + "/" + code + ".yml";
+				path = directory + "/" + code + ".yml";
 			}
 			FileUtils.copyFileFromPlugin(plugin, file, path);
 		}

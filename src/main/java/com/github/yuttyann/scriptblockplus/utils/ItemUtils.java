@@ -11,8 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -57,7 +55,7 @@ public class ItemUtils {
 		ItemStack item = new ItemStack(Material.STICK);
 		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
 		meta.setDisplayName("§dBlock Selector");
-		meta.setLore(setListColor(SBConfig.BLOCK_SELECTOR.getValue()));
+		meta.setLore(StringUtils.setListColor(SBConfig.BLOCK_SELECTOR.getValue()));
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -67,7 +65,7 @@ public class ItemUtils {
 		ItemStack item = new ItemStack(Material.BLAZE_ROD);
 		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
 		meta.setDisplayName("§dScript Editor§6[Mode: " + scriptType.name() + "]");
-		meta.setLore(setListColor(SBConfig.SCRIPT_EDITOR.getValue()));
+		meta.setLore(StringUtils.setListColor(SBConfig.SCRIPT_EDITOR.getValue()));
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -77,18 +75,9 @@ public class ItemUtils {
 		ItemStack item = new ItemStack(Material.valueOf(Utils.isCBXXXorLater("1.13") ? "CLOCK" : "WATCH"));
 		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
 		meta.setDisplayName("§dScript Viewer");
-		meta.setLore(setListColor(SBConfig.SCRIPT_VIEWER.getValue()));
+		meta.setLore(StringUtils.setListColor(SBConfig.SCRIPT_VIEWER.getValue()));
 		item.setItemMeta(meta);
 		return item;
-	}
-
-	@NotNull
-	private static List<String> setListColor(List<String> list) {
-		list = new ArrayList<>(list);
-		for (int i = 0; i < list.size(); i++) {
-			list.set(i, StringUtils.setColor(list.get(i), true));
-		}
-		return list;
 	}
 
 	public static boolean isBlockSelector(@Nullable ItemStack item) {

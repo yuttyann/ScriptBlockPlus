@@ -20,8 +20,8 @@ public final class EndProcessManager {
 	private static final List<SBConstructor<? extends EndProcess>> ENDPROCESS_LIST = new ArrayList<>();
 
 	static {
-		ENDPROCESS_LIST.add(new SBConstructor<>(new EndInventory()));
-		ENDPROCESS_LIST.add(new SBConstructor<>(new EndMoneyCost()));
+		register(new SBConstructor<>(new EndInventory()));
+		register(new SBConstructor<>(new EndMoneyCost()));
 	}
 
 	public static void register(@NotNull SBConstructor<EndProcess> endProcess) {

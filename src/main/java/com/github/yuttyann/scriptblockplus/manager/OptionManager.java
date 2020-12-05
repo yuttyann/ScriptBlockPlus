@@ -115,16 +115,11 @@ public final class OptionManager {
                 case LAST:
                     list.addLast(key);
                     break;
-                case LOWEST:
-                case LOW:
-                case NORMAL:
-                case HIGH:
-                case VERY_HIGH:
-                case HIGHEST:
-                    list.add(list.indexOf(priority.getSyntax()) + 1, key);
-                    break;
                 case TOP:
                     list.addFirst(key);
+                    break;
+                default:
+                    list.add(list.indexOf(priority.getSyntax()) + 1, key);
                     break;
             }
             return super.put(key, value);

@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.hook.Placeholder;
+import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
@@ -139,7 +139,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
 			return source;
 		}
 		Player player = value.get();
-		if (Placeholder.HAS) {
+		if (Placeholder.INSTANCE.has()) {
 			source = Placeholder.INSTANCE.set(player, source);
 		}
 		source = StringUtils.replace(source, "<player>", player.getName());

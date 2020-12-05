@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.json.Json;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
@@ -237,7 +236,7 @@ public final class ScriptData implements Cloneable {
 	}
 
 	public void reload() {
-		ScriptBlock.getInstance().getMapManager().loadScripts(scriptFile, scriptType);
+		Files.loadScripts(scriptFile, scriptType);
 	}
 
 	@Override

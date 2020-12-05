@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
+import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -34,7 +35,7 @@ public class ScriptWalkListener extends ScriptListener {
 			return;
 		}
 		sbPlayer.setOldFullCoords(blockCoords.getFullCoords());
-		if (mapManager.containsCoords(blockCoords, scriptType)) {
+		if (Files.hasScriptCoords(blockCoords, scriptType)) {
 			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(player, blockCoords.getBlock());
 			Bukkit.getPluginManager().callEvent(walkEvent);
 			if (walkEvent.isCancelled()) {

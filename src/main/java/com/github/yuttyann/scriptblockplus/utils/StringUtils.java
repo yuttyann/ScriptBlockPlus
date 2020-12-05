@@ -65,12 +65,18 @@ public final class StringUtils {
 	}
 
 	@NotNull
-	public static String setColor(@Nullable String source, boolean isRandomColor) {
+	public static String setColor(@Nullable String source) {
 		source = isEmpty(source) ? "" : ChatColor.translateAlternateColorCodes('&', source);
-		if (isRandomColor) {
-			source = replace(source, "§rc", ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16))));
+		return replace(source, "§rc", ChatColor.getByChar(Integer.toHexString(RANDOM.nextInt(16))));
+	}
+
+	@NotNull
+	public static List<String> setListColor(List<String> list) {
+		list = new ArrayList<>(list);
+		for (int i = 0; i < list.size(); i++) {
+			list.set(i, setColor(list.get(i)));
 		}
-		return source;
+		return list;
 	}
 
 	@NotNull

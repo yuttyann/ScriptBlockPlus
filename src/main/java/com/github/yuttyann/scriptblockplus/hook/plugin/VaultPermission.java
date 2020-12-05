@@ -1,5 +1,6 @@
-package com.github.yuttyann.scriptblockplus.hook;
+package com.github.yuttyann.scriptblockplus.hook.plugin;
 
+import com.github.yuttyann.scriptblockplus.hook.HookPlugin;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -13,9 +14,8 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus VaultPermission クラス
  * @author yuttyann44581
  */
-public final class VaultPermission {
+public final class VaultPermission extends HookPlugin {
 
-	public static final boolean HAS = Bukkit.getPluginManager().isPluginEnabled("Vault");
 	public static final VaultPermission INSTANCE = VaultPermission.setupPermission();
 
 	private final Permission permission;
@@ -24,6 +24,12 @@ public final class VaultPermission {
 	private VaultPermission(@Nullable Permission permission) {
 		this.permission = permission;
 		this.name = permission == null ? "None" : permission.getName();
+	}
+
+	@Override
+	@NotNull
+	public String getPluginName() {
+		return "Vault";
 	}
 
 	@NotNull

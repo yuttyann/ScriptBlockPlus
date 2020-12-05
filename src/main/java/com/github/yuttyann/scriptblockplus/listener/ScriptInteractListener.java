@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.BlockClickEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
+import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
@@ -37,7 +38,7 @@ public class ScriptInteractListener extends ScriptListener {
 			return;
 		}
 		Location location = block.getLocation();
-		if (mapManager.containsCoords(location, scriptType)) {
+		if (Files.hasScriptCoords(location, scriptType)) {
 			Player player = event.getPlayer();
 			Action action = event.getAction();
 			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, action);

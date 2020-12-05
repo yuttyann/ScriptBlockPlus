@@ -1,7 +1,8 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
-import com.github.yuttyann.scriptblockplus.hook.PsudoCommand;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.hook.CommandSelector;
+import com.github.yuttyann.scriptblockplus.hook.plugin.PsudoCommand;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -18,6 +19,10 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 
 /**
  * ScriptBlockPlus Utils クラス
@@ -34,7 +39,14 @@ public final class Utils {
 	}
 
 	@NotNull
-	public static String getPluginName(Plugin plugin) {
+	public static <T extends Plugin> T getPlugin(@NotNull Class<? extends Plugin> plugin) {
+		Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
+		Predicate<? super Plugin> classEquals = p -> p.getClass().equals(plugin);
+		return (T) Stream.of(plugins).filter(classEquals).findFirst().orElseThrow(NullPointerException::new);
+	}
+
+	@NotNull
+	public static String getPluginName(@NotNull Plugin plugin) {
 		return plugin.getName() + " v" + plugin.getDescription().getVersion();
 	}
 
@@ -60,14 +72,14 @@ public final class Utils {
 	}
 
 	public static boolean isUpperVersion(@NotNull String source, @NotNull String target) {
-		if (StringUtils.isNotEmpty(source) && StringUtils.isNotEmpty(target)) {
+		if (isNotEmpty(source) && isNotEmpty(target)) {
 			return getVersionInt(source) >= getVersionInt(target);
 		}
 		return false;
 	}
 
 	public static int getVersionInt(@NotNull String source) {
-		String[] array = StringUtils.split(source, ".");
+		String[] array = split(source, ".");
 		int result = (Integer.parseInt(array[0]) * 100000) + (Integer.parseInt(array[1]) * 1000);
 		if (array.length == 3) {
 			result += Integer.parseInt(array[2]);
@@ -87,14 +99,13 @@ public final class Utils {
 	}
 
 	public static void sendColorMessage(@NotNull CommandSender sender, @Nullable String message) {
-		if (StringUtils.isNotEmpty(message)) {
-			message = StringUtils.setColor(message, true);
-			message = StringUtils.replace(message, "\\n", "|~");
+		if (isNotEmpty(message)) {
+			message = replace(setColor(message), "\\n", "|~");
 			String color = "";
-			for (String line : StringUtils.split(message, "|~")) {
+			for (String line : split(message, "|~")) {
 				sender.sendMessage(line = (color + line));
 				if (line.indexOf('§') > -1) {
-					color = StringUtils.getColors(line);
+					color = getColors(line);
 				}
 			}
 		}
@@ -107,9 +118,10 @@ public final class Utils {
 			sender = Objects.requireNonNull(((SBPlayer) sender).getPlayer());
 		}
 		command = command.startsWith("/") ? command.substring(1) : command;
-		if (PsudoCommand.HAS) {
+		if (CommandSelector.INSTANCE.has(command) && (isCBXXXorLater("1.13.2") || PsudoCommand.INSTANCE.has())) {
 			int succsess = 0;
-			List<StringBuilder> list = PsudoCommand.INSTANCE.build(sender, command);
+			List<StringBuilder> list = CommandSelector.INSTANCE.build(sender, command);
+			list.forEach(l -> System.out.println(l.toString()));
 			for (StringBuilder builder : list) {
 				if (Bukkit.dispatchCommand(sender, builder.toString())) {
 					succsess++;

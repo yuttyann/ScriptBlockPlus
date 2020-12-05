@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.hook.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  */
 public class Calculation extends BaseOption {
 
-	static final Pattern REALNUMBER_PATTERN = Pattern.compile("^-?(0|[1-9]\\d*)(\\.\\d+|)$");
+	public static final Pattern REALNUMBER_PATTERN = Pattern.compile("^-?(0|[1-9]\\d*)(\\.\\d+|)$");
 
 	public Calculation() {
 		super("calculation", "@calc:");
@@ -49,7 +49,7 @@ public class Calculation extends BaseOption {
 			return true;
 		}
 		if (array.length > 3) {
-			String message = StringUtils.setColor(StringUtils.createString(array, 3), true);
+			String message = StringUtils.setColor(StringUtils.createString(array, 3));
 			message = StringUtils.replace(message, "%value1%", value1);
 			message = StringUtils.replace(message, "%value2%", value2);
 			message = StringUtils.replace(message, "%operator%", operator);
@@ -183,7 +183,7 @@ public class Calculation extends BaseOption {
 				VaultEconomy vaultEconomy = VaultEconomy.INSTANCE;
 				return vaultEconomy.isEnabled() ? vaultEconomy.getBalance(player) : 0;
 			default:
-				return 0;
+				return source;
 		}
 	}
 

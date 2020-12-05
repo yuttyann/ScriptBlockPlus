@@ -23,6 +23,6 @@ public class Bypass extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		return executeCommand(getSBPlayer(), StringUtils.setColor(getOptionValue(), true), true);
+		return executeCommand(getSBPlayer(), StringUtils.setColor(getOptionValue()), true);
 	}
 }
