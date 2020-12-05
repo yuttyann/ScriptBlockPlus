@@ -121,7 +121,6 @@ public final class Utils {
 		if (CommandSelector.INSTANCE.has(command) && (isCBXXXorLater("1.13.2") || PsudoCommand.INSTANCE.has())) {
 			int succsess = 0;
 			List<StringBuilder> list = CommandSelector.INSTANCE.build(sender, command);
-			list.forEach(l -> System.out.println(l.toString()));
 			for (StringBuilder builder : list) {
 				if (Bukkit.dispatchCommand(sender, builder.toString())) {
 					succsess++;

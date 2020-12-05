@@ -70,14 +70,10 @@ public abstract class Json<T> {
                 e.printStackTrace();
             }
         });
-        try {
-            thread.setName(THREAD_NAME);
-            thread.setPriority(Thread.MAX_PRIORITY);
-            thread.start();
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        thread.setName(THREAD_NAME);
+        thread.setPriority(Thread.MAX_PRIORITY);
+        thread.start();
+        // thread.join(1000);
     }
 
     public void remove(@NotNull T t) {
@@ -89,14 +85,10 @@ public abstract class Json<T> {
                 e.printStackTrace();
             }
         });
-        try {
-            thread.setName(THREAD_NAME);
-            thread.setPriority(Thread.MAX_PRIORITY);
-            thread.start();
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        thread.setName(THREAD_NAME);
+        thread.setPriority(Thread.MAX_PRIORITY);
+        thread.start();
+        // thread.join(1000);
     }
 
     @Nullable

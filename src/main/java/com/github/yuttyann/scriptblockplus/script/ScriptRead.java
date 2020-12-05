@@ -1,10 +1,10 @@
 package com.github.yuttyann.scriptblockplus.script;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
+import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
