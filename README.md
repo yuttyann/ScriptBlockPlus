@@ -11,7 +11,7 @@ ScriptBlockPlus [Java8 MC1.9-1.16.x] [![](https://jitpack.io/v/yuttyann/ScriptBl
 その後前提プラグインである[`Vault`](https://dev.bukkit.org/projects/vault)(v1.7.1以降推奨)をダウンロードを行い`plugins`フォルダへ保存すれば完了です。  
 ――――――――――――――――――――――――――――――――――  
 **連携プラグイン（拡張機能）**  
-・[PsudoCommands - セレクター追加](https://www.spigotmc.org/resources/psudocommands-add-the-target-selector-to-plugin-commands.56738/)  
+・[PsudoCommands - セレクター実装](https://www.spigotmc.org/resources/psudocommands-add-the-target-selector-to-plugin-commands.56738/) **※v1.13.2以降は不要です。**  
 ・[PlaceholderAPI - プレースホルダ拡張](https://www.spigotmc.org/resources/placeholderapi.6245/)  
 ・[ScriptEntityPlus - エンティティにスクリプトを設定](https://github.com/yuttyann/ScriptEntityPlus)  
 ――――――――――――――――――――――――――――――――――  
