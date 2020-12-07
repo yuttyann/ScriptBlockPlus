@@ -53,10 +53,10 @@ public final class Files {
 
 	public static void searchKeys(@NotNull Plugin plugin, @NotNull String... paths) {
 		for (String path : paths) {
-			YamlConfig yaml = get(plugin, path);
-			if (yaml.exists()) {
-				Optional<String> filePath = Optional.ofNullable(yaml.getInnerPath());
-				sendNotKeyMessages(plugin, yaml, filePath.orElse(yaml.getFileName()));
+			Optional<YamlConfig> yaml = getFile(plugin, path);
+			if (yaml.isPresent() && yaml.get().exists()) {
+				Optional<String> filePath = Optional.ofNullable(yaml.get().getInnerPath());
+				sendNotKeyMessages(plugin, yaml.get(), filePath.orElse(yaml.get().getFileName()));
 			}
 		}
 	}
@@ -82,18 +82,14 @@ public final class Files {
 		return Collections.unmodifiableMap(FILES);
 	}
 
-	@NotNull
-	public static YamlConfig get(@NotNull Plugin plugin, @NotNull String filePath) {
-		return FILES.get(plugin.getName() + "_" + filePath);
+	public static Optional<YamlConfig> getFile(@NotNull Plugin plugin, @NotNull String filePath) {
+		return Optional.ofNullable(FILES.get(plugin.getName() + "_" + filePath));
 	}
 
 	@NotNull
 	public static YamlConfig getScriptFile(@NotNull ScriptType scriptType) {
-		YamlConfig yaml = FILES.get(scriptType.type());
-		if (yaml == null) {
-			FILES.put(scriptType.type(), yaml = loadScript(scriptType));
-		}
-		return yaml;
+		String filePath = "scripts" + S + scriptType.type() + ".yml";
+		return getFile(ScriptBlock.getInstance(), filePath).orElseGet(() -> loadScript(scriptType));
 	}
 
 	public static void addScriptCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
@@ -144,8 +140,8 @@ public final class Files {
 
 	@NotNull
 	private static YamlConfig loadScript(@NotNull ScriptType scriptType) {
-		Plugin plugin = ScriptBlock.getInstance();
-		return loadFile(plugin, "scripts" + S + scriptType.type() + ".yml", false);
+		String filePath = "scripts" + S + scriptType.type() + ".yml";
+		return loadFile(ScriptBlock.getInstance(), filePath, false);
 	}
 
 	@NotNull
