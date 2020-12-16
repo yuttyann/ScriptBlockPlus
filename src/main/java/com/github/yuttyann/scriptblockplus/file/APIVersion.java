@@ -6,7 +6,6 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 
@@ -32,15 +31,6 @@ public final class APIVersion {
         this.plugin = plugin;
     }
 
-    public void set(@Nullable String apiVersion) {
-        this.apiVersion = apiVersion;
-    }
-
-    @Nullable
-    public String get() {
-        return apiVersion;
-    }
-
     public void update() {
         PluginDescriptionFile description = plugin.getDescription();
         for (Field field : description.getClass().getDeclaredFields()) {
@@ -53,7 +43,6 @@ public final class APIVersion {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-            break;
         }
     }
 }

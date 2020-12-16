@@ -6,6 +6,10 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus UnmodifiableLocation クラス
+ * @author yuttyann44581
+ */
 public class UnmodifiableLocation extends Location {
 
     public UnmodifiableLocation(@NotNull Location location) {

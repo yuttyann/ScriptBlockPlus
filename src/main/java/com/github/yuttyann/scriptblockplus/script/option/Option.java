@@ -6,6 +6,7 @@ import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -131,7 +132,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(@Nullable Object obj) {
 		if (obj instanceof Option) {
 			Option option = (Option) obj;
 			return name.equals(option.getName()) && syntax.equals(option.getSyntax());
@@ -149,7 +150,8 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	@Override
+	@NotNull
 	public String toString() {
-		return "Option{name='" + name + '\'' + ", syntax='" + syntax + '\'' + '}';
+		return "Option{name=" + name + ", syntax=" + syntax + '}';
 	}
 }

@@ -60,14 +60,14 @@ public final class ScriptEdit {
 
 	public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
 		TimerOption.removeAll(location, scriptType);
-		PlayerCountJson.clearCounts(location, scriptType);
+		PlayerCountJson.clear(location, scriptType);
 		ScriptParam scriptParam = blockScriptJson.load().get(location);
 		scriptParam.getAuthor().add(player.getUniqueId());
 		scriptParam.setScript(Collections.singletonList(script));
 		scriptParam.setLastEdit(Utils.getFormatTime());
 		blockScriptJson.saveFile();
 		SBConfig.SCRIPT_CREATE.replace(scriptType).send(player);
-		SBConfig.CONSOLE_SCRIPT_CREATE.replace(player.getName(), scriptType, location).console();
+		SBConfig.CONSOLE_SCRIPT_CREATE.replace(player.getName(), location, scriptType).console();
 	}
 
 	public void add(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
@@ -81,7 +81,7 @@ public final class ScriptEdit {
 	}
 
 	public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-		if (!blockScriptJson.load().has(location)) {
+		if (!BlockScriptJson.has(location, blockScriptJson)) {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
@@ -92,7 +92,7 @@ public final class ScriptEdit {
 		scriptParam.setLastEdit(Utils.getFormatTime());
 		blockScriptJson.saveFile();
 		SBConfig.SCRIPT_ADD.replace(scriptType).send(player);
-		SBConfig.CONSOLE_SCRIPT_ADD.replace(player.getName(), scriptType, location).console();
+		SBConfig.CONSOLE_SCRIPT_ADD.replace(player.getName(), location, scriptType).console();
 	}
 
 	public void remove(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
@@ -105,23 +105,23 @@ public final class ScriptEdit {
 	}
 
 	public void remove(@NotNull Player player, @NotNull Location location) {
-		if (!blockScriptJson.load().has(location)) {
+		if (!BlockScriptJson.has(location, blockScriptJson)) {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
 		TimerOption.removeAll(location, scriptType);
-		PlayerCountJson.clearCounts(location, scriptType);
+		PlayerCountJson.clear(location, scriptType);
 		blockScriptJson.load().remove(location);
 		blockScriptJson.saveFile();
 		SBConfig.SCRIPT_REMOVE.replace(scriptType).send(player);
-		SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), scriptType, location).console();
+		SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), location, scriptType).console();
 	}
 
 	public boolean lightRemove(@NotNull Location location) {
-		if (!blockScriptJson.load().has(location)) {
+		if (!BlockScriptJson.has(location, blockScriptJson)) {
 			return false;
 		}
-		PlayerCountJson.clearCounts(location, scriptType);
+		PlayerCountJson.clear(location, scriptType);
 		TimerOption.removeAll(location, scriptType);
 		blockScriptJson.load().remove(location);
 		return true;
@@ -137,17 +137,17 @@ public final class ScriptEdit {
 	}
 
 	public void view(@NotNull Player player, @NotNull Location location) {
-		if (!blockScriptJson.load().has(location)) {
+		if (!BlockScriptJson.has(location, blockScriptJson)) {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
 		ScriptParam scriptParam = blockScriptJson.load().get(location);
-		PlayerCount playerCount = new PlayerCountJson(player.getUniqueId()).load();
+		PlayerCount playerCount = new PlayerCountJson(player.getUniqueId()).load(location, scriptType);
 		player.sendMessage("Author: " + getAuthors(scriptParam));
 		player.sendMessage("LastEdit: " + scriptParam.getLastEdit());
 		player.sendMessage("Execute: " + playerCount.getAmount());
 		scriptParam.getScript().forEach(s -> player.sendMessage("- " + s));
-		SBConfig.CONSOLE_SCRIPT_VIEW.replace(player.getName(), scriptType, location).console();
+		SBConfig.CONSOLE_SCRIPT_VIEW.replace(player.getName(), location, scriptType).console();
 	}
 
 	@NotNull
@@ -161,7 +161,6 @@ public final class ScriptEdit {
 		private final Location location;
 		private final ScriptType scriptType;
 		private final BlockScriptJson blockScriptJson;
-
 
 		private final Set<UUID> author;
 		private final List<String> script;
@@ -199,13 +198,13 @@ public final class ScriptEdit {
 		@Override
 		public boolean copy() {
 			try {
-				if (!blockScriptJson.load().has(location)) {
+				if (!BlockScriptJson.has(location, blockScriptJson)) {
 					SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
 					return false;
 				}
 				sbPlayer.setClipboard(this);
 				SBConfig.SCRIPT_COPY.replace(scriptType).send(sbPlayer);
-				SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), scriptType, location).console();
+				SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), location, scriptType).console();
 			} finally {
 				sbPlayer.setScriptLine(null);
 				sbPlayer.setActionType(null);
@@ -216,10 +215,10 @@ public final class ScriptEdit {
 		@Override
 		public boolean paste(@NotNull Location location, boolean overwrite) {
 			try {
-				if (blockScriptJson.load().has(location) && !overwrite) {
+				if (BlockScriptJson.has(location, blockScriptJson) && !overwrite) {
 					return false;
 				}
-				PlayerCountJson.clearCounts(location, scriptType);
+				PlayerCountJson.clear(location, scriptType);
 				ScriptParam scriptParam = blockScriptJson.load().get(location);
 				scriptParam.setAuthor(author);
 				scriptParam.getAuthor().add(sbPlayer.getUniqueId());
@@ -228,7 +227,7 @@ public final class ScriptEdit {
 				scriptParam.setAmount(amount);
 				blockScriptJson.saveFile();
 				SBConfig.SCRIPT_PASTE.replace(scriptType).send(sbPlayer);
-				SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), scriptType, location).console();
+				SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), location, scriptType).console();
 			} finally {
 				sbPlayer.setClipboard(null);
 				sbPlayer.setScriptLine(null);
@@ -239,10 +238,10 @@ public final class ScriptEdit {
 
 		@Override
 		public boolean lightPaste(@NotNull Location location, boolean overwrite) {
-			if (blockScriptJson.load().has(location) && !overwrite) {
+			if (BlockScriptJson.has(location, blockScriptJson) && !overwrite) {
 				return false;
 			}
-			PlayerCountJson.clearCounts(location, scriptType);
+			PlayerCountJson.clear(location, scriptType);
 			ScriptParam scriptParam = blockScriptJson.load().get(location);
 			scriptParam.setAuthor(author);
 			scriptParam.getAuthor().add(sbPlayer.getUniqueId());

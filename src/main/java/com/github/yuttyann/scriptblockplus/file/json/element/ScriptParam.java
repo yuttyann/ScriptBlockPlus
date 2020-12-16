@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.file.json.element;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -69,11 +68,6 @@ public class ScriptParam {
 
     public void subtractAmount(int amount) {
         this.amount = Math.min(this.amount - amount, 0);
-    }
-
-    @Override
-    public boolean equals(@Nullable Object obj) {
-        return obj instanceof ScriptParam && obj.hashCode() == hashCode();
     }
 
     @Override

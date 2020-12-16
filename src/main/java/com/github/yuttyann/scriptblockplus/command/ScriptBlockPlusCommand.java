@@ -5,6 +5,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.file.APIVersion;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
@@ -116,6 +117,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		return false;
 	}
+
+	public static int i = 0;
 
 	private boolean doExport(@NotNull CommandSender sender, @NotNull String[] args) {
 		if (!hasPermission(sender, Permission.COMMAND_EXPORT, false)) {

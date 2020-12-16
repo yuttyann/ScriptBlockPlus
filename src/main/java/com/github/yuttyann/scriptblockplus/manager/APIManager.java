@@ -37,6 +37,9 @@ public final class APIManager implements ScriptBlockAPI {
 
 	@Override
 	public boolean scriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index) {
+		if (!BlockScriptJson.has(location, scriptType)) {
+			return false;
+		}
 		return new ScriptRead(player, location, new ScriptListener(plugin, scriptType)).read(index);
 	}
 
@@ -199,7 +202,7 @@ public final class APIManager implements ScriptBlockAPI {
 		@Override
 		public void remove() {
 			TimerOption.removeAll(location, scriptType);
-			PlayerCountJson.clearCounts(location, scriptType);
+			PlayerCountJson.clear(location, scriptType);
 			blockScriotJson.load().remove(location);
 		}
 	}

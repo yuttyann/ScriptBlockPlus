@@ -21,9 +21,6 @@ public class BlockCoords {
     private int y;
     private int z;
 
-    private String coords;
-    private String fullCoords;
-
     public BlockCoords(@NotNull final Location location) {
         this(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
@@ -33,8 +30,6 @@ public class BlockCoords {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.coords = x + ", " + y + ", " + z;
-        this.fullCoords = Objects.requireNonNull(world).getName() + ", " + coords;
     }
 
     /**
@@ -95,12 +90,42 @@ public class BlockCoords {
     }
 
     /**
+     * 指定した値を加算します。
+     * @param x X座標
+     * @param y Y座標
+     * @param z Z座標
+     * @return BlockCoords
+     */
+    @NotNull
+    public BlockCoords add(int x, int y, int z) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        return this;
+    }
+
+    /**
+     * 指定した値を減算します。
+     * @param x X座標
+     * @param y Y座標
+     * @param z Z座標
+     * @return BlockCoords
+     */
+    @NotNull
+    public BlockCoords subtract(int x, int y, int z) {
+        this.x -= x;
+        this.y -= y;
+        this.z -= z;
+        return this;
+    }
+
+    /**
      * 文字列の座標を取得します。
      * @return ワールド名を除いた文字列(x, y, z)
      */
     @NotNull
     public String getCoords() {
-        return coords;
+        return x + ", " + y + ", " + z;
     }
 
     /**
@@ -109,7 +134,7 @@ public class BlockCoords {
      */
     @NotNull
     public String getFullCoords() {
-        return fullCoords;
+        return world.getName() + ", " + getCoords();
     }
 
     /**
@@ -136,7 +161,7 @@ public class BlockCoords {
      * ワールド名を除いた文字列の座標からインスタンスを生成します。
      * @param world ワールド名
      * @param coords ワールド名を除いた文字列(x, y, z)
-     * @return Location 座標
+     * @return Location
      */
     @NotNull
     public static Location fromString(@NotNull World world, @NotNull String coords) {
@@ -153,7 +178,7 @@ public class BlockCoords {
     /**
      * ワールド名を含めた座標の文字列からインスタンスを生成します。
      * @param fullCoords ワールド名を含めた文字列(world, x, y, z)
-     * @return Location 座標
+     * @return Location
      */
     @NotNull
     public static Location fromString(@NotNull String fullCoords) {
@@ -168,6 +193,10 @@ public class BlockCoords {
         return new Location(world, x, y, z);
     }
 
+    /**
+     * Locationのインスタンスを生成します。
+     * @return Location
+     */
     @NotNull
     public Location toLocation() {
         return new Location(world, x, y, z);
@@ -181,7 +210,11 @@ public class BlockCoords {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        return obj instanceof BlockCoords && obj.hashCode() == hashCode();
+        if (!(obj instanceof BlockCoords)) {
+            return false;
+        }
+        BlockCoords blockCoords = (BlockCoords) obj;
+        return x == blockCoords.x && y == blockCoords.y && z == blockCoords.z && world.equals(blockCoords.world);
     }
 
     @Override

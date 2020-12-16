@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.player;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import org.bukkit.Location;
@@ -136,10 +137,10 @@ public interface SBPlayer extends CommandSender {
 	void setActionType(@Nullable String actionType);
 
 	/**
-	 * ワールド名を含めた文字列の座標をセットします。
-	 * @param fullCoords ワールド名を含めた文字列の座標
+	 * ブロックの座標をセットします。
+	 * @param blockCoords ブロックの座標
 	 */
-	void setOldFullCoords(@Nullable String fullCoords);
+	void setOldBlockCoords(@Nullable BlockCoords blockCoords);
 
 	/**
 	 * クリップボードを取得します。
@@ -163,9 +164,9 @@ public interface SBPlayer extends CommandSender {
 	Optional<String> getActionType();
 
 	/**
-	 * ワールド名を含めた文字列の座標を取得します。
-	 * @return ワールド名を含めた文字列の座標（オプショナル）
+	 * ブロックの座標を取得します。
+	 * @return ブロックの座標（オプショナル）
 	 */
 	@NotNull
-	Optional<String> getOldFullCoords();
+	Optional<BlockCoords> getOldBlockCoords();
 }

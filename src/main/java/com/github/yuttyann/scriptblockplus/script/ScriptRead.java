@@ -23,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -93,7 +92,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
 		}
 		if (!sort(blockScript.get(location).getScript())) {
 			SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptType).send(sbPlayer);
-			SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(sbPlayer.getName(), scriptType, location).console();
+			SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(sbPlayer.getName(), location, scriptType).console();
 			return false;
 		}
 		for (scriptIndex = index; scriptIndex < script.size(); scriptIndex++) {
@@ -111,22 +110,17 @@ public class ScriptRead extends ScriptMap implements SBRead {
 		}
 		executeEndProcess(e -> e.success(this));
 		new PlayerCountJson(sbPlayer.getUniqueId()).action(PlayerCount::add, location, scriptType);
-		SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(sbPlayer.getName(), scriptType, location).console();
+		SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(sbPlayer.getName(), location, scriptType).console();
 		return true;
 	}
 
 	@NotNull
 	protected final String setPlaceholders(@NotNull SBPlayer sbPlayer, @NotNull String source) {
-		Optional<Player> value = Optional.ofNullable(sbPlayer.getPlayer());
-		if (!value.isPresent()) {
-			return source;
-		}
-		Player player = value.get();
 		if (Placeholder.INSTANCE.has()) {
-			source = Placeholder.INSTANCE.set(player, source);
+			source = Placeholder.INSTANCE.set(sbPlayer.getPlayer(), source);
 		}
-		source = StringUtils.replace(source, "<player>", player.getName());
-		source = StringUtils.replace(source, "<world>", player.getWorld().getName());
+		source = StringUtils.replace(source, "<player>", sbPlayer.getName());
+		source = StringUtils.replace(source, "<world>", sbPlayer.getWorld().getName());
 		return source;
 	}
 

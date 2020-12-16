@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file.json;
 
+import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.script.SBLoader;
@@ -16,15 +17,20 @@ import java.util.UUID;
  * ScriptBlockPlus BlockScriptJson クラス
  * @author yuttyann44581
  */
-@JsonDirectory(path = "json/blockscript", file = "{id}.json")
+@JsonOptions(path = "json/blockscript", file = "{id}.json")
 public class BlockScriptJson extends Json<BlockScript> {
 
     public BlockScriptJson(@NotNull ScriptType scriptType) {
         super(scriptType.type());
     }
 
+    public static boolean has(@NotNull Location location, @NotNull BlockScriptJson blockScriptJson) {
+        return blockScriptJson.exists() && blockScriptJson.load().has(location);
+    }
+
     public static boolean has(@NotNull Location location, @NotNull ScriptType scriptType) {
-        return new BlockScriptJson(scriptType).load().has(location);
+        BlockScriptJson blockScriptJson = new BlockScriptJson(scriptType);
+        return blockScriptJson.exists() && blockScriptJson.load().has(location);
     }
 
     public static void convart(@NotNull ScriptType scriptType) {
@@ -62,7 +68,7 @@ public class BlockScriptJson extends Json<BlockScript> {
 
     @Override
     @NotNull
-    public BlockScript newInstance(@NotNull Object... args) {
+    public BlockScript newInstance(@NotNull Object[] args) {
         return new BlockScript(ScriptType.valueOf(id));
     }
 }

@@ -125,31 +125,28 @@ public class InteractListener implements Listener {
 		if (location != null && !isAIR && sbPlayer.getActionType().isPresent()) {
 			String[] array = StringUtils.split(sbPlayer.getActionType().get(), "_");
 			ScriptBlockEditEvent editEvent = new ScriptBlockEditEvent(player, location.getBlock(), array);
-			try {
-				Bukkit.getPluginManager().callEvent(editEvent);
-				if (editEvent.isCancelled()) {
-					return false;
-				}
-				ScriptEdit scriptEdit = new ScriptEdit(editEvent.getScriptType());
-				switch (editEvent.getActionType()) {
-					case CREATE:
-						scriptEdit.create(sbPlayer, location);
-						break;
-					case ADD:
-						scriptEdit.add(sbPlayer, location);
-						break;
-					case REMOVE:
-						scriptEdit.remove(sbPlayer, location);
-						break;
-					case VIEW:
-						scriptEdit.view(sbPlayer, location);
-						break;
-				}
-				return true;
-			} finally {
+			Bukkit.getPluginManager().callEvent(editEvent);
+			if (editEvent.isCancelled()) {
 				sbPlayer.setScriptLine(null);
 				sbPlayer.setActionType(null);
+				return false;
 			}
+			ScriptEdit scriptEdit = new ScriptEdit(editEvent.getScriptType());
+			switch (editEvent.getActionType()) {
+				case CREATE:
+					scriptEdit.create(sbPlayer, location);
+					break;
+				case ADD:
+					scriptEdit.add(sbPlayer, location);
+					break;
+				case REMOVE:
+					scriptEdit.remove(sbPlayer, location);
+					break;
+				case VIEW:
+					scriptEdit.view(sbPlayer, location);
+					break;
+			}
+			return true;
 		}
 		return false;
 	}

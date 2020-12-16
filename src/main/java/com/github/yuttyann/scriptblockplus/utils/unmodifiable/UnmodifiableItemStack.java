@@ -7,9 +7,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.Map;
 
+/**
+ * ScriptBlockPlus UnmodifiableItemStack クラス
+ * @author yuttyann44581
+ */
 public final class UnmodifiableItemStack extends ItemStack {
 
     public UnmodifiableItemStack(@NotNull ItemStack item) {

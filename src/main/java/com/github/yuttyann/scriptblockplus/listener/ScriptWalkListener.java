@@ -11,7 +11,6 @@ import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -29,25 +28,25 @@ public class ScriptWalkListener extends ScriptListener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerMoveEvent(PlayerMoveEvent event) {
-		Player player = event.getPlayer();
-		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
-		Location location = player.getLocation().clone().subtract(0.0D, 1.0D, 0.0D);
-		String fullCoords = BlockCoords.getFullCoords(location);
-		if (fullCoords.equals(sbPlayer.getOldFullCoords().orElse(null))) {
+		SBPlayer sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
+		BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation()).subtract(0, 1, 0);
+		if (blockCoords.equals(sbPlayer.getOldBlockCoords().orElse(null))) {
 			return;
+		} else {
+			sbPlayer.setOldBlockCoords(blockCoords);
 		}
-		sbPlayer.setOldFullCoords(fullCoords);
+		Location location = blockCoords.toLocation();
 		if (BlockScriptJson.has(location, scriptType)) {
-			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(player, location.getBlock());
+			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(sbPlayer.getPlayer(), location.getBlock());
 			Bukkit.getPluginManager().callEvent(walkEvent);
 			if (walkEvent.isCancelled()) {
 				return;
 			}
-			if (!Permission.has(player, ScriptType.WALK, false)) {
+			if (!Permission.has(sbPlayer, ScriptType.WALK, false)) {
 				SBConfig.NOT_PERMISSION.send(sbPlayer);
 				return;
 			}
-			new ScriptRead(player, location, this).read(0);
+			new ScriptRead(sbPlayer.getPlayer(), location, this).read(0);
 		}
 	}
 }

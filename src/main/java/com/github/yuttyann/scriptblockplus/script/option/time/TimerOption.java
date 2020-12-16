@@ -61,7 +61,7 @@ public abstract class TimerOption extends BaseOption {
     public static void removeAll(@NotNull Location location, @NotNull ScriptType scriptType) {
         String fullCoords = BlockCoords.getFullCoords(location);
         int oldCooldown = Objects.hash(true, fullCoords, scriptType);
-        for (String id : Json.getIdList(PlayerTempJson.class)) {
+        for (String id : Json.getNameList(PlayerTempJson.class)) {
             UUID uuid = UUID.fromString(id);
             Json<PlayerTemp> json = new PlayerTempJson(uuid);
             Set<TimerTemp> set = json.load().getTimerTemp();

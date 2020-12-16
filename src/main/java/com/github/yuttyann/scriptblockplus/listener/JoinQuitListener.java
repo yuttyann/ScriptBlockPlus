@@ -7,8 +7,6 @@ import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,23 +29,21 @@ public class JoinQuitListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
-		BaseSBPlayer sbPlayer = plugin.fromPlayer(player);
+		BaseSBPlayer sbPlayer = plugin.fromPlayer(event.getPlayer());
 		sbPlayer.setOnline(true);
-		if (!sbPlayer.getOldFullCoords().isPresent()) {
-			Location location = player.getLocation().clone();
-			sbPlayer.setOldFullCoords(BlockCoords.getFullCoords(location.subtract(0.0D, 1.0D, 0.0D)));
+		if (!sbPlayer.getOldBlockCoords().isPresent()) {
+			sbPlayer.setOldBlockCoords(new BlockCoords(sbPlayer.getLocation()));
 		}
-		if (player.isOp()) {
+		if (sbPlayer.isOp()) {
 			plugin.checkUpdate(sbPlayer, false);
 		}
 
 		// ItemCost アイテム返却
 		ObjectMap objectMap = sbPlayer.getObjectMap();
 		if (objectMap.has(ItemCost.KEY_PLAYER)) {
-			player.getInventory().setContents(objectMap.get(ItemCost.KEY_PLAYER, new ItemStack[0]));
+			sbPlayer.getInventory().setContents(objectMap.get(ItemCost.KEY_PLAYER, new ItemStack[0]));
 			objectMap.remove(ItemCost.KEY_PLAYER);
-			Utils.updateInventory(player);
+			Utils.updateInventory(sbPlayer.getPlayer());
 		}
 	}
 

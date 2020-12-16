@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.player;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
@@ -21,7 +22,7 @@ public abstract class PlayerMap implements SBPlayer {
 	private static final String KEY_CLIPBOARD = Utils.randomUUID();
 	private static final String KEY_SCRIPTLINE = Utils.randomUUID();
 	private static final String KEY_CLICKACTION = Utils.randomUUID();
-	private static final String KEY_OLDFULLCOORDS = Utils.randomUUID();
+	private static final String KEY_OLDBLOCKCOORDS = Utils.randomUUID();
 
 	private final ObjectMap objectMap;
 
@@ -91,8 +92,8 @@ public abstract class PlayerMap implements SBPlayer {
 	}
 
 	@Override
-	public void setOldFullCoords(@Nullable String fullCoords) {
-		getObjectMap().put(KEY_OLDFULLCOORDS, fullCoords);
+	public void setOldBlockCoords(@Nullable BlockCoords blockCoords) {
+		getObjectMap().put(KEY_OLDBLOCKCOORDS, blockCoords);
 	}
 
 	@Override
@@ -115,7 +116,7 @@ public abstract class PlayerMap implements SBPlayer {
 
 	@Override
 	@NotNull
-	public Optional<String> getOldFullCoords() {
-		return Optional.ofNullable(getObjectMap().get(KEY_OLDFULLCOORDS));
+	public Optional<BlockCoords> getOldBlockCoords() {
+		return Optional.ofNullable(getObjectMap().get(KEY_OLDBLOCKCOORDS));
 	}
 }

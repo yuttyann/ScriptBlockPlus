@@ -4,7 +4,6 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -66,10 +65,5 @@ public class PlayerCount {
 	@Override
 	public int hashCode() {
 		return Objects.hash(fullCoords, scriptType);
-	}
-
-	@Override
-	public boolean equals(@Nullable Object obj) {
-		return obj instanceof PlayerCount && obj.hashCode() == hashCode();
 	}
 }

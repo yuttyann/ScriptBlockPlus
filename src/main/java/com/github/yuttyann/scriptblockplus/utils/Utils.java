@@ -19,8 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 
@@ -36,13 +34,6 @@ public final class Utils {
 	@NotNull
 	public static String randomUUID() {
 		return UUID.randomUUID().toString();
-	}
-
-	@NotNull
-	public static <T extends Plugin> T getPlugin(@NotNull Class<? extends Plugin> plugin) {
-		Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
-		Predicate<Plugin> classEquals = p -> p.getClass().equals(plugin);
-		return (T) Stream.of(plugins).filter(classEquals).findFirst().orElseThrow(NullPointerException::new);
 	}
 
 	@NotNull

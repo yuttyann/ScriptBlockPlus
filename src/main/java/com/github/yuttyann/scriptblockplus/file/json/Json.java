@@ -1,10 +1,13 @@
 package com.github.yuttyann.scriptblockplus.file.json;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.reflection.ClassType;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.google.common.base.Charsets;
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
@@ -17,10 +20,21 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
+/**
+ * ScriptBlockPlus Json クラス
+ * @author yuttyann44581
+ */
 public abstract class Json<T> {
 
+    @Exclude
+    private final File file;
+
+    @Exclude
+    private final Class<?>[] classes;
+
+    @SerializedName("id")
+    @Expose
     protected final String id;
 
     @SerializedName("elements")
@@ -36,7 +50,15 @@ public abstract class Json<T> {
     }
 
     public Json(@NotNull String id) {
+        // ファイル名等に使う
         this.id = id;
+
+        // アノテーションからパラメータを取得
+        JsonOptions jsonOptions = getClass().getAnnotation(JsonOptions.class);
+        this.file = getFile(jsonOptions);
+        this.classes = jsonOptions.classes();
+
+        // JSONをデシリアライズ
         try {
             Optional<Json<T>> json = Optional.ofNullable((Json<T>) loadFile());
             json.ifPresent(j -> list.addAll(Optional.ofNullable(j.oldList).orElseGet(() -> j.list)));
@@ -45,9 +67,12 @@ public abstract class Json<T> {
         }
     }
 
+    public final boolean exists() {
+        return file.exists();
+    }
+
     @Nullable
     private Json loadFile() throws IOException {
-        File file = getFile();
         if (!file.exists()) {
             return null;
         }
@@ -56,12 +81,12 @@ public abstract class Json<T> {
             parent.mkdirs();
         }
         try (JsonReader reader = new JsonReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8))) {
-            return new Gson().fromJson(reader, getClass());
+            GsonBuilder builder = new GsonBuilder().setExclusionStrategies(new FieldExclusion());
+            return builder.create().fromJson(reader, getClass());
         }
     }
 
     public void saveFile() {
-        File file = getFile();
         File parent = file.getParentFile();
         if (!parent.exists()) {
             parent.mkdirs();
@@ -69,7 +94,9 @@ public abstract class Json<T> {
         try {
             try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8))) {
                 writer.setIndent("  ");
-                new Gson().toJson(this, getClass(), writer);
+
+                GsonBuilder builder = new GsonBuilder().setExclusionStrategies(new FieldExclusion());
+                builder.create().toJson(this, getClass(), writer);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,62 +104,72 @@ public abstract class Json<T> {
     }
 
     @NotNull
-    public T load() {
-        if (list.size() == 0) {
+    public final T load() {
+        if (classes.length > 0) {
+            throw new IllegalArgumentException("Please specify the parameter " + Arrays.toString(classes));
+        }
+        if (list.isEmpty()) {
             list.add(newInstance(ArrayUtils.EMPTY_OBJECT_ARRAY));
         }
         return list.get(0);
     }
 
     @NotNull
-    public T load(@NotNull Object... args) {
-        int paramHash = hashCode(args);
-        Predicate<T> equal = t -> t.hashCode() == paramHash;
-        Optional<T> value = list.stream().filter(equal).findFirst();
-        if (!value.isPresent()) {
-            list.add((value = Optional.of(newInstance(args))).get());
+    public final T load(@NotNull Object... args) {
+        if (!equalParams(args)) {
+            String equal = Arrays.toString(ClassType.getReference(args)) + " != " + Arrays.toString(classes);
+            throw new IllegalArgumentException("Classes do not match " + equal);
         }
-        return value.get();
+        int hash = hashCode(args);
+        T value = StreamUtils.fOrElse(list, t -> t.hashCode() == hash, null);
+        if (value == null) {
+            list.add(value = newInstance(args));
+        }
+        return value;
     }
 
-    protected int hashCode(@NotNull Object... args) {
+    protected int hashCode(@NotNull Object[] args) {
         return Objects.hash(args);
     }
 
     @NotNull
-    protected abstract T newInstance(@NotNull Object... args);
+    protected abstract T newInstance(@NotNull Object[] args);
 
-    public void action(@NotNull Consumer<T> action, @NotNull Object... args) {
+    public final void action(@NotNull Consumer<T> action, @NotNull Object... args) {
         action.accept(args.length == 0 ? load() : load(args));
         saveFile();
     }
 
-    public void remove(@NotNull T value) {
-        list.remove(value);
+    public final void remove(@NotNull T value) {
+        int hash = value.hashCode();
+        list.removeIf(t -> t.hashCode() == hash);
         saveFile();
     }
 
-    public boolean exists() {
-        return getFile().exists();
-    }
-
-    private File getFile() {
-        return new File(ScriptBlock.getInstance().getDataFolder(), getPath());
+    private boolean equalParams(@NotNull Object[] args) {
+        if (args.length != classes.length) {
+            return false;
+        }
+        for (int i = 0; i < args.length; i++) {
+            if (!classes[i].isAssignableFrom(args[i].getClass())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @NotNull
-    private String getPath() {
-        JsonDirectory jsonDirectory = getClass().getAnnotation(JsonDirectory.class);
-        String path = jsonDirectory.path() + SBFiles.S + jsonDirectory.file();
+    private File getFile(@NotNull JsonOptions jsonOptions) {
+        String path = jsonOptions.path() + SBFiles.S + jsonOptions.file();
         path = StringUtils.replace(path, "/", SBFiles.S);
         path = StringUtils.replace(path, "{id}", id);
-        return path;
+        return new File(ScriptBlock.getInstance().getDataFolder(), path);
     }
 
     @NotNull
-    public static List<String> getIdList(@NotNull Class<? extends Json> jsonClass) {
-        JsonDirectory jsonDirectory = jsonClass.getAnnotation(JsonDirectory.class);
-        File folder = new File(ScriptBlock.getInstance().getDataFolder(), jsonDirectory.path());
+    public static List<String> getNameList(@NotNull Class<? extends Json> jsonClass) {
+        JsonOptions jsonOptions = jsonClass.getAnnotation(JsonOptions.class);
+        File folder = new File(ScriptBlock.getInstance().getDataFolder(), jsonOptions.path());
         List<String> list = new ArrayList<>();
         if (folder.exists()) {
             int length = ".json".length();
@@ -143,7 +180,7 @@ public abstract class Json<T> {
 
     @Override
     public int hashCode() {
-        return getPath().hashCode();
+        return file.hashCode();
     }
 
     @Override

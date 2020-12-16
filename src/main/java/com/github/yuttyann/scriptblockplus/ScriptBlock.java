@@ -58,7 +58,7 @@ public class ScriptBlock extends JavaPlugin {
 			return;
 		}
 
-		// 1.13移行のバージョンは、APIVersionを書き換える
+		// 1.13以降のバージョンは、APIVersionを書き換える
 		if (Utils.isCBXXXorLater("1.13")) {
 			new APIVersion(this).update();
 		}
@@ -152,6 +152,6 @@ public class ScriptBlock extends JavaPlugin {
 	 */
 	@NotNull
 	public static ScriptBlock getInstance() {
-		return Utils.getPlugin(ScriptBlock.class);
+		return getPlugin(ScriptBlock.class);
 	}
 }

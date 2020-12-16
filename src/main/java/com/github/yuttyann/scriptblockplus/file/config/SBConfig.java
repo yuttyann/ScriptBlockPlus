@@ -120,10 +120,10 @@ public final class SBConfig {
 	};
 
 	private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SCRIPT = r -> {
-		Location l = r.getArg(2, Location.class);
+		Location l = r.getArg(1, Location.class);
 		String s = r.getValue();
 		s = replace(s, "%player%", r.getArg(0, String.class));
-		s = replace(s, "%scripttype%", r.getArg(1, ScriptType.class).type());
+		s = replace(s, "%scripttype%", r.getArg(2, ScriptType.class).type());
 		s = replace(s, "%world%", Objects.requireNonNull(l.getWorld()).getName());
 		s = replace(s, "%coords%", BlockCoords.getCoords(l));
 		return s;
@@ -248,32 +248,32 @@ public final class SBConfig {
 	public static final ReplaceKey ERROR_COST = replaceKey(stringKey("ErrorCostMessage", ""), "%cost%", "%result%");
 
 	/**
-	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
 	 */
 	public static final ReplaceKey CONSOLE_SCRIPT_COPY = replaceKey(stringKey("ConsoleScriptCopyMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
 	/**
-	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
 	 */
 	public static final ReplaceKey CONSOLE_SCRIPT_PASTE = replaceKey(stringKey("ConsoleScriptPasteMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
 	/**
-	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
 	 */
 	public static final ReplaceKey CONSOLE_SCRIPT_CREATE = replaceKey(stringKey("ConsoleScriptCreateMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
 	/**
-	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
 	 */
 	public static final ReplaceKey CONSOLE_SCRIPT_ADD = replaceKey(stringKey("ConsoleScriptAddMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
 	/**
-	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
 	 */
 	public static final ReplaceKey CONSOLE_SCRIPT_REMOVE = replaceKey(stringKey("ConsoleScriptRemoveMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
 	/**
-	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
 	 */
 	public static final ReplaceKey CONSOLE_SCRIPT_VIEW = replaceKey(stringKey("ConsoleScriptViewMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
@@ -288,12 +288,12 @@ public final class SBConfig {
 	public static final ReplaceKey CONSOLE_SELECTOR_REMOVE = replaceKey(stringKey("ConsoleSelectorRemoveMessage", ""), FUNCTION_CONSOLE_SELECTOR);
 
 	/**
-	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
 	 */
 	public static final ReplaceKey CONSOLE_SUCCESS_SCRIPT_EXECUTE = replaceKey(stringKey("ConsoleSuccScriptExecMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
 	/**
-	 * Parameter: {@link String} playerName, {@link ScriptType} scriptType, {@link Location} location
+	 * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
 	 */
 	public static final ReplaceKey CONSOLE_ERROR_SCRIPT_EXECUTE = replaceKey(stringKey("ConsoleErrorScriptExecMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 }
