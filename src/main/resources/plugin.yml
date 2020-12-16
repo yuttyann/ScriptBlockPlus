@@ -13,10 +13,10 @@ commands:
     usage: |
            /<command> tool - get the scriptblock tools
            /<command> reload - reload the plugin
-           /<command> backup - make a backup of the script data
+           /<command> backup - Make a backup of the plugin data
            /<command> checkver - check new version
            /<command> datamigr - migrate old data from ScriptBlock to ScriptBlockPlus
-           /<command> export <sound | material> - Output BukkitAPI Sound and Material as text
+           /<command> export <sound | material> - output BukkitAPI Sound and Material as text
            /<command> <scripttype> create <options> - create new scriptblock
            /<command> <scripttype> add <options> - add new script to the block
            /<command> <scripttype> remove - remove script of block
