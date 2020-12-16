@@ -5,12 +5,13 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * ScriptBlockPlus ScriptBlockAPI インターフェース
@@ -62,12 +63,6 @@ public interface ScriptBlockAPI {
 		void save();
 
 		/**
-		 * スクリプトが存在するのか確認します。
-		 * @return スクリプトが存在する場合はtrue
-		 */
-		boolean hasPath();
-
-		/**
 		 * スクリプトの種類を取得します。
 		 * @return スクリプトの種類
 		 */
@@ -116,30 +111,15 @@ public interface ScriptBlockAPI {
 	interface SBFile {
 
 		/**
-		 * スクリプトの対象を、指定した座標のスクリプトに切り替えます。
-		 * <p>
-		 * 別の座標の情報を参照する機能なので、保存場所を変えるわけではありません。
-		 * @param location スクリプトの座標
-		 */
-		void setLocation(@NotNull Location location);
-
-		/**
 		 * 変更を保存します。
 		 */
 		void save();
 
 		/**
-		 * スクリプトのパスが存在するのか確認します。
-		 * @return スクリプトのパスが存在する場合はtrue
+		 * スクリプトが存在するのか確認します。
+		 * @return スクリプトが存在する場合はtrue
 		 */
-		boolean hasPath();
-
-		/**
-		 * スクリプトのパスを取得します。
-		 * @return スクリプトのパス
-		 */
-		@NotNull
-		String getPath();
+		boolean has();
 
 		/**
 		 * スクリプトの座標を取得します。
@@ -156,19 +136,30 @@ public interface ScriptBlockAPI {
 		ScriptType getScriptType();
 
 		/**
-		 * スクリプトの作者を取得します。
-		 * @return 作者
-		 */
-		@Nullable
-		String getAuthor();
-
-		/**
-		 * スクリプトの作者のリストを取得します。
-		 * @param isMinecraftID trueの場合はMinecraftIDを取得し、falseの場合はUUIDを取得します。
-		 * @return 作者のリスト
+		 * スクリプトの作者のセットを取得します。
+		 * @return 作者のセット
 		 */
 		@NotNull
-		List<String> getAuthors(boolean isMinecraftID);
+		Set<UUID> getAuthor();
+
+		/**
+		 * クリプトの作者を設定します。
+		 * @param author 作者のセット
+		 */
+		void setAuthor(@NotNull Set<UUID> author);
+
+		/**
+		 * スクリプトを取得します。
+		 * @return スクリプト
+		 */
+		@NotNull
+		List<String> getScript();
+
+		/**
+		 * スクリプトを設定します。
+		 * @param script スクリプトのリスト
+		 */
+		void setScript(@NotNull List<String> script);
 
 		/**
 		 * スクリプトの編集時刻を取得します。
@@ -176,45 +167,6 @@ public interface ScriptBlockAPI {
 		 */
 		@Nullable
 		String getLastEdit();
-
-		/**
-		 * スクリプトの実行可能な回数を取得します。
-		 * @return 実行可能な回数
-		 */
-		int getAmount();
-
-		/**
-		 * スクリプトを取得します。
-		 * @return スクリプト
-		 */
-		@NotNull
-		List<String> getScripts();
-
-		/**
-		 * スクリプトをコピーします。
-		 * @param target 保存先の座標
-		 * @param overwrite trueの場合は上書きを行い、falseの場合は上書きを行いません。
-		 * @return コピーに成功した場合はtrue
-		 */
-		boolean copyScripts(@NotNull Location target, boolean overwrite);
-
-		/**
-		 * スクリプトの作者を設定します。
-		 * @param player 作者のプレイヤー
-		 */
-		void setAuthor(@NotNull OfflinePlayer player);
-
-		/**
-		 * スクリプトの作者を追加します。
-		 * @param player 作者のプレイヤー
-		 */
-		void addAuthor(@NotNull OfflinePlayer player);
-
-		/**
-		 * スクリプトの作者を削除します。
-		 * @param player 作者のプレイヤー
-		 */
-		void removeAuthor(@NotNull OfflinePlayer player);
 
 		/**
 		 * スクリプトの編集時刻を現在の時刻に設定します。
@@ -226,6 +178,12 @@ public interface ScriptBlockAPI {
 		 * @param time 時間
 		 */
 		void setLastEdit(@NotNull String time);
+
+		/**
+		 * スクリプトの実行可能な回数を取得します。
+		 * @return 実行可能な回数
+		 */
+		int getAmount();
 
 		/**
 		 * スクリプトの実行可能な回数を設定します。
@@ -246,55 +204,8 @@ public interface ScriptBlockAPI {
 		void subtractAmount(int amount);
 
 		/**
-		 * スクリプトを設定します。
-		 * @param scripts スクリプトのリスト
-		 */
-		void setScripts(@NotNull List<String> scripts);
-
-		/**
-		 * 指定した位置のスクリプトを上書きします。
-		 * @param index 位置
-		 * @param script スクリプト
-		 */
-		void setScript(int index, @NotNull String script);
-
-		/**
-		 * スクリプトを追加します。
-		 * @param script スクリプト
-		 */
-		void addScript(@NotNull String script);
-
-		/**
-		 * 指定した位置にスクリプトを追加します。
-		 * @param index 位置
-		 * @param script スクリプト
-		 */
-		void addScript(int index, @NotNull String script);
-
-		/**
-		 * スクリプトを削除します。
-		 * @param script スクリプト
-		 */
-		void removeScript(@NotNull String script);
-
-		/**
-		 * 全てのスクリプトを削除します。
-		 */
-		void clearScripts();
-
-		/**
-		 * 全てのプレイヤーの実行回数を削除します。
-		 */
-		void clearCounts();
-
-		/**
 		 * 全ての設定を削除します。
 		 */
 		void remove();
-
-		/**
-		 * スクリプトを再読み込みを行います。
-		 */
-		void reload();
 	}
 }

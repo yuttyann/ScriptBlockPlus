@@ -1,7 +1,5 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -29,11 +27,6 @@ public class ScriptListener implements Listener {
 	@NotNull
 	public Plugin getPlugin() {
 		return plugin;
-	}
-
-	@NotNull
-	public YamlConfig getScriptFile() {
-		return Files.getScriptFile(scriptType);
 	}
 
 	@NotNull

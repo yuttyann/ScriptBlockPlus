@@ -1,15 +1,18 @@
-package com.github.yuttyann.scriptblockplus.file.json;
+package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
- * ScriptBlockPlus PlayerCountInfo クラス
+ * ScriptBlockPlus PlayerCount クラス
  * @author yuttyann44581
  */
-public class PlayerCountInfo {
+public class PlayerCount {
 
 	@SerializedName("fullcoords")
 	@Expose
@@ -23,7 +26,7 @@ public class PlayerCountInfo {
 	@Expose
 	private int amount;
 
-	public PlayerCountInfo(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
+	public PlayerCount(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
 		this.fullCoords = fullCoords;
 		this.scriptType = scriptType;
 	}
@@ -62,24 +65,11 @@ public class PlayerCountInfo {
 
 	@Override
 	public int hashCode() {
-		int hash = 1;
-		int prime = 31;
-		hash = prime * hash + fullCoords.hashCode();
-		hash = prime * hash + scriptType.hashCode();
-		return hash;
+		return Objects.hash(fullCoords, scriptType);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof PlayerCountInfo) {
-			PlayerCountInfo info = ((PlayerCountInfo) obj);
-			return info.scriptType.equals(scriptType) && info.fullCoords.equals(fullCoords);
-		}
-		return false;
-	}
-
-	@Override
-	public String toString() {
-		return "PlayerCountInfo{fullCoords=" + fullCoords + ", scriptType=" + scriptType + ", amount=" + amount + "}";
+	public boolean equals(@Nullable Object obj) {
+		return obj instanceof PlayerCount && obj.hashCode() == hashCode();
 	}
 }

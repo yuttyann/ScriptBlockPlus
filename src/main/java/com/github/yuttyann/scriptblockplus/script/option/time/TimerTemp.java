@@ -1,6 +1,8 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,17 +21,24 @@ public class TimerTemp {
     private final String fullCoords;
     private final ScriptType scriptType;
 
-    public TimerTemp(final long[] params, @NotNull String fullCoords, @NotNull ScriptType scriptType) {
-        this.params = params;
-        this.uuid = null;
-        this.fullCoords = fullCoords;
+    private TimerTemp(@Nullable UUID uuid, @NotNull Location location, @NotNull ScriptType scriptType) {
+        this.params = null;
+        this.uuid = uuid;
+        this.fullCoords = BlockCoords.getFullCoords(location);
         this.scriptType = scriptType;
     }
 
-    public TimerTemp(final long[] params, @NotNull UUID uuid, @NotNull String fullCoords, @NotNull ScriptType scriptType) {
+    public TimerTemp(final long[] params, @NotNull Location location, @NotNull ScriptType scriptType) {
+        this.params = params;
+        this.uuid = null;
+        this.fullCoords = BlockCoords.getFullCoords(location);
+        this.scriptType = scriptType;
+    }
+
+    public TimerTemp(final long[] params, @NotNull UUID uuid, @NotNull Location location, @NotNull ScriptType scriptType) {
         this.params = params;
         this.uuid = uuid;
-        this.fullCoords = fullCoords;
+        this.fullCoords = BlockCoords.getFullCoords(location);
         this.scriptType = scriptType;
     }
 
@@ -52,6 +61,10 @@ public class TimerTemp {
         }
         TimerTemp temp = (TimerTemp) o;
         return Objects.equals(uuid, temp.uuid) && fullCoords.equals(temp.fullCoords) && scriptType.equals(temp.scriptType);
+    }
+
+    public static int hash(@Nullable UUID uuid, @NotNull Location location, @NotNull ScriptType scriptType) {
+        return new TimerTemp(uuid, location, scriptType).hashCode();
     }
 
     @Override

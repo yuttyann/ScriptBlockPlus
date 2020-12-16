@@ -1,9 +1,13 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import com.github.yuttyann.scriptblockplus.file.Files;
-import com.github.yuttyann.scriptblockplus.script.ScriptData;
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.Json;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,16 +28,18 @@ public class Amount extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		ScriptData scriptData = getScriptData();
-		if (scriptData.getAmount() == -1) {
-			scriptData.setAmount(Integer.parseInt(getOptionValue()));
+		Json<BlockScript> json = new BlockScriptJson(getScriptType());
+		ScriptParam scriptParam = json.load().get(getLocation());
+		if (scriptParam.getAmount() == -1) {
+			scriptParam.setAmount(Integer.parseInt(getOptionValue()));
 		}
-		scriptData.subtractAmount(1);
-		if (scriptData.getAmount() <= 0) {
-			scriptData.remove();
-			Files.removeScriptCoords(getLocation(), getScriptType());
+		scriptParam.subtractAmount(1);
+		if (scriptParam.getAmount() <= 0) {
+			PlayerCountJson.clearCounts(getLocation(), getScriptType());
+			TimerOption.removeAll(getLocation(), getScriptType());
+			json.load().remove(getLocation());
 		}
-		scriptData.save();
+		json.saveFile();
 		return true;
 	}
 }

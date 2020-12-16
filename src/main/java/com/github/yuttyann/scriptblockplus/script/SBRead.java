@@ -33,7 +33,7 @@ public interface SBRead extends ObjectMap {
 	 * @return スクリプトのリスト
 	 */
 	@NotNull
-	List<String> getScripts();
+	List<String> getScript();
 
 	/**
 	 * オプションの値を取得します。
@@ -41,20 +41,6 @@ public interface SBRead extends ObjectMap {
 	 */
 	@NotNull
 	String getOptionValue();
-
-	/**
-	 * ワールド名を除いた文字列の座標を取得します。
-	 * @return ワールド名を除いた文字列(x, y, z)
-	 */
-	@NotNull
-	String getCoords();
-
-	/**
-	 * ワールド名を含めた文字列の座標を取得します。
-	 * @return ワールド名を含めた文字列(world, x, y, z)
-	 */
-	@NotNull
-	String getFullCoords();
 
 	/**
 	 * 編集不可な座標を取得します。
@@ -69,13 +55,6 @@ public interface SBRead extends ObjectMap {
 	 */
 	@NotNull
 	ScriptType getScriptType();
-
-	/**
-	 * スクリプトのデータクラスを取得します。
-	 * @return スクリプトのデータクラス。
-	 */
-	@NotNull
-	ScriptData getScriptData();
 
 	/**
 	 * スクリプトを何番目まで実行したのか取得します。

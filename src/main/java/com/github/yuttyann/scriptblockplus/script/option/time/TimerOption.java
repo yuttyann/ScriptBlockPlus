@@ -1,14 +1,16 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.Json;
-import com.github.yuttyann.scriptblockplus.file.json.PlayerTemp;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerTempJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -37,7 +39,7 @@ public abstract class TimerOption extends BaseOption {
         return getUniqueId();
     }
 
-    protected boolean inCooldown() throws Exception {
+    protected boolean inCooldown() {
         Optional<TimerTemp> timer = getTimerTemp();
         if (timer.isPresent()) {
             int time = timer.get().getSecond();
@@ -48,28 +50,26 @@ public abstract class TimerOption extends BaseOption {
                 SBConfig.ACTIVE_COOLDOWN.replace(hour, minute, second).send(getSBPlayer());
                 return true;
             } else {
-                PlayerTemp temp = new PlayerTemp(getFileUniqueId());
-                temp.getInfo().getTimerTemp().remove(timer.get());
-                temp.save();
+                Json<PlayerTemp> json = new PlayerTempJson(getFileUniqueId());
+                json.load().getTimerTemp().remove(timer.get());
+                json.saveFile();
             }
         }
         return false;
     }
 
-    public static void removeAll(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
+    public static void removeAll(@NotNull Location location, @NotNull ScriptType scriptType) {
+        String fullCoords = BlockCoords.getFullCoords(location);
         int oldCooldown = Objects.hash(true, fullCoords, scriptType);
-        for (UUID uuid : Json.getUniqueIdList(PlayerTemp.class)) {
-            PlayerTemp temp = new PlayerTemp(uuid);
-            Set<TimerTemp> set = temp.getInfo().getTimerTemp();
+        for (String id : Json.getIdList(PlayerTempJson.class)) {
+            UUID uuid = UUID.fromString(id);
+            Json<PlayerTemp> json = new PlayerTempJson(uuid);
+            Set<TimerTemp> set = json.load().getTimerTemp();
             if (set.size() > 0) {
                 int cooldown = Objects.hash(false, uuid, fullCoords, scriptType);
                 set.removeIf(t -> t.hashCode() == cooldown);
                 set.removeIf(t -> t.hashCode() == oldCooldown);
-                try {
-                    temp.save();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                json.saveFile();
             }
         }
     }

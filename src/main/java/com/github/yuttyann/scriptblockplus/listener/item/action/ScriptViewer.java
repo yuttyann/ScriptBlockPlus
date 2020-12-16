@@ -2,24 +2,27 @@ package com.github.yuttyann.scriptblockplus.listener.item.action;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
 import com.github.yuttyann.scriptblockplus.region.PlayerRegion;
+import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * ScriptBlockPlus ScriptViewer クラス
@@ -27,10 +30,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ScriptViewer extends ItemAction {
 
-    private static final String KEY = Utils.randomUUID();
+    private static final Set<UUID> PLAYERS = new HashSet<>();
 
     static {
-        new Task().runTaskTimer(ScriptBlock.getInstance(), 0L, 7L);
+        new Task().runTaskTimer(ScriptBlock.getInstance(), 0L, 8L);
     }
 
     public ScriptViewer() {
@@ -48,12 +51,12 @@ public class ScriptViewer extends ItemAction {
         switch (action) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
-                sbPlayer.getObjectMap().put(KEY, true);
+                PLAYERS.add(sbPlayer.getUniqueId());
                 SBConfig.SCRIPT_VIEWER_START.send(player);
                 break;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
-                sbPlayer.getObjectMap().put(KEY, false);
+                PLAYERS.remove(sbPlayer.getUniqueId());
                 SBConfig.SCRIPT_VIEWER_STOP.send(player);
                 break;
             default:
@@ -65,18 +68,22 @@ public class ScriptViewer extends ItemAction {
 
         @Override
         public void run() {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (!SBPlayer.fromPlayer(player).getObjectMap().getBoolean(KEY)) {
+            for (UUID uuid : PLAYERS) {
+                SBPlayer sbPlayer = SBPlayer.fromUUID(uuid);
+                if (!sbPlayer.isOnline()) {
                     continue;
                 }
-                new CuboidRegionBlocks(new PlayerRegion(player, 15)).forEach(b -> {
-                    Block block = b.getBlock(player.getWorld());
-                    for (ScriptType scriptType : ScriptType.values()) {
-                        if (Files.hasScriptCoords(block.getLocation(), scriptType)) {
-                            spawnParticlesOnBlock(player, block, block.getType()== Material.AIR);
+                Set<Block> temp = new HashSet<>();
+                Region region = new PlayerRegion(sbPlayer.getPlayer(), 15);
+                new CuboidRegionBlocks(region).forEach(b -> temp.add(b.getBlock(sbPlayer.getWorld())));
+                for (ScriptType scriptType : ScriptType.values()) {
+                    BlockScript blockScript = new BlockScriptJson(scriptType).load();
+                    for (Block block : temp) {
+                        if (blockScript.has(block.getLocation())) {
+                            spawnParticlesOnBlock(sbPlayer.getPlayer(), block, block.getType() == Material.AIR);
                         }
                     }
-                });
+                }
             }
         }
 

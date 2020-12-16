@@ -125,8 +125,11 @@ public class InteractListener implements Listener {
 		if (location != null && !isAIR && sbPlayer.getActionType().isPresent()) {
 			String[] array = StringUtils.split(sbPlayer.getActionType().get(), "_");
 			ScriptBlockEditEvent editEvent = new ScriptBlockEditEvent(player, location.getBlock(), array);
-			Bukkit.getPluginManager().callEvent(editEvent);
-			if (!editEvent.isCancelled()) {
+			try {
+				Bukkit.getPluginManager().callEvent(editEvent);
+				if (editEvent.isCancelled()) {
+					return false;
+				}
 				ScriptEdit scriptEdit = new ScriptEdit(editEvent.getScriptType());
 				switch (editEvent.getActionType()) {
 					case CREATE:
@@ -143,9 +146,10 @@ public class InteractListener implements Listener {
 						break;
 				}
 				return true;
+			} finally {
+				sbPlayer.setScriptLine(null);
+				sbPlayer.setActionType(null);
 			}
-			sbPlayer.setScriptLine(null);
-			sbPlayer.setActionType(null);
 		}
 		return false;
 	}

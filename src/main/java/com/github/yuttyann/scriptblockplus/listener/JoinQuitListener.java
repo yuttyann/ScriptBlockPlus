@@ -7,6 +7,7 @@ import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -34,8 +35,8 @@ public class JoinQuitListener implements Listener {
 		BaseSBPlayer sbPlayer = plugin.fromPlayer(player);
 		sbPlayer.setOnline(true);
 		if (!sbPlayer.getOldFullCoords().isPresent()) {
-			BlockCoords blockCoords = new BlockCoords(player.getLocation());
-			sbPlayer.setOldFullCoords(blockCoords.subtract(0.0D, 1.0D, 0.0D).getFullCoords());
+			Location location = player.getLocation().clone();
+			sbPlayer.setOldFullCoords(BlockCoords.getFullCoords(location.subtract(0.0D, 1.0D, 0.0D)));
 		}
 		if (player.isOp()) {
 			plugin.checkUpdate(sbPlayer, false);

@@ -62,9 +62,10 @@ public final class BaseSBPlayer extends PlayerMap {
 	}
 
 	@Override
-	@Nullable
+	@NotNull
 	public synchronized Player getPlayer() {
-		return isOnline() ? player : Bukkit.getPlayer(uuid);
+		Player player = isOnline() ? this.player : Bukkit.getPlayer(uuid);
+		return Objects.requireNonNull(player, "Player cannot be null");
 	}
 
 	@Override

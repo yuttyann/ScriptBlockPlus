@@ -1,6 +1,8 @@
-package com.github.yuttyann.scriptblockplus.manager.auxiliary;
+package com.github.yuttyann.scriptblockplus.script.option.time;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,20 +11,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ScriptBlockPlus SBMap クラス
+ * ScriptBlockPlus DelayMap クラス
  * @param <T> 値の型
  * @author yuttyann44581
  */
-public final class SBMap<T> implements Serializable {
+final class DelayMap<T> implements Serializable {
 
 	private Map<ScriptType, Map<String, T>> sbMap;
 
-	public SBMap() {
-		this(0);
-	}
-
-	public SBMap(int initialCapacity) {
-		this.sbMap = initialCapacity > 0 ? new HashMap<>(initialCapacity) : new HashMap<>();
+	public DelayMap() {
+		this.sbMap = new HashMap<>();
 	}
 
 	public void clear() {
@@ -38,14 +36,14 @@ public final class SBMap<T> implements Serializable {
 	}
 
 	@Nullable
-	public T get(@NotNull ScriptType scriptType, @NotNull String fullCoords) {
-		return sbMap.computeIfAbsent(scriptType, k -> new HashMap<>()).get(fullCoords);
+	public T get(@NotNull Location location, @NotNull ScriptType scriptType) {
+		return sbMap.computeIfAbsent(scriptType, k -> new HashMap<>()).get(BlockCoords.getFullCoords(location));
 	}
 
 	@Nullable
-	public T put(@NotNull ScriptType scriptType, @NotNull String fullCoords, T value) {
+	public T put(@NotNull Location location, @NotNull ScriptType scriptType, T value) {
 		Map<String, T> map = sbMap.get(scriptType);
-		return map == null ? null : map.put(fullCoords, value);
+		return map == null ? null : map.put(BlockCoords.getFullCoords(location), value);
 	}
 
 	@Nullable
@@ -54,16 +52,16 @@ public final class SBMap<T> implements Serializable {
 	}
 
 	@Nullable
-	public T remove(@NotNull ScriptType scriptType, @NotNull String fullCoords) {
-		return sbMap.computeIfAbsent(scriptType, k -> new HashMap<>()).remove(fullCoords);
+	public T remove(@NotNull Location location, @NotNull ScriptType scriptType) {
+		return sbMap.computeIfAbsent(scriptType, k -> new HashMap<>()).remove(BlockCoords.getFullCoords(location));
 	}
 
 	public boolean has(@NotNull ScriptType scriptType) {
 		return sbMap.get(scriptType) != null;
 	}
 
-	public boolean has(@NotNull ScriptType scriptType, @NotNull String fullCoords) {
-		return get(scriptType, fullCoords) != null;
+	public boolean has(@NotNull Location location, @NotNull ScriptType scriptType) {
+		return get(location, scriptType) != null;
 	}
 
 	public boolean containsKey(@NotNull ScriptType scriptType) {

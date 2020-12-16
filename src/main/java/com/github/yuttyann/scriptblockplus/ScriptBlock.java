@@ -1,13 +1,17 @@
 package com.github.yuttyann.scriptblockplus;
 
-import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
-import com.github.yuttyann.scriptblockplus.file.Files;
+import com.github.yuttyann.scriptblockplus.file.APIVersion;
+import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.listener.*;
 import com.github.yuttyann.scriptblockplus.manager.APIManager;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -31,36 +35,52 @@ public class ScriptBlock extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		// 1.9未満のバージョンだった場合はプラグインを無効化
 		if (!Utils.isCBXXXorLater("1.9")) {
 			Bukkit.getConsoleSender().sendMessage("§cUnsupported Version: v" + Utils.getServerVersion());
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
 
+		// 旧ScriptBlockが導入されていた場合は無効化
 		Plugin plugin = getServer().getPluginManager().getPlugin("ScriptBlock");
 		if (plugin != null) {
 			getServer().getPluginManager().disablePlugin(plugin);
 		}
 
-		Files.reload();
+		// 全ファイルの読み込み
+		SBFiles.reload();
+
+		// Vaultが導入されているのか確認
 		if (!VaultEconomy.INSTANCE.has()) {
 			SBConfig.NOT_VAULT.send();
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
 
-		Files.loadAllScripts();
-		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setOnline(true));
+		// 1.13移行のバージョンは、APIVersionを書き換える
+		if (Utils.isCBXXXorLater("1.13")) {
+			new APIVersion(this).update();
+		}
 
+		// アップデート処理
 		updater = new Updater(this);
 		checkUpdate(Bukkit.getConsoleSender(), false);
 
+		// スクリプトの形式を".yml"から".json"へ移行
+		StreamUtils.forEach(ScriptType.values(), BlockScriptJson::convart);
+
+		// ログイン中のプレイヤーの設定をオンラインへ変更
+		Bukkit.getOnlinePlayers().forEach(p -> fromPlayer(p).setOnline(true));
+
+		// コマンドとリスナーの登録
 		scriptBlockPlusCommand = new ScriptBlockPlusCommand(this);
 		getServer().getPluginManager().registerEvents(new InteractListener(), this);
 		getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
 		getServer().getPluginManager().registerEvents(new ScriptInteractListener(this), this);
 		getServer().getPluginManager().registerEvents(new ScriptBreakListener(this), this);
 		getServer().getPluginManager().registerEvents(new ScriptWalkListener(this), this);
+
 	}
 
 	@Override
@@ -128,7 +148,7 @@ public class ScriptBlock extends JavaPlugin {
 
 	/**
 	 * ScriptBlockのインスタンスを取得します。
-	 * @return メインクラス
+	 * @return メインクラスのインスタンス
 	 */
 	@NotNull
 	public static ScriptBlock getInstance() {

@@ -43,8 +43,8 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 		}
 	}
 
-	/**
-	 * スクリプトの種類名(大文字)を取得します。
+    /**
+	 * スクリプトの種類名(小文字)を取得します。
 	 * @return スクリプトの種類名
 	 */
 	@NotNull
@@ -53,7 +53,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	}
 
 	/**
-	 * スクリプトの種類名(小文字)を取得します。
+	 * スクリプトの種類名(大文字)を取得します。
 	 * @return スクリプトの種類名
 	 */
 	@NotNull

@@ -64,9 +64,9 @@ public class PlaySound extends BaseOption {
 		}
 	}
 
-	private void playSound(@NotNull Sound soundType, int volume, int pitch, boolean playWorld) {
+	private void playSound(@NotNull Sound soundType, int volume, int pitch, boolean sendAllPlayer) {
 		Location location = getLocation();
-		if (playWorld) {
+		if (sendAllPlayer) {
 			Objects.requireNonNull(location.getWorld()).playSound(location, soundType, volume, pitch);
 		} else if (getSBPlayer().isOnline()) {
 			getPlayer().playSound(location, soundType, volume, pitch);

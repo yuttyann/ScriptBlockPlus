@@ -49,11 +49,9 @@ public interface SBPlayer extends CommandSender {
 
 	/**
 	 * プレイヤーを取得します。
-	 * <p>
-	 * プレイヤーがオフラインの場合はnullを返します。
 	 * @return プレイヤー
 	 */
-	@Nullable
+	@NotNull
 	Player getPlayer();
 
 	/**

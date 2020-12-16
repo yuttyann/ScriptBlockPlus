@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.region;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableLocation;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -36,12 +36,12 @@ public final class CuboidRegionBlocks {
 
 	@NotNull
 	public Location getMinimumPoint() {
-		return BlockCoords.unmodifiableLocation(min);
+		return new UnmodifiableLocation(min);
 	}
 
 	@NotNull
 	public Location getMaximumPoint() {
-		return BlockCoords.unmodifiableLocation(max);
+		return new UnmodifiableLocation(max);
 	}
 
 	public int getCount() {
@@ -60,8 +60,8 @@ public final class CuboidRegionBlocks {
 		return set;
 	}
 
-	public void forEach(@NotNull Consumer<BlockPos> action) {
-		BlockPos position = new BlockPos();
+	public void forEach(@NotNull Consumer<BlockPosition> action) {
+		BlockPosition position = new BlockPosition();
 		for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
 			for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
 				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
@@ -71,13 +71,13 @@ public final class CuboidRegionBlocks {
 		}
 	}
 
-	public static final class BlockPos {
+	public static final class BlockPosition {
 
 		private int x;
 		private int y;
 		private int z;
 
-		private BlockPos setPos(int x, int y, int z) {
+		private BlockPosition setPos(int x, int y, int z) {
 			this.x = x;
 			this.y = y;
 			this.z = z;

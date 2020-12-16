@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.listener.item;
+package com.github.yuttyann.scriptblockplus.utils.unmodifiable;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 public final class UnmodifiableItemStack extends ItemStack {
 
-    protected UnmodifiableItemStack(@NotNull ItemStack item) {
+    public UnmodifiableItemStack(@NotNull ItemStack item) {
         super(item);
     }
 

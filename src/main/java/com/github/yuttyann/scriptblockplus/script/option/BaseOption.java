@@ -4,7 +4,6 @@ import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
-import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
@@ -79,24 +78,6 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * ワールド名を除いた文字列の座標を取得します。
-	 * @return ワールド名を除いた文字列(x, y, z)
-	 */
-	@NotNull
-	protected final String getCoords() {
-		return sbRead.getCoords();
-	}
-
-	/**
-	 * ワールド名を含めた文字列の座標を取得します。
-	 * @return ワールド名を含めた文字列(world, x, y, z)
-	 */
-	@NotNull
-	protected final String getFullCoords() {
-		return sbRead.getFullCoords();
-	}
-
-	/**
 	 * 編集不可な座標を取得します。
 	 * @return スクリプトの座標
 	 */
@@ -111,7 +92,7 @@ public abstract class BaseOption extends Option {
 	 */
 	@NotNull
 	protected final List<String> getScripts() {
-		return sbRead.getScripts();
+		return sbRead.getScript();
 	}
 
 	/**
@@ -130,15 +111,6 @@ public abstract class BaseOption extends Option {
 	@NotNull
 	protected final SBRead getSBRead() {
 		return sbRead;
-	}
-
-	/**
-	 * スクリプトのデータクラスを取得します。
-	 * @return スクリプトのデータクラス。
-	 */
-	@NotNull
-	protected final ScriptData getScriptData() {
-		return sbRead.getScriptData();
 	}
 
 	/**

@@ -4,12 +4,13 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
-import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -30,22 +31,23 @@ public class ScriptWalkListener extends ScriptListener {
 	public void onPlayerMoveEvent(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
-		BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation()).subtract(0.0D, 1.0D, 0.0D);
-		if (blockCoords.getFullCoords().equals(sbPlayer.getOldFullCoords().orElse(null))) {
+		Location location = player.getLocation().clone().subtract(0.0D, 1.0D, 0.0D);
+		String fullCoords = BlockCoords.getFullCoords(location);
+		if (fullCoords.equals(sbPlayer.getOldFullCoords().orElse(null))) {
 			return;
 		}
-		sbPlayer.setOldFullCoords(blockCoords.getFullCoords());
-		if (Files.hasScriptCoords(blockCoords, scriptType)) {
-			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(player, blockCoords.getBlock());
+		sbPlayer.setOldFullCoords(fullCoords);
+		if (BlockScriptJson.has(location, scriptType)) {
+			ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(player, location.getBlock());
 			Bukkit.getPluginManager().callEvent(walkEvent);
 			if (walkEvent.isCancelled()) {
 				return;
 			}
-			if (!Permission.has(sbPlayer, ScriptType.WALK, false)) {
-				SBConfig.NOT_PERMISSION.send(player);
+			if (!Permission.has(player, ScriptType.WALK, false)) {
+				SBConfig.NOT_PERMISSION.send(sbPlayer);
 				return;
 			}
-			new ScriptRead(player, blockCoords, this).read(0);
+			new ScriptRead(player, location, this).read(0);
 		}
 	}
 }

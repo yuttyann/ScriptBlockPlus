@@ -4,8 +4,8 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.BlockClickEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockInteractEvent;
-import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
@@ -38,9 +38,9 @@ public class ScriptInteractListener extends ScriptListener {
 			return;
 		}
 		Location location = block.getLocation();
-		if (Files.hasScriptCoords(location, scriptType)) {
-			Player player = event.getPlayer();
+		if (BlockScriptJson.has(location, scriptType)) {
 			Action action = event.getAction();
+			Player player = event.getPlayer();
 			ScriptBlockInteractEvent interactEvent = new ScriptBlockInteractEvent(player, block, action);
 			Bukkit.getPluginManager().callEvent(interactEvent);
 			if (interactEvent.isCancelled()

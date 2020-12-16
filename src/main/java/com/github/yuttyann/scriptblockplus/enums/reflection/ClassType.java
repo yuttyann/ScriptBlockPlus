@@ -49,7 +49,7 @@ public enum ClassType {
 	}
 
 	@Nullable
-	public static ClassType fromClass(@Nullable Class<?> clazz) {
+	public static ClassType fromClass(Class<?> clazz) {
 		return CLASS.get(clazz);
 	}
 
@@ -66,7 +66,7 @@ public enum ClassType {
 	}
 
 	@NotNull
-	public static Class<?>[] getPrimitive(@Nullable Class<?>[] classes) {
+	public static Class<?>[] getPrimitive(Class<?>[] classes) {
 		if (classes == null || classes.length == 0) {
 			return ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
@@ -79,7 +79,7 @@ public enum ClassType {
 	}
 
 	@NotNull
-	public static Class<?>[] getReference(@Nullable Class<?>[] classes) {
+	public static Class<?>[] getReference(Class<?>[] classes) {
 		if (classes == null || classes.length == 0) {
 			return ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
@@ -92,7 +92,7 @@ public enum ClassType {
 	}
 
 	@NotNull
-	public static Class<?>[] getPrimitive(@Nullable Object[] objects) {
+	public static Class<?>[] getPrimitive(Object[] objects) {
 		if (objects == null || objects.length == 0) {
 			return ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
@@ -105,7 +105,7 @@ public enum ClassType {
 	}
 
 	@NotNull
-	public static Class<?>[] getReference(@Nullable Object[] objects) {
+	public static Class<?>[] getReference(Object[] objects) {
 		if (objects == null || objects.length == 0) {
 			return ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
@@ -117,7 +117,7 @@ public enum ClassType {
 		return types;
 	}
 
-	public static boolean compare(@Nullable Class<?>[] primary, @Nullable Class<?>[] secondary) {
+	public static boolean compare(Class<?>[] primary, Class<?>[] secondary) {
 		if (primary == null || secondary == null || primary.length != secondary.length) {
 			return false;
 		}

@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.file.json;
+package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerTemp;
 import com.google.gson.annotations.Expose;
@@ -7,25 +7,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * ScriptBlockPlus PlayerTemp クラス
  * @author yuttyann44581
  */
-public class PlayerTempInfo {
+public class PlayerTemp {
 
     @SerializedName("timer")
     @Expose
     private final Set<TimerTemp> timer = new HashSet<>();
-
-    @SerializedName("uuid")
-    @Expose
-    private final UUID uuid;
-
-    public PlayerTempInfo(UUID uuid) {
-        this.uuid = uuid;
-    }
 
     @NotNull
     public Set<TimerTemp> getTimerTemp() {
@@ -34,6 +25,6 @@ public class PlayerTempInfo {
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        return timer.hashCode();
     }
 }

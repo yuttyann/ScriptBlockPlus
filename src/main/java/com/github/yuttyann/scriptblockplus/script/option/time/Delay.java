@@ -2,12 +2,12 @@ package com.github.yuttyann.scriptblockplus.script.option.time;
 
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
-import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBMap;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -21,7 +21,7 @@ import java.util.UUID;
  */
 public class Delay extends BaseOption implements Runnable {
 
-	private static final SBMap<Set<UUID>> DELAY_MAP = new SBMap<>();
+	private static final DelayMap<Set<UUID>> DELAY_MAP = new DelayMap<>();
 
 	private boolean delaySave;
 
@@ -44,11 +44,11 @@ public class Delay extends BaseOption implements Runnable {
 	protected boolean isValid() throws Exception {
 		String[] array = StringUtils.split(getOptionValue(), "/");
 		delaySave = array.length <= 1 || Boolean.parseBoolean(array[1]);
-		if (delaySave && containsDelay(getUniqueId(), getScriptType(), getFullCoords())) {
+		if (delaySave && containsDelay(getUniqueId(), getLocation(), getScriptType())) {
 			SBConfig.ACTIVE_DELAY.send(getSBPlayer());
 		} else {
 			if (delaySave) {
-				putDelay(getUniqueId(), getScriptType(), getFullCoords());
+				putDelay(getUniqueId(), getLocation(), getScriptType());
 			}
 			Bukkit.getScheduler().runTaskLater(getPlugin(), this, Long.parseLong(array[0]));
 		}
@@ -58,7 +58,7 @@ public class Delay extends BaseOption implements Runnable {
 	@Override
 	public void run() {
 		if (delaySave) {
-			removeDelay(getUniqueId(), getScriptType(), getFullCoords());
+			removeDelay(getUniqueId(), getLocation(), getScriptType());
 		}
 		if (getSBPlayer().isOnline()) {
 			getSBRead().read(getScriptIndex() + 1);
@@ -67,20 +67,20 @@ public class Delay extends BaseOption implements Runnable {
 		}
 	}
 
-	private void putDelay(@NotNull UUID uuid, @NotNull ScriptType scriptType, @NotNull String fullCoords) {
-		Set<UUID> set = DELAY_MAP.get(scriptType, fullCoords);
+	private void putDelay(@NotNull UUID uuid, @NotNull Location location, @NotNull ScriptType scriptType) {
+		Set<UUID> set = DELAY_MAP.get(location, scriptType);
 		if (set == null) {
-			DELAY_MAP.put(scriptType, fullCoords, set = new HashSet<>());
+			DELAY_MAP.put(location, scriptType, set = new HashSet<>());
 		}
 		set.add(uuid);
 	}
 
-	private void removeDelay(@NotNull UUID uuid, @NotNull ScriptType scriptType, @NotNull String fullCoords) {
-		Optional.ofNullable(DELAY_MAP.get(scriptType, fullCoords)).ifPresent(v -> v.remove(uuid));
+	private void removeDelay(@NotNull UUID uuid, @NotNull Location location, @NotNull ScriptType scriptType) {
+		Optional.ofNullable(DELAY_MAP.get(location, scriptType)).ifPresent(v -> v.remove(uuid));
 	}
 
-	private boolean containsDelay(@NotNull UUID uuid, @NotNull ScriptType scriptType, @NotNull String fullCoords) {
-		Optional<Set<UUID>> value = Optional.ofNullable(DELAY_MAP.get(scriptType, fullCoords));
+	private boolean containsDelay(@NotNull UUID uuid, @NotNull Location location, @NotNull ScriptType scriptType) {
+		Optional<Set<UUID>> value = Optional.ofNullable(DELAY_MAP.get(location, scriptType));
 		return value.isPresent() && value.get().contains(uuid);
 	}
 }

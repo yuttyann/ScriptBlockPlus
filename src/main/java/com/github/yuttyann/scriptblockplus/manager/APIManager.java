@@ -2,22 +2,26 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
+import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
-import com.github.yuttyann.scriptblockplus.manager.auxiliary.SBConstructor;
-import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
+import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * ScriptBlockPlus APIManager クラス
@@ -66,11 +70,6 @@ public final class APIManager implements ScriptBlockAPI {
 		}
 
 		@Override
-		public boolean hasPath() {
-			return scriptEdit.hasPath();
-		}
-
-		@Override
 		@NotNull
 		public ScriptType getScriptType() {
 			return scriptEdit.getScriptType();
@@ -105,162 +104,103 @@ public final class APIManager implements ScriptBlockAPI {
 
 	private static class SFile implements SBFile {
 
-		private final ScriptData scriptData;
+		private final ScriptType scriptType;
+		private final Location location;
+		private final ScriptParam scriptParam;
+		private final BlockScriptJson blockScriotJson;
 
 		public SFile(@NotNull Location location, @NotNull ScriptType scriptType) {
-			this.scriptData = new ScriptData(location, scriptType);
-		}
-
-		@Override
-		public void setLocation(@NotNull Location location) {
-			scriptData.setLocation(location);
+			this.scriptType = scriptType;
+			this.location = location;
+			this.blockScriotJson = new BlockScriptJson(scriptType);
+			this.scriptParam = blockScriotJson.load().get(location);
 		}
 
 		@Override
 		public void save() {
-			scriptData.save();
+			blockScriotJson.saveFile();
 		}
 
 		@Override
-		public boolean hasPath() {
-			return scriptData.hasPath();
-		}
-
-		@Override
-		@NotNull
-		public String getPath() {
-			return scriptData.getPath();
+		public boolean has() {
+			return blockScriotJson.load().has(location);
 		}
 
 		@Override
 		@Nullable
 		public Location getLocation() {
-			return scriptData.getLocation();
+			return location;
 		}
 
 		@Override
 		@NotNull
 		public ScriptType getScriptType() {
-			return scriptData.getScriptType();
-		}
-
-		@Override
-		@Nullable
-		public String getAuthor() {
-			return scriptData.getAuthor();
+			return scriptType;
 		}
 
 		@Override
 		@NotNull
-		public List<String> getAuthors(boolean isMinecraftID) {
-			return scriptData.getAuthors(isMinecraftID);
+		public Set<UUID> getAuthor() {
+			return scriptParam.getAuthor();
+		}
+
+		@Override
+		public void setAuthor(@NotNull Set<UUID> author) {
+			scriptParam.setAuthor(author);
+		}
+
+		@Override
+		@NotNull
+		public List<String> getScript() {
+			return scriptParam.getScript();
+		}
+
+		@Override
+		public void setScript(@NotNull List<String> script) {
+			scriptParam.setScript(script);
 		}
 
 		@Override
 		@Nullable
 		public String getLastEdit() {
-			return scriptData.getLastEdit();
-		}
-
-		@Override
-		public int getAmount() {
-			return scriptData.getAmount();
-		}
-
-		@Override
-		@NotNull
-		public List<String> getScripts() {
-			return scriptData.getScripts();
-		}
-
-		@Override
-		public boolean copyScripts(@NotNull Location target, boolean overwrite) {
-			return scriptData.copyScripts(target, overwrite);
-		}
-
-		@Override
-		public void setAuthor(@NotNull OfflinePlayer player) {
-			scriptData.setAuthor(player);
-		}
-
-		@Override
-		public void addAuthor(@NotNull OfflinePlayer player) {
-			scriptData.addAuthor(player);
-		}
-
-		@Override
-		public void removeAuthor(@NotNull OfflinePlayer player) {
-			scriptData.removeAuthor(player);
+			return scriptParam.getLastEdit();
 		}
 
 		@Override
 		public void setLastEdit() {
-			scriptData.setLastEdit();
+			scriptParam.setLastEdit(Utils.getFormatTime());
 		}
 
 		@Override
 		public void setLastEdit(@NotNull String time) {
-			scriptData.setLastEdit(time);
+			scriptParam.setLastEdit(time);
+		}
+
+		@Override
+		public int getAmount() {
+			return scriptParam.getAmount();
 		}
 
 		@Override
 		public void setAmount(int amount) {
-			scriptData.setAmount(amount);
+			scriptParam.setAmount(amount);
 		}
 
 		@Override
 		public void addAmount(int amount) {
-			scriptData.addAmount(amount);
+			scriptParam.addAmount(amount);
 		}
 
 		@Override
 		public void subtractAmount(int amount) {
-			scriptData.subtractAmount(amount);
-		}
-
-		@Override
-		public void setScripts(@NotNull List<String> scripts) {
-			scriptData.setScripts(scripts);
-		}
-
-		@Override
-		public void setScript(int index, @NotNull String script) {
-			scriptData.setScript(index, script);
-		}
-
-		@Override
-		public void addScript(@NotNull String script) {
-			scriptData.addScript(script);
-		}
-
-		@Override
-		public void addScript(int index, @NotNull String script) {
-			scriptData.addScript(index, script);
-		}
-
-		@Override
-		public void removeScript(@NotNull String script) {
-			scriptData.removeScript(script);
-		}
-
-		@Override
-		public void clearScripts() {
-			scriptData.clearScripts();
-		}
-
-		@Override
-		public void clearCounts() {
-			scriptData.clearCounts();
+			scriptParam.subtractAmount(amount);
 		}
 
 		@Override
 		public void remove() {
-			scriptData.remove();
-		}
-
-		@Override
-		public void reload() {
-			scriptData.reload();
+			TimerOption.removeAll(location, scriptType);
+			PlayerCountJson.clearCounts(location, scriptType);
+			blockScriotJson.load().remove(location);
 		}
 	}
 }

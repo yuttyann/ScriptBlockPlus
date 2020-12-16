@@ -2,7 +2,6 @@ package com.github.yuttyann.scriptblockplus.enums.reflection;
 
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -229,7 +228,7 @@ public enum PackageType {
 			}
 			return rName + this + "." + className;
 		}
-		StrBuilder builder = new StrBuilder();
+		StringBuilder builder = new StringBuilder();
 		boolean notEmptyName = StringUtils.isNotEmpty(name);
 		builder.append(rName).append(this).append('.').append(className).append(notEmptyName ? '=' : '[');
 		if (notEmptyName) {

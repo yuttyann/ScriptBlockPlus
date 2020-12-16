@@ -3,8 +3,8 @@ package com.github.yuttyann.scriptblockplus.listener;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
-import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
@@ -36,7 +36,7 @@ public class ScriptBreakListener extends ScriptListener {
 		}
 		Block block = event.getBlock();
 		Location location = block.getLocation();
-		if (Files.hasScriptCoords(location, scriptType)) {
+		if (BlockScriptJson.has(location, scriptType)) {
 			ScriptBlockBreakEvent breakEvent = new ScriptBlockBreakEvent(player, block);
 			Bukkit.getPluginManager().callEvent(breakEvent);
 			if (breakEvent.isCancelled()) {

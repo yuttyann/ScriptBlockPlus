@@ -41,7 +41,7 @@ public final class Utils {
 	@NotNull
 	public static <T extends Plugin> T getPlugin(@NotNull Class<? extends Plugin> plugin) {
 		Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
-		Predicate<? super Plugin> classEquals = p -> p.getClass().equals(plugin);
+		Predicate<Plugin> classEquals = p -> p.getClass().equals(plugin);
 		return (T) Stream.of(plugins).filter(classEquals).findFirst().orElseThrow(NullPointerException::new);
 	}
 

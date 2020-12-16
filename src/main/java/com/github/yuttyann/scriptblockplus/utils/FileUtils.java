@@ -9,8 +9,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Objects;
-import java.util.function.Predicate;
 
 /**
  * ScriptBlockPlus FileUtils クラス
@@ -63,35 +61,6 @@ public final class FileUtils {
 			e.printStackTrace();
 		}
 
-	}
-
-	public static void copyDirectory(@NotNull File sourceFile, @NotNull File targetFile, @NotNull Predicate<File> filter) {
-		if (isEmpty(sourceFile)) {
-			return;
-		}
-		if (!targetFile.exists()) {
-			targetFile.mkdirs();
-		}
-		for (File file : Objects.requireNonNull(sourceFile.listFiles())) {
-			if (filter.test(file)) {
-				continue;
-			}
-			File copy = new File(targetFile, file.getName());
-			try (
-				InputStream is = new FileInputStream(file);
-				FileOutputStream fos = new FileOutputStream(copy);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
-				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, Charsets.UTF_8))
-			) {
-				String line;
-				while ((line = reader.readLine()) != null) {
-					writer.write(line);
-					writer.newLine();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public static void fileDownload(@NotNull String url, @NotNull File file) throws IOException {

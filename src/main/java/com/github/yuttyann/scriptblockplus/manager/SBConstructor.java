@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.manager.auxiliary;
+package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.script.SBInstance;

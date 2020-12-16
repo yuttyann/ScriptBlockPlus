@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
 import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -107,9 +106,9 @@ public final class StringUtils {
 		String value = replace == null ? "" : replace.toString();
 		int searchLength = search.length();
 		int replaceLength = Math.max(source.length() - value.length(), 0);
-		StrBuilder builder = new StrBuilder(source.length() + replaceLength);
+		StringBuilder builder = new StringBuilder(source.length() + replaceLength);
 		while (end != -1) {
-			builder.append(source.substring(start, end)).append(value);
+			builder.append(source, start, end).append(value);
 			end = source.indexOf(search, start = end + searchLength);
 		}
 		return builder.append(source.substring(start)).toString();
@@ -117,7 +116,7 @@ public final class StringUtils {
 
 	@NotNull
 	public static String createString(@NotNull String[] args, int start) {
-		StrBuilder builder = new StrBuilder();
+		StringBuilder builder = new StringBuilder();
 		for (int i = start; i < args.length; i++) {
 			builder.append(args[i]).append(i == (args.length - 1) ? "" : " ");
 		}

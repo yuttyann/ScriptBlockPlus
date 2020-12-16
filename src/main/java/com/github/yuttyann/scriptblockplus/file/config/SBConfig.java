@@ -63,8 +63,8 @@ public final class SBConfig {
 	public static final ConfigKey<String> ALL_FILE_RELOAD = stringKey("AllFileReloadMessage", "");
 	public static final ConfigKey<String> NOT_LATEST_PLUGIN = stringKey("NotLatestPluginMessage", "");
 	public static final ConfigKey<String> NOT_SCRIPT_BLOCK_FILE = stringKey("NotScriptBlockFileMessage", "");
-	public static final ConfigKey<String> SCRIPTS_BACKUP = stringKey("ScriptsBackupMessage", "");
-	public static final ConfigKey<String> ERROR_SCRIPTS_BACKUP = stringKey("ErrorScriptsBackupMessage", "");
+	public static final ConfigKey<String> PLUGIN_BACKUP = stringKey("PluginBackupMessage", "");
+	public static final ConfigKey<String> ERROR_PLUGIN_BACKUP = stringKey("ErrorPluginBackupMessage", "");
 	public static final ConfigKey<String> DATAMIGR_START = stringKey("DataMigrStartMessage", "");
 	public static final ConfigKey<String> DATAMIGR_END = stringKey("DataMigrEndMessage", "");
 	public static final ConfigKey<String> UPDATE_DOWNLOAD_START = stringKey("UpdateDownloadStartMessage", "");

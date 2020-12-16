@@ -1,20 +1,15 @@
 package com.github.yuttyann.scriptblockplus.file;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.FileReloadEvent;
 import com.github.yuttyann.scriptblockplus.file.config.ConfigKeys;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.yaml.UTF8Config;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.google.common.base.Charsets;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -26,28 +21,30 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- * ScriptBlockPlus Files クラス
+ * ScriptBlockPlus SBFiles クラス
  * @author yuttyann44581
  */
-public final class Files {
+public final class SBFiles {
 
 	private static final Map<String, YamlConfig> FILES = new HashMap<>();
-	private static final Map<ScriptType, Set<String>> SCRIPT_COORDS = new HashMap<>();
 
 	public static final String S = File.separator;
 	public static final String PATH_CONFIG = "config.yml";
 	public static final String PATH_LANGS = "langs" + S + "{code}.yml";
 
 	public static void reload() {
+		// ScriptBlockのインスタンス
 		Plugin plugin = ScriptBlock.getInstance();
 
+		// ファイルの内容を読み込む
 		ConfigKeys.clear();
 		ConfigKeys.load(loadFile(plugin, PATH_CONFIG, true));
 		ConfigKeys.load(loadLang(plugin, PATH_LANGS));
 
-		StreamUtils.forEach(ScriptType.values(), Files::loadScript);
+		// ファイルの内容が欠けていないか確認
 		searchKeys(plugin, PATH_CONFIG, PATH_LANGS);
 
+		// リロードを行ったことを知らせるイベントを呼ぶ
 		Bukkit.getPluginManager().callEvent(new FileReloadEvent());
 	}
 
@@ -87,44 +84,6 @@ public final class Files {
 	}
 
 	@NotNull
-	public static YamlConfig getScriptFile(@NotNull ScriptType scriptType) {
-		String filePath = "scripts" + S + scriptType.type() + ".yml";
-		return getFile(ScriptBlock.getInstance(), filePath).orElseGet(() -> loadScript(scriptType));
-	}
-
-	public static void addScriptCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
-		String fullCoords = BlockCoords.getFullCoords(location);
-		Optional<Set<String>> value = Optional.ofNullable(SCRIPT_COORDS.get(scriptType));
-		value.ifPresent(v -> v.add(fullCoords));
-		TimerOption.removeAll(fullCoords, scriptType);
-	}
-
-	public static void removeScriptCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
-		String fullCoords = BlockCoords.getFullCoords(location);
-		Optional.ofNullable(SCRIPT_COORDS.get(scriptType)).ifPresent(v -> v.remove(fullCoords));
-		TimerOption.removeAll(fullCoords, scriptType);
-	}
-
-	public static boolean hasScriptCoords(@NotNull Location location, @NotNull ScriptType scriptType) {
-		Optional<Set<String>> value = Optional.ofNullable(SCRIPT_COORDS.get(scriptType));
-		return value.isPresent() && value.get().contains(BlockCoords.getFullCoords(location));
-	}
-
-	public static void loadAllScripts() {
-		try {
-			StreamUtils.forEach(ScriptType.values(), s -> loadScripts(Files.getScriptFile(s), s));
-		} catch (Exception e) {
-			SCRIPT_COORDS.clear();
-		}
-	}
-
-	public static void loadScripts(@NotNull YamlConfig scriptFile, @NotNull ScriptType scriptType) {
-		Set<String> set = new HashSet<>(SCRIPT_COORDS.size());
-		scriptFile.getKeys().forEach(w -> scriptFile.getKeys(w).forEach(c -> set.add(w + ", " + c)));
-		SCRIPT_COORDS.put(scriptType, set);
-	}
-
-	@NotNull
 	public static YamlConfig loadFile(@NotNull Plugin plugin, @NotNull String filePath, boolean isCopyFile) {
 		return putFile(plugin, filePath, YamlConfig.load(plugin, filePath, isCopyFile));
 	}
@@ -136,12 +95,6 @@ public final class Files {
 			language = Locale.getDefault().getLanguage();
 		}
 		return putFile(plugin, filePath, new Lang(plugin, language, filePath, "lang").load());
-	}
-
-	@NotNull
-	private static YamlConfig loadScript(@NotNull ScriptType scriptType) {
-		String filePath = "scripts" + S + scriptType.type() + ".yml";
-		return loadFile(ScriptBlock.getInstance(), filePath, false);
 	}
 
 	@NotNull

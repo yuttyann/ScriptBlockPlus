@@ -1,9 +1,10 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.file.Files;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
+import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -11,10 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -24,19 +22,11 @@ import java.util.stream.Collectors;
 public final class ScriptEdit {
 
 	private final ScriptType scriptType;
-	private final ScriptData scriptData;
+	private final BlockScriptJson blockScriptJson;
 
 	public ScriptEdit(@NotNull ScriptType scriptType) {
 		this.scriptType = scriptType;
-		this.scriptData = new ScriptData(scriptType);
-	}
-
-	public void save() {
-		scriptData.save();
-	}
-
-	public boolean hasPath() {
-		return scriptData.hasPath();
+		this.blockScriptJson = new BlockScriptJson(scriptType);
 	}
 
 	@NotNull
@@ -44,22 +34,24 @@ public final class ScriptEdit {
 		return scriptType;
 	}
 
+	public boolean exists() {
+		return blockScriptJson.exists();
+	}
+
+	public void save() {
+		blockScriptJson.saveFile();
+	}
+
 	@NotNull
-	public String getAuthors() {
-		List<String> authors = scriptData.getAuthors(true);
-		if (authors.size() < 2) {
-			return authors.size() == 1 ? authors.get(0) : "null";
-		}
-		return authors.stream().collect(Collectors.joining(", ", "[", "]"));
+	public String getAuthors(@NotNull ScriptParam scriptParam) {
+		Set<UUID> author = scriptParam.getAuthor();
+		return author.stream().map(Utils::getName).collect(Collectors.joining(", "));
 	}
 
 	public void create(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
-			Optional<Player> player = Optional.ofNullable(sbPlayer.getPlayer());
 			Optional<String> scriptLine = sbPlayer.getScriptLine();
-			if (scriptLine.isPresent() && player.isPresent()) {
-				create(player.get(), location, scriptLine.get());
-			}
+			scriptLine.ifPresent(s -> create(sbPlayer.getPlayer(), location, s));
 		} finally {
 			sbPlayer.setScriptLine(null);
 			sbPlayer.setActionType(null);
@@ -67,24 +59,21 @@ public final class ScriptEdit {
 	}
 
 	public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-		scriptData.setLocation(location);
-		scriptData.setAuthor(player.getUniqueId());
-		scriptData.setLastEdit();
-		scriptData.setScripts(Collections.singletonList(script));
-		scriptData.clearCounts();
-		scriptData.save();
-		Files.addScriptCoords(location, scriptType);
+		TimerOption.removeAll(location, scriptType);
+		PlayerCountJson.clearCounts(location, scriptType);
+		ScriptParam scriptParam = blockScriptJson.load().get(location);
+		scriptParam.getAuthor().add(player.getUniqueId());
+		scriptParam.setScript(Collections.singletonList(script));
+		scriptParam.setLastEdit(Utils.getFormatTime());
+		blockScriptJson.saveFile();
 		SBConfig.SCRIPT_CREATE.replace(scriptType).send(player);
 		SBConfig.CONSOLE_SCRIPT_CREATE.replace(player.getName(), scriptType, location).console();
 	}
 
 	public void add(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
-			Optional<Player> player = Optional.ofNullable(sbPlayer.getPlayer());
 			Optional<String> scriptLine = sbPlayer.getScriptLine();
-			if (scriptLine.isPresent() && player.isPresent()) {
-				add(player.get(), location, scriptLine.get());
-			}
+			scriptLine.ifPresent(s -> add(sbPlayer.getPlayer(), location, s));
 		} finally {
 			sbPlayer.setScriptLine(null);
 			sbPlayer.setActionType(null);
@@ -92,23 +81,23 @@ public final class ScriptEdit {
 	}
 
 	public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-		scriptData.setLocation(location);
-		if (!scriptData.hasPath()) {
+		if (!blockScriptJson.load().has(location)) {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
-		scriptData.addAuthor(player.getUniqueId());
-		scriptData.setLastEdit();
-		scriptData.addScript(script);
-		scriptData.save();
-		TimerOption.removeAll(BlockCoords.getFullCoords(location), scriptType);
+		TimerOption.removeAll(location, scriptType);
+		ScriptParam scriptParam = blockScriptJson.load().get(location);
+		scriptParam.getAuthor().add(player.getUniqueId());
+		scriptParam.getScript().add(script);
+		scriptParam.setLastEdit(Utils.getFormatTime());
+		blockScriptJson.saveFile();
 		SBConfig.SCRIPT_ADD.replace(scriptType).send(player);
 		SBConfig.CONSOLE_SCRIPT_ADD.replace(player.getName(), scriptType, location).console();
 	}
 
 	public void remove(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
-			Optional.ofNullable(sbPlayer.getPlayer()).ifPresent(p -> remove(p, location));
+			remove(sbPlayer.getPlayer(), location);
 		} finally {
 			sbPlayer.setScriptLine(null);
 			sbPlayer.setActionType(null);
@@ -116,33 +105,31 @@ public final class ScriptEdit {
 	}
 
 	public void remove(@NotNull Player player, @NotNull Location location) {
-		scriptData.setLocation(location);
-		if (!scriptData.hasPath()) {
+		if (!blockScriptJson.load().has(location)) {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
-		scriptData.remove();
-		scriptData.clearCounts();
-		scriptData.save();
-		Files.removeScriptCoords(location, scriptType);
+		TimerOption.removeAll(location, scriptType);
+		PlayerCountJson.clearCounts(location, scriptType);
+		blockScriptJson.load().remove(location);
+		blockScriptJson.saveFile();
 		SBConfig.SCRIPT_REMOVE.replace(scriptType).send(player);
 		SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), scriptType, location).console();
 	}
 
 	public boolean lightRemove(@NotNull Location location) {
-		scriptData.setLocation(location);
-		if (!scriptData.hasPath()) {
+		if (!blockScriptJson.load().has(location)) {
 			return false;
 		}
-		scriptData.remove();
-		scriptData.clearCounts();
-		Files.removeScriptCoords(location, scriptType);
+		PlayerCountJson.clearCounts(location, scriptType);
+		TimerOption.removeAll(location, scriptType);
+		blockScriptJson.load().remove(location);
 		return true;
 	}
 
 	public void view(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
 		try {
-			Optional.ofNullable(sbPlayer.getPlayer()).ifPresent(p -> view(p, location));
+			view(sbPlayer.getPlayer(), location);
 		} finally {
 			sbPlayer.setScriptLine(null);
 			sbPlayer.setActionType(null);
@@ -150,50 +137,52 @@ public final class ScriptEdit {
 	}
 
 	public void view(@NotNull Player player, @NotNull Location location) {
-		scriptData.setLocation(location);
-		if (!scriptData.hasPath()) {
+		if (!blockScriptJson.load().has(location)) {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
 			return;
 		}
-		PlayerCount playerCount = new PlayerCount(player.getUniqueId());
-		player.sendMessage("Author: " + getAuthors());
-		player.sendMessage("LastEdit: " + scriptData.getLastEdit());
-		player.sendMessage("Execute: " + playerCount.getInfo(location, getScriptType()).getAmount());
-		for (String script : scriptData.getScripts()) {
-			player.sendMessage("- " + script);
-		}
+		ScriptParam scriptParam = blockScriptJson.load().get(location);
+		PlayerCount playerCount = new PlayerCountJson(player.getUniqueId()).load();
+		player.sendMessage("Author: " + getAuthors(scriptParam));
+		player.sendMessage("LastEdit: " + scriptParam.getLastEdit());
+		player.sendMessage("Execute: " + playerCount.getAmount());
+		scriptParam.getScript().forEach(s -> player.sendMessage("- " + s));
 		SBConfig.CONSOLE_SCRIPT_VIEW.replace(player.getName(), scriptType, location).console();
 	}
 
 	@NotNull
 	public SBClipboard clipboard(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
-		scriptData.setLocation(location);
-		return new Clipboard(sbPlayer, scriptData);
+		return new Clipboard(sbPlayer, location, scriptType);
 	}
 
 	private static class Clipboard implements SBClipboard {
 
 		private final SBPlayer sbPlayer;
-		private final ScriptData scriptData;
-
-		private final int amount;
-		private final String author;
-		private final List<String> scripts;
+		private final Location location;
 		private final ScriptType scriptType;
+		private final BlockScriptJson blockScriptJson;
 
-		private Clipboard(@NotNull SBPlayer sbPlayer, @NotNull ScriptData scriptData) {
+
+		private final Set<UUID> author;
+		private final List<String> script;
+		private final int amount;
+
+		private Clipboard(@NotNull SBPlayer sbPlayer, @NotNull Location location, @NotNull ScriptType scriptType) {
 			this.sbPlayer = sbPlayer;
-			this.scriptData = scriptData.clone();
-			this.amount = this.scriptData.getAmount();
-			this.author = this.scriptData.getAuthor();
-			this.scripts = new ArrayList<>(this.scriptData.getScripts());
-			this.scriptType = this.scriptData.getScriptType();
+			this.location = location;
+			this.scriptType = scriptType;
+			this.blockScriptJson = new BlockScriptJson(scriptType);
+
+			ScriptParam scriptParam = blockScriptJson.load().get(location);
+			this.author = scriptParam.getAuthor();
+			this.script = scriptParam.getScript();
+			this.amount = scriptParam.getAmount();
 		}
 
 		@Override
 		@NotNull
 		public Location getLocation() {
-			return scriptData.getLocation();
+			return location;
 		}
 
 		@Override
@@ -204,19 +193,19 @@ public final class ScriptEdit {
 
 		@Override
 		public void save() {
-			scriptData.save();
+			blockScriptJson.saveFile();
 		}
 
 		@Override
 		public boolean copy() {
 			try {
-				if (!scriptData.hasPath()) {
+				if (!blockScriptJson.load().has(location)) {
 					SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
 					return false;
 				}
 				sbPlayer.setClipboard(this);
 				SBConfig.SCRIPT_COPY.replace(scriptType).send(sbPlayer);
-				SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), scriptType, scriptData.getLocation()).console();
+				SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), scriptType, location).console();
 			} finally {
 				sbPlayer.setScriptLine(null);
 				sbPlayer.setActionType(null);
@@ -227,20 +216,17 @@ public final class ScriptEdit {
 		@Override
 		public boolean paste(@NotNull Location location, boolean overwrite) {
 			try {
-				scriptData.setLocation(location);
-				if (scriptData.hasPath() && !overwrite) {
+				if (blockScriptJson.load().has(location) && !overwrite) {
 					return false;
 				}
-				scriptData.setAuthor(author);
-				scriptData.addAuthor(sbPlayer.getOfflinePlayer());
-				scriptData.setLastEdit(Utils.getFormatTime());
-				if (amount > 0) {
-					scriptData.setAmount(amount);
-				}
-				scriptData.setScripts(scripts);
-				scriptData.clearCounts();
-				scriptData.save();
-				Files.addScriptCoords(location, scriptType);
+				PlayerCountJson.clearCounts(location, scriptType);
+				ScriptParam scriptParam = blockScriptJson.load().get(location);
+				scriptParam.setAuthor(author);
+				scriptParam.getAuthor().add(sbPlayer.getUniqueId());
+				scriptParam.setScript(script);
+				scriptParam.setLastEdit(Utils.getFormatTime());
+				scriptParam.setAmount(amount);
+				blockScriptJson.saveFile();
 				SBConfig.SCRIPT_PASTE.replace(scriptType).send(sbPlayer);
 				SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), scriptType, location).console();
 			} finally {
@@ -253,19 +239,16 @@ public final class ScriptEdit {
 
 		@Override
 		public boolean lightPaste(@NotNull Location location, boolean overwrite) {
-			scriptData.setLocation(location);
-			if (scriptData.hasPath() && !overwrite) {
+			if (blockScriptJson.load().has(location) && !overwrite) {
 				return false;
 			}
-			scriptData.setAuthor(author);
-			scriptData.addAuthor(sbPlayer.getUniqueId());
-			if (amount > 0) {
-				scriptData.setAmount(amount);
-			}
-			scriptData.setLastEdit(Utils.getFormatTime("yyyy/MM/dd HH:mm:ss"));
-			scriptData.setScripts(scripts);
-			scriptData.clearCounts();
-			Files.addScriptCoords(location, scriptType);
+			PlayerCountJson.clearCounts(location, scriptType);
+			ScriptParam scriptParam = blockScriptJson.load().get(location);
+			scriptParam.setAuthor(author);
+			scriptParam.getAuthor().add(sbPlayer.getUniqueId());
+			scriptParam.setScript(script);
+			scriptParam.setLastEdit(Utils.getFormatTime());
+			scriptParam.setAmount(amount);
 			return true;
 		}
 	}

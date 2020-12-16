@@ -1,9 +1,8 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
-import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -69,8 +68,8 @@ public class Calculation extends BaseOption {
 				return 0;
 			}
 			ScriptType scriptType = array.length == 1 ? getScriptType() : ScriptType.valueOf(array[0]);
-			BlockCoords blockCoords = BlockCoords.fromString(array.length == 1 ? array[0] : array[1]);
-			return new PlayerCount(getUniqueId()).getInfo(blockCoords, scriptType).getAmount();
+			String fullCoords = array.length == 1 ? array[0] : array[1];
+			return new PlayerCountJson(getUniqueId()).load(fullCoords, scriptType).getAmount();
 		}
 		if (source.startsWith("%player_others_in_range_") && source.endsWith("%")) {
 			source = source.substring("%player_others_in_range_".length(), source.length() - 1);
@@ -101,8 +100,7 @@ public class Calculation extends BaseOption {
 			case "%server_offline%":
 				return Bukkit.getOfflinePlayers().length;
 			case "%player_count%":
-				BlockCoords fullCoords = BlockCoords.fromString(getFullCoords());
-				return new PlayerCount(getUniqueId()).getInfo(fullCoords, getScriptType()).getAmount();
+				return new PlayerCountJson(getUniqueId()).load(getLocation(), getScriptType()).getAmount();
 			case "%player_ping%":
 				if (!Utils.isPlatform()) {
 					return 0;

@@ -5,20 +5,22 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
-import com.github.yuttyann.scriptblockplus.file.Files;
+import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.Json;
+import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
-import com.github.yuttyann.scriptblockplus.script.ScriptData;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.*;
 import com.google.common.base.Charsets;
-import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -27,6 +29,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 /**
@@ -79,7 +83,11 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			} else if (equals(args[0], "reload")) {
 				return doReload(sender);
 			} else if (equals(args[0], "backup")) {
-				return doBackup(sender);
+				try {
+					return doBackup(sender);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			} else if (equals(args[0], "checkver")) {
 				return doCheckVer(sender);
 			} else if (equals(args[0], "datamigr")) {
@@ -157,29 +165,44 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!hasPermission(sender, Permission.COMMAND_RELOAD, false)) {
 			return false;
 		}
-		Files.reload();
+		SBFiles.reload();
 		NameFetcher.clear();
 		PackageType.clear();
 		setUsage(getUsages());
-		Files.loadAllScripts();
 		SBConfig.ALL_FILE_RELOAD.send(sender);
 		return true;
 	}
 
-	private boolean doBackup(@NotNull CommandSender sender) {
+	private boolean doBackup(@NotNull CommandSender sender) throws IOException {
 		if (!hasPermission(sender, Permission.COMMAND_BACKUP, false)) {
 			return false;
 		}
 		File dataFolder = ScriptBlock.getInstance().getDataFolder();
-		File scripts = new File(dataFolder, "scripts");
-		if (!scripts.exists() || FileUtils.isEmpty(scripts)) {
-			SBConfig.ERROR_SCRIPTS_BACKUP.send(sender);
+		if (!dataFolder.exists() || FileUtils.isEmpty(dataFolder)) {
+			SBConfig.ERROR_PLUGIN_BACKUP.send(sender);
 			return true;
 		}
-		File backup = new File(scripts, "backup");
-		String formatTime = Utils.getFormatTime("yyyy-MM-dd HH-mm-ss");
-		FileUtils.copyDirectory(scripts, new File(backup, "scripts " + formatTime), File::isDirectory);
-		SBConfig.SCRIPTS_BACKUP.send(sender);
+		File backup = new File(dataFolder, "backup");
+		Path source = dataFolder.toPath();
+		Path target = new File(backup, Utils.getFormatTime("yyyy-MM-dd HH-mm-ss")).toPath();
+
+		// フォルダをコピー（再帰）
+		Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+
+			@Override
+			@NotNull
+			public FileVisitResult visitFile(@NotNull Path path, @NotNull BasicFileAttributes attributes) throws IOException {
+				if (!path.toString().contains(SBFiles.S + "backup" + SBFiles.S)) {
+					Path targetFile = target.resolve(source.relativize(path));
+					Path parentDir = targetFile.getParent();
+					Files.createDirectories(parentDir);
+					Files.copy(path, targetFile, StandardCopyOption.REPLACE_EXISTING);
+				}
+				return FileVisitResult.CONTINUE;
+			}
+		});
+
+		SBConfig.PLUGIN_BACKUP.send(sender);
 		return true;
 	}
 
@@ -202,15 +225,15 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!walkFile.exists() && !interactFile.exists()) {
 			SBConfig.NOT_SCRIPT_BLOCK_FILE.send(sender);
 		} else {
+			UUID uuid = player.getUniqueId();
 			String time = Utils.getFormatTime();
-			String uuid = player.getUniqueId().toString();
 			SBConfig.DATAMIGR_START.send(sender);
 			new Thread(() -> {
 				if (interactFile.exists()) {
-					saveScript(uuid, time, YamlConfig.load(getPlugin(), interactFile, false), ScriptType.INTERACT);
+					convart(uuid, time, YamlConfig.load(getPlugin(), interactFile, false), ScriptType.INTERACT);
 				}
 				if (walkFile.exists()) {
-					saveScript(uuid, time, YamlConfig.load(getPlugin(), walkFile, false), ScriptType.WALK);
+					convart(uuid, time, YamlConfig.load(getPlugin(), walkFile, false), ScriptType.WALK);
 				}
 				SBConfig.DATAMIGR_END.send(sender);
 			}).start();
@@ -218,28 +241,28 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private void saveScript(@NotNull String uuid, @NotNull String time, @NotNull YamlConfig scriptFile, @NotNull ScriptType scriptType) {
-		ScriptData scriptData = new ScriptData(scriptType);
+	private void convart(@NotNull UUID uuid, @NotNull String time, @NotNull YamlConfig scriptFile, @NotNull ScriptType scriptType) {
+		Json<BlockScript> json = new BlockScriptJson(scriptType);
+		BlockScript blockScript = json.load();
 		for (String world : scriptFile.getKeys()) {
 			World tWorld = Objects.requireNonNull(Utils.getWorld(world));
 			for (String coords : scriptFile.getKeys(world)) {
-				List<String> scripts = scriptFile.getStringList(world + "." + coords);
-				if (scripts.size() > 0 && scripts.get(0).startsWith("Author:")) {
-					scripts.remove(0);
+				List<String> script = scriptFile.getStringList(world + "." + coords);
+				if (script.size() > 0 && script.get(0).startsWith("Author:")) {
+					script.remove(0);
 				}
-				for (int i = 0; i < scripts.size(); i++) {
-					if (scripts.get(i).contains("@cooldown:")) {
-						scripts.set(i, StringUtils.replace(scripts.get(i), "@cooldown:", "@oldcooldown:"));
+				for (int i = 0; i < script.size(); i++) {
+					if (script.get(i).contains("@cooldown:")) {
+						script.set(i, StringUtils.replace(script.get(i), "@cooldown:", "@oldcooldown:"));
 					}
 				}
-				scriptData.setLocation(BlockCoords.fromString(tWorld, coords));
-				scriptData.setAuthor(uuid);
-				scriptData.setLastEdit(time);
-				scriptData.setScripts(scripts);
+				ScriptParam scriptParam = blockScript.get(BlockCoords.fromString(tWorld, coords));
+				scriptParam.getAuthor().add(uuid);
+				scriptParam.setLastEdit(time);
+				scriptParam.setScript(script);
 			}
 		}
-		scriptData.save();
-		scriptData.reload();
+		json.saveFile();
 	}
 
 	private boolean doRun(@NotNull CommandSender sender, @NotNull String[] args) {
@@ -293,12 +316,12 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		}
 		CuboidRegionBlocks regionBlocks = new CuboidRegionBlocks(region);
 		Set<Block> blocks = regionBlocks.getBlocks();
-		StrBuilder builder = new StrBuilder();
+		StringBuilder builder = new StringBuilder();
 		for (ScriptType scriptType : ScriptType.values()) {
-			if (!Files.getScriptFile(scriptType).exists()) {
+			ScriptEdit scriptEdit = new ScriptEdit(scriptType);
+			if (!scriptEdit.exists()) {
 				continue;
 			}
-			ScriptEdit scriptEdit = new ScriptEdit(scriptType);
 			for (Block block : blocks) {
 				if (scriptEdit.lightRemove(block.getLocation()) && builder.indexOf(scriptType.type()) == -1) {
 					builder.append(builder.length() == 0 ? "" : ", ").append(scriptType.type());

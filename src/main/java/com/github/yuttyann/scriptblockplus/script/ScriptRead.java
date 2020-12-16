@@ -1,9 +1,11 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.file.json.PlayerCount;
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
@@ -12,6 +14,7 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableLocation;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -30,10 +33,11 @@ import java.util.function.Consumer;
 public class ScriptRead extends ScriptMap implements SBRead {
 
 	protected SBPlayer sbPlayer;
-	protected List<String> scripts;
+	protected Location location;
+	protected BlockScript blockScript;
+	
+	protected List<String> script;
 	protected String optionValue;
-	protected ScriptData scriptData;
-	protected BlockCoords blockCoords;
 	protected int scriptIndex;
 
 	// 継承用
@@ -43,57 +47,36 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
 	public ScriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptListener listener) {
 		super(listener);
-		this.sbPlayer = SBPlayer.fromPlayer(player);
-		this.scriptData = new ScriptData(location, scriptType, true);
-		if (!(location instanceof BlockCoords)) {
-			location = new BlockCoords(location);
-		}
 		location.setX(location.getBlockX() + 0.5D);
 		location.setY(location.getBlockY() + 0.5D);
 		location.setZ(location.getBlockZ() + 0.5D);
-		this.blockCoords = ((BlockCoords) location).unmodifiable();
+		this.sbPlayer = SBPlayer.fromPlayer(player);
+		this.location = new UnmodifiableLocation(location); // 変更不可
+		this.blockScript = new BlockScriptJson(getScriptType()).load();
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public SBPlayer getSBPlayer() {
 		return sbPlayer;
 	}
 
-	@NotNull
 	@Override
-	public List<String> getScripts() {
-		return scripts;
+	@NotNull
+	public List<String> getScript() {
+		return script;
 	}
 
-	@NotNull
 	@Override
+	@NotNull
 	public String getOptionValue() {
 		return optionValue;
 	}
 
-	@NotNull
 	@Override
-	public String getCoords() {
-		return blockCoords.getCoords();
-	}
-
 	@NotNull
-	@Override
-	public String getFullCoords() {
-		return blockCoords.getFullCoords();
-	}
-
-	@NotNull
-	@Override
 	public Location getLocation() {
-		return blockCoords;
-	}
-
-	@NotNull
-	@Override
-	public ScriptData getScriptData() {
-		return scriptData;
+		return location;
 	}
 
 	@Override
@@ -104,21 +87,21 @@ public class ScriptRead extends ScriptMap implements SBRead {
 	@Override
 	public boolean read(int index) {
 		Validate.notNull(sbPlayer.getPlayer(), "Player cannot be null");
-		if (!scriptData.hasPath()) {
+		if (!blockScript.has(location)) {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
 			return false;
 		}
-		if (!sort(scriptData.getScripts())) {
+		if (!sort(blockScript.get(location).getScript())) {
 			SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptType).send(sbPlayer);
-			SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(sbPlayer.getName(), scriptType, blockCoords).console();
+			SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(sbPlayer.getName(), scriptType, location).console();
 			return false;
 		}
-		for (scriptIndex = index; scriptIndex < scripts.size(); scriptIndex++) {
+		for (scriptIndex = index; scriptIndex < script.size(); scriptIndex++) {
 			if (!sbPlayer.isOnline()) {
 				executeEndProcess(e -> e.failed(this));
 				return false;
 			}
-			String script = scripts.get(scriptIndex);
+			String script = this.script.get(scriptIndex);
 			Option option = OptionManager.get(script).newInstance();
 			optionValue = setPlaceholders(getSBPlayer(), option.getValue(script));
 			if (!hasPermission(option) || !option.callOption(this)) {
@@ -127,8 +110,8 @@ public class ScriptRead extends ScriptMap implements SBRead {
 			}
 		}
 		executeEndProcess(e -> e.success(this));
-		new PlayerCount(sbPlayer.getUniqueId()).add(blockCoords, scriptType);
-		SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(sbPlayer.getName(), scriptType, blockCoords).console();
+		new PlayerCountJson(sbPlayer.getUniqueId()).action(PlayerCount::add, location, scriptType);
+		SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(sbPlayer.getName(), scriptType, location).console();
 		return true;
 	}
 
@@ -172,7 +155,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
 				parse.addAll(StringUtils.getScripts(script));
 			}
 			SBConfig.SORT_SCRIPTS.ifPresentAndTrue(s -> OptionManager.sort(parse));
-			this.scripts = Collections.unmodifiableList(parse);
+			this.script = Collections.unmodifiableList(parse);
 			return true;
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();

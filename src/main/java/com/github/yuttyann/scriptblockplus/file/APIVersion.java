@@ -10,20 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 
-/*
-　| 今後"api-version"の互換性が無くなった場合に実装する機能です。
-　| 互換性を保つことが困難になった場合は最新以外を非対応としてこのクラスを削除します。
-　|
-　| <下記は実装予定の設定>
-　|　　## ===== SBP-API-Versionの設定 ===== ##
-　|　　# [true -> 有効 | false -> 無効]
-　|　　# "plugin.yml"の"api-version"の設定を自動で行います。
-　|　　# 1.13以降のサーバーにて正常な動作を行わせる為の設定です。
-　|　　# ※無効にした場合は一度サーバーをリロードしてください。
-　|　　# SBP-API-Version: true
-　|　　
-　|　　@author yuttyann44581
- */
 /**
  * ScriptBlockPlus APIVersion クラス
  * @author yuttyann44581
