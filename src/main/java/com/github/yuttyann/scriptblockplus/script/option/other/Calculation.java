@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
@@ -9,6 +10,7 @@ import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -68,8 +70,8 @@ public class Calculation extends BaseOption {
 				return 0;
 			}
 			ScriptType scriptType = array.length == 1 ? getScriptType() : ScriptType.valueOf(array[0]);
-			String fullCoords = array.length == 1 ? array[0] : array[1];
-			return new PlayerCountJson(getUniqueId()).load(fullCoords, scriptType).getAmount();
+			Location location = BlockCoords.fromString(array.length == 1 ? array[0] : array[1]);
+			return new PlayerCountJson(getUniqueId()).load(location, scriptType).getAmount();
 		}
 		if (source.startsWith("%player_others_in_range_") && source.endsWith("%")) {
 			source = source.substring("%player_others_in_range_".length(), source.length() - 1);
