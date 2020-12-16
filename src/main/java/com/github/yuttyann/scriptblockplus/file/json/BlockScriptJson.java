@@ -55,8 +55,6 @@ public class BlockScriptJson extends Json<BlockScript> {
         // 移行完了後にファイルとディレクトリを削除する
         scriptLoader.getFile().delete();
         File parent = scriptLoader.getFile().getParentFile();
-        System.out.println(parent.getPath());
-        System.out.println("Dir" + parent.isDirectory() + ", Len=" + parent.list().length);
         if (parent.isDirectory() && parent.list().length == 0) {
             parent.delete();
         }
