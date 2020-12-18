@@ -22,11 +22,25 @@ public interface SBRead extends ObjectMap {
 	Plugin getPlugin();
 
 	/**
-	 * SBPlayerを取得します。
-	 * @return SBPlayer
+	 * ScriptBlockPlusの{@link SBPlayer}を取得します。
+	 * @return {@link SBPlayer}
 	 */
 	@NotNull
 	SBPlayer getSBPlayer();
+
+	/**
+	 * スクリプトの座標を取得します。
+	 * @return スクリプトの座標
+	 */
+	@NotNull
+	Location getLocation();
+
+	/**
+	 * スクリプトの種類を取得します。
+	 * @return スクリプトの種類
+	 */
+	@NotNull
+	ScriptType getScriptType();
 
 	/**
 	 * スクリプトのリストを取得します。
@@ -41,20 +55,6 @@ public interface SBRead extends ObjectMap {
 	 */
 	@NotNull
 	String getOptionValue();
-
-	/**
-	 * 編集不可な座標を取得します。
-	 * @return スクリプトの座標
-	 */
-	@NotNull
-	Location getLocation();
-
-	/**
-	 * スクリプトの種類を取得します。
-	 * @return スクリプトの種類
-	 */
-	@NotNull
-	ScriptType getScriptType();
 
 	/**
 	 * スクリプトを何番目まで実行したのか取得します。

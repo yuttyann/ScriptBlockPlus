@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.file.yaml;
+package com.github.yuttyann.scriptblockplus.file.config;
 
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfigurationOptions;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.NumberConversions;
@@ -36,8 +37,9 @@ public class YamlConfig {
 	private final File file;
 
 	private String innerPath;
-	private UTF8Config yaml;
 	private boolean isCopyFile;
+
+	private YamlConfiguration yaml;
 
 	protected YamlConfig(@NotNull Plugin plugin, @NotNull File file, boolean isCopyFile) {
 		this.plugin = plugin;
@@ -132,7 +134,7 @@ public class YamlConfig {
 		if (isCopyFile && !file.exists()) {
 			FileUtils.copyFileFromPlugin(plugin, file, getFolderPath());
 		}
-		yaml = new UTF8Config();
+		yaml = new YamlConfiguration();
 		try {
 			yaml.load(file);
 		} catch (FileNotFoundException ignored) {

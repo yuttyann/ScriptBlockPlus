@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EndMoneyCost implements EndProcess {
 
-	@NotNull
 	@Override
+	@NotNull
 	public EndProcess newInstance() {
 		return new EndMoneyCost();
 	}

@@ -15,7 +15,6 @@ import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableLocation;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -62,6 +61,12 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
 	@Override
 	@NotNull
+	public Location getLocation() {
+		return location;
+	}
+
+	@Override
+	@NotNull
 	public List<String> getScript() {
 		return script;
 	}
@@ -73,19 +78,12 @@ public class ScriptRead extends ScriptMap implements SBRead {
 	}
 
 	@Override
-	@NotNull
-	public Location getLocation() {
-		return location;
-	}
-
-	@Override
 	public int getScriptIndex() {
 		return scriptIndex;
 	}
 
 	@Override
 	public boolean read(int index) {
-		Validate.notNull(sbPlayer.getPlayer(), "Player cannot be null");
 		if (!blockScript.has(location)) {
 			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
 			return false;
@@ -101,7 +99,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
 				return false;
 			}
 			String script = this.script.get(scriptIndex);
-			Option option = OptionManager.get(script).newInstance();
+			Option option = OptionManager.newInstance(script);
 			optionValue = setPlaceholders(getSBPlayer(), option.getValue(script));
 			if (!hasPermission(option) || !option.callOption(this)) {
 				executeEndProcess(e -> { if (!option.isFailedIgnore()) e.failed(this); });

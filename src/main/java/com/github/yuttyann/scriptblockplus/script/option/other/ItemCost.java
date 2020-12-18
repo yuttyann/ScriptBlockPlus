@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -17,14 +18,11 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus ItemCost オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "itemcost", syntax = "$item:")
 public class ItemCost extends BaseOption {
 
 	public static final String KEY_OPTION = Utils.randomUUID();
 	public static final String KEY_PLAYER = Utils.randomUUID();
-
-	public ItemCost() {
-		super("itemcost", "$item:");
-	}
 
 	@Override
 	@NotNull
@@ -47,8 +45,8 @@ public class ItemCost extends BaseOption {
 
 		Player player = getPlayer();
 		PlayerInventory inventory = player.getInventory();
-		if (!getSBRead().has(KEY_OPTION)) {
-			getSBRead().put(KEY_OPTION, copyItems(inventory.getContents()));
+		if (!getTempMap().has(KEY_OPTION)) {
+			getTempMap().put(KEY_OPTION, copyItems(inventory.getContents()));
 		}
 		ItemStack[] items = inventory.getContents();
 		int result = amount;

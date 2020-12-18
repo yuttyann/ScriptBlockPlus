@@ -7,6 +7,7 @@ import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
@@ -24,13 +25,10 @@ import java.util.regex.Pattern;
  * ScriptBlockPlus Calculation オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "calculation", syntax = "@calc:")
 public class Calculation extends BaseOption {
 
 	public static final Pattern REALNUMBER_PATTERN = Pattern.compile("^-?(0|[1-9]\\d*)(\\.\\d+|)$");
-
-	public Calculation() {
-		super("calculation", "@calc:");
-	}
 
 	@Override
 	@NotNull
@@ -88,7 +86,7 @@ public class Calculation extends BaseOption {
 		}
 		if (source.startsWith("%server_online_") && source.endsWith("%")) {
 			source = source.substring("%server_online_".length(), source.length() - 1);
-			return Objects.requireNonNull(Utils.getWorld(source)).getPlayers().size();
+			return Utils.getWorld(source).getPlayers().size();
 		}
 		if (source.startsWith("%objective_score_") && source.endsWith("%")) {
 			source = source.substring("%objective_score_".length(), source.length() - 1);

@@ -1,9 +1,10 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import com.github.yuttyann.scriptblockplus.file.json.Json;
+import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerTempJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -14,13 +15,10 @@ import java.util.UUID;
  * ScriptBlockPlus OldCooldown オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "oldcooldown", syntax = "@oldcooldown:")
 public class OldCooldown extends TimerOption {
 
 	private static final UUID UUID_OLDCOOLDOWN = UUID.nameUUIDFromBytes(OldCooldown.class.getName().getBytes());
-
-	public OldCooldown() {
-		super("oldcooldown", "@oldcooldown:");
-	}
 
 	@Override
 	@NotNull
@@ -38,7 +36,7 @@ public class OldCooldown extends TimerOption {
 		params[2] = params[0] + params[1];
 
 		Json<PlayerTemp> json = new PlayerTempJson(getFileUniqueId());
-		json.load().getTimerTemp().add(new TimerTemp(params, getLocation(), getScriptType()));
+		json.load().getTimerTemp().add(new TimerTemp(getLocation(), getScriptType()).set(params));
 		json.saveFile();
 		return true;
 	}
@@ -53,6 +51,6 @@ public class OldCooldown extends TimerOption {
 	@NotNull
 	protected Optional<TimerTemp> getTimerTemp() {
 		Set<TimerTemp> timers = new PlayerTempJson(getFileUniqueId()).load().getTimerTemp();
-		return get(timers, TimerTemp.hash(null, getLocation(), getScriptType()));
+		return get(timers, new TimerTemp(getLocation(), getScriptType()));
 	}
 }

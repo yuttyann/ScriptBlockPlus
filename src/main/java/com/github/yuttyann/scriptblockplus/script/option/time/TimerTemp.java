@@ -15,31 +15,32 @@ import java.util.UUID;
  */
 public class TimerTemp {
 
-    private final long[] params;
+    private long[] params;
 
     private final UUID uuid;
     private final String fullCoords;
     private final ScriptType scriptType;
 
-    private TimerTemp(@Nullable UUID uuid, @NotNull Location location, @NotNull ScriptType scriptType) {
-        this.params = null;
+    public TimerTemp(@NotNull Location location, @NotNull ScriptType scriptType) {
+        this(null, location, scriptType);
+    }
+
+    public TimerTemp(@Nullable UUID uuid, @NotNull Location location, @NotNull ScriptType scriptType) {
         this.uuid = uuid;
         this.fullCoords = BlockCoords.getFullCoords(location);
         this.scriptType = scriptType;
     }
-
-    public TimerTemp(final long[] params, @NotNull Location location, @NotNull ScriptType scriptType) {
+    
+    TimerTemp set(long[] params) {
         this.params = params;
-        this.uuid = null;
-        this.fullCoords = BlockCoords.getFullCoords(location);
-        this.scriptType = scriptType;
+        return this;
     }
 
-    public TimerTemp(final long[] params, @NotNull UUID uuid, @NotNull Location location, @NotNull ScriptType scriptType) {
-        this.params = params;
-        this.uuid = uuid;
-        this.fullCoords = BlockCoords.getFullCoords(location);
-        this.scriptType = scriptType;
+    public int getSecond() {
+        if (params != null && params[2] > System.currentTimeMillis()) {
+            return Math.toIntExact((params[2] - System.currentTimeMillis()) / 1000L);
+        }
+        return 0;
     }
 
     @Nullable
@@ -47,24 +48,13 @@ public class TimerTemp {
         return uuid;
     }
 
-    public int getSecond() {
-        if (params[2] > System.currentTimeMillis()) {
-            return Math.toIntExact((params[2] - System.currentTimeMillis()) / 1000L);
-        }
-        return 0;
-    }
-
     @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof TimerTemp)) {
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof TimerTemp)) {
             return false;
         }
-        TimerTemp temp = (TimerTemp) o;
+        TimerTemp temp = (TimerTemp) obj;
         return Objects.equals(uuid, temp.uuid) && fullCoords.equals(temp.fullCoords) && scriptType.equals(temp.scriptType);
-    }
-
-    public static int hash(@Nullable UUID uuid, @NotNull Location location, @NotNull ScriptType scriptType) {
-        return new TimerTemp(uuid, location, scriptType).hashCode();
     }
 
     @Override

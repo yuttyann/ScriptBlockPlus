@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
@@ -14,11 +15,8 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus Execute オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "execute", syntax = "@execute:")
 public class Execute extends BaseOption {
-
-	public Execute() {
-		super("execute", "@execute:");
-	}
 
 	@Override
 	@NotNull

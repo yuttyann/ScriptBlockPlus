@@ -4,7 +4,7 @@ version: ${project.version}
 description: ${project.description}
 author: yuttyann44581
 website: ${project.url}
-# api-version: 1.13
+api-version: 1.13
 softdepend: [ScriptBlock, Vault, PlaceholderAPI]
 
 commands:
@@ -13,7 +13,7 @@ commands:
     usage: |
            /<command> tool - get the scriptblock tools
            /<command> reload - reload the plugin
-           /<command> backup - Make a backup of the plugin data
+           /<command> backup - make a backup of the plugin data
            /<command> checkver - check new version
            /<command> datamigr - migrate old data from ScriptBlock to ScriptBlockPlus
            /<command> export <sound | material> - output BukkitAPI Sound and Material as text

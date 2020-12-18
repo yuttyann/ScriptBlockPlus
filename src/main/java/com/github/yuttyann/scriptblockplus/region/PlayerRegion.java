@@ -5,6 +5,10 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus PlayerRegion クラス
+ * @author yuttyann44581
+ */
 public class PlayerRegion implements Region {
 
 	private World world;
@@ -47,7 +51,6 @@ public class PlayerRegion implements Region {
 	}
 
 	@Override
-	@NotNull
 	public boolean hasPositions() {
 		return true;
 	}

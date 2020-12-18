@@ -79,6 +79,6 @@ public class CommandData {
 		if (permissions == null || permissions.size() == 0) {
 			return true;
 		}
-		return StreamUtils.anyMatch(permissions, s -> Permission.has(sender, s));
+		return permissions.stream().anyMatch(s -> Permission.has(sender, s));
 	}
 }

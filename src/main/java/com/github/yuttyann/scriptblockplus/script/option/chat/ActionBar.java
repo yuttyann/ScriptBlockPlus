@@ -1,31 +1,26 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
-import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * ScriptBlockPlus ActionBar オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "actionbar", syntax = "@actionbar:")
 public class ActionBar extends BaseOption {
-
-	public ActionBar() {
-		super("actionbar", "@actionbar:");
-	}
 
 	@Override
 	@NotNull
@@ -42,27 +37,22 @@ public class ActionBar extends BaseOption {
 			int stay = Integer.parseInt(array[1]);
 			new Task(stay, message).runTaskTimer(getPlugin(), 0, 20);
 		} else {
-			sendActionBar(message);
+			send(getSBPlayer(), message);
 		}
 		return true;
 	}
 
-	private void sendActionBar(@NotNull String message) throws ReflectiveOperationException {
-		Optional<Player> value = Optional.ofNullable(getSBPlayer().getPlayer());
-		if (!value.isPresent()) {
-			return;
-		}
-		Player player = value.get();
+	public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) throws ReflectiveOperationException {
 		if (Utils.isCBXXXorLater("1.11")) {
-			String command = "title " + player.getName() + " actionbar " + "{\"text\":\"" + message + "\"}";
-			LogAdmin.action(player.getWorld(), l -> Bukkit.dispatchCommand(player, command));
+			String command = "title " + sbPlayer.getName() + " actionbar " + "{\"text\":\"" + message + "\"}";
+			Utils.tempOP(sbPlayer, () -> Utils.dispatchCommand(sbPlayer, command));
 		} else if (Utils.isPlatform()) {
 			String chatSerializer = "IChatBaseComponent$ChatSerializer";
 			Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
 			Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
 			Class<?>[] array = { PackageType.NMS.getClass("IChatBaseComponent"), byte.class };
 			Constructor<?> packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", array);
-			PackageType.sendPacket(player, packetPlayOutChat.newInstance(component, (byte) 2));
+			PackageType.sendPacket(sbPlayer.getPlayer(), packetPlayOutChat.newInstance(component, (byte) 2));
 		} else {
 			String platforms = SBConfig.PLATFORMS.getValue().stream().map(String::valueOf).collect(Collectors.joining(", "));
 			throw new UnsupportedOperationException("Unsupported server. | Supported Servers <" + platforms + ">");
@@ -88,7 +78,7 @@ public class ActionBar extends BaseOption {
 				if (!getSBPlayer().isOnline() || tick++ >= stay) {
 					cancel();
 				}
-				sendActionBar(isCancelled() ? "" : message);
+				send(getSBPlayer(), isCancelled() ? "" : message);
 			} catch (Exception e) {
 				cancel();
 			}

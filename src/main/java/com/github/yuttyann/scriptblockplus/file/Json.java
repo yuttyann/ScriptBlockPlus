@@ -1,8 +1,8 @@
-package com.github.yuttyann.scriptblockplus.file.json;
+package com.github.yuttyann.scriptblockplus.file;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.reflection.ClassType;
-import com.github.yuttyann.scriptblockplus.file.SBFiles;
+import com.github.yuttyann.scriptblockplus.file.json.FieldExclusion;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 
 /**
  * ScriptBlockPlus Json クラス
+ * @param <T> 値の型
  * @author yuttyann44581
  */
 public abstract class Json<T> {
@@ -121,11 +122,13 @@ public abstract class Json<T> {
             throw new IllegalArgumentException("Classes do not match " + equal);
         }
         int hash = hashCode(args);
-        T value = StreamUtils.fOrElse(list, t -> t.hashCode() == hash, null);
-        if (value == null) {
-            list.add(value = newInstance(args));
+        Optional<T> value = list.stream().filter(t -> t.hashCode() == hash).findFirst();
+        if (!value.isPresent()) {
+            T instance = newInstance(args);
+            list.add(instance);
+            return instance;
         }
-        return value;
+        return value.get();
     }
 
     protected int hashCode(@NotNull Object[] args) {

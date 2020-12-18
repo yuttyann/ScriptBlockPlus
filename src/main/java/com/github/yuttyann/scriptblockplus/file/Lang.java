@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file;
 
-import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
+import com.github.yuttyann.scriptblockplus.file.config.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.plugin.Plugin;

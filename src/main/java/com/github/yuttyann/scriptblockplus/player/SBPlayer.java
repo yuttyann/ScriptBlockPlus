@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.player;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
+import com.github.yuttyann.scriptblockplus.script.ScriptEditType;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -23,8 +24,8 @@ import java.util.UUID;
 public interface SBPlayer extends CommandSender {
 
 	/**
-	 * SBPlayerを取得します。
-	 * @param player プレイヤー(オフラインも可)
+	 * ScriptBlockPlusの{@link SBPlayer}を取得します。
+	 * @param player プレイヤー
 	 * @return {@link SBPlayer}
 	 */
 	@NotNull
@@ -33,7 +34,7 @@ public interface SBPlayer extends CommandSender {
 	}
 
 	/**
-	 * SBPlayerを取得します。
+	 * ScriptBlockPlusの{@link SBPlayer}を取得します。
 	 * @param uuid プレイヤーのUUID
 	 * @return {@link SBPlayer}
 	 */
@@ -49,15 +50,15 @@ public interface SBPlayer extends CommandSender {
 	boolean isOnline();
 
 	/**
-	 * プレイヤーを取得します。
-	 * @return プレイヤー
+	 * BukkitAPIの{@link Player}を取得します。
+	 * @return {@link Player}
 	 */
 	@NotNull
 	Player getPlayer();
 
 	/**
-	 * オフラインプレイヤーを取得します。
-	 * @return オフラインプレイヤー（オンラインの場合はキャストします。）
+	 * BukkitAPIの{@link OfflinePlayer}を取得します。
+	 * @return {@link OfflinePlayer}
 	 */
 	@NotNull
 	OfflinePlayer getOfflinePlayer();
@@ -70,8 +71,8 @@ public interface SBPlayer extends CommandSender {
 	PlayerInventory getInventory();
 
 	/**
-	 * プレイヤーのUUIDを取得します。
-	 * @return プレイヤーのUUID
+	 * プレイヤーの{@link UUID}を取得します。
+	 * @return {@link UUID}
 	 */
 	@NotNull
 	UUID getUniqueId();
@@ -105,15 +106,15 @@ public interface SBPlayer extends CommandSender {
 	ItemStack getItemInOffHand();
 
 	/**
-	 * Region（範囲選択クラス）を取得します。
-	 * @return {@link Region}
+	 * ワールドの選択範囲を取得します。
+	 * @return ワールドの選択範囲
 	 */
 	@NotNull
 	Region getRegion();
 
 	/**
-	 * ObjectMapを取得します。
-	 * @return {@link ObjectMap}
+	 * プレイヤーの格納データを取得します。
+	 * @return プレイヤーの格納データ
 	 */
 	@NotNull
 	ObjectMap getObjectMap();
@@ -131,10 +132,10 @@ public interface SBPlayer extends CommandSender {
 	void setScriptLine(@Nullable String scriptLine);
 
 	/**
-	 * アクションをセットします。
-	 * @param actionType アクション
+	 * エディットタイプをセットします。
+	 * @param editType エディットタイプ
 	 */
-	void setActionType(@Nullable String actionType);
+	void setScriptEditType(@Nullable ScriptEditType editType);
 
 	/**
 	 * ブロックの座標をセットします。
@@ -157,11 +158,11 @@ public interface SBPlayer extends CommandSender {
 	Optional<String> getScriptLine();
 
 	/**
-	 * アクションを取得します。
-	 * @return アクション（オプショナル）
+	 * エディットタイプを取得します。
+	 * @return エディットタイプ（オプショナル）
 	 */
 	@NotNull
-	Optional<String> getActionType();
+	Optional<ScriptEditType> getScriptEditType();
 
 	/**
 	 * ブロックの座標を取得します。

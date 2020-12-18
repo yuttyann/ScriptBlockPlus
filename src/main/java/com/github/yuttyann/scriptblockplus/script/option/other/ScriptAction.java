@@ -3,24 +3,23 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.event.block.Action;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+
 /**
  * ScriptBlockPlus ScriptAction オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "scriptaction", syntax = "@scriptaction:")
 public class ScriptAction extends BaseOption {
 
 	public static final String KEY = Utils.randomUUID();
-
-	public ScriptAction() {
-		super("scriptaction", "@scriptaction:");
-	}
 
 	@Override
 	@NotNull
@@ -30,9 +29,9 @@ public class ScriptAction extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		Action action = getSBRead().get(KEY);
+		Action action = getTempMap().get(KEY);
 		String[] array = StringUtils.split(getOptionValue(), ",");
-		return StreamUtils.allMatch(array, s -> equals(action, s));
+		return Arrays.stream(array).allMatch(s -> equals(action, s));
 	}
 
 	private boolean equals(@Nullable Action action, @NotNull String actionType) {
@@ -45,6 +44,7 @@ public class ScriptAction extends BaseOption {
 		return ScriptType.INTERACT.equals(getScriptType()) && action == getAction(actionType);
 	}
 
+	@Nullable
 	private Action getAction(@NotNull String actionType) {
 		if (actionType.equalsIgnoreCase("left")) {
 			return Action.LEFT_CLICK_BLOCK;

@@ -5,25 +5,25 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
-import com.github.yuttyann.scriptblockplus.file.APIVersion;
+import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.config.YamlConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.Json;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
-import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
+import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
+import com.github.yuttyann.scriptblockplus.region.CuboidRegionPaste;
+import com.github.yuttyann.scriptblockplus.region.CuboidRegionRemove;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
-import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
+import com.github.yuttyann.scriptblockplus.script.ScriptEditType;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.*;
 import com.google.common.base.Charsets;
 import org.bukkit.*;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,6 +33,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * ScriptBlockPlus ScriptBlockPlusCommand コマンドクラス
@@ -42,12 +43,6 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
 	public ScriptBlockPlusCommand(@NotNull ScriptBlock plugin) {
 		super(plugin);
-	}
-
-	@NotNull
-	@Override
-	public String getCommandName() {
-		return "ScriptBlockPlus";
 	}
 
 	@Override
@@ -100,13 +95,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			} if (equals(args[0], ScriptType.types()) && equals(args[1], "remove", "view")) {
 				return setAction(sender, args);
 			} else if (equals(args[0], "selector") && equals(args[1], "remove")) {
-				return doSelectorRemove(sender);
+				return doSelector(sender, args);
 			} else if (equals(args[0], "selector") && equals(args[1], "paste")) {
-				return doSelectorPaste(sender, args);
+				return doSelector(sender, args);
 			}
 		} else if (args.length > 2) {
 			if (args.length < 5 && equals(args[0], "selector") && equals(args[1], "paste")) {
-				return doSelectorPaste(sender, args);
+				return doSelector(sender, args);
 			} else if (equals(args[0], ScriptType.types())) {
 				if (args.length == 6 && equals(args[1], "run")) {
 					return doRun(sender, args);
@@ -138,8 +133,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 				OutputStream os = new FileOutputStream(file);
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, Charsets.UTF_8))
 			) {
-				for (Enum<?> t : isSound ? Sound.values() : Material.values()) {
-					writer.write(t.name());
+				for (Enum<?> e : isSound ? Sound.values() : Material.values()) {
+					writer.write(e.name());
 					writer.newLine();
 				}
 			} catch (IOException e) {
@@ -156,9 +151,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return false;
 		}
 		Player player = (Player) sender;
-		player.getInventory().addItem(ItemUtils.getBlockSelector());
-		player.getInventory().addItem(ItemUtils.getScriptEditor(ScriptType.INTERACT));
-		player.getInventory().addItem(ItemUtils.getScriptViewer());
+		ItemAction.getItems().forEach(i -> player.getInventory().addItem(i.getItem()));
 		Utils.updateInventory(player);
 		SBConfig.GIVE_TOOL.send(player);
 		return true;
@@ -224,19 +217,17 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		String path = "plugins/ScriptBlock/BlocksData/";
 		File interactFile = new File(path + "interact_Scripts.yml");
 		File walkFile = new File(path + "walk_Scripts.yml");
-		Player player = (Player) sender;
 		if (!walkFile.exists() && !interactFile.exists()) {
 			SBConfig.NOT_SCRIPT_BLOCK_FILE.send(sender);
 		} else {
-			UUID uuid = player.getUniqueId();
-			String time = Utils.getFormatTime();
 			SBConfig.DATAMIGR_START.send(sender);
+			UUID uuid = ((Player) sender).getUniqueId();
 			new Thread(() -> {
 				if (interactFile.exists()) {
-					convart(uuid, time, YamlConfig.load(getPlugin(), interactFile, false), ScriptType.INTERACT);
+					convart(uuid, interactFile, ScriptType.INTERACT);
 				}
 				if (walkFile.exists()) {
-					convart(uuid, time, YamlConfig.load(getPlugin(), walkFile, false), ScriptType.WALK);
+					convart(uuid, walkFile, ScriptType.WALK);
 				}
 				SBConfig.DATAMIGR_END.send(sender);
 			}).start();
@@ -244,24 +235,21 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		return true;
 	}
 
-	private void convart(@NotNull UUID uuid, @NotNull String time, @NotNull YamlConfig scriptFile, @NotNull ScriptType scriptType) {
+	private void convart(@NotNull UUID uuid, @NotNull File file, @NotNull ScriptType scriptType) {
 		Json<BlockScript> json = new BlockScriptJson(scriptType);
 		BlockScript blockScript = json.load();
-		for (String world : scriptFile.getKeys()) {
-			World tWorld = Objects.requireNonNull(Utils.getWorld(world));
-			for (String coords : scriptFile.getKeys(world)) {
-				List<String> script = scriptFile.getStringList(world + "." + coords);
+		YamlConfig scriptFile = YamlConfig.load(getPlugin(), file, false);
+		for (String name : scriptFile.getKeys()) {
+			World world = Utils.getWorld(name);
+			for (String coords : scriptFile.getKeys(name)) {
+				List<String> script = scriptFile.getStringList(name + "." + coords);
 				if (script.size() > 0 && script.get(0).startsWith("Author:")) {
 					script.remove(0);
 				}
-				for (int i = 0; i < script.size(); i++) {
-					if (script.get(i).contains("@cooldown:")) {
-						script.set(i, StringUtils.replace(script.get(i), "@cooldown:", "@oldcooldown:"));
-					}
-				}
-				ScriptParam scriptParam = blockScript.get(BlockCoords.fromString(tWorld, coords));
+				script.replaceAll(s -> StringUtils.replace(s, "@cooldown:", "@oldcooldown:"));
+				ScriptParam scriptParam = blockScript.get(BlockCoords.fromString(world, coords));
 				scriptParam.getAuthor().add(uuid);
-				scriptParam.setLastEdit(time);
+				scriptParam.setLastEdit(Utils.getFormatTime());
 				scriptParam.setScript(script);
 			}
 		}
@@ -289,7 +277,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return false;
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
-		if (sbPlayer.getScriptLine().isPresent() || sbPlayer.getActionType().isPresent()) {
+		if (sbPlayer.getScriptLine().isPresent() || sbPlayer.getScriptEditType().isPresent()) {
 			SBConfig.ERROR_ACTION_DATA.send(sbPlayer);
 			return true;
 		}
@@ -302,75 +290,48 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			sbPlayer.setScriptLine(script);
 		}
 		ActionType actionType = ActionType.valueOf(args[1].toUpperCase());
-		sbPlayer.setActionType(actionType.getKey(scriptType));
+		sbPlayer.setScriptEditType(new ScriptEditType(actionType, scriptType));
 		SBConfig.SUCCESS_ACTION_DATA.replace(scriptType.type() + "-" + actionType.name().toLowerCase()).send(sbPlayer);
 		return true;
 	}
 
-	private boolean doSelectorRemove(@NotNull CommandSender sender) {
+	private boolean doSelector(@NotNull CommandSender sender, @NotNull String[] args) {
 		if (!hasPermission(sender, Permission.COMMAND_SELECTOR)) {
 			return false;
 		}
-		Player player = (Player) sender;
-		Region region = SBPlayer.fromPlayer(player).getRegion();
-		if (!region.hasPositions()) {
-			SBConfig.NOT_SELECTION.send(sender);
-			return true;
-		}
-		CuboidRegionBlocks regionBlocks = new CuboidRegionBlocks(region);
-		Set<Block> blocks = regionBlocks.getBlocks();
-		StringBuilder builder = new StringBuilder();
-		for (ScriptType scriptType : ScriptType.values()) {
-			ScriptEdit scriptEdit = new ScriptEdit(scriptType);
-			if (!scriptEdit.exists()) {
-				continue;
-			}
-			for (Block block : blocks) {
-				if (scriptEdit.lightRemove(block.getLocation()) && builder.indexOf(scriptType.type()) == -1) {
-					builder.append(builder.length() == 0 ? "" : ", ").append(scriptType.type());
-				}
-			}
-			scriptEdit.save();
-		}
-		if (builder.length() == 0) {
-			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
-		} else {
-			String types = builder.toString();
-			SBConfig.SELECTOR_REMOVE.replace(types, regionBlocks.getCount()).send(player);
-			SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, regionBlocks).console();
-		}
-		return true;
-	}
-
-	private boolean doSelectorPaste(@NotNull CommandSender sender, @NotNull String[] args) {
-		if (!hasPermission(sender, Permission.COMMAND_SELECTOR)) {
-			return false;
-		}
-		boolean pasteonair = args.length > 2 && Boolean.parseBoolean(args[2]);
-		boolean overwrite = args.length > 3 && Boolean.parseBoolean(args[3]);
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
-		if (!sbPlayer.getClipboard().isPresent()) {
-			SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
-			return true;
-		}
 		Region region = sbPlayer.getRegion();
 		if (!region.hasPositions()) {
 			SBConfig.NOT_SELECTION.send(sender);
 			return true;
 		}
-		CuboidRegionBlocks regionBlocks = new CuboidRegionBlocks(region);
-		SBClipboard clipboard = sbPlayer.getClipboard().get();
-		sbPlayer.setClipboard(null);
-		for (Block block : regionBlocks.getBlocks()) {
-			if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
-				continue;
+		if (equals(args[1], "paste")) {
+			if (!sbPlayer.getClipboard().isPresent()) {
+				SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
+				return true;
 			}
-			clipboard.lightPaste(block.getLocation(), overwrite);
+			SBClipboard clipboard = sbPlayer.getClipboard().get();
+			try {
+				boolean pasteonair = args.length > 2 && Boolean.parseBoolean(args[2]);
+				boolean overwrite = args.length > 3 && Boolean.parseBoolean(args[3]);
+				CuboidRegionPaste regionPaste = new CuboidRegionPaste(clipboard, region).paste(pasteonair, overwrite);
+				String scriptType = regionPaste.getScriptType().type();
+				SBConfig.SELECTOR_PASTE.replace(scriptType, regionPaste.getRegionBlocks().getCount()).send(sbPlayer);
+				SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptType, regionPaste.getRegionBlocks()).console();
+			} finally {
+				sbPlayer.setClipboard(null);
+			}
+		} else {
+			CuboidRegionRemove regionRemove = new CuboidRegionRemove(region).remove();
+			Set<ScriptType> scriptTypes = regionRemove.getScriptTypes();
+			if (scriptTypes.size() == 0) {
+				SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
+			} else {
+				String types = scriptTypes.stream().map(ScriptType::type).collect(Collectors.joining(", "));
+				SBConfig.SELECTOR_REMOVE.replace(types, regionRemove.getRegionBlocks().getCount()).send(sbPlayer);
+				SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, regionRemove.getRegionBlocks()).console();
+			}
 		}
-		clipboard.save();
-		String scriptType = clipboard.getScriptType().type();
-		SBConfig.SELECTOR_PASTE.replace(scriptType, regionBlocks.getCount()).send(sbPlayer);
-		SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptType, regionBlocks).console();
 		return true;
 	}
 

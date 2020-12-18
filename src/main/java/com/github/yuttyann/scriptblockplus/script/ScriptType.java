@@ -1,12 +1,12 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import com.github.yuttyann.scriptblockplus.listener.item.action.ScriptEditor;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -39,7 +39,6 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 		this.ordinal = scriptType == null ? TYPES.size() : scriptType.ordinal;
 		if (scriptType == null) {
 			TYPES.put(name, this);
-			new ScriptEditor(this).put();
 		}
 	}
 
@@ -153,11 +152,12 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	 */
 	@NotNull
 	public static ScriptType valueOf(int ordinal) {
-		ScriptType scriptType = StreamUtils.fOrElse(TYPES.values(), s -> s.ordinal == ordinal, null);
-		if (scriptType == null) {
-			throw new NullPointerException(ordinal + " does not exist");
+		for (ScriptType scriptType : TYPES.values()) {
+			if (scriptType.ordinal == ordinal) {
+				return scriptType;
+			}
 		}
-		return scriptType;
+		throw new NullPointerException(ordinal + " does not exist");
 	}
 
 	/**

@@ -2,17 +2,16 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus Say オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "say", syntax = "@say ")
 public class Say extends BaseOption {
-
-	public Say() {
-		super("say", "@say ");
-	}
 
 	@Override
 	@NotNull
@@ -22,6 +21,7 @@ public class Say extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		return executeCommand(getSBPlayer(), "say " + getOptionValue(), true);
+		String command = "say " + getOptionValue();
+		return Utils.tempOP(getSBPlayer(), () -> Utils.dispatchCommand(getSBPlayer(), command));
 	}
 }

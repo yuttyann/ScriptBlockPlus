@@ -13,13 +13,13 @@ import java.util.UUID;
  * ScriptBlockPlus ScriptMap クラス
  * @author yuttyann44581
  */
-abstract class ScriptMap extends ScriptListener implements ObjectMap {
+public abstract class ScriptMap extends ScriptListener implements ObjectMap {
 
 	private static final Map<UUID, Map<String, Object>> OBJECT_MAP = new HashMap<>();
 
 	private final UUID ramdomId = UUID.randomUUID();
 
-	ScriptMap(@NotNull ScriptListener listener) {
+	protected ScriptMap(@NotNull ScriptListener listener) {
 		super(listener);
 	}
 

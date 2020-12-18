@@ -33,7 +33,7 @@ public enum ClassType {
 		}
 	}
 
-	private ClassType(@NotNull Class<?> primitive, @NotNull Class<?> reference) {
+	ClassType(@NotNull Class<?> primitive, @NotNull Class<?> reference) {
 		this.primitive = primitive;
 		this.reference = reference;
 	}
@@ -115,20 +115,5 @@ public enum ClassType {
 			types[index] = getReference(objects[index].getClass());
 		}
 		return types;
-	}
-
-	public static boolean compare(Class<?>[] primary, Class<?>[] secondary) {
-		if (primary == null || secondary == null || primary.length != secondary.length) {
-			return false;
-		}
-		for (int index = 0; index < primary.length; index++) {
-			Class<?> primaryClass = primary[index];
-			Class<?> secondaryClass = secondary[index];
-			if (primaryClass.equals(secondaryClass) || primaryClass.isAssignableFrom(secondaryClass)) {
-				continue;
-			}
-			return false;
-		}
-		return true;
 	}
 }

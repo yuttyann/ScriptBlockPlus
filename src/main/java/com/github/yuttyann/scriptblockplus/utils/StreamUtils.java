@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -41,71 +40,9 @@ public final class StreamUtils {
 		collection.forEach(t -> filter(t, filter, action));
 	}
 
-	@Nullable
-	public static <T> T fOrElse(@NotNull T[] array, @NotNull Predicate<T> filter, @Nullable T other) {
-		for (T t : array) {
-			if (filter.test(t)) {
-				return t;
-			}
-		}
-		return other;
-	}
-
-	@Nullable
-	public static <T> T fOrElse(@NotNull Collection<T> collection, @NotNull Predicate<T> filter, @Nullable T other) {
-		for (T t : collection) {
-			if (filter.test(t)) {
-				return t;
-			}
-		}
-		return other;
-	}
-
-	public static <T, R> void mForEach(@NotNull T[] array, @NotNull Function<T, R> mapper, @NotNull Consumer<R> action) {
-		forEach(array, t -> action.accept(mapper.apply(t)));
-	}
-
-	public static <T, R> void mForEach(@NotNull Collection<T> collection, @NotNull Function<T, R> mapper, @NotNull Consumer<R> action) {
-		collection.forEach(t -> action.accept(mapper.apply(t)));
-	}
-
-	public static <T> boolean allMatch(@NotNull T[] array, @NotNull Predicate<T> filter) {
-		return match(array, filter, false);
-	}
-
-	public static <T> boolean allMatch(@NotNull Collection<T> collection, @NotNull Predicate<T> filter) {
-		return match(collection, filter, false);
-	}
-
-	public static <T> boolean anyMatch(@NotNull T[] array, @NotNull Predicate<T> filter) {
-		return match(array, filter, true);
-	}
-
-	public static <T> boolean anyMatch(@NotNull Collection<T> collection, @NotNull Predicate<T> filter) {
-		return match(collection, filter, true);
-	}
-
 	public static <T> void filter(@NotNull T t, Predicate<T> filter, @NotNull Consumer<T> action) {
 		if (filter.test(t)) {
 			action.accept(t);
 		}
-	}
-
-	private static <T> boolean match(@NotNull T[] array, @NotNull Predicate<T> filter, boolean anyMatch) {
-		for (T t : array) {
-			if (anyMatch == filter.test(t)) {
-				return anyMatch;
-			}
-		}
-		return !anyMatch;
-	}
-
-	private static <T> boolean match(@NotNull Collection<T> collection, @NotNull Predicate<T> filter, boolean anyMatch) {
-		for (T t : collection) {
-			if (anyMatch == filter.test(t)) {
-				return anyMatch;
-			}
-		}
-		return !anyMatch;
 	}
 }

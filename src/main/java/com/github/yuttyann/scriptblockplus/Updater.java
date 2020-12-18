@@ -105,7 +105,7 @@ public final class Updater {
 		isUpperVersion = Utils.getVersionInt(latestVersion) > Utils.getVersionInt(pluginVersion);
 	}
 
-	public boolean execute(@NotNull CommandSender sender) {
+	public boolean run(@NotNull CommandSender sender) {
 		if (!SBConfig.UPDATE_CHECKER.getValue() || !isUpperVersion) {
 			return false;
 		}

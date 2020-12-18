@@ -6,15 +6,27 @@ import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
+/**
+ * ScriptBlockPlus LogAdmin 列挙型
+ * @author yuttyann44581
+ */
 public enum LogAdmin {
+
+    /**
+     * コマンドログを表示する
+     */
     TRUE(true),
+
+    /**
+     * コマンドログを非表示にする
+     */
     FALSE(false);
 
     private boolean value;
 
-    private LogAdmin(boolean value) {
+    LogAdmin(boolean value) {
         this.value = value;
     }
 
@@ -49,13 +61,13 @@ public enum LogAdmin {
         }
     }
 
-    public static <T> T function(@NotNull World world, @NotNull Function<LogAdmin, T> function) {
+    public static <T> T supplier(@NotNull World world, @NotNull Supplier<T> supplier) {
         LogAdmin oldValue = LogAdmin.get(world);
         try {
             if (LogAdmin.FALSE != oldValue) {
                 LogAdmin.FALSE.set(world);
             }
-            return function.apply(oldValue);
+            return supplier.get();
         } finally {
             oldValue.set(world);
         }

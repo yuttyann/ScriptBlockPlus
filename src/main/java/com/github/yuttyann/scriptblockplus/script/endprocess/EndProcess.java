@@ -23,13 +23,13 @@ public interface EndProcess extends SBInstance<EndProcess> {
 
 	/**
 	 * スクリプトの実行が最後まで成功した場合に呼び出されます。
-	 * @param sbRead スクリプトの実行クラス
+	 * @param sbRead {@link SBRead}
 	 */
 	void success(@NotNull SBRead sbRead);
 
 	/**
 	 * スクリプトの実行が途中で失敗した場合に呼び出されます。
-	 * @param sbRead スクリプトの実行クラス
+	 * @param sbRead {@link SBRead}
 	 */
 	void failed(@NotNull SBRead sbRead);
 }

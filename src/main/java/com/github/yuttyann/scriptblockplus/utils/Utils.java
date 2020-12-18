@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
+import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.hook.CommandSelector;
 import com.github.yuttyann.scriptblockplus.hook.plugin.PsudoCommand;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 
@@ -102,6 +104,21 @@ public final class Utils {
 		}
 	}
 
+	public static boolean tempOP(@NotNull SBPlayer sbPlayer, @NotNull Supplier<Boolean> supplier) {
+		return sbPlayer.isOnline() && LogAdmin.supplier(sbPlayer.getWorld(), () -> {
+			if (sbPlayer.isOp()) {
+				return supplier.get();
+			} else {
+				try {
+					sbPlayer.setOp(true);
+					return supplier.get();
+				} finally {
+					sbPlayer.setOp(false);
+				}
+			}
+		});
+	}
+
 	public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
@@ -122,7 +139,7 @@ public final class Utils {
 		return Bukkit.dispatchCommand(sender, command);
 	}
 
-	@Nullable
+	@NotNull
 	public static World getWorld(@NotNull String name) {
 		Validate.notNull(name, "Name cannot be null");
 		World world = Bukkit.getWorld(name);
@@ -132,7 +149,7 @@ public final class Utils {
 				world = Bukkit.createWorld(WorldCreator.name(name));
 			}
 		}
-		return world;
+		return Objects.requireNonNull(world);
 	}
 
 	@SuppressWarnings("deprecation")

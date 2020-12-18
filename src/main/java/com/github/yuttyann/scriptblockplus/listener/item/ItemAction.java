@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * ScriptBlockPlus ItemAction クラス
@@ -22,16 +23,14 @@ public abstract class ItemAction implements Cloneable {
 
     private static final Set<ItemAction> ITEMS = new HashSet<>();
 
-    protected final ItemStack item;
-
-    protected Player player;
-    protected Action action;
-    protected Location location;
-    protected boolean isAIR;
-    protected boolean isSneaking;
+    private final ItemStack item;
 
     public ItemAction(@NotNull ItemStack item) {
         this.item = new UnmodifiableItemStack(item);
+    }
+
+    public static <T extends ItemAction> void register(@NotNull T itemAction) {
+        ITEMS.add(itemAction);
     }
 
     @NotNull
@@ -39,34 +38,9 @@ public abstract class ItemAction implements Cloneable {
         return ITEMS;
     }
 
-    public final void put() {
-        ITEMS.add(this);
-    }
-
     @NotNull
     public ItemStack getItem() {
         return item;
-    }
-
-    public boolean hasPermission(@NotNull Permissible permissible) {
-        return true;
-    }
-
-    public boolean equals(@Nullable ItemStack item) {
-        return item != null && ItemUtils.isItem(this.item, item.getType(), ItemUtils.getName(item));
-    }
-
-    @Override
-    public boolean equals(@Nullable Object obj) {
-        if (!(obj instanceof ItemAction)) {
-            return false;
-        }
-        return equals(((ItemAction) obj).item);
-    }
-
-    @Override
-    public int hashCode() {
-        return item.hashCode();
     }
 
     @Override
@@ -79,27 +53,45 @@ public abstract class ItemAction implements Cloneable {
         }
     }
 
-    public abstract boolean run();
-
-    public static synchronized boolean run(@Nullable ItemStack item, @NotNull Player player, @NotNull Action action, @Nullable Location location, boolean isAIR, boolean isSneaking) {
-        if (item == null) {
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof ItemAction)) {
             return false;
         }
-        Optional<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).findFirst();
-        if (itemAction.isPresent()) {
-            ItemAction value = itemAction.get().clone();
-            value.player = player;
-            value.action = action;
-            value.location = location;
-            value.isAIR = isAIR;
-            value.isSneaking = isSneaking;
-            return value.run();
-        }
-        return false;
+        return equals(((ItemAction) obj).item);
     }
+
+    private boolean equals(@Nullable ItemStack item) {
+        return item != null && ItemUtils.isItem(this.item, item.getType(), ItemUtils.getName(item));
+    }
+
+    @Override
+    public int hashCode() {
+        return item.hashCode();
+    }
+
+    public boolean hasPermission(@NotNull Permissible permissible) {
+        return true;
+    }
+
+    public void slot(@NotNull ChangeSlot changeSlot) {
+        // アイテムスロットを移動した際に呼ばれる
+    }
+
+    public abstract boolean run(@NotNull RunItem runItem);
 
     public static boolean has(@NotNull Permissible permissible, @Nullable ItemStack item, boolean permission) {
         Optional<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).findFirst();
         return itemAction.filter(i -> !permission || i.hasPermission(permissible)).isPresent();
+    }
+
+    public static void callSlot(@NotNull Player player, @Nullable ItemStack item, boolean isNewSlot) {
+        Stream<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player));
+        itemAction.findFirst().ifPresent(i ->  i.clone().slot(new ChangeSlot(player, item, isNewSlot)));
+    }
+
+    public static boolean callRun(@NotNull Player player, @Nullable ItemStack item, @Nullable Location location, @NotNull Action action) {
+        Stream<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player));
+        return itemAction.findFirst().map(i -> i.clone().run(new RunItem(player, item, location, action))).orElse(false);
     }
 }

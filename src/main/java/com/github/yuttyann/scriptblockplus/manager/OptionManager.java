@@ -1,8 +1,8 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
-import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionPriority;
 import com.github.yuttyann.scriptblockplus.script.option.chat.*;
 import com.github.yuttyann.scriptblockplus.script.option.other.*;
 import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
@@ -12,7 +12,6 @@ import com.github.yuttyann.scriptblockplus.script.option.vault.*;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +22,7 @@ import java.util.Optional;
  */
 public final class OptionManager {
 
-    private static final IndexedLinkedMap OPTION_MAP = new IndexedLinkedMap();
+    private static final OptionMap OPTION_MAP = new OptionMap();
 
     static {
         OPTION_MAP.put(new ScriptAction());
@@ -55,47 +54,46 @@ public final class OptionManager {
         OPTION_MAP.updateOrdinal();
     }
 
-    public static void register(@NotNull OptionPriority priority, @NotNull SBConstructor<Option> option) {
-        Option instance = option.newInstance(InstanceType.REFLECTION);
-        OPTION_MAP.put(priority, instance.getSyntax(), instance);
+    public static void register(@NotNull OptionPriority priority) {
+        OPTION_MAP.put(priority);
         OPTION_MAP.updateOrdinal();
     }
 
     public static void sort(@NotNull List<String> scripts) {
-        scripts.sort(Comparator.comparingInt(s1 -> get(s1).ordinal()));
+        scripts.sort(Comparator.comparingInt(s -> get(s).ordinal()));
     }
 
     public static boolean has(@NotNull String syntax) {
-        return StreamUtils.fOrElse(OPTION_MAP.sValues(), o -> o.isOption(syntax), null) != null;
+        return OPTION_MAP.values().stream().anyMatch(o -> o.isOption(syntax));
     }
 
     @NotNull
-    public static Option get(@NotNull String syntax) {
-        Optional<Option> value = Optional.ofNullable(StreamUtils.fOrElse(OPTION_MAP.sValues(), o -> o.isOption(syntax), null));
-        return value.orElseThrow(() -> new NullPointerException("Option does not exist."));
+    private static Option get(@NotNull String syntax) {
+        Optional<Option> option = OPTION_MAP.values().stream().filter(o -> o.isOption(syntax)).findFirst();
+        return option.orElseThrow(() -> new NullPointerException("Option does not exist."));
     }
 
     @NotNull
-    public static Option newInstance(@NotNull Class<? extends Option> option, @NotNull InstanceType instanceType) {
-        for (Option value : OPTION_MAP.sValues()) {
-            if (!option.equals(value.getClass())) {
+    public static Option newInstance(@NotNull String syntax) {
+        return get(syntax).newInstance();
+    }
+
+    @NotNull
+    public static Option newInstance(@NotNull Class<? extends Option> optionClass, @NotNull InstanceType instanceType) {
+        for (Option option : OPTION_MAP.values()) {
+            if (!optionClass.equals(option.getClass())) {
                 continue;
             }
             if (instanceType == InstanceType.REFLECTION) {
-                return new SBConstructor<>(option).newInstance(InstanceType.REFLECTION);
+                return new SBConstructor<>(optionClass).newInstance(InstanceType.REFLECTION);
             }
-            return value.newInstance();
+            return option.newInstance();
         }
-        throw new NullPointerException(option.getName() + " does not exist");
-    }
-
-    @NotNull
-    public static List<Option> getList() {
-        return Collections.unmodifiableList(OPTION_MAP.values());
+        throw new NullPointerException(optionClass.getName() + " does not exist");
     }
 
     @NotNull
     public static String[] getSyntaxs() {
-        return StreamUtils.toArray(OPTION_MAP.values(), Option::getSyntax, new String[OPTION_MAP.size()]);
+        return StreamUtils.toArray(OPTION_MAP.list(), Option::getSyntax, new String[OPTION_MAP.size()]);
     }
 }

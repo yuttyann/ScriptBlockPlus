@@ -1,12 +1,11 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
-import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,11 +13,8 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus Title オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "title", syntax = "@title:")
 public class Title extends BaseOption {
-
-	public Title() {
-		super("title", "@title:");
-	}
 
 	@Override
 	@NotNull
@@ -40,19 +36,21 @@ public class Title extends BaseOption {
 				fadeOut = Integer.parseInt(times[2]);
 			}
 		}
-		sendTitle(getPlayer(), title, subtitle, fadeIn, stay, fadeOut);
+		sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		return true;
 	}
 
-	private void sendTitle(@NotNull Player player, @Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
+	private void sendTitle(@Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
+		SBPlayer sbPlayer = getSBPlayer();
 		if (Utils.isCBXXXorLater("1.12")) {
-			player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+			sbPlayer.getPlayer().sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		} else {
-			String prefix = "title " + player.getName();
-			LogAdmin.action(getSBPlayer().getWorld(), l -> {
-				Bukkit.dispatchCommand(player, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
-				Bukkit.dispatchCommand(player, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
-				Bukkit.dispatchCommand(player, prefix + " title {\"text\":\"" + title + "\"}");
+			String prefix = "title " + sbPlayer.getName();
+			Utils.tempOP(getSBPlayer(), () -> {
+				Utils.dispatchCommand(sbPlayer, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
+				Utils.dispatchCommand(sbPlayer, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
+				Utils.dispatchCommand(sbPlayer, prefix + " title {\"text\":\"" + title + "\"}");
+				return true;
 			});
 		}
 	}

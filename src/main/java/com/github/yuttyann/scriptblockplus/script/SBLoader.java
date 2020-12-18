@@ -3,7 +3,7 @@ package com.github.yuttyann.scriptblockplus.script;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
-import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
+import com.github.yuttyann.scriptblockplus.file.config.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -39,10 +39,10 @@ public final class SBLoader {
 	}
 
 	public void forEach(@NotNull Consumer<SBLoader> action) {
-        for (String world : scriptFile.getKeys()) {
-			World tWorld = Objects.requireNonNull(Utils.getWorld(world));
-			for (String xyz : scriptFile.getKeys(world)) {
-				action.accept(createPath(BlockCoords.fromString(tWorld, xyz)));
+        for (String name : scriptFile.getKeys()) {
+			World world = Utils.getWorld(name);
+			for (String xyz : scriptFile.getKeys(name)) {
+				action.accept(createPath(BlockCoords.fromString(world, xyz)));
 			}
 		}
 	}

@@ -194,8 +194,8 @@ public class BlockCoords {
     }
 
     /**
-     * Locationのインスタンスを生成します。
-     * @return Location
+     * {@link Location}のインスタンスを生成します。
+     * @return {@link Location}
      */
     @NotNull
     public Location toLocation() {

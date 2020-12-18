@@ -1,18 +1,16 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
-import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -24,15 +22,6 @@ public abstract class BaseOption extends Option {
 	private SBRead sbRead;
 
 	/**
-	 * コンストラクタ
-	 * @param name オプション名 例:"example"
-	 * @param syntax オプション構文 例:"@example: "
-	 */
-	public BaseOption(@NotNull String name, @NotNull String syntax) {
-		super(name, syntax);
-	}
-
-	/**
 	 * プラグインを取得します。
 	 * @return プラグイン
 	 */
@@ -42,17 +31,8 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * プレイヤーを取得します。
-	 * @return プレイヤー
-	 */
-	@NotNull
-	protected final Player getPlayer() {
-		return Objects.requireNonNull(getSBPlayer().getPlayer());
-	}
-
-	/**
-	 * SBPlayerを取得します。
-	 * @return SBPlayer
+	 * ScriptBlockPlusの{@link SBPlayer}を取得します。
+	 * @return {@link SBPlayer}
 	 */
 	@NotNull
 	protected final SBPlayer getSBPlayer() {
@@ -60,8 +40,17 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * UUIDを取得します。
-	 * @return プレイヤーのUUID
+	 * BukkitAPIの{@link Player}を取得します。
+	 * @return {@link Player}
+	 */
+	@NotNull
+	protected final Player getPlayer() {
+		return sbRead.getSBPlayer().getPlayer();
+	}
+
+	/**
+	 * プレイヤーの{@link UUID}を取得します。
+	 * @return {@link UUID}
 	 */
 	@NotNull
 	protected final UUID getUniqueId() {
@@ -78,7 +67,7 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * 編集不可な座標を取得します。
+	 * スクリプトの座標を取得します。
 	 * @return スクリプトの座標
 	 */
 	@NotNull
@@ -105,11 +94,11 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * スクリプトの実行クラスを取得します。
-	 * @return スクリプトの実行クラス
+	 * スクリプトの一時データ構造を取得します。
+	 * @return 一時的なデータ構造（全ての実行が終了したら初期化されます。）
 	 */
 	@NotNull
-	protected final SBRead getSBRead() {
+	protected final ObjectMap getTempMap() {
 		return sbRead;
 	}
 
@@ -122,16 +111,16 @@ public abstract class BaseOption extends Option {
 	}
 
 	/**
-	 * オプションの処理を実行します
+	 * オプションの処理を実行します。
 	 * @throws Exception オプションの処理内で例外が発生した時にスローされます。
-	 * @return 実行に成功した場合はtrue
+	 * @return 有効な場合はtrue
 	 */
 	protected abstract boolean isValid() throws Exception;
 
 	/**
-	 * オプションを実行します。
-	 * @param sbRead スクリプトの実行クラス
-	 * @return 実行に成功した場合はtrue
+	 * オプションを呼び出します。
+	 * @param sbRead {@link SBRead}
+	 * @return 有効な場合はtrue
 	 */
 	@Override
 	@Deprecated
@@ -144,27 +133,5 @@ public abstract class BaseOption extends Option {
 			SBConfig.OPTION_FAILED_TO_EXECUTE.replace(this, e).send(getSBPlayer());
 		}
 		return false;
-	}
-
-	/**
-	 * プレイヤーからコマンドを実行します。
-	 * @param sbPlayer プレイヤー
-	 * @param command コマンド
-	 * @param isBypass trueの場合は権限を無視し、falseの場合は権限を無視せず実行します。
-	 * @return 実行に成功した場合はtrue
-	 */
-	protected boolean executeCommand(@NotNull SBPlayer sbPlayer, @NotNull String command, boolean isBypass) {
-		return LogAdmin.function(sbPlayer.getWorld(), l -> {
-			if (!isBypass || sbPlayer.isOp()) {
-				return Utils.dispatchCommand(sbPlayer, command);
-			} else {
-				try {
-					sbPlayer.setOp(true);
-					return Utils.dispatchCommand(sbPlayer, command);
-				} finally {
-					sbPlayer.setOp(false);
-				}
-			}
-		});
 	}
 }

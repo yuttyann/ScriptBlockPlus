@@ -2,15 +2,20 @@ package com.github.yuttyann.scriptblockplus.listener.item.action;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.listener.item.ChangeSlot;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
+import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
+import com.github.yuttyann.scriptblockplus.script.ScriptAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Location;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
  * ScriptBlockPlus ScriptEditor クラス
@@ -18,11 +23,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ScriptEditor extends ItemAction {
 
-    private final ScriptType scriptType;
+    private static final String KEY = Utils.randomUUID();
 
-    public ScriptEditor(@NotNull ScriptType scriptType) {
-        super(ItemUtils.getScriptEditor(scriptType));
-        this.scriptType = scriptType;
+    public ScriptEditor() {
+        super(ItemUtils.getScriptEditor());
     }
 
     @Override
@@ -31,26 +35,48 @@ public class ScriptEditor extends ItemAction {
     }
 
     @Override
-    public boolean run() {
-        SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
-        switch (action) {
+    public void slot(@NotNull ChangeSlot changeSlot) {
+        try {
+            SBPlayer sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
+            if (changeSlot.isNewSlot()) {
+                ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
+                ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
+            } else {
+                ActionBar.send(sbPlayer, "");
+            }
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean run(@NotNull RunItem runItem) {
+        SBPlayer sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
+        ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
+        Optional<Location> location = Optional.ofNullable(runItem.getLocation());
+        switch (runItem.getAction()) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
-                if (isSneaking && !isAIR) {
-                    new ScriptEdit(scriptType).remove(sbPlayer, location);
-                } else if (!isSneaking) {
-                    player.getInventory().setItemInMainHand(ItemUtils.getScriptEditor(getNextScriptType(item)));
-                    Utils.updateInventory(player);
+                if (runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {
+                    new ScriptAction(scriptType).remove(sbPlayer, location.get());
+                } else if (!runItem.isSneaking()) {
+                    try {
+                        sbPlayer.getObjectMap().put(KEY, scriptType = getNextType(scriptType));
+                        ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
+                    } catch (ReflectiveOperationException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
-                if (isSneaking && !isAIR) {
-                    if (!sbPlayer.getClipboard().isPresent() || !sbPlayer.getClipboard().get().paste(location, true)) {
+                if (runItem.isSneaking() && !runItem.isAIR()) {
+                    if (!location.isPresent() || !sbPlayer.getClipboard().isPresent()
+                            || !sbPlayer.getClipboard().get().paste(location.get(), true)) {
                         SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
                     }
-                } else if (!isSneaking && !isAIR) {
-                    new ScriptEdit(ItemUtils.getScriptType(item)).clipboard(sbPlayer, location).copy();
+                } else if (!runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {
+                    new ScriptAction(scriptType).clipboard(sbPlayer, location.get()).copy();
                 }
                 break;
             default:
@@ -59,11 +85,11 @@ public class ScriptEditor extends ItemAction {
     }
 
     @NotNull
-    private ScriptType getNextScriptType(@NotNull ItemStack item) {
+    private ScriptType getNextType(@NotNull ScriptType scriptType) {
         try {
-            return ScriptType.valueOf(ItemUtils.getScriptType(item).ordinal() + 1);
+            return ScriptType.valueOf(scriptType.ordinal() + 1);
         } catch (Exception e) {
-            return ScriptType.valueOf(0);
+            return ScriptType.INTERACT;
         }
     }
 }

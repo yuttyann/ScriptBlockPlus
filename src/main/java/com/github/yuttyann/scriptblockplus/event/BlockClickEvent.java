@@ -4,7 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
@@ -32,22 +31,13 @@ public class BlockClickEvent extends PlayerEvent implements Cancellable {
 	private boolean isInvalid;
 	private boolean cancelled;
 
-	public BlockClickEvent(@NotNull final PlayerInteractEvent event, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
-		this(event, event.getItem(), hand, isAnimation);
-	}
-
-	public BlockClickEvent(@NotNull final PlayerInteractEvent event, @Nullable final ItemStack item, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
-		this(event, event.getPlayer(), event.getClickedBlock(), item, event.getAction(), event.getBlockFace(), hand, isAnimation);
-	}
-
-	public BlockClickEvent(@NotNull final PlayerInteractEvent event, @NotNull final Player player, @Nullable final Block block,
-						   final ItemStack item, @NotNull final Action action, @NotNull final BlockFace blockFace, @Nullable final EquipmentSlot hand, final boolean isAnimation) {
-		super(player);
-		this.block = block;
-		this.item = item;
-		this.action = action;
-		this.blockFace = blockFace;
-		this.hand = hand == null ? event.getHand() : hand;
+	public BlockClickEvent(@NotNull final PlayerInteractEvent event, final boolean isAnimation) {
+		super(event.getPlayer());
+		this.block = event.getClickedBlock();
+		this.item = event.getItem();
+		this.action = event.getAction();
+		this.blockFace = event.getBlockFace();
+		this.hand = event.getHand();
 		this.isAnimation = isAnimation;
 	}
 

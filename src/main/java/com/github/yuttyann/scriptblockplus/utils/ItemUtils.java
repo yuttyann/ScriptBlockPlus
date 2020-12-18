@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,20 +18,6 @@ import java.util.function.Predicate;
  * @author yuttyann44581
  */
 public class ItemUtils {
-
-	@SuppressWarnings("deprecation")
-	public static void setDamage(@NotNull ItemStack item, int damage) {
-		Validate.notNull(item, "Item cannot be null");
-		if (Utils.isCBXXXorLater("1.13")) {
-			ItemMeta meta = item.getItemMeta();
-			if (meta != null) {
-				((org.bukkit.inventory.meta.Damageable) meta).setDamage(damage);
-				item.setItemMeta(meta);
-			}
-		} else {
-			item.setDurability((short) damage);
-		}
-	}
 
 	@SuppressWarnings("deprecation")
 	public static int getDamage(@NotNull ItemStack item) {
@@ -61,10 +46,10 @@ public class ItemUtils {
 	}
 
 	@NotNull
-	public static ItemStack getScriptEditor(@NotNull ScriptType scriptType) {
+	public static ItemStack getScriptEditor() {
 		ItemStack item = new ItemStack(Material.BLAZE_ROD);
 		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
-		meta.setDisplayName("§dScript Editor§6[Mode: " + scriptType.name() + "]");
+		meta.setDisplayName("§dScript Editor");
 		meta.setLore(StringUtils.setListColor(SBConfig.SCRIPT_EDITOR.getValue()));
 		item.setItemMeta(meta);
 		return item;
@@ -80,37 +65,10 @@ public class ItemUtils {
 		return item;
 	}
 
-	public static boolean isBlockSelector(@Nullable ItemStack item) {
-		return isItem(item, Material.STICK, s -> s.equals("§dBlock Selector"));
-	}
-
-	public static boolean isScriptEditor(@Nullable ItemStack item) {
-		return isItem(item, Material.BLAZE_ROD, s -> s.startsWith("§dScript Editor§6[Mode: ") && s.endsWith("]"));
-	}
-
-	public static boolean isScriptViewer(@Nullable ItemStack item) {
-		return isItem(item, Material.valueOf(Utils.isCBXXXorLater("1.13") ? "CLOCK" : "WATCH"), s -> s.startsWith("§dScript Viewer"));
-	}
-
-	@NotNull
-	public static ScriptType getScriptType(@Nullable ItemStack item) {
-		if (isScriptEditor(item)) {
-			String name = StringUtils.removeStart(ItemUtils.getName(item, ""), "§dScript Editor§6[Mode: ");
-			return ScriptType.valueOf(name.substring(0, name.length() - 1));
-		}
-		return ScriptType.valueOf(0);
-	}
-
 	@NotNull
 	public static ItemStack[] getHandItems(Player player) {
 		PlayerInventory inventory = player.getInventory();
 		return new ItemStack[] { inventory.getItemInMainHand(), inventory.getItemInOffHand() };
-	}
-
-	public static void setName(@NotNull ItemStack item, @NotNull String name) {
-		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
-		meta.setDisplayName(name);
-		item.setItemMeta(meta);
 	}
 
 	@NotNull

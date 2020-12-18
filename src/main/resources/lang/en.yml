@@ -7,7 +7,7 @@
 # There are no placeholders
 ToolCommandMessage: 'tool - get the scriptblock tools'
 ReloadCommandMessage: 'reload - reload the plugin'
-BackupCommandMessage: 'backup - Make a backup of the plugin data'
+BackupCommandMessage: 'backup - make a backup of the plugin data'
 CheckVerCommandMessage: 'checkver - check new version'
 DataMigrCommandMessage: 'datamigr - migrate old data from ScriptBlock to ScriptBlockPlus'
 ExportCommandMessage: 'export <sound | material> - output BukkitAPI Sound and Material as text'

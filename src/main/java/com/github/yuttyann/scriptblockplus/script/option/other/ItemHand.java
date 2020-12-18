@@ -3,8 +3,8 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,15 +12,14 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+
 /**
  * ScriptBlockPlus ItemHand オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "itemhand", syntax = "@hand:")
 public class ItemHand extends BaseOption {
-
-	public ItemHand() {
-		super("itemhand", "@hand:");
-	}
 
 	@Override
 	@NotNull
@@ -43,7 +42,7 @@ public class ItemHand extends BaseOption {
 
 		Player player = getPlayer();
 		ItemStack[] items = ItemUtils.getHandItems(player);
-		if (!StreamUtils.anyMatch(items, i -> checkItem(i, itemName, type, amount, damage))) {
+		if (Arrays.stream(items).noneMatch(i -> checkItem(i, itemName, type, amount, damage))) {
 			SBConfig.ERROR_HAND.replace(type, amount, damage, itemName).send(player);
 			return false;
 		}

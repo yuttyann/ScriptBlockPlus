@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.hook;
 
 import com.github.yuttyann.scriptblockplus.hook.plugin.PsudoCommand;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -9,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,7 +41,7 @@ public final class CommandSelector {
     private CommandSelector() { }
 
     public boolean has(@NotNull String command) {
-        return StreamUtils.anyMatch(SELECTOR_NAMES, command::contains);
+        return Arrays.stream(SELECTOR_NAMES).anyMatch(command::contains);
     }
 
     @NotNull

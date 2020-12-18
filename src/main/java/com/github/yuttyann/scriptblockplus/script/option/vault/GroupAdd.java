@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.script.option.vault;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -11,11 +12,8 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus GroupAdd オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "group_add", syntax = "@groupADD:")
 public class GroupAdd extends BaseOption {
-
-	public GroupAdd() {
-		super("group_add", "@groupADD:");
-	}
 
 	@Override
 	@NotNull

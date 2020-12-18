@@ -8,8 +8,6 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 /**
  * ScriptBlockPlus Option オプションクラス
  * @author yuttyann44581
@@ -25,30 +23,29 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
 	private int ordinal = -1;
 
-	/**
-	 * コンストラクタ
-	 * @param name オプション名 例:"example"
-	 * @param syntax オプション構文 例:"@example: "
-	 */
-	protected Option(@NotNull String name, @NotNull String syntax) {
-		this.name = Objects.requireNonNull(name);
-		this.syntax = Objects.requireNonNull(syntax);
+	{
+		OptionTag optionTag = getClass().getAnnotation(OptionTag.class);
+		if (optionTag == null) {
+			throw new NullPointerException("Annotation not found [OptionTag]");
+		}
+		this.name = optionTag.name();
+		this.syntax = optionTag.syntax();
 		this.length = this.syntax.length();
 	}
 
 	/**
 	 * インスタンスを生成します。
-	 * @return Optionのインスタンス
+	 * @return オプションのインスタンス
 	 */
 	@Override
 	@NotNull
 	public Option newInstance() {
-		return OptionManager.newInstance(this.getClass(), InstanceType.REFLECTION);
+		return OptionManager.newInstance(getClass(), InstanceType.REFLECTION);
 	}
 
 	/**
-	 * オプション名を取得します。
-	 * @return オプション名
+	 * オプションの名前を取得します。
+	 * @return オプションの名前
 	 */
 	@NotNull
 	public final String getName() {
@@ -56,8 +53,8 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	/**
-	 * 構文を取得します。
-	 * @return 構文
+	 * オプションの構文を取得します。
+	 * @return オプションの構文
 	 */
 	@NotNull
 	public final String getSyntax() {
@@ -65,18 +62,20 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	/**
-	 * 構文の文字列の長さを取得します。
-	 * @return 構文の文字列の長さ
+	 * オプションの構文の文字数を取得します。
+	 * @return オプションの構文の文字数
 	 */
-	public int length() {
+	public final int length() {
 		return length;
 	}
 
 	/**
-	 * オプションの序数を取得します（オプションの順番により変動）
+	 * オプションの序数を取得します
+	 * <p>
+	 * ※オプションの順番により変動
 	 * @return 序数
 	 */
-	public int ordinal() {
+	public final int ordinal() {
 		return ordinal;
 	}
 
@@ -100,7 +99,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	/**
-	 * スクリプトがオプションなのかどうか確認します。
+	 * 指定されたスクリプトがオプションなのか判定します。
 	 * @param script スクリプト
 	 * @return オプションだった場合はtrue
 	 */
@@ -120,9 +119,9 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 	}
 
 	/**
-	 * オプションを実行します。
-	 * @param sbRead スクリプトの実行クラス
-	 * @return 実行に成功した場合はtrue
+	 * オプションを呼び出します。
+	 * @param sbRead {@link SBRead}
+	 * @return 有効な場合はtrue
 	 */
 	public abstract boolean callOption(@NotNull SBRead sbRead);
 

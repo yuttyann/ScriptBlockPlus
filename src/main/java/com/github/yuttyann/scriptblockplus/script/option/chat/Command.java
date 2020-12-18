@@ -2,18 +2,17 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus Command オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "command", syntax = "@command ")
 public class Command extends BaseOption {
-
-	public Command() {
-		super("command", "@command ");
-	}
 
 	@Override
 	@NotNull
@@ -23,6 +22,6 @@ public class Command extends BaseOption {
 
 	@Override
 	protected boolean isValid() throws Exception {
-		return executeCommand(getSBPlayer(), StringUtils.setColor(getOptionValue()), false);
+		return Utils.dispatchCommand(getSBPlayer(), StringUtils.setColor(getOptionValue()));
 	}
 }

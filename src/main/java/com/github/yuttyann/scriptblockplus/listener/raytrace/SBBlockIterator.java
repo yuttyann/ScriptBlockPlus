@@ -14,10 +14,10 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
- * ScriptBlockPlus BlockIterator クラス
- * @author bukkit(source), yuttyann44581
+ * ScriptBlockPlus SBBlockIterator クラス
+ * @author bukkit(source)
  */
-public class BlockIterator implements Iterator<BlockIterator.BlockData> {
+public class SBBlockIterator implements Iterator<SBBlockIterator.Queue> {
 
     private final double maxDistance;
 
@@ -25,30 +25,30 @@ public class BlockIterator implements Iterator<BlockIterator.BlockData> {
 
     private boolean end = false;
 
-    private final BlockData[] blockQueue = new BlockData[3];
+    private final Queue[] blockQueue = new Queue[3];
     {
-        blockQueue[0] = new BlockData();
-        blockQueue[1] = new BlockData();
-        blockQueue[2] = new BlockData();
+        blockQueue[0] = new Queue();
+        blockQueue[1] = new Queue();
+        blockQueue[2] = new Queue();
     }
 
-    public static class BlockData {
+    public static class Queue {
 
-        private Block b;
-        private BlockFace f;
+        private Block block;
+        private BlockFace face;
 
-        public BlockData put(@NotNull Block b, @NotNull BlockFace f) {
-            this.b = b;
-            this.f = f;
+        public Queue set(@NotNull Block b, @NotNull BlockFace f) {
+            this.block = b;
+            this.face = f;
             return this;
         }
 
         public Block getBlock() {
-            return b;
+            return block;
         }
 
         public BlockFace getFace() {
-            return f;
+            return face;
         }
     }
 
@@ -66,7 +66,7 @@ public class BlockIterator implements Iterator<BlockIterator.BlockData> {
     private BlockFace secondFace;
     private BlockFace thirdFace;
 
-    public BlockIterator(@NotNull World world, @NotNull Vector start, @NotNull Vector direction, double yOffset, int maxDistance) {
+    public SBBlockIterator(@NotNull World world, @NotNull Vector start, @NotNull Vector direction, double yOffset, int maxDistance) {
         this.maxDistance = maxDistance;
 
         Vector startClone = start.clone();
@@ -151,13 +151,13 @@ public class BlockIterator implements Iterator<BlockIterator.BlockData> {
 
         secondError -= gridSize;
         thirdError -= gridSize;
-        blockQueue[0].b = lastBlock;
+        blockQueue[0].block = lastBlock;
         currentBlock = -1;
 
         scan();
         boolean startBlockFound = false;
         for (int cnt = currentBlock; cnt >= 0; cnt--) {
-            if (blockEquals(blockQueue[cnt].b, startBlock)) {
+            if (blockEquals(blockQueue[cnt].block, startBlock)) {
                 currentBlock = cnt;
                 startBlockFound = true;
                 break;
@@ -170,11 +170,11 @@ public class BlockIterator implements Iterator<BlockIterator.BlockData> {
         maxDistanceInt = NumberConversions.round(maxDistance / (Math.sqrt(mainDirection * mainDirection + secondDirection * secondDirection + thirdDirection * thirdDirection) / mainDirection));
     }
 
-    public BlockIterator(@NotNull Location location, double yOffset, int maxDistance) {
+    public SBBlockIterator(@NotNull Location location, double yOffset, int maxDistance) {
         this(Objects.requireNonNull(location.getWorld()), location.toVector(), location.getDirection(), yOffset, maxDistance);
     }
 
-    public BlockIterator(@NotNull LivingEntity entity, int maxDistance) {
+    public SBBlockIterator(@NotNull LivingEntity entity, int maxDistance) {
         this(entity.getLocation(), entity.getEyeHeight(), maxDistance);
     }
 
@@ -228,13 +228,13 @@ public class BlockIterator implements Iterator<BlockIterator.BlockData> {
     }
 
     @NotNull
-    public BlockData next() {
+    public SBBlockIterator.Queue next() {
         scan();
         if (currentBlock <= -1) {
             throw new NoSuchElementException();
         } else {
-            BlockData t = blockQueue[currentBlock--];
-            t.f = convert(t.f);
+            Queue t = blockQueue[currentBlock--];
+            t.face = convert(t.face);
             return t;
         }
     }
@@ -274,29 +274,29 @@ public class BlockIterator implements Iterator<BlockIterator.BlockData> {
         secondError += secondStep;
         thirdError += thirdStep;
         if (secondError > 0 && thirdError > 0) {
-            blockQueue[2].put(blockQueue[0].b.getRelative(mainFace), mainFace);
+            blockQueue[2].set(blockQueue[0].block.getRelative(mainFace), mainFace);
             if (((long) secondStep) * ((long) thirdError) < ((long) thirdStep) * ((long) secondError)) {
-                blockQueue[1].put(blockQueue[2].b.getRelative(secondFace), secondFace);
-                blockQueue[0].put(blockQueue[1].b.getRelative(thirdFace), thirdFace);
+                blockQueue[1].set(blockQueue[2].block.getRelative(secondFace), secondFace);
+                blockQueue[0].set(blockQueue[1].block.getRelative(thirdFace), thirdFace);
             } else {
-                blockQueue[1].put(blockQueue[2].b.getRelative(thirdFace), thirdFace);
-                blockQueue[0].put(blockQueue[1].b.getRelative(secondFace), secondFace);
+                blockQueue[1].set(blockQueue[2].block.getRelative(thirdFace), thirdFace);
+                blockQueue[0].set(blockQueue[1].block.getRelative(secondFace), secondFace);
             }
             thirdError -= gridSize;
             secondError -= gridSize;
             currentBlock = 2;
         } else if (secondError > 0) {
-            blockQueue[1].put(blockQueue[0].b.getRelative(mainFace), mainFace);
-            blockQueue[0].put(blockQueue[1].b.getRelative(secondFace), secondFace);
+            blockQueue[1].set(blockQueue[0].block.getRelative(mainFace), mainFace);
+            blockQueue[0].set(blockQueue[1].block.getRelative(secondFace), secondFace);
             secondError -= gridSize;
             currentBlock = 1;
         } else if (thirdError > 0) {
-            blockQueue[1].put(blockQueue[0].b.getRelative(mainFace), mainFace);
-            blockQueue[0].put(blockQueue[1].b.getRelative(thirdFace), thirdFace);
+            blockQueue[1].set(blockQueue[0].block.getRelative(mainFace), mainFace);
+            blockQueue[0].set(blockQueue[1].block.getRelative(thirdFace), thirdFace);
             thirdError -= gridSize;
             currentBlock = 1;
         } else {
-            blockQueue[0].put(blockQueue[0].b.getRelative(mainFace), mainFace);
+            blockQueue[0].set(blockQueue[0].block.getRelative(mainFace), mainFace);
             currentBlock = 0;
         }
     }

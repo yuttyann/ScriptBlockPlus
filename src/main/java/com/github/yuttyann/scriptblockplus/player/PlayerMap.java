@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
+import com.github.yuttyann.scriptblockplus.script.ScriptEditType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,16 +14,16 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * ScriptBlockPlus PlayerData クラス
+ * ScriptBlockPlus PlayerMap クラス
  * @author yuttyann44581
  */
 public abstract class PlayerMap implements SBPlayer {
 
 	private static final String KEY_REGION = Utils.randomUUID();
 	private static final String KEY_CLIPBOARD = Utils.randomUUID();
-	private static final String KEY_SCRIPTLINE = Utils.randomUUID();
-	private static final String KEY_CLICKACTION = Utils.randomUUID();
-	private static final String KEY_OLDBLOCKCOORDS = Utils.randomUUID();
+	private static final String KEY_SCRIPT_LINE = Utils.randomUUID();
+	private static final String KEY_SCRIPT_EDIT_TYPE = Utils.randomUUID();
+	private static final String KEY_OLD_BLOCK_COORDS = Utils.randomUUID();
 
 	private final ObjectMap objectMap;
 
@@ -83,17 +84,17 @@ public abstract class PlayerMap implements SBPlayer {
 
 	@Override
 	public void setScriptLine(@Nullable String scriptLine) {
-		getObjectMap().put(KEY_SCRIPTLINE, scriptLine);
+		getObjectMap().put(KEY_SCRIPT_LINE, scriptLine);
 	}
 
 	@Override
-	public void setActionType(@Nullable String actionType) {
-		getObjectMap().put(KEY_CLICKACTION, actionType);
+	public void setScriptEditType(@Nullable ScriptEditType scriptEditType) {
+		getObjectMap().put(KEY_SCRIPT_EDIT_TYPE, scriptEditType);
 	}
 
 	@Override
 	public void setOldBlockCoords(@Nullable BlockCoords blockCoords) {
-		getObjectMap().put(KEY_OLDBLOCKCOORDS, blockCoords);
+		getObjectMap().put(KEY_OLD_BLOCK_COORDS, blockCoords);
 	}
 
 	@Override
@@ -105,18 +106,18 @@ public abstract class PlayerMap implements SBPlayer {
 	@Override
 	@NotNull
 	public Optional<String> getScriptLine() {
-		return Optional.ofNullable(getObjectMap().get(KEY_SCRIPTLINE));
+		return Optional.ofNullable(getObjectMap().get(KEY_SCRIPT_LINE));
 	}
 
 	@Override
 	@NotNull
-	public Optional<String> getActionType() {
-		return Optional.ofNullable(getObjectMap().get(KEY_CLICKACTION));
+	public Optional<ScriptEditType> getScriptEditType() {
+		return Optional.ofNullable(getObjectMap().get(KEY_SCRIPT_EDIT_TYPE));
 	}
 
 	@Override
 	@NotNull
 	public Optional<BlockCoords> getOldBlockCoords() {
-		return Optional.ofNullable(getObjectMap().get(KEY_OLDBLOCKCOORDS));
+		return Optional.ofNullable(getObjectMap().get(KEY_OLD_BLOCK_COORDS));
 	}
 }

@@ -2,23 +2,22 @@ package com.github.yuttyann.scriptblockplus.command;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ProxiedCommandSender;
-import org.bukkit.command.TabExecutor;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * ScriptBlockPlus BaseCommand コマンドクラス
  * @author yuttyann44581
  */
-public abstract class BaseCommand extends CommandUsage implements TabExecutor {
+public abstract class BaseCommand extends CommandUsage implements CommandExecutor, TabCompleter {
 
 	private Plugin plugin;
 	private boolean isIgnoreUsage;
@@ -28,13 +27,19 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 		setUsage(getUsages());
 	}
 
+	public static <T extends BaseCommand> void register(@NotNull String command, @NotNull T baseCommand) {
+		JavaPlugin plugin = (JavaPlugin) baseCommand.getPlugin();
+		Optional<PluginCommand> pluginCommand = Optional.ofNullable(plugin.getCommand(command));
+		if (pluginCommand.isPresent()) {
+			pluginCommand.get().setExecutor(baseCommand);
+			pluginCommand.get().setTabCompleter(baseCommand);
+		}
+	}
+
 	@NotNull
 	public final Plugin getPlugin() {
 		return plugin;
 	}
-
-	@NotNull
-	public abstract String getCommandName();
 
 	@NotNull
 	public abstract CommandData[] getUsages();
@@ -55,7 +60,7 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 		}
 		try {
 			if (!runCommand(sender, command, label, args) && !isIgnoreUsage) {
-				sendUsage(this, sender, command);
+				sendUsage(sender, command, this);
 			}
 		} finally {
 			isIgnoreUsage = false;
@@ -105,6 +110,6 @@ public abstract class BaseCommand extends CommandUsage implements TabExecutor {
 	}
 
 	protected final boolean equals(@NotNull String source, @NotNull String... anothers) {
-		return StreamUtils.anyMatch(anothers, s -> equals(source, s));
+		return Arrays.stream(anothers).anyMatch(s -> equals(source, s));
 	}
 }

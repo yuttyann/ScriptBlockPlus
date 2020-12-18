@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.script.option.vault;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,11 +11,8 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus PermRemove オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "perm_remove", syntax = "@permREMOVE:")
 public class PermRemove extends BaseOption {
-
-	public PermRemove() {
-		super("perm_remove", "@permREMOVE:");
-	}
 
 	@Override
 	@NotNull

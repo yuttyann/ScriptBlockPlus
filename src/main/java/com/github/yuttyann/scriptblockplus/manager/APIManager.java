@@ -2,16 +2,15 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
-import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
-import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
+import com.github.yuttyann.scriptblockplus.script.ScriptAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
-import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.OptionPriority;
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
@@ -44,13 +43,13 @@ public final class APIManager implements ScriptBlockAPI {
 	}
 
 	@Override
-	public void registerOption(@NotNull OptionPriority priority, @NotNull Class<? extends BaseOption> option) {
-		OptionManager.register(priority, new SBConstructor<>(option));
+	public void registerOption(@NotNull OptionPriority optionPriority) {
+		OptionManager.register(optionPriority);
 	}
 
 	@Override
-	public void registerEndProcess(@NotNull Class<? extends EndProcess> endProcess) {
-		EndProcessManager.register(new SBConstructor<>(endProcess));
+	public void registerEndProcess(@NotNull Class<? extends EndProcess> endProcessClass) {
+		EndProcessManager.register(new SBConstructor<>(endProcessClass));
 	}
 
 	@Override
@@ -61,41 +60,41 @@ public final class APIManager implements ScriptBlockAPI {
 
 	private static class SEdit implements SBEdit {
 
-		private final ScriptEdit scriptEdit;
+		private final ScriptAction scriptAction;
 
 		public SEdit(@NotNull ScriptType scriptType) {
-			this.scriptEdit = new ScriptEdit(scriptType);
+			this.scriptAction = new ScriptAction(scriptType);
 		}
 
 		@Override
 		public void save() {
-			scriptEdit.save();
+			scriptAction.save();
 		}
 
 		@Override
 		@NotNull
 		public ScriptType getScriptType() {
-			return scriptEdit.getScriptType();
+			return scriptAction.getScriptType();
 		}
 
 		@Override
 		public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-			scriptEdit.create(player, location, script);
+			scriptAction.create(player, location, script);
 		}
 
 		@Override
 		public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-			scriptEdit.add(player, location, script);
+			scriptAction.add(player, location, script);
 		}
 
 		@Override
 		public void remove(@NotNull Player player, @NotNull Location location) {
-			scriptEdit.remove(player, location);
+			scriptAction.remove(player, location);
 		}
 
 		@Override
 		public void view(@NotNull Player player, @NotNull Location location) {
-			scriptEdit.view(player, location);
+			scriptAction.view(player, location);
 		}
 	}
 
@@ -172,11 +171,6 @@ public final class APIManager implements ScriptBlockAPI {
 		@Override
 		public void setLastEdit() {
 			scriptParam.setLastEdit(Utils.getFormatTime());
-		}
-
-		@Override
-		public void setLastEdit(@NotNull String time) {
-			scriptParam.setLastEdit(time);
 		}
 
 		@Override

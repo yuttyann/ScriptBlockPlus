@@ -6,6 +6,7 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
+import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
 import com.github.yuttyann.scriptblockplus.region.PlayerRegion;
@@ -46,18 +47,18 @@ public class ScriptViewer extends ItemAction {
     }
 
     @Override
-    public boolean run() {
-        SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
-        switch (action) {
+    public boolean run(@NotNull RunItem runItem) {
+        SBPlayer sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
+        switch (runItem.getAction()) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
                 PLAYERS.add(sbPlayer.getUniqueId());
-                SBConfig.SCRIPT_VIEWER_START.send(player);
+                SBConfig.SCRIPT_VIEWER_START.send(sbPlayer);
                 break;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
                 PLAYERS.remove(sbPlayer.getUniqueId());
-                SBConfig.SCRIPT_VIEWER_STOP.send(player);
+                SBConfig.SCRIPT_VIEWER_STOP.send(sbPlayer);
                 break;
             default:
         }

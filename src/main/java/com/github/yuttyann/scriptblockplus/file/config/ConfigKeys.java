@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.file.config;
 
-import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

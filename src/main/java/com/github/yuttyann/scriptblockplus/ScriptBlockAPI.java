@@ -1,9 +1,8 @@
 package com.github.yuttyann.scriptblockplus;
 
-import com.github.yuttyann.scriptblockplus.enums.OptionPriority;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
-import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.OptionPriority;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -30,27 +29,22 @@ public interface ScriptBlockAPI {
 	boolean scriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index);
 
 	/**
-	 * 指定した追加位置にオプションを登録します。
-	 * <p>
-	 * 指定するクラスには"BaseOption"を継承してください。
-	 * @param priority 追加位置の優先度
-	 * @param option オプションのクラス
+	 * 指定したオプションを登録します。
+	 * @param optionPriority オプション
 	 */
-	void registerOption(@NotNull OptionPriority priority, @NotNull Class<? extends BaseOption> option);
+	void registerOption(@NotNull OptionPriority optionPriority);
 
 	/**
-	 * エンドプロセスを登録します。
-	 * <p>
-	 * 指定するクラスには"EndProcess"を実装してください。
-	 * @param endProcess エンドプロセスのクラス
+	 * 指定したエンドプロセスを登録します。
+	 * @param endProcessClass エンドプロセスの継承クラス
 	 */
-	void registerEndProcess(@NotNull Class<? extends EndProcess> endProcess);
+	void registerEndProcess(@NotNull Class<? extends EndProcess> endProcessClass);
 
 
 	/**
-	 * スクリプトの編集クラスを取得します。
+	 * SBEditを取得します。
 	 * @param scriptType スクリプトの種類
-	 * @return スクリプトの編集クラス
+	 * @return SBEdit
 	 */
 	@NotNull
 	SBEdit getSBEdit(@NotNull ScriptType scriptType);
@@ -101,10 +95,10 @@ public interface ScriptBlockAPI {
 	}
 
 	/**
-	 * スクリプトのファイルクラスを取得します。
+	 * SBFileを取得します。
 	 * @param location スクリプトの座標
 	 * @param scriptType スクリプトの種類
-	 * @return スクリプトのファイルクラス
+	 * @return SBFile
 	 */
 	SBFile getSBFile(@NotNull Location location, @NotNull ScriptType scriptType);
 
@@ -136,15 +130,15 @@ public interface ScriptBlockAPI {
 		ScriptType getScriptType();
 
 		/**
-		 * スクリプトの作者のセットを取得します。
-		 * @return 作者のセット
+		 * スクリプトの作者の一覧を取得します。
+		 * @return スクリプトの作者の一覧
 		 */
 		@NotNull
 		Set<UUID> getAuthor();
 
 		/**
-		 * クリプトの作者を設定します。
-		 * @param author 作者のセット
+		 * スクリプトの作者の一覧を設定します。
+		 * @param author 作者の一覧
 		 */
 		void setAuthor(@NotNull Set<UUID> author);
 
@@ -172,12 +166,6 @@ public interface ScriptBlockAPI {
 		 * スクリプトの編集時刻を現在の時刻に設定します。
 		 */
 		void setLastEdit();
-
-		/**
-		 * スクリプトの編集時刻を指定の時刻に設定します。
-		 * @param time 時間
-		 */
-		void setLastEdit(@NotNull String time);
 
 		/**
 		 * スクリプトの実行可能な回数を取得します。

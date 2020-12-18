@@ -70,11 +70,9 @@ public final class StringUtils {
 	}
 
 	@NotNull
-	public static List<String> setListColor(List<String> list) {
+	public static List<String> setListColor(@NotNull List<String> list) {
 		list = new ArrayList<>(list);
-		for (int i = 0; i < list.size(); i++) {
-			list.set(i, setColor(list.get(i)));
-		}
+		list.replaceAll(StringUtils::setColor);
 		return list;
 	}
 
@@ -145,6 +143,6 @@ public final class StringUtils {
 	}
 
 	public static boolean isEmpty(@NotNull String[] sources) {
-		return StreamUtils.anyMatch(sources, StringUtils::isEmpty);
+		return Arrays.stream(sources).anyMatch(StringUtils::isEmpty);
 	}
 }

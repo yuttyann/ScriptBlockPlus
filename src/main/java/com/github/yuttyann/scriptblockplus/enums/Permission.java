@@ -35,7 +35,7 @@ public enum Permission {
 
 	private final String node;
 
-	private Permission(@NotNull String node) {
+	Permission(@NotNull String node) {
 		this.node = node;
 	}
 

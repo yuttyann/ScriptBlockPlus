@@ -1,17 +1,14 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.file.json.Json;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerTempJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -22,16 +19,13 @@ import java.util.UUID;
  */
 public abstract class TimerOption extends BaseOption {
 
-    public TimerOption(@NotNull String name, @NotNull String syntax) {
-        super(name, syntax);
-    }
-
     @NotNull
     protected abstract Optional<TimerTemp> getTimerTemp();
 
     @NotNull
-    protected final <T> Optional<T> get(Set<T> set, int hash) {
-        return Optional.ofNullable(StreamUtils.fOrElse(set, t -> t.hashCode() == hash, null));
+    protected final <T> Optional<T> get(Set<T> set, @NotNull TimerTemp timerTemp) {
+        int hash = timerTemp.hashCode();
+        return set.stream().filter(t -> t.hashCode() == hash).findFirst();
     }
 
     @NotNull
@@ -59,16 +53,13 @@ public abstract class TimerOption extends BaseOption {
     }
 
     public static void removeAll(@NotNull Location location, @NotNull ScriptType scriptType) {
-        String fullCoords = BlockCoords.getFullCoords(location);
-        int oldCooldown = Objects.hash(true, fullCoords, scriptType);
-        for (String id : Json.getNameList(PlayerTempJson.class)) {
-            UUID uuid = UUID.fromString(id);
+        for (String name : Json.getNameList(PlayerTempJson.class)) {
+            UUID uuid = UUID.fromString(name);
             Json<PlayerTemp> json = new PlayerTempJson(uuid);
             Set<TimerTemp> set = json.load().getTimerTemp();
             if (set.size() > 0) {
-                int cooldown = Objects.hash(false, uuid, fullCoords, scriptType);
-                set.removeIf(t -> t.hashCode() == cooldown);
-                set.removeIf(t -> t.hashCode() == oldCooldown);
+                set.remove(new TimerTemp(location, scriptType));
+                set.remove(new TimerTemp(uuid, location, scriptType));
                 json.saveFile();
             }
         }

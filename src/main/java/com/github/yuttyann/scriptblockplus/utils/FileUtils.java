@@ -83,19 +83,6 @@ public final class FileUtils {
 		}
 	}
 
-	public static void saveFile(@NotNull File file, @NotNull Object value) throws IOException {
-		try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file))) {
-			os.writeObject(value);
-		}
-	}
-
-	@NotNull
-	public static <T> T loadFile(@NotNull File file) throws IOException, ClassNotFoundException {
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-			return (T) ois.readObject();
-		}
-	}
-
 	@Nullable
 	public static InputStream getWebFile(@NotNull String url) throws IOException {
 		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();

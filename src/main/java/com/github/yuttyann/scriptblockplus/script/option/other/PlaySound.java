@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -14,11 +15,8 @@ import java.util.Objects;
  * ScriptBlockPlus PlaySound オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "sound", syntax = "@sound:")
 public class PlaySound extends BaseOption {
-
-	public PlaySound() {
-		super("sound", "@sound:");
-	}
 
 	@Override
 	@NotNull
@@ -46,10 +44,10 @@ public class PlaySound extends BaseOption {
 
 	private class Task extends BukkitRunnable {
 
-		Sound soundType;
-		int volume;
-		int pitch;
-		boolean playWorld;
+		private final Sound soundType;
+		private final int volume;
+		private final int pitch;
+		private final boolean playWorld;
 
 		Task(@NotNull Sound soundType, int volume, int pitch, boolean playWorld) {
 			this.soundType = soundType;

@@ -16,8 +16,8 @@ import java.util.Objects;
  */
 public class EndInventory implements EndProcess {
 
-	@NotNull
 	@Override
+	@NotNull
 	public EndProcess newInstance() {
 		return new EndInventory();
 	}

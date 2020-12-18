@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file.json;
 
+import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
@@ -26,6 +27,17 @@ public class BlockScriptJson extends Json<BlockScript> {
 
     public static boolean has(@NotNull Location location, @NotNull BlockScriptJson blockScriptJson) {
         return blockScriptJson.exists() && blockScriptJson.load().has(location);
+    }
+
+    @NotNull
+    public ScriptType getScriptType() {
+        return ScriptType.valueOf(id);
+    }
+
+    @Override
+    @NotNull
+    public BlockScript newInstance(@NotNull Object[] args) {
+        return new BlockScript(getScriptType());
     }
 
     public static boolean has(@NotNull Location location, @NotNull ScriptType scriptType) {
@@ -64,11 +76,5 @@ public class BlockScriptJson extends Json<BlockScript> {
         if (parent.isDirectory() && parent.list().length == 0) {
             parent.delete();
         }
-    }
-
-    @Override
-    @NotNull
-    public BlockScript newInstance(@NotNull Object[] args) {
-        return new BlockScript(ScriptType.valueOf(id));
     }
 }

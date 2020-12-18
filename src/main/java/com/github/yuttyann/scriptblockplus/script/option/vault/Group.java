@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -12,11 +13,8 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus Group オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "group", syntax = "@group:")
 public class Group extends BaseOption {
-
-	public Group() {
-		super("group", "@group:");
-	}
 
 	@Override
 	@NotNull

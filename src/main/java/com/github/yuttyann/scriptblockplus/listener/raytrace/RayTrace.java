@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.listener.raytrace;
 
+import com.github.yuttyann.scriptblockplus.listener.raytrace.SBBlockIterator.Queue;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.FluidCollisionMode;
@@ -28,7 +29,7 @@ public class RayTrace {
         this.world = world;
     }
 
-    public RayResult rayTrace(Player player, double distance) {
+    public RayResult rayTrace(@NotNull Player player, double distance) {
         if (Utils.isCBXXXorLater("1.13.2")) {
             RayTraceResult rayTraceResult = player.rayTraceBlocks(distance, FluidCollisionMode.NEVER);
             if (rayTraceResult != null && rayTraceResult.getHitBlock() != null) {
@@ -71,12 +72,12 @@ public class RayTrace {
             }
         } else {
             // 互換性を保つため、"Raytrace"が使えない関係で"BlockIterator"を使用
-            BlockIterator iterator = new BlockIterator(player, 5);
+            SBBlockIterator iterator = new SBBlockIterator(player, 5);
             while (iterator.hasNext()) {
-                BlockIterator.BlockData data = iterator.next();
-                Block block = data.getBlock();
+                Queue next = iterator.next();
+                Block block = next.getBlock();
                 if (block.getType() != Material.AIR && player.getEyeLocation().distanceSquared(block.getLocation()) <= 30.77) {
-                    return new RayResult(block, data.getFace());
+                    return new RayResult(block, next.getFace());
                 }
             }
         }

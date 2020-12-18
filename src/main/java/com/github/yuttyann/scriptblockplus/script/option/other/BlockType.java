@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,11 +12,8 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus BlockType オプションクラス
  * @author yuttyann44581
  */
+@OptionTag(name = "blocktype", syntax = "@blocktype:")
 public class BlockType extends BaseOption {
-
-	public BlockType() {
-		super("blocktype", "@blocktype:");
-	}
 
 	@Override
 	@NotNull

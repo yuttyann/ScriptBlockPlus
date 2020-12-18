@@ -4,8 +4,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.FileReloadEvent;
 import com.github.yuttyann.scriptblockplus.file.config.ConfigKeys;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.file.yaml.UTF8Config;
-import com.github.yuttyann.scriptblockplus.file.yaml.YamlConfig;
+import com.github.yuttyann.scriptblockplus.file.config.YamlConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.google.common.base.Charsets;
@@ -63,7 +62,7 @@ public final class SBFiles {
 		if (is == null) {
 			return;
 		}
-		YamlConfiguration config = UTF8Config.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8));
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8));
 		String filePath = plugin.getName() + "/" + StringUtils.replace(yaml.getFolderPath(), S, "/");
 		Set<String> keys = yaml.getKeys(true);
 		for (String key : config.getKeys(true)) {

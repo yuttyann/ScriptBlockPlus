@@ -40,7 +40,7 @@ public enum PackageType {
 	CB_UPDATER(CB, "updater"),
 	CB_UTIL(CB, "util");
 
-	private enum RType {
+	private enum ReturnType {
 		CLASS("class_"),
 		FIELD("field_"),
 		METHOD("method_"),
@@ -48,7 +48,7 @@ public enum PackageType {
 
 		private final String name;
 
-		private RType(@NotNull String name) {
+		ReturnType(@NotNull String name) {
 			this.name = name;
 		}
 
@@ -62,11 +62,11 @@ public enum PackageType {
 
 	private final String path;
 
-	private PackageType(@NotNull String path) {
+	PackageType(@NotNull String path) {
 		this.path = path;
 	}
 
-	private PackageType(@NotNull PackageType parent, @NotNull String path) {
+	PackageType(@NotNull PackageType parent, @NotNull String path) {
 		this(parent + "." + path);
 	}
 
@@ -91,7 +91,7 @@ public enum PackageType {
 	}
 
 	public Field getField(boolean declared, @NotNull String className, @NotNull String fieldName) throws ReflectiveOperationException {
-		String key = createKey(RType.FIELD, className, fieldName, null);
+		String key = createKey(ReturnType.FIELD, className, fieldName, null);
 		Field field = (Field) CACHE.get(key);
 		if (field == null) {
 			if (declared) {
@@ -135,7 +135,7 @@ public enum PackageType {
 		if (parameterTypes == null) {
 			parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
-		String key = createKey(RType.METHOD, className, methodName, parameterTypes);
+		String key = createKey(ReturnType.METHOD, className, methodName, parameterTypes);
 		Method method = (Method) CACHE.get(key);
 		if (method == null) {
 			if (declared) {
@@ -176,7 +176,7 @@ public enum PackageType {
 		if (parameterTypes == null) {
 			parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
 		}
-		String key = createKey(RType.CONSTRUCTOR, className, null, parameterTypes);
+		String key = createKey(ReturnType.CONSTRUCTOR, className, null, parameterTypes);
 		Constructor<?> constructor = (Constructor<?>) CACHE.get(key);
 		if (constructor == null) {
 			if (declared) {
@@ -202,7 +202,7 @@ public enum PackageType {
 			throw new IllegalArgumentException();
 		}
 		String pass = this + "." + className;
-		String key = RType.CLASS + pass;
+		String key = ReturnType.CLASS + pass;
 		Class<?> clazz = (Class<?>) CACHE.get(key);
 		if (clazz == null) {
 			clazz = Class.forName(pass);
@@ -216,11 +216,11 @@ public enum PackageType {
 		return clazz.isEnum() ? (Enum<?>) getMethod(className, "valueOf", String.class).invoke(null, name) : null;
 	}
 
-	private String createKey(@NotNull RType rType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
+	private String createKey(@NotNull ReturnType returnType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
 		if (StringUtils.isEmpty(className)) {
 			return "null";
 		}
-		String rName = rType + "";
+		String rName = returnType + "";
 		int lastLength = objects == null ? -1 : objects.length - 1;
 		if (lastLength == -1) {
 			if (name != null) {

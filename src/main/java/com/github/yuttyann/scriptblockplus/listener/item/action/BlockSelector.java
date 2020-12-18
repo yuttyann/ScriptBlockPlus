@@ -4,9 +4,11 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
+import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import org.bukkit.Location;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,15 +28,16 @@ public class BlockSelector extends ItemAction {
     }
 
     @Override
-    public boolean run() {
-        SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
+    public boolean run(@NotNull RunItem runItem) {
+        SBPlayer sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
         CuboidRegion region = ((CuboidRegion) sbPlayer.getRegion());
-        switch (action) {
+        Location location = runItem.getLocation();
+        switch (runItem.getAction()) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
-                if (isSneaking) {
-                    region.setPos1((location = player.getLocation()).toVector());
-                } else if (!isAIR) {
+                if (runItem.isSneaking()) {
+                    region.setPos1((location = sbPlayer.getLocation()).toVector());
+                } else if (!runItem.isAIR() && location != null) {
                     region.setPos1(location.toVector());
                 }
                 if (location != null) {
@@ -44,9 +47,9 @@ public class BlockSelector extends ItemAction {
                 break;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
-                if (isSneaking) {
-                    region.setPos2((location = player.getLocation()).toVector());
-                } else if (!isAIR) {
+                if (runItem.isSneaking()) {
+                    region.setPos2((location = sbPlayer.getLocation()).toVector());
+                } else if (!runItem.isAIR() && location != null) {
                     region.setPos2(location.toVector());
                 }
                 if (location != null) {
