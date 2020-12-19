@@ -1,8 +1,9 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.script.option.OptionPriority;
+import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
 import com.github.yuttyann.scriptblockplus.script.option.chat.*;
 import com.github.yuttyann.scriptblockplus.script.option.other.*;
 import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
@@ -54,8 +55,8 @@ public final class OptionManager {
         OPTION_MAP.updateOrdinal();
     }
 
-    public static void register(@NotNull OptionPriority priority) {
-        OPTION_MAP.put(priority);
+    public static void register(@NotNull OptionIndex priority, @NotNull Class<? extends BaseOption> optionClass) {
+        OPTION_MAP.put(priority, optionClass);
         OPTION_MAP.updateOrdinal();
     }
 

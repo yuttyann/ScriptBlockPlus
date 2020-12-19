@@ -10,7 +10,8 @@ import com.github.yuttyann.scriptblockplus.script.ScriptAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
-import com.github.yuttyann.scriptblockplus.script.option.OptionPriority;
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
@@ -43,8 +44,8 @@ public final class APIManager implements ScriptBlockAPI {
 	}
 
 	@Override
-	public void registerOption(@NotNull OptionPriority optionPriority) {
-		OptionManager.register(optionPriority);
+	public void registerOption(@NotNull OptionIndex optionIndex, @NotNull Class<? extends BaseOption> optionClass) {
+		OptionManager.register(optionIndex, optionClass);
 	}
 
 	@Override

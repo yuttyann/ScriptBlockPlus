@@ -3,7 +3,8 @@ package com.github.yuttyann.scriptblockplus.manager;
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
-import com.github.yuttyann.scriptblockplus.script.option.OptionPriority;
+import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,8 +26,8 @@ public class OptionMap extends HashMap<String, Option> {
     }
 
     @Nullable
-    public Option put(@NotNull OptionPriority priority) {
-        String syntax = priority.getSyntax();
+    public Option put(@NotNull OptionIndex priority, @NotNull Class<? extends BaseOption> optionClass) {
+        String syntax = optionClass.getAnnotation(OptionTag.class).syntax();
         switch (priority.getIndexType()) {
             case TOP:
                 LINKED_LIST.addFirst(syntax);
@@ -35,10 +36,11 @@ public class OptionMap extends HashMap<String, Option> {
                 LINKED_LIST.addLast(syntax);
                 break;
             default:
-                LINKED_LIST.add(Math.min(LINKED_LIST.indexOf(syntax) + priority.getIndexType().getAmount(), 0), syntax);
+                int index = LINKED_LIST.indexOf(priority.getSyntax()) + priority.getIndexType().getAmount();
+                LINKED_LIST.add(Math.max(Math.min(index, 0), LINKED_LIST.size()), syntax);
                 break;
         }
-        return super.put(syntax, new SBConstructor<>(priority.getOptionClass()).newInstance(InstanceType.REFLECTION));
+        return super.put(syntax, new SBConstructor<>(optionClass).newInstance(InstanceType.REFLECTION));
     }
 
     @Override

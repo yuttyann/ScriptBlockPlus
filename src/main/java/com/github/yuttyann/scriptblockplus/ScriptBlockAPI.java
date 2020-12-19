@@ -2,7 +2,8 @@ package com.github.yuttyann.scriptblockplus;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
-import com.github.yuttyann.scriptblockplus.script.option.OptionPriority;
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -24,15 +25,16 @@ public interface ScriptBlockAPI {
 	 * @param location スクリプトの座標
 	 * @param scriptType スクリプトの種類
 	 * @param index 開始位置
-	 * @return 実行が成功した場合はtrue
+	 * @return 正常に終了した場合はtrue
 	 */
 	boolean scriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index);
 
 	/**
 	 * 指定したオプションを登録します。
-	 * @param optionPriority オプション
+	 * @param optionIndex オプションの追加位置
+	 * @param optionClass 追加するオプションのクラス
 	 */
-	void registerOption(@NotNull OptionPriority optionPriority);
+	void registerOption(@NotNull OptionIndex optionIndex, @NotNull Class<? extends BaseOption> optionClass);
 
 	/**
 	 * 指定したエンドプロセスを登録します。
