@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
@@ -11,19 +12,30 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ScriptEdit {
 
-    private final SBPlayer sbPlayer;
+    private final ActionType actionType;
+    private final ScriptType scriptType;
 
-    public ScriptEdit(@NotNull SBPlayer sbPlayer) {
-        this.sbPlayer = sbPlayer;
+    public ScriptEdit(@NotNull ActionType actionType, @NotNull ScriptType scriptType) {
+        this.actionType = actionType;
+        this.scriptType = scriptType;
     }
 
-    public boolean perform(@Nullable Location location) {
-        if (location == null || !sbPlayer.getScriptEditType().isPresent()) {
+    @NotNull
+    public ScriptType getScriptType() {
+        return scriptType;
+    }
+
+    @NotNull
+    public ActionType getActionType() {
+        return actionType;
+    }
+
+    public boolean perform(@NotNull SBPlayer sbPlayer, @Nullable Location location) {
+        if (location == null) {
             return false;
         }
-        ScriptEditType scriptEditType = sbPlayer.getScriptEditType().get();
-        ScriptAction scriptAction = new ScriptAction(scriptEditType.getScriptType());
-        switch (scriptEditType.getActionType()) {
+        ScriptAction scriptAction = new ScriptAction(scriptType);
+        switch (actionType) {
             case CREATE:
                 scriptAction.create(sbPlayer, location);
                 break;

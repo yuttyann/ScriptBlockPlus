@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
@@ -14,18 +13,14 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus ScriptBreakListener クラス
  * @author yuttyann44581
  */
-public class ScriptBreakListener extends ScriptListener {
-
-	public ScriptBreakListener(@NotNull ScriptBlock plugin) {
-		super(plugin, ScriptType.BREAK);
-	}
+public class ScriptBreakListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
@@ -36,7 +31,7 @@ public class ScriptBreakListener extends ScriptListener {
 		}
 		Block block = event.getBlock();
 		Location location = block.getLocation();
-		if (BlockScriptJson.has(location, scriptType)) {
+		if (BlockScriptJson.has(location, ScriptType.BREAK)) {
 			ScriptBlockBreakEvent breakEvent = new ScriptBlockBreakEvent(player, block);
 			Bukkit.getPluginManager().callEvent(breakEvent);
 			if (breakEvent.isCancelled()) {
@@ -46,7 +41,7 @@ public class ScriptBreakListener extends ScriptListener {
 				SBConfig.NOT_PERMISSION.send(player);
 				return;
 			}
-			new ScriptRead(player, location, this).read(0);
+			new ScriptRead(player, location, ScriptType.BREAK).read(0);
 		}
 	}
 }

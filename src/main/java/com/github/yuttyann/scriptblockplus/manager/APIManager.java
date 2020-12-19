@@ -5,7 +5,6 @@ import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
-import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.script.ScriptAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
@@ -36,11 +35,11 @@ public final class APIManager implements ScriptBlockAPI {
 	}
 
 	@Override
-	public boolean scriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index) {
+	public boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index) {
 		if (!BlockScriptJson.has(location, scriptType)) {
 			return false;
 		}
-		return new ScriptRead(player, location, new ScriptListener(plugin, scriptType)).read(index);
+		return new ScriptRead(player, location, scriptType).read(index);
 	}
 
 	@Override

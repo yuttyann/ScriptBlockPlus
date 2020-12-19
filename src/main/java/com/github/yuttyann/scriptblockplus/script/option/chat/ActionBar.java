@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -35,7 +36,7 @@ public class ActionBar extends BaseOption {
 
 		if (array.length > 1) {
 			int stay = Integer.parseInt(array[1]);
-			new Task(stay, message).runTaskTimer(getPlugin(), 0, 20);
+			new Task(stay, message).runTaskTimer(ScriptBlock.getInstance(), 0, 20);
 		} else {
 			send(getSBPlayer(), message);
 		}

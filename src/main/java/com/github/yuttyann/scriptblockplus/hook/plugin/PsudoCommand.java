@@ -2,6 +2,7 @@ package com.github.yuttyann.scriptblockplus.hook.plugin;
 
 import com.github.yuttyann.scriptblockplus.hook.HookPlugin;
 import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -20,8 +21,7 @@ public final class PsudoCommand extends HookPlugin {
 
     public static final PsudoCommand INSTANCE = new PsudoCommand();
 
-    private final static Method GET_TARGETS = _getTargets();
-    private final static Method GET_INT_RELATIVE = _getIntRelative();
+    private final static Method METHOD_GET_TARGETS = _getTargets();
 
     @Override
     @NotNull
@@ -35,7 +35,7 @@ public final class PsudoCommand extends HookPlugin {
             return Bukkit.selectEntities(sender, selector).toArray(new Entity[0]);
         }
         try {
-            return GET_TARGETS == null ? new Entity[] { } : (Entity[]) GET_TARGETS.invoke(null, sender, selector);
+            return METHOD_GET_TARGETS == null ? new Entity[] { } : (Entity[]) METHOD_GET_TARGETS.invoke(null, sender, selector);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -43,27 +43,20 @@ public final class PsudoCommand extends HookPlugin {
     }
 
     public int getIntRelative(@NotNull String target, @NotNull String relative, @NotNull Entity entity) {
-        if (Utils.isCBXXXorLater("1.13.2")) {
-            int number = 0;
-            String value = target.substring(1);
-            if (Calculation.REALNUMBER_PATTERN.matcher(value).matches()) {
-                number = Integer.parseInt(value);
-            }
-            switch (relative) {
-                case "x":
-                    return entity.getLocation().getBlockX() + number;
-                case "y":
-                    return entity.getLocation().getBlockY() + number;
-                case "z":
-                    return entity.getLocation().getBlockZ() + number;
-            }
+        int number = 0;
+        if (StringUtils.isNotEmpty(target) && Calculation.REALNUMBER_PATTERN.matcher(target).matches()) {
+            number = Integer.parseInt(target);
         }
-        try {
-            return GET_INT_RELATIVE == null ? 0 : (int) GET_INT_RELATIVE.invoke(null, target, relative, entity);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+        switch (relative) {
+            case "x":
+                return entity.getLocation().getBlockX() + number;
+            case "y":
+                return entity.getLocation().getBlockY() + number;
+            case "z":
+                return entity.getLocation().getBlockZ() + number;
+            default:
+                return 0;
         }
-        return 0;
     }
 
     @Nullable

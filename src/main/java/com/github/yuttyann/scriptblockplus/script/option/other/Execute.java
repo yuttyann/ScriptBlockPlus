@@ -34,6 +34,6 @@ public class Execute extends BaseOption {
 		double y = Integer.parseInt(coords[2]);
 		double z = Integer.parseInt(coords[3]);
 		Location location = new Location(world, x, y, z);
-		return ScriptBlock.getInstance().getAPI().scriptRead(getPlayer(), location, scriptType, 0);
+		return ScriptBlock.getInstance().getAPI().read(getPlayer(), location, scriptType, 0);
 	}
 }

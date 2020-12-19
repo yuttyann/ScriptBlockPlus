@@ -7,7 +7,6 @@ import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -20,15 +19,6 @@ import java.util.UUID;
 public abstract class BaseOption extends Option {
 
 	private SBRead sbRead;
-
-	/**
-	 * プラグインを取得します。
-	 * @return プラグイン
-	 */
-	@NotNull
-	protected final Plugin getPlugin() {
-		return sbRead.getPlugin();
-	}
 
 	/**
 	 * ScriptBlockPlusの{@link SBPlayer}を取得します。

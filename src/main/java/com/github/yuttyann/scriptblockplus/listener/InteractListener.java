@@ -6,7 +6,6 @@ import com.github.yuttyann.scriptblockplus.listener.raytrace.RayResult;
 import com.github.yuttyann.scriptblockplus.listener.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -21,6 +20,8 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * ScriptBlockPlus InteractListener クラス
@@ -90,13 +91,14 @@ public class InteractListener implements Listener {
 		Player player = interactEvent.getPlayer();
 		BlockClickEvent blockEvent = new BlockClickEvent(interactEvent, isAnimation);
 		if (blockEvent.getHand() == EquipmentSlot.HAND) {
-			boolean invalid = false;
+			AtomicBoolean invalid = new AtomicBoolean(false);
 			if (ItemAction.callRun(player, blockEvent.getItem(), blockEvent.getLocation(), blockEvent.getAction())) {
-				invalid = true;
+				invalid.set(true);
 			} else if (blockEvent.getAction().name().endsWith("_CLICK_BLOCK")) {
-				invalid = new ScriptEdit(SBPlayer.fromPlayer(player)).perform(blockEvent.getLocation());
+				SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
+				sbPlayer.getScriptEdit().ifPresent(s -> invalid.set(s.perform(sbPlayer, blockEvent.getLocation())));
 			}
-			blockEvent.setInvalid(invalid);
+			blockEvent.setInvalid(invalid.get());
 		}
 		Bukkit.getPluginManager().callEvent(blockEvent);
 		if (blockEvent.isCancelled() || ItemAction.has(player, blockEvent.getItem(), true)) {

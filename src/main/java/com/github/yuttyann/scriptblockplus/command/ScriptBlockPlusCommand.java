@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.region.CuboidRegionPaste;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionRemove;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
-import com.github.yuttyann.scriptblockplus.script.ScriptEditType;
+import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.*;
 import com.google.common.base.Charsets;
@@ -214,7 +214,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		if (!hasPermission(sender, Permission.COMMAND_DATAMIGR)) {
 			return false;
 		}
-		String path = "plugins/ScriptBlock/BlocksData/";
+		String path = "plugins" + SBFiles.S + "ScriptBlock" + SBFiles.S + "BlocksData" + SBFiles.S;
 		File interactFile = new File(path + "interact_Scripts.yml");
 		File walkFile = new File(path + "walk_Scripts.yml");
 		if (!walkFile.exists() && !interactFile.exists()) {
@@ -267,7 +267,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 		int y = Integer.parseInt(args[4]);
 		int z = Integer.parseInt(args[5]);
 		Location location = new Location(world, x, y, z);
-		ScriptBlock.getInstance().getAPI().scriptRead(player, location, scriptType, 0);
+		ScriptBlock.getInstance().getAPI().read(player, location, scriptType, 0);
 		return true;
 	}
 
@@ -277,7 +277,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return false;
 		}
 		SBPlayer sbPlayer = SBPlayer.fromPlayer((Player) sender);
-		if (sbPlayer.getScriptLine().isPresent() || sbPlayer.getScriptEditType().isPresent()) {
+		if (sbPlayer.getScriptLine().isPresent() || sbPlayer.getScriptEdit().isPresent()) {
 			SBConfig.ERROR_ACTION_DATA.send(sbPlayer);
 			return true;
 		}
@@ -290,7 +290,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			sbPlayer.setScriptLine(script);
 		}
 		ActionType actionType = ActionType.valueOf(args[1].toUpperCase());
-		sbPlayer.setScriptEditType(new ScriptEditType(actionType, scriptType));
+		sbPlayer.setScriptEdit(new ScriptEdit(actionType, scriptType));
 		SBConfig.SUCCESS_ACTION_DATA.replace(scriptType.type() + "-" + actionType.name().toLowerCase()).send(sbPlayer);
 		return true;
 	}
@@ -306,11 +306,11 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 			return true;
 		}
 		if (equals(args[1], "paste")) {
-			if (!sbPlayer.getClipboard().isPresent()) {
+			if (!sbPlayer.getSBClipboard().isPresent()) {
 				SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
 				return true;
 			}
-			SBClipboard clipboard = sbPlayer.getClipboard().get();
+			SBClipboard clipboard = sbPlayer.getSBClipboard().get();
 			try {
 				boolean pasteonair = args.length > 2 && Boolean.parseBoolean(args[2]);
 				boolean overwrite = args.length > 3 && Boolean.parseBoolean(args[3]);
@@ -319,7 +319,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 				SBConfig.SELECTOR_PASTE.replace(scriptType, regionPaste.getRegionBlocks().getCount()).send(sbPlayer);
 				SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptType, regionPaste.getRegionBlocks()).console();
 			} finally {
-				sbPlayer.setClipboard(null);
+				sbPlayer.setSBClipboard(null);
 			}
 		} else {
 			CuboidRegionRemove regionRemove = new CuboidRegionRemove(region).remove();

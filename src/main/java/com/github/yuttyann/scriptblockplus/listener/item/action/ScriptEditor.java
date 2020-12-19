@@ -71,8 +71,8 @@ public class ScriptEditor extends ItemAction {
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
                 if (runItem.isSneaking() && !runItem.isAIR()) {
-                    if (!location.isPresent() || !sbPlayer.getClipboard().isPresent()
-                            || !sbPlayer.getClipboard().get().paste(location.get(), true)) {
+                    if (!location.isPresent() || !sbPlayer.getSBClipboard().isPresent()
+                            || !sbPlayer.getSBClipboard().get().paste(location.get(), true)) {
                         SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
                     }
                 } else if (!runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {

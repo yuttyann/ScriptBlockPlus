@@ -12,17 +12,17 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CuboidRegionPaste {
 
-    private final SBClipboard clipboard;
+    private final SBClipboard sbClipboard;
     private final CuboidRegionBlocks cuboidRegionBlocks;
 
-    public CuboidRegionPaste(@NotNull SBClipboard clipboard, @NotNull Region region) {
-        this.clipboard = clipboard;
+    public CuboidRegionPaste(@NotNull SBClipboard sbClipboard, @NotNull Region region) {
+        this.sbClipboard = sbClipboard;
         this.cuboidRegionBlocks = new CuboidRegionBlocks(region);
     }
 
     @NotNull
     public ScriptType getScriptType() {
-        return clipboard.getScriptType();
+        return sbClipboard.getScriptType();
     }
 
     @NotNull
@@ -35,9 +35,9 @@ public class CuboidRegionPaste {
             if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
                 continue;
             }
-            clipboard.lightPaste(block.getLocation(), overwrite);
+            sbClipboard.lightPaste(block.getLocation(), overwrite);
         }
-        clipboard.save();
+        sbClipboard.save();
         return this;
     }
 }

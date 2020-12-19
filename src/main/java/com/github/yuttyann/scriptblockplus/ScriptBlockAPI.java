@@ -27,7 +27,7 @@ public interface ScriptBlockAPI {
 	 * @param index 開始位置
 	 * @return 正常に終了した場合はtrue
 	 */
-	boolean scriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index);
+	boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index);
 
 	/**
 	 * 指定したオプションを登録します。

@@ -7,7 +7,6 @@ import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
-import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -32,24 +31,20 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
 	protected SBPlayer sbPlayer;
 	protected Location location;
+	protected ScriptType scriptType;
 	protected BlockScript blockScript;
 	
 	protected List<String> script;
 	protected String optionValue;
 	protected int scriptIndex;
 
-	// 継承用
-	protected ScriptRead(@NotNull ScriptListener listener) {
-		super(listener);
-	}
-
-	public ScriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptListener listener) {
-		super(listener);
+	public ScriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType) {
 		location.setX(location.getBlockX() + 0.5D);
 		location.setY(location.getBlockY() + 0.5D);
 		location.setZ(location.getBlockZ() + 0.5D);
 		this.sbPlayer = SBPlayer.fromPlayer(player);
 		this.location = new UnmodifiableLocation(location); // 変更不可
+		this.scriptType = scriptType;
 		this.blockScript = new BlockScriptJson(getScriptType()).load();
 	}
 
@@ -63,6 +58,12 @@ public class ScriptRead extends ScriptMap implements SBRead {
 	@NotNull
 	public Location getLocation() {
 		return location;
+	}
+
+	@Override
+	@NotNull
+	public ScriptType getScriptType() {
+		return scriptType;
 	}
 
 	@Override

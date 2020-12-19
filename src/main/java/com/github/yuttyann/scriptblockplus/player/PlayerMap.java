@@ -4,7 +4,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
-import com.github.yuttyann.scriptblockplus.script.ScriptEditType;
+import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,9 +20,9 @@ import java.util.Optional;
 public abstract class PlayerMap implements SBPlayer {
 
 	private static final String KEY_REGION = Utils.randomUUID();
-	private static final String KEY_CLIPBOARD = Utils.randomUUID();
 	private static final String KEY_SCRIPT_LINE = Utils.randomUUID();
-	private static final String KEY_SCRIPT_EDIT_TYPE = Utils.randomUUID();
+	private static final String KEY_SCRIPT_EDIT = Utils.randomUUID();
+	private static final String KEY_SB_CLIPBOARD = Utils.randomUUID();
 	private static final String KEY_OLD_BLOCK_COORDS = Utils.randomUUID();
 
 	private final ObjectMap objectMap;
@@ -78,29 +78,23 @@ public abstract class PlayerMap implements SBPlayer {
 	}
 
 	@Override
-	public void setClipboard(@Nullable SBClipboard clipboard) {
-		getObjectMap().put(KEY_CLIPBOARD, clipboard);
-	}
-
-	@Override
 	public void setScriptLine(@Nullable String scriptLine) {
 		getObjectMap().put(KEY_SCRIPT_LINE, scriptLine);
 	}
 
 	@Override
-	public void setScriptEditType(@Nullable ScriptEditType scriptEditType) {
-		getObjectMap().put(KEY_SCRIPT_EDIT_TYPE, scriptEditType);
+	public void setScriptEdit(@Nullable ScriptEdit scriptEdit) {
+		getObjectMap().put(KEY_SCRIPT_EDIT, scriptEdit);
+	}
+
+	@Override
+	public void setSBClipboard(@Nullable SBClipboard sbClipboard) {
+		getObjectMap().put(KEY_SB_CLIPBOARD, sbClipboard);
 	}
 
 	@Override
 	public void setOldBlockCoords(@Nullable BlockCoords blockCoords) {
 		getObjectMap().put(KEY_OLD_BLOCK_COORDS, blockCoords);
-	}
-
-	@Override
-	@NotNull
-	public Optional<SBClipboard> getClipboard() {
-		return Optional.ofNullable(getObjectMap().get(KEY_CLIPBOARD));
 	}
 
 	@Override
@@ -111,8 +105,14 @@ public abstract class PlayerMap implements SBPlayer {
 
 	@Override
 	@NotNull
-	public Optional<ScriptEditType> getScriptEditType() {
-		return Optional.ofNullable(getObjectMap().get(KEY_SCRIPT_EDIT_TYPE));
+	public Optional<ScriptEdit> getScriptEdit() {
+		return Optional.ofNullable(getObjectMap().get(KEY_SCRIPT_EDIT));
+	}
+
+	@Override
+	@NotNull
+	public Optional<SBClipboard> getSBClipboard() {
+		return Optional.ofNullable(getObjectMap().get(KEY_SB_CLIPBOARD));
 	}
 
 	@Override

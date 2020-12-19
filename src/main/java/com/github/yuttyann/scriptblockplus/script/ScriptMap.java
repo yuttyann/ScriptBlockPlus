@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import com.github.yuttyann.scriptblockplus.listener.ScriptListener;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,15 +12,11 @@ import java.util.UUID;
  * ScriptBlockPlus ScriptMap クラス
  * @author yuttyann44581
  */
-public abstract class ScriptMap extends ScriptListener implements ObjectMap {
+public abstract class ScriptMap implements ObjectMap {
 
 	private static final Map<UUID, Map<String, Object>> OBJECT_MAP = new HashMap<>();
 
 	private final UUID ramdomId = UUID.randomUUID();
-
-	protected ScriptMap(@NotNull ScriptListener listener) {
-		super(listener);
-	}
 
 	@Override
 	public void put(@NotNull String key, @Nullable Object value) {

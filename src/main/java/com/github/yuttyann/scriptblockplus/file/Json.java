@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 public abstract class Json<T> {
 
     @Exclude
-    private final File file;
+    protected final File file;
 
     @Exclude
     private final Class<?>[] classes;

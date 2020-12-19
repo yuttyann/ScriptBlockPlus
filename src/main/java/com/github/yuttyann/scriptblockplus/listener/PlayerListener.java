@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -27,12 +26,6 @@ import java.util.Optional;
  */
 public class PlayerListener implements Listener {
 
-	private final ScriptBlock plugin;
-
-	public PlayerListener(@NotNull ScriptBlock plugin) {
-		this.plugin = plugin;
-	}
-
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		BaseSBPlayer sbPlayer = (BaseSBPlayer) SBPlayer.fromPlayer(event.getPlayer());
@@ -41,7 +34,7 @@ public class PlayerListener implements Listener {
 			sbPlayer.setOldBlockCoords(new BlockCoords(sbPlayer.getLocation()).subtract(0, 1, 0));
 		}
 		if (sbPlayer.isOp()) {
-			plugin.checkUpdate(sbPlayer, false);
+			ScriptBlock.getInstance().checkUpdate(sbPlayer, false);
 		}
 
 		// ItemCost アイテム返却
@@ -58,8 +51,8 @@ public class PlayerListener implements Listener {
 		BaseSBPlayer sbPlayer = (BaseSBPlayer) SBPlayer.fromPlayer(event.getPlayer());
 		sbPlayer.setOnline(false);
 		sbPlayer.setScriptLine(null);
-		sbPlayer.setScriptEditType(null);
-		sbPlayer.setClipboard(null);
+		sbPlayer.setScriptEdit(null);
+		sbPlayer.setSBClipboard(null);
 
 		CuboidRegion region = ((CuboidRegion) sbPlayer.getRegion());
 		region.setWorld(null);

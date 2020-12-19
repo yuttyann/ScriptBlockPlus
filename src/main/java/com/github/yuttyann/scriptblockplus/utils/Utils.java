@@ -122,21 +122,13 @@ public final class Utils {
 	public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull String command) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(command, "Command cannot be null");
-		if (sender instanceof SBPlayer && ((SBPlayer) sender).isOnline()) {
-			sender = Objects.requireNonNull(((SBPlayer) sender).getPlayer());
-		}
 		command = command.startsWith("/") ? command.substring(1) : command;
+		CommandSender commandSender = sender instanceof SBPlayer ? ((SBPlayer) sender).getPlayer() : sender;
 		if (CommandSelector.INSTANCE.has(command) && (isCBXXXorLater("1.13.2") || PsudoCommand.INSTANCE.has())) {
-			int succsess = 0;
-			List<StringBuilder> list = CommandSelector.INSTANCE.build(sender, command);
-			for (StringBuilder builder : list) {
-				if (Bukkit.dispatchCommand(sender, builder.toString())) {
-					succsess++;
-				}
-			}
-			return list.size() == succsess;
+			List<String> commands = CommandSelector.INSTANCE.build(commandSender, command);
+			return commands.stream().allMatch(s -> Bukkit.dispatchCommand(commandSender, s));
 		}
-		return Bukkit.dispatchCommand(sender, command);
+		return Bukkit.dispatchCommand(commandSender, command);
 	}
 
 	@NotNull

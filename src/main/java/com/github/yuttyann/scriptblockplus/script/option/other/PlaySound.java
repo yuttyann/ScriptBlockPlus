@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -35,7 +36,7 @@ public class PlaySound extends BaseOption {
 		boolean playWorld = array.length > 1 && Boolean.parseBoolean(array[1]);
 
 		if (delay > 0) {
-			new Task(soundType, volume, pitch, playWorld).runTaskLater(getPlugin(), delay);
+			new Task(soundType, volume, pitch, playWorld).runTaskLater(ScriptBlock.getInstance(), delay);
 		} else {
 			playSound(soundType, volume, pitch, playWorld);
 		}

@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
@@ -45,7 +46,7 @@ public class Delay extends BaseOption implements Runnable {
 			if (saveDelay) {
 				DELAY_SET.add(new TimerTemp(getUniqueId(), getLocation(), getScriptType()));
 			}
-			Bukkit.getScheduler().runTaskLater(getPlugin(), this, Long.parseLong(array[0]));
+			Bukkit.getScheduler().runTaskLater(ScriptBlock.getInstance(), this, Long.parseLong(array[0]));
 		}
 		return false;
 	}

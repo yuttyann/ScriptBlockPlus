@@ -1,52 +1,109 @@
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
 /**
- * ScriptBlockPlus SBClipboard インターフェース
+ * ScriptBlockPlus ScriptClipboard クラス
  * @author yuttyann44581
  */
-public interface SBClipboard {
+public class SBClipboard {
 
-	/**
-	 * スクリプトの座標を取得します。
-	 * @return スクリプトの座標
-	 */
-	@NotNull
-	Location getLocation();
+    private final SBPlayer sbPlayer;
+    private final Location location;
+    private final ScriptType scriptType;
+    private final BlockScriptJson blockScriptJson;
 
-	/**
-	 * スクリプトの種類を取得します。
-	 * @return スクリプトの種類
-	 */
-	@NotNull
-	ScriptType getScriptType();
+    private final Set<UUID> author;
+    private final List<String> script;
+    private final int amount;
 
-	/**
-	 * 変更を保存します。
-	 */
-	void save();
+    public SBClipboard(@NotNull SBPlayer sbPlayer, @NotNull Location location, @NotNull BlockScriptJson blockScriptJson) {
+        this.sbPlayer = sbPlayer;
+        this.location = location;
+        this.scriptType = blockScriptJson.getScriptType();
+        this.blockScriptJson = blockScriptJson;
 
-	/**
-	 * スクリプトをコピーします。
-	 * @return コピーに成功した場合はtrue
-	 */
-	boolean copy();
+        ScriptParam scriptParam = blockScriptJson.load().get(location);
+        this.author = scriptParam.getAuthor();
+        this.script = scriptParam.getScript();
+        this.amount = scriptParam.getAmount();
+    }
 
-	/**
-	 * スクリプトを指定した座標にペーストします（保存を行います。）
-	 * @param location スクリプトの座標
-	 * @param overwrite trueの場合は上書きを行い、falseの場合は行いません。
-	 * @return ペーストに成功した場合はtrue
-	 */
-	boolean paste(@NotNull Location location, boolean overwrite);
+    @NotNull
+    public Location getLocation() {
+        return location;
+    }
 
-	/**
-	 * スクリプトを指定した座標にペーストします（保存は行いません。）
-	 * @param location スクリプトの座標
-	 * @param overwrite trueの場合は上書きを行い、falseの場合は行いません。
-	 * @return ペーストに成功した場合はtrue
-	 */
-	boolean lightPaste(@NotNull Location location, boolean overwrite);
+    @NotNull
+    public ScriptType getScriptType() {
+        return scriptType;
+    }
+
+    public void save() {
+        blockScriptJson.saveFile();
+    }
+
+    public boolean copy() {
+        try {
+            if (!BlockScriptJson.has(location, blockScriptJson)) {
+                SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
+                return false;
+            }
+            sbPlayer.setSBClipboard(this);
+            SBConfig.SCRIPT_COPY.replace(scriptType).send(sbPlayer);
+            SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), location, scriptType).console();
+        } finally {
+            sbPlayer.setScriptLine(null);
+            sbPlayer.setScriptEdit(null);
+        }
+        return true;
+    }
+
+    public boolean paste(@NotNull Location location, boolean overwrite) {
+        try {
+            if (BlockScriptJson.has(location, blockScriptJson) && !overwrite) {
+                return false;
+            }
+            PlayerCountJson.clear(location, scriptType);
+            ScriptParam scriptParam = blockScriptJson.load().get(location);
+            scriptParam.setAuthor(author);
+            scriptParam.getAuthor().add(sbPlayer.getUniqueId());
+            scriptParam.setScript(script);
+            scriptParam.setLastEdit(Utils.getFormatTime());
+            scriptParam.setAmount(amount);
+            blockScriptJson.saveFile();
+            SBConfig.SCRIPT_PASTE.replace(scriptType).send(sbPlayer);
+            SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), location, scriptType).console();
+        } finally {
+            sbPlayer.setSBClipboard(null);
+            sbPlayer.setScriptLine(null);
+            sbPlayer.setScriptEdit(null);
+        }
+        return true;
+    }
+
+    public boolean lightPaste(@NotNull Location location, boolean overwrite) {
+        if (BlockScriptJson.has(location, blockScriptJson) && !overwrite) {
+            return false;
+        }
+        PlayerCountJson.clear(location, scriptType);
+        ScriptParam scriptParam = blockScriptJson.load().get(location);
+        scriptParam.setAuthor(author);
+        scriptParam.getAuthor().add(sbPlayer.getUniqueId());
+        scriptParam.setScript(script);
+        scriptParam.setLastEdit(Utils.getFormatTime());
+        scriptParam.setAmount(amount);
+        return true;
+    }
 }

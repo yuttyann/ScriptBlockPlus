@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.script;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import org.bukkit.Location;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -13,13 +12,6 @@ import java.util.List;
  * @author yuttyann44581
  */
 public interface SBRead extends ObjectMap {
-
-	/**
-	 * プラグインを取得します。
-	 * @return プラグイン
-	 */
-	@NotNull
-	Plugin getPlugin();
 
 	/**
 	 * ScriptBlockPlusの{@link SBPlayer}を取得します。

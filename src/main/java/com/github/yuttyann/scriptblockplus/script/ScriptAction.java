@@ -54,7 +54,7 @@ public final class ScriptAction {
 			scriptLine.ifPresent(s -> create(sbPlayer.getPlayer(), location, s));
 		} finally {
 			sbPlayer.setScriptLine(null);
-			sbPlayer.setScriptEditType(null);
+			sbPlayer.setScriptEdit(null);
 		}
 	}
 
@@ -76,7 +76,7 @@ public final class ScriptAction {
 			scriptLine.ifPresent(s -> add(sbPlayer.getPlayer(), location, s));
 		} finally {
 			sbPlayer.setScriptLine(null);
-			sbPlayer.setScriptEditType(null);
+			sbPlayer.setScriptEdit(null);
 		}
 	}
 
@@ -100,7 +100,7 @@ public final class ScriptAction {
 			remove(sbPlayer.getPlayer(), location);
 		} finally {
 			sbPlayer.setScriptLine(null);
-			sbPlayer.setScriptEditType(null);
+			sbPlayer.setScriptEdit(null);
 		}
 	}
 
@@ -132,7 +132,7 @@ public final class ScriptAction {
 			view(sbPlayer.getPlayer(), location);
 		} finally {
 			sbPlayer.setScriptLine(null);
-			sbPlayer.setScriptEditType(null);
+			sbPlayer.setScriptEdit(null);
 		}
 	}
 
@@ -152,6 +152,6 @@ public final class ScriptAction {
 
 	@NotNull
 	public SBClipboard clipboard(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
-		return new ScriptClipboard(sbPlayer, location, blockScriptJson);
+		return new SBClipboard(sbPlayer, location, blockScriptJson);
 	}
 }

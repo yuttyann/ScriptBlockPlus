@@ -25,6 +25,11 @@ public class BlockScriptJson extends Json<BlockScript> {
         super(scriptType.type());
     }
 
+    public static boolean has(@NotNull Location location, @NotNull ScriptType scriptType) {
+        BlockScriptJson blockScriptJson = new BlockScriptJson(scriptType);
+        return blockScriptJson.exists() && blockScriptJson.load().has(location);
+    }
+
     public static boolean has(@NotNull Location location, @NotNull BlockScriptJson blockScriptJson) {
         return blockScriptJson.exists() && blockScriptJson.load().has(location);
     }
@@ -38,11 +43,6 @@ public class BlockScriptJson extends Json<BlockScript> {
     @NotNull
     public BlockScript newInstance(@NotNull Object[] args) {
         return new BlockScript(getScriptType());
-    }
-
-    public static boolean has(@NotNull Location location, @NotNull ScriptType scriptType) {
-        BlockScriptJson blockScriptJson = new BlockScriptJson(scriptType);
-        return blockScriptJson.exists() && blockScriptJson.load().has(location);
     }
 
     public static void convart(@NotNull ScriptType scriptType) {

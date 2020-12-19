@@ -3,7 +3,7 @@ package com.github.yuttyann.scriptblockplus.player;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
-import com.github.yuttyann.scriptblockplus.script.ScriptEditType;
+import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -120,35 +120,28 @@ public interface SBPlayer extends CommandSender {
 	ObjectMap getObjectMap();
 
 	/**
-	 * クリップボードをセットします。
-	 * @param clipboard クリップボード
-	 */
-	void setClipboard(@Nullable SBClipboard clipboard);
-
-	/**
 	 * スクリプトをセットします。
 	 * @param scriptLine スクリプト
 	 */
 	void setScriptLine(@Nullable String scriptLine);
 
 	/**
-	 * エディットタイプをセットします。
-	 * @param editType エディットタイプ
+	 * スクリプトエディットをセットします。
+	 * @param scriptEdit スクリプトエディット
 	 */
-	void setScriptEditType(@Nullable ScriptEditType editType);
+	void setScriptEdit(@Nullable ScriptEdit scriptEdit);
+
+	/**
+	 * スクリプトのクリップボードをセットします。
+	 * @param sbClipboard スクリプトのクリップボード
+	 */
+	void setSBClipboard(@Nullable SBClipboard sbClipboard);
 
 	/**
 	 * ブロックの座標をセットします。
 	 * @param blockCoords ブロックの座標
 	 */
 	void setOldBlockCoords(@Nullable BlockCoords blockCoords);
-
-	/**
-	 * クリップボードを取得します。
-	 * @return クリップボード（オプショナル）
-	 */
-	@NotNull
-	Optional<SBClipboard> getClipboard();
 
 	/**
 	 * スクリプトを取得します。
@@ -158,11 +151,18 @@ public interface SBPlayer extends CommandSender {
 	Optional<String> getScriptLine();
 
 	/**
-	 * エディットタイプを取得します。
-	 * @return エディットタイプ（オプショナル）
+	 * スクリプトエディットを取得します。
+	 * @return スクリプトエディット（オプショナル）
 	 */
 	@NotNull
-	Optional<ScriptEditType> getScriptEditType();
+	Optional<ScriptEdit> getScriptEdit();
+
+	/**
+	 * スクリプトのクリップボードを取得します。
+	 * @return スクリプトのクリップボード（オプショナル）
+	 */
+	@NotNull
+	Optional<SBClipboard> getSBClipboard();
 
 	/**
 	 * ブロックの座標を取得します。
