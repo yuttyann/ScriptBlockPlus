@@ -11,13 +11,13 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus Bypass オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "bypass", syntax = "@bypass ")
-public class Bypass extends BaseOption {
+@OptionTag(name = "bypass_op", syntax = "@bypass ")
+public class BypassOP extends BaseOption {
 
 	@Override
 	@NotNull
 	public Option newInstance() {
-		return new Bypass();
+		return new BypassOP();
 	}
 
 	@Override

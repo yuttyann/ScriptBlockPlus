@@ -47,7 +47,9 @@ public final class OptionManager {
         OPTION_MAP.put(new PlaySound());
         OPTION_MAP.put(new Title());
         OPTION_MAP.put(new ActionBar());
-        OPTION_MAP.put(new Bypass());
+        OPTION_MAP.put(new BypassOP());
+        OPTION_MAP.put(new BypassPerm());
+        OPTION_MAP.put(new BypassGroup());
         OPTION_MAP.put(new Command());
         OPTION_MAP.put(new Console());
         OPTION_MAP.put(new Execute());

@@ -18,7 +18,7 @@ import java.util.UUID;
 @OptionTag(name = "oldcooldown", syntax = "@oldcooldown:")
 public class OldCooldown extends TimerOption {
 
-	private static final UUID UUID_OLDCOOLDOWN = UUID.nameUUIDFromBytes(OldCooldown.class.getName().getBytes());
+	public static final UUID UUID_OLDCOOLDOWN = UUID.nameUUIDFromBytes(OldCooldown.class.getName().getBytes());
 
 	@Override
 	@NotNull

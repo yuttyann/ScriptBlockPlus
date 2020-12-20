@@ -34,14 +34,14 @@ public class ScriptAction extends BaseOption {
 		return Arrays.stream(array).allMatch(s -> equals(action, s));
 	}
 
-	private boolean equals(@Nullable Action action, @NotNull String actionType) {
+	private boolean equals(@Nullable Action action, @NotNull String type) {
 		if (action == null) {
 			return false;
 		}
-		if (actionType.equalsIgnoreCase("shift")) {
+		if (type.equalsIgnoreCase("shift")) {
 			return getPlayer().isSneaking();
 		}
-		return ScriptType.INTERACT.equals(getScriptType()) && action == getAction(actionType);
+		return ScriptType.INTERACT.equals(getScriptType()) && action == getAction(type);
 	}
 
 	@Nullable
