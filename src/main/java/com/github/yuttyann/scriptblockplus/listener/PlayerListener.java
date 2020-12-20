@@ -7,6 +7,7 @@ import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
+import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.entity.Player;
@@ -17,8 +18,6 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Optional;
 
 /**
  * ScriptBlockPlus JoinQuitListener クラス
@@ -63,9 +62,15 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerItemHeld(PlayerItemHeldEvent event) {
 		Player player = event.getPlayer();
-		Optional<ItemStack> newSlot = Optional.ofNullable(player.getInventory().getItem(event.getNewSlot()));
-		Optional<ItemStack> oldSlot = Optional.ofNullable(player.getInventory().getItem(event.getPreviousSlot()));
-		newSlot.ifPresent(i -> ItemAction.callSlot(player, i, true));
-		oldSlot.ifPresent(i -> ItemAction.callSlot(player, i, false));
+		ItemStack oldSlot = player.getInventory().getItem(event.getPreviousSlot());
+		if (ItemAction.has(player, oldSlot, true)) {
+			try {
+				ActionBar.send(SBPlayer.fromPlayer(player), "");
+			} catch (ReflectiveOperationException e) {
+				e.printStackTrace();
+			}
+		}
+		ItemStack newSlot = player.getInventory().getItem(event.getNewSlot());
+		ItemAction.callSlot(player, newSlot, event.getNewSlot(), event.getPreviousSlot());
 	}
 }

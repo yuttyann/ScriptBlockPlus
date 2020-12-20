@@ -3,6 +3,7 @@ package com.github.yuttyann.scriptblockplus.listener.item.action;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.listener.item.ChangeSlot;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -25,6 +26,11 @@ public class BlockSelector extends ItemAction {
     @Override
     public boolean hasPermission(@NotNull Permissible permissible) {
         return Permission.TOOL_BLOCK_SELECTOR.has(permissible);
+    }
+
+    @Override
+    public void slot(@NotNull ChangeSlot changeSlot) {
+
     }
 
     @Override

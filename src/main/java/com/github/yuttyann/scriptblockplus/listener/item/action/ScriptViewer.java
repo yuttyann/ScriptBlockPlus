@@ -5,6 +5,7 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.listener.item.ChangeSlot;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -14,7 +15,9 @@ import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -44,6 +47,11 @@ public class ScriptViewer extends ItemAction {
     @Override
     public boolean hasPermission(@NotNull Permissible permissible) {
         return Permission.TOOL_SCRIPT_VIEWER.has(permissible);
+    }
+
+    @Override
+    public void slot(@NotNull ChangeSlot changeSlot) {
+
     }
 
     @Override

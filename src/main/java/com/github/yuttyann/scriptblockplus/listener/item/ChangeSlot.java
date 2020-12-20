@@ -1,11 +1,12 @@
 package com.github.yuttyann.scriptblockplus.listener.item;
 
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * ScriptBlockPlus ChangeSlot クラス
@@ -14,13 +15,13 @@ import java.util.Objects;
 public class ChangeSlot {
 
     private final Player player;
-    private final ItemStack item;
-    private final boolean isNewSlot;
+    private final int newSlot;
+    private final int oldSlot;
 
-    public ChangeSlot(@NotNull Player player, @Nullable ItemStack item, boolean isNewSlot) {
+    public ChangeSlot(@NotNull Player player, int newSlot, int oldSlot) {
         this.player = player;
-        this.item = item;
-        this.isNewSlot = isNewSlot;
+        this.newSlot = newSlot;
+        this.oldSlot = oldSlot;
     }
 
     @NotNull
@@ -29,11 +30,25 @@ public class ChangeSlot {
     }
 
     @NotNull
-    public ItemStack getItem() {
-        return Objects.requireNonNull(item);
+    public SBPlayer getSBPlayer() {
+        return SBPlayer.fromPlayer(player);
     }
 
-    public boolean isNewSlot() {
-        return isNewSlot;
+    @NotNull
+    public ItemStack getNewItem() {
+        return Optional.ofNullable(player.getInventory().getItem(newSlot)).orElse(new ItemStack(Material.AIR));
+    }
+
+    @NotNull
+    public ItemStack getOldItem() {
+        return Optional.ofNullable(player.getInventory().getItem(oldSlot)).orElse(new ItemStack(Material.AIR));
+    }
+
+    public int getNewSlot() {
+        return newSlot;
+    }
+
+    public int getOldSlot() {
+        return oldSlot;
     }
 }

@@ -38,12 +38,8 @@ public class ScriptEditor extends ItemAction {
     public void slot(@NotNull ChangeSlot changeSlot) {
         try {
             SBPlayer sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
-            if (changeSlot.isNewSlot()) {
-                ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
-                ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
-            } else {
-                ActionBar.send(sbPlayer, "");
-            }
+            ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
+            ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }

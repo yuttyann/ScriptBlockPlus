@@ -61,7 +61,7 @@ public abstract class ItemAction implements Cloneable {
         return equals(((ItemAction) obj).item);
     }
 
-    private boolean equals(@Nullable ItemStack item) {
+    public boolean equals(@Nullable ItemStack item) {
         return item != null && ItemUtils.isItem(this.item, item.getType(), ItemUtils.getName(item));
     }
 
@@ -74,20 +74,18 @@ public abstract class ItemAction implements Cloneable {
         return true;
     }
 
-    public void slot(@NotNull ChangeSlot changeSlot) {
-        // アイテムスロットを移動した際に呼ばれる
-    }
-
-    public abstract boolean run(@NotNull RunItem runItem);
-
     public static boolean has(@NotNull Permissible permissible, @Nullable ItemStack item, boolean permission) {
         Optional<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).findFirst();
         return itemAction.filter(i -> !permission || i.hasPermission(permissible)).isPresent();
     }
 
-    public static void callSlot(@NotNull Player player, @Nullable ItemStack item, boolean isNewSlot) {
+    public abstract void slot(@NotNull ChangeSlot changeSlot);
+
+    public abstract boolean run(@NotNull RunItem runItem);
+
+    public static void callSlot(@NotNull Player player, @Nullable ItemStack item, int newSlot, int oldSlot) {
         Stream<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player));
-        itemAction.findFirst().ifPresent(i ->  i.clone().slot(new ChangeSlot(player, item, isNewSlot)));
+        itemAction.findFirst().ifPresent(i ->  i.clone().slot(new ChangeSlot(player, newSlot, oldSlot)));
     }
 
     public static boolean callRun(@NotNull Player player, @Nullable ItemStack item, @Nullable Location location, @NotNull Action action) {
