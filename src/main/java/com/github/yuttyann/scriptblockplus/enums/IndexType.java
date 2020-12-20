@@ -19,7 +19,7 @@ public enum IndexType {
     /**
      * 指定したオプションより一つ前に追加
      */
-    BEFORE(-1),
+    BEFORE(0),
 
     /**
      * 指定したオプションより一つ後に追加

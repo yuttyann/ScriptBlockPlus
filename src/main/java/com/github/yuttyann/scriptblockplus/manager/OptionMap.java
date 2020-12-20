@@ -37,7 +37,7 @@ public class OptionMap extends HashMap<String, Option> {
                 break;
             default:
                 int index = LINKED_LIST.indexOf(priority.getSyntax()) + priority.getIndexType().getAmount();
-                LINKED_LIST.add(Math.max(Math.min(index, 0), LINKED_LIST.size()), syntax);
+                LINKED_LIST.add(Math.min(Math.max(index, 0), LINKED_LIST.size()), syntax);
                 break;
         }
         return super.put(syntax, new SBConstructor<>(optionClass).newInstance(InstanceType.REFLECTION));
