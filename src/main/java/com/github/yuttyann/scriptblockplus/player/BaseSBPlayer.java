@@ -21,28 +21,19 @@ import java.util.*;
  */
 public final class BaseSBPlayer extends PlayerMap {
 
-	private static final Map<UUID, SBPlayer> PLAYERS = new HashMap<>(64);
+	private static final Map<UUID, BaseSBPlayer> PLAYERS = new HashMap<>(64);
 
 	private final UUID uuid;
 
 	private Player player;
 	private boolean isOnline;
 
-	private BaseSBPlayer(@NotNull UUID uuid) {
+	BaseSBPlayer(@NotNull UUID uuid) {
 		this.uuid = uuid;
 	}
 
 	@NotNull
-	static SBPlayer getSBPlayer(@NotNull UUID uuid) {
-		SBPlayer sbPlayer = PLAYERS.get(uuid);
-		if (sbPlayer == null) {
-			PLAYERS.put(uuid, sbPlayer = new BaseSBPlayer(uuid));
-		}
-		return sbPlayer;
-	}
-
-	@NotNull
-	public static Map<UUID, SBPlayer> getPlayers() {
+	public static Map<UUID, BaseSBPlayer> getSBPlayers() {
 		return PLAYERS;
 	}
 

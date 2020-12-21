@@ -22,7 +22,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class ScriptWalkListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerMoveEvent(PlayerMoveEvent event) {
+	public void onPlayerMove(PlayerMoveEvent event) {
 		SBPlayer sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
 		BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation()).subtract(0, 1, 0);
 		if (blockCoords.equals(sbPlayer.getOldBlockCoords().orElse(null))) {

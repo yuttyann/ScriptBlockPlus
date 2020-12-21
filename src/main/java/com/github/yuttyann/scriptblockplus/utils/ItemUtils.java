@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -41,6 +42,7 @@ public class ItemUtils {
 		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
 		meta.setDisplayName("§dBlock Selector");
 		meta.setLore(StringUtils.setListColor(SBConfig.BLOCK_SELECTOR.getValue()));
+		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -51,6 +53,7 @@ public class ItemUtils {
 		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
 		meta.setDisplayName("§dScript Editor");
 		meta.setLore(StringUtils.setListColor(SBConfig.SCRIPT_EDITOR.getValue()));
+		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -61,6 +64,7 @@ public class ItemUtils {
 		ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
 		meta.setDisplayName("§dScript Viewer");
 		meta.setLore(StringUtils.setListColor(SBConfig.SCRIPT_VIEWER.getValue()));
+		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		item.setItemMeta(meta);
 		return item;
 	}

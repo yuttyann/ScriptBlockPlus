@@ -103,7 +103,9 @@ public class ScriptRead extends ScriptMap implements SBRead {
 			Option option = OptionManager.newInstance(script);
 			optionValue = setPlaceholders(getSBPlayer(), option.getValue(script));
 			if (!hasPermission(option) || !option.callOption(this)) {
-				executeEndProcess(e -> { if (!option.isFailedIgnore()) e.failed(this); });
+				if (!option.isFailedIgnore()) {
+					executeEndProcess(e -> e.failed(this));
+				}
 				return false;
 			}
 		}

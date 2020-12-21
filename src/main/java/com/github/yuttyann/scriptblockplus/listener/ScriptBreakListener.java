@@ -23,7 +23,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 public class ScriptBreakListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onBlockBreakEvent(BlockBreakEvent event) {
+	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		if (ItemAction.has(player, player.getInventory().getItemInMainHand(), true)) {
 			event.setCancelled(true);

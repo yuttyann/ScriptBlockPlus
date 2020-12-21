@@ -64,11 +64,7 @@ public class PlayerListener implements Listener {
 		Player player = event.getPlayer();
 		ItemStack oldSlot = player.getInventory().getItem(event.getPreviousSlot());
 		if (ItemAction.has(player, oldSlot, true)) {
-			try {
-				ActionBar.send(SBPlayer.fromPlayer(player), "");
-			} catch (ReflectiveOperationException e) {
-				e.printStackTrace();
-			}
+			ActionBar.send(SBPlayer.fromPlayer(player), "");
 		}
 		ItemStack newSlot = player.getInventory().getItem(event.getNewSlot());
 		ItemAction.callSlot(player, newSlot, event.getNewSlot(), event.getPreviousSlot());

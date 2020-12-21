@@ -34,7 +34,7 @@ public class BlockSelector extends ItemAction {
     }
 
     @Override
-    public boolean run(@NotNull RunItem runItem) {
+    public void run(@NotNull RunItem runItem) {
         SBPlayer sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
         CuboidRegion region = ((CuboidRegion) sbPlayer.getRegion());
         Location location = runItem.getLocation();
@@ -65,6 +65,5 @@ public class BlockSelector extends ItemAction {
                 break;
             default:
         }
-        return true;
     }
 }

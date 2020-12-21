@@ -43,17 +43,21 @@ public class ActionBar extends BaseOption {
 		return true;
 	}
 
-	public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) throws ReflectiveOperationException {
+	public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
 		if (Utils.isCBXXXorLater("1.11")) {
 			String command = "title " + sbPlayer.getName() + " actionbar " + "{\"text\":\"" + message + "\"}";
 			Utils.tempOP(sbPlayer, () -> Utils.dispatchCommand(sbPlayer, command));
 		} else if (Utils.isPlatform()) {
-			String chatSerializer = "IChatBaseComponent$ChatSerializer";
-			Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
-			Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
-			Class<?>[] array = { PackageType.NMS.getClass("IChatBaseComponent"), byte.class };
-			Constructor<?> packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", array);
-			PackageType.sendPacket(sbPlayer.getPlayer(), packetPlayOutChat.newInstance(component, (byte) 2));
+			try {
+				String chatSerializer = "IChatBaseComponent$ChatSerializer";
+				Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
+				Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
+				Class<?>[] array = {PackageType.NMS.getClass("IChatBaseComponent"), byte.class};
+				Constructor<?> packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", array);
+				PackageType.sendPacket(sbPlayer.getPlayer(), packetPlayOutChat.newInstance(component, (byte) 2));
+			} catch (ReflectiveOperationException e) {
+				e.printStackTrace();
+			}
 		} else {
 			String platforms = SBConfig.PLATFORMS.getValue().stream().map(String::valueOf).collect(Collectors.joining(", "));
 			throw new UnsupportedOperationException("Unsupported server. | Supported Servers <" + platforms + ">");

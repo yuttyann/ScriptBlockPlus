@@ -29,17 +29,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class InteractListener implements Listener {
 
-	private static final String KEY_FLAG = Utils.randomUUID();
+	private static final String KEY_ENTITY = Utils.randomUUID();
+	private static final String KEY_ANIMATION = Utils.randomUUID();
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerAnimationEvent(PlayerAnimationEvent event) {
+	public void onPlayerAnimation(PlayerAnimationEvent event) {
 		Player player = event.getPlayer();
 		if (event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
 			return;
 		}
 		ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
-		if (objectMap.has(KEY_FLAG) && objectMap.getBoolean(KEY_FLAG)) {
-			objectMap.put(KEY_FLAG, false);
+		if (objectMap.has(KEY_ANIMATION) && objectMap.getBoolean(KEY_ANIMATION)) {
+			objectMap.put(KEY_ANIMATION, false);
 			return;
 		}
 		RayResult ray = new RayTrace(player.getWorld()).rayTrace(player, 4.5D);
@@ -55,7 +56,7 @@ public class InteractListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerInteractEvent(PlayerInteractEvent event) {
+	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action action = event.getAction();
 		if (action == Action.PHYSICAL) {
 			return;
@@ -66,43 +67,55 @@ public class InteractListener implements Listener {
 				return;
 			}
 			ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
-			if (action == Action.RIGHT_CLICK_BLOCK && (!objectMap.has(KEY_FLAG) || !objectMap.getBoolean(KEY_FLAG))) {
-				objectMap.put(KEY_FLAG, true);
+			if (action == Action.RIGHT_CLICK_BLOCK && (!objectMap.has(KEY_ANIMATION) || !objectMap.getBoolean(KEY_ANIMATION))) {
+				objectMap.put(KEY_ANIMATION, true);
 			}
 		}
 		callEvent(event, false);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
+	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+		SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().put(KEY_ENTITY, true);
+	}
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		if (event.getPlayer().getGameMode() == GameMode.ADVENTURE) {
-			SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().put(KEY_FLAG, true);
+			SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().put(KEY_ANIMATION, true);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerGameModeChangeEvent(PlayerGameModeChangeEvent event) {
+	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
 		if (event.getNewGameMode() != GameMode.ADVENTURE) {
-			SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().put(KEY_FLAG, false);
+			SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().put(KEY_ANIMATION, false);
 		}
 	}
 
-	private void callEvent(@NotNull PlayerInteractEvent interactEvent, final boolean isAnimation) {
-		Player player = interactEvent.getPlayer();
-		BlockClickEvent blockEvent = new BlockClickEvent(interactEvent, isAnimation);
-		if (blockEvent.getHand() == EquipmentSlot.HAND) {
-			AtomicBoolean invalid = new AtomicBoolean(false);
-			if (ItemAction.callRun(player, blockEvent.getItem(), blockEvent.getLocation(), blockEvent.getAction())) {
-				invalid.set(true);
-			} else if (blockEvent.getAction().name().endsWith("_CLICK_BLOCK")) {
-				SBPlayer sbPlayer = SBPlayer.fromPlayer(player);
-				sbPlayer.getScriptEdit().ifPresent(s -> invalid.set(s.perform(sbPlayer, blockEvent.getLocation())));
+	private void callEvent(@NotNull PlayerInteractEvent interactEvent, boolean isAnimation) {
+		SBPlayer sbPlayer = SBPlayer.fromPlayer(interactEvent.getPlayer());
+		ObjectMap objectMap = sbPlayer.getObjectMap();
+		try {
+			BlockClickEvent blockEvent = new BlockClickEvent(interactEvent, isAnimation);
+			if (objectMap.getBoolean(KEY_ENTITY) && interactEvent.getAction() == Action.LEFT_CLICK_AIR) {
+				return;
 			}
-			blockEvent.setInvalid(invalid.get());
-		}
-		Bukkit.getPluginManager().callEvent(blockEvent);
-		if (blockEvent.isCancelled() || ItemAction.has(player, blockEvent.getItem(), true)) {
-			interactEvent.setCancelled(true);
+			if (blockEvent.getHand() == EquipmentSlot.HAND) {
+				AtomicBoolean invalid = new AtomicBoolean(false);
+				if (ItemAction.callRun(sbPlayer.getPlayer(), blockEvent.getItem(), blockEvent.getLocation(), blockEvent.getAction())) {
+					invalid.set(true);
+				} else if (blockEvent.getAction().name().endsWith("_CLICK_BLOCK")) {
+					sbPlayer.getScriptEdit().ifPresent(s -> invalid.set(s.perform(sbPlayer, blockEvent.getLocation())));
+				}
+				blockEvent.setInvalid(invalid.get());
+			}
+			Bukkit.getPluginManager().callEvent(blockEvent);
+			if (blockEvent.isCancelled() || ItemAction.has(sbPlayer.getPlayer(), blockEvent.getItem(), true)) {
+				interactEvent.setCancelled(true);
+			}
+		} finally {
+			objectMap.remove(KEY_ENTITY);
 		}
 	}
 }

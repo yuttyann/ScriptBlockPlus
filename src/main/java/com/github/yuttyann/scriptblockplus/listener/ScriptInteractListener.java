@@ -27,7 +27,7 @@ import org.bukkit.material.Redstone;
 public class ScriptInteractListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onBlockClickEvent(BlockClickEvent event) {
+	public void onBlockClick(BlockClickEvent event) {
 		Block block = event.getBlock();
 		if (event.isInvalid() || event.getHand() != EquipmentSlot.HAND || block == null) {
 			return;

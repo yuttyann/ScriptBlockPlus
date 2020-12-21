@@ -55,7 +55,7 @@ public class ScriptViewer extends ItemAction {
     }
 
     @Override
-    public boolean run(@NotNull RunItem runItem) {
+    public void run(@NotNull RunItem runItem) {
         SBPlayer sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
         switch (runItem.getAction()) {
             case LEFT_CLICK_AIR:
@@ -70,7 +70,6 @@ public class ScriptViewer extends ItemAction {
                 break;
             default:
         }
-        return true;
     }
 
     private static class Task extends BukkitRunnable {

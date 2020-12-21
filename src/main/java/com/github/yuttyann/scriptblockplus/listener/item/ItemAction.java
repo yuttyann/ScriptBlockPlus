@@ -1,7 +1,9 @@
 package com.github.yuttyann.scriptblockplus.listener.item;
 
+import com.github.yuttyann.scriptblockplus.event.RunItemEvent;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableItemStack;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -81,7 +83,7 @@ public abstract class ItemAction implements Cloneable {
 
     public abstract void slot(@NotNull ChangeSlot changeSlot);
 
-    public abstract boolean run(@NotNull RunItem runItem);
+    public abstract void run(@NotNull RunItem runItem);
 
     public static void callSlot(@NotNull Player player, @Nullable ItemStack item, int newSlot, int oldSlot) {
         Stream<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player));
@@ -89,7 +91,16 @@ public abstract class ItemAction implements Cloneable {
     }
 
     public static boolean callRun(@NotNull Player player, @Nullable ItemStack item, @Nullable Location location, @NotNull Action action) {
-        Stream<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player));
-        return itemAction.findFirst().map(i -> i.clone().run(new RunItem(player, item, location, action))).orElse(false);
+        Optional<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player)).findFirst();
+        if (itemAction.isPresent()) {
+            RunItem runItem = new RunItem(player, item, location, action);
+            RunItemEvent runItemEvent = new RunItemEvent(runItem);
+            Bukkit.getPluginManager().callEvent(runItemEvent);
+            if (!runItemEvent.isCancelled()) {
+                itemAction.get().clone().run(runItem);
+            }
+            return true;
+        }
+        return false;
     }
 }

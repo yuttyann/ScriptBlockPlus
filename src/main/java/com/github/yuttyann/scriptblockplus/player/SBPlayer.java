@@ -35,12 +35,16 @@ public interface SBPlayer extends CommandSender {
 
 	/**
 	 * ScriptBlockPlusの{@link SBPlayer}を取得します。
-	 * @param uuid プレイヤーのUUID
+	 * @param uuid プレイヤーの{@link UUID}
 	 * @return {@link SBPlayer}
 	 */
 	@NotNull
 	static SBPlayer fromUUID(@NotNull UUID uuid) {
-		return BaseSBPlayer.getSBPlayer(uuid);
+		BaseSBPlayer sbPlayer = BaseSBPlayer.getSBPlayers().get(uuid);
+		if (sbPlayer == null) {
+			BaseSBPlayer.getSBPlayers().put(uuid, sbPlayer = new BaseSBPlayer(uuid));
+		}
+		return sbPlayer;
 	}
 
 	/**

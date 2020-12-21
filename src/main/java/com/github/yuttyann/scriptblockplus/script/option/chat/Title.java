@@ -36,17 +36,16 @@ public class Title extends BaseOption {
 				fadeOut = Integer.parseInt(times[2]);
 			}
 		}
-		sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+		send(getSBPlayer(), title, subtitle, fadeIn, stay, fadeOut);
 		return true;
 	}
 
-	private void sendTitle(@Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) throws ReflectiveOperationException {
-		SBPlayer sbPlayer = getSBPlayer();
+	public static void send(@NotNull SBPlayer sbPlayer, @Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) {
 		if (Utils.isCBXXXorLater("1.12")) {
 			sbPlayer.getPlayer().sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		} else {
 			String prefix = "title " + sbPlayer.getName();
-			Utils.tempOP(getSBPlayer(), () -> {
+			Utils.tempOP(sbPlayer, () -> {
 				Utils.dispatchCommand(sbPlayer, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
 				Utils.dispatchCommand(sbPlayer, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
 				Utils.dispatchCommand(sbPlayer, prefix + " title {\"text\":\"" + title + "\"}");

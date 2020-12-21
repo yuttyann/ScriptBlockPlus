@@ -36,17 +36,13 @@ public class ScriptEditor extends ItemAction {
 
     @Override
     public void slot(@NotNull ChangeSlot changeSlot) {
-        try {
-            SBPlayer sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
-            ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
-            ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
+        SBPlayer sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
+        ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
+        ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
     }
 
     @Override
-    public boolean run(@NotNull RunItem runItem) {
+    public void run(@NotNull RunItem runItem) {
         SBPlayer sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
         ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
         Optional<Location> location = Optional.ofNullable(runItem.getLocation());
@@ -56,12 +52,8 @@ public class ScriptEditor extends ItemAction {
                 if (runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {
                     new ScriptAction(scriptType).remove(sbPlayer, location.get());
                 } else if (!runItem.isSneaking()) {
-                    try {
-                        sbPlayer.getObjectMap().put(KEY, scriptType = getNextType(scriptType));
-                        ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
-                    } catch (ReflectiveOperationException e) {
-                        e.printStackTrace();
-                    }
+                    sbPlayer.getObjectMap().put(KEY, scriptType = getNextType(scriptType));
+                    ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
                 }
                 break;
             case RIGHT_CLICK_AIR:
@@ -77,7 +69,6 @@ public class ScriptEditor extends ItemAction {
                 break;
             default:
         }
-        return true;
     }
 
     @NotNull
