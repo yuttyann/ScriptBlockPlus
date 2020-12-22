@@ -15,6 +15,8 @@ import java.util.function.Function;
  */
 public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
+	private static final long serialVersionUID = 8105557375706974440L;
+
 	private static final Map<String, ScriptType> TYPES = new LinkedHashMap<>();
 
 	// Default Types

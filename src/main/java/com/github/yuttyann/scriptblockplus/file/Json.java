@@ -61,6 +61,7 @@ public abstract class Json<T> {
 
         // JSONをデシリアライズ
         try {
+            @SuppressWarnings("unchecked")
             Optional<Json<T>> json = Optional.ofNullable((Json<T>) loadFile());
             json.ifPresent(j -> list.addAll(Optional.ofNullable(j.oldList).orElseGet(() -> j.list)));
         } catch (IOException e) {
@@ -73,7 +74,7 @@ public abstract class Json<T> {
     }
 
     @Nullable
-    private Json loadFile() throws IOException {
+    private Json<?> loadFile() throws IOException {
         if (!file.exists()) {
             return null;
         }
@@ -170,7 +171,7 @@ public abstract class Json<T> {
     }
 
     @NotNull
-    public static List<String> getNameList(@NotNull Class<? extends Json> jsonClass) {
+    public static List<String> getNameList(@NotNull Class<? extends Json<?>> jsonClass) {
         JsonOptions jsonOptions = jsonClass.getAnnotation(JsonOptions.class);
         File folder = new File(ScriptBlock.getInstance().getDataFolder(), jsonOptions.path());
         List<String> list = new ArrayList<>();
@@ -191,7 +192,7 @@ public abstract class Json<T> {
         if (!(obj instanceof Json)) {
             return false;
         }
-        Json json = (Json) obj;
+        Json<?> json = (Json<?>) obj;
         return Objects.equals(id, json.id) && Objects.equals(list, json.list);
     }
 }

@@ -13,6 +13,7 @@ import java.util.Map;
  * ScriptBlockPlus UnmodifiableItemStack クラス
  * @author yuttyann44581
  */
+@SuppressWarnings("deprecation")
 public final class UnmodifiableItemStack extends ItemStack {
 
     public UnmodifiableItemStack(@NotNull ItemStack item) {

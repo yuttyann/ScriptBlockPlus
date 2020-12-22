@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 public class ScriptBlock extends JavaPlugin {
 
 	private Updater updater;
-	private ScriptBlockAPI scriptAPI;
 
 	@Override
 	public void onEnable() {
@@ -118,7 +117,7 @@ public class ScriptBlock extends JavaPlugin {
 	 */
 	@NotNull
 	public ScriptBlockAPI getAPI() {
-		return scriptAPI == null ? scriptAPI = new APIManager(this) : scriptAPI;
+		return new APIManager();
 	}
 
 	/**

@@ -12,6 +12,7 @@ import java.util.function.Supplier;
  * ScriptBlockPlus LogAdmin 列挙型
  * @author yuttyann44581
  */
+@SuppressWarnings("deprecation")
 public enum LogAdmin {
 
     /**

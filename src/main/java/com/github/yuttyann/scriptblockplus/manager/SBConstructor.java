@@ -14,6 +14,7 @@ import java.util.Objects;
  * @param <T> コンストラクタの型
  * @author yuttyann44581
  */
+@SuppressWarnings("unchecked")
 public final class SBConstructor<T> {
 
 	private SBInstance<? extends T> sbInstance;

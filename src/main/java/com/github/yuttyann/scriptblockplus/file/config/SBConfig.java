@@ -84,6 +84,7 @@ public final class SBConfig {
 		s = replace(s, "%pluginname%", r.getArg(0, String.class));
 		s = replace(s, "%latestversion%", r.getArg(1, String.class));
 		if (s.contains("%details%")) {
+			@SuppressWarnings("unchecked")
 			List<String> l = r.getArg(2, List.class);
 			StrBuilder b = new StrBuilder(l.size());
 			for (int i = 0; i < l.size(); i++) {

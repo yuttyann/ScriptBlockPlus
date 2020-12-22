@@ -25,6 +25,7 @@ public abstract class ScriptMap implements ObjectMap {
 
 	@Override
 	@Nullable
+	@SuppressWarnings("unchecked")
 	public <T> T get(@NotNull String key) {
 		Map<String, Object> map = OBJECT_MAP.get(ramdomId);
 		return map == null ? null : (T) map.get(key);

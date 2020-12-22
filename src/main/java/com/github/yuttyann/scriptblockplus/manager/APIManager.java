@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
@@ -27,12 +26,6 @@ import java.util.UUID;
  * @author yuttyann44581
  */
 public final class APIManager implements ScriptBlockAPI {
-
-	private ScriptBlock plugin;
-
-	public APIManager(@NotNull ScriptBlock plugin) {
-		this.plugin = plugin;
-	}
 
 	@Override
 	public boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index) {

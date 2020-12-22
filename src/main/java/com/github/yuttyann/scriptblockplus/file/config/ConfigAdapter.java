@@ -19,6 +19,7 @@ public class ConfigAdapter<T> {
     }
 
     @Nullable
+    @SuppressWarnings("unchecked")
     public T get(@NotNull String key) {
         return (T) map.get(key);
     }

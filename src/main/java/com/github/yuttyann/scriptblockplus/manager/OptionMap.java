@@ -15,6 +15,7 @@ import java.util.*;
  * ScriptBlockPlus OptionMap クラス
  * @author yuttyann44581
  */
+@SuppressWarnings("serial")
 public class OptionMap extends HashMap<String, Option> {
 
     private final LinkedList<String> LINKED_LIST = new LinkedList<>();

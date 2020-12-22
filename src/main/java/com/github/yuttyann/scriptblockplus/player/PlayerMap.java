@@ -52,6 +52,7 @@ public abstract class PlayerMap implements SBPlayer {
 
 		@Override
 		@Nullable
+		@SuppressWarnings("unchecked")
 		public <T> T get(@NotNull String key) {
 			return (T) objectMap.get(key);
 		}
