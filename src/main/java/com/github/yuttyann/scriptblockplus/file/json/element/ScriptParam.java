@@ -67,7 +67,7 @@ public class ScriptParam {
     }
 
     public void subtractAmount(int amount) {
-        this.amount = Math.min(this.amount - amount, 0);
+        this.amount = Math.max(this.amount - amount, 0);
     }
 
     @Override
