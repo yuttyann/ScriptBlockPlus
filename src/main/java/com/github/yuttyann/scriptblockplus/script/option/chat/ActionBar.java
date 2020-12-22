@@ -52,7 +52,7 @@ public class ActionBar extends BaseOption {
 				String chatSerializer = "IChatBaseComponent$ChatSerializer";
 				Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
 				Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
-				Class<?>[] array = {PackageType.NMS.getClass("IChatBaseComponent"), byte.class};
+				Class<?>[] array = { PackageType.NMS.getClass("IChatBaseComponent"), byte.class };
 				Constructor<?> packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", array);
 				PackageType.sendPacket(sbPlayer.getPlayer(), packetPlayOutChat.newInstance(component, (byte) 2));
 			} catch (ReflectiveOperationException e) {

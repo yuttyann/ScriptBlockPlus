@@ -5,7 +5,7 @@ description: ${project.description}
 author: yuttyann44581
 website: ${project.url}
 api-version: 1.13
-softdepend: [ScriptBlock, Vault, PlaceholderAPI]
+softdepend: [Vault, ScriptBlock, PsudoCommand, PlaceholderAPI]
 
 commands:
   scriptblockplus:
@@ -36,6 +36,7 @@ permissions:
       scriptblockplus.interact.use: true
       scriptblockplus.break.use: true
       scriptblockplus.walk.use: true
+      scriptblockplus.hit.use: true
   scriptblockplus.option.*:
     default: op
   scriptblockplus.command.*:
@@ -50,6 +51,7 @@ permissions:
       scriptblockplus.command.interact: true
       scriptblockplus.command.break: true
       scriptblockplus.command.walk: true
+      scriptblockplus.command.hit: true
       scriptblockplus.command.selector: true
   scriptblockplus.tool.*:
     default: op
@@ -75,6 +77,8 @@ permissions:
     default: false
   scriptblockplus.command.walk:
     default: false
+  scriptblockplus.command.hit:
+    default: false
   scriptblockplus.command.selector:
     default: false
   scriptblockplus.interact.use:
@@ -82,6 +86,8 @@ permissions:
   scriptblockplus.break.use:
     default: true
   scriptblockplus.walk.use:
+    default: true
+  scriptblockplus.hit.use:
     default: true
   scriptblockplus.tool.blockselector:
     default: false

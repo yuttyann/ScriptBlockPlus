@@ -73,6 +73,7 @@ public class ScriptBlock extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ScriptInteractListener(), this);
 		getServer().getPluginManager().registerEvents(new ScriptBreakListener(), this);
 		getServer().getPluginManager().registerEvents(new ScriptWalkListener(), this);
+		getServer().getPluginManager().registerEvents(new ScriptHitListener(), this);
 
 		// アイテムアクションの登録
 		ItemAction.register(new ScriptViewer());

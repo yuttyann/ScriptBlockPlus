@@ -29,13 +29,13 @@ public final class SBLoader {
 	private static final String KEY_SCRIPTS = ".Scripts";
 	private static final String KEY_LASTEDIT = ".LastEdit";
 
-	private String scriptPath;
+	private String path;
 	private Location location;
 	private YamlConfig scriptFile;
 
 	public SBLoader(@NotNull ScriptType scriptType) {
 		String filePath = "scripts" + SBFiles.S + scriptType.type() + ".yml";
-		this.scriptFile = YamlConfig.load(ScriptBlock.getInstance(), filePath);
+		this.scriptFile = YamlConfig.load(ScriptBlock.getInstance(), filePath, false);
 	}
 
 	public void forEach(@NotNull Consumer<SBLoader> action) {
@@ -59,7 +59,7 @@ public final class SBLoader {
 
 	@NotNull
 	public List<UUID> getAuthors() {
-		String author = scriptFile.getString(scriptPath + KEY_AUTHOR, "null");
+		String author = scriptFile.getString(path + KEY_AUTHOR, "");
 		if (StringUtils.isEmpty(author)) {
 			return new ArrayList<>();
 		}
@@ -71,21 +71,21 @@ public final class SBLoader {
 
 	@NotNull
 	public List<String> getScripts() {
-		return scriptFile.getStringList(scriptPath + KEY_SCRIPTS);
+		return scriptFile.getStringList(path + KEY_SCRIPTS);
 	}
 
 	@NotNull
 	public String getLastEdit() {
-		return scriptFile.getString(scriptPath + KEY_LASTEDIT, "null");
+		return scriptFile.getString(path + KEY_LASTEDIT, "null");
 	}
 
 	public int getAmount() {
-		return scriptFile.getInt(scriptPath + KEY_AMOUNT, -1);
+		return scriptFile.getInt(path + KEY_AMOUNT, -1);
 	}
 
 	private SBLoader createPath(@NotNull Location location) {
 		this.location = location;
-		this.scriptPath = Objects.requireNonNull(location.getWorld()).getName() + "." + BlockCoords.getCoords(location);
+		this.path = Objects.requireNonNull(location.getWorld()).getName() + "." + BlockCoords.getCoords(location);
 		return this;
 	}
 }

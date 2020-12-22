@@ -60,16 +60,6 @@ public final class PsudoCommand extends HookPlugin {
     }
 
     @Nullable
-    private static Method _getIntRelative() {
-        try {
-            Class<?> commandUtils = Class.forName("me.zombie_striker.psudocommands.CommandUtils");
-            return commandUtils.getMethod("getIntRelative", String.class, String.class, Entity.class);
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            return null;
-        }
-    }
-
-    @Nullable
     private static Method _getTargets() {
         try {
             Class<?> commandUtils = Class.forName("me.zombie_striker.psudocommands.CommandUtils");

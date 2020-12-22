@@ -21,6 +21,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 	public static final ScriptType INTERACT = new ScriptType("interact");
 	public static final ScriptType BREAK = new ScriptType("break");
 	public static final ScriptType WALK = new ScriptType("walk");
+	public static final ScriptType HIT = new ScriptType("hit");
 
 	private final String type;
 	private final String name;
