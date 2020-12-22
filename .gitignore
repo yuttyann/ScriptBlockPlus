@@ -4,6 +4,9 @@
 *.war
 *.ear
 
+# JavaDoc
+javadoc-latest
+
 # Eclipse
 .project
 .classpath
