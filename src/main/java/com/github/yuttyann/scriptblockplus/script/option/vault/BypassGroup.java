@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
-import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
+import com.github.yuttyann.scriptblockplus.enums.CommandLog;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -30,7 +30,7 @@ public class BypassGroup extends BaseOption {
             throw new IllegalArgumentException("Insufficient parameters");
         }
         Player player = getSBPlayer().getPlayer();
-        return LogAdmin.supplier(player.getWorld(), () -> {
+        return CommandLog.supplier(player.getWorld(), () -> {
             String world = array[1];
             String group = array.length > 2 ? array[2] : world;
             if (vaultPermission.playerInGroup(world, player, group)) {

@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -45,7 +46,7 @@ public class Title extends BaseOption {
 			sbPlayer.getPlayer().sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		} else {
 			String prefix = "title " + sbPlayer.getName();
-			Utils.tempOP(sbPlayer, () -> {
+			Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> {
 				Utils.dispatchCommand(sbPlayer, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
 				Utils.dispatchCommand(sbPlayer, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
 				Utils.dispatchCommand(sbPlayer, prefix + " title {\"text\":\"" + title + "\"}");

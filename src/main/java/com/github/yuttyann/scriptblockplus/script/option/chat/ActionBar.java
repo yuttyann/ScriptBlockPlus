@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -46,7 +47,7 @@ public class ActionBar extends BaseOption {
 	public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
 		if (Utils.isCBXXXorLater("1.11")) {
 			String command = "title " + sbPlayer.getName() + " actionbar " + "{\"text\":\"" + message + "\"}";
-			Utils.tempOP(sbPlayer, () -> Utils.dispatchCommand(sbPlayer, command));
+			Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Utils.dispatchCommand(sbPlayer, command));
 		} else if (Utils.isPlatform()) {
 			try {
 				String chatSerializer = "IChatBaseComponent$ChatSerializer";

@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -22,6 +23,6 @@ public class Say extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		String command = "say " + getOptionValue();
-		return Utils.tempOP(getSBPlayer(), () -> Utils.dispatchCommand(getSBPlayer(), command));
+		return Utils.tempPerm(getSBPlayer(), Permission.MINECRAFT_COMMAND_SAY, () -> Utils.dispatchCommand(getSBPlayer(), command));
 	}
 }

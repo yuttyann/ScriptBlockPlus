@@ -29,7 +29,11 @@ public enum Permission {
 	*/
 	TOOL_BLOCK_SELECTOR("scriptblockplus.tool.blockselector"),
 	TOOL_SCRIPT_EDITOR("scriptblockplus.tool.scripteditor"),
-	TOOL_SCRIPT_VIEWER("scriptblockplus.tool.scriptviewer");
+	TOOL_SCRIPT_VIEWER("scriptblockplus.tool.scriptviewer"),
+
+	// Minecraft Permissions
+	MINECRAFT_COMMAND_SAY("minecraft.command.say"),
+	MINECRAFT_COMMAND_TITLE("minecraft.command.title");
 
 	private static final String SBP_PREFIX = "scriptblockplus.";
 

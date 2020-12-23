@@ -1,6 +1,8 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
-import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.CommandLog;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.hook.CommandSelector;
 import com.github.yuttyann.scriptblockplus.hook.plugin.PsudoCommand;
@@ -12,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -87,41 +90,40 @@ public final class Utils {
 
 	@NotNull
 	public static String getFormatTime(@NotNull String pattern) {
-		Validate.notNull(pattern, "Pattern cannot be null");
 		return new SimpleDateFormat(pattern).format(new Date());
 	}
 
 	public static void sendColorMessage(@NotNull CommandSender sender, @Nullable String message) {
-		if (isNotEmpty(message)) {
-			message = replace(setColor(message), "\\n", "|~");
-			String color = "";
-			for (String line : split(message, "|~")) {
-				sender.sendMessage(line = (color + line));
-				if (line.indexOf('§') > -1) {
-					color = getColors(line);
-				}
+		if (isEmpty(message)) {
+			return;
+		}
+		message = replace(setColor(message), "\\n", "|~");
+		String color = "";
+		for (String line : split(message, "|~")) {
+			sender.sendMessage(line = (color + line));
+			if (line.indexOf('§') > -1) {
+				color = getColors(line);
 			}
 		}
 	}
 
-	public static boolean tempOP(@NotNull SBPlayer sbPlayer, @NotNull Supplier<Boolean> supplier) {
-		return sbPlayer.isOnline() && LogAdmin.supplier(sbPlayer.getWorld(), () -> {
-			if (sbPlayer.isOp()) {
+	public static boolean tempPerm(@NotNull SBPlayer sbPlayer, @NotNull Permission permission, @NotNull Supplier<Boolean> supplier) {
+		return sbPlayer.isOnline() && CommandLog.supplier(sbPlayer.getWorld(), () -> {
+			if (sbPlayer.hasPermission(permission.getNode())) {
 				return supplier.get();
 			} else {
+				PermissionAttachment attachment = sbPlayer.addAttachment(ScriptBlock.getInstance());
 				try {
-					sbPlayer.setOp(true);
+					attachment.setPermission(permission.getNode(), true);
 					return supplier.get();
 				} finally {
-					sbPlayer.setOp(false);
+					attachment.unsetPermission(permission.getNode());
 				}
 			}
 		});
 	}
 
 	public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull String command) {
-		Validate.notNull(sender, "Sender cannot be null");
-		Validate.notNull(command, "Command cannot be null");
 		command = command.startsWith("/") ? command.substring(1) : command;
 		CommandSender commandSender = sender instanceof SBPlayer ? ((SBPlayer) sender).getPlayer() : sender;
 		if (CommandSelector.INSTANCE.has(command) && (isCBXXXorLater("1.13.2") || PsudoCommand.INSTANCE.has())) {
@@ -133,7 +135,6 @@ public final class Utils {
 
 	@NotNull
 	public static World getWorld(@NotNull String name) {
-		Validate.notNull(name, "Name cannot be null");
 		World world = Bukkit.getWorld(name);
 		if (world == null) {
 			File file = new File(Bukkit.getWorldContainer(), name + "/level.dat");

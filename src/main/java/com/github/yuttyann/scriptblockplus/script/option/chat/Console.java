@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
-import com.github.yuttyann.scriptblockplus.enums.LogAdmin;
+import com.github.yuttyann.scriptblockplus.enums.CommandLog;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -25,6 +25,6 @@ public class Console extends BaseOption {
 	@Override
 	protected boolean isValid() throws Exception {
 		String command = StringUtils.setColor(getOptionValue());
-		return LogAdmin.supplier(getSBPlayer().getWorld(), () -> Utils.dispatchCommand(Bukkit.getConsoleSender(), command));
+		return CommandLog.supplier(getSBPlayer().getWorld(), () -> Utils.dispatchCommand(Bukkit.getConsoleSender(), command));
 	}
 }
