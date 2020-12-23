@@ -37,7 +37,7 @@ public class ScriptViewer extends ItemAction {
     private static final Set<UUID> PLAYERS = new HashSet<>();
 
     static {
-        new Task().runTaskTimer(ScriptBlock.getInstance(), 0L, 8L);
+        new Task().runTaskTimer(ScriptBlock.getInstance(), 0L, 11L);
     }
 
     public ScriptViewer() {
@@ -82,7 +82,7 @@ public class ScriptViewer extends ItemAction {
                     continue;
                 }
                 Set<Block> temp = new HashSet<>();
-                Region region = new PlayerRegion(sbPlayer.getPlayer(), 15);
+                Region region = new PlayerRegion(sbPlayer.getPlayer(), 10);
                 new CuboidRegionBlocks(region).forEach(b -> temp.add(b.getBlock(sbPlayer.getWorld())));
                 for (ScriptType scriptType : ScriptType.values()) {
                     BlockScript blockScript = new BlockScriptJson(scriptType).load();

@@ -23,7 +23,7 @@ public class PlayerRegion implements Region {
         this.x = location.getBlockX();
         this.y = location.getBlockY();
         this.z = location.getBlockZ();
-        this.range = range;
+        this.range = Math.max(range, 1);
     }
 
     @Override
@@ -41,13 +41,13 @@ public class PlayerRegion implements Region {
     @Override
     @NotNull
     public Location getMinimumPoint() {
-        return toLocation(x - range, y - range, z - range);
+        return toLocation(x - range, y - (range / 2), z - range);
     }
 
     @Override
     @NotNull
     public Location getMaximumPoint() {
-        return toLocation(x + range, y + range, z + range);
+        return toLocation(x + range, y + (range / 2), z + range);
     }
 
     @Override
