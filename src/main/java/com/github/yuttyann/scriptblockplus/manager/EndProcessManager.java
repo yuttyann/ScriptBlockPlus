@@ -16,28 +16,28 @@ import java.util.function.Consumer;
  */
 public final class EndProcessManager {
 
-	private static final List<SBConstructor<? extends EndProcess>> ENDPROCESS_LIST = new ArrayList<>();
+    private static final List<SBConstructor<? extends EndProcess>> ENDPROCESS_LIST = new ArrayList<>();
 
-	static {
-		register(new SBConstructor<>(new EndInventory()));
-		register(new SBConstructor<>(new EndMoneyCost()));
-	}
+    static {
+        register(new SBConstructor<>(new EndInventory()));
+        register(new SBConstructor<>(new EndMoneyCost()));
+    }
 
-	public static void register(@NotNull SBConstructor<EndProcess> endProcess) {
-		ENDPROCESS_LIST.add(endProcess);
-	}
+    public static void register(@NotNull SBConstructor<EndProcess> endProcess) {
+        ENDPROCESS_LIST.add(endProcess);
+    }
 
-	public static void forEach(@NotNull Consumer<EndProcess> action) {
-		ENDPROCESS_LIST.forEach(c -> action.accept(c.newInstance(InstanceType.SBINSTANCE)));
-	}
+    public static void forEach(@NotNull Consumer<EndProcess> action) {
+        ENDPROCESS_LIST.forEach(c -> action.accept(c.newInstance(InstanceType.SBINSTANCE)));
+    }
 
-	@NotNull
-	public static EndProcess newInstance(@NotNull Class<? extends EndProcess> endProcess, @NotNull InstanceType instanceType) {
-		for (SBConstructor<? extends EndProcess> constructor : ENDPROCESS_LIST) {
-			if (constructor.getDeclaringClass().equals(endProcess)) {
-				return constructor.newInstance(instanceType);
-			}
-		}
-		throw new NullPointerException(endProcess.getName() + " does not exist");
-	}
+    @NotNull
+    public static EndProcess newInstance(@NotNull Class<? extends EndProcess> endProcess, @NotNull InstanceType instanceType) {
+        for (SBConstructor<? extends EndProcess> constructor : ENDPROCESS_LIST) {
+            if (constructor.getDeclaringClass().equals(endProcess)) {
+                return constructor.newInstance(instanceType);
+            }
+        }
+        throw new NullPointerException(endProcess.getName() + " does not exist");
+    }
 }

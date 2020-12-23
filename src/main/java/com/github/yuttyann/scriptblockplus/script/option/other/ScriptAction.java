@@ -19,38 +19,38 @@ import java.util.Arrays;
 @OptionTag(name = "scriptaction", syntax = "@scriptaction:")
 public class ScriptAction extends BaseOption {
 
-	public static final String KEY = Utils.randomUUID();
+    public static final String KEY = Utils.randomUUID();
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new ScriptAction();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new ScriptAction();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		Action action = getTempMap().get(KEY);
-		String[] array = StringUtils.split(getOptionValue(), ",");
-		return Arrays.stream(array).allMatch(s -> equals(action, s));
-	}
+    @Override
+    protected boolean isValid() throws Exception {
+        Action action = getTempMap().get(KEY);
+        String[] array = StringUtils.split(getOptionValue(), ",");
+        return Arrays.stream(array).allMatch(s -> equals(action, s));
+    }
 
-	private boolean equals(@Nullable Action action, @NotNull String type) {
-		if (action == null) {
-			return false;
-		}
-		if (type.equalsIgnoreCase("shift")) {
-			return getPlayer().isSneaking();
-		}
-		return ScriptType.INTERACT.equals(getScriptType()) && action == getAction(type);
-	}
+    private boolean equals(@Nullable Action action, @NotNull String type) {
+        if (action == null) {
+            return false;
+        }
+        if (type.equalsIgnoreCase("shift")) {
+            return getPlayer().isSneaking();
+        }
+        return ScriptType.INTERACT.equals(getScriptType()) && action == getAction(type);
+    }
 
-	@Nullable
-	private Action getAction(@NotNull String actionType) {
-		if (actionType.equalsIgnoreCase("left")) {
-			return Action.LEFT_CLICK_BLOCK;
-		} else if (actionType.equalsIgnoreCase("right")) {
-			return Action.RIGHT_CLICK_BLOCK;
-		}
-		return null;
-	}
+    @Nullable
+    private Action getAction(@NotNull String actionType) {
+        if (actionType.equalsIgnoreCase("left")) {
+            return Action.LEFT_CLICK_BLOCK;
+        } else if (actionType.equalsIgnoreCase("right")) {
+            return Action.RIGHT_CLICK_BLOCK;
+        }
+        return null;
+    }
 }

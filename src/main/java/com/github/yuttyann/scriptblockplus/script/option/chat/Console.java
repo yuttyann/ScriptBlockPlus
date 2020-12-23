@@ -16,15 +16,15 @@ import org.jetbrains.annotations.NotNull;
 @OptionTag(name = "console", syntax = "@console ")
 public class Console extends BaseOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new Console();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new Console();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		String command = StringUtils.setColor(getOptionValue());
-		return CommandLog.supplier(getSBPlayer().getWorld(), () -> Utils.dispatchCommand(Bukkit.getConsoleSender(), command));
-	}
+    @Override
+    protected boolean isValid() throws Exception {
+        String command = StringUtils.setColor(getOptionValue());
+        return CommandLog.supplier(getSBPlayer().getWorld(), () -> Utils.dispatchCommand(Bukkit.getConsoleSender(), command));
+    }
 }

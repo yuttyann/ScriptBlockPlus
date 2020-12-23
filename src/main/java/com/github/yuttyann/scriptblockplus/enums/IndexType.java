@@ -6,33 +6,33 @@ package com.github.yuttyann.scriptblockplus.enums;
  */
 public enum IndexType {
 
-	/**
-	 * 先頭に追加
-	 */
-	TOP(0),
+    /**
+     * 先頭に追加
+     */
+    TOP(0),
 
-	/**
-	 * 最後尾に追加
-	 */
-	LAST(0),
+    /**
+     * 最後尾に追加
+     */
+    LAST(0),
 
-	/**
-	 * 指定したオプションより一つ前に追加
-	 */
-	BEFORE(0),
+    /**
+     * 指定したオプションより一つ前に追加
+     */
+    BEFORE(0),
 
-	/**
-	 * 指定したオプションより一つ後に追加
-	 */
-	AFTER(1);
+    /**
+     * 指定したオプションより一つ後に追加
+     */
+    AFTER(1);
 
-	private final int amount;
+    private final int amount;
 
-	IndexType(int amount) {
-		this.amount = amount;
-	}
+    IndexType(int amount) {
+        this.amount = amount;
+    }
 
-	public int getAmount() {
-		return amount;
-	}
+    public int getAmount() {
+        return amount;
+    }
 }

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ScriptBlockWalkEvent extends TriggerEvent {
 
-	public ScriptBlockWalkEvent(@NotNull final Player player, @NotNull final Block block) {
-		super(player, block);
-	}
+    public ScriptBlockWalkEvent(@NotNull final Player player, @NotNull final Block block) {
+        super(player, block);
+    }
 }

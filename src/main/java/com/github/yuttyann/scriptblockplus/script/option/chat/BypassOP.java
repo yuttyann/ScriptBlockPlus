@@ -17,27 +17,27 @@ import org.jetbrains.annotations.NotNull;
 @OptionTag(name = "bypass_op", syntax = "@bypass ")
 public class BypassOP extends BaseOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new BypassOP();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new BypassOP();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		Player player = getSBPlayer().getPlayer();
-		String command = StringUtils.setColor(getOptionValue());
-		return CommandLog.supplier(player.getWorld(), () -> {
-			if (player.isOp()) {
-				return Utils.dispatchCommand(player, command);
-			} else {
-				try {
-					player.setOp(true);
-					return Utils.dispatchCommand(player, command);
-				} finally {
-					player.setOp(false);
-				}
-			}
-		});
-	}
+    @Override
+    protected boolean isValid() throws Exception {
+        Player player = getSBPlayer().getPlayer();
+        String command = StringUtils.setColor(getOptionValue());
+        return CommandLog.supplier(player.getWorld(), () -> {
+            if (player.isOp()) {
+                return Utils.dispatchCommand(player, command);
+            } else {
+                try {
+                    player.setOp(true);
+                    return Utils.dispatchCommand(player, command);
+                } finally {
+                    player.setOp(false);
+                }
+            }
+        });
+    }
 }

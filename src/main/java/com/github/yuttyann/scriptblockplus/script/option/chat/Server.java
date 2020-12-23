@@ -14,15 +14,15 @@ import org.jetbrains.annotations.NotNull;
 @OptionTag(name = "server", syntax = "@server ")
 public class Server extends BaseOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new Server();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new Server();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		Bukkit.broadcastMessage(StringUtils.setColor(getOptionValue()));
-		return true;
-	}
+    @Override
+    protected boolean isValid() throws Exception {
+        Bukkit.broadcastMessage(StringUtils.setColor(getOptionValue()));
+        return true;
+    }
 }

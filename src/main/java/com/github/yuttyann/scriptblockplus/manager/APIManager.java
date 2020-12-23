@@ -27,170 +27,170 @@ import java.util.UUID;
  */
 public final class APIManager implements ScriptBlockAPI {
 
-	@Override
-	public boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index) {
-		if (!BlockScriptJson.has(location, scriptType)) {
-			return false;
-		}
-		return new ScriptRead(player, location, scriptType).read(index);
-	}
+    @Override
+    public boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index) {
+        if (!BlockScriptJson.has(location, scriptType)) {
+            return false;
+        }
+        return new ScriptRead(player, location, scriptType).read(index);
+    }
 
-	@Override
-	public void registerOption(@NotNull OptionIndex optionIndex, @NotNull Class<? extends BaseOption> optionClass) {
-		OptionManager.register(optionIndex, optionClass);
-	}
+    @Override
+    public void registerOption(@NotNull OptionIndex optionIndex, @NotNull Class<? extends BaseOption> optionClass) {
+        OptionManager.register(optionIndex, optionClass);
+    }
 
-	@Override
-	public void registerEndProcess(@NotNull Class<? extends EndProcess> endProcessClass) {
-		EndProcessManager.register(new SBConstructor<>(endProcessClass));
-	}
+    @Override
+    public void registerEndProcess(@NotNull Class<? extends EndProcess> endProcessClass) {
+        EndProcessManager.register(new SBConstructor<>(endProcessClass));
+    }
 
-	@Override
-	@NotNull
-	public SBEdit getSBEdit(@NotNull ScriptType scriptType) {
-		return new SEdit(scriptType);
-	}
+    @Override
+    @NotNull
+    public SBEdit getSBEdit(@NotNull ScriptType scriptType) {
+        return new SEdit(scriptType);
+    }
 
-	private static class SEdit implements SBEdit {
+    private static class SEdit implements SBEdit {
 
-		private final ScriptAction scriptAction;
+        private final ScriptAction scriptAction;
 
-		public SEdit(@NotNull ScriptType scriptType) {
-			this.scriptAction = new ScriptAction(scriptType);
-		}
+        public SEdit(@NotNull ScriptType scriptType) {
+            this.scriptAction = new ScriptAction(scriptType);
+        }
 
-		@Override
-		public void save() {
-			scriptAction.save();
-		}
+        @Override
+        public void save() {
+            scriptAction.save();
+        }
 
-		@Override
-		@NotNull
-		public ScriptType getScriptType() {
-			return scriptAction.getScriptType();
-		}
+        @Override
+        @NotNull
+        public ScriptType getScriptType() {
+            return scriptAction.getScriptType();
+        }
 
-		@Override
-		public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-			scriptAction.create(player, location, script);
-		}
+        @Override
+        public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
+            scriptAction.create(player, location, script);
+        }
 
-		@Override
-		public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-			scriptAction.add(player, location, script);
-		}
+        @Override
+        public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
+            scriptAction.add(player, location, script);
+        }
 
-		@Override
-		public void remove(@NotNull Player player, @NotNull Location location) {
-			scriptAction.remove(player, location);
-		}
+        @Override
+        public void remove(@NotNull Player player, @NotNull Location location) {
+            scriptAction.remove(player, location);
+        }
 
-		@Override
-		public void view(@NotNull Player player, @NotNull Location location) {
-			scriptAction.view(player, location);
-		}
-	}
+        @Override
+        public void view(@NotNull Player player, @NotNull Location location) {
+            scriptAction.view(player, location);
+        }
+    }
 
-	@Override
-	@NotNull
-	public SBFile getSBFile(@NotNull Location location, @NotNull ScriptType scriptType) {
-		return new SFile(location, scriptType);
-	}
+    @Override
+    @NotNull
+    public SBFile getSBFile(@NotNull Location location, @NotNull ScriptType scriptType) {
+        return new SFile(location, scriptType);
+    }
 
-	private static class SFile implements SBFile {
+    private static class SFile implements SBFile {
 
-		private final ScriptType scriptType;
-		private final Location location;
-		private final ScriptParam scriptParam;
-		private final BlockScriptJson blockScriotJson;
+        private final ScriptType scriptType;
+        private final Location location;
+        private final ScriptParam scriptParam;
+        private final BlockScriptJson blockScriotJson;
 
-		public SFile(@NotNull Location location, @NotNull ScriptType scriptType) {
-			this.scriptType = scriptType;
-			this.location = location;
-			this.blockScriotJson = new BlockScriptJson(scriptType);
-			this.scriptParam = blockScriotJson.load().get(location);
-		}
+        public SFile(@NotNull Location location, @NotNull ScriptType scriptType) {
+            this.scriptType = scriptType;
+            this.location = location;
+            this.blockScriotJson = new BlockScriptJson(scriptType);
+            this.scriptParam = blockScriotJson.load().get(location);
+        }
 
-		@Override
-		public void save() {
-			blockScriotJson.saveFile();
-		}
+        @Override
+        public void save() {
+            blockScriotJson.saveFile();
+        }
 
-		@Override
-		public boolean has() {
-			return blockScriotJson.load().has(location);
-		}
+        @Override
+        public boolean has() {
+            return blockScriotJson.load().has(location);
+        }
 
-		@Override
-		@Nullable
-		public Location getLocation() {
-			return location;
-		}
+        @Override
+        @Nullable
+        public Location getLocation() {
+            return location;
+        }
 
-		@Override
-		@NotNull
-		public ScriptType getScriptType() {
-			return scriptType;
-		}
+        @Override
+        @NotNull
+        public ScriptType getScriptType() {
+            return scriptType;
+        }
 
-		@Override
-		@NotNull
-		public Set<UUID> getAuthor() {
-			return scriptParam.getAuthor();
-		}
+        @Override
+        @NotNull
+        public Set<UUID> getAuthor() {
+            return scriptParam.getAuthor();
+        }
 
-		@Override
-		public void setAuthor(@NotNull Set<UUID> author) {
-			scriptParam.setAuthor(author);
-		}
+        @Override
+        public void setAuthor(@NotNull Set<UUID> author) {
+            scriptParam.setAuthor(author);
+        }
 
-		@Override
-		@NotNull
-		public List<String> getScript() {
-			return scriptParam.getScript();
-		}
+        @Override
+        @NotNull
+        public List<String> getScript() {
+            return scriptParam.getScript();
+        }
 
-		@Override
-		public void setScript(@NotNull List<String> script) {
-			scriptParam.setScript(script);
-		}
+        @Override
+        public void setScript(@NotNull List<String> script) {
+            scriptParam.setScript(script);
+        }
 
-		@Override
-		@Nullable
-		public String getLastEdit() {
-			return scriptParam.getLastEdit();
-		}
+        @Override
+        @Nullable
+        public String getLastEdit() {
+            return scriptParam.getLastEdit();
+        }
 
-		@Override
-		public void setLastEdit() {
-			scriptParam.setLastEdit(Utils.getFormatTime());
-		}
+        @Override
+        public void setLastEdit() {
+            scriptParam.setLastEdit(Utils.getFormatTime());
+        }
 
-		@Override
-		public int getAmount() {
-			return scriptParam.getAmount();
-		}
+        @Override
+        public int getAmount() {
+            return scriptParam.getAmount();
+        }
 
-		@Override
-		public void setAmount(int amount) {
-			scriptParam.setAmount(amount);
-		}
+        @Override
+        public void setAmount(int amount) {
+            scriptParam.setAmount(amount);
+        }
 
-		@Override
-		public void addAmount(int amount) {
-			scriptParam.addAmount(amount);
-		}
+        @Override
+        public void addAmount(int amount) {
+            scriptParam.addAmount(amount);
+        }
 
-		@Override
-		public void subtractAmount(int amount) {
-			scriptParam.subtractAmount(amount);
-		}
+        @Override
+        public void subtractAmount(int amount) {
+            scriptParam.subtractAmount(amount);
+        }
 
-		@Override
-		public void remove() {
-			TimerOption.removeAll(location, scriptType);
-			PlayerCountJson.clear(location, scriptType);
-			blockScriotJson.load().remove(location);
-		}
-	}
+        @Override
+        public void remove() {
+            TimerOption.removeAll(location, scriptType);
+            PlayerCountJson.clear(location, scriptType);
+            blockScriotJson.load().remove(location);
+        }
+    }
 }

@@ -17,88 +17,88 @@ import java.util.function.Consumer;
  */
 public final class CuboidRegionBlocks {
 
-	private final World world;
-	private final Location min;
-	private final Location max;
+    private final World world;
+    private final Location min;
+    private final Location max;
 
-	private int count = -1;
+    private int count = -1;
 
-	public CuboidRegionBlocks(@NotNull Region region) {
-		this.world = Objects.requireNonNull(region.getWorld());
-		this.min = Objects.requireNonNull(region.getMinimumPoint());
-		this.max = Objects.requireNonNull(region.getMaximumPoint());
-	}
+    public CuboidRegionBlocks(@NotNull Region region) {
+        this.world = Objects.requireNonNull(region.getWorld());
+        this.min = Objects.requireNonNull(region.getMinimumPoint());
+        this.max = Objects.requireNonNull(region.getMaximumPoint());
+    }
 
-	@NotNull
-	public World getWorld() {
-		return world;
-	}
+    @NotNull
+    public World getWorld() {
+        return world;
+    }
 
-	@NotNull
-	public Location getMinimumPoint() {
-		return new UnmodifiableLocation(min);
-	}
+    @NotNull
+    public Location getMinimumPoint() {
+        return new UnmodifiableLocation(min);
+    }
 
-	@NotNull
-	public Location getMaximumPoint() {
-		return new UnmodifiableLocation(max);
-	}
+    @NotNull
+    public Location getMaximumPoint() {
+        return new UnmodifiableLocation(max);
+    }
 
-	public int getCount() {
-		if (count == -1) {
-			int[] count = { 0 };
-			forEach(b -> count[0]++);
-			this.count = count[0];
-		}
-		return count;
-	}
+    public int getCount() {
+        if (count == -1) {
+            int[] count = { 0 };
+            forEach(b -> count[0]++);
+            this.count = count[0];
+        }
+        return count;
+    }
 
-	@NotNull
-	public Set<Block> getBlocks() {
-		Set<Block> set = new HashSet<>();
-		forEach(b -> set.add(b.getBlock(world)));
-		return set;
-	}
+    @NotNull
+    public Set<Block> getBlocks() {
+        Set<Block> set = new HashSet<>();
+        forEach(b -> set.add(b.getBlock(world)));
+        return set;
+    }
 
-	public void forEach(@NotNull Consumer<BlockPosition> action) {
-		BlockPosition position = new BlockPosition();
-		for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-			for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
-				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-					action.accept(position.setPos(x, y, z));
-				}
-			}
-		}
-	}
+    public void forEach(@NotNull Consumer<BlockPosition> action) {
+        BlockPosition position = new BlockPosition();
+        for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+            for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                    action.accept(position.setPos(x, y, z));
+                }
+            }
+        }
+    }
 
-	public static final class BlockPosition {
+    public static final class BlockPosition {
 
-		private int x;
-		private int y;
-		private int z;
+        private int x;
+        private int y;
+        private int z;
 
-		private BlockPosition setPos(int x, int y, int z) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-			return this;
-		}
+        private BlockPosition setPos(int x, int y, int z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            return this;
+        }
 
-		public int getX() {
-			return x;
-		}
+        public int getX() {
+            return x;
+        }
 
-		public int getY() {
-			return y;
-		}
+        public int getY() {
+            return y;
+        }
 
-		public int getZ() {
-			return z;
-		}
+        public int getZ() {
+            return z;
+        }
 
-		@NotNull
-		public Block getBlock(@NotNull World world) {
-			return world.getBlockAt(x, y, z);
-		}
-	}
+        @NotNull
+        public Block getBlock(@NotNull World world) {
+            return world.getBlockAt(x, y, z);
+        }
+    }
 }

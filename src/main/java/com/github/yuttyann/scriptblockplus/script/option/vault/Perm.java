@@ -16,27 +16,27 @@ import org.jetbrains.annotations.NotNull;
 @OptionTag(name = "permission", syntax = "@perm:")
 public class Perm extends BaseOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new Perm();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new Perm();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		VaultPermission vaultPermission = VaultPermission.INSTANCE;
-		if (!vaultPermission.isEnabled()) {
-			throw new UnsupportedOperationException();
-		}
-		String[] array = StringUtils.split(getOptionValue(), "/");
-		String world = array.length > 1 ? array[0] : null;
-		String permission = array.length > 1 ? array[1] : array[0];
+    @Override
+    protected boolean isValid() throws Exception {
+        VaultPermission vaultPermission = VaultPermission.INSTANCE;
+        if (!vaultPermission.isEnabled()) {
+            throw new UnsupportedOperationException();
+        }
+        String[] array = StringUtils.split(getOptionValue(), "/");
+        String world = array.length > 1 ? array[0] : null;
+        String permission = array.length > 1 ? array[1] : array[0];
 
-		Player player = getPlayer();
-		if (!vaultPermission.playerHas(world, player, permission)) {
-			SBConfig.NOT_PERMISSION.send(player);
-			return false;
-		}
-		return true;
-	}
+        Player player = getPlayer();
+        if (!vaultPermission.playerHas(world, player, permission)) {
+            SBConfig.NOT_PERMISSION.send(player);
+            return false;
+        }
+        return true;
+    }
 }

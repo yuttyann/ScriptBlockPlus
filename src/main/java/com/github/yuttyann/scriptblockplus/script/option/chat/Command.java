@@ -14,14 +14,14 @@ import org.jetbrains.annotations.NotNull;
 @OptionTag(name = "command", syntax = "@command ")
 public class Command extends BaseOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new Command();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new Command();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		return Utils.dispatchCommand(getSBPlayer(), StringUtils.setColor(getOptionValue()));
-	}
+    @Override
+    protected boolean isValid() throws Exception {
+        return Utils.dispatchCommand(getSBPlayer(), StringUtils.setColor(getOptionValue()));
+    }
 }

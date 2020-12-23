@@ -23,60 +23,60 @@ import java.util.Optional;
  */
 public class ScriptEditor extends ItemAction {
 
-	private static final String KEY = Utils.randomUUID();
+    private static final String KEY = Utils.randomUUID();
 
-	public ScriptEditor() {
-		super(ItemUtils.getScriptEditor());
-	}
+    public ScriptEditor() {
+        super(ItemUtils.getScriptEditor());
+    }
 
-	@Override
-	public boolean hasPermission(@NotNull Permissible permissible) {
-		return Permission.TOOL_SCRIPT_EDITOR.has(permissible);
-	}
+    @Override
+    public boolean hasPermission(@NotNull Permissible permissible) {
+        return Permission.TOOL_SCRIPT_EDITOR.has(permissible);
+    }
 
-	@Override
-	public void slot(@NotNull ChangeSlot changeSlot) {
-		SBPlayer sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
-		ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
-		ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
-	}
+    @Override
+    public void slot(@NotNull ChangeSlot changeSlot) {
+        SBPlayer sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
+        ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
+        ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
+    }
 
-	@Override
-	public void run(@NotNull RunItem runItem) {
-		SBPlayer sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
-		ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
-		Optional<Location> location = Optional.ofNullable(runItem.getLocation());
-		switch (runItem.getAction()) {
-			case LEFT_CLICK_AIR:
-			case LEFT_CLICK_BLOCK:
-				if (runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {
-					new ScriptAction(scriptType).remove(sbPlayer, location.get());
-				} else if (!runItem.isSneaking()) {
-					sbPlayer.getObjectMap().put(KEY, scriptType = getNextType(scriptType));
-					ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
-				}
-				break;
-			case RIGHT_CLICK_AIR:
-			case RIGHT_CLICK_BLOCK:
-				if (runItem.isSneaking() && !runItem.isAIR()) {
-					if (!location.isPresent() || !sbPlayer.getSBClipboard().isPresent()
-							|| !sbPlayer.getSBClipboard().get().paste(location.get(), true)) {
-						SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
-					}
-				} else if (!runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {
-					new ScriptAction(scriptType).clipboard(sbPlayer, location.get()).copy();
-				}
-				break;
-			default:
-		}
-	}
+    @Override
+    public void run(@NotNull RunItem runItem) {
+        SBPlayer sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
+        ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
+        Optional<Location> location = Optional.ofNullable(runItem.getLocation());
+        switch (runItem.getAction()) {
+            case LEFT_CLICK_AIR:
+            case LEFT_CLICK_BLOCK:
+                if (runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {
+                    new ScriptAction(scriptType).remove(sbPlayer, location.get());
+                } else if (!runItem.isSneaking()) {
+                    sbPlayer.getObjectMap().put(KEY, scriptType = getNextType(scriptType));
+                    ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
+                }
+                break;
+            case RIGHT_CLICK_AIR:
+            case RIGHT_CLICK_BLOCK:
+                if (runItem.isSneaking() && !runItem.isAIR()) {
+                    if (!location.isPresent() || !sbPlayer.getSBClipboard().isPresent()
+                            || !sbPlayer.getSBClipboard().get().paste(location.get(), true)) {
+                        SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
+                    }
+                } else if (!runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {
+                    new ScriptAction(scriptType).clipboard(sbPlayer, location.get()).copy();
+                }
+                break;
+            default:
+        }
+    }
 
-	@NotNull
-	private ScriptType getNextType(@NotNull ScriptType scriptType) {
-		try {
-			return ScriptType.valueOf(scriptType.ordinal() + 1);
-		} catch (Exception e) {
-			return ScriptType.INTERACT;
-		}
-	}
+    @NotNull
+    private ScriptType getNextType(@NotNull ScriptType scriptType) {
+        try {
+            return ScriptType.valueOf(scriptType.ordinal() + 1);
+        } catch (Exception e) {
+            return ScriptType.INTERACT;
+        }
+    }
 }

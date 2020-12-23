@@ -14,15 +14,15 @@ import org.jetbrains.annotations.NotNull;
 @OptionTag(name = "say", syntax = "@say ")
 public class Say extends BaseOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new Say();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new Say();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		String command = "say " + getOptionValue();
-		return Utils.tempPerm(getSBPlayer(), Permission.MINECRAFT_COMMAND_SAY, () -> Utils.dispatchCommand(getSBPlayer(), command));
-	}
+    @Override
+    protected boolean isValid() throws Exception {
+        String command = "say " + getOptionValue();
+        return Utils.tempPerm(getSBPlayer(), Permission.MINECRAFT_COMMAND_SAY, () -> Utils.dispatchCommand(getSBPlayer(), command));
+    }
 }

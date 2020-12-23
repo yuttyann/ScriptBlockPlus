@@ -6,24 +6,24 @@ package com.github.yuttyann.scriptblockplus.enums;
  */
 public enum ActionType {
 
-	/**
-	 * スクリプトの作成
-	 */
-	CREATE,
+    /**
+     * スクリプトの作成
+     */
+    CREATE,
 
-	/**
-	 * スクリプトの追加
-	 */
-	ADD,
+    /**
+     * スクリプトの追加
+     */
+    ADD,
 
-	/**
-	 * スクリプトの削除
-	 */
-	REMOVE,
+    /**
+     * スクリプトの削除
+     */
+    REMOVE,
 
-	/**
-	 * スクリプトの詳細
-	 */
-	VIEW;
+    /**
+     * スクリプトの詳細
+     */
+    VIEW;
 }
 

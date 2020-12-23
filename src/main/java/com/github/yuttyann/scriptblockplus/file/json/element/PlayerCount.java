@@ -13,57 +13,57 @@ import java.util.Objects;
  */
 public class PlayerCount {
 
-	@SerializedName("fullcoords")
-	@Expose
-	private final String fullCoords;
+    @SerializedName("fullcoords")
+    @Expose
+    private final String fullCoords;
 
-	@SerializedName("scripttype")
-	@Expose
-	private final ScriptType scriptType;
+    @SerializedName("scripttype")
+    @Expose
+    private final ScriptType scriptType;
 
-	@SerializedName("amount")
-	@Expose
-	private int amount;
+    @SerializedName("amount")
+    @Expose
+    private int amount;
 
-	public PlayerCount(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
-		this.fullCoords = fullCoords;
-		this.scriptType = scriptType;
-	}
+    public PlayerCount(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
+        this.fullCoords = fullCoords;
+        this.scriptType = scriptType;
+    }
 
-	public int add() {
-		synchronized(this) {
-			return ++amount;
-		}
-	}
+    public int add() {
+        synchronized(this) {
+            return ++amount;
+        }
+    }
 
-	public int subtract() {
-		synchronized(this) {
-			return amount < 1 ? --amount : 0;
-		}
-	}
+    public int subtract() {
+        synchronized(this) {
+            return amount < 1 ? --amount : 0;
+        }
+    }
 
-	public void setAmount(int amount) {
-		synchronized(this) {
-			this.amount = Math.min(amount, 0);
-		}
-	}
+    public void setAmount(int amount) {
+        synchronized(this) {
+            this.amount = Math.min(amount, 0);
+        }
+    }
 
-	public synchronized int getAmount() {
-		return amount;
-	}
+    public synchronized int getAmount() {
+        return amount;
+    }
 
-	@NotNull
-	public String getFullCoords() {
-		return fullCoords;
-	}
+    @NotNull
+    public String getFullCoords() {
+        return fullCoords;
+    }
 
-	@NotNull
-	public ScriptType getScriptType() {
-		return scriptType;
-	}
+    @NotNull
+    public ScriptType getScriptType() {
+        return scriptType;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(fullCoords, scriptType);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullCoords, scriptType);
+    }
 }

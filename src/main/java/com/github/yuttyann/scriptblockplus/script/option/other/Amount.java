@@ -18,26 +18,26 @@ import org.jetbrains.annotations.NotNull;
 @OptionTag(name = "amount", syntax = "@amount:")
 public class Amount extends BaseOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new Amount();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new Amount();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		Json<BlockScript> json = new BlockScriptJson(getScriptType());
-		ScriptParam scriptParam = json.load().get(getLocation());
-		if (scriptParam.getAmount() == -1) {
-			scriptParam.setAmount(Integer.parseInt(getOptionValue()));
-		}
-		scriptParam.subtractAmount(1);
-		if (scriptParam.getAmount() <= 0) {
-			PlayerCountJson.clear(getLocation(), getScriptType());
-			TimerOption.removeAll(getLocation(), getScriptType());
-			json.load().remove(getLocation());
-		}
-		json.saveFile();
-		return true;
-	}
+    @Override
+    protected boolean isValid() throws Exception {
+        Json<BlockScript> json = new BlockScriptJson(getScriptType());
+        ScriptParam scriptParam = json.load().get(getLocation());
+        if (scriptParam.getAmount() == -1) {
+            scriptParam.setAmount(Integer.parseInt(getOptionValue()));
+        }
+        scriptParam.subtractAmount(1);
+        if (scriptParam.getAmount() <= 0) {
+            PlayerCountJson.clear(getLocation(), getScriptType());
+            TimerOption.removeAll(getLocation(), getScriptType());
+            json.load().remove(getLocation());
+        }
+        json.saveFile();
+        return true;
+    }
 }

@@ -20,106 +20,106 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BlockClickEvent extends PlayerEvent implements Cancellable {
 
-	private static final HandlerList HANDLERS = new HandlerList();
+    private static final HandlerList HANDLERS = new HandlerList();
 
-	private Block block;
-	private ItemStack item;
-	private Action action;
-	private BlockFace blockFace;
-	private EquipmentSlot hand;
-	private boolean isAnimation;
-	private boolean isInvalid;
-	private boolean cancelled;
+    private Block block;
+    private ItemStack item;
+    private Action action;
+    private BlockFace blockFace;
+    private EquipmentSlot hand;
+    private boolean isAnimation;
+    private boolean isInvalid;
+    private boolean cancelled;
 
-	public BlockClickEvent(@NotNull final PlayerInteractEvent event, final boolean isAnimation) {
-		super(event.getPlayer());
-		this.block = event.getClickedBlock();
-		this.item = event.getItem();
-		this.action = event.getAction();
-		this.blockFace = event.getBlockFace();
-		this.hand = event.getHand();
-		this.isAnimation = isAnimation;
-	}
+    public BlockClickEvent(@NotNull final PlayerInteractEvent event, final boolean isAnimation) {
+        super(event.getPlayer());
+        this.block = event.getClickedBlock();
+        this.item = event.getItem();
+        this.action = event.getAction();
+        this.blockFace = event.getBlockFace();
+        this.hand = event.getHand();
+        this.isAnimation = isAnimation;
+    }
 
-	@Nullable
-	public Block getBlock() {
-		return block;
-	}
+    @Nullable
+    public Block getBlock() {
+        return block;
+    }
 
-	@Nullable
-	public Location getLocation() {
-		return block == null ? null : block.getLocation();
-	}
+    @Nullable
+    public Location getLocation() {
+        return block == null ? null : block.getLocation();
+    }
 
-	@Nullable
-	public ItemStack getItem() {
-		return item;
-	}
+    @Nullable
+    public ItemStack getItem() {
+        return item;
+    }
 
-	@NotNull
-	public Material getMaterial() {
-		if (!hasItem()) {
-			return Material.AIR;
-		}
-		return item.getType();
-	}
+    @NotNull
+    public Material getMaterial() {
+        if (!hasItem()) {
+            return Material.AIR;
+        }
+        return item.getType();
+    }
 
-	@NotNull
-	public Action getAction() {
-		return action;
-	}
+    @NotNull
+    public Action getAction() {
+        return action;
+    }
 
-	@NotNull
-	public BlockFace getBlockFace() {
-		return blockFace;
-	}
+    @NotNull
+    public BlockFace getBlockFace() {
+        return blockFace;
+    }
 
-	@NotNull
-	public EquipmentSlot getHand() {
-		return hand;
-	}
+    @NotNull
+    public EquipmentSlot getHand() {
+        return hand;
+    }
 
-	public boolean hasItem() {
-		return item != null;
-	}
+    public boolean hasItem() {
+        return item != null;
+    }
 
-	public boolean isBlockInHand() {
-		if (!hasItem()) {
-			return false;
-		}
-		return item.getType().isBlock();
-	}
+    public boolean isBlockInHand() {
+        if (!hasItem()) {
+            return false;
+        }
+        return item.getType().isBlock();
+    }
 
-	public boolean isAnimation() {
-		return isAnimation;
-	}
+    public boolean isAnimation() {
+        return isAnimation;
+    }
 
-	public boolean isInvalid() {
-		return isInvalid;
-	}
+    public boolean isInvalid() {
+        return isInvalid;
+    }
 
-	public void setInvalid(boolean isInvalid) {
-		this.isInvalid = isInvalid;
-	}
+    public void setInvalid(boolean isInvalid) {
+        this.isInvalid = isInvalid;
+    }
 
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
 
-	@Override
-	public void setCancelled(boolean cancel) {
-		cancelled = cancel;
-	}
+    @Override
+    public void setCancelled(boolean cancel) {
+        cancelled = cancel;
+    }
 
-	@NotNull
-	@Override
-	public HandlerList getHandlers() {
-		return HANDLERS;
-	}
+    @NotNull
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLERS;
+    }
 
-	@NotNull
-	public static HandlerList getHandlerList() {
-		return HANDLERS;
-	}
+    @NotNull
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
 }

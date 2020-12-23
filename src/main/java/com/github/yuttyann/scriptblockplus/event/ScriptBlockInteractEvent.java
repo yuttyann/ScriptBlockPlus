@@ -11,18 +11,18 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ScriptBlockInteractEvent extends TriggerEvent {
 
-	private boolean isLeftClick;
+    private boolean isLeftClick;
 
-	public ScriptBlockInteractEvent(@NotNull final Player player, @NotNull final Block block, @NotNull final Action action) {
-		super(player, block);
-		this.isLeftClick = action == Action.LEFT_CLICK_BLOCK;
-	}
+    public ScriptBlockInteractEvent(@NotNull final Player player, @NotNull final Block block, @NotNull final Action action) {
+        super(player, block);
+        this.isLeftClick = action == Action.LEFT_CLICK_BLOCK;
+    }
 
-	public boolean isLeftClick() {
-		return isLeftClick;
-	}
+    public boolean isLeftClick() {
+        return isLeftClick;
+    }
 
-	public boolean isRightClick() {
-		return !isLeftClick;
-	}
+    public boolean isRightClick() {
+        return !isLeftClick;
+    }
 }

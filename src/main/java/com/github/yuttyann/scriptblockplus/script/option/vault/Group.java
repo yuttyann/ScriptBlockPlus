@@ -16,27 +16,27 @@ import org.jetbrains.annotations.NotNull;
 @OptionTag(name = "group", syntax = "@group:")
 public class Group extends BaseOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new Group();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new Group();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		VaultPermission vaultPermission = VaultPermission.INSTANCE;
-		if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
-			throw new UnsupportedOperationException();
-		}
-		String[] array = StringUtils.split(getOptionValue(), "/");
-		String world = array.length > 1 ? array[0] : null;
-		String group = array.length > 1 ? array[1] : array[0];
+    @Override
+    protected boolean isValid() throws Exception {
+        VaultPermission vaultPermission = VaultPermission.INSTANCE;
+        if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
+            throw new UnsupportedOperationException();
+        }
+        String[] array = StringUtils.split(getOptionValue(), "/");
+        String world = array.length > 1 ? array[0] : null;
+        String group = array.length > 1 ? array[1] : array[0];
 
-		Player player = getPlayer();
-		if (!vaultPermission.playerInGroup(world, player, group)) {
-			SBConfig.ERROR_GROUP.replace(getOptionValue()).send(player);
-			return false;
-		}
-		return true;
-	}
+        Player player = getPlayer();
+        if (!vaultPermission.playerInGroup(world, player, group)) {
+            SBConfig.ERROR_GROUP.replace(getOptionValue()).send(player);
+            return false;
+        }
+        return true;
+    }
 }

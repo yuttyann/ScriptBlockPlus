@@ -14,17 +14,17 @@ import java.util.Set;
  */
 public class PlayerTemp {
 
-	@SerializedName("timer")
-	@Expose
-	private final Set<TimerTemp> timer = new HashSet<>();
+    @SerializedName("timer")
+    @Expose
+    private final Set<TimerTemp> timer = new HashSet<>();
 
-	@NotNull
-	public Set<TimerTemp> getTimerTemp() {
-		return timer;
-	}
+    @NotNull
+    public Set<TimerTemp> getTimerTemp() {
+        return timer;
+    }
 
-	@Override
-	public int hashCode() {
-		return timer.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return timer.hashCode();
+    }
 }

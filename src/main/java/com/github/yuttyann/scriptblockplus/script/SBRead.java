@@ -13,51 +13,51 @@ import java.util.List;
  */
 public interface SBRead extends ObjectMap {
 
-	/**
-	 * ScriptBlockPlusの{@link SBPlayer}を取得します。
-	 * @return {@link SBPlayer}
-	 */
-	@NotNull
-	SBPlayer getSBPlayer();
+    /**
+     * ScriptBlockPlusの{@link SBPlayer}を取得します。
+     * @return {@link SBPlayer}
+     */
+    @NotNull
+    SBPlayer getSBPlayer();
 
-	/**
-	 * スクリプトの座標を取得します。
-	 * @return スクリプトの座標
-	 */
-	@NotNull
-	Location getLocation();
+    /**
+     * スクリプトの座標を取得します。
+     * @return スクリプトの座標
+     */
+    @NotNull
+    Location getLocation();
 
-	/**
-	 * スクリプトの種類を取得します。
-	 * @return スクリプトの種類
-	 */
-	@NotNull
-	ScriptType getScriptType();
+    /**
+     * スクリプトの種類を取得します。
+     * @return スクリプトの種類
+     */
+    @NotNull
+    ScriptType getScriptType();
 
-	/**
-	 * スクリプトのリストを取得します。
-	 * @return スクリプトのリスト
-	 */
-	@NotNull
-	List<String> getScript();
+    /**
+     * スクリプトのリストを取得します。
+     * @return スクリプトのリスト
+     */
+    @NotNull
+    List<String> getScript();
 
-	/**
-	 * オプションの値を取得します。
-	 * @return オプションの値
-	 */
-	@NotNull
-	String getOptionValue();
+    /**
+     * オプションの値を取得します。
+     * @return オプションの値
+     */
+    @NotNull
+    String getOptionValue();
 
-	/**
-	 * スクリプトを何番目まで実行したのか取得します。
-	 * @return 進行度
-	 */
-	int getScriptIndex();
+    /**
+     * スクリプトを何番目まで実行したのか取得します。
+     * @return 進行度
+     */
+    int getScriptIndex();
 
-	/**
-	 * スクリプトを実行します。
-	 * @param index 開始位置
-	 * @return 実行に成功した場合はtrue
-	 */
-	boolean read(int index);
+    /**
+     * スクリプトを実行します。
+     * @param index 開始位置
+     * @return 実行に成功した場合はtrue
+     */
+    boolean read(int index);
 }

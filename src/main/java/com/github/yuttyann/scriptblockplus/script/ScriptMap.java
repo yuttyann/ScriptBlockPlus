@@ -14,30 +14,30 @@ import java.util.UUID;
  */
 public abstract class ScriptMap implements ObjectMap {
 
-	private static final Map<UUID, Map<String, Object>> OBJECT_MAP = new HashMap<>();
+    private static final Map<UUID, Map<String, Object>> OBJECT_MAP = new HashMap<>();
 
-	private final UUID ramdomId = UUID.randomUUID();
+    private final UUID ramdomId = UUID.randomUUID();
 
-	@Override
-	public void put(@NotNull String key, @Nullable Object value) {
-		OBJECT_MAP.computeIfAbsent(ramdomId, k -> new HashMap<>()).put(key, value);
-	}
+    @Override
+    public void put(@NotNull String key, @Nullable Object value) {
+        OBJECT_MAP.computeIfAbsent(ramdomId, k -> new HashMap<>()).put(key, value);
+    }
 
-	@Override
-	@Nullable
-	@SuppressWarnings("unchecked")
-	public <T> T get(@NotNull String key) {
-		Map<String, Object> map = OBJECT_MAP.get(ramdomId);
-		return map == null ? null : (T) map.get(key);
-	}
+    @Override
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public <T> T get(@NotNull String key) {
+        Map<String, Object> map = OBJECT_MAP.get(ramdomId);
+        return map == null ? null : (T) map.get(key);
+    }
 
-	@Override
-	public void remove(@NotNull String key) {
-		OBJECT_MAP.get(ramdomId).remove(key);
-	}
+    @Override
+    public void remove(@NotNull String key) {
+        OBJECT_MAP.get(ramdomId).remove(key);
+    }
 
-	@Override
-	public void clear() {
-		OBJECT_MAP.remove(ramdomId);
-	}
+    @Override
+    public void clear() {
+        OBJECT_MAP.remove(ramdomId);
+    }
 }

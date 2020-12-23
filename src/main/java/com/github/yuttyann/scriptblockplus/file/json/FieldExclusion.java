@@ -11,13 +11,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public class FieldExclusion implements ExclusionStrategy {
 
-	@Override
-	public boolean shouldSkipField(@NotNull FieldAttributes field) {
-		return field.getAnnotation(Exclude.class) != null;
-	}
+    @Override
+    public boolean shouldSkipField(@NotNull FieldAttributes field) {
+        return field.getAnnotation(Exclude.class) != null;
+    }
 
-	@Override
-	public boolean shouldSkipClass(@NotNull Class<?> clazz) {
-		return false;
-	}
+    @Override
+    public boolean shouldSkipClass(@NotNull Class<?> clazz) {
+        return false;
+    }
 }

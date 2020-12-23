@@ -21,46 +21,46 @@ import java.util.Set;
 @OptionTag(name = "delay", syntax = "@delay:")
 public class Delay extends BaseOption implements Runnable {
 
-	public static final Set<TimerTemp> DELAY_SET = new HashSet<>();
+    public static final Set<TimerTemp> DELAY_SET = new HashSet<>();
 
-	private boolean saveDelay;
+    private boolean saveDelay;
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new Delay();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new Delay();
+    }
 
-	@Override
-	public boolean isFailedIgnore() {
-		return true;
-	}
+    @Override
+    public boolean isFailedIgnore() {
+        return true;
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		String[] array = StringUtils.split(getOptionValue(), "/");
-		saveDelay = array.length <= 1 || Boolean.parseBoolean(array[1]);
-		if (saveDelay && DELAY_SET.contains(new TimerTemp(getUniqueId(), getLocation(), getScriptType()))) {
-			SBConfig.ACTIVE_DELAY.send(getSBPlayer());
-		} else {
-			if (saveDelay) {
-				DELAY_SET.add(new TimerTemp(getUniqueId(), getLocation(), getScriptType()));
-			}
-			Bukkit.getScheduler().runTaskLater(ScriptBlock.getInstance(), this, Long.parseLong(array[0]));
-		}
-		return false;
-	}
+    @Override
+    protected boolean isValid() throws Exception {
+        String[] array = StringUtils.split(getOptionValue(), "/");
+        saveDelay = array.length <= 1 || Boolean.parseBoolean(array[1]);
+        if (saveDelay && DELAY_SET.contains(new TimerTemp(getUniqueId(), getLocation(), getScriptType()))) {
+            SBConfig.ACTIVE_DELAY.send(getSBPlayer());
+        } else {
+            if (saveDelay) {
+                DELAY_SET.add(new TimerTemp(getUniqueId(), getLocation(), getScriptType()));
+            }
+            Bukkit.getScheduler().runTaskLater(ScriptBlock.getInstance(), this, Long.parseLong(array[0]));
+        }
+        return false;
+    }
 
-	@Override
-	public void run() {
-		if (saveDelay) {
-			DELAY_SET.remove(new TimerTemp(getUniqueId(), getLocation(), getScriptType()));
-		}
-		SBRead sbRead = (SBRead) getTempMap();
-		if (getSBPlayer().isOnline()) {
-			sbRead.read(getScriptIndex() + 1);
-		} else {
-			EndProcessManager.forEach(e -> e.failed(sbRead));
-		}
-	}
+    @Override
+    public void run() {
+        if (saveDelay) {
+            DELAY_SET.remove(new TimerTemp(getUniqueId(), getLocation(), getScriptType()));
+        }
+        SBRead sbRead = (SBRead) getTempMap();
+        if (getSBPlayer().isOnline()) {
+            sbRead.read(getScriptIndex() + 1);
+        } else {
+            EndProcessManager.forEach(e -> e.failed(sbRead));
+        }
+    }
 }

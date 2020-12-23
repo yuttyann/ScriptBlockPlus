@@ -16,29 +16,29 @@ import org.jetbrains.annotations.NotNull;
 @OptionTag(name = "moneycost", syntax = "$cost:")
 public class MoneyCost extends BaseOption {
 
-	public static final String KEY = Utils.randomUUID();
+    public static final String KEY = Utils.randomUUID();
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new MoneyCost();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new MoneyCost();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		VaultEconomy vaultEconomy = VaultEconomy.INSTANCE;
-		if (!vaultEconomy.isEnabled()) {
-			throw new UnsupportedOperationException();
-		}
-		Player player = getPlayer();
-		double cost = Double.parseDouble(getOptionValue());
-		if (vaultEconomy.has(player, cost)) {
-			vaultEconomy.withdrawPlayer(player, cost);
-			getTempMap().put(KEY, cost + (getTempMap().has(KEY) ? getTempMap().getDouble(KEY) : 0.0D));
-			return true;
-		}
-		double result = cost - vaultEconomy.getBalance(player);
-		SBConfig.ERROR_COST.replace(cost, result).send(player);
-		return false;
-	}
+    @Override
+    protected boolean isValid() throws Exception {
+        VaultEconomy vaultEconomy = VaultEconomy.INSTANCE;
+        if (!vaultEconomy.isEnabled()) {
+            throw new UnsupportedOperationException();
+        }
+        Player player = getPlayer();
+        double cost = Double.parseDouble(getOptionValue());
+        if (vaultEconomy.has(player, cost)) {
+            vaultEconomy.withdrawPlayer(player, cost);
+            getTempMap().put(KEY, cost + (getTempMap().has(KEY) ? getTempMap().getDouble(KEY) : 0.0D));
+            return true;
+        }
+        double result = cost - vaultEconomy.getBalance(player);
+        SBConfig.ERROR_COST.replace(cost, result).send(player);
+        return false;
+    }
 }

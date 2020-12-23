@@ -11,20 +11,20 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EndMoneyCost implements EndProcess {
 
-	@Override
-	@NotNull
-	public EndProcess newInstance() {
-		return new EndMoneyCost();
-	}
+    @Override
+    @NotNull
+    public EndProcess newInstance() {
+        return new EndMoneyCost();
+    }
 
-	@Override
-	public void success(@NotNull SBRead sbRead) { }
+    @Override
+    public void success(@NotNull SBRead sbRead) { }
 
-	@Override
-	public void failed(@NotNull SBRead sbRead) {
-		VaultEconomy economy = VaultEconomy.INSTANCE;
-		if (economy.isEnabled() && sbRead.has(MoneyCost.KEY)) {
-			economy.depositPlayer(sbRead.getSBPlayer().getOfflinePlayer(), sbRead.getDouble(MoneyCost.KEY));
-		}
-	}
+    @Override
+    public void failed(@NotNull SBRead sbRead) {
+        VaultEconomy economy = VaultEconomy.INSTANCE;
+        if (economy.isEnabled() && sbRead.has(MoneyCost.KEY)) {
+            economy.depositPlayer(sbRead.getSBPlayer().getOfflinePlayer(), sbRead.getDouble(MoneyCost.KEY));
+        }
+    }
 }

@@ -17,31 +17,31 @@ import java.util.Set;
 @OptionTag(name = "cooldown", syntax = "@cooldown:")
 public class Cooldown extends TimerOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new Cooldown();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new Cooldown();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		if (inCooldown()) {
-			return false;
-		}
-		long value = Integer.parseInt(getOptionValue()) * 1000L;
-		long[] params = new long[] { System.currentTimeMillis(), value, 0L };
-		params[2] = params[0] + params[1];
+    @Override
+    protected boolean isValid() throws Exception {
+        if (inCooldown()) {
+            return false;
+        }
+        long value = Integer.parseInt(getOptionValue()) * 1000L;
+        long[] params = new long[] { System.currentTimeMillis(), value, 0L };
+        params[2] = params[0] + params[1];
 
-		Json<PlayerTemp> json = new PlayerTempJson(getFileUniqueId());
-		json.load().getTimerTemp().add(new TimerTemp(getFileUniqueId(), getLocation(), getScriptType()).set(params));
-		json.saveFile();
-		return true;
-	}
+        Json<PlayerTemp> json = new PlayerTempJson(getFileUniqueId());
+        json.load().getTimerTemp().add(new TimerTemp(getFileUniqueId(), getLocation(), getScriptType()).set(params));
+        json.saveFile();
+        return true;
+    }
 
-	@Override
-	@NotNull
-	protected Optional<TimerTemp> getTimerTemp() {
-		Set<TimerTemp> timers = new PlayerTempJson(getFileUniqueId()).load().getTimerTemp();
-		return get(timers, new TimerTemp(getFileUniqueId(), getLocation(), getScriptType()));
-	}
+    @Override
+    @NotNull
+    protected Optional<TimerTemp> getTimerTemp() {
+        Set<TimerTemp> timers = new PlayerTempJson(getFileUniqueId()).load().getTimerTemp();
+        return get(timers, new TimerTemp(getFileUniqueId(), getLocation(), getScriptType()));
+    }
 }

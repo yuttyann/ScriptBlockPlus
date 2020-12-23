@@ -14,22 +14,22 @@ import org.jetbrains.annotations.NotNull;
 @OptionTag(name = "perm_remove", syntax = "@permREMOVE:")
 public class PermRemove extends BaseOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new PermRemove();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new PermRemove();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		VaultPermission vaultPermission = VaultPermission.INSTANCE;
-		if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
-			throw new UnsupportedOperationException();
-		}
-		String[] array = StringUtils.split(getOptionValue(), "/");
-		String world = array.length > 1 ? array[0] : null;
-		String permission = array.length > 1 ? array[1] : array[0];
-		vaultPermission.playerRemove(world, getPlayer(), permission);
-		return true;
-	}
+    @Override
+    protected boolean isValid() throws Exception {
+        VaultPermission vaultPermission = VaultPermission.INSTANCE;
+        if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
+            throw new UnsupportedOperationException();
+        }
+        String[] array = StringUtils.split(getOptionValue(), "/");
+        String world = array.length > 1 ? array[0] : null;
+        String permission = array.length > 1 ? array[1] : array[0];
+        vaultPermission.playerRemove(world, getPlayer(), permission);
+        return true;
+    }
 }

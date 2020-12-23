@@ -6,13 +6,13 @@ package com.github.yuttyann.scriptblockplus.enums;
  */
 public enum InstanceType {
 
-	/**
-	 * リフレクションを使用しない場合
-	 */
-	SBINSTANCE,
+    /**
+     * リフレクションを使用しない場合
+     */
+    SBINSTANCE,
 
-	/**
-	 * リフレクションを使用する場合
-	 */
-	REFLECTION
+    /**
+     * リフレクションを使用する場合
+     */
+    REFLECTION
 }

@@ -14,38 +14,38 @@ import java.util.Set;
  */
 public class CuboidRegionRemove {
 
-	private final Set<ScriptType> set;
-	private final CuboidRegionBlocks cuboidRegionBlocks;
+    private final Set<ScriptType> set;
+    private final CuboidRegionBlocks cuboidRegionBlocks;
 
-	public CuboidRegionRemove(@NotNull Region region) {
-		this.set = new LinkedHashSet<>();
-		this.cuboidRegionBlocks = new CuboidRegionBlocks(region);
-	}
+    public CuboidRegionRemove(@NotNull Region region) {
+        this.set = new LinkedHashSet<>();
+        this.cuboidRegionBlocks = new CuboidRegionBlocks(region);
+    }
 
-	@NotNull
-	public Set<ScriptType> getScriptTypes() {
-		return set;
-	}
+    @NotNull
+    public Set<ScriptType> getScriptTypes() {
+        return set;
+    }
 
-	@NotNull
-	public CuboidRegionBlocks getRegionBlocks() {
-		return cuboidRegionBlocks;
-	}
+    @NotNull
+    public CuboidRegionBlocks getRegionBlocks() {
+        return cuboidRegionBlocks;
+    }
 
-	public CuboidRegionRemove remove() {
-		set.clear();
-		Set<Block> blocks = cuboidRegionBlocks.getBlocks();
-		for (ScriptType scriptType : ScriptType.values()) {
-			ScriptAction scriptAction = new ScriptAction(scriptType);
-			if (scriptAction.exists()) {
-				for (Block block : blocks) {
-					if (scriptAction.lightRemove(block.getLocation())) {
-						set.add(scriptType);
-					}
-				}
-				scriptAction.save();
-			}
-		}
-		return this;
-	}
+    public CuboidRegionRemove remove() {
+        set.clear();
+        Set<Block> blocks = cuboidRegionBlocks.getBlocks();
+        for (ScriptType scriptType : ScriptType.values()) {
+            ScriptAction scriptAction = new ScriptAction(scriptType);
+            if (scriptAction.exists()) {
+                for (Block block : blocks) {
+                    if (scriptAction.lightRemove(block.getLocation())) {
+                        set.add(scriptType);
+                    }
+                }
+                scriptAction.save();
+            }
+        }
+        return this;
+    }
 }

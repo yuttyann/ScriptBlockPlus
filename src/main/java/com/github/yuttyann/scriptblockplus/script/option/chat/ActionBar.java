@@ -24,70 +24,70 @@ import java.util.stream.Collectors;
 @OptionTag(name = "actionbar", syntax = "@actionbar:")
 public class ActionBar extends BaseOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new ActionBar();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new ActionBar();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		String[] array = StringUtils.split(getOptionValue(), "/");
-		String message = StringUtils.setColor(array[0]);
+    @Override
+    protected boolean isValid() throws Exception {
+        String[] array = StringUtils.split(getOptionValue(), "/");
+        String message = StringUtils.setColor(array[0]);
 
-		if (array.length > 1) {
-			int stay = Integer.parseInt(array[1]);
-			new Task(stay, message).runTaskTimer(ScriptBlock.getInstance(), 0, 20);
-		} else {
-			send(getSBPlayer(), message);
-		}
-		return true;
-	}
+        if (array.length > 1) {
+            int stay = Integer.parseInt(array[1]);
+            new Task(stay, message).runTaskTimer(ScriptBlock.getInstance(), 0, 20);
+        } else {
+            send(getSBPlayer(), message);
+        }
+        return true;
+    }
 
-	public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
-		if (Utils.isCBXXXorLater("1.11")) {
-			String command = "title " + sbPlayer.getName() + " actionbar " + "{\"text\":\"" + message + "\"}";
-			Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Utils.dispatchCommand(sbPlayer, command));
-		} else if (Utils.isPlatform()) {
-			try {
-				String chatSerializer = "IChatBaseComponent$ChatSerializer";
-				Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
-				Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
-				Class<?>[] array = { PackageType.NMS.getClass("IChatBaseComponent"), byte.class };
-				Constructor<?> packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", array);
-				PackageType.sendPacket(sbPlayer.getPlayer(), packetPlayOutChat.newInstance(component, (byte) 2));
-			} catch (ReflectiveOperationException e) {
-				e.printStackTrace();
-			}
-		} else {
-			String platforms = SBConfig.PLATFORMS.getValue().stream().map(String::valueOf).collect(Collectors.joining(", "));
-			throw new UnsupportedOperationException("Unsupported server. | Supported Servers <" + platforms + ">");
-		}
-	}
+    public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
+        if (Utils.isCBXXXorLater("1.11")) {
+            String command = "title " + sbPlayer.getName() + " actionbar " + "{\"text\":\"" + message + "\"}";
+            Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Utils.dispatchCommand(sbPlayer, command));
+        } else if (Utils.isPlatform()) {
+            try {
+                String chatSerializer = "IChatBaseComponent$ChatSerializer";
+                Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
+                Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
+                Class<?>[] array = { PackageType.NMS.getClass("IChatBaseComponent"), byte.class };
+                Constructor<?> packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", array);
+                PackageType.sendPacket(sbPlayer.getPlayer(), packetPlayOutChat.newInstance(component, (byte) 2));
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
+        } else {
+            String platforms = SBConfig.PLATFORMS.getValue().stream().map(String::valueOf).collect(Collectors.joining(", "));
+            throw new UnsupportedOperationException("Unsupported server. | Supported Servers <" + platforms + ">");
+        }
+    }
 
-	private class Task extends BukkitRunnable {
+    private class Task extends BukkitRunnable {
 
-		private final int stay;
-		private final String message;
+        private final int stay;
+        private final String message;
 
-		private int tick;
+        private int tick;
 
-		Task(int stay, @NotNull String message) {
-			this.tick = 0;
-			this.stay = stay;
-			this.message = message;
-		}
+        Task(int stay, @NotNull String message) {
+            this.tick = 0;
+            this.stay = stay;
+            this.message = message;
+        }
 
-		@Override
-		public void run() {
-			try {
-				if (!getSBPlayer().isOnline() || tick++ >= stay) {
-					cancel();
-				}
-				send(getSBPlayer(), isCancelled() ? "" : message);
-			} catch (Exception e) {
-				cancel();
-			}
-		}
-	}
+        @Override
+        public void run() {
+            try {
+                if (!getSBPlayer().isOnline() || tick++ >= stay) {
+                    cancel();
+                }
+                send(getSBPlayer(), isCancelled() ? "" : message);
+            } catch (Exception e) {
+                cancel();
+            }
+        }
+    }
 }

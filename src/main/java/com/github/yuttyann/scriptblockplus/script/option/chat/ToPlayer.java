@@ -13,15 +13,15 @@ import org.jetbrains.annotations.NotNull;
 @OptionTag(name = "toplayer", syntax = "@player ")
 public class ToPlayer extends BaseOption {
 
-	@Override
-	@NotNull
-	public Option newInstance() {
-		return new ToPlayer();
-	}
+    @Override
+    @NotNull
+    public Option newInstance() {
+        return new ToPlayer();
+    }
 
-	@Override
-	protected boolean isValid() throws Exception {
-		Utils.sendColorMessage(getPlayer(), getOptionValue());
-		return true;
-	}
+    @Override
+    protected boolean isValid() throws Exception {
+        Utils.sendColorMessage(getPlayer(), getOptionValue());
+        return true;
+    }
 }

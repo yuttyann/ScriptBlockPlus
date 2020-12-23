@@ -22,26 +22,26 @@ import org.bukkit.event.block.BlockBreakEvent;
  */
 public class ScriptBreakListener implements Listener {
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onBlockBreak(BlockBreakEvent event) {
-		Player player = event.getPlayer();
-		if (ItemAction.has(player, player.getInventory().getItemInMainHand(), true)) {
-			event.setCancelled(true);
-			return;
-		}
-		Block block = event.getBlock();
-		Location location = block.getLocation();
-		if (BlockScriptJson.has(location, ScriptType.BREAK)) {
-			ScriptBlockBreakEvent breakEvent = new ScriptBlockBreakEvent(player, block);
-			Bukkit.getPluginManager().callEvent(breakEvent);
-			if (breakEvent.isCancelled()) {
-				return;
-			}
-			if (!Permission.has(player, ScriptType.BREAK, false)) {
-				SBConfig.NOT_PERMISSION.send(player);
-				return;
-			}
-			new ScriptRead(player, location, ScriptType.BREAK).read(0);
-		}
-	}
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        if (ItemAction.has(player, player.getInventory().getItemInMainHand(), true)) {
+            event.setCancelled(true);
+            return;
+        }
+        Block block = event.getBlock();
+        Location location = block.getLocation();
+        if (BlockScriptJson.has(location, ScriptType.BREAK)) {
+            ScriptBlockBreakEvent breakEvent = new ScriptBlockBreakEvent(player, block);
+            Bukkit.getPluginManager().callEvent(breakEvent);
+            if (breakEvent.isCancelled()) {
+                return;
+            }
+            if (!Permission.has(player, ScriptType.BREAK, false)) {
+                SBConfig.NOT_PERMISSION.send(player);
+                return;
+            }
+            new ScriptRead(player, location, ScriptType.BREAK).read(0);
+        }
+    }
 }

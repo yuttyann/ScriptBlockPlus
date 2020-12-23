@@ -14,13 +14,13 @@ import java.util.UUID;
 @JsonOptions(path = "json/playertemp", file = "{id}.json")
 public class PlayerTempJson extends Json<PlayerTemp> {
 
-	public PlayerTempJson(@NotNull UUID uuid) {
-		super(uuid);
-	}
+    public PlayerTempJson(@NotNull UUID uuid) {
+        super(uuid);
+    }
 
-	@Override
-	@NotNull
-	public PlayerTemp newInstance(@NotNull Object[] args) {
-		return new PlayerTemp();
-	}
+    @Override
+    @NotNull
+    public PlayerTemp newInstance(@NotNull Object[] args) {
+        return new PlayerTemp();
+    }
 }

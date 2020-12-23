@@ -23,155 +23,155 @@ import java.util.UUID;
  */
 public interface SBPlayer extends CommandSender {
 
-	/**
-	 * ScriptBlockPlusの{@link SBPlayer}を取得します。
-	 * @param player プレイヤー
-	 * @return {@link SBPlayer}
-	 */
-	@NotNull
-	static SBPlayer fromPlayer(@NotNull OfflinePlayer player) {
-		return fromUUID(player.getUniqueId());
-	}
+    /**
+     * ScriptBlockPlusの{@link SBPlayer}を取得します。
+     * @param player プレイヤー
+     * @return {@link SBPlayer}
+     */
+    @NotNull
+    static SBPlayer fromPlayer(@NotNull OfflinePlayer player) {
+        return fromUUID(player.getUniqueId());
+    }
 
-	/**
-	 * ScriptBlockPlusの{@link SBPlayer}を取得します。
-	 * @param uuid プレイヤーの{@link UUID}
-	 * @return {@link SBPlayer}
-	 */
-	@NotNull
-	static SBPlayer fromUUID(@NotNull UUID uuid) {
-		BaseSBPlayer sbPlayer = BaseSBPlayer.getSBPlayers().get(uuid);
-		if (sbPlayer == null) {
-			BaseSBPlayer.getSBPlayers().put(uuid, sbPlayer = new BaseSBPlayer(uuid));
-		}
-		return sbPlayer;
-	}
+    /**
+     * ScriptBlockPlusの{@link SBPlayer}を取得します。
+     * @param uuid プレイヤーの{@link UUID}
+     * @return {@link SBPlayer}
+     */
+    @NotNull
+    static SBPlayer fromUUID(@NotNull UUID uuid) {
+        BaseSBPlayer sbPlayer = BaseSBPlayer.getSBPlayers().get(uuid);
+        if (sbPlayer == null) {
+            BaseSBPlayer.getSBPlayers().put(uuid, sbPlayer = new BaseSBPlayer(uuid));
+        }
+        return sbPlayer;
+    }
 
-	/**
-	 * プレイヤーがオンラインの場合にtrueを返します。
-	 * @return プレイヤーがオンラインの場合はtrue
-	 */
-	boolean isOnline();
+    /**
+     * プレイヤーがオンラインの場合にtrueを返します。
+     * @return プレイヤーがオンラインの場合はtrue
+     */
+    boolean isOnline();
 
-	/**
-	 * BukkitAPIの{@link Player}を取得します。
-	 * @return {@link Player}
-	 */
-	@NotNull
-	Player getPlayer();
+    /**
+     * BukkitAPIの{@link Player}を取得します。
+     * @return {@link Player}
+     */
+    @NotNull
+    Player getPlayer();
 
-	/**
-	 * BukkitAPIの{@link OfflinePlayer}を取得します。
-	 * @return {@link OfflinePlayer}
-	 */
-	@NotNull
-	OfflinePlayer getOfflinePlayer();
+    /**
+     * BukkitAPIの{@link OfflinePlayer}を取得します。
+     * @return {@link OfflinePlayer}
+     */
+    @NotNull
+    OfflinePlayer getOfflinePlayer();
 
-	/**
-	 * プレイヤーのインベントリを取得します。
-	 * @return プレイヤーのインベントリ
-	 */
-	@NotNull
-	PlayerInventory getInventory();
+    /**
+     * プレイヤーのインベントリを取得します。
+     * @return プレイヤーのインベントリ
+     */
+    @NotNull
+    PlayerInventory getInventory();
 
-	/**
-	 * プレイヤーの{@link UUID}を取得します。
-	 * @return {@link UUID}
-	 */
-	@NotNull
-	UUID getUniqueId();
+    /**
+     * プレイヤーの{@link UUID}を取得します。
+     * @return {@link UUID}
+     */
+    @NotNull
+    UUID getUniqueId();
 
-	/**
-	 * プレイヤーが存在しているワールドを取得します。
-	 * @return プレイヤーが存在しているワールド
-	 */
-	@NotNull
-	World getWorld();
+    /**
+     * プレイヤーが存在しているワールドを取得します。
+     * @return プレイヤーが存在しているワールド
+     */
+    @NotNull
+    World getWorld();
 
-	/**
-	 * プレイヤーの座標を取得します。
-	 * @return プレイヤーの座標
-	 */
-	@NotNull
-	Location getLocation();
+    /**
+     * プレイヤーの座標を取得します。
+     * @return プレイヤーの座標
+     */
+    @NotNull
+    Location getLocation();
 
-	/**
-	 * プレイヤーのメインハンドのアイテムを取得します。
-	 * @return メインハンドのアイテム
-	 */
-	@Nullable
-	ItemStack getItemInMainHand();
+    /**
+     * プレイヤーのメインハンドのアイテムを取得します。
+     * @return メインハンドのアイテム
+     */
+    @Nullable
+    ItemStack getItemInMainHand();
 
-	/**
-	 * プレイヤーのオフハンドのアイテムを取得します。
-	 * @return オフハンドのアイテム
-	 */
-	@Nullable
-	ItemStack getItemInOffHand();
+    /**
+     * プレイヤーのオフハンドのアイテムを取得します。
+     * @return オフハンドのアイテム
+     */
+    @Nullable
+    ItemStack getItemInOffHand();
 
-	/**
-	 * ワールドの選択範囲を取得します。
-	 * @return ワールドの選択範囲
-	 */
-	@NotNull
-	Region getRegion();
+    /**
+     * ワールドの選択範囲を取得します。
+     * @return ワールドの選択範囲
+     */
+    @NotNull
+    Region getRegion();
 
-	/**
-	 * プレイヤーの格納データを取得します。
-	 * @return プレイヤーの格納データ
-	 */
-	@NotNull
-	ObjectMap getObjectMap();
+    /**
+     * プレイヤーの格納データを取得します。
+     * @return プレイヤーの格納データ
+     */
+    @NotNull
+    ObjectMap getObjectMap();
 
-	/**
-	 * スクリプトをセットします。
-	 * @param scriptLine スクリプト
-	 */
-	void setScriptLine(@Nullable String scriptLine);
+    /**
+     * スクリプトをセットします。
+     * @param scriptLine スクリプト
+     */
+    void setScriptLine(@Nullable String scriptLine);
 
-	/**
-	 * スクリプトエディットをセットします。
-	 * @param scriptEdit スクリプトエディット
-	 */
-	void setScriptEdit(@Nullable ScriptEdit scriptEdit);
+    /**
+     * スクリプトエディットをセットします。
+     * @param scriptEdit スクリプトエディット
+     */
+    void setScriptEdit(@Nullable ScriptEdit scriptEdit);
 
-	/**
-	 * スクリプトのクリップボードをセットします。
-	 * @param sbClipboard スクリプトのクリップボード
-	 */
-	void setSBClipboard(@Nullable SBClipboard sbClipboard);
+    /**
+     * スクリプトのクリップボードをセットします。
+     * @param sbClipboard スクリプトのクリップボード
+     */
+    void setSBClipboard(@Nullable SBClipboard sbClipboard);
 
-	/**
-	 * ブロックの座標をセットします。
-	 * @param blockCoords ブロックの座標
-	 */
-	void setOldBlockCoords(@Nullable BlockCoords blockCoords);
+    /**
+     * ブロックの座標をセットします。
+     * @param blockCoords ブロックの座標
+     */
+    void setOldBlockCoords(@Nullable BlockCoords blockCoords);
 
-	/**
-	 * スクリプトを取得します。
-	 * @return スクリプト（オプショナル）
-	 */
-	@NotNull
-	Optional<String> getScriptLine();
+    /**
+     * スクリプトを取得します。
+     * @return スクリプト（オプショナル）
+     */
+    @NotNull
+    Optional<String> getScriptLine();
 
-	/**
-	 * スクリプトエディットを取得します。
-	 * @return スクリプトエディット（オプショナル）
-	 */
-	@NotNull
-	Optional<ScriptEdit> getScriptEdit();
+    /**
+     * スクリプトエディットを取得します。
+     * @return スクリプトエディット（オプショナル）
+     */
+    @NotNull
+    Optional<ScriptEdit> getScriptEdit();
 
-	/**
-	 * スクリプトのクリップボードを取得します。
-	 * @return スクリプトのクリップボード（オプショナル）
-	 */
-	@NotNull
-	Optional<SBClipboard> getSBClipboard();
+    /**
+     * スクリプトのクリップボードを取得します。
+     * @return スクリプトのクリップボード（オプショナル）
+     */
+    @NotNull
+    Optional<SBClipboard> getSBClipboard();
 
-	/**
-	 * ブロックの座標を取得します。
-	 * @return ブロックの座標（オプショナル）
-	 */
-	@NotNull
-	Optional<BlockCoords> getOldBlockCoords();
+    /**
+     * ブロックの座標を取得します。
+     * @return ブロックの座標（オプショナル）
+     */
+    @NotNull
+    Optional<BlockCoords> getOldBlockCoords();
 }
