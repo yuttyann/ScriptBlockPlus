@@ -34,7 +34,7 @@ ScriptBlockPlus [Java8 MC1.9-1.16.x] [![](https://jitpack.io/v/yuttyann/ScriptBl
 **★以下機能制限の一覧★**<br>
 ・アドベンチャーモードの左クリック判定の制限 **[v1.9-1.13.1]**<br>
 　- 判定が本来のクリック判定ではなく疑似的に再現した判定になります。<br>
-・オプション **`@actionbar`** の制限 **[v1.9-1.11]**<br>
+・オプション **`@actionbar`** の制限 **[v1.9-1.12]**<br>
 　- BukkitAPIに実装されていないため利用はできません。<br>
 ~~&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;~~<br>
 
