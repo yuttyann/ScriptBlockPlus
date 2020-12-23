@@ -30,61 +30,61 @@ import java.util.stream.Stream;
 
 public class ScriptHitListener implements Listener {
 
-    private static final String KEY_HIT = Utils.randomUUID();
+	private static final String KEY_HIT = Utils.randomUUID();
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onProjectileHit(ProjectileHitEvent event) {
-        Block block = getHitBlock(event);
-        ProjectileSource shooter = event.getEntity().getShooter();
-        if (block == null || !(shooter instanceof Player)) {
-            return;
-        }
-        Location location = block.getLocation();
-        if (BlockScriptJson.has(location, ScriptType.HIT)) {
-            Player player = (Player) shooter;
-            if (isTwice(player)) {
-                return;
-            }
-            ScriptBlockHitEvent hitEvent = new ScriptBlockHitEvent(player, block);
-            Bukkit.getServer().getPluginManager().callEvent(hitEvent);
-            if (hitEvent.isCancelled()) {
-                return;
-            }
-            new ScriptRead(player, location, ScriptType.HIT).read(0);
-        }
-    }
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onProjectileHit(ProjectileHitEvent event) {
+		Block block = getHitBlock(event);
+		ProjectileSource shooter = event.getEntity().getShooter();
+		if (block == null || !(shooter instanceof Player)) {
+			return;
+		}
+		Location location = block.getLocation();
+		if (BlockScriptJson.has(location, ScriptType.HIT)) {
+			Player player = (Player) shooter;
+			if (isTwice(player)) {
+				return;
+			}
+			ScriptBlockHitEvent hitEvent = new ScriptBlockHitEvent(player, block);
+			Bukkit.getServer().getPluginManager().callEvent(hitEvent);
+			if (hitEvent.isCancelled()) {
+				return;
+			}
+			new ScriptRead(player, location, ScriptType.HIT).read(0);
+		}
+	}
 
-    private boolean isTwice(@NotNull Player player) {
-        if (!Utils.isCBXXXorLater("1.16")) {
-            return false;
-        }
-        ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
-        if (objectMap.getBoolean(KEY_HIT)) {
-            objectMap.remove(KEY_HIT);
-            return true;
-        }
-        objectMap.put(KEY_HIT, true);
-        return false;
-    }
+	private boolean isTwice(@NotNull Player player) {
+		if (!Utils.isCBXXXorLater("1.16")) {
+			return false;
+		}
+		ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
+		if (objectMap.getBoolean(KEY_HIT)) {
+			objectMap.remove(KEY_HIT);
+			return true;
+		}
+		objectMap.put(KEY_HIT, true);
+		return false;
+	}
 
-    @Nullable
-    private Block getHitBlock(@NotNull ProjectileHitEvent event) {
-        Predicate<Method> isGetHitBlock = m -> m.getName().equals("getHitBlock");
-        if (Stream.of(event.getClass().getMethods()).anyMatch(isGetHitBlock)) {
-            return event.getHitBlock();
-        }
-        Projectile projectile = event.getEntity();
-        World world = projectile.getWorld();
-        Vector start = projectile.getLocation().toVector();
-        Vector direction = projectile.getVelocity().normalize();
-        BlockIterator iterator = new BlockIterator(world, start, direction, 0.0D, 4);
-        Block hitBlock = null;
-        while (iterator.hasNext()) {
-            hitBlock = iterator.next();
-            if (hitBlock.getType() != Material.AIR) {
-                break;
-            }
-        }
-        return hitBlock;
-    }
+	@Nullable
+	private Block getHitBlock(@NotNull ProjectileHitEvent event) {
+		Predicate<Method> isGetHitBlock = m -> m.getName().equals("getHitBlock");
+		if (Stream.of(event.getClass().getMethods()).anyMatch(isGetHitBlock)) {
+			return event.getHitBlock();
+		}
+		Projectile projectile = event.getEntity();
+		World world = projectile.getWorld();
+		Vector start = projectile.getLocation().toVector();
+		Vector direction = projectile.getVelocity().normalize();
+		BlockIterator iterator = new BlockIterator(world, start, direction, 0.0D, 4);
+		Block hitBlock = null;
+		while (iterator.hasNext()) {
+			hitBlock = iterator.next();
+			if (hitBlock.getType() != Material.AIR) {
+				break;
+			}
+		}
+		return hitBlock;
+	}
 }

@@ -39,7 +39,7 @@ public final class SBLoader {
 	}
 
 	public void forEach(@NotNull Consumer<SBLoader> action) {
-        for (String name : scriptFile.getKeys()) {
+		for (String name : scriptFile.getKeys()) {
 			World world = Utils.getWorld(name);
 			for (String xyz : scriptFile.getKeys(name)) {
 				action.accept(createPath(BlockCoords.fromString(world, xyz)));

@@ -21,60 +21,60 @@ import java.util.UUID;
 @JsonOptions(path = "json/blockscript", file = "{id}.json")
 public class BlockScriptJson extends Json<BlockScript> {
 
-    public BlockScriptJson(@NotNull ScriptType scriptType) {
-        super(scriptType.type());
-    }
+	public BlockScriptJson(@NotNull ScriptType scriptType) {
+		super(scriptType.type());
+	}
 
-    public static boolean has(@NotNull Location location, @NotNull ScriptType scriptType) {
-        BlockScriptJson blockScriptJson = new BlockScriptJson(scriptType);
-        return blockScriptJson.exists() && blockScriptJson.load().has(location);
-    }
+	public static boolean has(@NotNull Location location, @NotNull ScriptType scriptType) {
+		BlockScriptJson blockScriptJson = new BlockScriptJson(scriptType);
+		return blockScriptJson.exists() && blockScriptJson.load().has(location);
+	}
 
-    public static boolean has(@NotNull Location location, @NotNull BlockScriptJson blockScriptJson) {
-        return blockScriptJson.exists() && blockScriptJson.load().has(location);
-    }
+	public static boolean has(@NotNull Location location, @NotNull BlockScriptJson blockScriptJson) {
+		return blockScriptJson.exists() && blockScriptJson.load().has(location);
+	}
 
-    @NotNull
-    public ScriptType getScriptType() {
-        return ScriptType.valueOf(id);
-    }
+	@NotNull
+	public ScriptType getScriptType() {
+		return ScriptType.valueOf(id);
+	}
 
-    @Override
-    @NotNull
-    public BlockScript newInstance(@NotNull Object[] args) {
-        return new BlockScript(getScriptType());
-    }
+	@Override
+	@NotNull
+	public BlockScript newInstance(@NotNull Object[] args) {
+		return new BlockScript(getScriptType());
+	}
 
-    public static void convart(@NotNull ScriptType scriptType) {
-        // YAML形式のファイルからデータを読み込むクラス
-        SBLoader scriptLoader = new SBLoader(scriptType);
-        if (!scriptLoader.getFile().exists()) {
-            return;
-        }
+	public static void convart(@NotNull ScriptType scriptType) {
+		// YAML形式のファイルからデータを読み込むクラス
+		SBLoader scriptLoader = new SBLoader(scriptType);
+		if (!scriptLoader.getFile().exists()) {
+			return;
+		}
 
-        // JSON
-        Json<BlockScript> json = new BlockScriptJson(scriptType);
-        BlockScript blockScript = json.load();
-        scriptLoader.forEach(s -> {
+		// JSON
+		Json<BlockScript> json = new BlockScriptJson(scriptType);
+		BlockScript blockScript = json.load();
+		scriptLoader.forEach(s -> {
 
-            // 移行の為、パラメータを設定する
-            List<UUID> author = s.getAuthors();
-            if (author.size() == 0) {
-                return;
-            }
-            ScriptParam scriptParam = blockScript.get(s.getLocation());
-            scriptParam.setAuthor(new LinkedHashSet<>(s.getAuthors()));
-            scriptParam.setScript(s.getScripts());
-            scriptParam.setLastEdit(s.getLastEdit());
-            scriptParam.setAmount(s.getAmount());
-        });
-        json.saveFile();
+			// 移行の為、パラメータを設定する
+			List<UUID> author = s.getAuthors();
+			if (author.size() == 0) {
+				return;
+			}
+			ScriptParam scriptParam = blockScript.get(s.getLocation());
+			scriptParam.setAuthor(new LinkedHashSet<>(s.getAuthors()));
+			scriptParam.setScript(s.getScripts());
+			scriptParam.setLastEdit(s.getLastEdit());
+			scriptParam.setAmount(s.getAmount());
+		});
+		json.saveFile();
 
-        // 移行完了後にファイルとディレクトリを削除する
-        scriptLoader.getFile().delete();
-        File parent = scriptLoader.getFile().getParentFile();
-        if (parent.isDirectory() && parent.list().length == 0) {
-            parent.delete();
-        }
-    }
+		// 移行完了後にファイルとディレクトリを削除する
+		scriptLoader.getFile().delete();
+		File parent = scriptLoader.getFile().getParentFile();
+		if (parent.isDirectory() && parent.list().length == 0) {
+			parent.delete();
+		}
+	}
 }

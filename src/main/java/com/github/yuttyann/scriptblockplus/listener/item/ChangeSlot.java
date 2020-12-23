@@ -14,41 +14,41 @@ import java.util.Optional;
  */
 public class ChangeSlot {
 
-    private final Player player;
-    private final int newSlot;
-    private final int oldSlot;
+	private final Player player;
+	private final int newSlot;
+	private final int oldSlot;
 
-    public ChangeSlot(@NotNull Player player, int newSlot, int oldSlot) {
-        this.player = player;
-        this.newSlot = newSlot;
-        this.oldSlot = oldSlot;
-    }
+	public ChangeSlot(@NotNull Player player, int newSlot, int oldSlot) {
+		this.player = player;
+		this.newSlot = newSlot;
+		this.oldSlot = oldSlot;
+	}
 
-    @NotNull
-    public Player getPlayer() {
-        return player;
-    }
+	@NotNull
+	public Player getPlayer() {
+		return player;
+	}
 
-    @NotNull
-    public SBPlayer getSBPlayer() {
-        return SBPlayer.fromPlayer(player);
-    }
+	@NotNull
+	public SBPlayer getSBPlayer() {
+		return SBPlayer.fromPlayer(player);
+	}
 
-    @NotNull
-    public ItemStack getNewItem() {
-        return Optional.ofNullable(player.getInventory().getItem(newSlot)).orElse(new ItemStack(Material.AIR));
-    }
+	@NotNull
+	public ItemStack getNewItem() {
+		return Optional.ofNullable(player.getInventory().getItem(newSlot)).orElse(new ItemStack(Material.AIR));
+	}
 
-    @NotNull
-    public ItemStack getOldItem() {
-        return Optional.ofNullable(player.getInventory().getItem(oldSlot)).orElse(new ItemStack(Material.AIR));
-    }
+	@NotNull
+	public ItemStack getOldItem() {
+		return Optional.ofNullable(player.getInventory().getItem(oldSlot)).orElse(new ItemStack(Material.AIR));
+	}
 
-    public int getNewSlot() {
-        return newSlot;
-    }
+	public int getNewSlot() {
+		return newSlot;
+	}
 
-    public int getOldSlot() {
-        return oldSlot;
-    }
+	public int getOldSlot() {
+		return oldSlot;
+	}
 }

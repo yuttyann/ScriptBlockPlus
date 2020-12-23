@@ -16,12 +16,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface JsonOptions {
 
-    @NotNull
-    String path();
+	@NotNull
+	String path();
 
-    @NotNull
-    String file();
+	@NotNull
+	String file();
 
-    @NotNull
-    Class<?>[] classes() default { };
+	@NotNull
+	Class<?>[] classes() default { };
 }

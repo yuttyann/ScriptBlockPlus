@@ -11,21 +11,21 @@ import org.jetbrains.annotations.Nullable;
  */
 public class RayResult {
 
-    private Block block;
-    private BlockFace blockFace;
+	private Block block;
+	private BlockFace blockFace;
 
-    public RayResult(@NotNull Block block, @Nullable BlockFace blockFace) {
-        this.block = block;
-        this.blockFace = blockFace == null ? BlockFace.SOUTH : blockFace;
-    }
+	public RayResult(@NotNull Block block, @Nullable BlockFace blockFace) {
+		this.block = block;
+		this.blockFace = blockFace == null ? BlockFace.SOUTH : blockFace;
+	}
 
-    @NotNull
-    public Block getHitBlock() {
-        return block;
-    }
+	@NotNull
+	public Block getHitBlock() {
+		return block;
+	}
 
-    @NotNull
-    public BlockFace getHitBlockFace() {
-        return blockFace;
-    }
+	@NotNull
+	public BlockFace getHitBlockFace() {
+		return blockFace;
+	}
 }

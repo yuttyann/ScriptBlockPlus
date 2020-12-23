@@ -16,58 +16,58 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 public final class UnmodifiableItemStack extends ItemStack {
 
-    public UnmodifiableItemStack(@NotNull ItemStack item) {
-        super(item);
-    }
+	public UnmodifiableItemStack(@NotNull ItemStack item) {
+		super(item);
+	}
 
-    @Override
-    public void setType(@NotNull Material type) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void setType(@NotNull Material type) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public void setAmount(int amount) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void setAmount(int amount) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public void setData(@Nullable MaterialData data) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void setData(@Nullable MaterialData data) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    @Deprecated
-    public void setDurability(short durability) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	@Deprecated
+	public void setDurability(short durability) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public void addEnchantment(@NotNull Enchantment ench, int level) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void addEnchantment(@NotNull Enchantment ench, int level) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public void addEnchantments(@NotNull Map<Enchantment, Integer> enchantments) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void addEnchantments(@NotNull Map<Enchantment, Integer> enchantments) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public void addUnsafeEnchantment(@NotNull Enchantment ench, int level) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void addUnsafeEnchantment(@NotNull Enchantment ench, int level) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public void addUnsafeEnchantments(@NotNull Map<Enchantment, Integer> enchantments) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void addUnsafeEnchantments(@NotNull Map<Enchantment, Integer> enchantments) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public int removeEnchantment(@NotNull Enchantment ench) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public int removeEnchantment(@NotNull Enchantment ench) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public boolean setItemMeta(@Nullable ItemMeta meta) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public boolean setItemMeta(@Nullable ItemMeta meta) {
+		throw new UnsupportedOperationException();
+	}
 }

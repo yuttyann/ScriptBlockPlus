@@ -12,66 +12,66 @@ import java.util.*;
  */
 public class ScriptParam {
 
-    @SerializedName("author")
-    @Expose
-    private Set<UUID> author = new LinkedHashSet<>();
+	@SerializedName("author")
+	@Expose
+	private Set<UUID> author = new LinkedHashSet<>();
 
-    @SerializedName("script")
-    @Expose
-    private List<String> script = new LinkedList<>();
+	@SerializedName("script")
+	@Expose
+	private List<String> script = new LinkedList<>();
 
-    @SerializedName("lastedit")
-    @Expose
-    private String lastedit;
+	@SerializedName("lastedit")
+	@Expose
+	private String lastedit;
 
-    @SerializedName("amount")
-    @Expose
-    private int amount = -1;
+	@SerializedName("amount")
+	@Expose
+	private int amount = -1;
 
-    @NotNull
-    public Set<UUID> getAuthor() {
-        return author;
-    }
+	@NotNull
+	public Set<UUID> getAuthor() {
+		return author;
+	}
 
-    public void setAuthor(@NotNull Set<UUID> author) {
-        this.author = author;
-    }
+	public void setAuthor(@NotNull Set<UUID> author) {
+		this.author = author;
+	}
 
-    public List<String> getScript() {
-        return script;
-    }
+	public List<String> getScript() {
+		return script;
+	}
 
-    public void setScript(@NotNull List<String> script) {
-        this.script = script;
-    }
+	public void setScript(@NotNull List<String> script) {
+		this.script = script;
+	}
 
-    @NotNull
-    public String getLastEdit() {
-        return lastedit;
-    }
+	@NotNull
+	public String getLastEdit() {
+		return lastedit;
+	}
 
-    public void setLastEdit(@NotNull String time) {
-        this.lastedit = time;
-    }
+	public void setLastEdit(@NotNull String time) {
+		this.lastedit = time;
+	}
 
-    public int getAmount() {
-        return amount;
-    }
+	public int getAmount() {
+		return amount;
+	}
 
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
 
-    public void addAmount(int amount) {
-        this.amount += amount;
-    }
+	public void addAmount(int amount) {
+		this.amount += amount;
+	}
 
-    public void subtractAmount(int amount) {
-        this.amount = Math.max(this.amount - amount, 0);
-    }
+	public void subtractAmount(int amount) {
+		this.amount = Math.max(this.amount - amount, 0);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(author, script, lastedit);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(author, script, lastedit);
+	}
 }

@@ -19,285 +19,285 @@ import java.util.Objects;
  */
 public class SBBlockIterator implements Iterator<SBBlockIterator.Queue> {
 
-    private final double maxDistance;
+	private final double maxDistance;
 
-    private static final int gridSize = 1 << 24;
+	private static final int gridSize = 1 << 24;
 
-    private boolean end = false;
+	private boolean end = false;
 
-    private final Queue[] blockQueue = new Queue[3];
-    {
-        blockQueue[0] = new Queue();
-        blockQueue[1] = new Queue();
-        blockQueue[2] = new Queue();
-    }
+	private final Queue[] blockQueue = new Queue[3];
+	{
+		blockQueue[0] = new Queue();
+		blockQueue[1] = new Queue();
+		blockQueue[2] = new Queue();
+	}
 
-    public static class Queue {
+	public static class Queue {
 
-        private Block block;
-        private BlockFace face;
+		private Block block;
+		private BlockFace face;
 
-        public Queue set(@NotNull Block b, @NotNull BlockFace f) {
-            this.block = b;
-            this.face = f;
-            return this;
-        }
+		public Queue set(@NotNull Block b, @NotNull BlockFace f) {
+			this.block = b;
+			this.face = f;
+			return this;
+		}
 
-        public Block getBlock() {
-            return block;
-        }
+		public Block getBlock() {
+			return block;
+		}
 
-        public BlockFace getFace() {
-            return face;
-        }
-    }
+		public BlockFace getFace() {
+			return face;
+		}
+	}
 
-    private int currentBlock;
-    private int currentDistance = 0;
-    private int maxDistanceInt;
+	private int currentBlock;
+	private int currentDistance = 0;
+	private int maxDistanceInt;
 
-    private int secondError;
-    private int thirdError;
+	private int secondError;
+	private int thirdError;
 
-    private int secondStep;
-    private int thirdStep;
+	private int secondStep;
+	private int thirdStep;
 
-    private BlockFace mainFace;
-    private BlockFace secondFace;
-    private BlockFace thirdFace;
+	private BlockFace mainFace;
+	private BlockFace secondFace;
+	private BlockFace thirdFace;
 
-    public SBBlockIterator(@NotNull World world, @NotNull Vector start, @NotNull Vector direction, double yOffset, int maxDistance) {
-        this.maxDistance = maxDistance;
+	public SBBlockIterator(@NotNull World world, @NotNull Vector start, @NotNull Vector direction, double yOffset, int maxDistance) {
+		this.maxDistance = maxDistance;
 
-        Vector startClone = start.clone();
-        startClone.setY(startClone.getY() + yOffset);
+		Vector startClone = start.clone();
+		startClone.setY(startClone.getY() + yOffset);
 
-        double mainDirection = 0;
-        double secondDirection = 0;
-        double thirdDirection = 0;
+		double mainDirection = 0;
+		double secondDirection = 0;
+		double thirdDirection = 0;
 
-        double mainPosition = 0;
-        double secondPosition = 0;
-        double thirdPosition = 0;
+		double mainPosition = 0;
+		double secondPosition = 0;
+		double thirdPosition = 0;
 
-        Block startBlock = world.getBlockAt(NumberConversions.floor(startClone.getX()),
-                NumberConversions.floor(startClone.getY()), NumberConversions.floor(startClone.getZ()));
-        if (getXLength(direction) > mainDirection) {
-            mainFace = getXFace(direction);
-            mainDirection = getXLength(direction);
-            mainPosition = getXPosition(direction, startClone, startBlock);
+		Block startBlock = world.getBlockAt(NumberConversions.floor(startClone.getX()),
+				NumberConversions.floor(startClone.getY()), NumberConversions.floor(startClone.getZ()));
+		if (getXLength(direction) > mainDirection) {
+			mainFace = getXFace(direction);
+			mainDirection = getXLength(direction);
+			mainPosition = getXPosition(direction, startClone, startBlock);
 
-            secondFace = getYFace(direction);
-            secondDirection = getYLength(direction);
-            secondPosition = getYPosition(direction, startClone, startBlock);
+			secondFace = getYFace(direction);
+			secondDirection = getYLength(direction);
+			secondPosition = getYPosition(direction, startClone, startBlock);
 
-            thirdFace = getZFace(direction);
-            thirdDirection = getZLength(direction);
-            thirdPosition = getZPosition(direction, startClone, startBlock);
-        }
-        if (getYLength(direction) > mainDirection) {
-            mainFace = getYFace(direction);
-            mainDirection = getYLength(direction);
-            mainPosition = getYPosition(direction, startClone, startBlock);
+			thirdFace = getZFace(direction);
+			thirdDirection = getZLength(direction);
+			thirdPosition = getZPosition(direction, startClone, startBlock);
+		}
+		if (getYLength(direction) > mainDirection) {
+			mainFace = getYFace(direction);
+			mainDirection = getYLength(direction);
+			mainPosition = getYPosition(direction, startClone, startBlock);
 
-            secondFace = getZFace(direction);
-            secondDirection = getZLength(direction);
-            secondPosition = getZPosition(direction, startClone, startBlock);
+			secondFace = getZFace(direction);
+			secondDirection = getZLength(direction);
+			secondPosition = getZPosition(direction, startClone, startBlock);
 
-            thirdFace = getXFace(direction);
-            thirdDirection = getXLength(direction);
-            thirdPosition = getXPosition(direction, startClone, startBlock);
-        }
-        if (getZLength(direction) > mainDirection) {
-            mainFace = getZFace(direction);
-            mainDirection = getZLength(direction);
-            mainPosition = getZPosition(direction, startClone, startBlock);
+			thirdFace = getXFace(direction);
+			thirdDirection = getXLength(direction);
+			thirdPosition = getXPosition(direction, startClone, startBlock);
+		}
+		if (getZLength(direction) > mainDirection) {
+			mainFace = getZFace(direction);
+			mainDirection = getZLength(direction);
+			mainPosition = getZPosition(direction, startClone, startBlock);
 
-            secondFace = getXFace(direction);
-            secondDirection = getXLength(direction);
-            secondPosition = getXPosition(direction, startClone, startBlock);
+			secondFace = getXFace(direction);
+			secondDirection = getXLength(direction);
+			secondPosition = getXPosition(direction, startClone, startBlock);
 
-            thirdFace = getYFace(direction);
-            thirdDirection = getYLength(direction);
-            thirdPosition = getYPosition(direction, startClone, startBlock);
-        }
-        double d = mainPosition / mainDirection;
-        double secondd = secondPosition - secondDirection * d;
-        double thirdd = thirdPosition - thirdDirection * d;
+			thirdFace = getYFace(direction);
+			thirdDirection = getYLength(direction);
+			thirdPosition = getYPosition(direction, startClone, startBlock);
+		}
+		double d = mainPosition / mainDirection;
+		double secondd = secondPosition - secondDirection * d;
+		double thirdd = thirdPosition - thirdDirection * d;
 
-        secondError = NumberConversions.floor(secondd * gridSize);
-        secondStep = NumberConversions.round(secondDirection / mainDirection * gridSize);
-        thirdError = NumberConversions.floor(thirdd * gridSize);
-        thirdStep = NumberConversions.round(thirdDirection / mainDirection * gridSize);
+		secondError = NumberConversions.floor(secondd * gridSize);
+		secondStep = NumberConversions.round(secondDirection / mainDirection * gridSize);
+		thirdError = NumberConversions.floor(thirdd * gridSize);
+		thirdStep = NumberConversions.round(thirdDirection / mainDirection * gridSize);
 
-        if (secondError + secondStep <= 0) {
-            secondError = -secondStep + 1;
-        }
-        if (thirdError + thirdStep <= 0) {
-            thirdError = -thirdStep + 1;
-        }
+		if (secondError + secondStep <= 0) {
+			secondError = -secondStep + 1;
+		}
+		if (thirdError + thirdStep <= 0) {
+			thirdError = -thirdStep + 1;
+		}
 
-        Block lastBlock;
-        lastBlock = startBlock.getRelative(mainFace.getOppositeFace());
+		Block lastBlock;
+		lastBlock = startBlock.getRelative(mainFace.getOppositeFace());
 
-        if (secondError < 0) {
-            secondError += gridSize;
-            lastBlock = lastBlock.getRelative(secondFace.getOppositeFace());
-        }
-        if (thirdError < 0) {
-            thirdError += gridSize;
-            lastBlock = lastBlock.getRelative(thirdFace.getOppositeFace());
-        }
+		if (secondError < 0) {
+			secondError += gridSize;
+			lastBlock = lastBlock.getRelative(secondFace.getOppositeFace());
+		}
+		if (thirdError < 0) {
+			thirdError += gridSize;
+			lastBlock = lastBlock.getRelative(thirdFace.getOppositeFace());
+		}
 
-        secondError -= gridSize;
-        thirdError -= gridSize;
-        blockQueue[0].block = lastBlock;
-        currentBlock = -1;
+		secondError -= gridSize;
+		thirdError -= gridSize;
+		blockQueue[0].block = lastBlock;
+		currentBlock = -1;
 
-        scan();
-        boolean startBlockFound = false;
-        for (int cnt = currentBlock; cnt >= 0; cnt--) {
-            if (blockEquals(blockQueue[cnt].block, startBlock)) {
-                currentBlock = cnt;
-                startBlockFound = true;
-                break;
-            }
-        }
-        if (!startBlockFound) {
-            throw new IllegalStateException("Start block missed in BlockIterator");
-        }
+		scan();
+		boolean startBlockFound = false;
+		for (int cnt = currentBlock; cnt >= 0; cnt--) {
+			if (blockEquals(blockQueue[cnt].block, startBlock)) {
+				currentBlock = cnt;
+				startBlockFound = true;
+				break;
+			}
+		}
+		if (!startBlockFound) {
+			throw new IllegalStateException("Start block missed in BlockIterator");
+		}
 
-        maxDistanceInt = NumberConversions.round(maxDistance / (Math.sqrt(mainDirection * mainDirection + secondDirection * secondDirection + thirdDirection * thirdDirection) / mainDirection));
-    }
+		maxDistanceInt = NumberConversions.round(maxDistance / (Math.sqrt(mainDirection * mainDirection + secondDirection * secondDirection + thirdDirection * thirdDirection) / mainDirection));
+	}
 
-    public SBBlockIterator(@NotNull Location location, double yOffset, int maxDistance) {
-        this(Objects.requireNonNull(location.getWorld()), location.toVector(), location.getDirection(), yOffset, maxDistance);
-    }
+	public SBBlockIterator(@NotNull Location location, double yOffset, int maxDistance) {
+		this(Objects.requireNonNull(location.getWorld()), location.toVector(), location.getDirection(), yOffset, maxDistance);
+	}
 
-    public SBBlockIterator(@NotNull LivingEntity entity, int maxDistance) {
-        this(entity.getLocation(), entity.getEyeHeight(), maxDistance);
-    }
+	public SBBlockIterator(@NotNull LivingEntity entity, int maxDistance) {
+		this(entity.getLocation(), entity.getEyeHeight(), maxDistance);
+	}
 
-    private boolean blockEquals(@NotNull Block a, @NotNull Block b) {
-        return a.getX() == b.getX() && a.getY() == b.getY() && a.getZ() == b.getZ();
-    }
+	private boolean blockEquals(@NotNull Block a, @NotNull Block b) {
+		return a.getX() == b.getX() && a.getY() == b.getY() && a.getZ() == b.getZ();
+	}
 
-    private BlockFace getXFace(@NotNull Vector direction) {
-        return (direction.getX() > 0) ? BlockFace.EAST : BlockFace.WEST;
-    }
+	private BlockFace getXFace(@NotNull Vector direction) {
+		return (direction.getX() > 0) ? BlockFace.EAST : BlockFace.WEST;
+	}
 
-    private BlockFace getYFace(@NotNull Vector direction) {
-        return (direction.getY() > 0) ? BlockFace.UP : BlockFace.DOWN;
-    }
+	private BlockFace getYFace(@NotNull Vector direction) {
+		return (direction.getY() > 0) ? BlockFace.UP : BlockFace.DOWN;
+	}
 
-    private BlockFace getZFace(@NotNull Vector direction) {
-        return (direction.getZ() > 0) ? BlockFace.SOUTH : BlockFace.NORTH;
-    }
+	private BlockFace getZFace(@NotNull Vector direction) {
+		return (direction.getZ() > 0) ? BlockFace.SOUTH : BlockFace.NORTH;
+	}
 
-    private double getXLength(@NotNull Vector direction) {
-        return Math.abs(direction.getX());
-    }
+	private double getXLength(@NotNull Vector direction) {
+		return Math.abs(direction.getX());
+	}
 
-    private double getYLength(@NotNull Vector direction) {
-        return Math.abs(direction.getY());
-    }
+	private double getYLength(@NotNull Vector direction) {
+		return Math.abs(direction.getY());
+	}
 
-    private double getZLength(@NotNull Vector direction) {
-        return Math.abs(direction.getZ());
-    }
+	private double getZLength(@NotNull Vector direction) {
+		return Math.abs(direction.getZ());
+	}
 
-    private double getPosition(double direction, double position, int blockPosition) {
-        return direction > 0 ? position - blockPosition : blockPosition + 1 - position;
-    }
+	private double getPosition(double direction, double position, int blockPosition) {
+		return direction > 0 ? position - blockPosition : blockPosition + 1 - position;
+	}
 
-    private double getXPosition(@NotNull Vector direction, @NotNull Vector position, @NotNull Block block) {
-        return getPosition(direction.getX(), position.getX(), block.getX());
-    }
+	private double getXPosition(@NotNull Vector direction, @NotNull Vector position, @NotNull Block block) {
+		return getPosition(direction.getX(), position.getX(), block.getX());
+	}
 
-    private double getYPosition(@NotNull Vector direction, @NotNull Vector position, @NotNull Block block) {
-        return getPosition(direction.getY(), position.getY(), block.getY());
-    }
+	private double getYPosition(@NotNull Vector direction, @NotNull Vector position, @NotNull Block block) {
+		return getPosition(direction.getY(), position.getY(), block.getY());
+	}
 
-    private double getZPosition(Vector direction, Vector position, Block block) {
-        return getPosition(direction.getZ(), position.getZ(), block.getZ());
-    }
+	private double getZPosition(Vector direction, Vector position, Block block) {
+		return getPosition(direction.getZ(), position.getZ(), block.getZ());
+	}
 
-    public boolean hasNext() {
-        scan();
-        return currentBlock != -1;
-    }
+	public boolean hasNext() {
+		scan();
+		return currentBlock != -1;
+	}
 
-    @NotNull
-    public SBBlockIterator.Queue next() {
-        scan();
-        if (currentBlock <= -1) {
-            throw new NoSuchElementException();
-        } else {
-            Queue t = blockQueue[currentBlock--];
-            t.face = convert(t.face);
-            return t;
-        }
-    }
+	@NotNull
+	public SBBlockIterator.Queue next() {
+		scan();
+		if (currentBlock <= -1) {
+			throw new NoSuchElementException();
+		} else {
+			Queue t = blockQueue[currentBlock--];
+			t.face = convert(t.face);
+			return t;
+		}
+	}
 
-    @NotNull
-    public BlockFace convert(@NotNull BlockFace f) {
-        switch (f) {
-            case SOUTH:
-                return BlockFace.NORTH;
-            case NORTH:
-                return BlockFace.SOUTH;
-            case EAST:
-                return BlockFace.WEST;
-            case WEST:
-                return BlockFace.EAST;
-            case UP:
-                return BlockFace.DOWN;
-            case DOWN:
-                return BlockFace.UP;
-            default:
-                return BlockFace.SELF;
-        }
-    }
+	@NotNull
+	public BlockFace convert(@NotNull BlockFace f) {
+		switch (f) {
+			case SOUTH:
+				return BlockFace.NORTH;
+			case NORTH:
+				return BlockFace.SOUTH;
+			case EAST:
+				return BlockFace.WEST;
+			case WEST:
+				return BlockFace.EAST;
+			case UP:
+				return BlockFace.DOWN;
+			case DOWN:
+				return BlockFace.UP;
+			default:
+				return BlockFace.SELF;
+		}
+	}
 
-    private void scan() {
-        if (currentBlock >= 0) {
-            return;
-        }
-        if (maxDistance != 0 && currentDistance > maxDistanceInt) {
-            end = true;
-            return;
-        }
-        if (end) {
-            return;
-        }
-        currentDistance++;
-        secondError += secondStep;
-        thirdError += thirdStep;
-        if (secondError > 0 && thirdError > 0) {
-            blockQueue[2].set(blockQueue[0].block.getRelative(mainFace), mainFace);
-            if (((long) secondStep) * ((long) thirdError) < ((long) thirdStep) * ((long) secondError)) {
-                blockQueue[1].set(blockQueue[2].block.getRelative(secondFace), secondFace);
-                blockQueue[0].set(blockQueue[1].block.getRelative(thirdFace), thirdFace);
-            } else {
-                blockQueue[1].set(blockQueue[2].block.getRelative(thirdFace), thirdFace);
-                blockQueue[0].set(blockQueue[1].block.getRelative(secondFace), secondFace);
-            }
-            thirdError -= gridSize;
-            secondError -= gridSize;
-            currentBlock = 2;
-        } else if (secondError > 0) {
-            blockQueue[1].set(blockQueue[0].block.getRelative(mainFace), mainFace);
-            blockQueue[0].set(blockQueue[1].block.getRelative(secondFace), secondFace);
-            secondError -= gridSize;
-            currentBlock = 1;
-        } else if (thirdError > 0) {
-            blockQueue[1].set(blockQueue[0].block.getRelative(mainFace), mainFace);
-            blockQueue[0].set(blockQueue[1].block.getRelative(thirdFace), thirdFace);
-            thirdError -= gridSize;
-            currentBlock = 1;
-        } else {
-            blockQueue[0].set(blockQueue[0].block.getRelative(mainFace), mainFace);
-            currentBlock = 0;
-        }
-    }
+	private void scan() {
+		if (currentBlock >= 0) {
+			return;
+		}
+		if (maxDistance != 0 && currentDistance > maxDistanceInt) {
+			end = true;
+			return;
+		}
+		if (end) {
+			return;
+		}
+		currentDistance++;
+		secondError += secondStep;
+		thirdError += thirdStep;
+		if (secondError > 0 && thirdError > 0) {
+			blockQueue[2].set(blockQueue[0].block.getRelative(mainFace), mainFace);
+			if (((long) secondStep) * ((long) thirdError) < ((long) thirdStep) * ((long) secondError)) {
+				blockQueue[1].set(blockQueue[2].block.getRelative(secondFace), secondFace);
+				blockQueue[0].set(blockQueue[1].block.getRelative(thirdFace), thirdFace);
+			} else {
+				blockQueue[1].set(blockQueue[2].block.getRelative(thirdFace), thirdFace);
+				blockQueue[0].set(blockQueue[1].block.getRelative(secondFace), secondFace);
+			}
+			thirdError -= gridSize;
+			secondError -= gridSize;
+			currentBlock = 2;
+		} else if (secondError > 0) {
+			blockQueue[1].set(blockQueue[0].block.getRelative(mainFace), mainFace);
+			blockQueue[0].set(blockQueue[1].block.getRelative(secondFace), secondFace);
+			secondError -= gridSize;
+			currentBlock = 1;
+		} else if (thirdError > 0) {
+			blockQueue[1].set(blockQueue[0].block.getRelative(mainFace), mainFace);
+			blockQueue[0].set(blockQueue[1].block.getRelative(thirdFace), thirdFace);
+			thirdError -= gridSize;
+			currentBlock = 1;
+		} else {
+			blockQueue[0].set(blockQueue[0].block.getRelative(mainFace), mainFace);
+			currentBlock = 0;
+		}
+	}
 }

@@ -12,9 +12,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface OptionTag {
 
-    @NotNull
-    String name();
+	@NotNull
+	String name();
 
-    @NotNull
-    String syntax();
+	@NotNull
+	String syntax();
 }

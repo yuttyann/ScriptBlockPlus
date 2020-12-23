@@ -9,18 +9,18 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class HookPlugin {
 
-    /**
-     * プラグイン名を取得します。
-     * @return プラグイン名
-     */
-    @NotNull
-    public abstract String getPluginName();
+	/**
+	 * プラグイン名を取得します。
+	 * @return プラグイン名
+	 */
+	@NotNull
+	public abstract String getPluginName();
 
-    /**
-     * プラグインが有効なのか確認します。
-     * @return プラグインが有効な場合はtrue
-     */
-    public final boolean has() {
-        return Bukkit.getPluginManager().isPluginEnabled(getPluginName());
-    }
+	/**
+	 * プラグインが有効なのか確認します。
+	 * @return プラグインが有効な場合はtrue
+	 */
+	public final boolean has() {
+		return Bukkit.getPluginManager().isPluginEnabled(getPluginName());
+	}
 }

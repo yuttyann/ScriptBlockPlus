@@ -12,21 +12,21 @@ import java.util.Map;
  */
 public class ConfigAdapter<T> {
 
-    private final Map<String, Object> map;
+	private final Map<String, Object> map;
 
-    public ConfigAdapter(@NotNull Map<String, Object> map) {
-        this.map = map;
-    }
+	public ConfigAdapter(@NotNull Map<String, Object> map) {
+		this.map = map;
+	}
 
-    @Nullable
-    @SuppressWarnings("unchecked")
-    public T get(@NotNull String key) {
-        return (T) map.get(key);
-    }
+	@Nullable
+	@SuppressWarnings("unchecked")
+	public T get(@NotNull String key) {
+		return (T) map.get(key);
+	}
 
-    @NotNull
-    public T get(@NotNull String key, @NotNull T def) {
-        T value = get(key);
-        return value == null ? def : value;
-    }
+	@NotNull
+	public T get(@NotNull String key, @NotNull T def) {
+		T value = get(key);
+		return value == null ? def : value;
+	}
 }

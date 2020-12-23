@@ -9,34 +9,34 @@ import org.jetbrains.annotations.NotNull;
  */
 public class OptionIndex {
 
-    private final String syntax;
-    private final IndexType indexType;
+	private final String syntax;
+	private final IndexType indexType;
 
-    /**
-     * コンストラクタ
-     * @param indexType スクリプトの追加位置
-     * @param optionClass オプションのクラス
-     */
-    public OptionIndex(@NotNull IndexType indexType, @NotNull Class<? extends BaseOption> optionClass) {
-        this.syntax = optionClass.getAnnotation(OptionTag.class).syntax();
-        this.indexType = indexType;
-    }
+	/**
+	 * コンストラクタ
+	 * @param indexType スクリプトの追加位置
+	 * @param optionClass オプションのクラス
+	 */
+	public OptionIndex(@NotNull IndexType indexType, @NotNull Class<? extends BaseOption> optionClass) {
+		this.syntax = optionClass.getAnnotation(OptionTag.class).syntax();
+		this.indexType = indexType;
+	}
 
-    /**
-     * オプションの構文を取得します。
-     * @return オプションの構文
-     */
-    @NotNull
-    public String getSyntax() {
-        return syntax;
-    }
+	/**
+	 * オプションの構文を取得します。
+	 * @return オプションの構文
+	 */
+	@NotNull
+	public String getSyntax() {
+		return syntax;
+	}
 
-    /**
-     * スクリプトの追加方法を取得します。
-     * @return スクリプトの追加方法
-     */
-    @NotNull
-    public IndexType getIndexType() {
-        return indexType;
-    }
+	/**
+	 * スクリプトの追加方法を取得します。
+	 * @return スクリプトの追加方法
+	 */
+	@NotNull
+	public IndexType getIndexType() {
+		return indexType;
+	}
 }

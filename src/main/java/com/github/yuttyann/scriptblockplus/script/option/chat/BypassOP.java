@@ -28,16 +28,16 @@ public class BypassOP extends BaseOption {
 		Player player = getSBPlayer().getPlayer();
 		String command = StringUtils.setColor(getOptionValue());
 		return CommandLog.supplier(player.getWorld(), () -> {
-            if (player.isOp()) {
-                return Utils.dispatchCommand(player, command);
-            } else {
-                try {
-                    player.setOp(true);
-                    return Utils.dispatchCommand(player, command);
-                } finally {
-                    player.setOp(false);
-                }
-            }
+			if (player.isOp()) {
+				return Utils.dispatchCommand(player, command);
+			} else {
+				try {
+					player.setOp(true);
+					return Utils.dispatchCommand(player, command);
+				} finally {
+					player.setOp(false);
+				}
+			}
 		});
 	}
 }
