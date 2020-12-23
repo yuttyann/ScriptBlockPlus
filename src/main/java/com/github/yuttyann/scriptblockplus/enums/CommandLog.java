@@ -33,8 +33,10 @@ public enum CommandLog {
 
     public void set(@NotNull World world) {
         if (Utils.isCBXXXorLater("1.13")) {
+            world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, this.value);
             world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, this.value);
         } else {
+            world.setGameRuleValue("logAdminCommands", String.valueOf(this.value));
             world.setGameRuleValue("sendCommandFeedback", String.valueOf(this.value));
         }
     }

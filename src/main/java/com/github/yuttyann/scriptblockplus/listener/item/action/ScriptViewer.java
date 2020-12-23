@@ -37,7 +37,7 @@ public class ScriptViewer extends ItemAction {
     private static final Set<UUID> PLAYERS = new HashSet<>();
 
     static {
-        new Task().runTaskTimer(ScriptBlock.getInstance(), 0L, 11L);
+        new Task().runTaskTimer(ScriptBlock.getInstance(), 0L, 10L);
     }
 
     public ScriptViewer() {
