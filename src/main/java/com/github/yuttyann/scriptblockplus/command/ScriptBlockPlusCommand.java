@@ -113,8 +113,6 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         return false;
     }
 
-    public static int i = 0;
-
     private boolean doExport(@NotNull CommandSender sender, @NotNull String[] args) {
         if (!hasPermission(sender, Permission.COMMAND_EXPORT, false)) {
             return false;
