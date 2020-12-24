@@ -93,17 +93,17 @@ public class SBClipboard {
         return true;
     }
 
-    public boolean lightPaste(@NotNull Location location, boolean overwrite) {
+    public boolean lightPaste(@NotNull Set<Location> locations, @NotNull Location location, boolean overwrite) {
         if (BlockScriptJson.has(location, blockScriptJson) && !overwrite) {
             return false;
         }
-        PlayerCountJson.clear(location, scriptType);
         ScriptParam scriptParam = blockScriptJson.load().get(location);
         scriptParam.setAuthor(author);
         scriptParam.getAuthor().add(sbPlayer.getUniqueId());
         scriptParam.setScript(script);
         scriptParam.setLastEdit(Utils.getFormatTime());
         scriptParam.setAmount(amount);
+        locations.add(location);
         return true;
     }
 }

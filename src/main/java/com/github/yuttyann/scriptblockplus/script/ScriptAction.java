@@ -117,13 +117,12 @@ public final class ScriptAction {
         SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), location, scriptType).console();
     }
 
-    public boolean lightRemove(@NotNull Location location) {
+    public boolean lightRemove(@NotNull Set<Location> locations, @NotNull Location location) {
         if (!BlockScriptJson.has(location, blockScriptJson)) {
             return false;
         }
-        PlayerCountJson.clear(location, scriptType);
-        TimerOption.removeAll(location, scriptType);
         blockScriptJson.load().remove(location);
+        locations.add(location);
         return true;
     }
 

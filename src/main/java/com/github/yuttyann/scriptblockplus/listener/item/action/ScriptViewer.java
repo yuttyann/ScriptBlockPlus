@@ -74,6 +74,8 @@ public class ScriptViewer extends ItemAction {
 
     private static class Task extends BukkitRunnable {
 
+        private static final int LIMIT = 800;
+
         @Override
         public void run() {
             for (UUID uuid : PLAYERS) {
@@ -81,18 +83,30 @@ public class ScriptViewer extends ItemAction {
                 if (!sbPlayer.isOnline()) {
                     continue;
                 }
-                Set<Block> temp = new HashSet<>();
+                int count = 0;
                 Region region = new PlayerRegion(sbPlayer.getPlayer(), 10);
-                new CuboidRegionBlocks(region).forEach(b -> temp.add(b.getBlock(sbPlayer.getWorld())));
-                for (ScriptType scriptType : ScriptType.values()) {
-                    BlockScript blockScript = new BlockScriptJson(scriptType).load();
-                    for (Block block : temp) {
-                        if (blockScript.has(block.getLocation())) {
-                            spawnParticlesOnBlock(sbPlayer.getPlayer(), block, block.getType() == Material.AIR);
-                        }
+                Set<Block> blocks = getBlocks(new CuboidRegionBlocks(region));
+                for (Block block : blocks) {
+                    if (count++ < LIMIT) {
+                        spawnParticlesOnBlock(sbPlayer.getPlayer(), block, block.getType() == Material.AIR);
                     }
                 }
             }
+        }
+
+        @NotNull
+        private Set<Block> getBlocks(@NotNull CuboidRegionBlocks cuboidRegionBlocks) {
+            Set<Block> set = new HashSet<>();
+            Set<Block> blocks = cuboidRegionBlocks.getBlocks();
+            for (ScriptType scriptType : ScriptType.values()) {
+                BlockScript blockScript = new BlockScriptJson(scriptType).load();
+                for (Block block : blocks) {
+                    if (blockScript.has(block.getLocation())) {
+                        set.add(block);
+                    }
+                }
+            }
+            return set;
         }
 
         private void spawnParticlesOnBlock(@NotNull Player player, @NotNull Block block, boolean isAIR) {

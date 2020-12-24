@@ -29,6 +29,9 @@ import java.util.function.Consumer;
 public abstract class Json<T> {
 
     @Exclude
+    private static final Map<Integer, List<?>> LIST_CACHE = new HashMap<>();
+
+    @Exclude
     protected final File file;
 
     @Exclude
@@ -40,16 +43,17 @@ public abstract class Json<T> {
 
     @SerializedName("elements")
     @Expose
-    protected final List<T> list = new ArrayList<>();
+    private List<T> list = new ArrayList<>();
 
     @SerializedName("infos")
     @Expose(serialize = false)
-    protected List<T> oldList = null;
+    private List<T> oldList = null;
 
     public Json(@NotNull UUID uuid) {
         this(uuid.toString());
     }
 
+    @SuppressWarnings("unchecked")
     public Json(@NotNull String id) {
         // ファイル名等に使う
         this.id = id;
@@ -59,13 +63,19 @@ public abstract class Json<T> {
         this.file = getFile(jsonOptions);
         this.classes = jsonOptions.classes();
 
-        // JSONをデシリアライズ
-        try {
-            @SuppressWarnings("unchecked")
-            Optional<Json<T>> json = Optional.ofNullable((Json<T>) loadFile());
-            json.ifPresent(j -> list.addAll(Optional.ofNullable(j.oldList).orElseGet(() -> j.list)));
-        } catch (IOException e) {
-            e.printStackTrace();
+        int hash = hashCode();
+        if (LIST_CACHE.containsKey(hash)) {
+            // キャッシュしてあるならそちらを取得
+            this.list = (List<T>) LIST_CACHE.get(hash);
+        } else {
+            // JSONをデシリアライズ
+            try {
+                Optional<Json<T>> json = Optional.ofNullable((Json<T>) loadFile());
+                json.ifPresent(j -> list.addAll(Optional.ofNullable(j.oldList).orElseGet(() -> j.list)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            LIST_CACHE.put(hash, list);
         }
     }
 
@@ -130,6 +140,24 @@ public abstract class Json<T> {
             return instance;
         }
         return value.get();
+    }
+
+    @NotNull
+    public final boolean has() {
+        if (classes.length > 0) {
+            throw new IllegalArgumentException("Please specify the parameter " + Arrays.toString(classes));
+        }
+        return !list.isEmpty();
+    }
+
+    @NotNull
+    public final boolean has(@NotNull Object... args) {
+        if (!equalParams(args)) {
+            String equal = Arrays.toString(ClassType.getReference(args)) + " != " + Arrays.toString(classes);
+            throw new IllegalArgumentException("Classes do not match " + equal);
+        }
+        int hash = hashCode(args);
+        return list.stream().filter(t -> t.hashCode() == hash).findFirst().isPresent();
     }
 
     protected int hashCode(@NotNull Object[] args) {

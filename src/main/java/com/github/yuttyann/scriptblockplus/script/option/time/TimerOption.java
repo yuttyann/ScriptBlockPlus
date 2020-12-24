@@ -6,6 +6,8 @@ import com.github.yuttyann.scriptblockplus.file.json.PlayerTempJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.google.common.collect.Sets;
+
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,13 +55,29 @@ public abstract class TimerOption extends BaseOption {
     }
 
     public static void removeAll(@NotNull Location location, @NotNull ScriptType scriptType) {
+        removeAll(Sets.newHashSet(location), scriptType);
+    }
+
+    public static void removeAll(@NotNull Set<Location> locations, @NotNull ScriptType scriptType) {
         for (String name : Json.getNameList(PlayerTempJson.class)) {
             UUID uuid = UUID.fromString(name);
             Json<PlayerTemp> json = new PlayerTempJson(uuid);
-            Set<TimerTemp> set = json.load().getTimerTemp();
-            if (set.size() > 0) {
-                set.remove(new TimerTemp(location, scriptType));
-                set.remove(new TimerTemp(uuid, location, scriptType));
+            if (!json.exists()) {
+                continue;
+            }
+            boolean modifiable = false;
+            for (Location location : locations) {
+                if (!json.has()) {
+                    continue;
+                }
+                Set<TimerTemp> timer = json.load().getTimerTemp();
+                if (timer.size() > 0) {
+                    modifiable = true;
+                    timer.remove(new TimerTemp(location, scriptType));
+                    timer.remove(new TimerTemp(uuid, location, scriptType));
+                }
+            }
+            if (modifiable) {
                 json.saveFile();
             }
         }

@@ -5,11 +5,13 @@ import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.google.common.collect.Sets;
+
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -35,9 +37,31 @@ public class PlayerCountJson extends Json<PlayerCount> {
     }
 
     public static void clear(@NotNull Location location, @NotNull ScriptType scriptType) {
+        clear(Sets.newHashSet(location), scriptType);
+    }
+
+    public static void clear(@NotNull Set<Location> locations, @NotNull ScriptType scriptType) {
+        Object[] args = { (Location) null, scriptType };
         for (String id : Json.getNameList(PlayerCountJson.class)) {
             Json<PlayerCount> json = new PlayerCountJson(UUID.fromString(id));
-            StreamUtils.filter(json.load(location, scriptType), p -> p.getAmount() > 0, json::remove);
+            if (!json.exists()) {
+                continue;
+            }
+            boolean modifiable = false;
+            for (Location location : locations) {
+                args[0] = location;
+                if (!json.has(args)) {
+                    continue;
+                }
+                PlayerCount playerCount = json.load(args);
+                if (playerCount.getAmount() > 0) {
+                    modifiable = true;
+                    json.remove(playerCount);
+                }
+            }
+            if (modifiable) {
+                json.saveFile();
+            }
         }
     }
 }
