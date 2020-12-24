@@ -6,9 +6,13 @@ import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableLocation;
+
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -30,14 +34,24 @@ public class SBClipboard {
 
     public SBClipboard(@NotNull SBPlayer sbPlayer, @NotNull Location location, @NotNull BlockScriptJson blockScriptJson) {
         this.sbPlayer = sbPlayer;
-        this.location = location;
+        this.location = new UnmodifiableLocation(location);
         this.scriptType = blockScriptJson.getScriptType();
         this.blockScriptJson = blockScriptJson;
 
         ScriptParam scriptParam = blockScriptJson.load().get(location);
-        this.author = scriptParam.getAuthor();
-        this.script = scriptParam.getScript();
+        this.author = new HashSet<>(scriptParam.getAuthor());
+        this.script = new ArrayList<>(scriptParam.getScript());
         this.amount = scriptParam.getAmount();
+    }
+
+    @NotNull
+    public BlockScriptJson getBlockScriptJson() {
+        return blockScriptJson;
+    }
+
+    @NotNull
+    public SBPlayer getSBPlayer() {
+        return sbPlayer;
     }
 
     @NotNull
@@ -46,8 +60,17 @@ public class SBClipboard {
     }
 
     @NotNull
-    public ScriptType getScriptType() {
-        return scriptType;
+    public Set<UUID> getAuthor() {
+        return author;
+    }
+
+    @NotNull
+    public List<String> getScript() {
+        return script;
+    }
+
+    public int getAmount() {
+        return amount;
     }
 
     public void save() {
@@ -90,20 +113,6 @@ public class SBClipboard {
             sbPlayer.setScriptLine(null);
             sbPlayer.setScriptEdit(null);
         }
-        return true;
-    }
-
-    public boolean lightPaste(@NotNull Set<Location> locations, @NotNull Location location, boolean overwrite) {
-        if (BlockScriptJson.has(location, blockScriptJson) && !overwrite) {
-            return false;
-        }
-        ScriptParam scriptParam = blockScriptJson.load().get(location);
-        scriptParam.setAuthor(author);
-        scriptParam.getAuthor().add(sbPlayer.getUniqueId());
-        scriptParam.setScript(script);
-        scriptParam.setLastEdit(Utils.getFormatTime());
-        scriptParam.setAmount(amount);
-        locations.add(location);
         return true;
     }
 }

@@ -30,6 +30,11 @@ public final class ScriptAction {
     }
 
     @NotNull
+    public BlockScriptJson getBlockScriptJson() {
+        return blockScriptJson;
+    }
+
+    @NotNull
     public ScriptType getScriptType() {
         return scriptType;
     }
@@ -115,15 +120,6 @@ public final class ScriptAction {
         blockScriptJson.saveFile();
         SBConfig.SCRIPT_REMOVE.replace(scriptType).send(player);
         SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), location, scriptType).console();
-    }
-
-    public boolean lightRemove(@NotNull Set<Location> locations, @NotNull Location location) {
-        if (!BlockScriptJson.has(location, blockScriptJson)) {
-            return false;
-        }
-        blockScriptJson.load().remove(location);
-        locations.add(location);
-        return true;
     }
 
     public void view(@NotNull SBPlayer sbPlayer, @NotNull Location location) {

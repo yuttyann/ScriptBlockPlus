@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.region;
 
+import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.script.ScriptAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 
@@ -42,20 +42,29 @@ public class CuboidRegionRemove {
         Set<Block> blocks = cuboidRegionBlocks.getBlocks();
         Set<Location> locations = new HashSet<>(cuboidRegionBlocks.getCount());
         for (ScriptType scriptType : ScriptType.values()) {
-            ScriptAction scriptAction = new ScriptAction(scriptType);
-            if (scriptAction.exists()) {
+            BlockScriptJson blockScriptJson = new BlockScriptJson(scriptType);
+            if (blockScriptJson.exists()) {
                 for (Block block : blocks) {
-                    if (scriptAction.lightRemove(locations, block.getLocation())) {
+                    if (lightRemove(locations, block.getLocation(), blockScriptJson)) {
                         scriptTypes.add(scriptType);
                     }
                 }
-                scriptAction.save();
+                blockScriptJson.saveFile();
             }
         }
         for (ScriptType scriptType : scriptTypes) {
-            PlayerCountJson.clear(locations, scriptType);
             TimerOption.removeAll(locations, scriptType);
+            PlayerCountJson.clear(locations, scriptType);
         }
         return this;
+    }
+    
+    private boolean lightRemove(@NotNull Set<Location> locations, @NotNull Location location, @NotNull BlockScriptJson blockScriptJson) {
+        if (!BlockScriptJson.has(location, blockScriptJson)) {
+            return false;
+        }
+        blockScriptJson.load().remove(location);
+        locations.add(location);
+        return true;
     }
 }
