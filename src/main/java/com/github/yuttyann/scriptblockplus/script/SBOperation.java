@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * ScriptBlockPlus ScriptAction クラス
+ * ScriptBlockPlus SBOperation クラス
  * @author yuttyann44581
  */
 public final class SBOperation {
