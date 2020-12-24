@@ -33,7 +33,7 @@ public class CuboidRegionRemove {
     }
 
     @NotNull
-    public CuboidRegionBlocks getRegionBlocks() {
+    public CuboidRegionBlocks getCuboidRegionBlocks() {
         return cuboidRegionBlocks;
     }
 

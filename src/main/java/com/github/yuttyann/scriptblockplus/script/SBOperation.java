@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
  * ScriptBlockPlus ScriptAction クラス
  * @author yuttyann44581
  */
-public final class ScriptAction {
+public final class SBOperation {
 
     private final ScriptType scriptType;
     private final BlockScriptJson blockScriptJson;
 
-    public ScriptAction(@NotNull ScriptType scriptType) {
+    public SBOperation(@NotNull ScriptType scriptType) {
         this.scriptType = scriptType;
         this.blockScriptJson = new BlockScriptJson(scriptType);
     }

@@ -34,7 +34,7 @@ public class ScriptEdit {
         if (location == null) {
             return false;
         }
-        ScriptAction scriptAction = new ScriptAction(scriptType);
+        SBOperation scriptAction = new SBOperation(scriptType);
         switch (actionType) {
             case CREATE:
                 scriptAction.create(sbPlayer, location);

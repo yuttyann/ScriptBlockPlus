@@ -314,8 +314,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                 boolean overwrite = args.length > 3 && Boolean.parseBoolean(args[3]);
                 CuboidRegionPaste regionPaste = new CuboidRegionPaste(clipboard, region).paste(pasteonair, overwrite);
                 String scriptType = regionPaste.getScriptType().type();
-                SBConfig.SELECTOR_PASTE.replace(scriptType, regionPaste.getRegionBlocks().getCount()).send(sbPlayer);
-                SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptType, regionPaste.getRegionBlocks()).console();
+                SBConfig.SELECTOR_PASTE.replace(scriptType, regionPaste.getCuboidRegionBlocks().getCount()).send(sbPlayer);
+                SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptType, regionPaste.getCuboidRegionBlocks()).console();
             } finally {
                 sbPlayer.setSBClipboard(null);
             }
@@ -326,8 +326,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                 SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
             } else {
                 String types = scriptTypes.stream().map(ScriptType::type).collect(Collectors.joining(", "));
-                SBConfig.SELECTOR_REMOVE.replace(types, regionRemove.getRegionBlocks().getCount()).send(sbPlayer);
-                SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, regionRemove.getRegionBlocks()).console();
+                SBConfig.SELECTOR_REMOVE.replace(types, regionRemove.getCuboidRegionBlocks().getCount()).send(sbPlayer);
+                SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, regionRemove.getCuboidRegionBlocks()).console();
             }
         }
         return true;

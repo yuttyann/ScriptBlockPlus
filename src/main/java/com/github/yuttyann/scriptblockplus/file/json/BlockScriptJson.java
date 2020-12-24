@@ -1,10 +1,10 @@
 package com.github.yuttyann.scriptblockplus.file.json;
 
 import com.github.yuttyann.scriptblockplus.file.Json;
+import com.github.yuttyann.scriptblockplus.file.SBLoader;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
-import com.github.yuttyann.scriptblockplus.script.SBLoader;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;

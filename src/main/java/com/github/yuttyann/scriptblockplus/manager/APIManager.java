@@ -4,7 +4,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
-import com.github.yuttyann.scriptblockplus.script.ScriptAction;
+import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
@@ -53,41 +53,41 @@ public final class APIManager implements ScriptBlockAPI {
 
     private static class SEdit implements SBEdit {
 
-        private final ScriptAction scriptAction;
+        private final SBOperation sbOperation;
 
         public SEdit(@NotNull ScriptType scriptType) {
-            this.scriptAction = new ScriptAction(scriptType);
+            this.sbOperation = new SBOperation(scriptType);
         }
 
         @Override
         public void save() {
-            scriptAction.save();
+            sbOperation.save();
         }
 
         @Override
         @NotNull
         public ScriptType getScriptType() {
-            return scriptAction.getScriptType();
+            return sbOperation.getScriptType();
         }
 
         @Override
         public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-            scriptAction.create(player, location, script);
+            sbOperation.create(player, location, script);
         }
 
         @Override
         public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-            scriptAction.add(player, location, script);
+            sbOperation.add(player, location, script);
         }
 
         @Override
         public void remove(@NotNull Player player, @NotNull Location location) {
-            scriptAction.remove(player, location);
+            sbOperation.remove(player, location);
         }
 
         @Override
         public void view(@NotNull Player player, @NotNull Location location) {
-            scriptAction.view(player, location);
+            sbOperation.view(player, location);
         }
     }
 
