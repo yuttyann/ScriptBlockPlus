@@ -46,7 +46,7 @@ public class ActionBar extends BaseOption {
 
     public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
         if (Utils.isCBXXXorLater("1.12.2")) {
-            String command = "title " + sbPlayer.getName() + " actionbar " + "{\"text\":\"" + message + "\"}";
+            String command = "title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
             Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Utils.dispatchCommand(sbPlayer, command));
         } else if (Utils.isPlatform()) {
             try {
