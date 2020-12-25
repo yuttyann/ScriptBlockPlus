@@ -21,7 +21,7 @@ public class ToPlayer extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        Utils.sendColorMessage(getPlayer(), getOptionValue());
+        Utils.sendColorMessage(getSBPlayer(), getOptionValue());
         return true;
     }
 }

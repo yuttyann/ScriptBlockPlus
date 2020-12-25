@@ -34,6 +34,7 @@ import java.util.UUID;
  */
 public class ScriptViewer extends ItemAction {
 
+    private static final int LIMIT = 800;
     private static final Set<UUID> PLAYERS = new HashSet<>();
 
     static {
@@ -73,8 +74,6 @@ public class ScriptViewer extends ItemAction {
     }
 
     private static class Task extends BukkitRunnable {
-
-        private static final int LIMIT = 800;
 
         @Override
         public void run() {

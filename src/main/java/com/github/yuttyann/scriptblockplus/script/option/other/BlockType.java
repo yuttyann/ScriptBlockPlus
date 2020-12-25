@@ -1,9 +1,13 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
+import java.util.stream.Stream;
+
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -24,21 +28,17 @@ public class BlockType extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         Block block = getLocation().getBlock();
-        for (String type : StringUtils.split(getOptionValue(), ",")) {
-            if (equals(block, type)) {
-                return true;
-            }
-        }
-        return false;
+        return Stream.of(StringUtils.split(getOptionValue(), ",")).anyMatch(s -> equals(block, s));
     }
 
-    private boolean equals(@NotNull Block block, @NotNull String blockType) throws IllegalAccessException {
+    private boolean equals(@NotNull Block block, @NotNull String blockType) {
         if (StringUtils.isEmpty(blockType)) {
             return false;
         }
         String[] array = StringUtils.split(blockType, ":");
         if (Calculation.REALNUMBER_PATTERN.matcher(array[0]).matches()) {
-            throw new IllegalAccessException("Numerical values can not be used");
+            Utils.sendColorMessage(getSBPlayer(), "§cNumerical values can not be used");
+            return false;
         }
         Material type = Material.getMaterial(array[0]);
         if (type == null || !type.isBlock()) {

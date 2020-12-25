@@ -28,12 +28,12 @@ public class Execute extends BaseOption {
     protected boolean isValid() throws Exception {
         String[] array = StringUtils.split(getOptionValue(), "/");
         String[] coords = StringUtils.split(array[1], ",");
-        ScriptType scriptType = ScriptType.valueOf(array[0].toUpperCase());
         World world = Utils.getWorld(coords[0]);
         double x = Integer.parseInt(coords[1]);
         double y = Integer.parseInt(coords[2]);
         double z = Integer.parseInt(coords[3]);
         Location location = new Location(world, x, y, z);
+        ScriptType scriptType = ScriptType.valueOf(array[0].toUpperCase());
         return ScriptBlock.getInstance().getAPI().read(getPlayer(), location, scriptType, 0);
     }
 }

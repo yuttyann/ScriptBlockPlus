@@ -117,8 +117,8 @@ public final class Updater {
             File jarFile = new File(plugin.getDataFolder(), "update/jar/" + getJarName());
             try {
                 SBConfig.UPDATE_DOWNLOAD_START.send(sender);
-                FileUtils.fileDownload(changeLogURL, logFile);
-                FileUtils.fileDownload(downloadURL, jarFile);
+                FileUtils.downloadFile(changeLogURL, logFile);
+                FileUtils.downloadFile(downloadURL, jarFile);
             } catch (IOException e) {
                 downloadError = true;
                 SBConfig.ERROR_UPDATE.send(sender);

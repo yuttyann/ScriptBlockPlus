@@ -1,9 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -26,8 +24,8 @@ public class Amount extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        Json<BlockScript> json = new BlockScriptJson(getScriptType());
-        ScriptParam scriptParam = json.load().get(getLocation());
+        BlockScriptJson blockScriptJson = new BlockScriptJson(getScriptType());
+        ScriptParam scriptParam = blockScriptJson.load().get(getLocation());
         if (scriptParam.getAmount() == -1) {
             scriptParam.setAmount(Integer.parseInt(getOptionValue()));
         }
@@ -35,9 +33,9 @@ public class Amount extends BaseOption {
         if (scriptParam.getAmount() <= 0) {
             PlayerCountJson.clear(getLocation(), getScriptType());
             TimerOption.removeAll(getLocation(), getScriptType());
-            json.load().remove(getLocation());
+            blockScriptJson.load().remove(getLocation());
         }
-        json.saveFile();
+        blockScriptJson.saveFile();
         return true;
     }
 }

@@ -42,14 +42,14 @@ public class ItemHand extends BaseOption {
 
         Player player = getPlayer();
         ItemStack[] items = ItemUtils.getHandItems(player);
-        if (Arrays.stream(items).noneMatch(i -> checkItem(i, itemName, type, amount, damage))) {
+        if (Arrays.stream(items).noneMatch(i -> equals(i, itemName, type, amount, damage))) {
             SBConfig.ERROR_HAND.replace(type, amount, damage, itemName).send(player);
             return false;
         }
         return true;
     }
 
-    private boolean checkItem(@Nullable ItemStack item, @NotNull String itemName, @Nullable Material type, int amount, int damage) {
+    private boolean equals(@Nullable ItemStack item, @NotNull String itemName, @Nullable Material type, int amount, int damage) {
         if (item == null || item.getAmount() < amount || ItemUtils.getDamage(item) != damage) {
             return false;
         }

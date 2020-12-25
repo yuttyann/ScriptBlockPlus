@@ -12,9 +12,9 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -73,7 +73,14 @@ public class Calculation extends BaseOption {
         }
         if (source.startsWith("%player_others_in_range_") && source.endsWith("%")) {
             source = source.substring("%player_others_in_range_".length(), source.length() - 1);
-            return getNearbyOthers(player, Integer.parseInt(source));
+            World world = Objects.requireNonNull(player.getLocation().getWorld());
+            int count = 0, result = Integer.parseInt(source) * Integer.parseInt(source);
+            for (Player worldPlayer : world.getPlayers()) {
+                if (player != worldPlayer && player.getLocation().distanceSquared(worldPlayer.getLocation()) <= result) {
+                    count++;
+                }
+            }
+            return count;
         }
         if (source.startsWith("%player_ping_") && source.endsWith("%")) {
             source = source.substring("%player_ping_".length(), source.length() - 1);
@@ -92,7 +99,7 @@ public class Calculation extends BaseOption {
             source = source.substring("%objective_score_".length(), source.length() - 1);
             ScoreboardManager scoreboardManager = Objects.requireNonNull(Bukkit.getScoreboardManager());
             Objective objective = scoreboardManager.getMainScoreboard().getObjective(source);
-            return objective == null ? 0 : getScore(objective, player).getScore();
+            return objective == null ? 0 : objective.getScore(player.getName()).getScore();
         }
         switch (source) {
             case "%server_online%":
@@ -183,22 +190,6 @@ public class Calculation extends BaseOption {
             default:
                 return source;
         }
-    }
-
-    private int getNearbyOthers(@NotNull Player player, int distance) {
-        int count = 0;
-        int result = distance * distance;
-        for (Player p : Objects.requireNonNull(player.getLocation().getWorld()).getPlayers()) {
-            if (player != p && player.getLocation().distanceSquared(p.getLocation()) <= result) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    @NotNull
-    private Score getScore(@NotNull Objective objective, @NotNull Player player) {
-        return objective.getScore(player.getName());
     }
 
     private boolean result(Object value1, Object value2, @NotNull String operator) {

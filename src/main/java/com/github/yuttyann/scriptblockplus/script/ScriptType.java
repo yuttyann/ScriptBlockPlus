@@ -13,13 +13,12 @@ import java.util.function.Function;
  * ScriptBlockPlus ScriptType クラス
  * @author yuttyann44581
  */
+@SuppressWarnings("serial")
 public final class ScriptType implements Comparable<ScriptType>, Serializable {
-
-    private static final long serialVersionUID = 8105557375706974440L;
 
     private static final Map<String, ScriptType> TYPES = new LinkedHashMap<>();
 
-    // Default Types
+    // デフォルトのキーを生成
     public static final ScriptType INTERACT = new ScriptType("interact");
     public static final ScriptType BREAK = new ScriptType("break");
     public static final ScriptType WALK = new ScriptType("walk");

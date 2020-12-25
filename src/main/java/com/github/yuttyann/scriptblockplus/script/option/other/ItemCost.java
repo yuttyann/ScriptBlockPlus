@@ -51,7 +51,7 @@ public class ItemCost extends BaseOption {
         ItemStack[] items = inventory.getContents();
         int result = amount;
         for (ItemStack item : items) {
-            if (equalItems(item, itemName, type, damage)) {
+            if (equals(item, itemName, type, damage)) {
                 result -= result > 0 ? setAmount(item, item.getAmount() - result) : 0;
             }
         }
@@ -69,7 +69,7 @@ public class ItemCost extends BaseOption {
         return oldAmount;
     }
 
-    private boolean equalItems(@Nullable ItemStack item, @NotNull String itemName, @Nullable Material type, int damage) {
+    private boolean equals(@Nullable ItemStack item, @NotNull String itemName, @Nullable Material type, int damage) {
         if (item == null || ItemUtils.getDamage(item) != damage) {
             return false;
         }

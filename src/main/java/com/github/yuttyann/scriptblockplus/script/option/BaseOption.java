@@ -84,7 +84,7 @@ public abstract class BaseOption extends Option {
     }
 
     /**
-     * スクリプトの一時データ構造を取得します。
+     * スクリプトのデータ構造を取得します。
      * @return 一時的なデータ構造（全ての実行が終了したら初期化されます。）
      */
     @NotNull

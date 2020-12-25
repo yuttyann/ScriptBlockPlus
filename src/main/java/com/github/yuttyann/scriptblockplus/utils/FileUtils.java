@@ -63,7 +63,7 @@ public final class FileUtils {
 
     }
 
-    public static void fileDownload(@NotNull String url, @NotNull File file) throws IOException {
+    public static void downloadFile(@NotNull String url, @NotNull File file) throws IOException {
         File parent = file.getParentFile();
         if (!parent.exists()) {
             parent.mkdirs();

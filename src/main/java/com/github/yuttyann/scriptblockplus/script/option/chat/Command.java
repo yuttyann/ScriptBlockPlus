@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
+import com.github.yuttyann.scriptblockplus.enums.CommandLog;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -22,6 +23,7 @@ public class Command extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        return Utils.dispatchCommand(getSBPlayer(), StringUtils.setColor(getOptionValue()));
+        String command = StringUtils.setColor(getOptionValue());
+        return CommandLog.supplier(getSBPlayer().getWorld(), () -> Utils.dispatchCommand(getSBPlayer(), command));
     }
 }

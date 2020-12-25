@@ -77,7 +77,7 @@ public class ActionBar extends BaseOption {
 
         private int tick;
 
-        Task(int stay, @NotNull String message) {
+        private Task(int stay, @NotNull String message) {
             this.tick = 0;
             this.stay = stay;
             this.message = message;
