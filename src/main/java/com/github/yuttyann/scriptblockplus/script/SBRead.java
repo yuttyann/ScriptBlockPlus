@@ -14,6 +14,12 @@ import java.util.List;
 public interface SBRead extends ObjectMap {
 
     /**
+     * 実行終了後にスクリプトの一時データを初期化するのか設定します。
+     * @param initialize 初期化を行う場合はtrue
+     */
+    void setInitialize(boolean initialize);
+
+    /**
      * ScriptBlockPlusの{@link SBPlayer}を取得します。
      * @return {@link SBPlayer}
      */

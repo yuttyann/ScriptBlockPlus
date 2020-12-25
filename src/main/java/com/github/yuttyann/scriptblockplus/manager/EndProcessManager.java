@@ -31,6 +31,14 @@ public final class EndProcessManager {
         ENDPROCESS_LIST.forEach(c -> action.accept(c.newInstance(InstanceType.SBINSTANCE)));
     }
 
+    public static void forEachFinally(@NotNull Consumer<EndProcess> action, @NotNull Runnable runnable) {
+        try {
+            forEach(action);
+        } finally {
+            runnable.run();
+        }
+    }
+
     @NotNull
     public static EndProcess newInstance(@NotNull Class<? extends EndProcess> endProcess, @NotNull InstanceType instanceType) {
         for (SBConstructor<? extends EndProcess> constructor : ENDPROCESS_LIST) {

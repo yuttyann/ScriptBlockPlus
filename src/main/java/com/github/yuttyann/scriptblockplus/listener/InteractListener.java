@@ -81,8 +81,9 @@ public class InteractListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (event.getPlayer().getGameMode() == GameMode.ADVENTURE) {
-            SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().put(KEY_ANIMATION, true);
+        Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.ADVENTURE) {
+            SBPlayer.fromPlayer(player).getObjectMap().put(KEY_ANIMATION, true);
         }
     }
 

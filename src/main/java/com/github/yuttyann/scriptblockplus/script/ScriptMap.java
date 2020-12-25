@@ -16,7 +16,7 @@ public abstract class ScriptMap implements ObjectMap {
 
     private static final Map<UUID, Map<String, Object>> OBJECT_MAP = new HashMap<>();
 
-    private final UUID ramdomId = UUID.randomUUID();
+    protected final UUID ramdomId = UUID.randomUUID();
 
     @Override
     public void put(@NotNull String key, @Nullable Object value) {

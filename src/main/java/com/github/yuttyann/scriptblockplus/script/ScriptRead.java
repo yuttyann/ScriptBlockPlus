@@ -1,6 +1,8 @@
 package com.github.yuttyann.scriptblockplus.script;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
+import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
@@ -10,24 +12,28 @@ import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableLocation;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * ScriptBlockPlus ScriptRead クラス
  * @author yuttyann44581
  */
 public class ScriptRead extends ScriptMap implements SBRead {
+
+    private boolean initialize;
 
     protected SBPlayer sbPlayer;
     protected Location location;
@@ -46,6 +52,12 @@ public class ScriptRead extends ScriptMap implements SBRead {
         this.location = new UnmodifiableLocation(location); // 変更不可
         this.scriptType = scriptType;
         this.blockScript = new BlockScriptJson(getScriptType()).load();
+        this.initialize = true;
+    }
+    
+    @Override
+    public void setInitialize(boolean initialize) {
+        this.initialize = initialize;
     }
 
     @Override
@@ -94,9 +106,20 @@ public class ScriptRead extends ScriptMap implements SBRead {
             SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(sbPlayer.getName(), location, scriptType).console();
             return false;
         }
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        pluginManager.callEvent(new ScriptReadStartEvent(ramdomId, this));
+        try {
+            return perform(index);
+        } finally {
+            pluginManager.callEvent(new ScriptReadEndEvent(ramdomId, this));
+            StreamUtils.filter(this, s -> s.initialize, ScriptMap::clear);
+        }
+    }
+
+    protected boolean perform(int index) {
         for (scriptIndex = index; scriptIndex < script.size(); scriptIndex++) {
             if (!sbPlayer.isOnline()) {
-                executeEndProcess(e -> e.failed(this));
+                EndProcessManager.forEach(e -> e.failed(this));
                 return false;
             }
             String script = this.script.get(scriptIndex);
@@ -104,19 +127,19 @@ public class ScriptRead extends ScriptMap implements SBRead {
             optionValue = setPlaceholders(getSBPlayer(), option.getValue(script));
             if (!hasPermission(option) || !option.callOption(this)) {
                 if (!option.isFailedIgnore()) {
-                    executeEndProcess(e -> e.failed(this));
+                    EndProcessManager.forEach(e -> e.failed(this));
                 }
                 return false;
             }
         }
-        executeEndProcess(e -> e.success(this));
+        EndProcessManager.forEach(e -> e.success(this));
         new PlayerCountJson(sbPlayer.getUniqueId()).action(PlayerCount::add, location, scriptType);
         SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(sbPlayer.getName(), location, scriptType).console();
         return true;
     }
 
     @NotNull
-    protected final String setPlaceholders(@NotNull SBPlayer sbPlayer, @NotNull String source) {
+    protected String setPlaceholders(@NotNull SBPlayer sbPlayer, @NotNull String source) {
         if (Placeholder.INSTANCE.has()) {
             source = Placeholder.INSTANCE.set(sbPlayer.getPlayer(), source);
         }
@@ -125,15 +148,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
         return source;
     }
 
-    protected final void executeEndProcess(@NotNull Consumer<EndProcess> action) {
-        try {
-            EndProcessManager.forEach(action);
-        } finally {
-            clear();
-        }
-    }
-
-    protected final boolean hasPermission(@NotNull Option option) {
+    protected boolean hasPermission(@NotNull Option option) {
         if (!SBConfig.OPTION_PERMISSION.getValue()
                 || Permission.has(sbPlayer, Option.PERMISSION_ALL)
                 || Permission.has(sbPlayer, option.getPermissionNode())) {
@@ -143,7 +158,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
         return false;
     }
 
-    protected final boolean sort(@NotNull List<String> scripts) {
+    protected boolean sort(@NotNull List<String> scripts) {
         try {
             List<String> parse = new ArrayList<>();
             for (String script : scripts) {

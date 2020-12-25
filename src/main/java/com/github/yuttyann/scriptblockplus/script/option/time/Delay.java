@@ -8,6 +8,7 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,6 +47,7 @@ public class Delay extends BaseOption implements Runnable {
             if (saveDelay) {
                 DELAY_SET.add(new TimerTemp(getUniqueId(), getLocation(), getScriptType()));
             }
+            ((SBRead) getTempMap()).setInitialize(false);
             Bukkit.getScheduler().runTaskLater(ScriptBlock.getInstance(), this, Long.parseLong(array[0]));
         }
         return false;
@@ -58,9 +60,10 @@ public class Delay extends BaseOption implements Runnable {
         }
         SBRead sbRead = (SBRead) getTempMap();
         if (getSBPlayer().isOnline()) {
+            sbRead.setInitialize(true);
             sbRead.read(getScriptIndex() + 1);
         } else {
-            EndProcessManager.forEach(e -> e.failed(sbRead));
+            EndProcessManager.forEachFinally(e -> e.failed(sbRead), () -> sbRead.clear());
         }
     }
 }

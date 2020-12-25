@@ -64,8 +64,8 @@ public abstract class ScriptBlockEvent extends PlayerEvent implements Cancellabl
     @Override
     public abstract void setCancelled(boolean cancel);
 
-    @NotNull
     @Override
+    @NotNull
     public HandlerList getHandlers() {
         return HANDLERS;
     }

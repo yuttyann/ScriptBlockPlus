@@ -24,9 +24,8 @@ public class EndInventory implements EndProcess {
 
     @Override
     public void success(@NotNull SBRead sbRead) {
-        SBPlayer sbPlayer = sbRead.getSBPlayer();
-        if (sbPlayer.isOnline()) {
-            Utils.updateInventory(Objects.requireNonNull(sbPlayer.getPlayer()));
+        if (sbRead.getSBPlayer().isOnline()) {
+            Utils.updateInventory(sbRead.getSBPlayer().getPlayer());
         }
     }
 

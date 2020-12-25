@@ -1,7 +1,11 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import java.util.Optional;
+
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
+import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
@@ -10,13 +14,17 @@ import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -24,6 +32,8 @@ import org.bukkit.inventory.ItemStack;
  * @author yuttyann44581
  */
 public class PlayerListener implements Listener {
+
+    private static final String KEY_INVENTORY = Utils.randomUUID();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -68,5 +78,27 @@ public class PlayerListener implements Listener {
         }
         ItemStack newSlot = player.getInventory().getItem(event.getNewSlot());
         ItemAction.callSlot(player, newSlot, event.getNewSlot(), event.getPreviousSlot());
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInventoryClick(InventoryClickEvent event) {
+        Optional<Inventory> inventory = Optional.ofNullable(event.getClickedInventory());
+        if (!inventory.isPresent() || inventory.get().getType() != InventoryType.PLAYER) {
+            return;
+        }
+        SBPlayer sbPlayer = SBPlayer.fromUUID(event.getWhoClicked().getUniqueId());
+        if (sbPlayer.getObjectMap().getBoolean(KEY_INVENTORY)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onScriptReadStart(ScriptReadStartEvent event) {
+        event.getSBRead().getSBPlayer().getObjectMap().put(KEY_INVENTORY, true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onScriptEndStart(ScriptReadEndEvent event) {
+        event.getSBRead().getSBPlayer().getObjectMap().remove(KEY_INVENTORY);
     }
 }
