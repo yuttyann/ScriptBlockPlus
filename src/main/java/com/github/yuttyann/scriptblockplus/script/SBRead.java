@@ -20,6 +20,12 @@ public interface SBRead extends ObjectMap {
     void setInitialize(boolean initialize);
 
     /**
+     * 初期化するのかどうかを取得します。
+     * @return 初期化を行う場合はtrue
+     */
+    boolean isInitialize();
+
+    /**
      * ScriptBlockPlusの{@link SBPlayer}を取得します。
      * @return {@link SBPlayer}
      */

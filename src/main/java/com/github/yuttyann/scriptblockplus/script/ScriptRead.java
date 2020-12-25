@@ -48,16 +48,21 @@ public class ScriptRead extends ScriptMap implements SBRead {
         location.setX(location.getBlockX() + 0.5D);
         location.setY(location.getBlockY() + 0.5D);
         location.setZ(location.getBlockZ() + 0.5D);
+        this.initialize = true;
         this.sbPlayer = SBPlayer.fromPlayer(player);
         this.location = new UnmodifiableLocation(location); // 変更不可
         this.scriptType = scriptType;
         this.blockScript = new BlockScriptJson(getScriptType()).load();
-        this.initialize = true;
     }
     
     @Override
-    public void setInitialize(boolean initialize) {
+    public final void setInitialize(boolean initialize) {
         this.initialize = initialize;
+    }
+
+    @Override
+    public final boolean isInitialize() {
+        return initialize;
     }
 
     @Override
