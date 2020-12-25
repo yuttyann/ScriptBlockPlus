@@ -52,7 +52,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
         this.sbPlayer = SBPlayer.fromPlayer(player);
         this.location = new UnmodifiableLocation(location); // 変更不可
         this.scriptType = scriptType;
-        this.blockScript = new BlockScriptJson(getScriptType()).load();
+        this.blockScript = new BlockScriptJson(scriptType).load();
     }
     
     @Override
