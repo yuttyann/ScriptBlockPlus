@@ -1,6 +1,10 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
@@ -87,18 +91,22 @@ public class PlayerListener implements Listener {
             return;
         }
         SBPlayer sbPlayer = SBPlayer.fromUUID(event.getWhoClicked().getUniqueId());
-        if (sbPlayer.getObjectMap().getBoolean(KEY_INVENTORY)) {
+        if (sbPlayer.getObjectMap().get(KEY_INVENTORY, Collections.EMPTY_SET).size() > 0) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onScriptReadStart(ScriptReadStartEvent event) {
-        event.getSBRead().getSBPlayer().getObjectMap().put(KEY_INVENTORY, true);
+        ObjectMap objectMap = event.getSBRead().getSBPlayer().getObjectMap();
+        Set<UUID> set = objectMap.get(KEY_INVENTORY, new HashSet<>());
+        set.add(event.getUniqueId());
+        objectMap.put(KEY_INVENTORY, set);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onScriptEndStart(ScriptReadEndEvent event) {
-        event.getSBRead().getSBPlayer().getObjectMap().remove(KEY_INVENTORY);
+        ObjectMap objectMap = event.getSBRead().getSBPlayer().getObjectMap();
+        objectMap.get(KEY_INVENTORY, new HashSet<>()).remove(event.getUniqueId());
     }
 }
