@@ -117,7 +117,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
             return perform(index);
         } finally {
             pluginManager.callEvent(new ScriptReadEndEvent(ramdomId, this));
-            StreamUtils.filter(this, s -> s.initialize, ScriptMap::clear);
+            StreamUtils.filter(this, SBRead::isInitialize, ScriptMap::clear);
         }
     }
 
