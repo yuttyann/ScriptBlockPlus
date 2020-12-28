@@ -4,17 +4,18 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.stream.Collectors;
 
 /**
@@ -45,22 +46,18 @@ public class ActionBar extends BaseOption {
     }
 
     public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
-        if (Utils.isCBXXXorLater("1.12.2")) {
+        if (ProtocolLib.INSTANCE.has()) {
+            try {
+                ProtocolLib.INSTANCE.sendActionBar(sbPlayer.getPlayer(), message);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        } else if (Utils.isCBXXXorLater("1.12.2")) {
             String command = "title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
             Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Utils.dispatchCommand(sbPlayer, command));
         } else if (Utils.isPlatform()) {
             try {
-                String chatSerializer = "IChatBaseComponent$ChatSerializer";
-                Method a = PackageType.NMS.getMethod(chatSerializer, "a", String.class);
-                Object component = a.invoke(null, "{\"text\": \"" + message + "\"}");
-                Object arg = (byte) 2;
-                Class<?>[] classes = { PackageType.NMS.getClass("IChatBaseComponent"), byte.class };
-                if (Utils.isCBXXXorLater("1.12")) {
-                    arg = PackageType.NMS.getEnumValueOf("ChatMessageType", "GAME_INFO");
-                    classes[1] = arg.getClass();
-                }
-                Constructor<?> packetPlayOutChat = PackageType.NMS.getConstructor("PacketPlayOutChat", classes);
-                PackageType.sendPacket(sbPlayer.getPlayer(), packetPlayOutChat.newInstance(component, arg));
+                PackageType.sendActionBar(sbPlayer.getPlayer(), message);
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }

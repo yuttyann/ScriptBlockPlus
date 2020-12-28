@@ -5,6 +5,7 @@ import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.listener.*;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
@@ -81,6 +82,14 @@ public class ScriptBlock extends JavaPlugin {
 
         // コマンドの登録
         BaseCommand.register("scriptblockplus", new ScriptBlockPlusCommand(this));
+    }
+
+    @Override
+    public void onDisable() {
+        ScriptViewer.PLAYERS.clear();
+        if (ProtocolLib.INSTANCE.has() && Utils.isCBXXXorLater("1.13.2")) {
+            ProtocolLib.INSTANCE.removeAll();
+        }
     }
 
     /**

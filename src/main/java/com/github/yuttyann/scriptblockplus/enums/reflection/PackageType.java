@@ -1,6 +1,8 @@
 package com.github.yuttyann.scriptblockplus.enums.reflection;
 
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -190,11 +192,25 @@ public enum PackageType {
         return constructor;
     }
 
-    public static void sendPacket(Player player, Object packet) throws ReflectiveOperationException {
-        Class<?> packetClass = PackageType.NMS.getClass("Packet");
-        Object handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
-        Object connection = PackageType.NMS.getField("EntityPlayer", "playerConnection").get(handle);
-        PackageType.NMS.getMethod("PlayerConnection", "sendPacket", packetClass).invoke(connection, packet);
+    public static void sendActionBar(@NotNull Player player, @NotNull String text) throws ReflectiveOperationException {
+        String chatSerializer = "IChatBaseComponent$ChatSerializer";
+        Method a = NMS.getMethod(chatSerializer, "a", String.class);
+        Object component = a.invoke(null, "{\"text\": \"" + text + "\"}");
+        Object arg = (byte) 2;
+        Class<?>[] classes = { NMS.getClass("IChatBaseComponent"), byte.class };
+        if (Utils.isCBXXXorLater("1.12")) {
+            arg = NMS.getEnumValueOf("ChatMessageType", "GAME_INFO");
+            classes[1] = arg.getClass();
+        }
+        Constructor<?> packetPlayOutChat = NMS.getConstructor("PacketPlayOutChat", classes);
+        sendPacket(player, packetPlayOutChat.newInstance(component, arg));
+    }
+
+    public static void sendPacket(@NotNull Player player, @NotNull Object packet) throws ReflectiveOperationException {
+        Class<?> packetClass = NMS.getClass("Packet");
+        Object handle = CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
+        Object connection = NMS.getField("EntityPlayer", "playerConnection").get(handle);
+        NMS.getMethod("PlayerConnection", "sendPacket", packetClass).invoke(connection, packet);
     }
 
     public Class<?> getClass(@NotNull String className) throws IllegalArgumentException, ClassNotFoundException {

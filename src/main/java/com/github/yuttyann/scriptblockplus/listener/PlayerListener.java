@@ -10,7 +10,9 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
+import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
+import com.github.yuttyann.scriptblockplus.listener.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -71,6 +73,10 @@ public class PlayerListener implements Listener {
         region.setWorld(null);
         region.setPos1(null);
         region.setPos2(null);
+
+        // 全ての発光エンティティを非表示にする
+        ScriptViewer.PLAYERS.remove(sbPlayer.getUniqueId());
+        ProtocolLib.INSTANCE.destroyAll(sbPlayer);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

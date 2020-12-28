@@ -3,25 +3,18 @@ package com.github.yuttyann.scriptblockplus.listener.item.action;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.listener.item.ChangeSlot;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
+import com.github.yuttyann.scriptblockplus.listener.item.action.task.GlowTask;
+import com.github.yuttyann.scriptblockplus.listener.item.action.task.LookTask;
+import com.github.yuttyann.scriptblockplus.listener.item.action.task.ParticleTask;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
-import com.github.yuttyann.scriptblockplus.region.PlayerRegion;
-import com.github.yuttyann.scriptblockplus.region.Region;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
+
 import org.bukkit.permissions.Permissible;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -30,15 +23,20 @@ import java.util.UUID;
 
 /**
  * ScriptBlockPlus ScriptViewer クラス
+ * 
  * @author yuttyann44581
  */
 public class ScriptViewer extends ItemAction {
 
-    private static final int LIMIT = 800;
-    private static final Set<UUID> PLAYERS = new HashSet<>();
+    public static final Set<UUID> PLAYERS = new HashSet<>();
 
     static {
-        new Task().runTaskTimer(ScriptBlock.getInstance(), 0L, 10L);
+        if (ProtocolLib.INSTANCE.has() && Utils.isCBXXXorLater("1.13.2")) {
+            new LookTask().runTaskTimer(ScriptBlock.getInstance(), 0L, 3L);
+            new GlowTask().runTaskTimer(ScriptBlock.getInstance(), 0L, 20L);
+        } else {
+            new ParticleTask().runTaskTimer(ScriptBlock.getInstance(), 0L, 10L);
+        }
     }
 
     public ScriptViewer() {
@@ -67,75 +65,12 @@ public class ScriptViewer extends ItemAction {
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
                 PLAYERS.remove(sbPlayer.getUniqueId());
+                if (ProtocolLib.INSTANCE.has() && Utils.isCBXXXorLater("1.13.2")) {
+                    ProtocolLib.INSTANCE.destroyAll(sbPlayer);
+                }
                 SBConfig.SCRIPT_VIEWER_STOP.send(sbPlayer);
                 break;
             default:
-        }
-    }
-
-    private static class Task extends BukkitRunnable {
-
-        @Override
-        public void run() {
-            for (UUID uuid : PLAYERS) {
-                SBPlayer sbPlayer = SBPlayer.fromUUID(uuid);
-                if (!sbPlayer.isOnline()) {
-                    continue;
-                }
-                int count = 0;
-                Region region = new PlayerRegion(sbPlayer.getPlayer(), 10);
-                Set<Block> blocks = getBlocks(new CuboidRegionBlocks(region));
-                for (Block block : blocks) {
-                    if (count++ < LIMIT) {
-                        spawnParticlesOnBlock(sbPlayer.getPlayer(), block, block.getType() == Material.AIR);
-                    }
-                }
-            }
-        }
-
-        @NotNull
-        private Set<Block> getBlocks(@NotNull CuboidRegionBlocks cuboidRegionBlocks) {
-            Set<Block> set = new HashSet<>();
-            Set<Block> blocks = cuboidRegionBlocks.getBlocks();
-            for (ScriptType scriptType : ScriptType.values()) {
-                BlockScript blockScript = new BlockScriptJson(scriptType).load();
-                for (Block block : blocks) {
-                    if (blockScript.has(block.getLocation())) {
-                        set.add(block);
-                    }
-                }
-            }
-            return set;
-        }
-
-        private void spawnParticlesOnBlock(@NotNull Player player, @NotNull Block block, boolean isAIR) {
-            double x = block.getX();
-            double y = block.getY();
-            double z = block.getZ();
-            Color color = isAIR ? Color.AQUA : Color.LIME;
-            if (Utils.isCBXXXorLater("1.13")) {
-                Particle.DustOptions dust = new Particle.DustOptions(color, 1);
-                player.spawnParticle(Particle.REDSTONE, x, y, z, 0, 0, 0, 0, dust);
-                player.spawnParticle(Particle.REDSTONE, x + 1, y, z, 0, 0, 0, 0, dust);
-                player.spawnParticle(Particle.REDSTONE, x + 1, y, z + 1, 0, 0, 0, 0, dust);
-                player.spawnParticle(Particle.REDSTONE, x, y, z + 1, 0, 0, 0, 0, dust);
-                player.spawnParticle(Particle.REDSTONE, x, y + 1, z, 0, 0, 0, 0, dust);
-                player.spawnParticle(Particle.REDSTONE, x + 1, y + 1, z, 0, 0, 0, 0, dust);
-                player.spawnParticle(Particle.REDSTONE, x + 1, y + 1, z + 1, 0, 0, 0, 0, dust);
-                player.spawnParticle(Particle.REDSTONE, x, y + 1, z + 1, 0, 0, 0, 0, dust);
-            } else {
-                double r = (color.getRed() - 0.0001) / 255D;
-                double g = (color.getGreen() - 0.0001) / 255D;
-                double b = (color.getBlue() - 0.0001) / 255D;
-                player.spawnParticle(Particle.REDSTONE, x, y, z, 0, r, g, b, 1);
-                player.spawnParticle(Particle.REDSTONE, x + 1, y, z, 0, r, g, b, 1);
-                player.spawnParticle(Particle.REDSTONE, x + 1, y, z + 1, 0, r, g, b, 1);
-                player.spawnParticle(Particle.REDSTONE, x, y, z + 1, 0, r, g, b, 1);
-                player.spawnParticle(Particle.REDSTONE, x, y + 1, z, 0, r, g, b, 1);
-                player.spawnParticle(Particle.REDSTONE, x + 1, y + 1, z, 0, r, g, b, 1);
-                player.spawnParticle(Particle.REDSTONE, x + 1, y + 1, z + 1, 0, r, g, b, 1);
-                player.spawnParticle(Particle.REDSTONE, x, y + 1, z + 1, 0, r, g, b, 1);
-            }
         }
     }
 }

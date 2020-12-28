@@ -29,6 +29,7 @@ public class RayTrace {
         this.world = world;
     }
 
+    @Nullable
     public RayResult rayTrace(@NotNull Player player, double distance) {
         if (Utils.isCBXXXorLater("1.13.2")) {
             RayTraceResult rayTraceResult = player.rayTraceBlocks(distance, FluidCollisionMode.NEVER);
