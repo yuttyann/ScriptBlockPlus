@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.listener.raytrace;
 
 import com.github.yuttyann.scriptblockplus.listener.raytrace.SBBlockIterator.Queue;
+
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.FluidCollisionMode;
@@ -20,9 +21,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class RayTrace {
 
-    private static final double R = 0.017453292D;
-    private static final String KEY_BPS = Utils.isCBXXXorLater("1.13.2") ? "getBlockPosition" : "a";
-
     private final World world;
 
     public RayTrace(@NotNull World world) {
@@ -30,30 +28,20 @@ public class RayTrace {
     }
 
     @Nullable
-    public RayResult rayTrace(@NotNull Player player, double distance) {
+    public RayResult rayTrace(@NotNull Player player, final double distance) {
         if (Utils.isCBXXXorLater("1.13.2")) {
             RayTraceResult rayTraceResult = player.rayTraceBlocks(distance, FluidCollisionMode.NEVER);
             if (rayTraceResult != null && rayTraceResult.getHitBlock() != null) {
                 return new RayResult(rayTraceResult.getHitBlock(), rayTraceResult.getHitBlockFace());
             }
         } else if (Utils.isPlatform()) {
-            Location location = player.getLocation();
-            double x = location.getX();
-            double y = location.getY() + player.getEyeHeight();
-            double z = location.getZ();
-            float pitch = location.getPitch();
-            float yaw = location.getYaw();
-            float f1 = (float) Math.cos((-yaw * R) - Math.PI);
-            float f2 = (float) Math.sin((-yaw * R) - Math.PI);
-            float f3 = (float) -Math.cos(-pitch * R);
-            float f4 = (float) Math.sin(-pitch * R);
-            float f5 = f2 * f3;
-            float f6 = f1 * f3;
-            SBVector vector1 = new SBVector(x, y, z);
-            SBVector vector2 = vector1.add(f5 * distance, f4 * distance, f6 * distance);
+            Location eyeLocation = player.getEyeLocation();
+            SBVector direction = new SBVector(eyeLocation.getDirection()).normalize().multiply(distance);
+			SBVector start = new SBVector(eyeLocation.toVector());
+            SBVector end = start.add(direction.getX(), direction.getY(), direction.getZ());
             try {
-                Object vec3d1 = vector1.toNMSVec3D();
-                Object vec3d2 = vector2.toNMSVec3D();
+                Object vec3d1 = start.toNMSVec3D();
+                Object vec3d2 = end.toNMSVec3D();
                 Object[] args = { vec3d1, vec3d2, false };
                 if (Utils.isCBXXXorLater("1.13")) {
                     Enum<?> NEVER = PackageType.NMS.getEnumValueOf("FluidCollisionOption", "NEVER");
@@ -62,7 +50,7 @@ public class RayTrace {
                 Object nmsWorld = PackageType.CB.invokeMethod(world, "CraftWorld", "getHandle");
                 Object rayTrace = PackageType.NMS.invokeMethod(nmsWorld, "World", "rayTrace", args);
                 if (rayTrace != null) {
-                    Object pos = PackageType.NMS.invokeMethod(rayTrace, "MovingObjectPosition", KEY_BPS);
+                    Object pos = PackageType.NMS.invokeMethod(rayTrace, "MovingObjectPosition", "a");
                     int bx = (int) PackageType.NMS.invokeMethod(pos, "BaseBlockPosition", "getX");
                     int by = (int) PackageType.NMS.invokeMethod(pos, "BaseBlockPosition", "getY");
                     int bz = (int) PackageType.NMS.invokeMethod(pos, "BaseBlockPosition", "getZ");
@@ -92,24 +80,6 @@ public class RayTrace {
 
     @NotNull
     private BlockFace notchToBlockFace(@Nullable Enum<?> direction) {
-        if (direction == null) {
-            return BlockFace.SELF;
-        }
-        switch (direction.ordinal()) {
-            case 1:
-                return BlockFace.DOWN;
-            case 2:
-                return BlockFace.UP;
-            case 3:
-                return BlockFace.NORTH;
-            case 4:
-                return BlockFace.SOUTH;
-            case 5:
-                return BlockFace.WEST;
-            case 6:
-                return BlockFace.EAST;
-            default:
-                return BlockFace.SELF;
-        }
+        return direction == null ? BlockFace.SELF : BlockFace.valueOf(direction.name());
     }
 }

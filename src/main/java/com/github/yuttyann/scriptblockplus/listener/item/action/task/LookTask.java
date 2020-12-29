@@ -2,21 +2,25 @@ package com.github.yuttyann.scriptblockplus.listener.item.action.task;
 
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
+import com.github.yuttyann.scriptblockplus.listener.raytrace.RayResult;
+import com.github.yuttyann.scriptblockplus.listener.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Color;
-import org.bukkit.FluidCollisionMode;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.util.RayTraceResult;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus LookTask クラス
+ * @author yuttyann44581
+ */
 public class LookTask extends BlockRunnable {
 
     public static final String KEY = Utils.randomUUID();
@@ -25,29 +29,29 @@ public class LookTask extends BlockRunnable {
     public void run(@NotNull SBPlayer sbPlayer) {
         Player player = sbPlayer.getPlayer();
         double distance = player.getGameMode() == GameMode.CREATIVE ? 5.0D : 4.5D;
-        RayTraceResult result = player.rayTraceBlocks(distance, FluidCollisionMode.NEVER);
+        RayResult result = new RayTrace(player.getWorld()).rayTrace(player, distance);
         if (result == null) {
             sbPlayer.getObjectMap().remove(KEY);
             return;
         }
         Block block = result.getHitBlock();
-        Location[] array = { (Location) null, (Location) null };
+        Location[] locations = { (Location) null, (Location) null };
         if (block != null && has(block.getLocation())) {
-            ProtocolLib.INSTANCE.destroyGlowEntity(sbPlayer, block);
+            ProtocolLib.GLOW_ENTITY.destroyGlowEntity(sbPlayer, block);
             spawnParticlesOnBlock(player, block, Color.GREEN);
-            array[0] = block.getLocation();
+            locations[0] = block.getLocation();
         }
         BlockFace blockFace = result.getHitBlockFace();
         if (blockFace != null) {
             Block relative = block.getRelative(blockFace);
             if (has(relative.getLocation())) {
                 boolean isAIR = relative.getType() == Material.AIR;
-                ProtocolLib.INSTANCE.destroyGlowEntity(sbPlayer, relative);
+                ProtocolLib.GLOW_ENTITY.destroyGlowEntity(sbPlayer, relative);
                 spawnParticlesOnBlock(player, relative, isAIR ? Color.BLUE : Color.GREEN);
-                array[1] = relative.getLocation();
+                locations[1] = relative.getLocation();
             }
         }
-        sbPlayer.getObjectMap().put(KEY, array);
+        sbPlayer.getObjectMap().put(KEY, locations);
     }
 
     private boolean has(@NotNull Location location) {

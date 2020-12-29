@@ -15,7 +15,7 @@ import java.util.Objects;
 
 /**
  * ScriptBlockPlus SBBlockIterator クラス
- * @author bukkit(source)
+ * @author bukkit(github)
  */
 public class SBBlockIterator implements Iterator<SBBlockIterator.Queue> {
 
