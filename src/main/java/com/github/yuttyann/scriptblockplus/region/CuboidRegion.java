@@ -20,17 +20,17 @@ public class CuboidRegion implements Region {
 
     public void setWorld(@Nullable World world) {
         if (this.world != null && !Objects.equals(this.world, world)) {
-            setPos1(null);
-            setPos2(null);
+            setVector1(null);
+            setVector2(null);
         }
         this.world = world;
     }
 
-    public void setPos1(@Nullable Vector pos1) {
+    public void setVector1(@Nullable Vector pos1) {
         this.pos1 = pos1;
     }
 
-    public void setPos2(@Nullable Vector pos2) {
+    public void setVector2(@Nullable Vector pos2) {
         this.pos2 = pos2;
     }
 

@@ -23,12 +23,12 @@ public class CuboidRegionPaste {
 
     private final ScriptType scriptType;
     private final SBClipboard sbClipboard;
-    private final CuboidRegionBlocks cuboidRegionBlocks;
+    private final CuboidRegionBlocks regionBlocks;
 
     public CuboidRegionPaste(@NotNull SBClipboard sbClipboard, @NotNull Region region) {
         this.scriptType = sbClipboard.getBlockScriptJson().getScriptType();
         this.sbClipboard = sbClipboard;
-        this.cuboidRegionBlocks = new CuboidRegionBlocks(region);
+        this.regionBlocks = new CuboidRegionBlocks(region);
     }
 
     @NotNull
@@ -37,13 +37,13 @@ public class CuboidRegionPaste {
     }
 
     @NotNull
-    public CuboidRegionBlocks getCuboidRegionBlocks() {
-        return cuboidRegionBlocks;
+    public CuboidRegionBlocks getRegionBlocks() {
+        return regionBlocks;
     }
 
     public CuboidRegionPaste paste(boolean pasteonair, boolean overwrite) {
-        Set<Location> locations = new HashSet<>(cuboidRegionBlocks.getCount());
-        for (Block block : cuboidRegionBlocks.getBlocks()) {
+        Set<Location> locations = new HashSet<>(regionBlocks.getCount());
+        for (Block block : regionBlocks.getBlocks()) {
             if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
                 continue;
             }

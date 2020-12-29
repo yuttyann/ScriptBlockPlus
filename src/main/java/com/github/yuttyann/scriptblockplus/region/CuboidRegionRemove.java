@@ -20,11 +20,11 @@ import java.util.Set;
 public class CuboidRegionRemove {
 
     private final Set<ScriptType> scriptTypes;
-    private final CuboidRegionBlocks cuboidRegionBlocks;
+    private final CuboidRegionBlocks regionBlocks;
 
     public CuboidRegionRemove(@NotNull Region region) {
         this.scriptTypes = new LinkedHashSet<>();
-        this.cuboidRegionBlocks = new CuboidRegionBlocks(region);
+        this.regionBlocks = new CuboidRegionBlocks(region);
     }
 
     @NotNull
@@ -33,14 +33,14 @@ public class CuboidRegionRemove {
     }
 
     @NotNull
-    public CuboidRegionBlocks getCuboidRegionBlocks() {
-        return cuboidRegionBlocks;
+    public CuboidRegionBlocks getRegionBlocks() {
+        return regionBlocks;
     }
 
     public CuboidRegionRemove remove() {
         scriptTypes.clear();
-        Set<Block> blocks = cuboidRegionBlocks.getBlocks();
-        Set<Location> locations = new HashSet<>(cuboidRegionBlocks.getCount());
+        Set<Block> blocks = regionBlocks.getBlocks();
+        Set<Location> locations = new HashSet<>(regionBlocks.getCount());
         for (ScriptType scriptType : ScriptType.values()) {
             BlockScriptJson blockScriptJson = new BlockScriptJson(scriptType);
             if (blockScriptJson.exists()) {
