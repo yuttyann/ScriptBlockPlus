@@ -46,15 +46,15 @@ public class ActionBar extends BaseOption {
     }
 
     public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
-        if (ProtocolLib.INSTANCE.has()) {
+        if (Utils.isCBXXXorLater("1.12.2")) {
+            String command = "title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
+            Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Utils.dispatchCommand(sbPlayer, command));
+        } else if (ProtocolLib.INSTANCE.has()) {
             try {
                 ProtocolLib.INSTANCE.sendActionBar(sbPlayer.getPlayer(), message);
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-        } else if (Utils.isCBXXXorLater("1.12.2")) {
-            String command = "title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
-            Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Utils.dispatchCommand(sbPlayer, command));
         } else if (Utils.isPlatform()) {
             try {
                 PackageType.sendActionBar(sbPlayer.getPlayer(), message);

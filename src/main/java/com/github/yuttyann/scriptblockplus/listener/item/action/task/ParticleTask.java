@@ -10,6 +10,10 @@ import com.github.yuttyann.scriptblockplus.region.Region;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus ParticleTask クラス
+ * @author yuttyann44581
+ */
 public class ParticleTask extends BlockRunnable {
     
     private static final int LIMIT = 800;

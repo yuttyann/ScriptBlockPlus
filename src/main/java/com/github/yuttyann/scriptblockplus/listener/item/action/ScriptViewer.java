@@ -12,7 +12,7 @@ import com.github.yuttyann.scriptblockplus.listener.item.action.task.LookTask;
 import com.github.yuttyann.scriptblockplus.listener.item.action.task.ParticleTask;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
@@ -31,8 +31,8 @@ public class ScriptViewer extends ItemAction {
     public static final Set<UUID> PLAYERS = new HashSet<>();
 
     static {
-        if (ProtocolLib.INSTANCE.has() && Utils.isCBXXXorLater("1.13.2")) {
-            new LookTask().runTaskTimer(ScriptBlock.getInstance(), 0L, 3L);
+        if (ProtocolLib.INSTANCE.has()) {
+            new LookTask().runTaskTimer(ScriptBlock.getInstance(), 0L, 2L);
             new GlowTask().runTaskTimer(ScriptBlock.getInstance(), 0L, 20L);
         } else {
             new ParticleTask().runTaskTimer(ScriptBlock.getInstance(), 0L, 10L);
@@ -65,9 +65,7 @@ public class ScriptViewer extends ItemAction {
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
                 PLAYERS.remove(sbPlayer.getUniqueId());
-                if (ProtocolLib.INSTANCE.has() && Utils.isCBXXXorLater("1.13.2")) {
-                    ProtocolLib.INSTANCE.destroyAll(sbPlayer);
-                }
+                StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> ProtocolLib.GLOW_ENTITY.destroyAll(sbPlayer));
                 SBConfig.SCRIPT_VIEWER_STOP.send(sbPlayer);
                 break;
             default:

@@ -87,9 +87,7 @@ public class ScriptBlock extends JavaPlugin {
     @Override
     public void onDisable() {
         ScriptViewer.PLAYERS.clear();
-        if (ProtocolLib.INSTANCE.has() && Utils.isCBXXXorLater("1.13.2")) {
-            ProtocolLib.INSTANCE.removeAll();
-        }
+        StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> ProtocolLib.GLOW_ENTITY.removeAll());
     }
 
     /**

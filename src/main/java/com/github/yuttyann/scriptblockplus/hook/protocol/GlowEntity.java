@@ -1,6 +1,5 @@
-package com.github.yuttyann.scriptblockplus.hook.plugin;
+package com.github.yuttyann.scriptblockplus.hook.protocol;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -10,6 +9,10 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus GlowEntity クラス
+ * @author yuttyann44581
+ */
 public class GlowEntity {
         
     private final int id;
@@ -30,6 +33,18 @@ public class GlowEntity {
         return id;
     }
 
+    public int getX() {
+        return vector.getBlockX();
+    }
+
+    public int getY() {
+        return vector.getBlockX();
+    }
+
+    public int getZ() {
+        return vector.getBlockX();
+    }
+
     @NotNull
     public UUID getUniqueId() {
         return uuid;
@@ -45,19 +60,7 @@ public class GlowEntity {
         return sbPlayer;
     }
 
-    public int getX() {
-        return vector.getBlockX();
-    }
-
-    public int getY() {
-        return vector.getBlockX();
-    }
-
-    public int getZ() {
-        return vector.getBlockX();
-    }
-
-    public boolean equals(int x, int y, int z) {
+    public boolean equals(final int x, final int y, final int z) {
         return vector.getBlockX() == x && vector.getBlockY() == y && vector.getBlockZ() == z;
     }
 
@@ -69,9 +72,15 @@ public class GlowEntity {
         GlowEntity glowEntity = (GlowEntity) obj;
         return glowEntity.id == id && glowEntity.uuid.equals(uuid) && glowEntity.vector.equals(vector) && glowEntity.sbPlayer.equals(sbPlayer);
     }
-
+    
     @Override
     public int hashCode() {
-        return Objects.hash(id, uuid, sbPlayer.getUniqueId(), vector);
+        int hash = 1;
+        int prime = 31;
+        hash = prime * hash + id;
+        hash = prime * hash + uuid.hashCode();
+        hash = prime * hash + sbPlayer.getUniqueId().hashCode();
+        hash = prime * hash + vector.hashCode();
+        return hash;
     }
 }

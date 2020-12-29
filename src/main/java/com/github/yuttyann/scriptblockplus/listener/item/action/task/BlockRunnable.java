@@ -22,6 +22,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus BlockRunnable クラス
+ * @author yuttyann44581
+ */
 public abstract class BlockRunnable extends BukkitRunnable {
 
     @Override
@@ -37,9 +41,9 @@ public abstract class BlockRunnable extends BukkitRunnable {
     protected abstract void run(@NotNull SBPlayer player);
 
     @NotNull
-    public Set<Block> getBlocks(@NotNull CuboidRegionBlocks cuboidRegionBlocks) {
+    public Set<Block> getBlocks(@NotNull CuboidRegionBlocks regionBlocks) {
         Set<Block> set = new HashSet<>();
-        Set<Block> blocks = cuboidRegionBlocks.getBlocks();
+        Set<Block> blocks = regionBlocks.getBlocks();
         for (ScriptType scriptType : ScriptType.values()) {
             BlockScript blockScript = new BlockScriptJson(scriptType).load();
             for (Block block : blocks) {

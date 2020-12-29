@@ -19,6 +19,7 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.entity.Player;
@@ -51,32 +52,34 @@ public class PlayerListener implements Listener {
         if (sbPlayer.isOp()) {
             ScriptBlock.getInstance().checkUpdate(sbPlayer, false);
         }
-
-        // ItemCost アイテム返却
         ObjectMap objectMap = sbPlayer.getObjectMap();
         if (objectMap.has(ItemCost.KEY_PLAYER)) {
-            sbPlayer.getInventory().setContents(objectMap.get(ItemCost.KEY_PLAYER, new ItemStack[0]));
-            objectMap.remove(ItemCost.KEY_PLAYER);
-            Utils.updateInventory(sbPlayer.getPlayer());
+            try {
+                Inventory inventory = sbPlayer.getInventory();
+                inventory.setContents(objectMap.get(ItemCost.KEY_PLAYER, new ItemStack[0]));
+            } finally {
+                objectMap.remove(ItemCost.KEY_PLAYER);
+                Utils.updateInventory(sbPlayer.getPlayer());
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        BaseSBPlayer sbPlayer = (BaseSBPlayer) SBPlayer.fromPlayer(event.getPlayer());
-        sbPlayer.setOnline(false);
+        SBPlayer sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
+        CuboidRegion cuboidRegion = (CuboidRegion) sbPlayer.getRegion();
         sbPlayer.setScriptLine(null);
         sbPlayer.setScriptEdit(null);
         sbPlayer.setSBClipboard(null);
-
-        CuboidRegion region = ((CuboidRegion) sbPlayer.getRegion());
-        region.setWorld(null);
-        region.setPos1(null);
-        region.setPos2(null);
-
-        // 全ての発光エンティティを非表示にする
-        ScriptViewer.PLAYERS.remove(sbPlayer.getUniqueId());
-        ProtocolLib.INSTANCE.destroyAll(sbPlayer);
+        cuboidRegion.setWorld(null);
+        cuboidRegion.setVector1(null);
+        cuboidRegion.setVector2(null);
+        try {
+            ScriptViewer.PLAYERS.remove(sbPlayer.getUniqueId());
+            StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> ProtocolLib.GLOW_ENTITY.destroyAll(sbPlayer));
+        } finally {
+            ((BaseSBPlayer) sbPlayer).setOnline(false);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)

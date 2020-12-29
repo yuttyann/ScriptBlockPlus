@@ -5,7 +5,6 @@ import com.github.yuttyann.scriptblockplus.enums.CommandLog;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.hook.CommandSelector;
-import com.github.yuttyann.scriptblockplus.hook.plugin.PsudoCommand;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -125,7 +124,7 @@ public final class Utils {
     public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull String command) {
         command = command.startsWith("/") ? command.substring(1) : command;
         CommandSender commandSender = sender instanceof SBPlayer ? ((SBPlayer) sender).getPlayer() : sender;
-        if (CommandSelector.INSTANCE.has(command) && (isCBXXXorLater("1.13.2") || PsudoCommand.INSTANCE.has())) {
+        if (CommandSelector.INSTANCE.has(command)) {
             List<String> commands = CommandSelector.INSTANCE.build(commandSender, command);
             return commands.stream().allMatch(s -> Bukkit.dispatchCommand(commandSender, s));
         }

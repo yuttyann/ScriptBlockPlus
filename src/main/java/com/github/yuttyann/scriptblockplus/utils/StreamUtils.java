@@ -26,12 +26,6 @@ public final class StreamUtils {
         return array;
     }
 
-    public static <T> void forEach(@NotNull T[] array, @NotNull Consumer<T> action) {
-        for (T t : Objects.requireNonNull(array)) {
-            action.accept(t);
-        }
-    }
-
     public static <T> void fForEach(@NotNull T[] array, @NotNull Predicate<T> filter, @NotNull Consumer<T> action) {
         forEach(array, t -> filter(t, filter, action));
     }
@@ -39,10 +33,22 @@ public final class StreamUtils {
     public static <T> void fForEach(@NotNull Collection<T> collection, @NotNull Predicate<T> filter, @NotNull Consumer<T> action) {
         collection.forEach(t -> filter(t, filter, action));
     }
+    
+    public static <T> void forEach(@NotNull T[] array, @NotNull Consumer<T> action) {
+        for (T t : Objects.requireNonNull(array)) {
+            action.accept(t);
+        }
+    }
 
     public static <T> void filter(@NotNull T t, Predicate<T> filter, @NotNull Consumer<T> action) {
         if (filter.test(t)) {
             action.accept(t);
+        }
+    }
+    
+    public static <T> void ifAction(@NotNull boolean value, @NotNull Runnable runnable) {
+        if (value) {
+            runnable.run();
         }
     }
 }

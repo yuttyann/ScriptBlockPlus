@@ -42,9 +42,9 @@ public class BlockSelector extends ItemAction {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
                 if (runItem.isSneaking()) {
-                    region.setPos1((location = sbPlayer.getLocation()).toVector());
+                    region.setVector1((location = sbPlayer.getLocation()).toVector());
                 } else if (!runItem.isAIR() && location != null) {
-                    region.setPos1(location.toVector());
+                    region.setVector1(location.toVector());
                 }
                 if (location != null) {
                     region.setWorld(location.getWorld());
@@ -54,9 +54,9 @@ public class BlockSelector extends ItemAction {
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
                 if (runItem.isSneaking()) {
-                    region.setPos2((location = sbPlayer.getLocation()).toVector());
+                    region.setVector2((location = sbPlayer.getLocation()).toVector());
                 } else if (!runItem.isAIR() && location != null) {
-                    region.setPos2(location.toVector());
+                    region.setVector2(location.toVector());
                 }
                 if (location != null) {
                     region.setWorld(location.getWorld());
