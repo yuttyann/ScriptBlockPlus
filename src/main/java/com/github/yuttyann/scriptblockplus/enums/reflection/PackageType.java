@@ -251,7 +251,7 @@ public enum PackageType {
             builder.append(name).append('[');
         }
         for (int i = 0; i < objects.length; i++) {
-            builder.append(objects[i] == null ? "null" : objects[i].getName());
+            builder.append(objects[i] == null ? null : objects[i].getName());
             if (i == lastLength) {
                 return builder.append(']').toString();
             }
@@ -262,8 +262,8 @@ public enum PackageType {
 
     @NotNull
     public static String getVersionName() {
-        String version = Bukkit.getServer().getClass().getPackage().getName();
-        return version.substring(version.lastIndexOf('.') + 1);
+        String name = Bukkit.getServer().getClass().getPackage().getName();
+        return name.substring(name.lastIndexOf('.') + 1);
     }
 
     public static void clear() {

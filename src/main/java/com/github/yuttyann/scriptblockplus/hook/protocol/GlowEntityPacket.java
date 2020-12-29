@@ -33,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus GlowEntityPacket クラス
- * 
  * @author yuttyann44581
  */
 public class GlowEntityPacket {
@@ -89,7 +88,7 @@ public class GlowEntityPacket {
     @NotNull
     public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block) {
         // エンティティのID
-        int id = (int) (Math.random() * Integer.MAX_VALUE);
+        int id = EntityCount.next();
         UUID uuid = UUID.randomUUID();
 
         // チームを取得、エンティティの登録
@@ -175,14 +174,12 @@ public class GlowEntityPacket {
     }
 
     private PacketContainer createEntity(final int id, @NotNull UUID uuid, @NotNull Block block) {
+        double x = block.getX() + 0.5D, y = block.getY(), z = block.getZ() + 0.5D;
         PacketType packetType = PacketType.Play.Server.SPAWN_ENTITY_LIVING;
         PacketContainer spawnEntity = ProtocolLibrary.getProtocolManager().createPacket(packetType);
         spawnEntity.getUUIDs().write(0, uuid);
-        spawnEntity.getIntegers().write(0, id);
-        spawnEntity.getIntegers().write(1, TYPE_ID); // MAGMA_CUBE
-        spawnEntity.getDoubles().write(0, block.getX() + 0.5D);
-        spawnEntity.getDoubles().write(1, (double) block.getY());
-        spawnEntity.getDoubles().write(2, block.getZ() + 0.5D);
+        spawnEntity.getIntegers().write(0, id).write(1, TYPE_ID);
+        spawnEntity.getDoubles().write(0, x).write(1, y).write(2, z);
         return spawnEntity;
     }
 
