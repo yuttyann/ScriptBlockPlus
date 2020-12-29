@@ -1,7 +1,11 @@
 package com.github.yuttyann.scriptblockplus.hook;
 
-import com.github.yuttyann.scriptblockplus.hook.plugin.PsudoCommand;
+import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
+import com.github.yuttyann.scriptblockplus.utils.CommandUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -51,7 +55,7 @@ public final class CommandSelector {
         commandList.add(parse(command.toCharArray(), sender, indexList));
         for (int i = 0; i < indexList.size(); i++) {
             String selector = indexList.get(i).substring(command);
-            Entity[] entities = PsudoCommand.INSTANCE.getTargets(sender, selector);
+            Entity[] entities = getTargets(sender, selector);
             if ((entities == null || entities.length == 0) && selector.startsWith("@p") && sender instanceof Player) {
                 entities = new Entity[] { (Entity) sender };
             }
@@ -96,7 +100,7 @@ public final class CommandSelector {
                             break;
                         }
                     }
-                    builder.append(PsudoCommand.INSTANCE.getIntRelative(tempBuilder.toString(), xyz, (Entity) sender));
+                    builder.append(getIntRelative(tempBuilder.toString(), xyz, (Entity) sender));
                     k++;
                 }
             } else if (chars[i] == '@' && type < chars.length && SELECTOR_SUFFIX.indexOf(chars[type]) > -1) {
@@ -128,5 +132,30 @@ public final class CommandSelector {
     @NotNull
     private String getName(@NotNull Entity entity) {
         return (entity instanceof Player) ? entity.getName() : entity.getUniqueId().toString();
+    }
+
+    @NotNull
+    private Entity[] getTargets(@NotNull CommandSender sender, @NotNull String selector) {
+        if (Utils.isCBXXXorLater("1.13.2")) {
+            return Bukkit.selectEntities(sender, selector).toArray(new Entity[0]);
+        }
+        return CommandUtils.getTargets(sender, selector);
+    }
+
+    private int getIntRelative(@NotNull String target, @NotNull String relative, @NotNull Entity entity) {
+        int number = 0;
+        if (StringUtils.isNotEmpty(target) && Calculation.REALNUMBER_PATTERN.matcher(target).matches()) {
+            number = Integer.parseInt(target);
+        }
+        switch (relative) {
+            case "x":
+                return entity.getLocation().getBlockX() + number;
+            case "y":
+                return entity.getLocation().getBlockY() + number;
+            case "z":
+                return entity.getLocation().getBlockZ() + number;
+            default:
+                return 0;
+        }
     }
 }
