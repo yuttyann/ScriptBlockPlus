@@ -12,7 +12,7 @@ ScriptBlockPlus [Java11](https://jdk.java.net/) [MC1.9-1.16.x] [![](https://jitp
 ### 連携プラグイン
 | Plugin | Description | Version |
 |:---|:---|:---:|
-| [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)  | NMSの補助 | **ALL** |
+| [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)  | パケットの補助 | **ALL** |
 | [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの拡張 | **ALL** |
 | [ScriptEntityPlus](https://www.spigotmc.org/resources/placeholderapi.6245/) | エンティティにスクリプトを設定 | **ALL** |
 
