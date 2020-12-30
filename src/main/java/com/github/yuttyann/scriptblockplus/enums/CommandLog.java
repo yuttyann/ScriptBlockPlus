@@ -31,48 +31,71 @@ public enum CommandLog {
         this.value = value;
     }
 
-    public void set(@NotNull World world) {
+    public void setLogAdmin(@NotNull World world) {
         if (Utils.isCBXXXorLater("1.13")) {
             world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, this.value);
-            world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, this.value);
         } else {
             world.setGameRuleValue("logAdminCommands", String.valueOf(this.value));
+        }
+    }
+
+    public void setCommandFeedBack(@NotNull World world) {
+        if (Utils.isCBXXXorLater("1.13")) {
+            world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, this.value);
+        } else {
             world.setGameRuleValue("sendCommandFeedback", String.valueOf(this.value));
         }
     }
 
     @NotNull
-    public static CommandLog get(@NotNull World world) {
-        Boolean value = null;
+    private static CommandLog getLogAdmin(@NotNull World world) { 
         if (Utils.isCBXXXorLater("1.13")) {
-            value = world.getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK);
+            return world.getGameRuleValue(GameRule.LOG_ADMIN_COMMANDS) ? TRUE : FALSE;
         } else {
-            value = Boolean.valueOf(world.getGameRuleValue("sendCommandFeedback"));
+            return Boolean.valueOf(world.getGameRuleValue("logAdminCommands")) ? TRUE : FALSE;
         }
-        return value == null ? FALSE : value ? TRUE : FALSE;
     }
 
-    public static void action(@NotNull World world, @NotNull Consumer<CommandLog> action) {
-        var oldValue = CommandLog.get(world);
+    @NotNull
+    public static CommandLog getCommandFeedBack(@NotNull World world) { 
+        if (Utils.isCBXXXorLater("1.13")) {
+            return world.getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK) ? TRUE : FALSE;
+        } else {
+            return Boolean.valueOf(world.getGameRuleValue("sendCommandFeedback")) ? TRUE : FALSE;
+        }
+    }
+
+    public static void action(@NotNull World world, @NotNull Runnable runnable) {
+        var logAdmin = CommandLog.getLogAdmin(world);
+        var commandFeedBack = CommandLog.getCommandFeedBack(world);
         try {
-            if (FALSE != oldValue) {
-                FALSE.set(world);
+            if (FALSE != logAdmin) {
+                FALSE.setLogAdmin(world);
             }
-            action.accept(oldValue);
+            if (FALSE != commandFeedBack) {
+                FALSE.setCommandFeedBack(world);
+            }
+            runnable.run();
         } finally {
-            oldValue.set(world);
+            logAdmin.setLogAdmin(world);
+            commandFeedBack.setCommandFeedBack(world);
         }
     }
 
     public static <T> T supplier(@NotNull World world, @NotNull Supplier<T> supplier) {
-        var oldValue = CommandLog.get(world);
+        var logAdmin = CommandLog.getLogAdmin(world);
+        var commandFeedBack = CommandLog.getCommandFeedBack(world);
         try {
-            if (FALSE != oldValue) {
-                FALSE.set(world);
+            if (FALSE != logAdmin) {
+                FALSE.setLogAdmin(world);
+            }
+            if (FALSE != commandFeedBack) {
+                FALSE.setCommandFeedBack(world);
             }
             return supplier.get();
         } finally {
-            oldValue.set(world);
+            logAdmin.setLogAdmin(world);
+            commandFeedBack.setCommandFeedBack(world);
         }
     }
 }
