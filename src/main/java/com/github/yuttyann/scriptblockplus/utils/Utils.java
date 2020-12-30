@@ -136,6 +136,7 @@ public final class Utils {
         return Objects.requireNonNull(world);
     }
 
+    @SuppressWarnings("deprecation")
     public static void updateInventory(@NotNull Player player) {
         player.updateInventory();
     }

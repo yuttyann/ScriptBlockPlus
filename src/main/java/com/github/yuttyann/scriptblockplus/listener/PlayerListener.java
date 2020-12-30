@@ -55,7 +55,7 @@ public class PlayerListener implements Listener {
                 sbPlayer.getInventory().setContents(items);
             } finally {
                 objectMap.remove(ItemCost.KEY_PLAYER);
-                sbPlayer.getPlayer().updateInventory();
+                Utils.updateInventory(sbPlayer.getPlayer());
             }
         }
     }

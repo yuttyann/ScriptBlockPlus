@@ -130,16 +130,6 @@ public final class BaseSBPlayer extends PlayerMap {
     }
 
     @Override
-    public void sendMessage(UUID uuid, String message) {
-        player.sendMessage(uuid, message);
-    }
-
-    @Override
-    public void sendMessage(UUID uuid, String[] messages) {
-        player.sendMessage(uuid, messages);
-    }
-
-    @Override
     @NotNull
     public PermissionAttachment addAttachment(@NotNull Plugin plugin) {
         return player.addAttachment(plugin);
@@ -212,10 +202,5 @@ public final class BaseSBPlayer extends PlayerMap {
     @Override
     public String toString() {
         return "BaseSBPlayer{uuid=" + uuid + ", player=" + player + ", isOnline=" + isOnline + '}';
-    }
-
-    @Override
-    public Spigot spigot() {
-        return player.spigot();
     }
 }
