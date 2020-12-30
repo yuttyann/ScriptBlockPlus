@@ -28,8 +28,8 @@ public class BlockScript {
     }
 
     public boolean has(@NotNull Location location) {
-        String fullCoords = BlockCoords.getFullCoords(location);
-        ScriptParam scriptParam = scripts.get(fullCoords);
+        var fullCoords = BlockCoords.getFullCoords(location);
+        var scriptParam = scripts.get(fullCoords);
         if (scriptParam == null) {
             return false;
         }
@@ -42,8 +42,8 @@ public class BlockScript {
 
     @NotNull
     public ScriptParam get(@NotNull Location location) {
-        String fullCoords = BlockCoords.getFullCoords(location);
-        ScriptParam scriptParam = scripts.get(fullCoords);
+        var fullCoords = BlockCoords.getFullCoords(location);
+        var scriptParam = scripts.get(fullCoords);
         if (scriptParam == null) {
             scripts.put(fullCoords, scriptParam = new ScriptParam());
         }

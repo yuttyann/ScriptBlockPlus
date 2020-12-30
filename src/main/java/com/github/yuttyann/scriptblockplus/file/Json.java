@@ -58,8 +58,8 @@ public abstract class Json<T> {
         // ファイル名等に使う
         this.id = id;
 
-        // アノテーションからパラメータを取得
-        JsonOptions jsonOptions = getClass().getAnnotation(JsonOptions.class);
+        // アノテーションを取得
+        var jsonOptions = getClass().getAnnotation(JsonOptions.class);
         this.file = getFile(jsonOptions);
         this.classes = jsonOptions.classes();
 
@@ -70,7 +70,7 @@ public abstract class Json<T> {
         } else {
             // JSONをデシリアライズ
             try {
-                Optional<Json<T>> json = Optional.ofNullable((Json<T>) loadFile());
+                var json = Optional.ofNullable((Json<T>) loadFile());
                 json.ifPresent(j -> list.addAll(Optional.ofNullable(j.oldList).orElseGet(() -> j.list)));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -88,30 +88,35 @@ public abstract class Json<T> {
         if (!file.exists()) {
             return null;
         }
-        File parent = file.getParentFile();
+        var parent = file.getParentFile();
         if (!parent.exists()) {
             parent.mkdirs();
         }
-        try (JsonReader reader = new JsonReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8))) {
-            GsonBuilder builder = new GsonBuilder().setExclusionStrategies(new FieldExclusion());
-            return builder.create().fromJson(reader, getClass());
+        try (var reader = new JsonReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8))) {
+            return new GsonBuilder().setExclusionStrategies(new FieldExclusion()).create().fromJson(reader, getClass());
         }
     }
 
     public void saveFile() {
-        File parent = file.getParentFile();
+        var parent = file.getParentFile();
         if (!parent.exists()) {
             parent.mkdirs();
         }
         try {
-            try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8))) {
+            try (var writer = new JsonWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8))) {
                 writer.setIndent("  ");
-
-                GsonBuilder builder = new GsonBuilder().setExclusionStrategies(new FieldExclusion());
-                builder.create().toJson(this, getClass(), writer);
+                new GsonBuilder().setExclusionStrategies(new FieldExclusion()).create().toJson(this, getClass(), writer);
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void deleteFile() {
+        try {
+            LIST_CACHE.remove(hashCode());
+        } finally {
+            file.delete();
         }
     }
 
@@ -133,7 +138,7 @@ public abstract class Json<T> {
             throw new IllegalArgumentException("Classes do not match " + equal);
         }
         int hash = hashCode(args);
-        Optional<T> value = list.stream().filter(t -> t.hashCode() == hash).findFirst();
+        var value = list.stream().filter(t -> t.hashCode() == hash).findFirst();
         if (!value.isPresent()) {
             T instance = newInstance(args);
             list.add(instance);
@@ -192,7 +197,7 @@ public abstract class Json<T> {
 
     @NotNull
     private File getFile(@NotNull JsonOptions jsonOptions) {
-        String path = jsonOptions.path() + SBFiles.S + jsonOptions.file();
+        var path = jsonOptions.path() + SBFiles.S + jsonOptions.file();
         path = StringUtils.replace(path, "/", SBFiles.S);
         path = StringUtils.replace(path, "{id}", id);
         return new File(ScriptBlock.getInstance().getDataFolder(), path);
@@ -200,9 +205,9 @@ public abstract class Json<T> {
 
     @NotNull
     public static List<String> getNameList(@NotNull Class<? extends Json<?>> jsonClass) {
-        JsonOptions jsonOptions = jsonClass.getAnnotation(JsonOptions.class);
-        File folder = new File(ScriptBlock.getInstance().getDataFolder(), jsonOptions.path());
-        List<String> list = new ArrayList<>();
+        var jsonOptions = jsonClass.getAnnotation(JsonOptions.class);
+        var folder = new File(ScriptBlock.getInstance().getDataFolder(), jsonOptions.path());
+        var list = new ArrayList<String>();
         if (folder.exists()) {
             int length = ".json".length();
             StreamUtils.forEach(folder.list(), s -> list.add(s.substring(0, s.length() - length)));
@@ -220,7 +225,7 @@ public abstract class Json<T> {
         if (!(obj instanceof Json)) {
             return false;
         }
-        Json<?> json = (Json<?>) obj;
+        var json = (Json<?>) obj;
         return Objects.equals(id, json.id) && Objects.equals(list, json.list);
     }
 }

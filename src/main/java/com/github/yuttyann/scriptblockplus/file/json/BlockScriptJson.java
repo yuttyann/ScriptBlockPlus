@@ -4,15 +4,11 @@ import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.SBLoader;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
-import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * ScriptBlockPlus BlockScriptJson クラス
@@ -26,12 +22,12 @@ public class BlockScriptJson extends Json<BlockScript> {
     }
 
     public static boolean has(@NotNull Location location, @NotNull ScriptType scriptType) {
-        BlockScriptJson blockScriptJson = new BlockScriptJson(scriptType);
-        return blockScriptJson.exists() && blockScriptJson.load().has(location);
+        var scriptJson = new BlockScriptJson(scriptType);
+        return scriptJson.exists() && scriptJson.load().has(location);
     }
 
-    public static boolean has(@NotNull Location location, @NotNull BlockScriptJson blockScriptJson) {
-        return blockScriptJson.exists() && blockScriptJson.load().has(location);
+    public static boolean has(@NotNull Location location, @NotNull BlockScriptJson scriptJson) {
+        return scriptJson.exists() && scriptJson.load().has(location);
     }
 
     @NotNull
@@ -47,32 +43,30 @@ public class BlockScriptJson extends Json<BlockScript> {
 
     public static void convart(@NotNull ScriptType scriptType) {
         // YAML形式のファイルからデータを読み込むクラス
-        SBLoader scriptLoader = new SBLoader(scriptType);
+        var scriptLoader = new SBLoader(scriptType);
         if (!scriptLoader.getFile().exists()) {
             return;
         }
-
-        // JSON
-        Json<BlockScript> json = new BlockScriptJson(scriptType);
-        BlockScript blockScript = json.load();
+        // JSONを作成
+        var scriptJson = new BlockScriptJson(scriptType);
+        var blockScript = scriptJson.load();
         scriptLoader.forEach(s -> {
-
             // 移行の為、パラメータを設定する
-            List<UUID> author = s.getAuthors();
+            var author = s.getAuthors();
             if (author.size() == 0) {
                 return;
             }
-            ScriptParam scriptParam = blockScript.get(s.getLocation());
-            scriptParam.setAuthor(new LinkedHashSet<>(s.getAuthors()));
+            var scriptParam = blockScript.get(s.getLocation());
+            scriptParam.setAuthor(new LinkedHashSet<>(author));
             scriptParam.setScript(s.getScripts());
             scriptParam.setLastEdit(s.getLastEdit());
             scriptParam.setAmount(s.getAmount());
         });
-        json.saveFile();
+        scriptJson.saveFile();
 
         // 移行完了後にファイルとディレクトリを削除する
         scriptLoader.getFile().delete();
-        File parent = scriptLoader.getFile().getParentFile();
+        var parent = scriptLoader.getFile().getParentFile();
         if (parent.isDirectory() && parent.list().length == 0) {
             parent.delete();
         }

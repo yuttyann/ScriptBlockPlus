@@ -41,26 +41,26 @@ public class PlayerCountJson extends Json<PlayerCount> {
     }
 
     public static void clear(@NotNull Set<Location> locations, @NotNull ScriptType scriptType) {
-        Object[] args = { (Location) null, scriptType };
+        var args = new Object[] { (Location) null, scriptType };
         for (String id : Json.getNameList(PlayerCountJson.class)) {
-            Json<PlayerCount> json = new PlayerCountJson(UUID.fromString(id));
-            if (!json.exists()) {
+            var countJson = new PlayerCountJson(UUID.fromString(id));
+            if (!countJson.exists()) {
                 continue;
             }
             boolean modifiable = false;
-            for (Location location : locations) {
+            for (var location : locations) {
                 args[0] = location;
-                if (!json.has(args)) {
+                if (!countJson.has(args)) {
                     continue;
                 }
-                PlayerCount playerCount = json.load(args);
+                var playerCount = countJson.load(args);
                 if (playerCount.getAmount() > 0) {
                     modifiable = true;
-                    json.remove(playerCount);
+                    countJson.remove(playerCount);
                 }
             }
             if (modifiable) {
-                json.saveFile();
+                countJson.saveFile();
             }
         }
     }
