@@ -5,7 +5,7 @@ description: ${project.description}
 author: yuttyann44581
 website: ${project.url}
 api-version: 1.13
-softdepend: [Vault, ScriptBlock, PsudoCommand, ProtocolLib, PlaceholderAPI]
+softdepend: [Vault, ScriptBlock, ProtocolLib, PlaceholderAPI]
 
 commands:
   scriptblockplus:
