@@ -31,7 +31,7 @@ public class RayTrace {
         } else {
             var eyeLocation = player.getEyeLocation();
             var direction = new SBVector(eyeLocation.getDirection()).normalize().multiply(distance);
-			var start = new SBVector(eyeLocation.toVector());
+            var start = new SBVector(eyeLocation.toVector());
             var end = start.add(direction.getX(), direction.getY(), direction.getZ());
             try {
                 var vec3d1 = start.toNMSVec3D();

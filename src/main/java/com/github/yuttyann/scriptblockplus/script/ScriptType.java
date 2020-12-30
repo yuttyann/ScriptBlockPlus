@@ -124,7 +124,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
         return StreamUtils.toArray(TYPES.values(), t -> t.name, String[]::new);
     }
 
-	/**
+    /**
      * スクリプトの種類の配列を作成します。
      * @return スクリプトの種類の配列
      */
