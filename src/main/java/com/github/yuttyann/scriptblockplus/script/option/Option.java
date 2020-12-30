@@ -24,7 +24,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
     private int ordinal = -1;
 
     {
-        OptionTag optionTag = getClass().getAnnotation(OptionTag.class);
+        var optionTag = getClass().getAnnotation(OptionTag.class);
         if (optionTag == null) {
             throw new NullPointerException("Annotation not found [OptionTag]");
         }
@@ -133,7 +133,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj instanceof Option) {
-            Option option = (Option) obj;
+            var option = (Option) obj;
             return name.equals(option.getName()) && syntax.equals(option.getSyntax());
         }
         return false;

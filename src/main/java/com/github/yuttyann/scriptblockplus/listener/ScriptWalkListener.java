@@ -9,7 +9,6 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,16 +22,16 @@ public class ScriptWalkListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerMove(PlayerMoveEvent event) {
-        SBPlayer sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
-        BlockCoords blockCoords = new BlockCoords(sbPlayer.getLocation()).subtract(0, 1, 0);
+        var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
+        var blockCoords = new BlockCoords(sbPlayer.getLocation()).subtract(0, 1, 0);
         if (blockCoords.equals(sbPlayer.getOldBlockCoords().orElse(null))) {
             return;
         } else {
             sbPlayer.setOldBlockCoords(blockCoords);
         }
-        Location location = blockCoords.toLocation();
+        var location = blockCoords.toLocation();
         if (BlockScriptJson.has(location, ScriptType.WALK)) {
-            ScriptBlockWalkEvent walkEvent = new ScriptBlockWalkEvent(sbPlayer.getPlayer(), location.getBlock());
+            var walkEvent = new ScriptBlockWalkEvent(sbPlayer.getPlayer(), location.getBlock());
             Bukkit.getPluginManager().callEvent(walkEvent);
             if (walkEvent.isCancelled()) {
                 return;

@@ -4,8 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.EnumWrappers.ChatType;
 import com.github.yuttyann.scriptblockplus.hook.HookPlugin;
@@ -31,8 +29,8 @@ public class ProtocolLib extends HookPlugin {
     }
 
     public void sendActionBar(@NotNull Player player, @NotNull String text) throws InvocationTargetException {
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        PacketContainer chat = protocolManager.createPacket(PacketType.Play.Server.CHAT);
+        var protocolManager = ProtocolLibrary.getProtocolManager();
+        var chat = protocolManager.createPacket(PacketType.Play.Server.CHAT);
         if (Utils.isCBXXXorLater("1.12")) {
             chat.getChatTypes().write(0, ChatType.GAME_INFO);
         } else {

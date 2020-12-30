@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.script;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
@@ -22,16 +21,16 @@ import java.util.stream.Collectors;
 public final class SBOperation {
 
     private final ScriptType scriptType;
-    private final BlockScriptJson blockScriptJson;
+    private final BlockScriptJson scriptJson;
 
     public SBOperation(@NotNull ScriptType scriptType) {
         this.scriptType = scriptType;
-        this.blockScriptJson = new BlockScriptJson(scriptType);
+        this.scriptJson = new BlockScriptJson(scriptType);
     }
 
     @NotNull
     public BlockScriptJson getBlockScriptJson() {
-        return blockScriptJson;
+        return scriptJson;
     }
 
     @NotNull
@@ -40,17 +39,16 @@ public final class SBOperation {
     }
 
     public boolean exists() {
-        return blockScriptJson.exists();
+        return scriptJson.exists();
     }
 
     public void save() {
-        blockScriptJson.saveFile();
+        scriptJson.saveFile();
     }
 
     @NotNull
     public String getAuthors(@NotNull ScriptParam scriptParam) {
-        Set<UUID> author = scriptParam.getAuthor();
-        return author.stream().map(Utils::getName).collect(Collectors.joining(", "));
+        return scriptParam.getAuthor().stream().map(Utils::getName).collect(Collectors.joining(", "));
     }
 
     public void create(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
@@ -66,11 +64,11 @@ public final class SBOperation {
     public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
         TimerOption.removeAll(location, scriptType);
         PlayerCountJson.clear(location, scriptType);
-        ScriptParam scriptParam = blockScriptJson.load().get(location);
+        ScriptParam scriptParam = scriptJson.load().get(location);
         scriptParam.getAuthor().add(player.getUniqueId());
         scriptParam.setScript(Collections.singletonList(script));
         scriptParam.setLastEdit(Utils.getFormatTime());
-        blockScriptJson.saveFile();
+        scriptJson.saveFile();
         SBConfig.SCRIPT_CREATE.replace(scriptType).send(player);
         SBConfig.CONSOLE_SCRIPT_CREATE.replace(player.getName(), location, scriptType).console();
     }
@@ -86,16 +84,16 @@ public final class SBOperation {
     }
 
     public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-        if (!BlockScriptJson.has(location, blockScriptJson)) {
+        if (!BlockScriptJson.has(location, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
         TimerOption.removeAll(location, scriptType);
-        ScriptParam scriptParam = blockScriptJson.load().get(location);
+        ScriptParam scriptParam = scriptJson.load().get(location);
         scriptParam.getAuthor().add(player.getUniqueId());
         scriptParam.getScript().add(script);
         scriptParam.setLastEdit(Utils.getFormatTime());
-        blockScriptJson.saveFile();
+        scriptJson.saveFile();
         SBConfig.SCRIPT_ADD.replace(scriptType).send(player);
         SBConfig.CONSOLE_SCRIPT_ADD.replace(player.getName(), location, scriptType).console();
     }
@@ -110,14 +108,14 @@ public final class SBOperation {
     }
 
     public void remove(@NotNull Player player, @NotNull Location location) {
-        if (!BlockScriptJson.has(location, blockScriptJson)) {
+        if (!BlockScriptJson.has(location, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
         TimerOption.removeAll(location, scriptType);
         PlayerCountJson.clear(location, scriptType);
-        blockScriptJson.load().remove(location);
-        blockScriptJson.saveFile();
+        scriptJson.load().remove(location);
+        scriptJson.saveFile();
         SBConfig.SCRIPT_REMOVE.replace(scriptType).send(player);
         SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), location, scriptType).console();
     }
@@ -132,12 +130,12 @@ public final class SBOperation {
     }
 
     public void view(@NotNull Player player, @NotNull Location location) {
-        if (!BlockScriptJson.has(location, blockScriptJson)) {
+        if (!BlockScriptJson.has(location, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        ScriptParam scriptParam = blockScriptJson.load().get(location);
-        PlayerCount playerCount = new PlayerCountJson(player.getUniqueId()).load(location, scriptType);
+        var scriptParam = scriptJson.load().get(location);
+        var playerCount = new PlayerCountJson(player.getUniqueId()).load(location, scriptType);
         player.sendMessage("Author: " + getAuthors(scriptParam));
         player.sendMessage("LastEdit: " + scriptParam.getLastEdit());
         player.sendMessage("Execute: " + playerCount.getAmount());
@@ -147,6 +145,6 @@ public final class SBOperation {
 
     @NotNull
     public SBClipboard clipboard(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
-        return new SBClipboard(sbPlayer, location, blockScriptJson);
+        return new SBClipboard(sbPlayer, location, scriptJson);
     }
 }

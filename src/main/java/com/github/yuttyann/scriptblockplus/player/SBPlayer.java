@@ -40,7 +40,7 @@ public interface SBPlayer extends CommandSender {
      */
     @NotNull
     static SBPlayer fromUUID(@NotNull UUID uuid) {
-        BaseSBPlayer sbPlayer = BaseSBPlayer.getSBPlayers().get(uuid);
+        var sbPlayer = BaseSBPlayer.getSBPlayers().get(uuid);
         if (sbPlayer == null) {
             BaseSBPlayer.getSBPlayers().put(uuid, sbPlayer = new BaseSBPlayer(uuid));
         }

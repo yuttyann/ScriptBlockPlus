@@ -113,7 +113,7 @@ public class ConfigKeys {
         @Override
         @NotNull
         public ReplaceKey replace(@NotNull Object... replaces) {
-            FunctionalReplaceKey replaceKey = new FunctionalReplaceKey(getConfigKey(), function);
+            var replaceKey = new FunctionalReplaceKey(getConfigKey(), function);
             replaceKey.args = replaces;
             replaceKey.result = replaceKey.function.apply(replaceKey);
             return replaceKey;

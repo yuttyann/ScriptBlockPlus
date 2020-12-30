@@ -24,7 +24,7 @@ public class EndMoneyCost implements EndProcess {
 
     @Override
     public void failed(@NotNull SBRead sbRead) {
-        VaultEconomy economy = VaultEconomy.INSTANCE;
+        var economy = VaultEconomy.INSTANCE;
         if (economy.isEnabled() && sbRead.has(MoneyCost.KEY)) {
             economy.depositPlayer(sbRead.getSBPlayer().getOfflinePlayer(), sbRead.getDouble(MoneyCost.KEY));
         }

@@ -2,14 +2,13 @@ package com.github.yuttyann.scriptblockplus.listener.item.action.task;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.listener.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Color;
@@ -30,29 +29,24 @@ public abstract class BlockRunnable extends BukkitRunnable {
 
     @Override
     public final void run() {
-        for (UUID uuid : ScriptViewer.PLAYERS) {
-            SBPlayer sbPlayer = SBPlayer.fromUUID(uuid);
-            if (sbPlayer.isOnline()) {
-                run(sbPlayer);
-            }
-        }
+        ScriptViewer.PLAYERS.forEach(p -> StreamUtils.ifAction(p.isOnline(), () -> run(p)));
     }
 
     protected abstract void run(@NotNull SBPlayer player);
 
     @NotNull
     public Set<Block> getBlocks(@NotNull CuboidRegionBlocks regionBlocks) {
-        Set<Block> set = new HashSet<>();
-        Set<Block> blocks = regionBlocks.getBlocks();
-        for (ScriptType scriptType : ScriptType.values()) {
-            BlockScript blockScript = new BlockScriptJson(scriptType).load();
-            for (Block block : blocks) {
+        var result = new HashSet<Block>();
+        var blocks = regionBlocks.getBlocks();
+        for (var scriptType : ScriptType.values()) {
+            var blockScript = new BlockScriptJson(scriptType).load();
+            for (var block : blocks) {
                 if (blockScript.has(block.getLocation())) {
-                    set.add(block);
+                    result.add(block);
                 }
             }
         }
-        return set;
+        return result;
     }
 
     public void spawnParticlesOnBlock(@NotNull Player player, @NotNull Block block, @Nullable Color color) {
@@ -61,7 +55,7 @@ public abstract class BlockRunnable extends BukkitRunnable {
         }
         double x = block.getX(), y = block.getY(), z = block.getZ(), a = 1;
         if (Utils.isCBXXXorLater("1.13")) {
-            DustOptions dust = new DustOptions(color, 1);
+            var dust = new DustOptions(color, 1);
             player.spawnParticle(Particle.REDSTONE, x, y, z, 0, 0, 0, 0, dust);
             player.spawnParticle(Particle.REDSTONE, x + a, y, z, 0, 0, 0, 0, dust);
             player.spawnParticle(Particle.REDSTONE, x + a, y, z + a, 0, 0, 0, 0, dust);

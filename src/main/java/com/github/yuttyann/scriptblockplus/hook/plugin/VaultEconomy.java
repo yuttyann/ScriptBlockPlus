@@ -2,11 +2,9 @@ package com.github.yuttyann.scriptblockplus.hook.plugin;
 
 import com.github.yuttyann.scriptblockplus.hook.HookPlugin;
 import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,12 +16,12 @@ public final class VaultEconomy extends HookPlugin {
 
     public static final VaultEconomy INSTANCE = VaultEconomy.setupEconomy();
 
-    private final Economy economy;
     private final String name;
+    private final Economy economy;
 
     private VaultEconomy(@Nullable Economy economy) {
-        this.economy = economy;
         this.name = economy == null ? "None" : economy.getName();
+        this.economy = economy;
     }
 
     @Override
@@ -33,11 +31,10 @@ public final class VaultEconomy extends HookPlugin {
     }
 
     @NotNull
-    static VaultEconomy setupEconomy() {
-        ServicesManager services = Bukkit.getServicesManager();
-        RegisteredServiceProvider<Economy> provider = services.getRegistration(Economy.class);
+    private static VaultEconomy setupEconomy() {
+        var provider = Bukkit.getServicesManager().getRegistration(Economy.class);
         if (provider != null) {
-            VaultEconomy vault = new VaultEconomy(provider.getProvider());
+            var vault = new VaultEconomy(provider.getProvider());
             if (vault.isEnabled()) {
                 return vault;
             }
@@ -63,13 +60,11 @@ public final class VaultEconomy extends HookPlugin {
     }
 
     public boolean withdrawPlayer(@NotNull OfflinePlayer player, double amount) {
-        EconomyResponse response = economy.withdrawPlayer(player, amount);
-        return response.transactionSuccess();
+        return economy.withdrawPlayer(player, amount).transactionSuccess();
     }
 
     public boolean depositPlayer(@NotNull OfflinePlayer player, double amount) {
-        EconomyResponse response = economy.depositPlayer(player, amount);
-        return response.transactionSuccess();
+        return economy.depositPlayer(player, amount).transactionSuccess();
     }
 
     public boolean setPlayer(@NotNull OfflinePlayer player, double amount) {

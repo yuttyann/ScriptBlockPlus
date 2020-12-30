@@ -93,8 +93,8 @@ public enum PackageType {
     }
 
     public Field getField(boolean declared, @NotNull String className, @NotNull String fieldName) throws ReflectiveOperationException {
-        String key = createKey(ReturnType.FIELD, className, fieldName, null);
-        Field field = (Field) CACHE.get(key);
+        var key = createKey(ReturnType.FIELD, className, fieldName, null);
+        var field = (Field) CACHE.get(key);
         if (field == null) {
             if (declared) {
                 field = getClass(className).getDeclaredField(fieldName);
@@ -137,8 +137,8 @@ public enum PackageType {
         if (parameterTypes == null) {
             parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        String key = createKey(ReturnType.METHOD, className, methodName, parameterTypes);
-        Method method = (Method) CACHE.get(key);
+        var key = createKey(ReturnType.METHOD, className, methodName, parameterTypes);
+        var method = (Method) CACHE.get(key);
         if (method == null) {
             if (declared) {
                 method = getClass(className).getDeclaredMethod(methodName, parameterTypes);
@@ -161,7 +161,7 @@ public enum PackageType {
 
     public Object newInstance(boolean declared, @NotNull String className, @Nullable Object... arguments) throws ReflectiveOperationException {
         if (arguments == null || arguments.length == 0) {
-            return getClass(className).newInstance();
+            return getClass(className).getConstructor(ArrayUtils.EMPTY_CLASS_ARRAY).newInstance();
         }
         return getConstructor(declared, className, ClassType.getPrimitive(arguments)).newInstance(arguments);
     }
@@ -178,8 +178,8 @@ public enum PackageType {
         if (parameterTypes == null) {
             parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        String key = createKey(ReturnType.CONSTRUCTOR, className, null, parameterTypes);
-        Constructor<?> constructor = (Constructor<?>) CACHE.get(key);
+        var key = createKey(ReturnType.CONSTRUCTOR, className, null, parameterTypes);
+        var constructor = (Constructor<?>) CACHE.get(key);
         if (constructor == null) {
             if (declared) {
                 constructor = getClass(className).getDeclaredConstructor(parameterTypes);
@@ -193,23 +193,21 @@ public enum PackageType {
     }
 
     public static void sendActionBar(@NotNull Player player, @NotNull String text) throws ReflectiveOperationException {
-        String chatSerializer = "IChatBaseComponent$ChatSerializer";
-        Method a = NMS.getMethod(chatSerializer, "a", String.class);
-        Object component = a.invoke(null, "{\"text\": \"" + text + "\"}");
-        Object arg = (byte) 2;
-        Class<?>[] classes = { NMS.getClass("IChatBaseComponent"), byte.class };
+        var chatSerializer = "IChatBaseComponent$ChatSerializer";
+        var component = NMS.invokeMethod(null, chatSerializer, "a", "{\"text\": \"" + text + "\"}");
+        var classes = new Class<?>[] { NMS.getClass("IChatBaseComponent"), byte.class };
+        Object value = (byte) 2;
         if (Utils.isCBXXXorLater("1.12")) {
-            arg = NMS.getEnumValueOf("ChatMessageType", "GAME_INFO");
-            classes[1] = arg.getClass();
+            value = NMS.getEnumValueOf("ChatMessageType", "GAME_INFO");
+            classes[1] = value.getClass();
         }
-        Constructor<?> packetPlayOutChat = NMS.getConstructor("PacketPlayOutChat", classes);
-        sendPacket(player, packetPlayOutChat.newInstance(component, arg));
+        sendPacket(player, NMS.getConstructor("PacketPlayOutChat", classes).newInstance(component, value));
     }
 
     public static void sendPacket(@NotNull Player player, @NotNull Object packet) throws ReflectiveOperationException {
-        Class<?> packetClass = NMS.getClass("Packet");
-        Object handle = CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
-        Object connection = NMS.getField("EntityPlayer", "playerConnection").get(handle);
+        var packetClass = NMS.getClass("Packet");
+        var handle = CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
+        var connection = NMS.getField("EntityPlayer", "playerConnection").get(handle);
         NMS.getMethod("PlayerConnection", "sendPacket", packetClass).invoke(connection, packet);
     }
 
@@ -217,9 +215,9 @@ public enum PackageType {
         if (StringUtils.isEmpty(className)) {
             throw new IllegalArgumentException();
         }
-        String pass = this + "." + className;
-        String key = ReturnType.CLASS + pass;
-        Class<?> clazz = (Class<?>) CACHE.get(key);
+        var pass = this + "." + className;
+        var key = ReturnType.CLASS + pass;
+        var clazz = (Class<?>) CACHE.get(key);
         if (clazz == null) {
             clazz = Class.forName(pass);
             CACHE.put(key, clazz);
@@ -236,7 +234,7 @@ public enum PackageType {
         if (StringUtils.isEmpty(className)) {
             return "null";
         }
-        String rName = returnType + "";
+        var rName = returnType + "";
         int lastLength = objects == null ? -1 : objects.length - 1;
         if (lastLength == -1) {
             if (name != null) {
@@ -244,7 +242,7 @@ public enum PackageType {
             }
             return rName + this + "." + className;
         }
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         boolean notEmptyName = StringUtils.isNotEmpty(name);
         builder.append(rName).append(this).append('.').append(className).append(notEmptyName ? '=' : '[');
         if (notEmptyName) {
@@ -262,7 +260,7 @@ public enum PackageType {
 
     @NotNull
     public static String getVersionName() {
-        String name = Bukkit.getServer().getClass().getPackage().getName();
+        var name = Bukkit.getServer().getClass().getPackage().getName();
         return name.substring(name.lastIndexOf('.') + 1);
     }
 

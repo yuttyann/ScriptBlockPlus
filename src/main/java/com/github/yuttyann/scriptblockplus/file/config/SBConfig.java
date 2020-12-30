@@ -23,14 +23,12 @@ import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 public final class SBConfig {
 
     // List Keys
-    public static final ConfigKey<List<String>> PLATFORMS = stringListKey("Platforms", new ArrayList<>());
     public static final ConfigKey<List<String>> BLOCK_SELECTOR = stringListKey("BlockSelector", new ArrayList<>());
     public static final ConfigKey<List<String>> SCRIPT_EDITOR = stringListKey("ScriptEditor", new ArrayList<>());
     public static final ConfigKey<List<String>> SCRIPT_VIEWER = stringListKey("ScriptViewer", new ArrayList<>());
 
 
     // Boolean Keys
-    /* public static final ConfigKey<Boolean> SBP_API_VERSION = booleanKey("SBP-API-Version", true); */
     public static final ConfigKey<Boolean> UPDATE_CHECKER = booleanKey("UpdateChecker", true);
     public static final ConfigKey<Boolean> AUTO_DOWNLOAD = booleanKey("AutoDownload", true);
     public static final ConfigKey<Boolean> OPEN_CHANGE_LOG = booleanKey("OpenChangeLog", true);
@@ -80,7 +78,7 @@ public final class SBConfig {
 
     // Functions (Private)
     private static Function<ReplaceKey, String> FUNCTION_UPDATE_CHECK = r -> {
-        String s = r.getValue();
+        var s = r.getValue();
         s = replace(s, "%pluginname%", r.getArg(0, String.class));
         s = replace(s, "%latestversion%", r.getArg(1, String.class));
         if (s.contains("%details%")) {
@@ -102,17 +100,17 @@ public final class SBConfig {
     };
 
     private static Function<ReplaceKey, String> FUNCTION_OPTION_FAILED = r -> {
-        Throwable t = r.getArg(1, Throwable.class);
-        String s = r.getValue();
+        var t = r.getArg(1, Throwable.class);
+        var s = r.getValue();
         s = replace(s, "%option%", r.getArg(0, Option.class).getName());
         s = replace(s, "%cause%", t.getClass().getSimpleName() + (t.getMessage() == null ? "" : " \"" + t.getMessage() + "\""));
         return s;
     };
 
     private static Function<ReplaceKey, String> FUNCTION_ITEM = r -> {
-        Material m = r.getArg(0, Material.class);
-        String n = r.getArg(3, String.class);
-        String s = r.getValue();
+        var m = r.getArg(0, Material.class);
+        var n = r.getArg(3, String.class);
+        var s = r.getValue();
         s = replace(s, "%material%", String.valueOf(m));
         s = replace(s, "%amount%", r.getArg(1, Integer.class));
         s = replace(s, "%damage%", r.getArg(2, Integer.class));
@@ -121,8 +119,8 @@ public final class SBConfig {
     };
 
     private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SCRIPT = r -> {
-        Location l = r.getArg(1, Location.class);
-        String s = r.getValue();
+        var l = r.getArg(1, Location.class);
+        var s = r.getValue();
         s = replace(s, "%player%", r.getArg(0, String.class));
         s = replace(s, "%scripttype%", r.getArg(2, ScriptType.class).type());
         s = replace(s, "%world%", Objects.requireNonNull(l.getWorld()).getName());
@@ -131,8 +129,8 @@ public final class SBConfig {
     };
 
     private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SELECTOR = r -> {
-        CuboidRegionBlocks c = r.getArg(1, CuboidRegionBlocks.class);
-        String s = r.getValue();
+        var c = r.getArg(1, CuboidRegionBlocks.class);
+        var s = r.getValue();
         s = replace(s, "%scripttype%", r.getArg(0, String.class));
         s = replace(s, "%blockcount%", c.getCount());
         s = replace(s, "%world%", c.getWorld().getName());

@@ -1,7 +1,11 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
+import java.util.Arrays;
+
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,7 +71,8 @@ public enum Permission {
 
     @NotNull
     public static String[] getTypeNodes(boolean isCMDorUse) {
-        return ScriptType.toArray(t -> getTypeNode(t, isCMDorUse), new String[ScriptType.size()]);
+        var values = Arrays.asList(ScriptType.values());
+        return StreamUtils.toArray(values, t -> getTypeNode(t, isCMDorUse), String[]::new);
     }
 
     @NotNull

@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
-import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
@@ -16,7 +15,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.stream.Collectors;
 
 /**
  * ScriptBlockPlus ActionBar オプションクラス
@@ -55,15 +53,12 @@ public class ActionBar extends BaseOption {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-        } else if (Utils.isPlatform()) {
+        } else {
             try {
                 PackageType.sendActionBar(sbPlayer.getPlayer(), message);
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }
-        } else {
-            String platforms = SBConfig.PLATFORMS.getValue().stream().map(String::valueOf).collect(Collectors.joining(", "));
-            throw new UnsupportedOperationException("Unsupported server. | Supported Servers <" + platforms + ">");
         }
     }
 

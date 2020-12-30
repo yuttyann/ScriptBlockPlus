@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * ScriptBlockPlus ScriptViewer クラス
@@ -28,7 +27,7 @@ import java.util.UUID;
  */
 public class ScriptViewer extends ItemAction {
 
-    public static final Set<UUID> PLAYERS = new HashSet<>();
+    public static final Set<SBPlayer> PLAYERS = new HashSet<>();
 
     static {
         if (ProtocolLib.INSTANCE.has()) {
@@ -55,16 +54,16 @@ public class ScriptViewer extends ItemAction {
 
     @Override
     public void run(@NotNull RunItem runItem) {
-        SBPlayer sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
+        var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
         switch (runItem.getAction()) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
-                PLAYERS.add(sbPlayer.getUniqueId());
+                PLAYERS.add(sbPlayer);
                 SBConfig.SCRIPT_VIEWER_START.send(sbPlayer);
                 break;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
-                PLAYERS.remove(sbPlayer.getUniqueId());
+                PLAYERS.remove(sbPlayer);
                 StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> ProtocolLib.GLOW_ENTITY.destroyAll(sbPlayer));
                 SBConfig.SCRIPT_VIEWER_STOP.send(sbPlayer);
                 break;

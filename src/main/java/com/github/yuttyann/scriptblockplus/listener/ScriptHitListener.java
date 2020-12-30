@@ -1,26 +1,22 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.ScriptBlockHitEvent;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.BlockIterator;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,20 +30,24 @@ public class ScriptHitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onProjectileHit(ProjectileHitEvent event) {
-        Block block = getHitBlock(event);
-        ProjectileSource shooter = event.getEntity().getShooter();
+        var block = getHitBlock(event);
+        var shooter = event.getEntity().getShooter();
         if (block == null || !(shooter instanceof Player)) {
             return;
         }
-        Location location = block.getLocation();
+        var location = block.getLocation();
         if (BlockScriptJson.has(location, ScriptType.HIT)) {
-            Player player = (Player) shooter;
+            var player = (Player) shooter;
             if (isTwice(player)) {
                 return;
             }
-            ScriptBlockHitEvent hitEvent = new ScriptBlockHitEvent(player, block);
+            var hitEvent = new ScriptBlockHitEvent(player, block);
             Bukkit.getServer().getPluginManager().callEvent(hitEvent);
             if (hitEvent.isCancelled()) {
+                return;
+            }
+            if (!Permission.has(player, ScriptType.HIT, false)) {
+                SBConfig.NOT_PERMISSION.send(player);
                 return;
             }
             new ScriptRead(player, location, ScriptType.HIT).read(0);
@@ -58,7 +58,7 @@ public class ScriptHitListener implements Listener {
         if (!Utils.isCBXXXorLater("1.16")) {
             return false;
         }
-        ObjectMap objectMap = SBPlayer.fromPlayer(player).getObjectMap();
+        var objectMap = SBPlayer.fromPlayer(player).getObjectMap();
         if (objectMap.getBoolean(KEY_HIT)) {
             objectMap.remove(KEY_HIT);
             return true;
@@ -73,11 +73,9 @@ public class ScriptHitListener implements Listener {
         if (Stream.of(event.getClass().getMethods()).anyMatch(isGetHitBlock)) {
             return event.getHitBlock();
         }
-        Projectile projectile = event.getEntity();
-        World world = projectile.getWorld();
-        Vector start = projectile.getLocation().toVector();
-        Vector direction = projectile.getVelocity().normalize();
-        BlockIterator iterator = new BlockIterator(world, start, direction, 0.0D, 4);
+        var start = event.getEntity().getLocation().toVector();
+        var direction = event.getEntity().getVelocity().normalize();
+        var iterator = new BlockIterator(event.getEntity().getWorld(), start, direction, 0.0D, 4);
         Block hitBlock = null;
         while (iterator.hasNext()) {
             hitBlock = iterator.next();

@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.listener;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
@@ -14,15 +13,14 @@ import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.listener.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
-import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
+import com.github.yuttyann.scriptblockplus.script.endprocess.EndInventory;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,8 +29,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * ScriptBlockPlus JoinQuitListener クラス
@@ -44,30 +40,30 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        BaseSBPlayer sbPlayer = (BaseSBPlayer) SBPlayer.fromPlayer(event.getPlayer());
-        sbPlayer.setOnline(true);
+        var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
+        ((BaseSBPlayer) sbPlayer).setOnline(true);
         if (!sbPlayer.getOldBlockCoords().isPresent()) {
             sbPlayer.setOldBlockCoords(new BlockCoords(sbPlayer.getLocation()).subtract(0, 1, 0));
         }
         if (sbPlayer.isOp()) {
             ScriptBlock.getInstance().checkUpdate(sbPlayer, false);
         }
-        ObjectMap objectMap = sbPlayer.getObjectMap();
-        if (objectMap.has(ItemCost.KEY_PLAYER)) {
+        var objectMap = sbPlayer.getObjectMap();
+        var items = objectMap.get(ItemCost.KEY_PLAYER, EndInventory.EMPTY_ARRAY);
+        if (items.length > 0) {
             try {
-                Inventory inventory = sbPlayer.getInventory();
-                inventory.setContents(objectMap.get(ItemCost.KEY_PLAYER, new ItemStack[0]));
+                sbPlayer.getInventory().setContents(items);
             } finally {
                 objectMap.remove(ItemCost.KEY_PLAYER);
-                Utils.updateInventory(sbPlayer.getPlayer());
+                sbPlayer.getPlayer().updateInventory();
             }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        SBPlayer sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
-        CuboidRegion cuboidRegion = (CuboidRegion) sbPlayer.getRegion();
+        var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
+        var cuboidRegion = (CuboidRegion) sbPlayer.getRegion();
         sbPlayer.setScriptLine(null);
         sbPlayer.setScriptEdit(null);
         sbPlayer.setSBClipboard(null);
@@ -75,7 +71,7 @@ public class PlayerListener implements Listener {
         cuboidRegion.setVector1(null);
         cuboidRegion.setVector2(null);
         try {
-            ScriptViewer.PLAYERS.remove(sbPlayer.getUniqueId());
+            ScriptViewer.PLAYERS.remove(sbPlayer);
             StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> ProtocolLib.GLOW_ENTITY.destroyAll(sbPlayer));
         } finally {
             ((BaseSBPlayer) sbPlayer).setOnline(false);
@@ -84,22 +80,22 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerItemHeld(PlayerItemHeldEvent event) {
-        Player player = event.getPlayer();
-        ItemStack oldSlot = player.getInventory().getItem(event.getPreviousSlot());
+        var player = event.getPlayer();
+        var oldSlot = player.getInventory().getItem(event.getPreviousSlot());
         if (ItemAction.has(player, oldSlot, true)) {
             ActionBar.send(SBPlayer.fromPlayer(player), "");
         }
-        ItemStack newSlot = player.getInventory().getItem(event.getNewSlot());
+        var newSlot = player.getInventory().getItem(event.getNewSlot());
         ItemAction.callSlot(player, newSlot, event.getNewSlot(), event.getPreviousSlot());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
-        Optional<Inventory> inventory = Optional.ofNullable(event.getClickedInventory());
+        var inventory = Optional.ofNullable(event.getClickedInventory());
         if (!inventory.isPresent() || inventory.get().getType() != InventoryType.PLAYER) {
             return;
         }
-        SBPlayer sbPlayer = SBPlayer.fromUUID(event.getWhoClicked().getUniqueId());
+        var sbPlayer = SBPlayer.fromUUID(event.getWhoClicked().getUniqueId());
         if (sbPlayer.getObjectMap().get(KEY_INVENTORY, Collections.EMPTY_SET).size() > 0) {
             event.setCancelled(true);
         }
@@ -107,15 +103,15 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onScriptReadStart(ScriptReadStartEvent event) {
-        ObjectMap objectMap = event.getSBRead().getSBPlayer().getObjectMap();
-        Set<UUID> set = objectMap.get(KEY_INVENTORY, new HashSet<>());
-        set.add(event.getUniqueId());
-        objectMap.put(KEY_INVENTORY, set);
+        var objectMap = event.getSBRead().getSBPlayer().getObjectMap();
+        var uuids = objectMap.get(KEY_INVENTORY, new HashSet<UUID>());
+        uuids.add(event.getUniqueId());
+        objectMap.put(KEY_INVENTORY, uuids);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onScriptEndStart(ScriptReadEndEvent event) {
-        ObjectMap objectMap = event.getSBRead().getSBPlayer().getObjectMap();
+        var objectMap = event.getSBRead().getSBPlayer().getObjectMap();
         objectMap.get(KEY_INVENTORY, new HashSet<>()).remove(event.getUniqueId());
     }
 }

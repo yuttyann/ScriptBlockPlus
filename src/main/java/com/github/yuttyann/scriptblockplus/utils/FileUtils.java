@@ -12,6 +12,7 @@ import java.net.URLConnection;
 
 /**
  * ScriptBlockPlus FileUtils クラス
+ * 
  * @author yuttyann44581
  */
 public final class FileUtils {
@@ -34,48 +35,44 @@ public final class FileUtils {
         }
     }
 
-    public static void copyFileFromPlugin(@NotNull Plugin plugin, @NotNull File targetFile, @NotNull String sourceFilePath) {
+    public static void copyFileFromPlugin(@NotNull Plugin plugin, @NotNull File targetFile, @NotNull String sourceFilePath) throws IOException {
         if (StringUtils.isEmpty(sourceFilePath)) {
             return;
         }
-        File parent = targetFile.getParentFile();
+        var parent = targetFile.getParentFile();
         if (!parent.exists()) {
             parent.mkdirs();
         }
-        InputStream is = getResource(plugin, sourceFilePath);
-        if (is == null) {
+        var resource = getResource(plugin, sourceFilePath);
+        if (resource == null) {
             return;
         }
         try (
-            FileOutputStream os = new FileOutputStream(targetFile);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, Charsets.UTF_8))
+            var reader = new BufferedReader(new InputStreamReader(resource, Charsets.UTF_8));
+            var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), Charsets.UTF_8))
         ) {
             String line;
             while ((line = reader.readLine()) != null) {
                 writer.write(line);
                 writer.newLine();
             }
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } finally {
+            resource.close();
         }
-
     }
 
     public static void downloadFile(@NotNull String url, @NotNull File file) throws IOException {
-        File parent = file.getParentFile();
+        var parent = file.getParentFile();
         if (!parent.exists()) {
             parent.mkdirs();
         }
-        try (
-            InputStream is = getWebFile(url);
-            FileOutputStream fos = new FileOutputStream(file)
-        ) {
+        var is = getWebFile(url);
+        var fos = new FileOutputStream(file);
+        try (is; fos) {
             if (is == null) {
                 return;
             }
-            byte[] bytes = new byte[1024];
+            var bytes = new byte[1024];
             int length;
             while ((length = is.read(bytes)) != -1) {
                 fos.write(bytes, 0, length);
@@ -85,7 +82,7 @@ public final class FileUtils {
 
     @Nullable
     public static InputStream getWebFile(@NotNull String url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        var connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestMethod("GET");
         connection.setAllowUserInteraction(false);
         connection.setInstanceFollowRedirects(true);

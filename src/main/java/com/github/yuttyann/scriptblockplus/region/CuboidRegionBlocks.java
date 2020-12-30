@@ -25,8 +25,8 @@ public final class CuboidRegionBlocks {
 
     public CuboidRegionBlocks(@NotNull Region region) {
         this.world = Objects.requireNonNull(region.getWorld());
-        this.min = Objects.requireNonNull(region.getMinimumPoint());
-        this.max = Objects.requireNonNull(region.getMaximumPoint());
+        this.min = new UnmodifiableLocation(region.getMinimumPoint());
+        this.max = new UnmodifiableLocation(region.getMaximumPoint());
     }
 
     @NotNull
@@ -36,17 +36,17 @@ public final class CuboidRegionBlocks {
 
     @NotNull
     public Location getMinimumPoint() {
-        return new UnmodifiableLocation(min);
+        return min;
     }
 
     @NotNull
     public Location getMaximumPoint() {
-        return new UnmodifiableLocation(max);
+        return max;
     }
 
     public int getCount() {
         if (count == -1) {
-            int[] count = { 0 };
+            var count = new int[] { 0 };
             forEach(b -> count[0]++);
             this.count = count[0];
         }
@@ -55,13 +55,13 @@ public final class CuboidRegionBlocks {
 
     @NotNull
     public Set<Block> getBlocks() {
-        Set<Block> set = new HashSet<>();
+        var set = new HashSet<Block>();
         forEach(b -> set.add(b.getBlock(world)));
         return set;
     }
 
     public void forEach(@NotNull Consumer<BlockPosition> action) {
-        BlockPosition position = new BlockPosition();
+        var position = new BlockPosition();
         for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
             for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
                 for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {

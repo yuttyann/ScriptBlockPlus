@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus;
 
+import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -10,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,6 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,7 @@ public final class Updater {
             isUpperVersion = false;
             return;
         }
-        NodeList rootChildren = getDocument(pluginName).getDocumentElement().getChildNodes();
+        var rootChildren = getDocument(pluginName).getDocumentElement().getChildNodes();
         for (int i = 0; i < rootChildren.getLength(); i++) {
             Node uNode = rootChildren.item(i);
             if (uNode.getNodeType() != Node.ELEMENT_NODE) {
@@ -77,7 +78,7 @@ public final class Updater {
             if (uNode.getNodeName().equals("update")) {
                 latestVersion = ((Element) uNode).getAttribute("version");
             }
-            NodeList updateChildren = uNode.getChildNodes();
+            var updateChildren = uNode.getChildNodes();
             for (int j = 0; j < updateChildren.getLength(); j++) {
                 Node cNode = updateChildren.item(j);
                 if (cNode.getNodeType() != Node.ELEMENT_NODE) {
@@ -91,7 +92,7 @@ public final class Updater {
                     changeLogURL = ((Element) cNode).getAttribute("url");
                     break;
                 case "details":
-                    NodeList detailsChildren = cNode.getChildNodes();
+                    var detailsChildren = cNode.getChildNodes();
                     details = new ArrayList<>(detailsChildren.getLength());
                     for (int k = 0; k < detailsChildren.getLength(); k++) {
                         Node dNode = detailsChildren.item(k);
@@ -109,29 +110,29 @@ public final class Updater {
         if (!SBConfig.UPDATE_CHECKER.getValue() || !isUpperVersion) {
             return false;
         }
+        var data = plugin.getDataFolder();
+        var logFile = new File(data, "update" + SBFiles.S + "ChangeLog.txt");
+        boolean sameLogs = !logFile.exists() || !logEquals(changeLogURL, logFile), failure = false;
         SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(sender);
-        File logFile = new File(plugin.getDataFolder(), "update/ChangeLog.txt");
-        boolean logEquals = !logFile.exists() || !logEquals(changeLogURL, logFile);
-        boolean downloadError = false;
         if (SBConfig.AUTO_DOWNLOAD.getValue()) {
-            File jarFile = new File(plugin.getDataFolder(), "update/jar/" + getJarName());
+            var jarFile = new File(data, "update" + SBFiles.S + "jar" + SBFiles.S + getJarName());
             try {
                 SBConfig.UPDATE_DOWNLOAD_START.send(sender);
                 FileUtils.downloadFile(changeLogURL, logFile);
                 FileUtils.downloadFile(downloadURL, jarFile);
             } catch (IOException e) {
-                downloadError = true;
+                failure = true;
                 SBConfig.ERROR_UPDATE.send(sender);
             } finally {
-                if (jarFile.exists() && !downloadError) {
+                if (jarFile.exists() && !failure) {
                     String fileName = jarFile.getName();
                     String filePath = StringUtils.replace(jarFile.getPath(), File.separator, "/");
                     SBConfig.UPDATE_DOWNLOAD_END.replace(fileName, filePath, getSize(jarFile.length())).send(sender);
                 }
             }
         }
-        if (SBConfig.OPEN_CHANGE_LOG.getValue() && logEquals && !downloadError) {
-            Desktop desktop = Desktop.getDesktop();
+        if (SBConfig.OPEN_CHANGE_LOG.getValue() && sameLogs && !failure) {
+            var desktop = Desktop.getDesktop();
             try {
                 desktop.open(logFile);
             } catch (IOException e) {
@@ -146,9 +147,9 @@ public final class Updater {
         if (b > length) {
             return length + " Byte";
         }
-        String unit = b * b > length ? " KB" : " MB";
+        var unit = b * b > length ? " KB" : " MB";
         double size = unit.endsWith("KB") ? length / b : length / b / b;
-        return new BigDecimal(size).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue() + unit;
+        return new BigDecimal(size).setScale(1, RoundingMode.HALF_UP).doubleValue() + unit;
     }
 
     private boolean logEquals(@NotNull String url, @NotNull File file) {
@@ -156,10 +157,9 @@ public final class Updater {
             return false;
         }
         try (
-            FileReader fr = new FileReader(file);
-            InputStream is = new URL(url).openStream(); InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader reader1 = new BufferedReader(fr); BufferedReader reader2 = new BufferedReader(isr)
-        ) {
+               var reader1 = new BufferedReader(new FileReader(file)); 
+               var reader2 = new BufferedReader(new InputStreamReader(new URL(url).openStream()))
+            ) {
             while (reader1.ready() && reader2.ready()) {
                 if (!reader1.readLine().equals(reader2.readLine())) {
                     return false;

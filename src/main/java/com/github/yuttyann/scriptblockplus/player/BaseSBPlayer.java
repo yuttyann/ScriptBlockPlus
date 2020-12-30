@@ -57,7 +57,7 @@ public final class BaseSBPlayer extends PlayerMap {
     @Override
     @NotNull
     public Player getPlayer() {
-        Player player = isOnline() ? this.player : Bukkit.getPlayer(uuid);
+        var player = isOnline() ? this.player : Bukkit.getPlayer(uuid);
         return Objects.requireNonNull(player, "Player cannot be null");
     }
 
@@ -76,7 +76,7 @@ public final class BaseSBPlayer extends PlayerMap {
     @Override
     @NotNull
     public String getName() {
-        return Objects.requireNonNull(getOfflinePlayer().getName());
+        return getOfflinePlayer().getName();
     }
 
     @Override
@@ -127,6 +127,16 @@ public final class BaseSBPlayer extends PlayerMap {
     @Override
     public void sendMessage(@NotNull String[] messages) {
         player.sendMessage(messages);
+    }
+
+    @Override
+    public void sendMessage(UUID uuid, String message) {
+        player.sendMessage(uuid, message);
+    }
+
+    @Override
+    public void sendMessage(UUID uuid, String[] messages) {
+        player.sendMessage(uuid, messages);
     }
 
     @Override
@@ -202,5 +212,10 @@ public final class BaseSBPlayer extends PlayerMap {
     @Override
     public String toString() {
         return "BaseSBPlayer{uuid=" + uuid + ", player=" + player + ", isOnline=" + isOnline + '}';
+    }
+
+    @Override
+    public Spigot spigot() {
+        return player.spigot();
     }
 }

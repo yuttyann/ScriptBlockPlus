@@ -1,20 +1,18 @@
 package com.github.yuttyann.scriptblockplus.script.endprocess;
 
-import com.github.yuttyann.scriptblockplus.player.ObjectMap;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 /**
  * ScriptBlockPlus EndInventory エンドプロセスクラス
  * @author yuttyann44581
  */
 public class EndInventory implements EndProcess {
+
+    public static final ItemStack[] EMPTY_ARRAY = new ItemStack[0];
 
     @Override
     @NotNull
@@ -24,21 +22,23 @@ public class EndInventory implements EndProcess {
 
     @Override
     public void success(@NotNull SBRead sbRead) {
-        if (sbRead.getSBPlayer().isOnline()) {
-            Utils.updateInventory(sbRead.getSBPlayer().getPlayer());
-        }
+        var sbPlayer = sbRead.getSBPlayer();
+        StreamUtils.ifAction(sbPlayer.isOnline(), () -> sbPlayer.getPlayer().updateInventory());
     }
 
     @Override
     public void failed(@NotNull SBRead sbRead) {
-        if (sbRead.has(ItemCost.KEY_OPTION)) {
-            ItemStack[] items = sbRead.get(ItemCost.KEY_OPTION);
-            SBPlayer sbPlayer = sbRead.getSBPlayer();
+        var items = sbRead.get(ItemCost.KEY_OPTION, EMPTY_ARRAY);
+        if (items.length > 0) {
+            var sbPlayer = sbRead.getSBPlayer();
             if (sbPlayer.isOnline()) {
-                sbPlayer.getInventory().setContents(items);
-                Utils.updateInventory(Objects.requireNonNull(sbPlayer.getPlayer()));
+                try {
+                    sbPlayer.getInventory().setContents(items);
+                } finally {
+                    sbPlayer.getPlayer().updateInventory();
+                }
             } else {
-                ObjectMap objectMap = sbRead.getSBPlayer().getObjectMap();
+                var objectMap = sbRead.getSBPlayer().getObjectMap();
                 if (!objectMap.has(ItemCost.KEY_PLAYER)) {
                     objectMap.put(ItemCost.KEY_PLAYER, items);
                 }

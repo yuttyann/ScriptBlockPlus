@@ -41,7 +41,7 @@ public final class EndProcessManager {
 
     @NotNull
     public static EndProcess newInstance(@NotNull Class<? extends EndProcess> endProcess, @NotNull InstanceType instanceType) {
-        for (SBConstructor<? extends EndProcess> constructor : ENDPROCESS_LIST) {
+        for (var constructor : ENDPROCESS_LIST) {
             if (constructor.getDeclaringClass().equals(endProcess)) {
                 return constructor.newInstance(instanceType);
             }

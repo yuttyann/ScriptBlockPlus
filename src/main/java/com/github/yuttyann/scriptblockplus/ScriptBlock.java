@@ -20,7 +20,6 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +41,7 @@ public class ScriptBlock extends JavaPlugin {
         }
 
         // 旧ScriptBlockが導入されていた場合は無効化
-        Plugin plugin = getServer().getPluginManager().getPlugin("ScriptBlock");
+        var plugin = getServer().getPluginManager().getPlugin("ScriptBlock");
         if (plugin != null) {
             getServer().getPluginManager().disablePlugin(plugin);
         }
@@ -96,7 +95,7 @@ public class ScriptBlock extends JavaPlugin {
      * @param latestMessage trueの場合は送信先にアップデートのメッセージを表示します。
      */
     public void checkUpdate(@NotNull CommandSender sender, boolean latestMessage) {
-        Thread thread = new Thread(() -> {
+        var thread = new Thread(() -> {
             try {
                 updater.init();
                 updater.load();

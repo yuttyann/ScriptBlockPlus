@@ -99,26 +99,26 @@ public final class APIManager implements ScriptBlockAPI {
 
     private static class SFile implements SBFile {
 
-        private final ScriptType scriptType;
         private final Location location;
+        private final ScriptType scriptType;
         private final ScriptParam scriptParam;
-        private final BlockScriptJson blockScriotJson;
+        private final BlockScriptJson scriptJson;
 
         public SFile(@NotNull Location location, @NotNull ScriptType scriptType) {
-            this.scriptType = scriptType;
             this.location = location;
-            this.blockScriotJson = new BlockScriptJson(scriptType);
-            this.scriptParam = blockScriotJson.load().get(location);
+            this.scriptType = scriptType;
+            this.scriptJson = new BlockScriptJson(scriptType);
+            this.scriptParam = scriptJson.load().get(location);
         }
 
         @Override
         public void save() {
-            blockScriotJson.saveFile();
+            scriptJson.saveFile();
         }
 
         @Override
         public boolean has() {
-            return blockScriotJson.load().has(location);
+            return scriptJson.load().has(location);
         }
 
         @Override
@@ -190,7 +190,7 @@ public final class APIManager implements ScriptBlockAPI {
         public void remove() {
             TimerOption.removeAll(location, scriptType);
             PlayerCountJson.clear(location, scriptType);
-            blockScriotJson.load().remove(location);
+            scriptJson.load().remove(location);
         }
     }
 }

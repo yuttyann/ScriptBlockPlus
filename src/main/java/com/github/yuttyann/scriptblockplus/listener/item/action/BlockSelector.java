@@ -9,7 +9,6 @@ import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import org.bukkit.Location;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,9 +34,9 @@ public class BlockSelector extends ItemAction {
 
     @Override
     public void run(@NotNull RunItem runItem) {
-        SBPlayer sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
-        CuboidRegion region = ((CuboidRegion) sbPlayer.getRegion());
-        Location location = runItem.getLocation();
+        var location = runItem.getLocation();
+        var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
+        var region = ((CuboidRegion) sbPlayer.getRegion());
         switch (runItem.getAction()) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:

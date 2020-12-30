@@ -132,7 +132,11 @@ public class YamlConfig {
     public final void reload() {
         Validate.notNull(file, "File cannot be null");
         if (isCopyFile && !file.exists()) {
-            FileUtils.copyFileFromPlugin(plugin, file, getFolderPath());
+            try {
+                FileUtils.copyFileFromPlugin(plugin, file, getFolderPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         yaml = new YamlConfiguration();
         try {

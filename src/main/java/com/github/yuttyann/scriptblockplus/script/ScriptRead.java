@@ -20,7 +20,6 @@ import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableLocati
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -111,7 +110,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
             SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(sbPlayer.getName(), location, scriptType).console();
             return false;
         }
-        PluginManager pluginManager = Bukkit.getPluginManager();
+        var pluginManager = Bukkit.getPluginManager();
         pluginManager.callEvent(new ScriptReadStartEvent(ramdomId, this));
         try {
             return perform(index);
@@ -127,8 +126,8 @@ public class ScriptRead extends ScriptMap implements SBRead {
                 EndProcessManager.forEach(e -> e.failed(this));
                 return false;
             }
-            String script = this.script.get(scriptIndex);
-            Option option = OptionManager.newInstance(script);
+            var script = this.script.get(scriptIndex);
+            var option = OptionManager.newInstance(script);
             optionValue = setPlaceholders(getSBPlayer(), option.getValue(script));
             if (!hasPermission(option) || !option.callOption(this)) {
                 if (!option.isFailedIgnore()) {
@@ -165,8 +164,8 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
     protected boolean sort(@NotNull List<String> scripts) {
         try {
-            List<String> parse = new ArrayList<>();
-            for (String script : scripts) {
+            var parse = new ArrayList<String>();
+            for (var script : scripts) {
                 parse.addAll(StringUtils.getScripts(script));
             }
             SBConfig.SORT_SCRIPTS.ifPresentAndTrue(s -> OptionManager.sort(parse));

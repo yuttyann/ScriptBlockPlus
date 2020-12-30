@@ -13,9 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  * ScriptBlockPlus ItemAction クラス
@@ -77,7 +75,7 @@ public abstract class ItemAction implements Cloneable {
     }
 
     public static boolean has(@NotNull Permissible permissible, @Nullable ItemStack item, boolean permission) {
-        Optional<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).findFirst();
+        var itemAction = ITEMS.stream().filter(i -> i.equals(item)).findFirst();
         return itemAction.filter(i -> !permission || i.hasPermission(permissible)).isPresent();
     }
 
@@ -86,15 +84,15 @@ public abstract class ItemAction implements Cloneable {
     public abstract void run(@NotNull RunItem runItem);
 
     public static void callSlot(@NotNull Player player, @Nullable ItemStack item, int newSlot, int oldSlot) {
-        Stream<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player));
+        var itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player));
         itemAction.findFirst().ifPresent(i ->  i.clone().slot(new ChangeSlot(player, newSlot, oldSlot)));
     }
 
     public static boolean callRun(@NotNull Player player, @Nullable ItemStack item, @Nullable Location location, @NotNull Action action) {
-        Optional<ItemAction> itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player)).findFirst();
+        var itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player)).findFirst();
         if (itemAction.isPresent()) {
-            RunItem runItem = new RunItem(player, item, location, action);
-            RunItemEvent runItemEvent = new RunItemEvent(runItem);
+            var runItem = new RunItem(player, item, location, action);
+            var runItemEvent = new RunItemEvent(runItem);
             Bukkit.getPluginManager().callEvent(runItemEvent);
             if (!runItemEvent.isCancelled()) {
                 itemAction.get().clone().run(runItem);

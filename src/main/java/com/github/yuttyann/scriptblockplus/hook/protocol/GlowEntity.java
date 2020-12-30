@@ -69,8 +69,8 @@ public class GlowEntity {
         if (!(obj instanceof GlowEntity)) {
             return false;
         }
-        GlowEntity glowEntity = (GlowEntity) obj;
-        return glowEntity.id == id && glowEntity.uuid.equals(uuid) && glowEntity.vector.equals(vector) && glowEntity.sbPlayer.equals(sbPlayer);
+        var glow = (GlowEntity) obj;
+        return glow.id == id && glow.uuid.equals(uuid) && glow.vector.equals(vector) && glow.sbPlayer.equals(sbPlayer);
     }
     
     @Override
@@ -79,8 +79,8 @@ public class GlowEntity {
         int prime = 31;
         hash = prime * hash + id;
         hash = prime * hash + uuid.hashCode();
-        hash = prime * hash + sbPlayer.getUniqueId().hashCode();
         hash = prime * hash + vector.hashCode();
+        hash = prime * hash + sbPlayer.getUniqueId().hashCode();
         return hash;
     }
 }

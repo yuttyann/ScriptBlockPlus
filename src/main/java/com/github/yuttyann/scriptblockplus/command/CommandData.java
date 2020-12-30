@@ -50,7 +50,7 @@ public class CommandData {
 
     @NotNull
     public CommandData addPermission(@Nullable String... permission) {
-        Optional<String[]> value = Optional.ofNullable(permission);
+        var value = Optional.ofNullable(permission);
         if (value.isPresent() && value.get().length > 0) {
             StreamUtils.forEach(value.get(), permissions::add);
         }

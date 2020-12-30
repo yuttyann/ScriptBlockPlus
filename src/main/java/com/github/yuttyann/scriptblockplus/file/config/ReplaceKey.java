@@ -43,7 +43,7 @@ public class ReplaceKey implements ConfigKey<String> {
         if (replaces.length != replaceKeys.length) {
             throw new IllegalArgumentException("Size are not equal.");
         }
-        ReplaceKey replaceKey = new ReplaceKey(configKey, replaceKeys);
+        var replaceKey = new ReplaceKey(configKey, replaceKeys);
         replaceKey.args = replaces;
         replaceKey.result = replaceKey.configKey.getValue();
         for (int i = 0; i < replaces.length; i++) {

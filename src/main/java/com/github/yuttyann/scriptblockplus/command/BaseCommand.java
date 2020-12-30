@@ -28,8 +28,8 @@ public abstract class BaseCommand extends CommandUsage implements CommandExecuto
     }
 
     public static <T extends BaseCommand> void register(@NotNull String command, @NotNull T baseCommand) {
-        JavaPlugin plugin = (JavaPlugin) baseCommand.getPlugin();
-        Optional<PluginCommand> pluginCommand = Optional.ofNullable(plugin.getCommand(command));
+        var plugin = (JavaPlugin) baseCommand.getPlugin();
+        var pluginCommand = Optional.ofNullable(plugin.getCommand(command));
         if (pluginCommand.isPresent()) {
             pluginCommand.get().setExecutor(baseCommand);
             pluginCommand.get().setTabCompleter(baseCommand);
@@ -53,7 +53,7 @@ public abstract class BaseCommand extends CommandUsage implements CommandExecuto
     @Override
     public final boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof ProxiedCommandSender) {
-            CommandSender proxiedCommandSender = ((ProxiedCommandSender) sender).getCallee();
+            var proxiedCommandSender = ((ProxiedCommandSender) sender).getCallee();
             if (proxiedCommandSender instanceof Player) {
                 sender = proxiedCommandSender;
             }
@@ -71,7 +71,7 @@ public abstract class BaseCommand extends CommandUsage implements CommandExecuto
     @Override
     @NotNull
     public final List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        List<String> completeList = new ArrayList<>();
+        var completeList = new ArrayList<String>();
         tabComplete(sender, command, label, args, completeList);
         return completeList;
     }

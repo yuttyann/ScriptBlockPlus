@@ -15,7 +15,6 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
@@ -33,7 +32,7 @@ public final class SBFiles {
 
     public static void reload() {
         // ScriptBlockのインスタンス
-        Plugin plugin = ScriptBlock.getInstance();
+        var plugin = ScriptBlock.getInstance();
 
         // ファイルの内容を読み込む
         ConfigKeys.clear();
@@ -48,26 +47,26 @@ public final class SBFiles {
     }
 
     public static void searchKeys(@NotNull Plugin plugin, @NotNull String... paths) {
-        for (String path : paths) {
-            Optional<YamlConfig> yaml = getFile(plugin, path);
+        for (var path : paths) {
+            var yaml = getFile(plugin, path);
             if (yaml.isPresent() && yaml.get().exists()) {
-                Optional<String> filePath = Optional.ofNullable(yaml.get().getInnerPath());
+                var filePath = Optional.ofNullable(yaml.get().getInnerPath());
                 sendNotKeyMessages(plugin, yaml.get(), filePath.orElse(yaml.get().getFileName()));
             }
         }
     }
 
     public static void sendNotKeyMessages(@NotNull Plugin plugin, @NotNull YamlConfig yaml, @NotNull String path) {
-        InputStream is = FileUtils.getResource(plugin, path);
-        if (is == null) {
+        var resource = FileUtils.getResource(plugin, path);
+        if (resource == null) {
             return;
         }
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8));
-        String filePath = plugin.getName() + "/" + StringUtils.replace(yaml.getFolderPath(), S, "/");
-        Set<String> keys = yaml.getKeys(true);
+        var keys = yaml.getKeys(true);
+        var config = YamlConfiguration.loadConfiguration(new InputStreamReader(resource, Charsets.UTF_8));
+        var filePath = plugin.getName() + "/" + StringUtils.replace(yaml.getFolderPath(), S, "/");
         for (String key : config.getKeys(true)) {
             if (!keys.contains(key)) {
-                Object value = config.get(key) instanceof MemorySection ? "" : config.get(key);
+                var value = config.get(key) instanceof MemorySection ? "" : config.get(key);
                 Bukkit.getConsoleSender().sendMessage("§c[" + filePath + "] Key not found: §r" + key + ": " + value);
             }
         }
@@ -89,7 +88,7 @@ public final class SBFiles {
 
     @NotNull
     public static YamlConfig loadLang(@NotNull Plugin plugin, @NotNull String filePath) {
-        String language = SBConfig.LANGUAGE.getValue();
+        var language = SBConfig.LANGUAGE.getValue();
         if (StringUtils.isEmpty(language) || "default".equalsIgnoreCase(language)) {
             language = Locale.getDefault().getLanguage();
         }

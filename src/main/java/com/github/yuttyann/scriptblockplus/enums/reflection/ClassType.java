@@ -27,7 +27,7 @@ public enum ClassType {
     private final Class<?> reference;
 
     static {
-        for (ClassType type : values()) {
+        for (var type : values()) {
             CLASS.put(type.primitive, type);
             CLASS.put(type.reference, type);
         }
@@ -55,13 +55,13 @@ public enum ClassType {
 
     @NotNull
     public static Class<?> getPrimitive(@NotNull Class<?> clazz) {
-        ClassType type = fromClass(clazz);
+        var type = fromClass(clazz);
         return type == null ? clazz : type.getPrimitive();
     }
 
     @NotNull
     public static Class<?> getReference(@NotNull Class<?> clazz) {
-        ClassType type = fromClass(clazz);
+        var type = fromClass(clazz);
         return type == null ? clazz : type.getReference();
     }
 
@@ -71,7 +71,7 @@ public enum ClassType {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
         int length = classes.length;
-        Class<?>[] types = new Class<?>[length];
+        var types = new Class<?>[length];
         for (int index = 0; index < length; index++) {
             types[index] = getPrimitive(classes[index]);
         }
@@ -84,7 +84,7 @@ public enum ClassType {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
         int length = classes.length;
-        Class<?>[] types = new Class<?>[length];
+        var types = new Class<?>[length];
         for (int index = 0; index < length; index++) {
             types[index] = getReference(classes[index]);
         }
@@ -97,7 +97,7 @@ public enum ClassType {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
         int length = objects.length;
-        Class<?>[] types = new Class<?>[length];
+        var types = new Class<?>[length];
         for (int index = 0; index < length; index++) {
             types[index] = getPrimitive(objects[index].getClass());
         }
@@ -110,7 +110,7 @@ public enum ClassType {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
         int length = objects.length;
-        Class<?>[] types = new Class<?>[length];
+        var types = new Class<?>[length];
         for (int index = 0; index < length; index++) {
             types[index] = getReference(objects[index].getClass());
         }

@@ -6,12 +6,12 @@ import com.github.yuttyann.scriptblockplus.listener.item.ChangeSlot;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.Location;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,16 +36,16 @@ public class ScriptEditor extends ItemAction {
 
     @Override
     public void slot(@NotNull ChangeSlot changeSlot) {
-        SBPlayer sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
-        ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
+        var sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
+        var scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
         ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
     }
 
     @Override
     public void run(@NotNull RunItem runItem) {
-        SBPlayer sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
-        ScriptType scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
-        Optional<Location> location = Optional.ofNullable(runItem.getLocation());
+        var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
+        var location = Optional.ofNullable(runItem.getLocation());
+        var scriptType = sbPlayer.getObjectMap().get(KEY, ScriptType.INTERACT);
         switch (runItem.getAction()) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
@@ -59,8 +59,8 @@ public class ScriptEditor extends ItemAction {
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
                 if (runItem.isSneaking() && !runItem.isAIR()) {
-                    if (!location.isPresent() || !sbPlayer.getSBClipboard().isPresent()
-                            || !sbPlayer.getSBClipboard().get().paste(location.get(), true)) {
+                    Optional<SBClipboard> clipboard = sbPlayer.getSBClipboard();
+                    if (!location.isPresent() || !clipboard.isPresent() || !clipboard.get().paste(location.get(), true)) {
                         SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
                     }
                 } else if (!runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {

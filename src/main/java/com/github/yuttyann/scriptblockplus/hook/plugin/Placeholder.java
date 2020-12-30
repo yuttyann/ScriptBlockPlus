@@ -23,14 +23,13 @@ public final class Placeholder extends HookPlugin {
     }
 
     @NotNull
+    @SuppressWarnings("deprecation")
     public String set(@NotNull Player player, @NotNull String source) {
-        String version = PlaceholderAPIPlugin.getInstance().getDescription().getVersion();
+        var version = PlaceholderAPIPlugin.getInstance().getDescription().getVersion();
         if (Utils.isUpperVersion("2.8.8", version)) {
             source = PlaceholderAPI.setPlaceholders((OfflinePlayer) player, source);
         } else {
-            @SuppressWarnings("deprecation")
-            String result = PlaceholderAPI.setPlaceholders(player, source);
-            source = result;
+            source = PlaceholderAPI.setPlaceholders(player, source);
         }
         return source;
     }

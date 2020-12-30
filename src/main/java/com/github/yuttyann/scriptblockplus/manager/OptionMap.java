@@ -13,10 +13,25 @@ import java.util.*;
 
 /**
  * ScriptBlockPlus OptionMap クラス
+ * 
  * @author yuttyann44581
  */
 @SuppressWarnings("serial")
 public class OptionMap extends HashMap<String, Option> {
+
+    private static final Field ORDINAL;
+
+    static {
+        Field field = null;
+        try {
+            field = Option.class.getDeclaredField("ordinal");
+            field.setAccessible(true);
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        } finally {
+            ORDINAL = field;
+        }
+    }
 
     private final LinkedList<String> LINKED_LIST = new LinkedList<>();
 
@@ -28,7 +43,7 @@ public class OptionMap extends HashMap<String, Option> {
 
     @Nullable
     public Option put(@NotNull OptionIndex priority, @NotNull Class<? extends BaseOption> optionClass) {
-        String syntax = optionClass.getAnnotation(OptionTag.class).syntax();
+        var syntax = optionClass.getAnnotation(OptionTag.class).syntax();
         switch (priority.getIndexType()) {
             case TOP:
                 LINKED_LIST.addFirst(syntax);
@@ -52,20 +67,18 @@ public class OptionMap extends HashMap<String, Option> {
 
     @NotNull
     public List<Option> list() {
-        List<Option> list = new ArrayList<>(values());
+        var list = new ArrayList<Option>(values());
         list.sort(Option::compareTo);
         return list;
     }
 
     void updateOrdinal() {
         try {
-            Field field = Option.class.getDeclaredField("ordinal");
-            field.setAccessible(true);
             int index = 0;
             for (String syntax : LINKED_LIST) {
-                field.setInt(super.get(syntax), index++);
+                ORDINAL.setInt(super.get(syntax), index++);
             }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }

@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * ScriptBlockPlus OptionManager クラス
@@ -72,7 +71,7 @@ public final class OptionManager {
 
     @NotNull
     private static Option get(@NotNull String syntax) {
-        Optional<Option> option = OPTION_MAP.values().stream().filter(o -> o.isOption(syntax)).findFirst();
+        var option = OPTION_MAP.values().stream().filter(o -> o.isOption(syntax)).findFirst();
         return option.orElseThrow(() -> new NullPointerException("Option does not exist."));
     }
 
@@ -83,7 +82,7 @@ public final class OptionManager {
 
     @NotNull
     public static Option newInstance(@NotNull Class<? extends Option> optionClass, @NotNull InstanceType instanceType) {
-        for (Option option : OPTION_MAP.values()) {
+        for (var option : OPTION_MAP.values()) {
             if (!optionClass.equals(option.getClass())) {
                 continue;
             }
@@ -97,6 +96,6 @@ public final class OptionManager {
 
     @NotNull
     public static String[] getSyntaxs() {
-        return StreamUtils.toArray(OPTION_MAP.list(), Option::getSyntax, new String[OPTION_MAP.size()]);
+        return StreamUtils.toArray(OPTION_MAP.list(), Option::getSyntax, String[]::new);
     }
 }

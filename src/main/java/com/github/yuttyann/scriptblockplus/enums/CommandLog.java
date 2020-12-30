@@ -43,7 +43,7 @@ public enum CommandLog {
 
     @NotNull
     public static CommandLog get(@NotNull World world) {
-        Boolean value;
+        Boolean value = null;
         if (Utils.isCBXXXorLater("1.13")) {
             value = world.getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK);
         } else {
@@ -53,10 +53,10 @@ public enum CommandLog {
     }
 
     public static void action(@NotNull World world, @NotNull Consumer<CommandLog> action) {
-        CommandLog oldValue = CommandLog.get(world);
+        var oldValue = CommandLog.get(world);
         try {
-            if (CommandLog.FALSE != oldValue) {
-                CommandLog.FALSE.set(world);
+            if (FALSE != oldValue) {
+                FALSE.set(world);
             }
             action.accept(oldValue);
         } finally {
@@ -65,10 +65,10 @@ public enum CommandLog {
     }
 
     public static <T> T supplier(@NotNull World world, @NotNull Supplier<T> supplier) {
-        CommandLog oldValue = CommandLog.get(world);
+        var oldValue = CommandLog.get(world);
         try {
-            if (CommandLog.FALSE != oldValue) {
-                CommandLog.FALSE.set(world);
+            if (FALSE != oldValue) {
+                FALSE.set(world);
             }
             return supplier.get();
         } finally {

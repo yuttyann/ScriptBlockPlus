@@ -7,9 +7,11 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * ScriptBlockPlus Lang クラス
+ * 
  * @author yuttyann44581
  */
 public final class Lang {
@@ -40,24 +42,26 @@ public final class Lang {
 
     @NotNull
     public String getPath() {
-        String path = directory + "/" + language + ".yml";
-        String code = isExists(path) ? language : DEFAULT_LANGUAGE;
-        String filePath = StringUtils.replace(this.filePath, "{code}", code);
-        File file = new File(plugin.getDataFolder(), filePath);
+        var path = directory + "/" + language + ".yml";
+        var code = isExists(path) ? language : DEFAULT_LANGUAGE;
+        var file = new File(plugin.getDataFolder(), StringUtils.replace(this.filePath, "{code}", code));
         return !file.exists() && !code.equals(language) ? directory + "/" + code + ".yml" : path;
     }
 
     @NotNull
     public File getFile() {
-        String path = directory + "/" + language + ".yml";
-        String code = isExists(path) ? language : DEFAULT_LANGUAGE;
-        String filePath = StringUtils.replace(this.filePath, "{code}", code);
-        File file = new File(plugin.getDataFolder(), filePath);
+        var path = directory + "/" + language + ".yml";
+        var code = isExists(path) ? language : DEFAULT_LANGUAGE;
+        var file = new File(plugin.getDataFolder(), StringUtils.replace(this.filePath, "{code}", code));
         if (!file.exists()) {
             if (!code.equals(language)) {
                 path = directory + "/" + code + ".yml";
             }
-            FileUtils.copyFileFromPlugin(plugin, file, path);
+            try {
+                FileUtils.copyFileFromPlugin(plugin, file, path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return file;
     }

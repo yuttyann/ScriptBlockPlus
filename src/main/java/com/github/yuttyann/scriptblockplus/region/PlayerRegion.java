@@ -11,14 +11,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlayerRegion implements Region {
 
-    private World world;
-    private int x;
-    private int y;
-    private int z;
-    private int range;
+    private final World world;
+    private final int x;
+    private final int y;
+    private final int z;
+    private final int range;
 
     public PlayerRegion(@NotNull Player player, int range) {
-        Location location = player.getLocation();
+        var location = player.getLocation();
         this.world = location.getWorld();
         this.x = location.getBlockX();
         this.y = location.getBlockY();

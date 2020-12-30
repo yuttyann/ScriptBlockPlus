@@ -34,19 +34,19 @@ public class ScriptEdit {
         if (location == null) {
             return false;
         }
-        SBOperation scriptAction = new SBOperation(scriptType);
+        var sbOperation = new SBOperation(scriptType);
         switch (actionType) {
             case CREATE:
-                scriptAction.create(sbPlayer, location);
+                sbOperation.create(sbPlayer, location);
                 break;
             case ADD:
-                scriptAction.add(sbPlayer, location);
+                sbOperation.add(sbPlayer, location);
                 break;
             case REMOVE:
-                scriptAction.remove(sbPlayer, location);
+                sbOperation.remove(sbPlayer, location);
                 break;
             case VIEW:
-                scriptAction.view(sbPlayer, location);
+                sbOperation.view(sbPlayer, location);
                 break;
         }
         return true;

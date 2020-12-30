@@ -5,14 +5,12 @@ import java.util.Set;
 
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -42,8 +40,8 @@ public class CuboidRegionPaste {
     }
 
     public CuboidRegionPaste paste(boolean pasteonair, boolean overwrite) {
-        Set<Location> locations = new HashSet<>(regionBlocks.getCount());
-        for (Block block : regionBlocks.getBlocks()) {
+        var locations = new HashSet<Location>(regionBlocks.getCount());
+        for (var block : regionBlocks.getBlocks()) {
             if (!pasteonair && (block == null || block.getType() == Material.AIR)) {
                 continue;
             }
@@ -55,11 +53,11 @@ public class CuboidRegionPaste {
     }
 
     private boolean lightPaste(@NotNull Set<Location> locations, @NotNull Location location, boolean overwrite) {
-        BlockScriptJson blockScriptJson = sbClipboard.getBlockScriptJson();
-        if (BlockScriptJson.has(location, blockScriptJson) && !overwrite) {
+        var scriptJson = sbClipboard.getBlockScriptJson();
+        if (BlockScriptJson.has(location, scriptJson) && !overwrite) {
             return false;
         }
-        ScriptParam scriptParam = blockScriptJson.load().get(location);
+        var scriptParam = scriptJson.load().get(location);
         scriptParam.setAuthor(sbClipboard.getAuthor());
         scriptParam.getAuthor().add(sbClipboard.getSBPlayer().getUniqueId());
         scriptParam.setScript(sbClipboard.getScript());

@@ -8,7 +8,6 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -34,14 +33,14 @@ public final class SBLoader {
     private YamlConfig scriptFile;
 
     public SBLoader(@NotNull ScriptType scriptType) {
-        String filePath = "scripts" + SBFiles.S + scriptType.type() + ".yml";
+        var filePath = "scripts" + SBFiles.S + scriptType.type() + ".yml";
         this.scriptFile = YamlConfig.load(ScriptBlock.getInstance(), filePath, false);
     }
 
     public void forEach(@NotNull Consumer<SBLoader> action) {
-        for (String name : scriptFile.getKeys()) {
-            World world = Utils.getWorld(name);
-            for (String xyz : scriptFile.getKeys(name)) {
+        for (var name : scriptFile.getKeys()) {
+            var world = Utils.getWorld(name);
+            for (var xyz : scriptFile.getKeys(name)) {
                 action.accept(createPath(BlockCoords.fromString(world, xyz)));
             }
         }
@@ -59,14 +58,14 @@ public final class SBLoader {
 
     @NotNull
     public List<UUID> getAuthors() {
-        String author = scriptFile.getString(path + KEY_AUTHOR, "");
+        var author = scriptFile.getString(path + KEY_AUTHOR, "");
         if (StringUtils.isEmpty(author)) {
             return new ArrayList<>();
         }
-        String[] authors = StringUtils.split(author, ",");
-        List<UUID> list = new ArrayList<>(authors.length);
-        StreamUtils.forEach(authors, s -> list.add(UUID.fromString(s.trim())));
-        return list;
+        var authors = StringUtils.split(author, ",");
+        var result = new ArrayList<UUID>(authors.length);
+        StreamUtils.forEach(authors, s -> result.add(UUID.fromString(s.trim())));
+        return result;
     }
 
     @NotNull

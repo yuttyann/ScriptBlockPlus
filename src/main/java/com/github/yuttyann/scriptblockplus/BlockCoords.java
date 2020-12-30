@@ -21,11 +21,11 @@ public class BlockCoords {
     private int y;
     private int z;
 
-    public BlockCoords(@NotNull final Location location) {
+    public BlockCoords(@NotNull Location location) {
         this(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
-    public BlockCoords(@Nullable final World world, final int x, final int y, final int z) {
+    public BlockCoords(@NotNull World world, final int x, final int y, final int z) {
         this.world = world;
         this.x = x;
         this.y = y;
@@ -165,7 +165,7 @@ public class BlockCoords {
      */
     @NotNull
     public static Location fromString(@NotNull World world, @NotNull String coords) {
-        String[] array = StringUtils.split(coords, ",");
+        var array = StringUtils.split(coords, ",");
         if (array.length != 3) {
             throw new IllegalArgumentException();
         }
@@ -182,11 +182,11 @@ public class BlockCoords {
      */
     @NotNull
     public static Location fromString(@NotNull String fullCoords) {
-        String[] array = StringUtils.split(fullCoords, ",");
+        var array = StringUtils.split(fullCoords, ",");
         if (array.length != 4) {
             throw new IllegalArgumentException();
         }
-        World world = Utils.getWorld(array[0].trim());
+        var world = Utils.getWorld(array[0].trim());
         int x = Integer.parseInt(array[1].trim());
         int y = Integer.parseInt(array[2].trim());
         int z = Integer.parseInt(array[3].trim());
@@ -213,7 +213,7 @@ public class BlockCoords {
         if (!(obj instanceof BlockCoords)) {
             return false;
         }
-        BlockCoords blockCoords = (BlockCoords) obj;
+        var blockCoords = (BlockCoords) obj;
         return x == blockCoords.x && y == blockCoords.y && z == blockCoords.z && world.equals(blockCoords.world);
     }
 

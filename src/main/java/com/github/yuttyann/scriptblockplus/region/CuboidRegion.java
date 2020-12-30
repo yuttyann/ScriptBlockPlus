@@ -34,26 +34,26 @@ public class CuboidRegion implements Region {
         this.pos2 = pos2;
     }
 
-    @Nullable
     @Override
+    @Nullable
     public World getWorld() {
         return world;
     }
 
-    @NotNull
     @Override
+    @NotNull
     public String getName() {
         return world == null ? "null" : world.getName();
     }
 
-    @NotNull
     @Override
+    @NotNull
     public Location getMinimumPoint() {
         return toLocation(min(pos1.getX(), pos2.getX()), min(pos1.getY(), pos2.getY()), min(pos1.getZ(), pos2.getZ()));
     }
 
-    @NotNull
     @Override
+    @NotNull
     public Location getMaximumPoint() {
         return toLocation(max(pos1.getX(), pos2.getX()), max(pos1.getY(), pos2.getY()), max(pos1.getZ(), pos2.getZ()));
     }

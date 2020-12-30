@@ -24,7 +24,7 @@ Language: default
 # 追加する場合は、"/ver"で表示されたサーバー名を参照してください。
 # 例: "This server is running <サーバー名> ..."
 # ※NMSが実装されていない環境では正常に動作しません。
-Platforms: [CraftBukkit, Paper, CatServer]
+# Platforms: [CraftBukkit, Paper, CatServer]
 
 ## ===== スクリプト自動並び変えの設定 ===== ##
 # [true -> 有効 | false -> 無効]

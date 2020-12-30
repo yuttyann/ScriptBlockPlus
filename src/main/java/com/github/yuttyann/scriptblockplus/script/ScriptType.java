@@ -3,11 +3,11 @@ package com.github.yuttyann.scriptblockplus.script;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * ScriptBlockPlus ScriptType クラス
@@ -33,11 +33,10 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
      * @param type スクリプトの種類名
      */
     public ScriptType(@NotNull String type) {
-        Validate.notNull(type, "Type cannot be null");
         this.type = type.toLowerCase();
         this.name = type.toUpperCase();
 
-        ScriptType scriptType = TYPES.get(name);
+        var scriptType = TYPES.get(name);
         this.ordinal = scriptType == null ? TYPES.size() : scriptType.ordinal;
         if (scriptType == null) {
             TYPES.put(name, this);
@@ -86,9 +85,9 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (obj instanceof ScriptType) {
-            ScriptType scriptType = ((ScriptType) obj);
+            var scriptType = (ScriptType) obj;
             return type.equals(scriptType.type) && name.equals(scriptType.name);
         }
         return false;
@@ -113,7 +112,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
      */
     @NotNull
     public static String[] types() {
-        return toArray(t -> t.type, new String[TYPES.size()]);
+        return StreamUtils.toArray(TYPES.values(), t -> t.type, String[]::new);
     }
 
     /**
@@ -122,28 +121,16 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
      */
     @NotNull
     public static String[] names() {
-        return toArray(t -> t.name, new String[TYPES.size()]);
+        return StreamUtils.toArray(TYPES.values(), t -> t.name, String[]::new);
     }
 
-    /**
+	/**
      * スクリプトの種類の配列を作成します。
      * @return スクリプトの種類の配列
      */
     @NotNull
     public static ScriptType[] values() {
-        return TYPES.values().toArray(new ScriptType[0]);
-    }
-
-    /**
-     * 任意の配列を作成します。
-     * @param mapper {@link Function}&lt;{@link ScriptType}, {@link T}&gt;
-     * @param array 変換先の配列
-     * @param <T> 変換先の配列の型
-     * @return 配列
-     */
-    @NotNull
-    public static <T> T[] toArray(@NotNull Function<ScriptType, T> mapper, @NotNull T[] array) {
-        return StreamUtils.toArray(TYPES.values(), mapper, array);
+        return TYPES.values().toArray(ScriptType[]::new);
     }
 
     /**
@@ -154,7 +141,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
      */
     @NotNull
     public static ScriptType valueOf(int ordinal) {
-        for (ScriptType scriptType : TYPES.values()) {
+        for (var scriptType : TYPES.values()) {
             if (scriptType.ordinal == ordinal) {
                 return scriptType;
             }
@@ -169,9 +156,9 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
      * @return スクリプトの種類
      */
     @NotNull
-    public static ScriptType valueOf(String name) {
+    public static ScriptType valueOf(@Nullable String name) {
         Validate.notNull(name, "Name cannot be null");
-        ScriptType scriptType = TYPES.get(name.toUpperCase());
+        var scriptType = TYPES.get(name.toUpperCase());
         if (scriptType == null) {
             throw new NullPointerException(name + " does not exist");
         }

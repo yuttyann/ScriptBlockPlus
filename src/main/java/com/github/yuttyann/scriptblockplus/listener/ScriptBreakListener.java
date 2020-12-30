@@ -8,9 +8,6 @@ import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,15 +21,15 @@ public class ScriptBreakListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-        Player player = event.getPlayer();
+        var player = event.getPlayer();
         if (ItemAction.has(player, player.getInventory().getItemInMainHand(), true)) {
             event.setCancelled(true);
             return;
         }
-        Block block = event.getBlock();
-        Location location = block.getLocation();
+        var block = event.getBlock();
+        var location = block.getLocation();
         if (BlockScriptJson.has(location, ScriptType.BREAK)) {
-            ScriptBlockBreakEvent breakEvent = new ScriptBlockBreakEvent(player, block);
+            var breakEvent = new ScriptBlockBreakEvent(player, block);
             Bukkit.getPluginManager().callEvent(breakEvent);
             if (breakEvent.isCancelled()) {
                 return;

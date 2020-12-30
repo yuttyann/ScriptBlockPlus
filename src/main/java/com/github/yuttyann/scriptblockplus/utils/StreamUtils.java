@@ -3,10 +3,10 @@ package com.github.yuttyann.scriptblockplus.utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
 /**
@@ -16,10 +16,9 @@ import java.util.function.Predicate;
 public final class StreamUtils {
 
     @NotNull
-    public static <T, R> R[] toArray(@NotNull Collection<T> collection, @NotNull Function<T, R> mapper, @NotNull R[] array) {
-        Objects.requireNonNull(array);
-        Objects.requireNonNull(collection);
-        Iterator<T> iterator = collection.iterator();
+    public static <T, R> R[] toArray(@NotNull Collection<T> collection, @NotNull Function<T, R> mapper, @NotNull IntFunction<R[]> generator) {
+        var array = generator.apply(collection.size());
+        var iterator = collection.iterator();
         for (int i = 0; iterator.hasNext(); i++) {
             array[i] = mapper.apply(iterator.next());
         }

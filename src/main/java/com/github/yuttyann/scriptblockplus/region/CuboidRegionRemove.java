@@ -6,7 +6,6 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -37,33 +36,38 @@ public class CuboidRegionRemove {
         return regionBlocks;
     }
 
-    public CuboidRegionRemove remove() {
+    public void init() {
         scriptTypes.clear();
-        Set<Block> blocks = regionBlocks.getBlocks();
-        Set<Location> locations = new HashSet<>(regionBlocks.getCount());
-        for (ScriptType scriptType : ScriptType.values()) {
-            BlockScriptJson blockScriptJson = new BlockScriptJson(scriptType);
-            if (blockScriptJson.exists()) {
-                for (Block block : blocks) {
-                    if (lightRemove(locations, block.getLocation(), blockScriptJson)) {
-                        scriptTypes.add(scriptType);
-                    }
-                }
-                blockScriptJson.saveFile();
+    }
+
+    public CuboidRegionRemove remove() {
+        init();
+        var blocks = regionBlocks.getBlocks();
+        var locations = new HashSet<Location>(regionBlocks.getCount());
+        for (var scriptType : ScriptType.values()) {
+            var scriptJson = new BlockScriptJson(scriptType);
+            if (!scriptJson.exists()) {
+                continue;
             }
+            for (var block : blocks) {
+                if (lightRemove(locations, block.getLocation(), scriptJson)) {
+                    scriptTypes.add(scriptType);
+                }
+            }
+            scriptJson.saveFile();
         }
-        for (ScriptType scriptType : scriptTypes) {
+        for (var scriptType : scriptTypes) {
             TimerOption.removeAll(locations, scriptType);
             PlayerCountJson.clear(locations, scriptType);
         }
         return this;
     }
     
-    private boolean lightRemove(@NotNull Set<Location> locations, @NotNull Location location, @NotNull BlockScriptJson blockScriptJson) {
-        if (!BlockScriptJson.has(location, blockScriptJson)) {
+    private boolean lightRemove(@NotNull Set<Location> locations, @NotNull Location location, @NotNull BlockScriptJson scriptJson) {
+        if (!BlockScriptJson.has(location, scriptJson)) {
             return false;
         }
-        blockScriptJson.load().remove(location);
+        scriptJson.load().remove(location);
         locations.add(location);
         return true;
     }

@@ -752,14 +752,39 @@ public class CommandUtils {
     }
 
     enum SelectorType {
-        LEVEL("level="), DISTANCE("distance="), TYPE("type="), NAME("name="), TEAM("team="), LMax("lm="), L(
-                "l="), World("w="), m("m="), C("c="), HM("hm="), H("h="), RM("rm="), RYM("rym="), RX("rx="), SCORE_FULL(
-                "score="), SCORE_MIN("score_min"), SCORE_13(
-                "scores="), R("r="), RXM("rxm="), RY("ry="), TAG("tag="), X("x="), Y("y="), Z("z="), LIMIT("limit="), Y_ROTATION("y_rotation"), X_ROTATION("x_rotation");
-        String name;
+        LEVEL("level="),
+        DISTANCE("distance="),
+        TYPE("type="),
+        NAME("name="),
+        TEAM("team="),
+        LMax("lm="),
+        L("l="), 
+        World("w="),
+        m("m="),
+        C("c="),
+        HM("hm="),
+        H("h="),
+        RM("rm="),
+        RYM("rym="),
+        RX("rx="),
+        SCORE_FULL("score="),
+        SCORE_MIN("score_min"),
+        SCORE_13("scores="),
+        R("r="),
+        RXM("rxm="),
+        RY("ry="),
+        TAG("tag="),
+        X("x="),
+        Y("y="),
+        Z("z="),
+        LIMIT("limit="),
+        Y_ROTATION("y_rotation"),
+        X_ROTATION("x_rotation");
 
-        SelectorType(String s) {
-            this.name = s;
+        private final String name;
+
+        SelectorType(String name) {
+            this.name = name;
         }
 
         public String getName() {

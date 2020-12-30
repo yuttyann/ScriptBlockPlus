@@ -5,8 +5,6 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,12 +16,12 @@ public final class VaultPermission extends HookPlugin {
 
     public static final VaultPermission INSTANCE = VaultPermission.setupPermission();
 
-    private final Permission permission;
     private final String name;
+    private final Permission permission;
 
     private VaultPermission(@Nullable Permission permission) {
-        this.permission = permission;
         this.name = permission == null ? "None" : permission.getName();
+        this.permission = permission;
     }
 
     @Override
@@ -33,11 +31,10 @@ public final class VaultPermission extends HookPlugin {
     }
 
     @NotNull
-    static VaultPermission setupPermission() {
-        ServicesManager services = Bukkit.getServicesManager();
-        RegisteredServiceProvider<Permission> provider = services.getRegistration(Permission.class);
+    private static VaultPermission setupPermission() {
+        var provider = Bukkit.getServicesManager().getRegistration(Permission.class);
         if (provider != null) {
-            VaultPermission vault = new VaultPermission(provider.getProvider());
+            var vault = new VaultPermission(provider.getProvider());
             if (vault.isEnabled()) {
                 return vault;
             }
