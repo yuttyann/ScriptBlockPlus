@@ -31,9 +31,8 @@ public class ActionBar extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        String[] array = StringUtils.split(getOptionValue(), "/");
-        String message = StringUtils.setColor(array[0]);
-
+        var array = StringUtils.split(getOptionValue(), "/");
+        var message = StringUtils.setColor(array[0]);
         if (array.length > 1) {
             int stay = Integer.parseInt(array[1]);
             new Task(stay, message).runTaskTimer(ScriptBlock.getInstance(), 0, 20);
@@ -45,7 +44,7 @@ public class ActionBar extends BaseOption {
 
     public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
         if (Utils.isCBXXXorLater("1.12.2")) {
-            String command = "title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
+            var command = "title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
             Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Utils.dispatchCommand(sbPlayer, command));
         } else if (ProtocolLib.INSTANCE.has()) {
             try {

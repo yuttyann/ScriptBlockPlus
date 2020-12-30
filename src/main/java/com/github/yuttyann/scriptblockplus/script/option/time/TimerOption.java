@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.script.option.time;
 import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerTempJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.google.common.collect.Sets;
@@ -25,7 +24,7 @@ public abstract class TimerOption extends BaseOption {
     protected abstract Optional<TimerTemp> getTimerTemp();
 
     @NotNull
-    protected final <T> Optional<T> get(Set<T> set, @NotNull TimerTemp timerTemp) {
+    protected final <T> Optional<T> get(@NotNull Set<T> set, @NotNull TimerTemp timerTemp) {
         int hash = timerTemp.hashCode();
         return set.stream().filter(t -> t.hashCode() == hash).findFirst();
     }
@@ -36,7 +35,7 @@ public abstract class TimerOption extends BaseOption {
     }
 
     protected boolean inCooldown() {
-        Optional<TimerTemp> timer = getTimerTemp();
+        var timer = getTimerTemp();
         if (timer.isPresent()) {
             int time = timer.get().getSecond();
             if (time > 0) {
@@ -46,9 +45,9 @@ public abstract class TimerOption extends BaseOption {
                 SBConfig.ACTIVE_COOLDOWN.replace(hour, minute, second).send(getSBPlayer());
                 return true;
             } else {
-                Json<PlayerTemp> json = new PlayerTempJson(getFileUniqueId());
-                json.load().getTimerTemp().remove(timer.get());
-                json.saveFile();
+                var tempJson = new PlayerTempJson(getFileUniqueId());
+                tempJson.load().getTimerTemp().remove(timer.get());
+                tempJson.saveFile();
             }
         }
         return false;
@@ -59,18 +58,18 @@ public abstract class TimerOption extends BaseOption {
     }
 
     public static void removeAll(@NotNull Set<Location> locations, @NotNull ScriptType scriptType) {
-        for (String name : Json.getNameList(PlayerTempJson.class)) {
-            UUID uuid = UUID.fromString(name);
-            Json<PlayerTemp> json = new PlayerTempJson(uuid);
-            if (!json.exists()) {
+        for (var name : Json.getNameList(PlayerTempJson.class)) {
+            var uuid = UUID.fromString(name);
+            var tempJson = new PlayerTempJson(uuid);
+            if (!tempJson.exists()) {
                 continue;
             }
             boolean modifiable = false;
-            for (Location location : locations) {
-                if (!json.has()) {
+            for (var location : locations) {
+                if (!tempJson.has()) {
                     continue;
                 }
-                Set<TimerTemp> timer = json.load().getTimerTemp();
+                var timer = tempJson.load().getTimerTemp();
                 if (timer.size() > 0) {
                     modifiable = true;
                     timer.remove(new TimerTemp(location, scriptType));
@@ -78,7 +77,7 @@ public abstract class TimerOption extends BaseOption {
                 }
             }
             if (modifiable) {
-                json.saveFile();
+                tempJson.saveFile();
             }
         }
     }

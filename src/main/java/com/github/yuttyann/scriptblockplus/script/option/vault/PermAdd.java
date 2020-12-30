@@ -22,13 +22,13 @@ public class PermAdd extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        VaultPermission vaultPermission = VaultPermission.INSTANCE;
+        var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
             throw new UnsupportedOperationException();
         }
-        String[] array = StringUtils.split(getOptionValue(), "/");
-        String world = array.length > 1 ? array[0] : null;
-        String permission = array.length > 1 ? array[1] : array[0];
+        var array = StringUtils.split(getOptionValue(), "/");
+        var world = array.length > 1 ? array[0] : null;
+        var permission = array.length > 1 ? array[1] : array[0];
         vaultPermission.playerAdd(world, getPlayer(), permission);
         return true;
     }

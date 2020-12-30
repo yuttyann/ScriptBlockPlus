@@ -39,7 +39,7 @@ public class Delay extends BaseOption implements Runnable {
 
     @Override
     protected boolean isValid() throws Exception {
-        String[] array = StringUtils.split(getOptionValue(), "/");
+        var array = StringUtils.split(getOptionValue(), "/");
         saveDelay = array.length <= 1 || Boolean.parseBoolean(array[1]);
         if (saveDelay && DELAY_SET.contains(new TimerTemp(getUniqueId(), getLocation(), getScriptType()))) {
             SBConfig.ACTIVE_DELAY.send(getSBPlayer());
@@ -58,7 +58,7 @@ public class Delay extends BaseOption implements Runnable {
         if (saveDelay) {
             DELAY_SET.remove(new TimerTemp(getUniqueId(), getLocation(), getScriptType()));
         }
-        SBRead sbRead = (SBRead) getTempMap();
+        var sbRead = (SBRead) getTempMap();
         if (getSBPlayer().isOnline()) {
             sbRead.setInitialize(true);
             sbRead.read(getScriptIndex() + 1);

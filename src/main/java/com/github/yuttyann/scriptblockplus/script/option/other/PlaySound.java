@@ -6,7 +6,6 @@ import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,24 +24,24 @@ public class PlaySound extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        String[] array = StringUtils.split(getOptionValue(), "/");
-        String[] sound = StringUtils.split(array[0], "-");
-        Sound soundType = Sound.valueOf(sound[0].toUpperCase());
+        var array = StringUtils.split(getOptionValue(), "/");
+        var sound = StringUtils.split(array[0], "-");
+        var type = Sound.valueOf(sound[0].toUpperCase());
         int volume = Integer.parseInt(sound[1]);
         int pitch = Integer.parseInt(sound[2]);
         long delay = sound.length > 3 ? Long.parseLong(sound[3]) : 0;
         boolean sendAllPlayer = array.length > 1 && Boolean.parseBoolean(array[1]);
 
         if (delay > 0) {
-            new Task(soundType, volume, pitch, sendAllPlayer).runTaskLater(ScriptBlock.getInstance(), delay);
+            new Task(type, volume, pitch, sendAllPlayer).runTaskLater(ScriptBlock.getInstance(), delay);
         } else {
-            playSound(soundType, volume, pitch, sendAllPlayer);
+            playSound(type, volume, pitch, sendAllPlayer);
         }
         return true;
     }
 
     private void playSound(@NotNull Sound soundType, int volume, int pitch, boolean sendAllPlayer) {
-        World world = getLocation().getWorld();
+        var world = getLocation().getWorld();
         if (sendAllPlayer && world != null) {
             world.playSound(getLocation(), soundType, volume, pitch);
         } else if (getSBPlayer().isOnline()) {

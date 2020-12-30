@@ -6,7 +6,6 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,11 +25,11 @@ public class MoneyCost extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        VaultEconomy vaultEconomy = VaultEconomy.INSTANCE;
+        var vaultEconomy = VaultEconomy.INSTANCE;
         if (!vaultEconomy.isEnabled()) {
             throw new UnsupportedOperationException();
         }
-        Player player = getPlayer();
+        var player = getPlayer();
         double cost = Double.parseDouble(getOptionValue());
         if (vaultEconomy.has(player, cost)) {
             vaultEconomy.withdrawPlayer(player, cost);

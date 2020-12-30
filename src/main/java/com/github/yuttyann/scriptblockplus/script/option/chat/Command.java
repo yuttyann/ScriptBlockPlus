@@ -23,7 +23,7 @@ public class Command extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        String command = StringUtils.setColor(getOptionValue());
+        var command = StringUtils.setColor(getOptionValue());
         return CommandLog.supplier(getSBPlayer().getWorld(), () -> Utils.dispatchCommand(getSBPlayer(), command));
     }
 }

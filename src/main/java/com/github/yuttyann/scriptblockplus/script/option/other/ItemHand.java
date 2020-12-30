@@ -7,7 +7,6 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,19 +28,19 @@ public class ItemHand extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        String[] array = StringUtils.split(getOptionValue(), " ");
-        String[] itemData = StringUtils.split(array[0], ":");
+        var array = StringUtils.split(getOptionValue(), " ");
+        var itemData = StringUtils.split(array[0], ":");
         if (Calculation.REALNUMBER_PATTERN.matcher(itemData[0]).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }
-        Material type = ItemUtils.getMaterial(itemData[0]);
+        var type = ItemUtils.getMaterial(itemData[0]);
         int damage = itemData.length > 1 ? Integer.parseInt(itemData[1]) : 0;
         int amount = Integer.parseInt(array[1]);
-        String create = array.length > 2 ? StringUtils.createString(array, 2) : null;
-        String itemName = StringUtils.setColor(create);
+        var create = array.length > 2 ? StringUtils.createString(array, 2) : null;
+        var itemName = StringUtils.setColor(create);
 
-        Player player = getPlayer();
-        ItemStack[] items = ItemUtils.getHandItems(player);
+        var player = getPlayer();
+        var items = ItemUtils.getHandItems(player);
         if (Arrays.stream(items).noneMatch(i -> equals(i, itemName, type, amount, damage))) {
             SBConfig.ERROR_HAND.replace(type, amount, damage, itemName).send(player);
             return false;

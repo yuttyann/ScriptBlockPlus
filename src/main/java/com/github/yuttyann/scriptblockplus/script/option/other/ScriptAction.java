@@ -30,8 +30,7 @@ public class ScriptAction extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         Action action = getTempMap().get(KEY);
-        String[] array = StringUtils.split(getOptionValue(), ",");
-        return Arrays.stream(array).allMatch(s -> equals(action, s));
+        return Arrays.stream(StringUtils.split(getOptionValue(), ",")).allMatch(s -> equals(action, s));
     }
 
     private boolean equals(@Nullable Action action, @NotNull String type) {

@@ -1,14 +1,11 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerTempJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -31,13 +28,12 @@ public class OldCooldown extends TimerOption {
         if (inCooldown()) {
             return false;
         }
-        long value = Integer.parseInt(getOptionValue()) * 1000L;
-        long[] params = new long[] { System.currentTimeMillis(), value, 0L };
+        var params = new long[] { System.currentTimeMillis(), Integer.parseInt(getOptionValue()) * 1000L, 0L };
         params[2] = params[0] + params[1];
 
-        Json<PlayerTemp> json = new PlayerTempJson(getFileUniqueId());
-        json.load().getTimerTemp().add(new TimerTemp(getLocation(), getScriptType()).set(params));
-        json.saveFile();
+        var tempJson = new PlayerTempJson(getFileUniqueId());
+        tempJson.load().getTimerTemp().add(new TimerTemp(getLocation(), getScriptType()).set(params));
+        tempJson.saveFile();
         return true;
     }
 
@@ -50,7 +46,7 @@ public class OldCooldown extends TimerOption {
     @Override
     @NotNull
     protected Optional<TimerTemp> getTimerTemp() {
-        Set<TimerTemp> timers = new PlayerTempJson(getFileUniqueId()).load().getTimerTemp();
+        var timers = new PlayerTempJson(getFileUniqueId()).load().getTimerTemp();
         return get(timers, new TimerTemp(getLocation(), getScriptType()));
     }
 }

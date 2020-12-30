@@ -186,10 +186,10 @@ public class BlockCoords {
         if (array.length != 4) {
             throw new IllegalArgumentException();
         }
-        var world = Utils.getWorld(array[0].trim());
         int x = Integer.parseInt(array[1].trim());
         int y = Integer.parseInt(array[2].trim());
         int z = Integer.parseInt(array[3].trim());
+        var world = Utils.getWorld(array[0].trim());
         return new Location(world, x, y, z);
     }
 

@@ -53,7 +53,7 @@ public class TimerTemp {
         if (!(obj instanceof TimerTemp)) {
             return false;
         }
-        TimerTemp temp = (TimerTemp) obj;
+        var temp = (TimerTemp) obj;
         return Objects.equals(uuid, temp.uuid) && fullCoords.equals(temp.fullCoords) && scriptType.equals(temp.scriptType);
     }
 

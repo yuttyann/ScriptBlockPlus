@@ -25,12 +25,12 @@ public class Title extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        String[] array = StringUtils.split(getOptionValue(), "/");
-        String title = StringUtils.setColor(array[0] + "");
-        String subtitle = StringUtils.setColor(array.length > 1 ? array[1] : "");
+        var array = StringUtils.split(getOptionValue(), "/");
+        var title = StringUtils.setColor(array[0] + "");
+        var subtitle = StringUtils.setColor(array.length > 1 ? array[1] : "");
         int fadeIn = 10, stay = 40, fadeOut = 10;
         if (array.length == 3) {
-            String[] times = StringUtils.split(array[2], "-");
+            var times = StringUtils.split(array[2], "-");
             if (times.length == 3) {
                 fadeIn = Integer.parseInt(times[0]);
                 stay = Integer.parseInt(times[1]);
@@ -45,7 +45,7 @@ public class Title extends BaseOption {
         if (Utils.isCBXXXorLater("1.12")) {
             sbPlayer.getPlayer().sendTitle(title, subtitle, fadeIn, stay, fadeOut);
         } else {
-            String prefix = "title " + sbPlayer.getName();
+            var prefix = "title " + sbPlayer.getName();
             Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> {
                 Utils.dispatchCommand(sbPlayer, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
                 Utils.dispatchCommand(sbPlayer, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
