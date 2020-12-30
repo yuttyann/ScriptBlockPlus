@@ -5,7 +5,6 @@ import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
