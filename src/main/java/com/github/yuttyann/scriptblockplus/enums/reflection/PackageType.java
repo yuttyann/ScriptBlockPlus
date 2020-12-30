@@ -192,6 +192,34 @@ public enum PackageType {
         return constructor;
     }
 
+    public static int getSlimeSizeId() throws ReflectiveOperationException {
+        var entitySlime = NMS.getClass("EntitySlime");
+        var dataWatcherObject = NMS.getClass("DataWatcherObject");
+        for (var field : entitySlime.getDeclaredFields()) {
+            if (!field.getType().equals(dataWatcherObject)) {
+                continue;
+            }
+            field.setAccessible(true);
+            return (int) NMS.invokeMethod(field.get(null), "DataWatcherObject", "a");
+        }
+        return -1;
+    }
+
+    public static int getMagmaCubeId() throws ReflectiveOperationException {
+        int entityId = 0;
+        var entityTypes = NMS.getClass("EntityTypes");
+        for (var field : entityTypes.getFields()) {
+            if (!field.getType().equals(entityTypes)) {
+                continue;   
+            }
+            if (field.getName().equals("MAGMA_CUBE")) {
+                break;
+            }
+            entityId++;
+        }
+        return entityId;
+    }
+
     public static void sendActionBar(@NotNull Player player, @NotNull String text) throws ReflectiveOperationException {
         var chatSerializer = "IChatBaseComponent$ChatSerializer";
         var component = NMS.invokeMethod(null, chatSerializer, "a", "{\"text\": \"" + text + "\"}");

@@ -10,6 +10,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.WrappedDataWatcherObject;
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -202,28 +203,26 @@ public class GlowEntityPacket {
     }
 
     private int getTypeId() {
-        if (Utils.isCBXXXorLater("1.16")) {
-            return 44;
-        } else if (Utils.isCBXXXorLater("1.15")) {
-            return 41;
-        } else if (Utils.isCBXXXorLater("1.14")) {
-            return 40;
-        } else if (Utils.isCBXXXorLater("1.13")) {
-            return 38;
-        } else {
-            return 62;
+        int entityId = 62;
+        if (Utils.isCBXXXorLater("1.13")) {
+            try {
+                entityId = PackageType.getMagmaCubeId();
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
         }
+        return entityId;
     }
 
     private int getSizeId() {
-        if (Utils.isCBXXXorLater("1.15")) {
-            return 15;
-        } else if (Utils.isCBXXXorLater("1.14")) {
-            return 14;
-        } else if (Utils.isCBXXXorLater("1.10")) {
-            return 12;
-        } else {
-            return 11;
+        int sizeId = 11;
+        if (Utils.isCBXXXorLater("1.10")) {
+            try {
+                sizeId = PackageType.getSlimeSizeId();
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
         }
+        return sizeId;
     }
 }
