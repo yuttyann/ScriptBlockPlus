@@ -31,7 +31,7 @@ public enum CommandLog {
     }
 
     public void setLogAdmin(@NotNull World world) {
-        if (Utils.isCBXXXorLater("1.13")) {
+        if (Utils.isCBXXXorLater("1.13.2")) {
             world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, this.value);
         } else {
             world.setGameRuleValue("logAdminCommands", String.valueOf(this.value));
@@ -39,7 +39,7 @@ public enum CommandLog {
     }
 
     public void setCommandFeedBack(@NotNull World world) {
-        if (Utils.isCBXXXorLater("1.13")) {
+        if (Utils.isCBXXXorLater("1.13.2")) {
             world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, this.value);
         } else {
             world.setGameRuleValue("sendCommandFeedback", String.valueOf(this.value));
@@ -48,7 +48,7 @@ public enum CommandLog {
 
     @NotNull
     private static CommandLog getLogAdmin(@NotNull World world) { 
-        if (Utils.isCBXXXorLater("1.13")) {
+        if (Utils.isCBXXXorLater("1.13.2")) {
             return world.getGameRuleValue(GameRule.LOG_ADMIN_COMMANDS) ? TRUE : FALSE;
         } else {
             return Boolean.valueOf(world.getGameRuleValue("logAdminCommands")) ? TRUE : FALSE;
@@ -57,7 +57,7 @@ public enum CommandLog {
 
     @NotNull
     public static CommandLog getCommandFeedBack(@NotNull World world) { 
-        if (Utils.isCBXXXorLater("1.13")) {
+        if (Utils.isCBXXXorLater("1.13.2")) {
             return world.getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK) ? TRUE : FALSE;
         } else {
             return Boolean.valueOf(world.getGameRuleValue("sendCommandFeedback")) ? TRUE : FALSE;
