@@ -25,6 +25,10 @@ ScriptBlockPlus [Java11](https://jdk.java.net/) [MC1.9-1.16.x] [![](https://jitp
 ・**[PaperMC](https://papermc.io/)**<br>
 ・**[CatServer](http://catserver.moe/)**<br>
 
+**★バージョン"1.13-1.13.1"の動作について★**<br>
+サーバーが"**JAVA9**"以降に対応していないことが原因で、**バージョン"1.13、1.13.1"にてエラーが表示される不具合が存在します。**<br>
+プラグイン自体は正常に動作するのですが、問題が発生する可能性があるのでなるべく"[**1.13.2**](https://papermc.io/legacy)"を利用してください。<br>
+
 プラグイン記事
 -----------
 **[[Github, JP-オプション、コマンドの詳細]](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91)**<br>
