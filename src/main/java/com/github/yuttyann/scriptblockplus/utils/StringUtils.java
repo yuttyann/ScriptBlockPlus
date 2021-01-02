@@ -43,6 +43,7 @@ public final class StringUtils {
         return result;
     }
 
+    @Deprecated
     @NotNull
     public static String[] split(@Nullable String source, @NotNull String regex) {
         return isEmpty(source) ? ArrayUtils.EMPTY_STRING_ARRAY : source.split(regex);
