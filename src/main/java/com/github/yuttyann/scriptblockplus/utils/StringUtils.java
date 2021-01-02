@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,22 +44,13 @@ public final class StringUtils {
     }
 
     @NotNull
-    public static String[] split(@NotNull String source, @NotNull String delimiter) {
-        int start = 0;
-        int end = source.indexOf(delimiter, start);
-        var result = new LinkedList<String>();
-        while (end != -1) {
-            result.add(source.substring(start, end));
-            start = end + delimiter.length();
-            end = source.indexOf(delimiter, start);
-        }
-        result.add(source.substring(start));
-        return result.toArray(String[]::new);
+    public static String[] split(@Nullable String source, @NotNull String regex) {
+        return isEmpty(source) ? ArrayUtils.EMPTY_STRING_ARRAY : source.split(regex);
     }
 
-    @Nullable
-    public static String replace(@Nullable String source, char search, char replace) {
-        return isEmpty(source) ? source : source.replace(search, replace);
+    @NotNull
+    public static String replace(@Nullable String source, @NotNull String search, @Nullable Object replace) {
+        return isEmpty(source) ? "" : source.replace(search, replace == null ? "" : replace.toString());
     }
 
     @NotNull
@@ -90,29 +82,8 @@ public final class StringUtils {
     }
 
     @NotNull
-    public static String replace(@Nullable String source, @NotNull String search, @Nullable Object replace) {
-        if (isEmpty(source)) {
-            return "";
-        }
-        int start = 0;
-        int end = source.indexOf(search, start);
-        if (end == -1) {
-            return source;
-        }
-        var value = replace == null ? "" : replace.toString();
-        int searchLength = search.length();
-        int replaceLength = Math.max(source.length() - value.length(), 0);
-        var builder = new StringBuilder(source.length() + replaceLength);
-        while (end != -1) {
-            builder.append(source, start, end).append(value);
-            end = source.indexOf(search, start = end + searchLength);
-        }
-        return builder.append(source.substring(start)).toString();
-    }
-
-    @NotNull
     public static String createString(@NotNull String[] args, int start) {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         for (int i = start; i < args.length; i++) {
             builder.append(args[i]).append(i == (args.length - 1) ? "" : " ");
         }
@@ -132,15 +103,7 @@ public final class StringUtils {
         return !isEmpty(source);
     }
 
-    public static boolean isNotEmpty(@NotNull String[] sources) {
-        return !isEmpty(sources);
-    }
-
     public static boolean isEmpty(@Nullable String source) {
         return source == null || source.length() == 0;
-    }
-
-    public static boolean isEmpty(@NotNull String[] sources) {
-        return Arrays.stream(sources).anyMatch(StringUtils::isEmpty);
     }
 }

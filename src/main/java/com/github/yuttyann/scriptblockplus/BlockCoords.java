@@ -1,12 +1,13 @@
 package com.github.yuttyann.scriptblockplus;
 
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -165,13 +166,12 @@ public class BlockCoords {
      */
     @NotNull
     public static Location fromString(@NotNull World world, @NotNull String coords) {
-        var array = StringUtils.split(coords, ",");
-        if (array.length != 3) {
+        var xyz = coords.split(",");
+        if (xyz.length != 3) {
             throw new IllegalArgumentException();
         }
-        int x = Integer.parseInt(array[0].trim());
-        int y = Integer.parseInt(array[1].trim());
-        int z = Integer.parseInt(array[2].trim());
+        Arrays.parallelSetAll(xyz, i -> xyz[i].trim());
+        int x = Integer.parseInt(xyz[0]), y = Integer.parseInt(xyz[1]), z = Integer.parseInt(xyz[2]);
         return new Location(world, x, y, z);
     }
 
@@ -182,15 +182,13 @@ public class BlockCoords {
      */
     @NotNull
     public static Location fromString(@NotNull String fullCoords) {
-        var array = StringUtils.split(fullCoords, ",");
-        if (array.length != 4) {
+        var wxyz = fullCoords.split(",");
+        if (wxyz.length != 4) {
             throw new IllegalArgumentException();
         }
-        int x = Integer.parseInt(array[1].trim());
-        int y = Integer.parseInt(array[2].trim());
-        int z = Integer.parseInt(array[3].trim());
-        var world = Utils.getWorld(array[0].trim());
-        return new Location(world, x, y, z);
+        Arrays.parallelSetAll(wxyz, i -> wxyz[i].trim());
+        int x = Integer.parseInt(wxyz[1]), y = Integer.parseInt(wxyz[2]), z = Integer.parseInt(wxyz[3]);
+        return new Location(Utils.getWorld(wxyz[0]), x, y, z);
     }
 
     /**

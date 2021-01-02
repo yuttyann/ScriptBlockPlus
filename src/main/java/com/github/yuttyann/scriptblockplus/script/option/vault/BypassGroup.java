@@ -24,7 +24,7 @@ public class BypassGroup extends BaseOption {
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
             throw new UnsupportedOperationException();
         }
-        var array = StringUtils.split(getOptionValue(), "/");
+        var array = getOptionValue().split("/");
         if (array.length < 2) {
             throw new IllegalArgumentException("Insufficient parameters");
         }

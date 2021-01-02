@@ -163,7 +163,7 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         public void setLastEdit() {
-            scriptParam.setLastEdit(Utils.getFormatTime());
+            scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         }
 
         @Override

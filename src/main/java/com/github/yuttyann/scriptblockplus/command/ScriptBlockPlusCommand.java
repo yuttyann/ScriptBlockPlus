@@ -173,8 +173,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
         // フォルダをコピー（再帰）
         try {
-            Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
-
+            FileVisitor<Path> fileVisitor = new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path path, BasicFileAttributes attributes) throws IOException {
                     if (!path.toString().contains(SBFiles.S + "backup" + SBFiles.S)) {
@@ -185,7 +184,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                     }
                     return FileVisitResult.CONTINUE;
                 }
-            });
+            };
+            Files.walkFileTree(source, fileVisitor);
         } finally {
             SBConfig.PLUGIN_BACKUP.send(sender);
         }
@@ -213,19 +213,21 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             SBConfig.DATAMIGR_START.send(sender);
             var uuid = ((Player) sender).getUniqueId();
             new Thread(() -> {
-                if (interactFile.exists()) {
+                try {
                     convart(uuid, interactFile, ScriptType.INTERACT);
-                }
-                if (walkFile.exists()) {
                     convart(uuid, walkFile, ScriptType.WALK);
+                } finally {
+                    SBConfig.DATAMIGR_END.send(sender);
                 }
-                SBConfig.DATAMIGR_END.send(sender);
             }).start();
         }
         return true;
     }
 
     private void convart(@NotNull UUID uuid, @NotNull File file, @NotNull ScriptType scriptType) {
+        if (!file.exists()) {
+            return;
+        }
         var scriptFile = YamlConfig.load(getPlugin(), file, false);
         var scriptJson = new BlockScriptJson(scriptType);
         var blockScript = scriptJson.load();
@@ -239,7 +241,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                 }
                 var scriptParam = blockScript.get(BlockCoords.fromString(world, coords));
                 scriptParam.getAuthor().add(uuid);
-                scriptParam.setLastEdit(Utils.getFormatTime());
+                scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
                 scriptParam.setScript(script);
             }
         }
@@ -251,12 +253,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         if (!isPlayer(sender) || !Permission.has(sender, scriptType, true)) {
             return false;
         }
-        int x = Integer.parseInt(args[3]);
-        int y = Integer.parseInt(args[4]);
-        int z = Integer.parseInt(args[5]);
-        var world = Utils.getWorld(args[2]);
-        var location = new Location(world, x, y, z);
-        ScriptBlock.getInstance().getAPI().read((Player) sender, location, scriptType, 0);
+        int x = Integer.parseInt(args[3]), y = Integer.parseInt(args[4]),z = Integer.parseInt(args[5]);
+        ScriptBlock.getInstance().getAPI().read((Player) sender, new Location(Utils.getWorld(args[2]), x, y, z), scriptType, 0);
         return true;
     }
 

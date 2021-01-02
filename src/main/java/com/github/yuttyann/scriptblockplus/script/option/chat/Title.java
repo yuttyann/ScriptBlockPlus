@@ -25,12 +25,12 @@ public class Title extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), "/");
+        var array = getOptionValue().split("/");
         var title = StringUtils.setColor(array[0] + "");
         var subtitle = StringUtils.setColor(array.length > 1 ? array[1] : "");
         int fadeIn = 10, stay = 40, fadeOut = 10;
         if (array.length == 3) {
-            var times = StringUtils.split(array[2], "-");
+            var times = array[2].split("-");
             if (times.length == 3) {
                 fadeIn = Integer.parseInt(times[0]);
                 stay = Integer.parseInt(times[1]);

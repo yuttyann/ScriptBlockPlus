@@ -62,10 +62,9 @@ public final class SBLoader {
         if (StringUtils.isEmpty(author)) {
             return new ArrayList<>();
         }
-        var authors = StringUtils.split(author, ",");
-        var result = new ArrayList<UUID>(authors.length);
-        StreamUtils.forEach(authors, s -> result.add(UUID.fromString(s.trim())));
-        return result;
+        var uuids = new ArrayList<UUID>();
+        StreamUtils.forEach(author.split(","), s -> uuids.add(UUID.fromString(s.trim())));
+        return uuids;
     }
 
     @NotNull
@@ -82,6 +81,7 @@ public final class SBLoader {
         return scriptFile.getInt(path + KEY_AMOUNT, -1);
     }
 
+    @NotNull
     private SBLoader createPath(@NotNull Location location) {
         this.location = location;
         this.path = Objects.requireNonNull(location.getWorld()).getName() + "." + BlockCoords.getCoords(location);

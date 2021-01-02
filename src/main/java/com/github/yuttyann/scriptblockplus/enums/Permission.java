@@ -71,8 +71,7 @@ public enum Permission {
 
     @NotNull
     public static String[] getTypeNodes(boolean isCMDorUse) {
-        var values = Arrays.asList(ScriptType.values());
-        return StreamUtils.toArray(values, t -> getTypeNode(t, isCMDorUse), String[]::new);
+        return StreamUtils.toArray(Arrays.asList(ScriptType.values()), t -> getTypeNode(t, isCMDorUse), String[]::new);
     }
 
     @NotNull

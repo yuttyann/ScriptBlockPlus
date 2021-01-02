@@ -101,7 +101,7 @@ public class SBClipboard {
             scriptParam.setAuthor(author);
             scriptParam.getAuthor().add(sbPlayer.getUniqueId());
             scriptParam.setScript(script);
-            scriptParam.setLastEdit(Utils.getFormatTime());
+            scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
             scriptParam.setAmount(amount);
             scriptJson.saveFile();
             PlayerCountJson.clear(location, scriptType);

@@ -27,25 +27,25 @@ public class BlockType extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        Block block = getLocation().getBlock();
-        return Stream.of(StringUtils.split(getOptionValue(), ",")).anyMatch(s -> equals(block, s));
+        var block = getLocation().getBlock();
+        return Stream.of(getOptionValue().split(",")).anyMatch(s -> equals(block, s));
     }
 
-    private boolean equals(@NotNull Block block, @NotNull String blockType) {
-        if (StringUtils.isEmpty(blockType)) {
+    private boolean equals(@NotNull Block block, @NotNull String type) {
+        if (StringUtils.isEmpty(type)) {
             return false;
         }
-        String[] array = StringUtils.split(blockType, ":");
+        var array = type.split(":");
         if (Calculation.REALNUMBER_PATTERN.matcher(array[0]).matches()) {
             Utils.sendColorMessage(getSBPlayer(), "§cNumerical values can not be used");
             return false;
         }
-        Material type = Material.getMaterial(array[0]);
-        if (type == null || !type.isBlock()) {
+        var material = Material.getMaterial(array[0]);
+        if (material == null || !material.isBlock()) {
             return false;
         }
         byte data = array.length == 2 ? Byte.parseByte(array[1]) : -1;
-        return type == block.getType() && (data == -1 || data == getData(block));
+        return material == block.getType() && (data == -1 || data == getData(block));
     }
 
     private byte getData(@NotNull Block block) {

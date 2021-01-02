@@ -95,7 +95,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
      */
     @NotNull
     public final String getValue(@NotNull String script) {
-        return StringUtils.isNotEmpty(script) ? script.substring(length) : "";
+        return StringUtils.isEmpty(script) ? "" : script.substring(length);
     }
 
     /**

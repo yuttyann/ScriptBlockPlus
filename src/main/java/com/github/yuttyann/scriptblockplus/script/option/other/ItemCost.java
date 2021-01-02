@@ -30,16 +30,16 @@ public class ItemCost extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), " ");
-        var itemData = StringUtils.split(array[0], ":");
-        if (Calculation.REALNUMBER_PATTERN.matcher(itemData[0]).matches()) {
+        var array = getOptionValue().split(" ");
+        var param = array[0].split(":");
+        if (Calculation.REALNUMBER_PATTERN.matcher(param[0]).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }
-        var type = ItemUtils.getMaterial(itemData[0]);
-        int damage = itemData.length > 1 ? Integer.parseInt(itemData[1]) : 0;
+        var material = ItemUtils.getMaterial(param[0]);
+        int damage = param.length > 1 ? Integer.parseInt(param[1]) : 0;
         int amount = Integer.parseInt(array[1]);
         var create = array.length > 2 ? StringUtils.createString(array, 2) : null;
-        var itemName = StringUtils.setColor(create);
+        var name = StringUtils.setColor(create);
 
         var player = getPlayer();
         var inventory = player.getInventory();
@@ -49,12 +49,12 @@ public class ItemCost extends BaseOption {
         var items = inventory.getContents();
         int result = amount;
         for (var item : items) {
-            if (equals(item, itemName, type, damage)) {
+            if (equals(item, material, name, damage)) {
                 result -= result > 0 ? setAmount(item, item.getAmount() - result) : 0;
             }
         }
         if (result > 0) {
-            SBConfig.ERROR_ITEM.replace(type, amount, damage, itemName).send(player);
+            SBConfig.ERROR_ITEM.replace(material, amount, damage, name).send(player);
             return false;
         }
         inventory.setContents(items);
@@ -67,11 +67,11 @@ public class ItemCost extends BaseOption {
         return oldAmount;
     }
 
-    private boolean equals(@Nullable ItemStack item, @NotNull String itemName, @Nullable Material type, int damage) {
+    private boolean equals(@Nullable ItemStack item, @Nullable Material material, @NotNull String name, int damage) {
         if (item == null || ItemUtils.getDamage(item) != damage) {
             return false;
         }
-        return ItemUtils.isItem(item, type, StringUtils.isEmpty(itemName) ? item.getType().name() : itemName);
+        return ItemUtils.isItem(item, material, StringUtils.isEmpty(name) ? item.getType().name() : name);
     }
 
     @NotNull

@@ -28,30 +28,30 @@ public class ItemHand extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), " ");
-        var itemData = StringUtils.split(array[0], ":");
-        if (Calculation.REALNUMBER_PATTERN.matcher(itemData[0]).matches()) {
+        var array = getOptionValue().split(" ");
+        var param = array[0].split(":");
+        if (Calculation.REALNUMBER_PATTERN.matcher(param[0]).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }
-        var type = ItemUtils.getMaterial(itemData[0]);
-        int damage = itemData.length > 1 ? Integer.parseInt(itemData[1]) : 0;
+        var material = ItemUtils.getMaterial(param[0]);
+        int damage = param.length > 1 ? Integer.parseInt(param[1]) : 0;
         int amount = Integer.parseInt(array[1]);
         var create = array.length > 2 ? StringUtils.createString(array, 2) : null;
-        var itemName = StringUtils.setColor(create);
+        var name = StringUtils.setColor(create);
 
         var player = getPlayer();
         var items = ItemUtils.getHandItems(player);
-        if (Arrays.stream(items).noneMatch(i -> equals(i, itemName, type, amount, damage))) {
-            SBConfig.ERROR_HAND.replace(type, amount, damage, itemName).send(player);
+        if (Arrays.stream(items).noneMatch(i -> equals(i, material, name, amount, damage))) {
+            SBConfig.ERROR_HAND.replace(material, amount, damage, name).send(player);
             return false;
         }
         return true;
     }
 
-    private boolean equals(@Nullable ItemStack item, @NotNull String itemName, @Nullable Material type, int amount, int damage) {
+    private boolean equals(@Nullable ItemStack item, @Nullable Material material, @NotNull String name, int amount, int damage) {
         if (item == null || item.getAmount() < amount || ItemUtils.getDamage(item) != damage) {
             return false;
         }
-        return ItemUtils.isItem(item, type, StringUtils.isEmpty(itemName) ? item.getType().name() : itemName);
+        return ItemUtils.isItem(item, material, StringUtils.isEmpty(name) ? item.getType().name() : name);
     }
 }

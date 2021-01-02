@@ -30,8 +30,8 @@ public class Amount extends BaseOption {
         }
         scriptParam.subtractAmount(1);
         if (scriptParam.getAmount() <= 0) {
-            PlayerCountJson.clear(getLocation(), getScriptType());
             TimerOption.removeAll(getLocation(), getScriptType());
+            PlayerCountJson.clear(getLocation(), getScriptType());
             scriptJson.load().remove(getLocation());
         }
         scriptJson.saveFile();

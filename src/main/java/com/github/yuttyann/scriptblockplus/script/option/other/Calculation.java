@@ -11,11 +11,7 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -38,17 +34,17 @@ public class Calculation extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        String[] array = StringUtils.split(getOptionValue(), " ");
-        Player player = getPlayer();
-        Object value1 = parse(player, array[0]);
-        Object value2 = parse(player, array[2]);
-        String operator = array[1];
+        var array = getOptionValue().split(" ");
+        var player = getPlayer();
+        var value1 = parse(player, array[0]);
+        var value2 = parse(player, array[2]);
+        var operator = array[1];
 
         if (result(value1, value2, operator)) {
             return true;
         }
         if (array.length > 3) {
-            String message = StringUtils.setColor(StringUtils.createString(array, 3));
+            var message = StringUtils.setColor(StringUtils.createString(array, 3));
             message = StringUtils.replace(message, "%value1%", value1);
             message = StringUtils.replace(message, "%value2%", value2);
             message = StringUtils.replace(message, "%operator%", operator);
@@ -57,25 +53,25 @@ public class Calculation extends BaseOption {
         return false;
     }
 
-    private Object parse(Player player, @NotNull String source) throws Exception {
+    private Object parse(@NotNull Player player, @NotNull String source) throws Exception {
         if (REALNUMBER_PATTERN.matcher(source).matches()) {
             return Double.parseDouble(source);
         }
         if (source.startsWith("%player_count_") && source.endsWith("%")) {
             source = source.substring("%player_count_".length(), source.length() - 1);
-            String[] array = StringUtils.split(source, "/");
+            var array = source.split("/");
             if (array.length < 1 || array.length > 2) {
                 return 0;
             }
-            ScriptType scriptType = array.length == 1 ? getScriptType() : ScriptType.valueOf(array[0]);
-            Location location = BlockCoords.fromString(array.length == 1 ? array[0] : array[1]);
+            var location = BlockCoords.fromString(array.length == 1 ? array[0] : array[1]);
+            var scriptType = array.length == 1 ? getScriptType() : ScriptType.valueOf(array[0]);
             return new PlayerCountJson(getUniqueId()).load(location, scriptType).getAmount();
         }
         if (source.startsWith("%player_others_in_range_") && source.endsWith("%")) {
             source = source.substring("%player_others_in_range_".length(), source.length() - 1);
-            World world = Objects.requireNonNull(player.getLocation().getWorld());
+            var world = Objects.requireNonNull(player.getLocation().getWorld());
             int count = 0, result = Integer.parseInt(source) * Integer.parseInt(source);
-            for (Player worldPlayer : world.getPlayers()) {
+            for (var worldPlayer : world.getPlayers()) {
                 if (player != worldPlayer && player.getLocation().distanceSquared(worldPlayer.getLocation()) <= result) {
                     count++;
                 }
@@ -84,11 +80,11 @@ public class Calculation extends BaseOption {
         }
         if (source.startsWith("%player_ping_") && source.endsWith("%")) {
             source = source.substring("%player_ping_".length(), source.length() - 1);
-            Player target = Bukkit.getPlayer(source);
+            var target = Bukkit.getPlayer(source);
             if (target == null) {
                 return 0;
             }
-            Object handle = PackageType.CB_ENTITY.invokeMethod(target, "CraftPlayer", "getHandle");
+            var handle = PackageType.CB_ENTITY.invokeMethod(target, "CraftPlayer", "getHandle");
             return PackageType.NMS.getField("EntityPlayer", "ping").getInt(handle);
         }
         if (source.startsWith("%server_online_") && source.endsWith("%")) {
@@ -97,8 +93,8 @@ public class Calculation extends BaseOption {
         }
         if (source.startsWith("%objective_score_") && source.endsWith("%")) {
             source = source.substring("%objective_score_".length(), source.length() - 1);
-            ScoreboardManager scoreboardManager = Objects.requireNonNull(Bukkit.getScoreboardManager());
-            Objective objective = scoreboardManager.getMainScoreboard().getObjective(source);
+            var scoreboard = Objects.requireNonNull(Bukkit.getScoreboardManager());
+            var objective = scoreboard.getMainScoreboard().getObjective(source);
             return objective == null ? 0 : objective.getScore(player.getName()).getScore();
         }
         switch (source) {
@@ -109,7 +105,7 @@ public class Calculation extends BaseOption {
             case "%player_count%":
                 return new PlayerCountJson(getUniqueId()).load(getLocation(), getScriptType()).getAmount();
             case "%player_ping%":
-                Object handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
+                var handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
                 return PackageType.NMS.getField("EntityPlayer", "ping").getInt(handle);
             case "%player_x%":
                 return player.getLocation().getBlockX();
@@ -182,8 +178,7 @@ public class Calculation extends BaseOption {
             case "%player_walk_speed%":
                 return player.getWalkSpeed();
             case "%vault_eco_balance%":
-                VaultEconomy vaultEconomy = VaultEconomy.INSTANCE;
-                return vaultEconomy.isEnabled() ? vaultEconomy.getBalance(player) : 0;
+                return VaultEconomy.INSTANCE.isEnabled() ? VaultEconomy.INSTANCE.getBalance(player) : 0;
             default:
                 return source;
         }

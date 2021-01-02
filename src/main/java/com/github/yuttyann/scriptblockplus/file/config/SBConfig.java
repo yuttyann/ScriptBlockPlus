@@ -114,7 +114,7 @@ public final class SBConfig {
         s = replace(s, "%material%", String.valueOf(m));
         s = replace(s, "%amount%", r.getArg(1, Integer.class));
         s = replace(s, "%damage%", r.getArg(2, Integer.class));
-        s = replace(s, "%itemname%", isEmpty(n) ? String.valueOf(m) : n);
+        s = replace(s, "%name%", isEmpty(n) ? String.valueOf(m) : n);
         return s;
     };
 
@@ -232,12 +232,12 @@ public final class SBConfig {
     public static final ReplaceKey ERROR_GROUP = replaceKey(stringKey("ErrorGroupMessage", ""), "%group%");
 
     /**
-     * Parameter: {@link Material} type, {@link Integer} amount, {@link Integer} damage, {@link String} itemName
+     * Parameter: {@link Material} material, {@link Integer} amount, {@link Integer} damage, {@link String} name
      */
     public static final ReplaceKey ERROR_HAND = replaceKey(stringKey("ErrorHandMessage", ""), FUNCTION_ITEM);
 
     /**
-     * Parameter: {@link Material} type, {@link Integer} amount, {@link Integer} damage, {@link String} itemName
+     * Parameter: {@link Material} material, {@link Integer} amount, {@link Integer} damage, {@link String} name
      */
     public static final ReplaceKey ERROR_ITEM = replaceKey(stringKey("ErrorItemMessage", ""), FUNCTION_ITEM);
 

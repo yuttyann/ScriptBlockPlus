@@ -254,7 +254,7 @@ public enum PackageType {
     }
 
     public Enum<?> getEnumValueOf(@NotNull String className, @NotNull String name) throws IllegalArgumentException, ReflectiveOperationException {
-        Class<?> clazz = getClass(className);
+        var clazz = getClass(className);
         return clazz.isEnum() ? (Enum<?>) getMethod(className, "valueOf", String.class).invoke(null, name) : null;
     }
 

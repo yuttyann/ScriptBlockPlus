@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -33,7 +32,7 @@ public final class NameFetcher {
         var name = CACHE.get(uuid);
         if (name == null) {
             var json = getJsonObject(URL + StringUtils.replace(uuid.toString(), "-", ""));
-            var error = Objects.requireNonNull(json).get("errorMessage").getAsString();
+            var error = json.get("errorMessage").getAsString();
             if (StringUtils.isNotEmpty(error)) {
                 throw new IllegalStateException(error);
             }
@@ -50,7 +49,7 @@ public final class NameFetcher {
         }
         try (var reader = new BufferedReader(new InputStreamReader(webFile))) {
             String line = reader.readLine();
-            return StringUtils.isNotEmpty(line) ? new Gson().fromJson(line, JsonObject.class) : null;
+            return StringUtils.isEmpty(line) ? null : new Gson().fromJson(line, JsonObject.class);
         }
     }
 }

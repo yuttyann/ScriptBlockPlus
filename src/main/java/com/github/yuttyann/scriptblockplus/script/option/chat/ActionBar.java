@@ -11,7 +11,8 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
@@ -21,7 +22,11 @@ import java.lang.reflect.InvocationTargetException;
  * @author yuttyann44581
  */
 @OptionTag(name = "actionbar", syntax = "@actionbar:")
-public class ActionBar extends BaseOption {
+public class ActionBar extends BaseOption implements Runnable {
+
+    private int tick, stay;
+    private String message;
+    private BukkitTask task;
 
     @Override
     @NotNull
@@ -31,15 +36,27 @@ public class ActionBar extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), "/");
-        var message = StringUtils.setColor(array[0]);
+        var array = getOptionValue().split("/");
+        this.message = StringUtils.setColor(array[0]);
         if (array.length > 1) {
-            int stay = Integer.parseInt(array[1]);
-            new Task(stay, message).runTaskTimer(ScriptBlock.getInstance(), 0, 20);
+            this.stay = Integer.parseInt(array[1]);
+            this.task = Bukkit.getScheduler().runTaskTimer(ScriptBlock.getInstance(), this, 0, 20);
         } else {
             send(getSBPlayer(), message);
         }
         return true;
+    }
+
+    @Override
+    public void run() {
+        try {
+            if (!getSBPlayer().isOnline() || tick++ >= stay) {
+                task.cancel();
+            }
+            send(getSBPlayer(), task.isCancelled() ? "" : message);
+        } catch (Exception e) {
+            task.cancel();
+        }
     }
 
     public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
@@ -57,32 +74,6 @@ public class ActionBar extends BaseOption {
                 PackageType.sendActionBar(sbPlayer.getPlayer(), message);
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
-            }
-        }
-    }
-
-    private class Task extends BukkitRunnable {
-
-        private final int stay;
-        private final String message;
-
-        private int tick;
-
-        private Task(int stay, @NotNull String message) {
-            this.tick = 0;
-            this.stay = stay;
-            this.message = message;
-        }
-
-        @Override
-        public void run() {
-            try {
-                if (!getSBPlayer().isOnline() || tick++ >= stay) {
-                    cancel();
-                }
-                send(getSBPlayer(), isCancelled() ? "" : message);
-            } catch (Exception e) {
-                cancel();
             }
         }
     }

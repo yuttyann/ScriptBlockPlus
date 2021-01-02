@@ -4,9 +4,9 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,7 +14,11 @@ import org.jetbrains.annotations.NotNull;
  * @author yuttyann44581
  */
 @OptionTag(name = "sound", syntax = "@sound:")
-public class PlaySound extends BaseOption {
+public class PlaySound extends BaseOption implements Runnable {
+
+    private Sound sound;
+    private int volume, pitch;
+    private boolean sendAllPlayer;
 
     @Override
     @NotNull
@@ -24,48 +28,33 @@ public class PlaySound extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), "/");
-        var sound = StringUtils.split(array[0], "-");
-        var type = Sound.valueOf(sound[0].toUpperCase());
-        int volume = Integer.parseInt(sound[1]);
-        int pitch = Integer.parseInt(sound[2]);
-        long delay = sound.length > 3 ? Long.parseLong(sound[3]) : 0;
-        boolean sendAllPlayer = array.length > 1 && Boolean.parseBoolean(array[1]);
+        var array = getOptionValue().split("/");
+        var param = array[0].split("-");
+        var delay = param.length > 3 ? Long.parseLong(param[3]) : 0;
+        this.sound = Sound.valueOf(param[0].toUpperCase());
+        this.volume = Integer.parseInt(param[1]);
+        this.pitch = Integer.parseInt(param[2]);
+        this.sendAllPlayer = array.length > 1 && Boolean.parseBoolean(array[1]);
 
-        if (delay > 0) {
-            new Task(type, volume, pitch, sendAllPlayer).runTaskLater(ScriptBlock.getInstance(), delay);
+        if (delay < 1) {
+            playSound();
         } else {
-            playSound(type, volume, pitch, sendAllPlayer);
+            Bukkit.getScheduler().runTaskLater(ScriptBlock.getInstance(), this, delay);
         }
         return true;
     }
 
-    private void playSound(@NotNull Sound soundType, int volume, int pitch, boolean sendAllPlayer) {
-        var world = getLocation().getWorld();
-        if (sendAllPlayer && world != null) {
-            world.playSound(getLocation(), soundType, volume, pitch);
-        } else if (getSBPlayer().isOnline()) {
-            getPlayer().playSound(getLocation(), soundType, volume, pitch);
-        }
+    @Override
+    public void run() {
+        playSound();
     }
 
-    private class Task extends BukkitRunnable {
-
-        private final Sound soundType;
-        private final int volume;
-        private final int pitch;
-        private final boolean sendAllPlayer;
-
-        Task(@NotNull Sound soundType, int volume, int pitch, boolean sendAllPlayer) {
-            this.soundType = soundType;
-            this.volume = volume;
-            this.pitch = pitch;
-            this.sendAllPlayer = sendAllPlayer;
-        }
-
-        @Override
-        public void run() {
-            playSound(soundType, volume, pitch, sendAllPlayer);
+    private void playSound() {
+        var world = getLocation().getWorld();
+        if (sendAllPlayer && world != null) {
+            world.playSound(getLocation(), sound, volume, pitch);
+        } else if (getSBPlayer().isOnline()) {
+            getPlayer().playSound(getLocation(), sound, volume, pitch);
         }
     }
 }

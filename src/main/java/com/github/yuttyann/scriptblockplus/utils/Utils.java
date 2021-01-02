@@ -5,6 +5,8 @@ import com.github.yuttyann.scriptblockplus.enums.CommandLog;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.hook.CommandSelector;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.google.common.base.Splitter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -19,14 +21,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Supplier;
-
 import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
-
 /**
  * ScriptBlockPlus Utils クラス
  * @author yuttyann44581
  */
 public final class Utils {
+
+    public static final String DATE_PATTERN = "yyyy/MM/dd HH:mm:ss";
 
     private static final String SERVER_VERSION = getServerVersion();
     private static final Map<String, Boolean> VC_CACHE = new HashMap<>();
@@ -66,17 +68,18 @@ public final class Utils {
     }
 
     public static int getVersionInt(@NotNull String source) {
-        var array = split(source, ".");
-        int result = (Integer.parseInt(array[0]) * 100000) + (Integer.parseInt(array[1]) * 1000);
-        if (array.length == 3) {
-            result += Integer.parseInt(array[2]);
+        var version = source.split(".");
+        if (version.length < 1) {
+            return -1;
+        }
+        int result = Integer.parseInt(version[0]) * 100000;
+        if (version.length == 2) {
+            result += Integer.parseInt(version[1]) * 1000;
+        }
+        if (version.length == 3) {
+            result += Integer.parseInt(version[2]);
         }
         return result;
-    }
-
-    @NotNull
-    public static String getFormatTime() {
-        return getFormatTime("yyyy/MM/dd HH:mm:ss");
     }
 
     @NotNull
@@ -85,12 +88,9 @@ public final class Utils {
     }
 
     public static void sendColorMessage(@NotNull CommandSender sender, @Nullable String message) {
-        if (isEmpty(message)) {
-            return;
-        }
         var color = "";
-        message = replace(setColor(message), "\\n", "|~");
-        for (var line : split(message, "|~")) {
+        var text = replace(setColor(isEmpty(message) ? "" : message), "\\n", "|~");
+        for (String line : Splitter.on("|~").omitEmptyStrings().split(text)) {
             sender.sendMessage(line = (color + line));
             if (line.indexOf('§') > -1) {
                 color = getColors(line);
