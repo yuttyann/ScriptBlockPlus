@@ -46,10 +46,12 @@ public abstract class TriggerListener<E extends Event> implements Listener {
     }
 
     @Nullable
-    public abstract Trigger createTrigger(@NotNull E event);
+    public TriggerEvent getTriggerEvent(@NotNull Trigger trigger) {
+        return new TriggerEvent(trigger.getPlayer(), trigger.getBlock(), getScriptType());
+    }
 
     @Nullable
-    public abstract TriggerEvent getTriggerEvent(@NotNull Trigger trigger);
+    public abstract Trigger createTrigger(@NotNull E event);
 
     protected final class Trigger {
 

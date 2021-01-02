@@ -1,5 +1,7 @@
 package com.github.yuttyann.scriptblockplus.event;
 
+import com.github.yuttyann.scriptblockplus.script.ScriptType;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -9,12 +11,19 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus TriggerEvent イベントクラス
  * @author yuttyann44581
  */
-public abstract class TriggerEvent extends ScriptBlockEvent {
+public class TriggerEvent extends ScriptBlockEvent {
 
     private boolean cancelled;
+    private ScriptType scriptType;
 
-    public TriggerEvent(@NotNull final Player player, @NotNull final Block block) {
+    public TriggerEvent(@NotNull final Player player, @NotNull final Block block, @NotNull final ScriptType scriptType) {
         super(player, block);
+        this.scriptType = scriptType;
+    }
+
+    @NotNull
+    public ScriptType getScriptType() {
+        return scriptType;
     }
 
     @NotNull

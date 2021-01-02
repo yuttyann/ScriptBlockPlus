@@ -1,8 +1,6 @@
 package com.github.yuttyann.scriptblockplus.listener.trigger;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.event.ScriptBlockBreakEvent;
-import com.github.yuttyann.scriptblockplus.event.TriggerEvent;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
@@ -32,11 +30,5 @@ public class BreakTrigger extends TriggerListener<BlockBreakEvent> {
             event.setCancelled(true);
         }
         return event.isCancelled() ? null : new Trigger(player, event.getBlock(), event);
-    }
-
-    @Override
-    @Nullable
-    public TriggerEvent getTriggerEvent(@NotNull Trigger trigger) {
-        return new ScriptBlockBreakEvent(trigger.getPlayer(), trigger.getBlock());
     }
 }

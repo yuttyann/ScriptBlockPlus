@@ -2,8 +2,6 @@ package com.github.yuttyann.scriptblockplus.listener.trigger;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.event.ScriptBlockWalkEvent;
-import com.github.yuttyann.scriptblockplus.event.TriggerEvent;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
@@ -37,11 +35,5 @@ public class WalkTrigger extends TriggerListener<PlayerMoveEvent> {
         }
         var location = blockCoords.toLocation();
         return new Trigger(sbPlayer.getPlayer(), location.getBlock(), event);
-    }
-
-    @Override
-    @Nullable
-    public TriggerEvent getTriggerEvent(@NotNull Trigger trigger) {
-        return new ScriptBlockWalkEvent(trigger.getPlayer(), trigger.getBlock());
     }
 }
