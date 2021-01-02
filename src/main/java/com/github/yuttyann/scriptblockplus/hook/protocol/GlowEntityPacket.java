@@ -73,8 +73,8 @@ public class GlowEntityPacket {
         StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> new EntityActionListener().register());
     }
 
-    private final int TYPE_ID = getTypeId();
-    private final int SIZE_ID = getSizeId();
+    private final int TYPE_ID = PackageType.getMagmaCubeId();
+    private final int SIZE_ID = PackageType.getSlimeSizeId();
     private final Multimap<UUID, GlowEntity> GLOW_ENTITIES = HashMultimap.create();
 
     @NotNull
@@ -200,29 +200,5 @@ public class GlowEntityPacket {
     @NotNull
     private WrappedDataWatcherObject createObject(final int index, @NotNull Class<?> clazz) {
         return new WrappedDataWatcherObject(index, Registry.get(clazz));
-    }
-
-    private int getTypeId() {
-        int entityId = 62;
-        if (Utils.isCBXXXorLater("1.13")) {
-            try {
-                entityId = PackageType.getMagmaCubeId();
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
-            }
-        }
-        return entityId;
-    }
-
-    private int getSizeId() {
-        int sizeId = 11;
-        if (Utils.isCBXXXorLater("1.10")) {
-            try {
-                sizeId = PackageType.getSlimeSizeId();
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
-            }
-        }
-        return sizeId;
     }
 }

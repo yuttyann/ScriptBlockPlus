@@ -192,32 +192,46 @@ public enum PackageType {
         return constructor;
     }
 
-    public static int getSlimeSizeId() throws ReflectiveOperationException {
-        var entitySlime = NMS.getClass("EntitySlime");
-        var dataWatcherObject = NMS.getClass("DataWatcherObject");
-        for (var field : entitySlime.getDeclaredFields()) {
-            if (!field.getType().equals(dataWatcherObject)) {
-                continue;
-            }
-            field.setAccessible(true);
-            return (int) NMS.invokeMethod(field.get(null), "DataWatcherObject", "a");
+    public static int getMagmaCubeId() {
+        if (!Utils.isCBXXXorLater("1.13")) {
+            return 62;
         }
-        return -1;
-    }
-
-    public static int getMagmaCubeId() throws ReflectiveOperationException {
         int entityId = 0;
-        var entityTypes = NMS.getClass("EntityTypes");
-        for (var field : entityTypes.getFields()) {
-            if (!field.getType().equals(entityTypes)) {
-                continue;   
+        try {
+            var entityTypes = NMS.getClass("EntityTypes");
+            for (var field : entityTypes.getFields()) {
+                if (!field.getType().equals(entityTypes)) {
+                    continue;   
+                }
+                if (field.getName().equals("MAGMA_CUBE")) {
+                    break;
+                }
+                entityId++;
             }
-            if (field.getName().equals("MAGMA_CUBE")) {
-                break;
-            }
-            entityId++;
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
         }
         return entityId;
+    }
+
+    public static int getSlimeSizeId() {
+        if (!Utils.isCBXXXorLater("1.10")) {
+            return 11;
+        }
+        try {
+            var entitySlime = NMS.getClass("EntitySlime");
+            var dataWatcherObject = NMS.getClass("DataWatcherObject");
+            for (var field : entitySlime.getDeclaredFields()) {
+                if (!field.getType().equals(dataWatcherObject)) {
+                    continue;
+                }
+                field.setAccessible(true);
+                return (int) NMS.invokeMethod(field.get(null), "DataWatcherObject", "a");
+            }
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public static void sendActionBar(@NotNull Player player, @NotNull String text) throws ReflectiveOperationException {
