@@ -13,8 +13,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class TriggerEvent extends ScriptBlockEvent {
 
+    private final ScriptType scriptType;
+
     private boolean cancelled;
-    private ScriptType scriptType;
 
     public TriggerEvent(@NotNull final Player player, @NotNull final Block block, @NotNull final ScriptType scriptType) {
         super(player, block);

@@ -39,7 +39,7 @@ public class InteractTrigger extends TriggerListener<BlockClickEvent> {
 
     @Override
     @Nullable
-    public TriggerEvent getTriggerEvent(@NotNull Trigger trigger) {
+    public TriggerEvent createTriggerEvent(@NotNull Trigger trigger) {
         var block = trigger.getBlock();
         var action = trigger.getEvent().getAction();
         if (isPowered(block) || isOpen(block) || isDisableArm(action)) {

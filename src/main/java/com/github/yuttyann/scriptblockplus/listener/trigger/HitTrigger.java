@@ -46,8 +46,8 @@ public class HitTrigger extends TriggerListener<ProjectileHitEvent> {
 
     @Override
     @Nullable
-    public TriggerEvent getTriggerEvent(@NotNull Trigger trigger) {
-        return isTwice(trigger) ? null : super.getTriggerEvent(trigger);
+    public TriggerEvent createTriggerEvent(@NotNull Trigger trigger) {
+        return isTwice(trigger) ? null : super.createTriggerEvent(trigger);
     }
 
     private boolean isTwice(@NotNull Trigger trigger) {

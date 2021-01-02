@@ -46,7 +46,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
     }
 
     @Nullable
-    public TriggerEvent getTriggerEvent(@NotNull Trigger trigger) {
+    public TriggerEvent createTriggerEvent(@NotNull Trigger trigger) {
         return new TriggerEvent(trigger.getPlayer(), trigger.getBlock(), getScriptType());
     }
 
@@ -81,10 +81,10 @@ public abstract class TriggerListener<E extends Event> implements Listener {
             return event;
         }
 
-        public void handle(@NotNull E event) {
+        private void handle(@NotNull E event) {
             var location = getBlock().getLocation();
             if (BlockScriptJson.has(location, scriptType)) {
-                var triggerEvent = getTriggerEvent(this);
+                var triggerEvent = createTriggerEvent(this);
                 if (triggerEvent == null) {
                     return;
                 }
