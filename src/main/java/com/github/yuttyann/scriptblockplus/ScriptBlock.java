@@ -12,6 +12,10 @@ import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.listener.item.action.BlockSelector;
 import com.github.yuttyann.scriptblockplus.listener.item.action.ScriptEditor;
 import com.github.yuttyann.scriptblockplus.listener.item.action.ScriptViewer;
+import com.github.yuttyann.scriptblockplus.listener.trigger.BreakTrigger;
+import com.github.yuttyann.scriptblockplus.listener.trigger.HitTrigger;
+import com.github.yuttyann.scriptblockplus.listener.trigger.InteractTrigger;
+import com.github.yuttyann.scriptblockplus.listener.trigger.WalkTrigger;
 import com.github.yuttyann.scriptblockplus.manager.APIManager;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -25,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus ScriptBlock メインクラス
+ * 
  * @author yuttyann44581
  */
 public class ScriptBlock extends JavaPlugin {
@@ -69,10 +74,12 @@ public class ScriptBlock extends JavaPlugin {
         // リスナーの登録
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new InteractListener(), this);
-        getServer().getPluginManager().registerEvents(new ScriptInteractListener(), this);
-        getServer().getPluginManager().registerEvents(new ScriptBreakListener(), this);
-        getServer().getPluginManager().registerEvents(new ScriptWalkListener(), this);
-        getServer().getPluginManager().registerEvents(new ScriptHitListener(), this);
+
+        // トリガーを登録
+        TriggerListener.register(new HitTrigger(this));
+        TriggerListener.register(new WalkTrigger(this));
+        TriggerListener.register(new BreakTrigger(this));
+        TriggerListener.register(new InteractTrigger(this));
 
         // アイテムアクションの登録
         ItemAction.register(new ScriptViewer());
