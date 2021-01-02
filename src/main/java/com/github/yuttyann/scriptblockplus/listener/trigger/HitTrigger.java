@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.listener.trigger;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.event.ScriptBlockHitEvent;
 import com.github.yuttyann.scriptblockplus.event.TriggerEvent;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -48,23 +47,19 @@ public class HitTrigger extends TriggerListener<ProjectileHitEvent> {
     @Override
     @Nullable
     public TriggerEvent getTriggerEvent(@NotNull Trigger trigger) {
-        if (isTwice(trigger.getPlayer())) {
-            return null;
-        }
-        return new ScriptBlockHitEvent(trigger.getPlayer(), trigger.getBlock());
+        return isTwice(trigger) ? null : super.getTriggerEvent(trigger);
     }
 
-    private boolean isTwice(@NotNull Player player) {
-        if (!Utils.isCBXXXorLater("1.16")) {
+    private boolean isTwice(@NotNull Trigger trigger) {
+        var objectMap = SBPlayer.fromPlayer(trigger.getPlayer()).getObjectMap();
+        int oldEntityId = objectMap.has(KEY_HIT) ? objectMap.getInt(KEY_HIT) : -1;
+        int nowEntityId = trigger.getEvent().getEntity().getEntityId();
+        if (oldEntityId == -1) {
+            objectMap.put(KEY_HIT, nowEntityId);
             return false;
         }
-        var objectMap = SBPlayer.fromPlayer(player).getObjectMap();
-        if (objectMap.getBoolean(KEY_HIT)) {
-            objectMap.remove(KEY_HIT);
-            return true;
-        }
-        objectMap.put(KEY_HIT, true);
-        return false;
+        objectMap.remove(KEY_HIT);
+        return oldEntityId == nowEntityId;
     }
 
     @Nullable
