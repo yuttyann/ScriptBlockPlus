@@ -25,7 +25,7 @@ public class WalkTrigger extends TriggerListener<PlayerMoveEvent> {
     @Override
     @Nullable
     @EventHandler(priority = EventPriority.HIGH)
-    public Trigger createTrigger(@NotNull PlayerMoveEvent event) {
+    public Trigger create(@NotNull PlayerMoveEvent event) {
         var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
         var blockCoords = new BlockCoords(sbPlayer.getLocation()).subtract(0, 1, 0);
         if (blockCoords.equals(sbPlayer.getOldBlockCoords().orElse(null))) {

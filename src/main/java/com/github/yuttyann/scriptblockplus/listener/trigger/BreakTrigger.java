@@ -24,7 +24,7 @@ public class BreakTrigger extends TriggerListener<BlockBreakEvent> {
     @Override
     @Nullable
     @EventHandler(priority = EventPriority.HIGH)
-    public Trigger createTrigger(@NotNull BlockBreakEvent event) {
+    public Trigger create(@NotNull BlockBreakEvent event) {
         var player = event.getPlayer();
         if (ItemAction.has(player, player.getInventory().getItemInMainHand(), true)) {
             event.setCancelled(true);

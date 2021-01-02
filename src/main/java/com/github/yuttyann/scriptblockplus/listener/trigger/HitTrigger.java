@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.listener.trigger;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.event.TriggerEvent;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
@@ -35,7 +34,7 @@ public class HitTrigger extends TriggerListener<ProjectileHitEvent> {
     @Override
     @Nullable
     @EventHandler(priority = EventPriority.HIGH)
-    public Trigger createTrigger(@NotNull ProjectileHitEvent event) {
+    public Trigger create(@NotNull ProjectileHitEvent event) {
         var block = getHitBlock(event);
         var shooter = event.getEntity().getShooter();
         if (block == null || !(shooter instanceof Player)) {
@@ -45,21 +44,22 @@ public class HitTrigger extends TriggerListener<ProjectileHitEvent> {
     }
 
     @Override
-    @Nullable
-    public TriggerEvent createTriggerEvent(@NotNull Trigger trigger) {
-        return isTwice(trigger) ? null : super.createTriggerEvent(trigger);
-    }
-
-    private boolean isTwice(@NotNull Trigger trigger) {
-        var objectMap = SBPlayer.fromPlayer(trigger.getPlayer()).getObjectMap();
-        int oldEntityId = objectMap.has(KEY_HIT) ? objectMap.getInt(KEY_HIT) : -1;
-        int nowEntityId = trigger.getEvent().getEntity().getEntityId();
-        if (oldEntityId == -1) {
-            objectMap.put(KEY_HIT, nowEntityId);
-            return false;
+    @NotNull
+    protected Result interrupt(@NotNull Trigger trigger) {
+        switch (trigger.getProgress()) {
+            case EVENT:
+                var objectMap = SBPlayer.fromPlayer(trigger.getPlayer()).getObjectMap();
+                int oldEntityId = objectMap.has(KEY_HIT) ? objectMap.getInt(KEY_HIT) : -1;
+                int nowEntityId = trigger.getEvent().getEntity().getEntityId();
+                if (oldEntityId == -1) {
+                    objectMap.put(KEY_HIT, nowEntityId);
+                    return Result.SUCCESS;
+                }
+                objectMap.remove(KEY_HIT);
+                return oldEntityId == nowEntityId ? Result.FAILURE : Result.SUCCESS;
+            default:
+                return super.interrupt(trigger);
         }
-        objectMap.remove(KEY_HIT);
-        return oldEntityId == nowEntityId;
     }
 
     @Nullable
@@ -71,7 +71,7 @@ public class HitTrigger extends TriggerListener<ProjectileHitEvent> {
         var start = event.getEntity().getLocation().toVector();
         var direction = event.getEntity().getVelocity().normalize();
         var iterator = new BlockIterator(event.getEntity().getWorld(), start, direction, 0.0D, 4);
-        Block hitBlock = null;
+        var hitBlock = (Block) null;
         while (iterator.hasNext()) {
             hitBlock = iterator.next();
             if (hitBlock.getType() != Material.AIR) {
