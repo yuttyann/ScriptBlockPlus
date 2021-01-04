@@ -114,7 +114,7 @@ public final class SBConfig {
         s = replace(s, "%material%", String.valueOf(m));
         s = replace(s, "%amount%", r.getArg(1, Integer.class));
         s = replace(s, "%damage%", r.getArg(2, Integer.class));
-        s = replace(s, "%name%", isEmpty(n) ? String.valueOf(m) : n);
+        s = replace(s, "%itemname%", isEmpty(n) ? String.valueOf(m) : n);
         return s;
     };
 
