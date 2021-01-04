@@ -24,10 +24,10 @@ public final class CommandSelector {
 
     public static final CommandSelector INSTANCE = new CommandSelector();
 
-    private final static String SELECTOR_SUFFIX = "paers";
-    private final static String[] SELECTOR_NAMES = { "@p", "@a", "@e", "@r", "@s" };
+    private final static String SELECTOR_SUFFIX = "aeprs";
+    private final static String[] SELECTOR_NAMES = { "@a", "@e", "@p", "@r", "@s" };
 
-    private static class Index {
+    private class Index {
 
         private final int start;
         private int end = 0;
@@ -41,8 +41,6 @@ public final class CommandSelector {
             return source.substring(start, Math.min(end + 1, source.length()));
         }
     }
-
-    private CommandSelector() { }
 
     public boolean has(@NotNull String command) {
         return Arrays.stream(SELECTOR_NAMES).anyMatch(command::contains);
