@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * ScriptBlockPlus StringUtils クラス
@@ -45,8 +46,8 @@ public final class StringUtils {
 
     @Deprecated
     @NotNull
-    public static String[] split(@Nullable String source, @NotNull String regex) {
-        return isEmpty(source) ? ArrayUtils.EMPTY_STRING_ARRAY : source.split(regex);
+    public static String[] split(@Nullable String source, @NotNull String delimiter) {
+        return isEmpty(source) ? ArrayUtils.EMPTY_STRING_ARRAY : source.split(Pattern.quote(delimiter));
     }
 
     @NotNull
