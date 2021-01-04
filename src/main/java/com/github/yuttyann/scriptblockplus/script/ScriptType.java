@@ -108,7 +108,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
     /**
      * スクリプトの種類名(大文字)の配列を作成します。
-     * @return {@link String[]} - スクリプトの種類名の配列
+     * @return {@link String}[] - スクリプトの種類名の配列
      */
     @NotNull
     public static String[] types() {
@@ -117,7 +117,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
     /**
      * スクリプトの種類名(小文字)の配列を作成します。
-     * @return {@link String[]} - スクリプトの種類名の配列
+     * @return {@link String}[] - スクリプトの種類名の配列
      */
     @NotNull
     public static String[] names() {
@@ -126,7 +126,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
     /**
      * スクリプトの種類の配列を作成します。
-     * @return {@link ScriptType[]} - スクリプトの種類の配列
+     * @return {@link ScriptType}[] - スクリプトの種類の配列
      */
     @NotNull
     public static ScriptType[] values() {
