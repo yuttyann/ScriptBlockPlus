@@ -8,7 +8,6 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.util.BlockIterator;
@@ -28,12 +27,11 @@ public class HitTrigger extends TriggerListener<ProjectileHitEvent> {
     private static final String KEY_HIT = Utils.randomUUID();
 
     public HitTrigger(@NotNull ScriptBlock plugin) {
-        super(plugin, ScriptType.HIT);
+        super(plugin, ScriptType.HIT, EventPriority.HIGH);
     }
 
     @Override
     @Nullable
-    @EventHandler(priority = EventPriority.HIGH)
     public Trigger create(@NotNull ProjectileHitEvent event) {
         var block = getHitBlock(event);
         var shooter = event.getEntity().getShooter();
@@ -45,7 +43,7 @@ public class HitTrigger extends TriggerListener<ProjectileHitEvent> {
 
     @Override
     @NotNull
-    protected Result interrupt(@NotNull Trigger trigger) {
+    protected Result handle(@NotNull Trigger trigger) {
         switch (trigger.getProgress()) {
             case EVENT:
                 var objectMap = SBPlayer.fromPlayer(trigger.getPlayer()).getObjectMap();
@@ -58,7 +56,7 @@ public class HitTrigger extends TriggerListener<ProjectileHitEvent> {
                 objectMap.remove(KEY_HIT);
                 return oldEntityId == nowEntityId ? Result.FAILURE : Result.SUCCESS;
             default:
-                return super.interrupt(trigger);
+                return super.handle(trigger);
         }
     }
 

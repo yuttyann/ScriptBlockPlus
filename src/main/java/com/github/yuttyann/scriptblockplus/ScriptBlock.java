@@ -76,7 +76,7 @@ public class ScriptBlock extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new InteractListener(), this);
 
         // トリガーを登録
-        TriggerListener.register(new HitTrigger(this)); 
+        TriggerListener.register(new HitTrigger(this));
         TriggerListener.register(new WalkTrigger(this));
         TriggerListener.register(new BreakTrigger(this));
         TriggerListener.register(new InteractTrigger(this));

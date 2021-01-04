@@ -5,7 +5,6 @@ import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.jetbrains.annotations.NotNull;
@@ -18,12 +17,11 @@ import org.jetbrains.annotations.Nullable;
 public class BreakTrigger extends TriggerListener<BlockBreakEvent> {
 
     public BreakTrigger(@NotNull ScriptBlock plugin) {
-        super(plugin, ScriptType.BREAK);
+        super(plugin, ScriptType.BREAK, EventPriority.HIGH);
     }
 
     @Override
     @Nullable
-    @EventHandler(priority = EventPriority.HIGH)
     public Trigger create(@NotNull BlockBreakEvent event) {
         var player = event.getPlayer();
         if (ItemAction.has(player, player.getInventory().getItemInMainHand(), true)) {

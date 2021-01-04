@@ -8,7 +8,6 @@ import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
 
 import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.EquipmentSlot;
@@ -24,12 +23,11 @@ import org.jetbrains.annotations.Nullable;
 public class InteractTrigger extends TriggerListener<BlockClickEvent> {
 
     public InteractTrigger(@NotNull ScriptBlock plugin) {
-        super(plugin, ScriptType.INTERACT);
+        super(plugin, ScriptType.INTERACT, EventPriority.HIGH);
     }
 
     @Override
     @Nullable
-    @EventHandler(priority = EventPriority.HIGH)
     protected Trigger create(@NotNull BlockClickEvent event) {
         var block = event.getBlock();
         if (event.isInvalid() || event.getHand() != EquipmentSlot.HAND || block == null) {
@@ -40,7 +38,7 @@ public class InteractTrigger extends TriggerListener<BlockClickEvent> {
 
     @Override
     @NotNull
-    protected Result interrupt(@NotNull Trigger trigger) {
+    protected Result handle(@NotNull Trigger trigger) {
         switch (trigger.getProgress()) {
             case EVENT:
                 var block = trigger.getBlock();
@@ -50,7 +48,7 @@ public class InteractTrigger extends TriggerListener<BlockClickEvent> {
                 trigger.getSBRead().ifPresent(s -> s.put(ScriptAction.KEY, trigger.getEvent().getAction()));
                 return Result.SUCCESS;
             default:
-                return super.interrupt(trigger);
+                return super.handle(trigger);
         }
     }
 
