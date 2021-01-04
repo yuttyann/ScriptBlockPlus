@@ -39,21 +39,6 @@ public class PlayerListener implements Listener {
 
     private static final String KEY_INVENTORY = Utils.randomUUID();
 
-    /*
-    {
-        var plugin = ScriptBlock.getInstance();
-        var listener = new RegisteredListener(this, (l, e) -> onCatch(e), EventPriority.NORMAL, plugin, false);
-        HandlerList.getHandlerLists().forEach(h -> h.register(listener));
-    }
-
-    public void onCatch(@NotNull Event event) {
-        var name = event.getEventName();
-        if (name.contains("Server") || name.contains("Statistic") || name.contains("Naturally") ) {
-            return;
-        }
-        TriggerListener.callTrigger(event);
-    }*/
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoin(PlayerJoinEvent event) {
         var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
