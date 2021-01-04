@@ -22,7 +22,7 @@ public class OptionMap extends HashMap<String, Option> {
     private static final Field ORDINAL;
 
     static {
-        Field field = null;
+        var field = (Field) null;
         try {
             field = Option.class.getDeclaredField("ordinal");
             field.setAccessible(true);

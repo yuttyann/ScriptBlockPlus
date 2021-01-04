@@ -14,7 +14,7 @@ public interface EndProcess extends SBInstance<EndProcess> {
 
     /**
      * インスタンスを生成します。
-     * @return EndProcessのインスタンス
+     * @return {@link EndProcess}
      */
     @NotNull
     default EndProcess newInstance() {

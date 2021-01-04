@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -32,9 +31,9 @@ public final class StreamUtils {
     public static <T> void fForEach(@NotNull Collection<T> collection, @NotNull Predicate<T> filter, @NotNull Consumer<T> action) {
         collection.forEach(t -> filter(t, filter, action));
     }
-    
+
     public static <T> void forEach(@NotNull T[] array, @NotNull Consumer<T> action) {
-        for (T t : Objects.requireNonNull(array)) {
+        for (T t : array) {
             action.accept(t);
         }
     }

@@ -15,10 +15,16 @@ public class ScriptEdit {
     private final ActionType actionType;
     private final ScriptType scriptType;
 
+    private String script;
+
     public ScriptEdit(@NotNull ActionType actionType, @NotNull ScriptType scriptType) {
         this.actionType = actionType;
         this.scriptType = scriptType;
     }
+
+    public void setScriptLine(@Nullable String script) {
+        this.script = script;
+	}
 
     @NotNull
     public ScriptType getScriptType() {
@@ -34,20 +40,25 @@ public class ScriptEdit {
         if (location == null) {
             return false;
         }
-        var sbOperation = new SBOperation(scriptType);
-        switch (actionType) {
-            case CREATE:
-                sbOperation.create(sbPlayer, location);
-                break;
-            case ADD:
-                sbOperation.add(sbPlayer, location);
-                break;
-            case REMOVE:
-                sbOperation.remove(sbPlayer, location);
-                break;
-            case VIEW:
-                sbOperation.view(sbPlayer, location);
-                break;
+        try {
+            var player = sbPlayer.getPlayer();
+            var sbOperation = new SBOperation(scriptType);
+            switch (actionType) {
+                case CREATE:
+                    sbOperation.create(player, location, script);
+                    break;
+                case ADD:
+                    sbOperation.add(player, location, script);
+                    break;
+                case REMOVE:
+                    sbOperation.remove(player, location);
+                    break;
+                case VIEW:
+                    sbOperation.view(player, location);
+                    break;
+            }
+        } finally {
+            sbPlayer.setScriptEdit(null);
         }
         return true;
     }

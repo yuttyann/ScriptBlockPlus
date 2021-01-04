@@ -86,7 +86,6 @@ public class SBClipboard {
             SBConfig.SCRIPT_COPY.replace(scriptType).send(sbPlayer);
             SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), location, scriptType).console();
         } finally {
-            sbPlayer.setScriptLine(null);
             sbPlayer.setScriptEdit(null);
         }
         return true;
@@ -108,9 +107,8 @@ public class SBClipboard {
             SBConfig.SCRIPT_PASTE.replace(scriptType).send(sbPlayer);
             SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), location, scriptType).console();
         } finally {
-            sbPlayer.setSBClipboard(null);
-            sbPlayer.setScriptLine(null);
             sbPlayer.setScriptEdit(null);
+            sbPlayer.setSBClipboard(null);
         }
         return true;
     }

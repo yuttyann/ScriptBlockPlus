@@ -11,15 +11,15 @@ public interface ObjectMap {
 
     /**
      * 指定された値と指定されたキーをこのマップで関連付けます。
-     * @param key キー
-     * @param value 値
+     * @param key - キー
+     * @param value - 値
      */
     void put(@NotNull String key, @Nullable Object value);
 
     /**
      * 指定されたキーがマップされている値を{@link Byte}にキャストして返します。
-     * @param key キー
-     * @return 指定されたキーがマップされている値 ({@link Byte})
+     * @param key - キー
+     * @return {@link Byte} - 指定されたキーがマップされている値
      */
     default byte getByte(@NotNull String key) {
         return get(key, (byte) 0);
@@ -27,8 +27,8 @@ public interface ObjectMap {
 
     /**
      * 指定されたキーがマップされている値を{@link Short}にキャストして返します。
-     * @param key キー
-     * @return 指定されたキーがマップされている値 ({@link Short})
+     * @param key - キー
+     * @return {@link Short} - 指定されたキーがマップされている値
      */
     default short getShort(@NotNull String key) {
         return get(key, (short) 0);
@@ -36,8 +36,8 @@ public interface ObjectMap {
 
     /**
      * 指定されたキーがマップされている値を{@link Integer}にキャストして返します。
-     * @param key キー
-     * @return 指定されたキーがマップされている値 ({@link Integer})
+     * @param key - キー
+     * @return {@link Integer} - 指定されたキーがマップされている値
      */
     default int getInt(@NotNull String key) {
         return get(key, 0);
@@ -45,8 +45,8 @@ public interface ObjectMap {
 
     /**
      * 指定されたキーがマップされている値を{@link Long}にキャストして返します。
-     * @param key キー
-     * @return 指定されたキーがマップされている値 ({@link Long})
+     * @param key - キー
+     * @return {@link Long} - 指定されたキーがマップされている値
      */
     default long getLong(@NotNull String key) {
         return get(key, 0L);
@@ -54,8 +54,8 @@ public interface ObjectMap {
 
     /**
      * 指定されたキーがマップされている値を{@link Character}にキャストして返します。
-     * @param key キー
-     * @return 指定されたキーがマップされている値 ({@link Character})
+     * @param key - キー
+     * @return {@link Character} - 指定されたキーがマップされている値
      */
     default char getChar(@NotNull String key) {
         return get(key, '\u0000');
@@ -63,8 +63,8 @@ public interface ObjectMap {
 
     /**
      * 指定されたキーがマップされている値を{@link Float}にキャストして返します。
-     * @param key キー
-     * @return 指定されたキーがマップされている値 ({@link Float})
+     * @param key - キー
+     * @return {@link Float} - 指定されたキーがマップされている値
      */
     default float getFloat(@NotNull String key) {
         return get(key, 0.0F);
@@ -72,8 +72,8 @@ public interface ObjectMap {
 
     /**
      * 指定されたキーがマップされている値を{@link Double}にキャストして返します。
-     * @param key キー
-     * @return 指定されたキーがマップされている値 ({@link Double})
+     * @param key - キー
+     * @return {@link Double} - 指定されたキーがマップされている値
      */
     default double getDouble(@NotNull String key) {
         return get(key, 0.0D);
@@ -81,8 +81,8 @@ public interface ObjectMap {
 
     /**
      * 指定されたキーがマップされている値を{@link Boolean}にキャストして返します。
-     * @param key キー
-     * @return 指定されたキーがマップされている値 ({@link Boolean})
+     * @param key - キー
+     * @return {@link Boolean} - 指定されたキーがマップされている値
      */
     default boolean getBoolean(@NotNull String key) {
         return get(key, false);
@@ -90,8 +90,8 @@ public interface ObjectMap {
 
     /**
      * 指定されたキーがマップされている値を{@link String}にキャストして返します。
-     * @param key キー
-     * @return 指定されたキーがマップされている値 ({@link String})
+     * @param key - キー
+     * @return {@link String} - 指定されたキーがマップされている値
      */
     @NotNull
     default String getString(@NotNull String key) {
@@ -102,9 +102,9 @@ public interface ObjectMap {
      * 指定されたキーがマップされている値を返します。
      * <p>
      * このマップにそのキーのマッピングが含まれていない場合はnullを返します。
-     * @param key キー
+     * @param key - キー
      * @param <T> 戻り値の型
-     * @return 指定されたキーがマップされている値（含まれていない場合はnull）
+     * @return {@link T} - 指定されたキーがマップされている値
      */
     @Nullable
     <T> T get(@NotNull String key);
@@ -113,10 +113,10 @@ public interface ObjectMap {
      * 指定されたキーがマップされている値を返します。
      * <p>
      * このマップにそのキーのマッピングが含まれていない場合はotherを返します。
-     * @param key キー
-     * @param other その他
+     * @param key - キー
+     * @param other - その他
      * @param <T> 戻り値の型
-     * @return 指定されたキーがマップされている値（含まれていない場合はother）
+     * @return {@link T} - 指定されたキーがマップされている値
      */
     @NotNull
     default <T> T get(@NotNull String key, @NotNull T other) {
@@ -126,14 +126,14 @@ public interface ObjectMap {
 
     /**
      * このマップからキーのマッピングを削除します。
-     * @param key キー
+     * @param key - キー
      */
     void remove(String key);
 
     /**
      * 指定されたキーに値がマップされている場合にtrueを返します。
-     * @param key キー
-     * @return 指定されたキーに値がマップされている場合はtrue
+     * @param key - キー
+     * @return {@link Boolean} - 指定されたキーに値がマップされている場合はtrue
      */
     default boolean has(@NotNull String key) {
         return get(key) != null;

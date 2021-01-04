@@ -51,15 +51,6 @@ public final class SBOperation {
         return scriptParam.getAuthor().stream().map(Utils::getName).collect(Collectors.joining(", "));
     }
 
-    public void create(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
-        try {
-            sbPlayer.getScriptLine().ifPresent(s -> create(sbPlayer.getPlayer(), location, s));
-        } finally {
-            sbPlayer.setScriptLine(null);
-            sbPlayer.setScriptEdit(null);
-        }
-    }
-
     public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
         var scriptParam = scriptJson.load().get(location);
         scriptParam.getAuthor().add(player.getUniqueId());
@@ -70,15 +61,6 @@ public final class SBOperation {
         PlayerCountJson.clear(location, scriptType);
         SBConfig.SCRIPT_CREATE.replace(scriptType).send(player);
         SBConfig.CONSOLE_SCRIPT_CREATE.replace(player.getName(), location, scriptType).console();
-    }
-
-    public void add(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
-        try {
-            sbPlayer.getScriptLine().ifPresent(s -> add(sbPlayer.getPlayer(), location, s));
-        } finally {
-            sbPlayer.setScriptLine(null);
-            sbPlayer.setScriptEdit(null);
-        }
     }
 
     public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
@@ -96,15 +78,6 @@ public final class SBOperation {
         SBConfig.CONSOLE_SCRIPT_ADD.replace(player.getName(), location, scriptType).console();
     }
 
-    public void remove(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
-        try {
-            remove(sbPlayer.getPlayer(), location);
-        } finally {
-            sbPlayer.setScriptLine(null);
-            sbPlayer.setScriptEdit(null);
-        }
-    }
-
     public void remove(@NotNull Player player, @NotNull Location location) {
         if (!BlockScriptJson.has(location, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
@@ -116,15 +89,6 @@ public final class SBOperation {
         PlayerCountJson.clear(location, scriptType);
         SBConfig.SCRIPT_REMOVE.replace(scriptType).send(player);
         SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), location, scriptType).console();
-    }
-
-    public void view(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
-        try {
-            view(sbPlayer.getPlayer(), location);
-        } finally {
-            sbPlayer.setScriptLine(null);
-            sbPlayer.setScriptEdit(null);
-        }
     }
 
     public void view(@NotNull Player player, @NotNull Location location) {

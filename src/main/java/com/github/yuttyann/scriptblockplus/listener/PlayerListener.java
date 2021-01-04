@@ -64,14 +64,13 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerQuit(PlayerQuitEvent event) {
         var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
-        var cuboidRegion = (CuboidRegion) sbPlayer.getRegion();
-        sbPlayer.setScriptLine(null);
-        sbPlayer.setScriptEdit(null);
-        sbPlayer.setSBClipboard(null);
-        cuboidRegion.setWorld(null);
-        cuboidRegion.setVector1(null);
-        cuboidRegion.setVector2(null);
         try {
+            var cuboidRegion = (CuboidRegion) sbPlayer.getRegion();
+            sbPlayer.setScriptEdit(null);
+            sbPlayer.setSBClipboard(null);
+            cuboidRegion.setWorld(null);
+            cuboidRegion.setVector1(null);
+            cuboidRegion.setVector2(null);
             ScriptViewer.PLAYERS.remove(sbPlayer);
             StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> ProtocolLib.GLOW_ENTITY.destroyAll(sbPlayer));
         } finally {

@@ -6,7 +6,6 @@ import com.github.yuttyann.scriptblockplus.listener.item.ChangeSlot;
 import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
@@ -50,7 +49,7 @@ public class ScriptEditor extends ItemAction {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
                 if (runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {
-                    new SBOperation(scriptType).remove(sbPlayer, location.get());
+                    new SBOperation(scriptType).remove(sbPlayer.getPlayer(), location.get());
                 } else if (!runItem.isSneaking()) {
                     sbPlayer.getObjectMap().put(KEY, scriptType = getNextType(scriptType));
                     ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptType);
@@ -59,8 +58,8 @@ public class ScriptEditor extends ItemAction {
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
                 if (runItem.isSneaking() && !runItem.isAIR()) {
-                    Optional<SBClipboard> clipboard = sbPlayer.getSBClipboard();
-                    if (!location.isPresent() || !clipboard.isPresent() || !clipboard.get().paste(location.get(), true)) {
+                    var sbClipboard = sbPlayer.getSBClipboard();
+                    if (!location.isPresent() || !sbClipboard.isPresent() || !sbClipboard.get().paste(location.get(), true)) {
                         SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
                     }
                 } else if (!runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {

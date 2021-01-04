@@ -35,7 +35,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
     /**
      * インスタンスを生成します。
-     * @return オプションのインスタンス
+     * @return {@link Option} - オプション
      */
     @Override
     @NotNull
@@ -45,7 +45,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
     /**
      * オプションの名前を取得します。
-     * @return オプションの名前
+     * @return {@link String} - オプションの名前
      */
     @NotNull
     public final String getName() {
@@ -54,7 +54,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
     /**
      * オプションの構文を取得します。
-     * @return オプションの構文
+     * @return {@link String} - オプションの構文
      */
     @NotNull
     public final String getSyntax() {
@@ -62,8 +62,8 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
     }
 
     /**
-     * オプションの構文の文字数を取得します。
-     * @return オプションの構文の文字数
+     * 構文の文字列の長さを取得します。
+     * @return {@link Integer} - 文字列の長さ
      */
     public final int length() {
         return length;
@@ -73,7 +73,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
      * オプションの序数を取得します
      * <p>
      * ※オプションの順番により変動
-     * @return 序数
+     * @return {@link Integer} - 序数
      */
     public final int ordinal() {
         return ordinal;
@@ -81,7 +81,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
     /**
      * パーミッションノードを取得します。
-     * @return パーミッションノード
+     * @return {@link String} - パーミッションノード
      */
     @NotNull
     public final String getPermissionNode() {
@@ -90,8 +90,8 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
     /**
      * スクリプトからオプションの値を取得します。
-     * @param script スクリプト
-     * @return オプションの値
+     * @param script - スクリプト
+     * @return {@link String} - オプションの値
      */
     @NotNull
     public final String getValue(@NotNull String script) {
@@ -99,9 +99,9 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
     }
 
     /**
-     * 指定されたスクリプトがオプションなのか判定します。
-     * @param script スクリプト
-     * @return オプションだった場合はtrue
+     * 指定されたスクリプト内のオプションが正常なのか確認します。
+     * @param script - スクリプト
+     * @return {@link String} - 正常だった場合はtrue
      */
     public final boolean isOption(@NotNull String script) {
         if (script.length() < length || !script.startsWith(syntax)) {
@@ -112,7 +112,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
     /**
      * 失敗時に終了処理を無視します（デフォルトはfalseです）
-     * @return trueの場合は終了処理を実行し、falseの場合は無視します。
+     * @return {@link String} - trueの場合は終了処理を実行し、falseの場合は無視します。
      */
     public boolean isFailedIgnore() {
         return false;
@@ -120,8 +120,8 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
     /**
      * オプションを呼び出します。
-     * @param sbRead {@link SBRead}
-     * @return 有効な場合はtrue
+     * @param sbRead - {@link SBRead}
+     * @return {@link String} - 有効な場合はtrue
      */
     public abstract boolean callOption(@NotNull SBRead sbRead);
 
@@ -134,7 +134,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
     public boolean equals(@Nullable Object obj) {
         if (obj instanceof Option) {
             var option = (Option) obj;
-            return name.equals(option.getName()) && syntax.equals(option.getSyntax());
+            return name.equals(option.name) && syntax.equals(option.syntax);
         }
         return false;
     }

@@ -14,8 +14,8 @@ public class OptionIndex {
 
     /**
      * コンストラクタ
-     * @param indexType スクリプトの追加位置
-     * @param optionClass オプションのクラス
+     * @param indexType - スクリプトの追加位置
+     * @param optionClass - オプションのクラス
      */
     public OptionIndex(@NotNull IndexType indexType, @NotNull Class<? extends BaseOption> optionClass) {
         this.syntax = optionClass.getAnnotation(OptionTag.class).syntax();
@@ -24,7 +24,7 @@ public class OptionIndex {
 
     /**
      * オプションの構文を取得します。
-     * @return オプションの構文
+     * @return {@link String} - オプションの構文
      */
     @NotNull
     public String getSyntax() {
@@ -33,7 +33,7 @@ public class OptionIndex {
 
     /**
      * スクリプトの追加方法を取得します。
-     * @return スクリプトの追加方法
+     * @return {@link IndexType} - スクリプトの追加方法
      */
     @NotNull
     public IndexType getIndexType() {

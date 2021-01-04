@@ -11,7 +11,7 @@ public interface SBInstance<T> {
 
     /**
      * インスタンスを生成します。
-     * @return インスタンス
+     * @return {@link T} - インスタンス
      */
     @NotNull
     T newInstance();

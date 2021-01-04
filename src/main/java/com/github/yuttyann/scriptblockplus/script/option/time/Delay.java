@@ -3,7 +3,7 @@ package com.github.yuttyann.scriptblockplus.script.option.time;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
-import com.github.yuttyann.scriptblockplus.script.SBRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -46,7 +46,7 @@ public class Delay extends BaseOption implements Runnable {
             if (saveDelay) {
                 DELAY_SET.add(new TimerTemp(getUniqueId(), getLocation(), getScriptType()));
             }
-            ((SBRead) getTempMap()).setInitialize(false);
+            ((ScriptRead) getTempMap()).setInitialize(false);
             Bukkit.getScheduler().runTaskLater(ScriptBlock.getInstance(), this, Long.parseLong(array[0]));
         }
         return false;
@@ -57,7 +57,7 @@ public class Delay extends BaseOption implements Runnable {
         if (saveDelay) {
             DELAY_SET.remove(new TimerTemp(getUniqueId(), getLocation(), getScriptType()));
         }
-        var sbRead = (SBRead) getTempMap();
+        var sbRead = (ScriptRead) getTempMap();
         if (getSBPlayer().isOnline()) {
             sbRead.setInitialize(true);
             sbRead.read(getScriptIndex() + 1);

@@ -1,9 +1,12 @@
 package com.github.yuttyann.scriptblockplus.player;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -24,22 +27,22 @@ import java.util.UUID;
 public interface SBPlayer extends CommandSender {
 
     /**
-     * ScriptBlockPlusの{@link SBPlayer}を取得します。
-     * @param player プレイヤー
-     * @return {@link SBPlayer}
+     * {@link ScriptBlock}の{@link SBPlayer}を取得します。
+     * @param player - {@link Bukkit}の{@link OfflinePlayer}
+     * @return {@link SBPlayer} - プレイヤー
      */
     @NotNull
-    static SBPlayer fromPlayer(@NotNull OfflinePlayer player) {
+    public static SBPlayer fromPlayer(@NotNull OfflinePlayer player) {
         return fromUUID(player.getUniqueId());
     }
 
     /**
-     * ScriptBlockPlusの{@link SBPlayer}を取得します。
-     * @param uuid プレイヤーの{@link UUID}
-     * @return {@link SBPlayer}
+     * {@link ScriptBlock}の{@link SBPlayer}を取得します。
+     * @param uuid - プレイヤーの{@link UUID}
+     * @return {@link SBPlayer} - プレイヤー
      */
     @NotNull
-    static SBPlayer fromUUID(@NotNull UUID uuid) {
+    public static SBPlayer fromUUID(@NotNull UUID uuid) {
         var sbPlayer = BaseSBPlayer.getSBPlayers().get(uuid);
         if (sbPlayer == null) {
             BaseSBPlayer.getSBPlayers().put(uuid, sbPlayer = new BaseSBPlayer(uuid));
@@ -49,128 +52,117 @@ public interface SBPlayer extends CommandSender {
 
     /**
      * プレイヤーがオンラインの場合にtrueを返します。
-     * @return プレイヤーがオンラインの場合はtrue
+     * @return {@link Boolean} - プレイヤーがオンラインの場合はtrue
      */
     boolean isOnline();
 
     /**
-     * BukkitAPIの{@link Player}を取得します。
-     * @return {@link Player}
+     * {@link Bukkit}の{@link Player}を取得します。
+     * @return {@link Player} - プレイヤー
      */
     @NotNull
     Player getPlayer();
 
     /**
-     * BukkitAPIの{@link OfflinePlayer}を取得します。
-     * @return {@link OfflinePlayer}
+     * {@link Bukkit}の{@link OfflinePlayer}を取得します。
+     * @return {@link OfflinePlayer} - オフラインプレイヤー
      */
     @NotNull
     OfflinePlayer getOfflinePlayer();
 
     /**
      * プレイヤーのインベントリを取得します。
-     * @return プレイヤーのインベントリ
+     * @return {@link PlayerInventory} - インベントリ
      */
     @NotNull
     PlayerInventory getInventory();
 
     /**
      * プレイヤーの{@link UUID}を取得します。
-     * @return {@link UUID}
+     * @return {@link UUID} - プレイヤーの{@link UUID}
      */
     @NotNull
     UUID getUniqueId();
 
     /**
      * プレイヤーが存在しているワールドを取得します。
-     * @return プレイヤーが存在しているワールド
+     * @return {@link World} - ワールド
      */
     @NotNull
     World getWorld();
 
     /**
      * プレイヤーの座標を取得します。
-     * @return プレイヤーの座標
+     * @return {@link Location} - プレイヤーの座標
      */
     @NotNull
     Location getLocation();
 
     /**
      * プレイヤーのメインハンドのアイテムを取得します。
-     * @return メインハンドのアイテム
+     * @return {@link ItemStack} - メインハンドアイテム
      */
     @Nullable
     ItemStack getItemInMainHand();
 
     /**
      * プレイヤーのオフハンドのアイテムを取得します。
-     * @return オフハンドのアイテム
+     * @return {@link ItemStack} - オフハンドアイテム
      */
     @Nullable
     ItemStack getItemInOffHand();
 
     /**
      * ワールドの選択範囲を取得します。
-     * @return ワールドの選択範囲
+     * @return {@link Region} - 選択範囲
      */
     @NotNull
     Region getRegion();
 
     /**
-     * プレイヤーの格納データを取得します。
-     * @return プレイヤーの格納データ
+     * {@link SBPlayer}の{@link ObjectMap}を取得します。
+     * <p>
+     * プレイヤー別のデータを格納しています。
+     * @return {@link ObjectMap} - データ構造
      */
     @NotNull
     ObjectMap getObjectMap();
 
     /**
-     * スクリプトをセットします。
-     * @param scriptLine スクリプト
-     */
-    void setScriptLine(@Nullable String scriptLine);
-
-    /**
-     * スクリプトエディットをセットします。
-     * @param scriptEdit スクリプトエディット
+     * {@link ScriptEdit}をセットします。
+     * @param scriptEdit - {@link ScriptEdit}
      */
     void setScriptEdit(@Nullable ScriptEdit scriptEdit);
 
     /**
-     * スクリプトのクリップボードをセットします。
-     * @param sbClipboard スクリプトのクリップボード
+     * {@link SBClipboard}をセットします。
+     * @param sbClipboard - {@link SBClipboard}
      */
     void setSBClipboard(@Nullable SBClipboard sbClipboard);
 
     /**
-     * ブロックの座標をセットします。
-     * @param blockCoords ブロックの座標
+     * {@link BlockCoords}をセットします。
+     * @param blockCoords - {@link BlockCoords}
      */
     void setOldBlockCoords(@Nullable BlockCoords blockCoords);
 
     /**
-     * スクリプトを取得します。
-     * @return スクリプト（オプショナル）
-     */
-    @NotNull
-    Optional<String> getScriptLine();
-
-    /**
-     * スクリプトエディットを取得します。
-     * @return スクリプトエディット（オプショナル）
+     * {@link ScriptEdit}を取得します。
+     * @return {@link Optional}&lt;{@link ScriptEdit}&gt; - {@link ScriptEdit}
      */
     @NotNull
     Optional<ScriptEdit> getScriptEdit();
 
     /**
-     * スクリプトのクリップボードを取得します。
-     * @return スクリプトのクリップボード（オプショナル）
+     * {@link SBClipboard}を取得します。
+     * @return {@link Optional}&lt;{@link SBClipboard}&gt; - {@link SBClipboard}
      */
     @NotNull
     Optional<SBClipboard> getSBClipboard();
 
     /**
-     * ブロックの座標を取得します。
-     * @return ブロックの座標（オプショナル）
+     * {@link BlockCoords}を取得します。
+     * @return {@link Optional}&lt;{@link BlockCoords}&gt; - {@link BlockCoords}
      */
     @NotNull
     Optional<BlockCoords> getOldBlockCoords();

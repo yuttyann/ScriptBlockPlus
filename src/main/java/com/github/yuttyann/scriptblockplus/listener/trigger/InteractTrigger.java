@@ -45,7 +45,7 @@ public class InteractTrigger extends TriggerListener<BlockClickEvent> {
                 var action = trigger.getEvent().getAction();
                 return isPowered(block) || isOpen(block) || isDisableArm(action) ? Result.FAILURE : Result.SUCCESS;
             case READ:
-                trigger.getSBRead().ifPresent(s -> s.put(ScriptAction.KEY, trigger.getEvent().getAction()));
+                trigger.getTempMap().ifPresent(m -> m.put(ScriptAction.KEY, trigger.getEvent().getAction()));
                 return Result.SUCCESS;
             default:
                 return super.handle(trigger);

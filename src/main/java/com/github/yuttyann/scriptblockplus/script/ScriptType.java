@@ -30,7 +30,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
     /**
      * コンストラクタ
-     * @param type スクリプトの種類名
+     * @param type - スクリプトの種類名
      */
     public ScriptType(@NotNull String type) {
         this.type = type.toLowerCase();
@@ -45,7 +45,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
     /**
      * スクリプトの種類名(小文字)を取得します。
-     * @return スクリプトの種類名
+     * @return {@link String} - スクリプトの種類名
      */
     @NotNull
     public String type() {
@@ -54,7 +54,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
     /**
      * スクリプトの種類名(大文字)を取得します。
-     * @return スクリプトの種類名
+     * @return {@link String} - スクリプトの種類名
      */
     @NotNull
     public String name() {
@@ -63,7 +63,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
     /**
      * スクリプトの種類の序数を取得します
-     * @return 序数
+     * @return {@link Integer} - 序数
      */
     public int ordinal() {
         return ordinal;
@@ -100,7 +100,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
     /**
      * スクリプトの種類の数を取得します。
-     * @return スクリプトの種類の数
+     * @return {@link Integer} - スクリプトの種類の数
      */
     public static int size() {
         return TYPES.size();
@@ -108,7 +108,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
     /**
      * スクリプトの種類名(大文字)の配列を作成します。
-     * @return スクリプトの種類名の配列
+     * @return {@link String[]} - スクリプトの種類名の配列
      */
     @NotNull
     public static String[] types() {
@@ -117,7 +117,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
     /**
      * スクリプトの種類名(小文字)の配列を作成します。
-     * @return スクリプトの種類名の配列
+     * @return {@link String[]} - スクリプトの種類名の配列
      */
     @NotNull
     public static String[] names() {
@@ -126,7 +126,7 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
 
     /**
      * スクリプトの種類の配列を作成します。
-     * @return スクリプトの種類の配列
+     * @return {@link ScriptType[]} - スクリプトの種類の配列
      */
     @NotNull
     public static ScriptType[] values() {
@@ -136,8 +136,8 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
     /**
      * 指定したスクリプトの種類を取得します。
      * @throws NullPointerException スクリプトの種類が見つからなかったときにスローされます。
-     * @param ordinal 序数
-     * @return スクリプトの種類
+     * @param ordinal - 序数
+     * @return {@link ScriptType} - スクリプトの種類
      */
     @NotNull
     public static ScriptType valueOf(int ordinal) {
@@ -152,8 +152,8 @@ public final class ScriptType implements Comparable<ScriptType>, Serializable {
     /**
      * 指定したスクリプトの種類を取得します。
      * @throws NullPointerException スクリプトの種類が見つからなかったときにスローされます。
-     * @param name スクリプトの種類名
-     * @return スクリプトの種類
+     * @param name - スクリプトの種類名
+     * @return {@link ScriptType} - スクリプトの種類
      */
     @NotNull
     public static ScriptType valueOf(@Nullable String name) {

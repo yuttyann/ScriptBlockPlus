@@ -1,8 +1,12 @@
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -14,62 +18,59 @@ import java.util.List;
 public interface SBRead extends ObjectMap {
 
     /**
-     * 実行終了後にスクリプトの一時データを初期化するのか設定します。
-     * @param initialize 初期化を行う場合はtrue
-     */
-    void setInitialize(boolean initialize);
-
-    /**
-     * 初期化するのかどうかを取得します。
-     * @return 初期化を行う場合はtrue
-     */
-    boolean isInitialize();
-
-    /**
-     * ScriptBlockPlusの{@link SBPlayer}を取得します。
-     * @return {@link SBPlayer}
+     * {@link ScriptBlock}の{@link SBPlayer}を取得します。
+     * @return {@link SBPlayer} - プレイヤー
      */
     @NotNull
     SBPlayer getSBPlayer();
 
     /**
+     * {@link Bukkit}の{@link Player}を取得します。
+     * @return {@link Player} - プレイヤー
+     */
+    @NotNull
+    default Player getPlayer() {
+        return getSBPlayer().getPlayer();
+    }
+
+    /**
      * スクリプトの座標を取得します。
-     * @return スクリプトの座標
+     * @return {@link Location} - スクリプトの座標
      */
     @NotNull
     Location getLocation();
 
     /**
      * スクリプトの種類を取得します。
-     * @return スクリプトの種類
+     * @return {@link ScriptType} - スクリプトの種類
      */
     @NotNull
     ScriptType getScriptType();
 
     /**
-     * スクリプトのリストを取得します。
-     * @return スクリプトのリスト
+     * スクリプトの一覧を取得します。
+     * @return {@link List}&lt;{@link String}&gt; - スクリプトの一覧
      */
     @NotNull
-    List<String> getScript();
+    List<String> getScripts();
 
     /**
      * オプションの値を取得します。
-     * @return オプションの値
+     * @return {@link String} - オプションの値
      */
     @NotNull
     String getOptionValue();
 
     /**
      * スクリプトを何番目まで実行したのか取得します。
-     * @return 進行度
+     * @return {@link Integer} - 進行度
      */
     int getScriptIndex();
 
     /**
      * スクリプトを実行します。
-     * @param index 開始位置
-     * @return 実行に成功した場合はtrue
+     * @param index - 開始位置
+     * @return {@link Boolean} - 実行に成功した場合はtrue
      */
-    boolean read(int index);
+    boolean read(final int index);
 }

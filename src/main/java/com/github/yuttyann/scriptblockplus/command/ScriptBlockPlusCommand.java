@@ -253,7 +253,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         if (!isPlayer(sender) || !Permission.has(sender, scriptType, true)) {
             return false;
         }
-        int x = Integer.parseInt(args[3]), y = Integer.parseInt(args[4]),z = Integer.parseInt(args[5]);
+        int x = Integer.parseInt(args[3]), y = Integer.parseInt(args[4]), z = Integer.parseInt(args[5]);
         ScriptBlock.getInstance().getAPI().read((Player) sender, new Location(Utils.getWorld(args[2]), x, y, z), scriptType, 0);
         return true;
     }
@@ -264,20 +264,21 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             return false;
         }
         var sbPlayer = SBPlayer.fromPlayer((Player) sender);
-        if (sbPlayer.getScriptLine().isPresent() || sbPlayer.getScriptEdit().isPresent()) {
+        if (sbPlayer.getScriptEdit().isPresent()) {
             SBConfig.ERROR_ACTION_DATA.send(sbPlayer);
             return true;
         }
-        if (args.length > 2) {
+        var actionType = ActionType.valueOf(args[1].toUpperCase());
+        var scriptEdit = new ScriptEdit(actionType, scriptType);
+        if (args.length > 2 && (actionType == ActionType.CREATE || actionType == ActionType.ADD)) {
             var script = StringUtils.createString(args, 2).trim();
             if (!isScripts(script)) {
                 SBConfig.ERROR_SCRIPT_CHECK.send(sbPlayer);
                 return true;
             }
-            sbPlayer.setScriptLine(script);
+            scriptEdit.setScriptLine(script);
         }
-        var actionType = ActionType.valueOf(args[1].toUpperCase());
-        sbPlayer.setScriptEdit(new ScriptEdit(actionType, scriptType));
+        sbPlayer.setScriptEdit(scriptEdit);
         SBConfig.SUCCESS_ACTION_DATA.replace(scriptType.type() + "-" + actionType.name().toLowerCase()).send(sbPlayer);
         return true;
     }

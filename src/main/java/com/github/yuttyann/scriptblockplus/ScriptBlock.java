@@ -29,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus ScriptBlock メインクラス
- * 
  * @author yuttyann44581
  */
 public class ScriptBlock extends JavaPlugin {
@@ -98,8 +97,8 @@ public class ScriptBlock extends JavaPlugin {
 
     /**
      * 最新のバージョンが存在するか確認します。
-     * @param sender 送信先
-     * @param latestMessage trueの場合は送信先にアップデートのメッセージを表示します。
+     * @param sender - 送信先
+     * @param latestMessage - trueの場合は送信先にアップデートのメッセージを表示します。
      */
     public void checkUpdate(@NotNull CommandSender sender, boolean latestMessage) {
         var thread = new Thread(() -> {
@@ -125,8 +124,8 @@ public class ScriptBlock extends JavaPlugin {
     }
 
     /**
-     * APIを取得します。
-     * @return {@link ScriptBlockAPI}
+     * {@link ScriptBlock}のAPIを取得します。
+     * @return {@link ScriptBlockAPI} - {@link ScriptBlock}のAPI
      */
     @NotNull
     public ScriptBlockAPI getAPI() {
@@ -134,8 +133,8 @@ public class ScriptBlock extends JavaPlugin {
     }
 
     /**
-     * ScriptBlockのインスタンスを取得します。
-     * @return メインクラスのインスタンス
+     * {@link ScriptBlock}のインスタンスを取得します。
+     * @return {@link ScriptBlock} - インスタンス
      */
     @NotNull
     public static ScriptBlock getInstance() {

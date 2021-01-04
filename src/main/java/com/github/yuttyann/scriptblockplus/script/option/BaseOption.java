@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -21,8 +22,8 @@ public abstract class BaseOption extends Option {
     private SBRead sbRead;
 
     /**
-     * ScriptBlockPlusの{@link SBPlayer}を取得します。
-     * @return {@link SBPlayer}
+     * {@link ScriptBlock}の{@link SBPlayer}を取得します。
+     * @return {@link SBPlayer} - プレイヤー
      */
     @NotNull
     protected final SBPlayer getSBPlayer() {
@@ -30,17 +31,17 @@ public abstract class BaseOption extends Option {
     }
 
     /**
-     * BukkitAPIの{@link Player}を取得します。
-     * @return {@link Player}
+     * {@link Bukkit}の{@link Player}を取得します。
+     * @return {@link Player} - プレイヤー
      */
     @NotNull
     protected final Player getPlayer() {
-        return sbRead.getSBPlayer().getPlayer();
+        return sbRead.getPlayer();
     }
 
     /**
      * プレイヤーの{@link UUID}を取得します。
-     * @return {@link UUID}
+     * @return {@link UUID} - プレイヤーの{@link UUID}
      */
     @NotNull
     protected final UUID getUniqueId() {
@@ -49,7 +50,7 @@ public abstract class BaseOption extends Option {
 
     /**
      * オプションの値を取得します。
-     * @return オプションの値
+     * @return {@link String} - オプションの値
      */
     @NotNull
     protected final String getOptionValue() {
@@ -58,7 +59,7 @@ public abstract class BaseOption extends Option {
 
     /**
      * スクリプトの座標を取得します。
-     * @return スクリプトの座標
+     * @return {@link Location} - スクリプトの座標
      */
     @NotNull
     protected final Location getLocation() {
@@ -66,17 +67,17 @@ public abstract class BaseOption extends Option {
     }
 
     /**
-     * スクリプトのリストを取得します。
-     * @return スクリプトのリスト
+     * スクリプトの一覧を取得します。
+     * @return {@link List}&lt;{@link String}&gt; - スクリプトの一覧
      */
     @NotNull
     protected final List<String> getScripts() {
-        return sbRead.getScript();
+        return sbRead.getScripts();
     }
 
     /**
      * スクリプトの種類を取得します。
-     * @return スクリプトの種類
+     * @return {@link ScriptType} - スクリプトの種類
      */
     @NotNull
     protected final ScriptType getScriptType() {
@@ -84,8 +85,12 @@ public abstract class BaseOption extends Option {
     }
 
     /**
-     * スクリプトのデータ構造を取得します。
-     * @return 一時的なデータ構造（全ての実行が終了したら初期化されます。）
+     * {@link SBRead}の{@link ObjectMap}を取得します。
+     * <p>
+     * {@link UUID}によって管理されているため、重複することはありません。
+     * <p>
+     * 一時的なデータなため、終了後に初期化されます。
+     * @return {@link ObjectMap} - データ構造
      */
     @NotNull
     protected final ObjectMap getTempMap() {
@@ -94,7 +99,7 @@ public abstract class BaseOption extends Option {
 
     /**
      * スクリプトを何番目まで実行したのか取得します。
-     * @return 進行度
+     * @return {@link Integer} - 進行度
      */
     protected final int getScriptIndex() {
         return sbRead.getScriptIndex();
@@ -103,24 +108,29 @@ public abstract class BaseOption extends Option {
     /**
      * オプションの処理を実行します。
      * @throws Exception オプションの処理内で例外が発生した時にスローされます。
-     * @return 有効な場合はtrue
+     * @return {@link Boolean} - 有効な場合はtrue
      */
     protected abstract boolean isValid() throws Exception;
 
     /**
-     * オプションを呼び出します。
-     * @param sbRead {@link SBRead}
-     * @return 有効な場合はtrue
+     * オプションの処理を実行します。
+     * @param sbRead - {@link SBRead}
+     * @return {@link Boolean} - 有効な場合はtrue
      */
     @Override
     @Deprecated
     public final boolean callOption(@NotNull SBRead sbRead) {
+        var sbPlayer = getSBPlayer();
+        if (SBConfig.OPTION_PERMISSION.getValue() && !Permission.has(sbPlayer, PERMISSION_ALL, getPermissionNode())) {
+            SBConfig.NOT_PERMISSION.send(sbPlayer);
+            return false;
+        }
         this.sbRead = sbRead;
         try {
             return isValid();
         } catch (Exception e) {
             e.printStackTrace();
-            SBConfig.OPTION_FAILED_TO_EXECUTE.replace(this, e).send(getSBPlayer());
+            SBConfig.OPTION_FAILED_TO_EXECUTE.replace(this, e).send(sbPlayer);
         }
         return false;
     }

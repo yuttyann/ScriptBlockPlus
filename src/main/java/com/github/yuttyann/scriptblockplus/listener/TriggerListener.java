@@ -2,11 +2,13 @@ package com.github.yuttyann.scriptblockplus.listener;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.TriggerEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
@@ -24,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus TriggerListener クラス
- * 
  * @param <E> イベントの型
  * @author yuttyann44581
  */
@@ -37,11 +38,11 @@ public abstract class TriggerListener<E extends Event> implements Listener {
     private final EventPriority eventPriority;
 
     {
-        var type = getClass().getGenericSuperclass();
-        var types = ((ParameterizedType) type).getActualTypeArguments();
         var genericClass = (Class<E>) null;
         try {
-            genericClass = (Class<E>) Class.forName(types[0].getTypeName());
+            var type = getClass().getGenericSuperclass();
+            var args = ((ParameterizedType) type).getActualTypeArguments();
+            genericClass = (Class<E>) Class.forName(args[0].getTypeName());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -50,9 +51,9 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
     /**
      * コンストラクタ
-     * @param plugin プラグイン
-     * @param scriptType スクリプトの種類
-     * @param eventPriority イベントの優先度
+     * @param plugin - プラグイン
+     * @param scriptType - スクリプトの種類
+     * @param eventPriority - イベントの優先度
      */
     public TriggerListener(@NotNull Plugin plugin, @NotNull ScriptType scriptType, @NotNull EventPriority eventPriority) {
         this.plugin = plugin;
@@ -62,9 +63,9 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
     /**
      * トリガーを登録します。
-     * @param listener {@link TriggerListener} を実装したクラスのインスタンス
+     * @param listener - {@link TriggerListener}を実装したクラスのインスタンス
      */
-    public static final void register(@NotNull TriggerListener<? extends Event> listener) {
+    public static void register(@NotNull TriggerListener<? extends Event> listener) {
         var plugin = listener.getPlugin();
         var eventClass = listener.getEventClass();
         var eventPriority = listener.getEventPriority();
@@ -73,7 +74,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
     /**
      * プラグインを取得します。
-     * @return プラグイン
+     * @return {@link Plugin} - プラグイン
      */
     @NotNull
     public Plugin getPlugin() {
@@ -81,9 +82,8 @@ public abstract class TriggerListener<E extends Event> implements Listener {
     }
 
     /**
-     * イベントのクラスを取得します。
-     * 
-     * @return イベントのクラス
+     * {@link Bukkit}のイベントのクラスを取得します。
+     * @return Class&lt;{@link E} extends {@link Event}&gt; - イベントのクラス
      */
     @NotNull
     public final Class<E> getEventClass() {
@@ -92,7 +92,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
     /**
      * スクリプトの種類を取得します。
-     * @return スクリプトの種類
+     * @return {@link ScriptType} - スクリプトの種類
      */
     @NotNull
     public final ScriptType getScriptType() {
@@ -101,7 +101,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
     /**
      * イベントの優先度を取得します。
-     * @return イベントの優先度
+     * @return {@link EventPriority} - イベントの優先度
      */
     @NotNull
     public EventPriority getEventPriority() {
@@ -121,8 +121,8 @@ public abstract class TriggerListener<E extends Event> implements Listener {
      * }
      * </pre>
      * 
-     * @param event イベント
-     * @return {@link Trigger} トリガー（null を返した場合はスルーする）
+     * @param event - イベント
+     * @return {@link Trigger}（null を返した場合はスルーする）
      */
     @Nullable
     protected abstract Trigger create(@NotNull E event);
@@ -152,12 +152,8 @@ public abstract class TriggerListener<E extends Event> implements Listener {
      * }
      * </pre>
      * 
-     * @param trigger トリガー
-     * @return {@link Result}
-     * 
-     *         <pre>
-     * Result.SUCCESS = 処理を中断しない, Result.FAILURE = 処理を中断する
-     *         </pre>
+     * @param trigger - トリガー
+     * @return {@link Result} - {@link Result#FAILURE}の場合は処理を中断します。
      */
     @NotNull
     protected Result handle(@NotNull Trigger trigger) {
@@ -165,8 +161,8 @@ public abstract class TriggerListener<E extends Event> implements Listener {
     }
 
     /**
-     * トリガーの処理
-     * @param event イベント
+     * トリガーの処理です。
+     * @param event - イベント
      */
     private void onTrigger(@NotNull Event event) {
         if (!eventClass.equals(event.getClass())) {
@@ -182,26 +178,16 @@ public abstract class TriggerListener<E extends Event> implements Listener {
             return;
         }
         var player = trigger.getPlayer();
-        if (!call(Progress.PERM, trigger) || !Permission.has(player, scriptType, false)) {
+        if (!trigger.call(Progress.PERM) || !Permission.has(player, scriptType, false)) {
             SBConfig.NOT_PERMISSION.send(player);
             return;
         }
         trigger.triggerEvent = new TriggerEvent(player, block, scriptType);
-        if (!call(Progress.EVENT, trigger) || isCancelled(trigger.triggerEvent)) {
+        if (!trigger.call(Progress.EVENT) || trigger.isCancelled()) {
             return;
         }
         trigger.scriptRead = new ScriptRead(player, location, scriptType);
-        StreamUtils.ifAction(call(Progress.READ, trigger), () -> trigger.scriptRead.read(0));
-    }
-
-    private boolean call(@NotNull Progress progress, @NotNull Trigger trigger) {
-        trigger.progress = progress;
-        return handle(trigger) == Result.SUCCESS;
-    }
-    
-    private boolean isCancelled(@NotNull TriggerEvent triggerEvent) {
-        Bukkit.getPluginManager().callEvent(triggerEvent);
-        return triggerEvent.isCancelled();
+        StreamUtils.ifAction(trigger.call(Progress.READ), () -> trigger.scriptRead.read(0));
     }
 
     protected class Trigger {
@@ -216,9 +202,9 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
         /**
          * コンストラクタ
-         * @param player プレイヤー
-         * @param block ブロック
-         * @param event イベント
+         * @param player - プレイヤー
+         * @param block - ブロック
+         * @param event - イベント
          */
         public Trigger(@NotNull Player player, @NotNull Block block, @NotNull E event) {
             this.player = player;
@@ -227,8 +213,8 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         }
 
         /**
-         * {@link Player} を取得します。
-         * @return {@link Player}
+         * {@link Bukkit}の{@link Player}を取得します。
+         * @return {@link Player} - プレイヤー
          */
         @NotNull
         public Player getPlayer() {
@@ -236,8 +222,8 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         }
 
         /**
-         * {@link Block} を取得します。
-         * @return {@link Block}
+         * ブロックを取得します。
+         * @return {@link Block} - ブロック
          */
         @NotNull
         public Block getBlock() {
@@ -245,8 +231,8 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         }
 
         /**
-         * {@link Event} を取得します。
-         * @return {@link Event}
+         * {@link Bukkit}のイベントを取得します。
+         * @return {@link E} - イベント
          */
         @NotNull
         public E getEvent() {
@@ -254,8 +240,8 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         }
 
         /**
-         * {@link Progress} を取得します。
-         * @return {@link Progress}
+         * プロセスの進行度を取得します。
+         * @return {@link Progress} - 進行度
          */
         @NotNull
         public Progress getProgress() {
@@ -263,21 +249,35 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         }
 
         /**
-         * {@link SBRead} を取得します。
-         * @return {@link SBRead}（オプショナル）
+         * {@link SBRead}の{@link ObjectMap}を取得します。
+         * <p>
+         * {@link UUID}によって管理されているため、重複することはありません。
+         * <p>
+         * 一時的なデータなため、終了後に初期化されます。
+         * @return {@link ObjectMap} - データ構造
          */
         @NotNull
-        public Optional<SBRead> getSBRead() {
+        public Optional<ObjectMap> getTempMap() {
             return Optional.ofNullable(scriptRead);
         }
 
         /**
-         * {@link TriggerEvent} を取得します。
-         * @return {@link TriggerEvent}（オプショナル）
+         * トリガーイベントを取得します。
+         * @return {@link Optional}&lt;{@link TriggerEvent}&gt; - トリガーイベント
          */
         @NotNull
         public Optional<TriggerEvent> getTriggerEvent() {
             return Optional.ofNullable(triggerEvent);
+        }
+
+        private boolean call(@NotNull Progress progress) {
+            this.progress = progress;
+            return handle(this) == Result.SUCCESS;
+        }
+        
+        private boolean isCancelled() {
+            Bukkit.getPluginManager().callEvent(triggerEvent);
+            return triggerEvent.isCancelled();
         }
     }
 

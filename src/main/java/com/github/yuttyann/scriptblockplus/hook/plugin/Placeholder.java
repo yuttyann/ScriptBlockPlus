@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.hook.plugin;
 
 import com.github.yuttyann.scriptblockplus.hook.HookPlugin;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
@@ -32,5 +33,12 @@ public final class Placeholder extends HookPlugin {
             source = PlaceholderAPI.setPlaceholders(player, source);
         }
         return source;
+    }
+
+    @NotNull
+    public String replace(@NotNull Player player, @NotNull String source) {
+        source = StringUtils.replace(source, "<player>", player.getName());
+        source = StringUtils.replace(source, "<world>", player.getWorld().getName());
+        return has() ? set(player, source) : source;
     }
 }

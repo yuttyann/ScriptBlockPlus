@@ -1,6 +1,7 @@
 package com.github.yuttyann.scriptblockplus.enums;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptType;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -61,8 +62,12 @@ public enum Permission {
         return has(permissible, node);
     }
 
-    public static boolean has(@NotNull Permissible permissible, @NotNull String permission) {
-        return StringUtils.isNotEmpty(permission) && permissible.hasPermission(permission);
+    public static boolean has(@NotNull Permissible permissible, @NotNull String node) {
+        return StringUtils.isNotEmpty(node) && permissible.hasPermission(node);
+    }
+
+    public static boolean has(@NotNull Permissible permissible, @NotNull String... nodes) {
+        return Stream.of(nodes).anyMatch(n -> has(permissible, n));
     }
 
     public static boolean has(@NotNull Permissible permissible, @NotNull ScriptType scriptType, boolean isCMDorUse) {

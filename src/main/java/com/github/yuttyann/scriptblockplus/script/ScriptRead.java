@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.script;
 
-import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
@@ -34,14 +33,16 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
     private boolean initialize;
 
+    // 初期宣言
     protected SBPlayer sbPlayer;
     protected Location location;
     protected ScriptType scriptType;
     protected BlockScript blockScript;
-    
-    protected List<String> script;
-    protected String optionValue;
-    protected int scriptIndex;
+
+    // ScriptRead#read(int) から
+    protected int index;
+    protected String value;
+    protected List<String> scripts;
 
     public ScriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType) {
         location.setX(location.getBlockX() + 0.5D);
@@ -49,17 +50,15 @@ public class ScriptRead extends ScriptMap implements SBRead {
         location.setZ(location.getBlockZ() + 0.5D);
         this.initialize = true;
         this.sbPlayer = SBPlayer.fromPlayer(player);
-        this.location = new UnmodifiableLocation(location); // 変更不可
+        this.location = new UnmodifiableLocation(location);
         this.scriptType = scriptType;
         this.blockScript = new BlockScriptJson(scriptType).load();
     }
     
-    @Override
     public final void setInitialize(boolean initialize) {
         this.initialize = initialize;
     }
 
-    @Override
     public final boolean isInitialize() {
         return initialize;
     }
@@ -84,55 +83,51 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
     @Override
     @NotNull
-    public List<String> getScript() {
-        return script;
+    public List<String> getScripts() {
+        return scripts;
     }
 
     @Override
     @NotNull
     public String getOptionValue() {
-        return optionValue;
+        return value;
     }
 
     @Override
     public int getScriptIndex() {
-        return scriptIndex;
+        return index;
     }
 
     @Override
-    public boolean read(int index) {
+    public boolean read(final int index) {
         if (!blockScript.has(location)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
             return false;
         }
-        if (!sort(blockScript.get(location).getScript())) {
+        if (!sortScripts(blockScript.get(location).getScript())) {
             SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptType).send(sbPlayer);
             SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(sbPlayer.getName(), location, scriptType).console();
             return false;
         }
-        var pluginManager = Bukkit.getPluginManager();
-        pluginManager.callEvent(new ScriptReadStartEvent(ramdomId, this));
+        Bukkit.getPluginManager().callEvent(new ScriptReadStartEvent(ramdomId, this));
         try {
             return perform(index);
         } finally {
-            pluginManager.callEvent(new ScriptReadEndEvent(ramdomId, this));
-            StreamUtils.filter(this, SBRead::isInitialize, ScriptMap::clear);
+            Bukkit.getPluginManager().callEvent(new ScriptReadEndEvent(ramdomId, this));
+            StreamUtils.ifAction(initialize, () -> clear());
         }
     }
 
-    protected boolean perform(int index) {
-        for (scriptIndex = index; scriptIndex < script.size(); scriptIndex++) {
+    protected boolean perform(final int index) {
+        for (this.index = index; this.index < scripts.size(); this.index++) {
             if (!sbPlayer.isOnline()) {
                 EndProcessManager.forEach(e -> e.failed(this));
                 return false;
             }
-            var script = this.script.get(scriptIndex);
+            var script = scripts.get(index);
             var option = OptionManager.newInstance(script);
-            optionValue = setPlaceholders(getSBPlayer(), option.getValue(script));
-            if (!hasPermission(option) || !option.callOption(this)) {
-                if (!option.isFailedIgnore()) {
-                    EndProcessManager.forEach(e -> e.failed(this));
-                }
+            this.value = Placeholder.INSTANCE.replace(getPlayer(), option.getValue(script));
+            if (!option.callOption(this) && isFailedIgnore(option)) {
                 return false;
             }
         }
@@ -141,35 +136,20 @@ public class ScriptRead extends ScriptMap implements SBRead {
         SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(sbPlayer.getName(), location, scriptType).console();
         return true;
     }
-
-    @NotNull
-    protected String setPlaceholders(@NotNull SBPlayer sbPlayer, @NotNull String source) {
-        if (Placeholder.INSTANCE.has()) {
-            source = Placeholder.INSTANCE.set(sbPlayer.getPlayer(), source);
-        }
-        source = StringUtils.replace(source, "<player>", sbPlayer.getName());
-        source = StringUtils.replace(source, "<world>", sbPlayer.getWorld().getName());
-        return source;
+    
+    protected boolean isFailedIgnore(@NotNull Option option) {
+        StreamUtils.ifAction(!option.isFailedIgnore(), () -> EndProcessManager.forEach(e -> e.failed(this)));
+        return true;
     }
 
-    protected boolean hasPermission(@NotNull Option option) {
-        if (!SBConfig.OPTION_PERMISSION.getValue()
-                || Permission.has(sbPlayer, Option.PERMISSION_ALL)
-                || Permission.has(sbPlayer, option.getPermissionNode())) {
-            return true;
-        }
-        SBConfig.NOT_PERMISSION.send(sbPlayer);
-        return false;
-    }
-
-    protected boolean sort(@NotNull List<String> scripts) {
+    protected boolean sortScripts(@NotNull List<String> scripts) {
         try {
             var parse = new ArrayList<String>();
             for (var script : scripts) {
                 parse.addAll(StringUtils.getScripts(script));
             }
             SBConfig.SORT_SCRIPTS.ifPresentAndTrue(s -> OptionManager.sort(parse));
-            this.script = Collections.unmodifiableList(parse);
+            this.scripts = Collections.unmodifiableList(parse);
             return true;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

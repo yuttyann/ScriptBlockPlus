@@ -20,7 +20,6 @@ import java.util.Optional;
 public abstract class PlayerMap implements SBPlayer {
 
     private static final String KEY_REGION = Utils.randomUUID();
-    private static final String KEY_SCRIPT_LINE = Utils.randomUUID();
     private static final String KEY_SCRIPT_EDIT = Utils.randomUUID();
     private static final String KEY_SB_CLIPBOARD = Utils.randomUUID();
     private static final String KEY_OLD_BLOCK_COORDS = Utils.randomUUID();
@@ -79,11 +78,6 @@ public abstract class PlayerMap implements SBPlayer {
     }
 
     @Override
-    public void setScriptLine(@Nullable String scriptLine) {
-        getObjectMap().put(KEY_SCRIPT_LINE, scriptLine);
-    }
-
-    @Override
     public void setScriptEdit(@Nullable ScriptEdit scriptEdit) {
         getObjectMap().put(KEY_SCRIPT_EDIT, scriptEdit);
     }
@@ -96,12 +90,6 @@ public abstract class PlayerMap implements SBPlayer {
     @Override
     public void setOldBlockCoords(@Nullable BlockCoords blockCoords) {
         getObjectMap().put(KEY_OLD_BLOCK_COORDS, blockCoords);
-    }
-
-    @Override
-    @NotNull
-    public Optional<String> getScriptLine() {
-        return Optional.ofNullable(getObjectMap().get(KEY_SCRIPT_LINE));
     }
 
     @Override

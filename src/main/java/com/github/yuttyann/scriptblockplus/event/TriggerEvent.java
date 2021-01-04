@@ -53,6 +53,6 @@ public class TriggerEvent extends ScriptBlockEvent {
 
     @Override
     public void setCancelled(boolean cancel) {
-        cancelled = cancel;
+        this.cancelled = cancel;
     }
 }
