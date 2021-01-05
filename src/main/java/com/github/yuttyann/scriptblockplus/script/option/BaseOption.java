@@ -123,9 +123,9 @@ public abstract class BaseOption extends Option {
     @Override
     @Deprecated
     public final boolean callOption(@NotNull SBRead sbRead) {
-        var sbPlayer = getSBPlayer();
-        if (SBConfig.OPTION_PERMISSION.getValue() && !Permission.has(sbPlayer, PERMISSION_ALL, getPermissionNode())) {
-            SBConfig.NOT_PERMISSION.send(sbPlayer);
+        var player = sbRead.getPlayer();
+        if (SBConfig.OPTION_PERMISSION.getValue() && !Permission.has(player, PERMISSION_ALL, getPermissionNode())) {
+            SBConfig.NOT_PERMISSION.send(player);
             return false;
         }
         this.sbRead = sbRead;
@@ -133,7 +133,7 @@ public abstract class BaseOption extends Option {
             return isValid();
         } catch (Exception e) {
             e.printStackTrace();
-            SBConfig.OPTION_FAILED_TO_EXECUTE.replace(this, e).send(sbPlayer);
+            SBConfig.OPTION_FAILED_TO_EXECUTE.replace(this, e).send(player);
         }
         return false;
     }

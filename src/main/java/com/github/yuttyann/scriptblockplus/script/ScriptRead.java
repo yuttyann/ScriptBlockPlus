@@ -10,6 +10,7 @@ import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
+import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -114,7 +115,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
             return perform(index);
         } finally {
             Bukkit.getPluginManager().callEvent(new ScriptReadEndEvent(ramdomId, this));
-            StreamUtils.ifAction(initialize, () -> clear());
+            StreamUtils.filter(this, ScriptRead::isInitialize, ObjectMap::clear);
         }
     }
 
@@ -124,7 +125,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
                 EndProcessManager.forEach(e -> e.failed(this));
                 return false;
             }
-            var script = scripts.get(index);
+            var script = scripts.get(this.index);
             var option = OptionManager.newInstance(script);
             this.value = Placeholder.INSTANCE.replace(getPlayer(), option.getValue(script));
             if (!option.callOption(this) && isFailedIgnore(option)) {
