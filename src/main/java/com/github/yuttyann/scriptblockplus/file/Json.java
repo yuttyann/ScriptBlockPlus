@@ -215,7 +215,6 @@ public abstract class Json<T> {
                 var extension = fileName.lastIndexOf('.');
                 if (extension > 0) {
                     names[i] = fileName.substring(0, extension);
-                    System.out.println(names[i]);
                 }
             }
             return names;
