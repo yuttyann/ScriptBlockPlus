@@ -6,7 +6,7 @@ import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
@@ -28,11 +28,11 @@ import java.util.UUID;
 public final class APIManager implements ScriptBlockAPI {
 
     @Override
-    public boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index) {
-        if (!BlockScriptJson.has(location, scriptType)) {
+    public boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptKey scriptKey, int index) {
+        if (!BlockScriptJson.has(location, scriptKey)) {
             return false;
         }
-        return new ScriptRead(player, location, scriptType).read(index);
+        return new ScriptRead(player, location, scriptKey).read(index);
     }
 
     @Override
@@ -47,16 +47,16 @@ public final class APIManager implements ScriptBlockAPI {
 
     @Override
     @NotNull
-    public SBEdit getSBEdit(@NotNull ScriptType scriptType) {
-        return new SEdit(scriptType);
+    public SBEdit getSBEdit(@NotNull ScriptKey scriptKey) {
+        return new SEdit(scriptKey);
     }
 
     private static class SEdit implements SBEdit {
 
         private final SBOperation sbOperation;
 
-        public SEdit(@NotNull ScriptType scriptType) {
-            this.sbOperation = new SBOperation(scriptType);
+        public SEdit(@NotNull ScriptKey scriptKey) {
+            this.sbOperation = new SBOperation(scriptKey);
         }
 
         @Override
@@ -66,8 +66,8 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         @NotNull
-        public ScriptType getScriptType() {
-            return sbOperation.getScriptType();
+        public ScriptKey getScriptKey() {
+            return sbOperation.getScriptKey();
         }
 
         @Override
@@ -93,21 +93,21 @@ public final class APIManager implements ScriptBlockAPI {
 
     @Override
     @NotNull
-    public SBFile getSBFile(@NotNull Location location, @NotNull ScriptType scriptType) {
-        return new SFile(location, scriptType);
+    public SBFile getSBFile(@NotNull Location location, @NotNull ScriptKey scriptKey) {
+        return new SFile(location, scriptKey);
     }
 
     private static class SFile implements SBFile {
 
         private final Location location;
-        private final ScriptType scriptType;
+        private final ScriptKey scriptKey;
         private final ScriptParam scriptParam;
         private final BlockScriptJson scriptJson;
 
-        public SFile(@NotNull Location location, @NotNull ScriptType scriptType) {
+        public SFile(@NotNull Location location, @NotNull ScriptKey scriptKey) {
             this.location = location;
-            this.scriptType = scriptType;
-            this.scriptJson = new BlockScriptJson(scriptType);
+            this.scriptKey = scriptKey;
+            this.scriptJson = new BlockScriptJson(scriptKey);
             this.scriptParam = scriptJson.load().get(location);
         }
 
@@ -129,8 +129,8 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         @NotNull
-        public ScriptType getScriptType() {
-            return scriptType;
+        public ScriptKey getScriptKey() {
+            return scriptKey;
         }
 
         @Override
@@ -188,8 +188,8 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         public void remove() {
-            TimerOption.removeAll(location, scriptType);
-            PlayerCountJson.clear(location, scriptType);
+            TimerOption.removeAll(location, scriptKey);
+            PlayerCountJson.clear(location, scriptKey);
             scriptJson.load().remove(location);
         }
     }

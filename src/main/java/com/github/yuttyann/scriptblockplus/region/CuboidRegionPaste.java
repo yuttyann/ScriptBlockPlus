@@ -6,7 +6,7 @@ import java.util.Set;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Location;
@@ -19,19 +19,19 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CuboidRegionPaste {
 
-    private final ScriptType scriptType;
+    private final ScriptKey scriptKey;
     private final SBClipboard sbClipboard;
     private final CuboidRegionBlocks regionBlocks;
 
     public CuboidRegionPaste(@NotNull SBClipboard sbClipboard, @NotNull Region region) {
-        this.scriptType = sbClipboard.getBlockScriptJson().getScriptType();
+        this.scriptKey = sbClipboard.getBlockScriptJson().getScriptKey();
         this.sbClipboard = sbClipboard;
         this.regionBlocks = new CuboidRegionBlocks(region);
     }
 
     @NotNull
-    public ScriptType getScriptType() {
-        return scriptType;
+    public ScriptKey getScriptKey() {
+        return scriptKey;
     }
 
     @NotNull
@@ -47,7 +47,7 @@ public class CuboidRegionPaste {
             }
             lightPaste(locations, block.getLocation(), overwrite);
         }
-        PlayerCountJson.clear(locations, scriptType);
+        PlayerCountJson.clear(locations, scriptKey);
         sbClipboard.save();
         return this;
     }

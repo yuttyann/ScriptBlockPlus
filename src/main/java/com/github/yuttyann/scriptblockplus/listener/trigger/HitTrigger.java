@@ -3,7 +3,7 @@ package com.github.yuttyann.scriptblockplus.listener.trigger;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,7 +27,7 @@ public class HitTrigger extends TriggerListener<ProjectileHitEvent> {
     private static final String KEY_HIT = Utils.randomUUID();
 
     public HitTrigger(@NotNull ScriptBlock plugin) {
-        super(plugin, ScriptType.HIT, EventPriority.HIGH);
+        super(plugin, ScriptKey.HIT, EventPriority.HIGH);
     }
 
     @Override

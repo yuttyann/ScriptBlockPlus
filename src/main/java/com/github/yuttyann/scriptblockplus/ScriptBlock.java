@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.listener.trigger.WalkTrigger;
 import com.github.yuttyann.scriptblockplus.manager.APIManager;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
@@ -65,7 +65,7 @@ public class ScriptBlock extends JavaPlugin {
         checkUpdate(Bukkit.getConsoleSender(), false);
 
         // スクリプトの形式を".yml"から".json"へ移行
-        StreamUtils.forEach(ScriptType.values(), BlockScriptJson::convart);
+        StreamUtils.forEach(ScriptKey.values(), BlockScriptJson::convart);
 
         // ログイン中のプレイヤーの設定をオンラインへ変更
         Bukkit.getOnlinePlayers().forEach(p -> ((BaseSBPlayer) SBPlayer.fromPlayer(p)).setOnline(true));

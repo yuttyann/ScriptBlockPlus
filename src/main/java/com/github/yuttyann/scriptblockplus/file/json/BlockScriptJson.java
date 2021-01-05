@@ -4,7 +4,7 @@ import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.SBLoader;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,12 +17,12 @@ import java.util.LinkedHashSet;
 @JsonOptions(path = "json/blockscript", file = "{id}.json")
 public class BlockScriptJson extends Json<BlockScript> {
 
-    public BlockScriptJson(@NotNull ScriptType scriptType) {
-        super(scriptType.type());
+    public BlockScriptJson(@NotNull ScriptKey scriptKey) {
+        super(scriptKey.getName());
     }
 
-    public static boolean has(@NotNull Location location, @NotNull ScriptType scriptType) {
-        var scriptJson = new BlockScriptJson(scriptType);
+    public static boolean has(@NotNull Location location, @NotNull ScriptKey scriptKey) {
+        var scriptJson = new BlockScriptJson(scriptKey);
         return scriptJson.exists() && scriptJson.load().has(location);
     }
 
@@ -31,24 +31,24 @@ public class BlockScriptJson extends Json<BlockScript> {
     }
 
     @NotNull
-    public ScriptType getScriptType() {
-        return ScriptType.valueOf(id);
+    public ScriptKey getScriptKey() {
+        return ScriptKey.valueOf(getId());
     }
 
     @Override
     @NotNull
     public BlockScript newInstance(@NotNull Object[] args) {
-        return new BlockScript(getScriptType());
+        return new BlockScript(getScriptKey());
     }
 
-    public static void convart(@NotNull ScriptType scriptType) {
+    public static void convart(@NotNull ScriptKey scriptKey) {
         // YAML形式のファイルからデータを読み込むクラス
-        var scriptLoader = new SBLoader(scriptType);
+        var scriptLoader = new SBLoader(scriptKey);
         if (!scriptLoader.getFile().exists()) {
             return;
         }
         // JSONを作成
-        var scriptJson = new BlockScriptJson(scriptType);
+        var scriptJson = new BlockScriptJson(scriptKey);
         var blockScript = scriptJson.load();
         scriptLoader.forEach(s -> {
             // 移行の為、パラメータを設定する

@@ -4,7 +4,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.BlockClickEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
 
 import org.bukkit.block.Block;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class InteractTrigger extends TriggerListener<BlockClickEvent> {
 
     public InteractTrigger(@NotNull ScriptBlock plugin) {
-        super(plugin, ScriptType.INTERACT, EventPriority.HIGH);
+        super(plugin, ScriptKey.INTERACT, EventPriority.HIGH);
     }
 
     @Override

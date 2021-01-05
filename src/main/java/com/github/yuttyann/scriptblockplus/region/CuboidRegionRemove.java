@@ -2,7 +2,7 @@ package com.github.yuttyann.scriptblockplus.region;
 
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 
 import org.bukkit.Location;
@@ -18,17 +18,17 @@ import java.util.Set;
  */
 public class CuboidRegionRemove {
 
-    private final Set<ScriptType> scriptTypes;
+    private final Set<ScriptKey> scriptKeys;
     private final CuboidRegionBlocks regionBlocks;
 
     public CuboidRegionRemove(@NotNull Region region) {
-        this.scriptTypes = new LinkedHashSet<>();
+        this.scriptKeys = new LinkedHashSet<>();
         this.regionBlocks = new CuboidRegionBlocks(region);
     }
 
     @NotNull
-    public Set<ScriptType> getScriptTypes() {
-        return scriptTypes;
+    public Set<ScriptKey> getScriptKeys() {
+        return scriptKeys;
     }
 
     @NotNull
@@ -37,28 +37,28 @@ public class CuboidRegionRemove {
     }
 
     public void init() {
-        scriptTypes.clear();
+        scriptKeys.clear();
     }
 
     public CuboidRegionRemove remove() {
         init();
         var blocks = regionBlocks.getBlocks();
         var locations = new HashSet<Location>(regionBlocks.getCount());
-        for (var scriptType : ScriptType.values()) {
-            var scriptJson = new BlockScriptJson(scriptType);
+        for (var scriptKey : ScriptKey.values()) {
+            var scriptJson = new BlockScriptJson(scriptKey);
             if (!scriptJson.exists()) {
                 continue;
             }
             for (var block : blocks) {
                 if (lightRemove(locations, block.getLocation(), scriptJson)) {
-                    scriptTypes.add(scriptType);
+                    scriptKeys.add(scriptKey);
                 }
             }
             scriptJson.saveFile();
         }
-        for (var scriptType : scriptTypes) {
-            TimerOption.removeAll(locations, scriptType);
-            PlayerCountJson.clear(locations, scriptType);
+        for (var scriptKey : scriptKeys) {
+            TimerOption.removeAll(locations, scriptKey);
+            PlayerCountJson.clear(locations, scriptKey);
         }
         return this;
     }

@@ -23,15 +23,15 @@ public class Amount extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var scriptJson = new BlockScriptJson(getScriptType());
+        var scriptJson = new BlockScriptJson(getScriptKey());
         var scriptParam = scriptJson.load().get(getLocation());
         if (scriptParam.getAmount() == -1) {
             scriptParam.setAmount(Integer.parseInt(getOptionValue()));
         }
         scriptParam.subtractAmount(1);
         if (scriptParam.getAmount() <= 0) {
-            TimerOption.removeAll(getLocation(), getScriptType());
-            PlayerCountJson.clear(getLocation(), getScriptType());
+            TimerOption.removeAll(getLocation(), getScriptKey());
+            PlayerCountJson.clear(getLocation(), getScriptKey());
             scriptJson.load().remove(getLocation());
         }
         scriptJson.saveFile();

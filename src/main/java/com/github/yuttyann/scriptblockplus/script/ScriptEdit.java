@@ -12,14 +12,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ScriptEdit {
 
+    private final ScriptKey scriptKey;
     private final ActionType actionType;
-    private final ScriptType scriptType;
 
     private String script;
 
-    public ScriptEdit(@NotNull ActionType actionType, @NotNull ScriptType scriptType) {
+    public ScriptEdit(@NotNull ScriptKey scriptKey, @NotNull ActionType actionType) {
+        this.scriptKey = scriptKey;
         this.actionType = actionType;
-        this.scriptType = scriptType;
     }
 
     public void setScriptLine(@Nullable String script) {
@@ -27,8 +27,8 @@ public class ScriptEdit {
 	}
 
     @NotNull
-    public ScriptType getScriptType() {
-        return scriptType;
+    public ScriptKey getScriptKey() {
+        return scriptKey;
     }
 
     @NotNull
@@ -42,7 +42,7 @@ public class ScriptEdit {
         }
         try {
             var player = sbPlayer.getPlayer();
-            var sbOperation = new SBOperation(scriptType);
+            var sbOperation = new SBOperation(scriptKey);
             switch (actionType) {
                 case CREATE:
                     sbOperation.create(player, location, script);

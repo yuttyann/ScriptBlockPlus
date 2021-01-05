@@ -40,11 +40,11 @@ public class Delay extends BaseOption implements Runnable {
     protected boolean isValid() throws Exception {
         var array = getOptionValue().split("/");
         saveDelay = array.length <= 1 || Boolean.parseBoolean(array[1]);
-        if (saveDelay && DELAY_SET.contains(new TimerTemp(getUniqueId(), getLocation(), getScriptType()))) {
+        if (saveDelay && DELAY_SET.contains(new TimerTemp(getUniqueId(), getLocation(), getScriptKey()))) {
             SBConfig.ACTIVE_DELAY.send(getSBPlayer());
         } else {
             if (saveDelay) {
-                DELAY_SET.add(new TimerTemp(getUniqueId(), getLocation(), getScriptType()));
+                DELAY_SET.add(new TimerTemp(getUniqueId(), getLocation(), getScriptKey()));
             }
             ((ScriptRead) getTempMap()).setInitialize(false);
             Bukkit.getScheduler().runTaskLater(ScriptBlock.getInstance(), this, Long.parseLong(array[0]));
@@ -55,7 +55,7 @@ public class Delay extends BaseOption implements Runnable {
     @Override
     public void run() {
         if (saveDelay) {
-            DELAY_SET.remove(new TimerTemp(getUniqueId(), getLocation(), getScriptType()));
+            DELAY_SET.remove(new TimerTemp(getUniqueId(), getLocation(), getScriptKey()));
         }
         var sbRead = (ScriptRead) getTempMap();
         if (getSBPlayer().isOnline()) {

@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -39,7 +39,7 @@ public class ScriptAction extends BaseOption {
         if (type.equalsIgnoreCase("shift")) {
             return getPlayer().isSneaking();
         }
-        return ScriptType.INTERACT.equals(getScriptType()) && action == getAction(type);
+        return ScriptKey.INTERACT.equals(getScriptKey()) && action == getAction(type);
     }
 
     @Nullable

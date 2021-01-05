@@ -1,8 +1,7 @@
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.google.gson.annotations.Expose;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
@@ -15,16 +14,14 @@ import java.util.HashMap;
  */
 public class BlockScript {
 
-    @SerializedName("scripttype")
-    @Expose
-    private final ScriptType scriptType;
+    @SerializedName(value = "scriptkey", alternate = { "scripttype" })
+    private final ScriptKey scriptKey;
 
     @SerializedName("scripts")
-    @Expose
     private final HashMap<String, ScriptParam> scripts = new HashMap<>();
 
-    public BlockScript(@NotNull ScriptType scriptType) {
-        this.scriptType = scriptType;
+    public BlockScript(@NotNull ScriptKey scriptKey) {
+        this.scriptKey = scriptKey;
     }
 
     public boolean has(@NotNull Location location) {
@@ -50,12 +47,12 @@ public class BlockScript {
         return scriptParam;
     }
 
-    public ScriptType getScriptType() {
-        return scriptType;
+    public ScriptKey getScriptKey() {
+        return scriptKey;
     }
 
     @Override
     public int hashCode() {
-        return scriptType.hashCode();
+        return scriptKey.hashCode();
     }
 }

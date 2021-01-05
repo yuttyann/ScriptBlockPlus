@@ -2,7 +2,7 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -29,8 +29,8 @@ public class Execute extends BaseOption {
     protected boolean isValid() throws Exception {
         var array = getOptionValue().split("/");
         var wxyz = array[1].split(",");
-        var scriptType = ScriptType.valueOf(array[0].toUpperCase());
+        var scriptKey = ScriptKey.valueOf(array[0].toUpperCase());
         int x = Integer.parseInt(wxyz[1]), y = Integer.parseInt(wxyz[2]), z = Integer.parseInt(wxyz[3]);
-        return API.read(getPlayer(), new Location(Utils.getWorld(wxyz[0]), x, y, z), scriptType, 0);
+        return API.read(getPlayer(), new Location(Utils.getWorld(wxyz[0]), x, y, z), scriptKey, 0);
     }
 }

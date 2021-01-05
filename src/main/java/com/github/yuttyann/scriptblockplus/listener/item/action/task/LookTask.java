@@ -4,7 +4,7 @@ import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.listener.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Color;
@@ -55,8 +55,8 @@ public class LookTask extends BlockRunnable {
     }
 
     private boolean has(@NotNull Location location) {
-        for (var scriptType : ScriptType.values()) {
-            if (BlockScriptJson.has(location, scriptType)) {
+        for (var scriptKey : ScriptKey.values()) {
+            if (BlockScriptJson.has(location, scriptKey)) {
                 return true;
             }
         }

@@ -11,11 +11,11 @@ BackupCommandMessage: 'backup - make a backup of the plugin data'
 CheckVerCommandMessage: 'checkver - check new version'
 DataMigrCommandMessage: 'datamigr - migrate old data from ScriptBlock to ScriptBlockPlus'
 ExportCommandMessage: 'export <sound | material> - output BukkitAPI Sound and Material as text'
-CreateCommandMessage: '<scripttype> create <options> - create new scriptblock'
-AddCommandMessage: '<scripttype> add <options> - add new script to the block'
-RemoveCommandMessage: '<scripttype> remove - remove script of block'
-ViewCommandMessage: '<scripttype> view - view the script of block'
-RunCommandMessage: '<scripttype> run <world> <x> <y> <z> - execute the specified script'
+CreateCommandMessage: '<scriptkey> create <options> - create new scriptblock'
+AddCommandMessage: '<scriptkey> add <options> - add new script to the block'
+RemoveCommandMessage: '<scriptkey> remove - remove script of block'
+ViewCommandMessage: '<scriptkey> view - view the script of block'
+RunCommandMessage: '<scriptkey> run <world> <x> <y> <z> - execute the specified script'
 SelectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - paste scriptblock for selected area'
 SelectorRemoveCommandMessage: 'selector remove - remove scriptblock for selected area'
 
@@ -31,7 +31,7 @@ BlockSelector:
 - '&6Shift+Rightclick: &eSpecify Player as Pos1.'
 
 ## ===== ScriptEditor ===== ##
-# %scripttype% : Type of script
+# %scriptkey% : Type of script
 ScriptEditor:
 - '&aThis tool supports script editing.'
 - '&6Left-click: &eChange the target of the tool.'
@@ -80,12 +80,12 @@ UpdateCheckMessage: '&bNew version available!|~v%latestversion% the latest ver.|
 # There are no placeholders
 ErrorUpdateMessage: '&cError occured while checking new version.'
 
-# %scripttype% : Type of script
-ScriptCopyMessage: '&aCopy a "%scripttype%" type scriptblock.'
-ScriptPasteMessage: '&aPaste a "%scripttype%" type scriptblock.'
-ScriptCreateMessage: '&aCreate a "%scripttype%" type scriptblock.'
-ScriptAddMessage: '&aAdd script to a "%scripttype%" type scriptblock.'
-ScriptRemoveMessage: '&cRemove a "%scripttype%" type scriptblock.'
+# %scriptkey% : Type of script
+ScriptCopyMessage: '&aCopy a "%scriptkey%" type scriptblock.'
+ScriptPasteMessage: '&aPaste a "%scriptkey%" type scriptblock.'
+ScriptCreateMessage: '&aCreate a "%scriptkey%" type scriptblock.'
+ScriptAddMessage: '&aAdd script to a "%scriptkey%" type scriptblock.'
+ScriptRemoveMessage: '&cRemove a "%scriptkey%" type scriptblock.'
 
 # There are no placeholders
 NotSelectionMessage: '&cBlockSelector area not selected.'
@@ -99,10 +99,10 @@ ScriptViewerStopMessage: '&cSearch for surrounding scripts has stopped.'
 SelectorPos1Message: '&bI selected the starting point "%coords%".'
 SelectorPos2Message: '&bI chose the end point "%coords%".'
 
-# %scripttype% : Type of script
+# %scriptkey% : Type of script
 # %blockcount% : Block amount
-SelectorPasteMessage: '&aScriptblock "%scripttype%" has been pasted from selected area.'
-SelectorRemoveMessage: '&cScriptblock "%scripttype%" has been removed from selected area.'
+SelectorPasteMessage: '&aScriptblock "%scriptkey%" has been pasted from selected area.'
+SelectorRemoveMessage: '&cScriptblock "%scriptkey%" has been removed from selected area.'
 
 # %option% : Name of the option where the error occurred
 # %cause%  : Cause of error
@@ -124,8 +124,8 @@ ErrorActionDataMessage: '&cInvaild setting.'
 ErrorScriptCheckMessage: '&cInvaild script.'
 ErrorScriptFileCheckMessage: '&cNo script file.'
 
-# %scripttype% : Type of script
-ErrorScriptExecMessage: '&cFail to execute script from "%scripttype%" type scriptblock.'
+# %scriptkey% : Type of script
+ErrorScriptExecMessage: '&cFail to execute script from "%scriptkey%" type scriptblock.'
 
 # %group% : Permission group name
 ErrorGroupMessage: '&cOnly players in group "%group%" can interact with this scriptblock.'
@@ -133,31 +133,31 @@ ErrorGroupMessage: '&cOnly players in group "%group%" can interact with this scr
 # %material% : Type of item
 # %amount%   : Amount of item
 # %damage%   : Damage value of item
-# %itemname% : Item name
-ErrorHandMessage: '&cThe items you hold in hand is not vaild, you must hold at least "%itemname%(%material%:%damage%)" with amount "%amount%x"'
-ErrorItemMessage: '&cThe items in your inventory is not vaild, you must keep in your inventory at least "%itemname%(%material%:%damage%)" with amount "%amount%x"'
+# %name%     : Item name
+ErrorHandMessage: '&cThe items you hold in hand is not vaild, you must hold at least "%name%(%material%:%damage%)" with amount "%amount%x"'
+ErrorItemMessage: '&cThe items in your inventory is not vaild, you must keep in your inventory at least "%name%(%material%:%damage%)" with amount "%amount%x"'
 
 # %cost%   : Required amount
 # %result% : Missing amount
 ErrorCostMessage: '&cYou need money "%cost%" to do this.'
 
-# %scripttype% : Type of script
+# %scriptkey%  : Type of script
 # %player%     : Player ID
 # %world%      : The name of the world
 # %coords%     : Coordinate(x, y, z)
-ConsoleScriptCopyMessage: '&aCreator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" has been copied.'
-ConsoleScriptPasteMessage: '&aCreator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" has been pasted.'
-ConsoleScriptCreateMessage: '&aCreator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" has been created.'
-ConsoleScriptAddMessage: '&aOperator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" has been added new script.'
-ConsoleScriptRemoveMessage: '&cOperator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" has been removed.'
-ConsoleScriptViewMessage: '&aOperator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" has been viewed.'
-ConsoleSuccScriptExecMessage: '&aOperator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" executed successfully.'
-ConsoleErrorScriptExecMessage: '&cOperator"%player%"、Type"%scripttype%"、Location"%world%, %coords%" fail to execute.'
+ConsoleScriptCopyMessage: '&aCreator"%player%"、Type"%scriptkey%"、Location"%world%, %coords%" has been copied.'
+ConsoleScriptPasteMessage: '&aCreator"%player%"、Type"%scriptkey%"、Location"%world%, %coords%" has been pasted.'
+ConsoleScriptCreateMessage: '&aCreator"%player%"、Type"%scriptkey%"、Location"%world%, %coords%" has been created.'
+ConsoleScriptAddMessage: '&aOperator"%player%"、Type"%scriptkey%"、Location"%world%, %coords%" has been added new script.'
+ConsoleScriptRemoveMessage: '&cOperator"%player%"、Type"%scriptkey%"、Location"%world%, %coords%" has been removed.'
+ConsoleScriptViewMessage: '&aOperator"%player%"、Type"%scriptkey%"、Location"%world%, %coords%" has been viewed.'
+ConsoleSuccScriptExecMessage: '&aOperator"%player%"、Type"%scriptkey%"、Location"%world%, %coords%" executed successfully.'
+ConsoleErrorScriptExecMessage: '&cOperator"%player%"、Type"%scriptkey%"、Location"%world%, %coords%" fail to execute.'
 
-# %scripttype% : Type of script
+# %scriptkey%  : Type of script
 # %blockcount% : Block amount
 # %world%      : The name of the world
 # %mincoords%  : Minimum coordinate(x, y, z)
 # %maxcoords%  : Maximum coordinate(x, y, z)
-ConsoleSelectorPasteMessage: '&aType"%scripttype%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been pasted.'
-ConsoleSelectorRemoveMessage: '&cType"%scripttype%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been removed.'
+ConsoleSelectorPasteMessage: '&aType"%scriptkey%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been pasted.'
+ConsoleSelectorRemoveMessage: '&cType"%scriptkey%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been removed.'

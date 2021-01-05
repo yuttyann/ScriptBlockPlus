@@ -11,7 +11,7 @@ import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 import org.bukkit.Bukkit;
@@ -38,7 +38,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
     private final Plugin plugin;
     private final Class<E> eventClass;
-    private final ScriptType scriptType;
+    private final ScriptKey scriptKey;
     private final EventPriority eventPriority;
 
     {
@@ -56,12 +56,12 @@ public abstract class TriggerListener<E extends Event> implements Listener {
     /**
      * コンストラクタ
      * @param plugin - プラグイン
-     * @param scriptType - スクリプトの種類
+     * @param scriptKey - スクリプトキー
      * @param eventPriority - イベントの優先度
      */
-    public TriggerListener(@NotNull Plugin plugin, @NotNull ScriptType scriptType, @NotNull EventPriority eventPriority) {
+    public TriggerListener(@NotNull Plugin plugin, @NotNull ScriptKey scriptKey, @NotNull EventPriority eventPriority) {
         this.plugin = plugin;
-        this.scriptType = scriptType;
+        this.scriptKey = scriptKey;
         this.eventPriority = eventPriority;
     }
 
@@ -95,12 +95,12 @@ public abstract class TriggerListener<E extends Event> implements Listener {
     }
 
     /**
-     * スクリプトの種類を取得します。
-     * @return {@link ScriptType} - スクリプトの種類
+     * スクリプトキーを取得します。
+     * @return {@link ScriptKey} - スクリプトキー
      */
     @NotNull
-    public final ScriptType getScriptType() {
-        return scriptType;
+    public final ScriptKey getScriptKey() {
+        return scriptKey;
     }
 
     /**
@@ -179,19 +179,19 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         }
         var block = trigger.getBlock();
         var location = block.getLocation();
-        if (!BlockScriptJson.has(location, scriptType)) {
+        if (!BlockScriptJson.has(location, scriptKey)) {
             return;
         }
         var player = trigger.getPlayer();
-        if (!trigger.call(Progress.PERM) || !Permission.has(player, scriptType, false)) {
+        if (!trigger.call(Progress.PERM) || !Permission.has(player, scriptKey, false)) {
             SBConfig.NOT_PERMISSION.send(player);
             return;
         }
-        trigger.triggerEvent = new TriggerEvent(player, block, scriptType);
+        trigger.triggerEvent = new TriggerEvent(player, block, scriptKey);
         if (!trigger.call(Progress.EVENT) || trigger.isCancelled()) {
             return;
         }
-        trigger.scriptRead = new ScriptRead(player, location, scriptType);
+        trigger.scriptRead = new ScriptRead(player, location, scriptKey);
         StreamUtils.ifAction(trigger.call(Progress.READ), () -> trigger.scriptRead.read(0));
     }
 

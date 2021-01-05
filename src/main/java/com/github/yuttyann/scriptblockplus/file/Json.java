@@ -5,10 +5,8 @@ import com.github.yuttyann.scriptblockplus.enums.reflection.ClassType;
 import com.github.yuttyann.scriptblockplus.file.json.FieldExclusion;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.google.common.base.Charsets;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -32,22 +30,23 @@ public abstract class Json<T> {
     private static final Map<Integer, List<?>> LIST_CACHE = new HashMap<>();
 
     @Exclude
-    protected final File file;
+    private final File file;
 
     @Exclude
     private final Class<?>[] classes;
 
-    @SerializedName("id")
-    @Expose
-    protected final String id;
+    @Exclude
+    private final JsonOptions jsonOptions;
 
-    @SerializedName("elements")
-    @Expose
+    @SerializedName("id")
+    private final String id;
+
+    @SerializedName(value = "elements", alternate = { "infos" })
     private List<T> list = new ArrayList<>();
 
-    @SerializedName("infos")
-    @Expose(serialize = false)
-    private List<T> oldList = null;
+    {
+        this.jsonOptions = getClass().getAnnotation(JsonOptions.class);
+    }
 
     public Json(@NotNull UUID uuid) {
         this(uuid.toString());
@@ -55,23 +54,16 @@ public abstract class Json<T> {
 
     @SuppressWarnings("unchecked")
     public Json(@NotNull String id) {
-        // ファイル名等に使う
         this.id = id;
-
-        // アノテーションを取得
-        var jsonOptions = getClass().getAnnotation(JsonOptions.class);
         this.file = getFile(jsonOptions);
         this.classes = jsonOptions.classes();
 
         int hash = hashCode();
         if (LIST_CACHE.containsKey(hash)) {
-            // キャッシュしてあるならそちらを取得
             this.list = (List<T>) LIST_CACHE.get(hash);
         } else {
-            // JSONをデシリアライズ
             try {
-                var json = Optional.ofNullable((Json<T>) loadFile());
-                json.ifPresent(j -> list.addAll(Optional.ofNullable(j.oldList).orElseGet(() -> j.list)));
+                Optional.ofNullable((Json<T>) loadFile()).ifPresent(j -> list.addAll(j.list));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -79,8 +71,14 @@ public abstract class Json<T> {
         }
     }
 
-    public final boolean exists() {
-        return file.exists();
+    @NotNull
+    protected String getId() {
+        return id;
+    }
+
+    @NotNull
+    protected File getFile() {
+        return file;
     }
 
     @Nullable
@@ -147,7 +145,10 @@ public abstract class Json<T> {
         return value.get();
     }
 
-    @NotNull
+    public final boolean exists() {
+        return file.exists();
+    }
+
     public final boolean has() {
         if (classes.length > 0) {
             throw new IllegalArgumentException("Please specify the parameter " + Arrays.toString(classes));
@@ -155,7 +156,6 @@ public abstract class Json<T> {
         return !list.isEmpty();
     }
 
-    @NotNull
     public final boolean has(@NotNull Object... args) {
         if (!equalParams(args)) {
             String equal = Arrays.toString(ClassType.getReference(args)) + " != " + Arrays.toString(classes);
@@ -204,15 +204,23 @@ public abstract class Json<T> {
     }
 
     @NotNull
-    public static List<String> getNameList(@NotNull Class<? extends Json<?>> jsonClass) {
+    public static String[] getNames(@NotNull Class<? extends Json<?>> jsonClass) {
         var jsonOptions = jsonClass.getAnnotation(JsonOptions.class);
         var folder = new File(ScriptBlock.getInstance().getDataFolder(), jsonOptions.path());
-        var list = new ArrayList<String>();
         if (folder.exists()) {
-            int length = ".json".length();
-            StreamUtils.forEach(folder.list(), s -> list.add(s.substring(0, s.length() - length)));
+            var files = folder.list();
+            var names = new String[files.length];
+            for (int i = 0; i < files.length; i++) {
+                var fileName = files[i];
+                var extension = fileName.lastIndexOf('.');
+                if (extension > 0) {
+                    names[i] = fileName.substring(0, extension);
+                    System.out.println(names[i]);
+                }
+            }
+            return names;
         }
-        return list;
+        return ArrayUtils.EMPTY_STRING_ARRAY;
     }
 
     @Override

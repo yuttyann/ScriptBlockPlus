@@ -41,11 +41,11 @@ public interface SBRead extends ObjectMap {
     Location getLocation();
 
     /**
-     * スクリプトの種類を取得します。
-     * @return {@link ScriptType} - スクリプトの種類
+     * スクリプトキーを取得します。
+     * @return {@link ScriptKey} - スクリプトキー
      */
     @NotNull
-    ScriptType getScriptType();
+    ScriptKey getScriptKey();
 
     /**
      * スクリプトの一覧を取得します。

@@ -3,7 +3,7 @@ package com.github.yuttyann.scriptblockplus.enums;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -70,17 +70,17 @@ public enum Permission {
         return Stream.of(nodes).anyMatch(n -> has(permissible, n));
     }
 
-    public static boolean has(@NotNull Permissible permissible, @NotNull ScriptType scriptType, boolean isCMDorUse) {
-        return Permission.has(permissible, getTypeNode(scriptType, isCMDorUse));
+    public static boolean has(@NotNull Permissible permissible, @NotNull ScriptKey scriptKey, boolean isCMDorUse) {
+        return Permission.has(permissible, getTypeNode(scriptKey, isCMDorUse));
     }
 
     @NotNull
     public static String[] getTypeNodes(boolean isCMDorUse) {
-        return StreamUtils.toArray(Arrays.asList(ScriptType.values()), t -> getTypeNode(t, isCMDorUse), String[]::new);
+        return StreamUtils.toArray(Arrays.asList(ScriptKey.values()), t -> getTypeNode(t, isCMDorUse), String[]::new);
     }
 
     @NotNull
-    public static String getTypeNode(@NotNull ScriptType scriptType, boolean isCMDorUse) {
-        return isCMDorUse ? SBP_PREFIX + "command." + scriptType.type() : SBP_PREFIX + scriptType.type() + ".use";
+    public static String getTypeNode(@NotNull ScriptKey scriptKey, boolean isCMDorUse) {
+        return isCMDorUse ? SBP_PREFIX + "command." + scriptKey.getName() : SBP_PREFIX + scriptKey.getName() + ".use";
     }
 }

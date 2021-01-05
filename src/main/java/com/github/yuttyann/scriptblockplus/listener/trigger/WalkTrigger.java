@@ -4,7 +4,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class WalkTrigger extends TriggerListener<PlayerMoveEvent> {
 
     public WalkTrigger(@NotNull ScriptBlock plugin) {
-        super(plugin, ScriptType.WALK, EventPriority.HIGH);
+        super(plugin, ScriptKey.WALK, EventPriority.HIGH);
     }
 
     @Override

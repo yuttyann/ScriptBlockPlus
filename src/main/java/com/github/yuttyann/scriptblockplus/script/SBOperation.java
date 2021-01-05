@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
  */
 public final class SBOperation {
 
-    private final ScriptType scriptType;
+    private final ScriptKey scriptKey;
     private final BlockScriptJson scriptJson;
 
-    public SBOperation(@NotNull ScriptType scriptType) {
-        this.scriptType = scriptType;
-        this.scriptJson = new BlockScriptJson(scriptType);
+    public SBOperation(@NotNull ScriptKey scriptKey) {
+        this.scriptKey = scriptKey;
+        this.scriptJson = new BlockScriptJson(scriptKey);
     }
 
     @NotNull
@@ -34,8 +34,8 @@ public final class SBOperation {
     }
 
     @NotNull
-    public ScriptType getScriptType() {
-        return scriptType;
+    public ScriptKey getScriptKey() {
+        return scriptKey;
     }
 
     public boolean exists() {
@@ -57,10 +57,10 @@ public final class SBOperation {
         scriptParam.setScript(Collections.singletonList(script));
         scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptJson.saveFile();
-        TimerOption.removeAll(location, scriptType);
-        PlayerCountJson.clear(location, scriptType);
-        SBConfig.SCRIPT_CREATE.replace(scriptType).send(player);
-        SBConfig.CONSOLE_SCRIPT_CREATE.replace(player.getName(), location, scriptType).console();
+        TimerOption.removeAll(location, scriptKey);
+        PlayerCountJson.clear(location, scriptKey);
+        SBConfig.SCRIPT_CREATE.replace(scriptKey).send(player);
+        SBConfig.CONSOLE_SCRIPT_CREATE.replace(player.getName(), location, scriptKey).console();
     }
 
     public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
@@ -73,9 +73,9 @@ public final class SBOperation {
         scriptParam.getScript().add(script);
         scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptJson.saveFile();
-        TimerOption.removeAll(location, scriptType);
-        SBConfig.SCRIPT_ADD.replace(scriptType).send(player);
-        SBConfig.CONSOLE_SCRIPT_ADD.replace(player.getName(), location, scriptType).console();
+        TimerOption.removeAll(location, scriptKey);
+        SBConfig.SCRIPT_ADD.replace(scriptKey).send(player);
+        SBConfig.CONSOLE_SCRIPT_ADD.replace(player.getName(), location, scriptKey).console();
     }
 
     public void remove(@NotNull Player player, @NotNull Location location) {
@@ -85,10 +85,10 @@ public final class SBOperation {
         }
         scriptJson.load().remove(location);
         scriptJson.saveFile();
-        TimerOption.removeAll(location, scriptType);
-        PlayerCountJson.clear(location, scriptType);
-        SBConfig.SCRIPT_REMOVE.replace(scriptType).send(player);
-        SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), location, scriptType).console();
+        TimerOption.removeAll(location, scriptKey);
+        PlayerCountJson.clear(location, scriptKey);
+        SBConfig.SCRIPT_REMOVE.replace(scriptKey).send(player);
+        SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), location, scriptKey).console();
     }
 
     public void view(@NotNull Player player, @NotNull Location location) {
@@ -97,13 +97,13 @@ public final class SBOperation {
             return;
         }
         var scriptParam = scriptJson.load().get(location);
-        var playerCount = new PlayerCountJson(player.getUniqueId()).load(location, scriptType);
+        var playerCount = new PlayerCountJson(player.getUniqueId()).load(location, scriptKey);
         player.sendMessage("Author: " + getAuthors(scriptParam));
         player.sendMessage("LastEdit: " + scriptParam.getLastEdit());
         player.sendMessage("PlayerCount: " + playerCount.getAmount());
         player.sendMessage("Scripts:");
         scriptParam.getScript().forEach(s -> player.sendMessage("- " + s));
-        SBConfig.CONSOLE_SCRIPT_VIEW.replace(player.getName(), location, scriptType).console();
+        SBConfig.CONSOLE_SCRIPT_VIEW.replace(player.getName(), location, scriptKey).console();
     }
 
     @NotNull

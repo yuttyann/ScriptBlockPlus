@@ -6,7 +6,7 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -79,12 +79,12 @@ public abstract class BaseOption extends Option {
     }
 
     /**
-     * スクリプトの種類を取得します。
-     * @return {@link ScriptType} - スクリプトの種類
+     * スクリプトキーを取得します。
+     * @return {@link ScriptKey} - スクリプトキー
      */
     @NotNull
-    protected final ScriptType getScriptType() {
-        return sbRead.getScriptType();
+    protected final ScriptKey getScriptKey() {
+        return sbRead.getScriptKey();
     }
 
     /**

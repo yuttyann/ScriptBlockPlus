@@ -1,7 +1,9 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.google.gson.annotations.SerializedName;
+
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,20 +17,26 @@ import java.util.UUID;
  */
 public class TimerTemp {
 
+    @SerializedName("params")
     private long[] params;
 
+    @SerializedName("uuid")
     private final UUID uuid;
-    private final String fullCoords;
-    private final ScriptType scriptType;
 
-    public TimerTemp(@NotNull Location location, @NotNull ScriptType scriptType) {
-        this(null, location, scriptType);
+    @SerializedName("fullCoords")
+    private final String fullCoords;
+
+    @SerializedName(value = "scriptkey", alternate = { "scriptType" })
+    private final ScriptKey scriptKey;
+
+    public TimerTemp(@NotNull Location location, @NotNull ScriptKey scriptKey) {
+        this(null, location, scriptKey);
     }
 
-    public TimerTemp(@Nullable UUID uuid, @NotNull Location location, @NotNull ScriptType scriptType) {
+    public TimerTemp(@Nullable UUID uuid, @NotNull Location location, @NotNull ScriptKey scriptKey) {
         this.uuid = uuid;
         this.fullCoords = BlockCoords.getFullCoords(location);
-        this.scriptType = scriptType;
+        this.scriptKey = scriptKey;
     }
     
     TimerTemp set(long[] params) {
@@ -54,7 +62,7 @@ public class TimerTemp {
             return false;
         }
         var temp = (TimerTemp) obj;
-        return Objects.equals(uuid, temp.uuid) && fullCoords.equals(temp.fullCoords) && scriptType.equals(temp.scriptType);
+        return Objects.equals(uuid, temp.uuid) && fullCoords.equals(temp.fullCoords) && scriptKey.equals(temp.scriptKey);
     }
 
     @Override
@@ -67,7 +75,7 @@ public class TimerTemp {
             hash = prime * hash + uuid.hashCode();
         }
         hash = prime * hash + fullCoords.hashCode();
-        hash = prime * hash + scriptType.hashCode();
+        hash = prime * hash + scriptKey.hashCode();
         return hash;
     }
 }

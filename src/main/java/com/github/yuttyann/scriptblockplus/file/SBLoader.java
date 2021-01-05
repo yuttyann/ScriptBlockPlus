@@ -3,7 +3,7 @@ package com.github.yuttyann.scriptblockplus.file;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.YamlConfig;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -32,8 +32,8 @@ public final class SBLoader {
     private Location location;
     private YamlConfig scriptFile;
 
-    public SBLoader(@NotNull ScriptType scriptType) {
-        var filePath = "scripts" + SBFiles.S + scriptType.type() + ".yml";
+    public SBLoader(@NotNull ScriptKey scriptKey) {
+        var filePath = "scripts" + SBFiles.S + scriptKey.getName() + ".yml";
         this.scriptFile = YamlConfig.load(ScriptBlock.getInstance(), filePath, false);
     }
 

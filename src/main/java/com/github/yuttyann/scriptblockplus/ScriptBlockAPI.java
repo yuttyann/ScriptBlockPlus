@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus;
 
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
@@ -23,11 +23,11 @@ public interface ScriptBlockAPI {
      * 指定した位置からスクリプトを実行します。
      * @param player - プレイヤー
      * @param location - スクリプトの座標
-     * @param scriptType - スクリプトの種類
+     * @param scriptKey - スクリプトキー
      * @param index - 開始位置
      * @return {@link Boolean} - 正常に終了した場合はtrue
      */
-    boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptType scriptType, int index);
+    boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptKey scriptKey, int index);
 
     /**
      * 指定したオプションを登録します。
@@ -45,11 +45,11 @@ public interface ScriptBlockAPI {
 
     /**
      * {@link SBEdit}を取得します。
-     * @param scriptType - スクリプトの種類
+     * @param scriptKey - スクリプトキー
      * @return {@link SBEdit}
      */
     @NotNull
-    SBEdit getSBEdit(@NotNull ScriptType scriptType);
+    SBEdit getSBEdit(@NotNull ScriptKey scriptKey);
 
     interface SBEdit {
 
@@ -59,11 +59,11 @@ public interface ScriptBlockAPI {
         void save();
 
         /**
-         * スクリプトの種類を取得します。
-         * @return {@link ScriptType} - スクリプトの種類
+         * スクリプトキーを取得します。
+         * @return {@link ScriptKey} - スクリプトキー
          */
         @NotNull
-        ScriptType getScriptType();
+        ScriptKey getScriptKey();
 
         /**
          * 指定した座標にスクリプトを作成します。
@@ -99,10 +99,10 @@ public interface ScriptBlockAPI {
     /**
      * {@link SBFile}を取得します。
      * @param location - スクリプトの座標
-     * @param scriptType - スクリプトの種類
+     * @param scriptKey - スクリプトキー
      * @return {@link SBFile}
      */
-    SBFile getSBFile(@NotNull Location location, @NotNull ScriptType scriptType);
+    SBFile getSBFile(@NotNull Location location, @NotNull ScriptKey scriptKey);
 
     interface SBFile {
 
@@ -125,11 +125,11 @@ public interface ScriptBlockAPI {
         Location getLocation();
 
         /**
-         * スクリプトの種類を取得します。
-         * @return {@link ScriptType} - スクリプトの種類
+         * スクリプトキーを取得します。
+         * @return {@link ScriptKey} - スクリプトキー
          */
         @NotNull
-        ScriptType getScriptType();
+        ScriptKey getScriptKey();
 
         /**
          * スクリプトの作者の一覧を取得します。

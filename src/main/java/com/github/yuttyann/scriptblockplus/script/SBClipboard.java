@@ -11,7 +11,7 @@ import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -24,7 +24,7 @@ public class SBClipboard {
 
     private final SBPlayer sbPlayer;
     private final Location location;
-    private final ScriptType scriptType;
+    private final ScriptKey scriptKey;
     private final BlockScriptJson scriptJson;
 
     private final Set<UUID> author;
@@ -34,11 +34,11 @@ public class SBClipboard {
     public SBClipboard(@NotNull SBPlayer sbPlayer, @NotNull Location location, @NotNull BlockScriptJson scriptJson) {
         this.sbPlayer = sbPlayer;
         this.location = new UnmodifiableLocation(location);
-        this.scriptType = scriptJson.getScriptType();
+        this.scriptKey = scriptJson.getScriptKey();
         this.scriptJson = scriptJson;
 
         var scriptParam = scriptJson.load().get(location);
-        this.author = new HashSet<>(scriptParam.getAuthor());
+        this.author = new LinkedHashSet<>(scriptParam.getAuthor());
         this.script = new ArrayList<>(scriptParam.getScript());
         this.amount = scriptParam.getAmount();
     }
@@ -83,8 +83,8 @@ public class SBClipboard {
         }
         try {
             sbPlayer.setSBClipboard(this);
-            SBConfig.SCRIPT_COPY.replace(scriptType).send(sbPlayer);
-            SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), location, scriptType).console();
+            SBConfig.SCRIPT_COPY.replace(scriptKey).send(sbPlayer);
+            SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), location, scriptKey).console();
         } finally {
             sbPlayer.setScriptEdit(null);
         }
@@ -103,9 +103,9 @@ public class SBClipboard {
             scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
             scriptParam.setAmount(amount);
             scriptJson.saveFile();
-            PlayerCountJson.clear(location, scriptType);
-            SBConfig.SCRIPT_PASTE.replace(scriptType).send(sbPlayer);
-            SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), location, scriptType).console();
+            PlayerCountJson.clear(location, scriptKey);
+            SBConfig.SCRIPT_PASTE.replace(scriptKey).send(sbPlayer);
+            SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), location, scriptKey).console();
         } finally {
             sbPlayer.setScriptEdit(null);
             sbPlayer.setSBClipboard(null);

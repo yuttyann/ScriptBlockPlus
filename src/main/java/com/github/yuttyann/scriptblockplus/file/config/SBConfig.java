@@ -2,7 +2,7 @@ package com.github.yuttyann.scriptblockplus.file.config;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.Location;
@@ -96,7 +96,7 @@ public final class SBConfig {
     };
 
     private static Function<ReplaceKey, String> FUNCTION_SCRIPT_TYPE = r -> {
-        return replace(r.getValue(), "%scripttype%", r.getArg(0, ScriptType.class).type());
+        return replace(r.getValue(), "%scriptkey%", r.getArg(0, ScriptKey.class).getName());
     };
 
     private static Function<ReplaceKey, String> FUNCTION_OPTION_FAILED = r -> {
@@ -114,7 +114,7 @@ public final class SBConfig {
         s = replace(s, "%material%", String.valueOf(m));
         s = replace(s, "%amount%", r.getArg(1, Integer.class));
         s = replace(s, "%damage%", r.getArg(2, Integer.class));
-        s = replace(s, "%itemname%", isEmpty(n) ? String.valueOf(m) : n);
+        s = replace(s, "%name%", isEmpty(n) ? String.valueOf(m) : n);
         return s;
     };
 
@@ -122,7 +122,7 @@ public final class SBConfig {
         var l = r.getArg(1, Location.class);
         var s = r.getValue();
         s = replace(s, "%player%", r.getArg(0, String.class));
-        s = replace(s, "%scripttype%", r.getArg(2, ScriptType.class).type());
+        s = replace(s, "%scriptkey%", r.getArg(2, ScriptKey.class).getName());
         s = replace(s, "%world%", Objects.requireNonNull(l.getWorld()).getName());
         s = replace(s, "%coords%", BlockCoords.getCoords(l));
         return s;
@@ -131,7 +131,7 @@ public final class SBConfig {
     private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SELECTOR = r -> {
         var c = r.getArg(1, CuboidRegionBlocks.class);
         var s = r.getValue();
-        s = replace(s, "%scripttype%", r.getArg(0, String.class));
+        s = replace(s, "%scriptkey%", r.getArg(0, String.class));
         s = replace(s, "%blockcount%", c.getCount());
         s = replace(s, "%world%", c.getWorld().getName());
         s = replace(s, "%mincoords%", BlockCoords.getCoords(c.getMinimumPoint()));
@@ -162,27 +162,27 @@ public final class SBConfig {
     public static final ReplaceKey UPDATE_CHECK = replaceKey(stringKey("UpdateCheckMessage", ""), FUNCTION_UPDATE_CHECK);
 
     /**
-     * Parameter: {@link ScriptType} scriptType
+     * Parameter: {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey SCRIPT_COPY = replaceKey(stringKey("ScriptCopyMessage", ""), FUNCTION_SCRIPT_TYPE);
 
     /**
-     * Parameter: {@link ScriptType} scriptType
+     * Parameter: {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey SCRIPT_PASTE = replaceKey(stringKey("ScriptPasteMessage", ""), FUNCTION_SCRIPT_TYPE);
 
     /**
-     * Parameter: {@link ScriptType} scriptType
+     * Parameter: {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey SCRIPT_CREATE = replaceKey(stringKey("ScriptCreateMessage", ""), FUNCTION_SCRIPT_TYPE);
 
     /**
-     * Parameter: {@link ScriptType} scriptType
+     * Parameter: {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey SCRIPT_ADD = replaceKey(stringKey("ScriptAddMessage", ""), FUNCTION_SCRIPT_TYPE);
 
     /**
-     * Parameter: {@link ScriptType} scriptType
+     * Parameter: {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey SCRIPT_REMOVE = replaceKey(stringKey("ScriptRemoveMessage", ""), FUNCTION_SCRIPT_TYPE);
 
@@ -197,14 +197,14 @@ public final class SBConfig {
     public static final ReplaceKey SELECTOR_POS2 = replaceKey(stringKey("SelectorPos2Message", ""), "%world%", "%coords%");
 
     /**
-     * Parameter: {@link String} scriptType, {@link Integer} blockCount
+     * Parameter: {@link String} scriptKey, {@link Integer} blockCount
      */
-    public static final ReplaceKey SELECTOR_PASTE = replaceKey(stringKey("SelectorPasteMessage", ""), "%scripttype%", "%blockcount%");
+    public static final ReplaceKey SELECTOR_PASTE = replaceKey(stringKey("SelectorPasteMessage", ""), "%scriptkey%", "%blockcount%");
 
     /**
-     * Parameter: {@link String} scriptType, {@link Integer} blockCount
+     * Parameter: {@link String} scriptKey, {@link Integer} blockCount
      */
-    public static final ReplaceKey SELECTOR_REMOVE = replaceKey(stringKey("SelectorRemoveMessage", ""), "%scripttype%", "%blockcount%");
+    public static final ReplaceKey SELECTOR_REMOVE = replaceKey(stringKey("SelectorRemoveMessage", ""), "%scriptkey%", "%blockcount%");
 
     /**
      * Parameter: {@link Option} option, {@link Throwable} throwable
@@ -217,12 +217,12 @@ public final class SBConfig {
     public static final ReplaceKey ACTIVE_COOLDOWN = replaceKey(stringKey("ActiveCooldownMessage", ""), "%hour%", "%minute%", "%second%");
 
     /**
-     * Parameter: {@link String} scriptType-actionType
+     * Parameter: {@link String} scriptKey-actionType
      */
     public static final ReplaceKey SUCCESS_ACTION_DATA = replaceKey(stringKey("SuccActionDataMessage", ""), "%actiontype%");
 
     /**
-     * Parameter: {@link ScriptType} scriptType
+     * Parameter: {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey ERROR_SCRIPT_EXECUTE = replaceKey(stringKey("ErrorScriptExecMessage", ""), FUNCTION_SCRIPT_TYPE);
 
@@ -247,52 +247,52 @@ public final class SBConfig {
     public static final ReplaceKey ERROR_COST = replaceKey(stringKey("ErrorCostMessage", ""), "%cost%", "%result%");
 
     /**
-     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
+     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey CONSOLE_SCRIPT_COPY = replaceKey(stringKey("ConsoleScriptCopyMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
     /**
-     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
+     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey CONSOLE_SCRIPT_PASTE = replaceKey(stringKey("ConsoleScriptPasteMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
     /**
-     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
+     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey CONSOLE_SCRIPT_CREATE = replaceKey(stringKey("ConsoleScriptCreateMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
     /**
-     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
+     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey CONSOLE_SCRIPT_ADD = replaceKey(stringKey("ConsoleScriptAddMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
     /**
-     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
+     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey CONSOLE_SCRIPT_REMOVE = replaceKey(stringKey("ConsoleScriptRemoveMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
     /**
-     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
+     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey CONSOLE_SCRIPT_VIEW = replaceKey(stringKey("ConsoleScriptViewMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
     /**
-     * Parameter: {@link ScriptType} scriptType, {@link CuboidRegionBlocks} regionBlocks
+     * Parameter: {@link ScriptKey} scriptKey, {@link CuboidRegionBlocks} regionBlocks
      */
     public static final ReplaceKey CONSOLE_SELECTOR_PASTE = replaceKey(stringKey("ConsoleSelectorPasteMessage", ""), FUNCTION_CONSOLE_SELECTOR);
 
     /**
-     * Parameter: {@link ScriptType} scriptType, {@link CuboidRegionBlocks} regionBlocks
+     * Parameter: {@link ScriptKey} scriptKey, {@link CuboidRegionBlocks} regionBlocks
      */
     public static final ReplaceKey CONSOLE_SELECTOR_REMOVE = replaceKey(stringKey("ConsoleSelectorRemoveMessage", ""), FUNCTION_CONSOLE_SELECTOR);
 
     /**
-     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
+     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey CONSOLE_SUCCESS_SCRIPT_EXECUTE = replaceKey(stringKey("ConsoleSuccScriptExecMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
     /**
-     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptType} scriptType
+     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey CONSOLE_ERROR_SCRIPT_EXECUTE = replaceKey(stringKey("ConsoleErrorScriptExecMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 }

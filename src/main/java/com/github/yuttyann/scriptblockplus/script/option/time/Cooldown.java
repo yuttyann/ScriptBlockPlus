@@ -29,7 +29,7 @@ public class Cooldown extends TimerOption {
         params[2] = params[0] + params[1];
 
         var tempJson = new PlayerTempJson(getFileUniqueId());
-        tempJson.load().getTimerTemp().add(new TimerTemp(getFileUniqueId(), getLocation(), getScriptType()).set(params));
+        tempJson.load().getTimerTemp().add(new TimerTemp(getFileUniqueId(), getLocation(), getScriptKey()).set(params));
         tempJson.saveFile();
         return true;
     }
@@ -38,6 +38,6 @@ public class Cooldown extends TimerOption {
     @NotNull
     protected Optional<TimerTemp> getTimerTemp() {
         var timers = new PlayerTempJson(getFileUniqueId()).load().getTimerTemp();
-        return get(timers, new TimerTemp(getFileUniqueId(), getLocation(), getScriptType()));
+        return get(timers, new TimerTemp(getFileUniqueId(), getLocation(), getScriptKey()));
     }
 }

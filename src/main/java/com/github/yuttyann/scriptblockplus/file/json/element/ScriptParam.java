@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,19 +12,15 @@ import java.util.*;
 public class ScriptParam {
 
     @SerializedName("author")
-    @Expose
     private Set<UUID> author = new LinkedHashSet<>();
 
     @SerializedName("script")
-    @Expose
     private List<String> script = new LinkedList<>();
 
     @SerializedName("lastedit")
-    @Expose
     private String lastedit;
 
     @SerializedName("amount")
-    @Expose
     private int amount = -1;
 
     @NotNull

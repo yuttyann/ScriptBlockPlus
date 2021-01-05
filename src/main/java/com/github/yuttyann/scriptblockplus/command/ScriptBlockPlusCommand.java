@@ -15,7 +15,7 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionPaste;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionRemove;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.*;
 import com.google.common.base.Charsets;
 import org.bukkit.*;
@@ -87,7 +87,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         } else if (args.length == 2) {
             if (equals(args[0], "export") && equals(args[1], "sound", "material")) {
                 return doExport(sender, args);
-            } if (equals(args[0], ScriptType.types()) && equals(args[1], "remove", "view")) {
+            } if (equals(args[0], ScriptKey.types()) && equals(args[1], "remove", "view")) {
                 return setAction(sender, args);
             } else if (equals(args[0], "selector") && equals(args[1], "remove")) {
                 return doSelector(sender, args);
@@ -97,7 +97,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         } else if (args.length > 2) {
             if (args.length < 5 && equals(args[0], "selector") && equals(args[1], "paste")) {
                 return doSelector(sender, args);
-            } else if (equals(args[0], ScriptType.types())) {
+            } else if (equals(args[0], ScriptKey.types())) {
                 if (args.length == 6 && equals(args[1], "run")) {
                     return doRun(sender, args);
                 } else if (equals(args[1], "create", "add")) {
@@ -214,8 +214,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             var uuid = ((Player) sender).getUniqueId();
             new Thread(() -> {
                 try {
-                    convart(uuid, interactFile, ScriptType.INTERACT);
-                    convart(uuid, walkFile, ScriptType.WALK);
+                    convart(uuid, interactFile, ScriptKey.INTERACT);
+                    convart(uuid, walkFile, ScriptKey.WALK);
                 } finally {
                     SBConfig.DATAMIGR_END.send(sender);
                 }
@@ -224,12 +224,12 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         return true;
     }
 
-    private void convart(@NotNull UUID uuid, @NotNull File file, @NotNull ScriptType scriptType) {
+    private void convart(@NotNull UUID uuid, @NotNull File file, @NotNull ScriptKey scriptKey) {
         if (!file.exists()) {
             return;
         }
         var scriptFile = YamlConfig.load(getPlugin(), file, false);
-        var scriptJson = new BlockScriptJson(scriptType);
+        var scriptJson = new BlockScriptJson(scriptKey);
         var blockScript = scriptJson.load();
         for (var name : scriptFile.getKeys()) {
             var world = Utils.getWorld(name);
@@ -249,18 +249,18 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
     }
 
     private boolean doRun(@NotNull CommandSender sender, @NotNull String[] args) {
-        var scriptType = ScriptType.valueOf(args[0].toUpperCase());
-        if (!isPlayer(sender) || !Permission.has(sender, scriptType, true)) {
+        var scriptKey = ScriptKey.valueOf(args[0].toUpperCase());
+        if (!isPlayer(sender) || !Permission.has(sender, scriptKey, true)) {
             return false;
         }
         int x = Integer.parseInt(args[3]), y = Integer.parseInt(args[4]), z = Integer.parseInt(args[5]);
-        ScriptBlock.getInstance().getAPI().read((Player) sender, new Location(Utils.getWorld(args[2]), x, y, z), scriptType, 0);
+        ScriptBlock.getInstance().getAPI().read((Player) sender, new Location(Utils.getWorld(args[2]), x, y, z), scriptKey, 0);
         return true;
     }
 
     private boolean setAction(@NotNull CommandSender sender, @NotNull String[] args) {
-        var scriptType = ScriptType.valueOf(args[0].toUpperCase());
-        if (!isPlayer(sender) || !Permission.has(sender, scriptType, true)) {
+        var scriptKey = ScriptKey.valueOf(args[0].toUpperCase());
+        if (!isPlayer(sender) || !Permission.has(sender, scriptKey, true)) {
             return false;
         }
         var sbPlayer = SBPlayer.fromPlayer((Player) sender);
@@ -269,7 +269,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             return true;
         }
         var actionType = ActionType.valueOf(args[1].toUpperCase());
-        var scriptEdit = new ScriptEdit(actionType, scriptType);
+        var scriptEdit = new ScriptEdit(scriptKey, actionType);
         if (args.length > 2 && (actionType == ActionType.CREATE || actionType == ActionType.ADD)) {
             var script = StringUtils.createString(args, 2).trim();
             if (!isScripts(script)) {
@@ -279,7 +279,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             scriptEdit.setScriptLine(script);
         }
         sbPlayer.setScriptEdit(scriptEdit);
-        SBConfig.SUCCESS_ACTION_DATA.replace(scriptType.type() + "-" + actionType.name().toLowerCase()).send(sbPlayer);
+        SBConfig.SUCCESS_ACTION_DATA.replace(scriptKey.getName() + "-" + actionType.getName()).send(sbPlayer);
         return true;
     }
 
@@ -304,19 +304,19 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             try {
                 var sbClipboard = sbPlayer.getSBClipboard().get();
                 var regionPaste = new CuboidRegionPaste(sbClipboard, region).paste(pasteonair, overwrite);
-                var scriptType = regionPaste.getScriptType().type();
-                SBConfig.SELECTOR_PASTE.replace(scriptType, regionPaste.getRegionBlocks().getCount()).send(sbPlayer);
-                SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptType, regionPaste.getRegionBlocks()).console();
+                var scriptKey = regionPaste.getScriptKey().getName();
+                SBConfig.SELECTOR_PASTE.replace(scriptKey, regionPaste.getRegionBlocks().getCount()).send(sbPlayer);
+                SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptKey, regionPaste.getRegionBlocks()).console();
             } finally {
                 sbPlayer.setSBClipboard(null);
             }
         } else {
             var regionRemove = new CuboidRegionRemove(region).remove();
-            var scriptTypes = regionRemove.getScriptTypes();
-            if (scriptTypes.size() == 0) {
+            var scriptKeys = regionRemove.getScriptKeys();
+            if (scriptKeys.size() == 0) {
                 SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
             } else {
-                var types = scriptTypes.stream().map(ScriptType::type).collect(Collectors.joining(", "));
+                var types = scriptKeys.stream().map(ScriptKey::getName).collect(Collectors.joining(", "));
                 SBConfig.SELECTOR_REMOVE.replace(types, regionRemove.getRegionBlocks().getCount()).send(player);
                 SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, regionRemove.getRegionBlocks()).console();
             }
@@ -343,8 +343,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                     var answers = new String[] { "paste", "remove" };
                     StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
                 }
-            } else if (equals(args[0], ScriptType.types())) {
-                if (Permission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
+            } else if (equals(args[0], ScriptKey.types())) {
+                if (Permission.has(sender, ScriptKey.valueOf(args[0].toUpperCase()), true)) {
                     var prefix = args[1].toLowerCase();
                     var answers = new String[] { "create", "add", "remove", "view", "run" };
                     StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
@@ -363,8 +363,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                     var answers = new String[] { "true", "false" };
                     StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
                 }
-            } else if (equals(args[0], ScriptType.types())) {
-                if (Permission.has(sender, ScriptType.valueOf(args[0].toUpperCase()), true)) {
+            } else if (equals(args[0], ScriptKey.types())) {
+                if (Permission.has(sender, ScriptKey.valueOf(args[0].toUpperCase()), true)) {
                     if (args.length == 3 && equals(args[1], "run")) {
                         var worlds = Bukkit.getWorlds();
                         var prefix = args[args.length - 1].toLowerCase();
@@ -390,7 +390,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         StreamUtils.filter(set, s -> Permission.COMMAND_DATAMIGR.has(sender), s -> s.add("datamigr"));
         StreamUtils.filter(set, s -> Permission.COMMAND_EXPORT.has(sender), s -> s.add("export"));
         StreamUtils.filter(set, s -> Permission.COMMAND_SELECTOR.has(sender), s -> s.add("selector"));
-        StreamUtils.fForEach(ScriptType.values(), s -> Permission.has(sender, s, true), s -> set.add(s.type()));
+        StreamUtils.fForEach(ScriptKey.values(), s -> Permission.has(sender, s, true), s -> set.add(s.getName()));
         return set;
     }
 

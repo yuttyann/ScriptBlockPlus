@@ -7,7 +7,7 @@ import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.listener.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -38,8 +38,8 @@ public abstract class BlockRunnable extends BukkitRunnable {
     public Set<Block> getBlocks(@NotNull CuboidRegionBlocks regionBlocks) {
         var result = new HashSet<Block>();
         var blocks = regionBlocks.getBlocks();
-        for (var scriptType : ScriptType.values()) {
-            var blockScript = new BlockScriptJson(scriptType).load();
+        for (var scriptKey : ScriptKey.values()) {
+            var blockScript = new BlockScriptJson(scriptKey).load();
             for (var block : blocks) {
                 if (blockScript.has(block.getLocation())) {
                     result.add(block);

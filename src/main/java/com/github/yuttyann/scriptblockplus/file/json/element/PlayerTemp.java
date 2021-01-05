@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerTemp;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +14,6 @@ import java.util.Set;
 public class PlayerTemp {
 
     @SerializedName("timer")
-    @Expose
     private final Set<TimerTemp> timer = new HashSet<>();
 
     @NotNull

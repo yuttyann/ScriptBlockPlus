@@ -31,7 +31,7 @@ BlockSelector:
 - '&6Shift+右键点击: &e将当前位置设置为区域的结束点'
 
 ## ===== ScriptEditor ===== ##
-# %scripttype% : 脚本种类
+# %scriptkey% : 脚本种类
 ScriptEditor:
 - '&a这是一个可以复制并粘贴脚本的工具'
 - '&6左键点击: &e更改选择模式'
@@ -40,7 +40,7 @@ ScriptEditor:
 - '&6Shift+右键点击: &e粘贴脚本'
 
 ## ===== ScriptViewer ===== ##
-# %scripttype% : 脚本种类
+# %scriptkey% : 脚本种类
 ScriptViewer:
 - '&a该工具支持脚本检查。'
 - '&6左键点击: &e开始搜索周围的脚本。'
@@ -80,12 +80,12 @@ UpdateCheckMessage: '&b新版本插件可用|~v%latestversion% 最新版本|~插
 # 沒有佔位符
 ErrorUpdateMessage: '&c查询更新失败，可能是国内网络导致的，建议去这个中文搬运帖查看更新http://www.mcbbs.net/thread-691900-1-1.html'
 
-# %scripttype% : 脚本种类
-ScriptCopyMessage: '&a复制一个种类是"%scripttype%"的脚本'
-ScriptPasteMessage: '&a粘贴一个种类是"%scripttype%"的脚本'
-ScriptCreateMessage: '&a创建一个种类是"%scripttype%"的脚本'
-ScriptAddMessage: '&a添加一个种类是"%scripttype%"的脚本'
-ScriptRemoveMessage: '&c删除一个种类是"%scripttype%"的脚本'
+# %scriptkey% : 脚本种类
+ScriptCopyMessage: '&a复制一个种类是"%scriptkey%"的脚本'
+ScriptPasteMessage: '&a粘贴一个种类是"%scriptkey%"的脚本'
+ScriptCreateMessage: '&a创建一个种类是"%scriptkey%"的脚本'
+ScriptAddMessage: '&a添加一个种类是"%scriptkey%"的脚本'
+ScriptRemoveMessage: '&c删除一个种类是"%scriptkey%"的脚本'
 
 # 沒有佔位符
 NotSelectionMessage: '&cBlockSelector坐标范围未选择'
@@ -99,10 +99,10 @@ ScriptViewerStopMessage: '&c对周围脚本的搜索已停止。'
 SelectorPos1Message: '&b已选择起点"%coords%"'
 SelectorPos2Message: '&b已选择终点"%coords%"'
 
-# %scripttype% : 脚本种类
+# %scriptkey%  : 脚本种类
 # %blockcount% : 塊數
-SelectorPasteMessage: '&a脚本种类"%scripttype%"已通过BlockSelector进行粘贴'
-SelectorRemoveMessage: '&c脚本种类"%scripttype%"已通过BlockSelector移除'
+SelectorPasteMessage: '&a脚本种类"%scriptkey%"已通过BlockSelector进行粘贴'
+SelectorRemoveMessage: '&c脚本种类"%scriptkey%"已通过BlockSelector移除'
 
 # %option% : 脚本名称
 # %cause%  : 错误发生原因
@@ -124,8 +124,8 @@ ErrorActionDataMessage: '&c设定出现错误'
 ErrorScriptCheckMessage: '&c脚本输入错误！'
 ErrorScriptFileCheckMessage: '&c无脚本'
 
-# %scripttype% : 脚本种类
-ErrorScriptExecMessage: '&c脚本种类"%scripttype%"执行失败'
+# %scriptkey% : 脚本种类
+ErrorScriptExecMessage: '&c脚本种类"%scriptkey%"执行失败'
 
 # %group% : 权限组名
 ErrorGroupMessage: '&c只有属于权限组"%group%"的玩家才可以运行该脚本'
@@ -133,32 +133,32 @@ ErrorGroupMessage: '&c只有属于权限组"%group%"的玩家才可以运行该�
 # %material% : 物品种类
 # %amount%   : 物品的数量
 # %damage%   : 物品的子ID
-# %itemname% : 物品的名称
-ErrorHandMessage: '&c您的手持物品不满足条件，所需物品必须满足"%itemname%(%material%:%damage%)"以及数量"%amount%个"'
-ErrorItemMessage: '&c您的背包内物品不满足条件，所需物品必须满足"%itemname%(%material%:%damage%)"以及数量"%amount%个"'
+# %name%     : 物品的名称
+ErrorHandMessage: '&c您的手持物品不满足条件，所需物品必须满足"%name%(%material%:%damage%)"以及数量"%amount%个"'
+ErrorItemMessage: '&c您的背包内物品不满足条件，所需物品必须满足"%name%(%material%:%damage%)"以及数量"%amount%个"'
 
 # %cost%   : 需要支付的金额
 # %result% : 至少应该剩余的金钱
 ErrorCostMessage: '&c你的金钱至少应该有"%result%"，执行这个脚本需要花费金钱"%cost%"'
 
-# %scripttype% : 脚本种类
+# %scriptkey%  : 脚本种类
 # %player%     : 玩家ID
 # %world%      : 世界名
 # %coords%     : 坐标(x, y, z)
-ConsoleScriptCopyMessage: '&a创建者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本已被复制'
-ConsoleScriptPasteMessage: '&a创建者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本已被粘贴'
-ConsoleScriptCreateMessage: '&a创建者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本已被创建'
-ConsoleScriptAddMessage: '&a更新者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本已被添加'
-ConsoleScriptRemoveMessage: '&c删除者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本已被删除'
-ConsoleScriptViewMessage: '&a执行者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本正在被预览'
-ConsoleSuccScriptExecMessage: '&a执行者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本被触发了'
-ConsoleErrorScriptExecMessage: '&c执行者"%player%"、脚本种类"%scripttype%"、位置"%world%, %coords%"脚本触发失败'
+ConsoleScriptCopyMessage: '&a创建者"%player%"、脚本种类"%scriptkey%"、位置"%world%, %coords%"脚本已被复制'
+ConsoleScriptPasteMessage: '&a创建者"%player%"、脚本种类"%scriptkey%"、位置"%world%, %coords%"脚本已被粘贴'
+ConsoleScriptCreateMessage: '&a创建者"%player%"、脚本种类"%scriptkey%"、位置"%world%, %coords%"脚本已被创建'
+ConsoleScriptAddMessage: '&a更新者"%player%"、脚本种类"%scriptkey%"、位置"%world%, %coords%"脚本已被添加'
+ConsoleScriptRemoveMessage: '&c删除者"%player%"、脚本种类"%scriptkey%"、位置"%world%, %coords%"脚本已被删除'
+ConsoleScriptViewMessage: '&a执行者"%player%"、脚本种类"%scriptkey%"、位置"%world%, %coords%"脚本正在被预览'
+ConsoleSuccScriptExecMessage: '&a执行者"%player%"、脚本种类"%scriptkey%"、位置"%world%, %coords%"脚本被触发了'
+ConsoleErrorScriptExecMessage: '&c执行者"%player%"、脚本种类"%scriptkey%"、位置"%world%, %coords%"脚本触发失败'
 
-# %scripttype% : 脚本种类
+# %scriptkey%  : 脚本种类
 # %blockcount% : 方块数量
 # %player%     : 玩家ID
 # %world%      : 世界名
 # %mincoords%  : 最小位置(x, y, z)
 # %maxcoords%  : 最大位置(x, y, z)
-ConsoleSelectorPasteMessage: '&a脚本种类"%scripttype%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已完成粘贴'
-ConsoleSelectorRemoveMessage: '&c脚本种类"%scripttype%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已被删除'
+ConsoleSelectorPasteMessage: '&a脚本种类"%scriptkey%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已完成粘贴'
+ConsoleSelectorRemoveMessage: '&c脚本种类"%scriptkey%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已被删除'

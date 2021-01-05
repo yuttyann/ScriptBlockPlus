@@ -4,7 +4,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -64,8 +64,8 @@ public class Calculation extends BaseOption {
                 return 0;
             }
             var location = BlockCoords.fromString(array.length == 1 ? array[0] : array[1]);
-            var scriptType = array.length == 1 ? getScriptType() : ScriptType.valueOf(array[0]);
-            return new PlayerCountJson(getUniqueId()).load(location, scriptType).getAmount();
+            var scriptKey = array.length == 1 ? getScriptKey() : ScriptKey.valueOf(array[0]);
+            return new PlayerCountJson(getUniqueId()).load(location, scriptKey).getAmount();
         }
         if (source.startsWith("%player_others_in_range_") && source.endsWith("%")) {
             source = source.substring("%player_others_in_range_".length(), source.length() - 1);
@@ -103,7 +103,7 @@ public class Calculation extends BaseOption {
             case "%server_offline%":
                 return Bukkit.getOfflinePlayers().length;
             case "%player_count%":
-                return new PlayerCountJson(getUniqueId()).load(getLocation(), getScriptType()).getAmount();
+                return new PlayerCountJson(getUniqueId()).load(getLocation(), getScriptKey()).getAmount();
             case "%player_ping%":
                 var handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
                 return PackageType.NMS.getField("EntityPlayer", "ping").getInt(handle);

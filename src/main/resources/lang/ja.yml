@@ -11,11 +11,11 @@ BackupCommandMessage: 'backup - プラグインデータのバックアップを
 CheckVerCommandMessage: 'checkver - 最新のプラグインが存在するかチェックします。'
 DataMigrCommandMessage: 'datamigr - ScriptBlockのスクリプトをPlusに移行します。'
 ExportCommandMessage: 'export <sound | material> - BukkitAPIのSound、MaterialをTXTに出力します。'
-CreateCommandMessage: '<scripttype> create <options> - ブロックにスクリプトを設定します。'
-AddCommandMessage: '<scripttype> add <options> - ブロックにスクリプトを追加します。'
-RemoveCommandMessage: '<scripttype> remove - ブロックのスクリプトを削除します。'
-ViewCommandMessage: '<scripttype> view - ブロックのスクリプトを表示します。'
-RunCommandMessage: '<scripttype> run <world> <x> <y> <z> - 指定したスクリプトを実行します。'
+CreateCommandMessage: '<scriptkey> create <options> - ブロックにスクリプトを設定します。'
+AddCommandMessage: '<scriptkey> add <options> - ブロックにスクリプトを追加します。'
+RemoveCommandMessage: '<scriptkey> remove - ブロックのスクリプトを削除します。'
+ViewCommandMessage: '<scriptkey> view - ブロックのスクリプトを表示します。'
+RunCommandMessage: '<scriptkey> run <world> <x> <y> <z> - 指定したスクリプトを実行します。'
 SelectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - 選択範囲にスクリプトをペーストします。'
 SelectorRemoveCommandMessage: 'selector remove - 選択範囲のスクリプトを削除します。'
 
@@ -80,12 +80,12 @@ UpdateCheckMessage: '&b最新のバージョンを検出しました。|~v%lates
 # プレースホルダはありません
 ErrorUpdateMessage: '&cアップデートに失敗しました。'
 
-# %scripttype% : スクリプトの種類
-ScriptCopyMessage: '&aブロック"%scripttype%"のスクリプトをコピーしました。'
-ScriptPasteMessage: '&aブロック"%scripttype%"にスクリプトをペーストしました。'
-ScriptCreateMessage: '&aブロック"%scripttype%"のスクリプトを作成しました。'
-ScriptAddMessage: '&aブロック"%scripttype%"にスクリプトを追加しました。'
-ScriptRemoveMessage: '&cブロック"%scripttype%"のスクリプトを削除しました。'
+# %scriptkey% : スクリプトキー
+ScriptCopyMessage: '&aブロック"%scriptkey%"のスクリプトをコピーしました。'
+ScriptPasteMessage: '&aブロック"%scriptkey%"にスクリプトをペーストしました。'
+ScriptCreateMessage: '&aブロック"%scriptkey%"のスクリプトを作成しました。'
+ScriptAddMessage: '&aブロック"%scriptkey%"にスクリプトを追加しました。'
+ScriptRemoveMessage: '&cブロック"%scriptkey%"のスクリプトを削除しました。'
 
 # プレースホルダはありません
 NotSelectionMessage: '&cBlockSelectorで座標を選択してください。'
@@ -99,10 +99,10 @@ ScriptViewerStopMessage: '&c周囲のスクリプトの検索を停止しまし�
 SelectorPos1Message: '&b始点"%coords%"を選択しました。'
 SelectorPos2Message: '&b終点"%coords%"を選択しました。'
 
-# %scripttype% : スクリプトの種類
+# %scriptkey%  : スクリプトキー
 # %blockcount% : ブロック数
-SelectorPasteMessage: '&aブロック(%blockcount%)"%scripttype%"にスクリプトをペーストしました。'
-SelectorRemoveMessage: '&cブロック(%blockcount%)"%scripttype%"のスクリプトを削除しました。'
+SelectorPasteMessage: '&aブロック(%blockcount%)"%scriptkey%"にスクリプトをペーストしました。'
+SelectorRemoveMessage: '&cブロック(%blockcount%)"%scriptkey%"のスクリプトを削除しました。'
 
 # %option% : オプション名
 # %cause%  : 発生原因
@@ -124,8 +124,8 @@ ErrorActionDataMessage: '&c既にアクションが選択されています。'
 ErrorScriptCheckMessage: '&c入力されたスクリプトが正しくありません。'
 ErrorScriptFileCheckMessage: '&cスクリプトが見つかりません。'
 
-# %scripttype% : スクリプトの種類
-ErrorScriptExecMessage: '&cブロック"%scripttype%"のスクリプトの実行に失敗しました。'
+# %scriptkey% : スクリプトキー
+ErrorScriptExecMessage: '&cブロック"%scriptkey%"のスクリプトの実行に失敗しました。'
 
 # %group% : グループ名
 ErrorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプトを実行することが出来ます。'
@@ -133,31 +133,31 @@ ErrorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプ�
 # %material% : アイテムの種類
 # %amount%   : アイテムの個数
 # %damage%   : アイテムのダメージ値
-# %itemname% : アイテムの名前(アイテム名が無い場合は"アイテムの種類"と同じになります。)
-ErrorHandMessage: '&cアイテム"&r%itemname%(%material%:%damage%)&r &e%amount%個&c"を持っていません。'
-ErrorItemMessage: '&cアイテム"&r%itemname%(%material%:%damage%)&r &e%amount%個&c"を所持していません。'
+# %name%     : アイテムの名前(アイテム名が無い場合は"アイテムの種類"と同じになります。)
+ErrorHandMessage: '&cアイテム"&r%name%(%material%:%damage%)&r &e%amount%個&c"を持っていません。'
+ErrorItemMessage: '&cアイテム"&r%name%(%material%:%damage%)&r &e%amount%個&c"を所持していません。'
 
 # %cost%   : 必要な金額
 # %result% : 足りない金額
 ErrorCostMessage: '&cお金が"%result%円"足りません。スクリプトの実行には"%cost%円"必要です。'
 
-# %scripttype% : スクリプトの種類
+# %scriptkey%  : スクリプトキー
 # %player%     : プレイヤーのID
 # %world%      : ワールドの名前
 # %coords%     : 座標(x, y, z)
-ConsoleScriptCopyMessage: '&aスクリプトがコピーされました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
-ConsoleScriptPasteMessage: '&aスクリプトがペーストされました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
-ConsoleScriptCreateMessage: '&aスクリプトが作成されました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
-ConsoleScriptAddMessage: '&aスクリプトが追加されました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
-ConsoleScriptRemoveMessage: '&cスクリプトが削除されました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
-ConsoleScriptViewMessage: '&aスクリプトが表示されました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
-ConsoleSuccScriptExecMessage: '&aスクリプトが実行されました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
-ConsoleErrorScriptExecMessage: '&cスクリプトの実行に失敗しました。[作成者"%player%"、種類"%scripttype%"、座標"%world%, %coords%"]'
+ConsoleScriptCopyMessage: '&aスクリプトがコピーされました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptPasteMessage: '&aスクリプトがペーストされました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptCreateMessage: '&aスクリプトが作成されました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptAddMessage: '&aスクリプトが追加されました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptRemoveMessage: '&cスクリプトが削除されました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptViewMessage: '&aスクリプトが表示されました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleSuccScriptExecMessage: '&aスクリプトが実行されました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleErrorScriptExecMessage: '&cスクリプトの実行に失敗しました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
 
-# %scripttype% : スクリプトの種類
+# %scriptkey%  : スクリプトキー
 # %blockcount% : ブロック数
 # %world%      : ワールドの名前
 # %mincoords%  : 最小座標(x, y, z)
 # %maxcoords%  : 最大座標(x, y, z)
-ConsoleSelectorPasteMessage: '&aスクリプトがペーストされました。[種類"%scripttype%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
-ConsoleSelectorRemoveMessage: '&cスクリプトが削除されました。[種類"%scripttype%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
+ConsoleSelectorPasteMessage: '&aスクリプトがペーストされました。[種類"%scriptkey%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
+ConsoleSelectorRemoveMessage: '&cスクリプトが削除されました。[種類"%scriptkey%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'

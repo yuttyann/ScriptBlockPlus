@@ -3,7 +3,7 @@ package com.github.yuttyann.scriptblockplus.script.option.time;
 import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerTempJson;
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.google.common.collect.Sets;
 
@@ -53,12 +53,12 @@ public abstract class TimerOption extends BaseOption {
         return false;
     }
 
-    public static void removeAll(@NotNull Location location, @NotNull ScriptType scriptType) {
-        removeAll(Sets.newHashSet(location), scriptType);
+    public static void removeAll(@NotNull Location location, @NotNull ScriptKey scriptKey) {
+        removeAll(Sets.newHashSet(location), scriptKey);
     }
 
-    public static void removeAll(@NotNull Set<Location> locations, @NotNull ScriptType scriptType) {
-        for (var name : Json.getNameList(PlayerTempJson.class)) {
+    public static void removeAll(@NotNull Set<Location> locations, @NotNull ScriptKey scriptKey) {
+        for (var name : Json.getNames(PlayerTempJson.class)) {
             var uuid = UUID.fromString(name);
             var tempJson = new PlayerTempJson(uuid);
             if (!tempJson.exists()) {
@@ -72,8 +72,8 @@ public abstract class TimerOption extends BaseOption {
                 var timer = tempJson.load().getTimerTemp();
                 if (timer.size() > 0) {
                     modifiable = true;
-                    timer.remove(new TimerTemp(location, scriptType));
-                    timer.remove(new TimerTemp(uuid, location, scriptType));
+                    timer.remove(new TimerTemp(location, scriptKey));
+                    timer.remove(new TimerTemp(uuid, location, scriptKey));
                 }
             }
             if (modifiable) {

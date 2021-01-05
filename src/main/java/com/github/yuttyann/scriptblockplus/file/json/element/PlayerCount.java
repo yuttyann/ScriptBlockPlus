@@ -1,7 +1,6 @@
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
-import com.github.yuttyann.scriptblockplus.script.ScriptType;
-import com.google.gson.annotations.Expose;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,20 +13,17 @@ import java.util.Objects;
 public class PlayerCount {
 
     @SerializedName("fullcoords")
-    @Expose
     private final String fullCoords;
 
-    @SerializedName("scripttype")
-    @Expose
-    private final ScriptType scriptType;
+    @SerializedName(value = "scriptkey", alternate = { "scripttype" })
+    private final ScriptKey scriptKey;
 
     @SerializedName("amount")
-    @Expose
     private int amount;
 
-    public PlayerCount(@NotNull String fullCoords, @NotNull ScriptType scriptType) {
+    public PlayerCount(@NotNull String fullCoords, @NotNull ScriptKey scriptKey) {
         this.fullCoords = fullCoords;
-        this.scriptType = scriptType;
+        this.scriptKey = scriptKey;
     }
 
     public int add() {
@@ -58,12 +54,12 @@ public class PlayerCount {
     }
 
     @NotNull
-    public ScriptType getScriptType() {
-        return scriptType;
+    public ScriptKey getScriptKey() {
+        return scriptKey;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fullCoords, scriptType);
+        return Objects.hash(fullCoords, scriptKey);
     }
 }
