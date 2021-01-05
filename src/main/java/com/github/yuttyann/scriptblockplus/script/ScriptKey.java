@@ -33,11 +33,12 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
      */
     public ScriptKey(@NotNull String name) {
         this.name = name.toUpperCase();
+
         var scriptKey = KEYS.get(this.name);
+        this.ordinal = scriptKey == null ? KEYS.size() : scriptKey.ordinal;
         if (scriptKey == null) {
             KEYS.put(this.name, this);
         }
-        this.ordinal = scriptKey == null ? KEYS.size() : scriptKey.ordinal;
     }
 
     /**
