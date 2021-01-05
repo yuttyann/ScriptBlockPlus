@@ -112,7 +112,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
     /**
      * 失敗時に終了処理を無視します（デフォルトはfalseです）
-     * @return {@link String} - trueの場合は終了処理を実行し、falseの場合は無視します。
+     * @return {@link String} - trueの場合は終了処理を無視し、falseの場合は実行します。
      */
     public boolean isFailedIgnore() {
         return false;
