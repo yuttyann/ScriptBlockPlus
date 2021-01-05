@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus WalkTrigger クラス
- * 
  * @author yuttyann44581
  */
 public class WalkTrigger extends TriggerListener<PlayerMoveEvent> {

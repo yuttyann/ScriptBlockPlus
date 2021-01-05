@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +32,9 @@ import org.jetbrains.annotations.Nullable;
  */
 @SuppressWarnings("unchecked")
 public abstract class TriggerListener<E extends Event> implements Listener {
+
+    // イベントが呼ばれた際にTriggerListener#onTrigger(Event)が呼ばれるようにする。
+    private static final EventExecutor EXECUTE = (l, e) -> ((TriggerListener<?>) l).onTrigger(e);
 
     private final Plugin plugin;
     private final Class<E> eventClass;
@@ -69,7 +73,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         var plugin = listener.getPlugin();
         var eventClass = listener.getEventClass();
         var eventPriority = listener.getEventPriority();
-        Bukkit.getPluginManager().registerEvent(eventClass, listener, eventPriority, (l, e) -> listener.onTrigger(e), plugin);
+        Bukkit.getPluginManager().registerEvent(eventClass, listener, eventPriority, EXECUTE, plugin);
     }
 
     /**
@@ -110,19 +114,20 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
     /**
      * トリガーを生成します。
-     * 
+     * <p>
+     * nullを返した場合は処理を行わずに終了します。
      * <pre>
      * 　
      * // 実装例
      * &#064;Override
      * &#064;Nullable
-     * protected Trigger create(&#064;NotNull ****Event event) {
+     * protected Trigger create(&#064;NotNull ExampleEvent event) {
      *     return new Trigger(event.getPlayer(), event.getBlock(), event);
      * }
      * </pre>
      * 
      * @param event - イベント
-     * @return {@link Trigger}（null を返した場合はスルーする）
+     * @return {@link Trigger} - トリガー
      */
     @Nullable
     protected abstract Trigger create(@NotNull E event);
@@ -232,7 +237,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
         /**
          * {@link Bukkit}のイベントを取得します。
-         * @return {@link E} - イベント
+         * @return {@link Event} - イベント
          */
         @NotNull
         public E getEvent() {
