@@ -98,11 +98,13 @@ public final class SBOperation {
         }
         var scriptParam = scriptJson.load().get(location);
         var playerCount = new PlayerCountJson(player.getUniqueId()).load(location, scriptKey);
-        player.sendMessage("Author: " + getAuthors(scriptParam));
-        player.sendMessage("LastEdit: " + scriptParam.getLastEdit());
-        player.sendMessage("PlayerCount: " + playerCount.getAmount());
-        player.sendMessage("Scripts:");
-        scriptParam.getScript().forEach(s -> player.sendMessage("- " + s));
+        player.sendMessage("--------- [ Script Views ] ---------");
+        player.sendMessage("§eAuthor: §a" + getAuthors(scriptParam));
+        player.sendMessage("§eUpdate: §a" + scriptParam.getLastEdit());
+        player.sendMessage("§eMyCount: §a" + playerCount.getAmount());
+        player.sendMessage("§eScripts:");
+        scriptParam.getScript().forEach(s -> player.sendMessage("§6- §b" + s));
+        player.sendMessage("----------------------------------");
         SBConfig.CONSOLE_SCRIPT_VIEW.replace(player.getName(), location, scriptKey).console();
     }
 
