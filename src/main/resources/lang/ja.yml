@@ -145,19 +145,19 @@ ErrorCostMessage: '&cお金が"%result%円"足りません。スクリプトの�
 # %player%     : プレイヤーのID
 # %world%      : ワールドの名前
 # %coords%     : 座標(x, y, z)
-ConsoleScriptCopyMessage: '&aスクリプトがコピーされました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
-ConsoleScriptPasteMessage: '&aスクリプトがペーストされました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
-ConsoleScriptCreateMessage: '&aスクリプトが作成されました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
-ConsoleScriptAddMessage: '&aスクリプトが追加されました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
-ConsoleScriptRemoveMessage: '&cスクリプトが削除されました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
-ConsoleScriptViewMessage: '&aスクリプトが表示されました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
-ConsoleSuccScriptExecMessage: '&aスクリプトが実行されました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
-ConsoleErrorScriptExecMessage: '&cスクリプトの実行に失敗しました。[作成者"%player%"、種類"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptCopyMessage: '&aスクリプトがコピーされました。[作成者"%player%"、キー"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptPasteMessage: '&aスクリプトがペーストされました。[作成者"%player%"、キー"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptCreateMessage: '&aスクリプトが作成されました。[作成者"%player%"、キー"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptAddMessage: '&aスクリプトが追加されました。[作成者"%player%"、キー"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptRemoveMessage: '&cスクリプトが削除されました。[作成者"%player%"、キー"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptViewMessage: '&aスクリプトが表示されました。[作成者"%player%"、キー"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleSuccScriptExecMessage: '&aスクリプトが実行されました。[作成者"%player%"、キー"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleErrorScriptExecMessage: '&cスクリプトの実行に失敗しました。[作成者"%player%"、キー"%scriptkey%"、座標"%world%, %coords%"]'
 
 # %scriptkey%  : スクリプトキー
 # %blockcount% : ブロック数
 # %world%      : ワールドの名前
 # %mincoords%  : 最小座標(x, y, z)
 # %maxcoords%  : 最大座標(x, y, z)
-ConsoleSelectorPasteMessage: '&aスクリプトがペーストされました。[種類"%scriptkey%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
-ConsoleSelectorRemoveMessage: '&cスクリプトが削除されました。[種類"%scriptkey%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
+ConsoleSelectorPasteMessage: '&aスクリプトがペーストされました。[キー"%scriptkey%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
+ConsoleSelectorRemoveMessage: '&cスクリプトが削除されました。[キー"%scriptkey%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
