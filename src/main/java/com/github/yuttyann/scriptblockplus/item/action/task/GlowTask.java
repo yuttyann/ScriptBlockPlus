@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.listener.item.action.task;
+package com.github.yuttyann.scriptblockplus.item.action.task;
 
 import java.util.Collections;
 

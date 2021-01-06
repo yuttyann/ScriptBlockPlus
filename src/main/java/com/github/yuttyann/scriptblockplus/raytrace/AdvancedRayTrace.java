@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.listener.raytrace;
+package com.github.yuttyann.scriptblockplus.raytrace;
 
 import java.util.ArrayList;
 import java.util.List;

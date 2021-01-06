@@ -2,7 +2,7 @@ package com.github.yuttyann.scriptblockplus.listener.trigger;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
-import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
+import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 
 import org.bukkit.event.EventPriority;

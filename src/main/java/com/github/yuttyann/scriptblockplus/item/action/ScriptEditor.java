@@ -1,10 +1,10 @@
-package com.github.yuttyann.scriptblockplus.listener.item.action;
+package com.github.yuttyann.scriptblockplus.item.action;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.listener.item.ChangeSlot;
-import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
-import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
+import com.github.yuttyann.scriptblockplus.item.ChangeSlot;
+import com.github.yuttyann.scriptblockplus.item.ItemAction;
+import com.github.yuttyann.scriptblockplus.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;

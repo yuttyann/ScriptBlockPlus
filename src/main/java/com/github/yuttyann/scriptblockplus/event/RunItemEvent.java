@@ -1,6 +1,6 @@
 package com.github.yuttyann.scriptblockplus.event;
 
-import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
+import com.github.yuttyann.scriptblockplus.item.RunItem;
 import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;

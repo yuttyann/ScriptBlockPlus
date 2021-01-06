@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.listener.item;
+package com.github.yuttyann.scriptblockplus.item;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

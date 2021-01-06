@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.listener.raytrace;
+package com.github.yuttyann.scriptblockplus.raytrace;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

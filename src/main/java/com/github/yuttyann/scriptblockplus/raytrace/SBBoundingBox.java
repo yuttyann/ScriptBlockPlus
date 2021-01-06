@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.listener.raytrace;
+package com.github.yuttyann.scriptblockplus.raytrace;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;

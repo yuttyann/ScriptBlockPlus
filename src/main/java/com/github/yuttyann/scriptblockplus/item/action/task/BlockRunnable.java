@@ -1,10 +1,10 @@
-package com.github.yuttyann.scriptblockplus.listener.item.action.task;
+package com.github.yuttyann.scriptblockplus.item.action.task;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.listener.item.action.ScriptViewer;
+import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;

@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.listener.item;
+package com.github.yuttyann.scriptblockplus.item;
 
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import org.bukkit.Material;

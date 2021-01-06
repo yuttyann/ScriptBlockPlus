@@ -1,15 +1,15 @@
-package com.github.yuttyann.scriptblockplus.listener.item.action;
+package com.github.yuttyann.scriptblockplus.item.action;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
-import com.github.yuttyann.scriptblockplus.listener.item.ChangeSlot;
-import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
-import com.github.yuttyann.scriptblockplus.listener.item.RunItem;
-import com.github.yuttyann.scriptblockplus.listener.item.action.task.GlowTask;
-import com.github.yuttyann.scriptblockplus.listener.item.action.task.LookTask;
-import com.github.yuttyann.scriptblockplus.listener.item.action.task.ParticleTask;
+import com.github.yuttyann.scriptblockplus.item.ChangeSlot;
+import com.github.yuttyann.scriptblockplus.item.ItemAction;
+import com.github.yuttyann.scriptblockplus.item.RunItem;
+import com.github.yuttyann.scriptblockplus.item.action.task.GlowTask;
+import com.github.yuttyann.scriptblockplus.item.action.task.LookTask;
+import com.github.yuttyann.scriptblockplus.item.action.task.ParticleTask;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;

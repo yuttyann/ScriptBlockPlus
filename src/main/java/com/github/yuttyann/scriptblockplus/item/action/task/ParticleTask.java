@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.listener.item.action.task;
+package com.github.yuttyann.scriptblockplus.item.action.task;
 
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;

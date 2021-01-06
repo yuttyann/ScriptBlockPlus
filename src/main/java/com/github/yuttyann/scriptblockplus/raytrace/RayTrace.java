@@ -1,4 +1,4 @@
-package com.github.yuttyann.scriptblockplus.listener.raytrace;
+package com.github.yuttyann.scriptblockplus.raytrace;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -69,7 +69,7 @@ public class RayTrace {
         var locations = new LinkedHashSet<Location>();
         for(var position : rayTrace.traverse(distance, raySize)) {
             var location = position.toLocation(world);
-            if(rayTrace.intersects(new SBBoundingBox(world.getBlockAt(location), square), distance, raySize)){
+            if(rayTrace.intersects(new SBBoundingBox(location.getBlock(), square), distance, raySize)){
                 locations.add(location);
             }
         }

@@ -1,8 +1,8 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
 import com.github.yuttyann.scriptblockplus.event.BlockClickEvent;
-import com.github.yuttyann.scriptblockplus.listener.item.ItemAction;
-import com.github.yuttyann.scriptblockplus.listener.raytrace.RayTrace;
+import com.github.yuttyann.scriptblockplus.item.ItemAction;
+import com.github.yuttyann.scriptblockplus.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
