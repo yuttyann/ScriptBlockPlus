@@ -8,6 +8,10 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus AdvancedRayTrace クラス
+ * @author yuttyann44581
+ */
 public final class AdvancedRayTrace {
     
     private final Vector start;
