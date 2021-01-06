@@ -7,6 +7,10 @@ import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ScriptBlockPlus SBBoundingBox クラス
+ * @author yuttyann44581
+ */
 public class SBBoundingBox {
 
     private Vector min;
