@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Supplier;
+
 import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
+
 /**
  * ScriptBlockPlus Utils クラス
  * @author yuttyann44581
@@ -68,17 +70,14 @@ public final class Utils {
     }
 
     public static int getVersionInt(@NotNull String source) {
-        var version = source.split(".");
+        var version = source.split("\\.");
         if (version.length < 1) {
             return -1;
         }
-        int result = Integer.parseInt(version[0]) * 100000;
-        if (version.length == 2) {
-            result += Integer.parseInt(version[1]) * 1000;
-        }
-        if (version.length == 3) {
-            result += Integer.parseInt(version[2]);
-        }
+		int result = (Integer.parseInt(version[0]) * 100000) + (Integer.parseInt(version[1]) * 1000);
+		if (version.length == 3) {
+			result += Integer.parseInt(version[2]);
+		}
         return result;
     }
 

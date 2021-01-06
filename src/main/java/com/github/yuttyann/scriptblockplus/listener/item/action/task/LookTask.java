@@ -1,5 +1,8 @@
 package com.github.yuttyann.scriptblockplus.listener.item.action.task;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.listener.raytrace.RayTrace;
@@ -25,29 +28,51 @@ public class LookTask extends BlockRunnable {
     @Override
     public void run(@NotNull SBPlayer sbPlayer) {
         var player = sbPlayer.getPlayer();
-        var result = new RayTrace(player.getWorld()).rayTrace(player, getDistance(player));
-        if (result == null) {
+        var rayTrace = new RayTrace(player.getWorld());
+        var rayResult = rayTrace.rayTraceBlocks(player, getDistance(player));
+        if (rayResult == null) {
             sbPlayer.getObjectMap().remove(KEY);
             return;
         }
-        var block = result.getHitBlock();
-        var arrays = new Location[2];
-        if (block != null && has(block.getLocation())) {
-            ProtocolLib.GLOW_ENTITY.destroyGlowEntity(sbPlayer, block);
-            spawnParticlesOnBlock(player, block, Color.GREEN);
-            arrays[0] = block.getLocation();
+        var hitBlock = rayResult.getHitBlock();
+        var locations = new LinkedHashSet<Location>();
+        if (hitBlock != null) {
+            destroyEntity(sbPlayer, hitBlock.getLocation(), locations, true);
         }
-        var blockFace = result.getHitBlockFace();
+        var blockFace = rayResult.getHitBlockFace();
         if (blockFace != null) {
-            var relative = block.getRelative(blockFace);
-            if (has(relative.getLocation())) {
-                boolean isAIR = relative.getType() == Material.AIR;
-                ProtocolLib.GLOW_ENTITY.destroyGlowEntity(sbPlayer, relative);
-                spawnParticlesOnBlock(player, relative, isAIR ? Color.BLUE : Color.GREEN);
-                arrays[1] = relative.getLocation();
+            destroyEntity(sbPlayer, hitBlock.getRelative(blockFace).getLocation(), locations, true);
+        }
+        if (locations.size() > 0) {
+            Location first = locations.stream().findFirst().get();
+            for (var location : rayTrace.rayTraceBlocks(player, getDistance(player), 0.01D, true)) {
+                var blockLocation = location.getBlock().getLocation();
+                if (first.equals(blockLocation)) {
+                    break;
+                }
+                if (!locations.contains(blockLocation)) {
+                    destroyEntity(sbPlayer, blockLocation, locations, false);
+                }
             }
         }
-        sbPlayer.getObjectMap().put(KEY, arrays);
+        sbPlayer.getObjectMap().put(KEY, locations);
+    }
+
+    private boolean destroyEntity(@NotNull SBPlayer sbPlayer, @NotNull Location location, @NotNull Set<Location> locations, final boolean particle) {
+        if (!has(location)) {
+            return false;
+        }
+        try {
+            ProtocolLib.GLOW_ENTITY.destroyGlowEntity(sbPlayer, location);
+        } finally {
+            if (particle) {
+                var block = location.getBlock();
+                boolean isAIR = block.getType() == Material.AIR;
+                spawnParticlesOnBlock(sbPlayer.getPlayer(), block, isAIR ? Color.BLUE : Color.GREEN);
+            }
+            locations.add(location);
+        }
+        return true;
     }
 
     private double getDistance(@NotNull Player player) {

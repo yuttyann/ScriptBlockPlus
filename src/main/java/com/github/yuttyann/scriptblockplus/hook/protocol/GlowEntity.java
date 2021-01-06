@@ -9,6 +9,8 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static org.bukkit.util.NumberConversions.floor;
+
 /**
  * ScriptBlockPlus GlowEntity クラス
  * @author yuttyann44581
@@ -34,15 +36,15 @@ public class GlowEntity {
     }
 
     public int getX() {
-        return vector.getBlockX();
+        return (int) vector.getX();
     }
 
     public int getY() {
-        return vector.getBlockX();
+        return (int) vector.getY();
     }
 
     public int getZ() {
-        return vector.getBlockX();
+        return (int) vector.getZ();
     }
 
     @NotNull
@@ -60,8 +62,8 @@ public class GlowEntity {
         return sbPlayer;
     }
 
-    public boolean equals(final int x, final int y, final int z) {
-        return vector.getBlockX() == x && vector.getBlockY() == y && vector.getBlockZ() == z;
+    public boolean equals(final double x, final double y, final double z) {
+        return getX() == floor(x) && getY() == floor(y) && getZ() == floor(z);
     }
 
     @Override

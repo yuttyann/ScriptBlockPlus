@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -35,7 +34,7 @@ public class ItemUtils {
     @NotNull
     public static ItemStack getBlockSelector() {
         var item = new ItemStack(Material.STICK);
-        var meta = Objects.requireNonNull(item.getItemMeta());
+        var meta = item.getItemMeta();
         meta.setDisplayName("§dBlock Selector");
         meta.setLore(StringUtils.setListColor(SBConfig.BLOCK_SELECTOR.getValue()));
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -46,7 +45,7 @@ public class ItemUtils {
     @NotNull
     public static ItemStack getScriptEditor() {
         var item = new ItemStack(Material.BLAZE_ROD);
-        var meta = Objects.requireNonNull(item.getItemMeta());
+        var meta = item.getItemMeta();
         meta.setDisplayName("§dScript Editor");
         meta.setLore(StringUtils.setListColor(SBConfig.SCRIPT_EDITOR.getValue()));
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -56,9 +55,8 @@ public class ItemUtils {
 
     @NotNull
     public static ItemStack getScriptViewer() {
-        var type = Utils.isCBXXXorLater("1.13") ? "CLOCK" : "WATCH";
-        var item = new ItemStack(getMaterial(type));
-        var meta = Objects.requireNonNull(item.getItemMeta());
+        var item = new ItemStack(getMaterial(Utils.isCBXXXorLater("1.13") ? "CLOCK" : "WATCH"));
+        var meta = item.getItemMeta();
         meta.setDisplayName("§dScript Viewer");
         meta.setLore(StringUtils.setListColor(SBConfig.SCRIPT_VIEWER.getValue()));
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
