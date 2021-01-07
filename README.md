@@ -28,7 +28,7 @@ ScriptBlockPlus [Java11](https://jdk.java.net/) [MC1.9-1.16.x] [![](https://jitp
 **★バージョン"1.13-1.13.1"の動作について★**<br>
 サーバーが"**JAVA9**"以降に対応していないことが原因で、**エラーが発生する不具合が存在します。**<br>
 プラグイン自体は正常に動作するのですが、問題が発生する可能性があるのでなるべく"[**1.13.2**](https://papermc.io/legacy)"を利用してください。<br>
-**強引な解決方法**、`&lt;Server&gt;.jar`内の`org/objectweb/asm/ClassVisitor.class`のバージョン処理を削除すると動作します。<br>
+**強引な解決方法**、&lt;Server&gt;.jar内の`org/objectweb/asm/ClassVisitor.class`を改変すると動作します。<br>
 
 プラグイン記事
 -----------
