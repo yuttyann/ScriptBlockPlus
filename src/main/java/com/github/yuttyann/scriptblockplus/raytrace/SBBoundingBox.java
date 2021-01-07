@@ -42,7 +42,8 @@ public class SBBoundingBox {
                         double maxX = fields[3].getDouble(axisAlignedBB);
                         double maxY = fields[4].getDouble(axisAlignedBB);
                         double maxZ = fields[5].getDouble(axisAlignedBB);
-                        setVector(minX, minY, minZ, maxX, maxY, maxZ);
+                        int x = block.getX(), y = block.getY(), z = block.getZ(); 
+                        setVector(x + minX, y + minY, z + minZ, x + maxX, y + maxY, z + maxZ);
                     }
                 } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
@@ -66,13 +67,14 @@ public class SBBoundingBox {
         var world = PackageType.CB.invokeMethod(block.getWorld(), "CraftWorld", "getHandle");
         var position = PackageType.NMS.newInstance("BlockPosition", block.getX(), block.getY(), block.getZ());
         var blockData = PackageType.NMS.invokeMethod(world, "WorldServer", "getType", position);
-        var nmsBlock = PackageType.NMS.invokeMethod(blockData, "IBlockData", "getBlock");
         if (Utils.isCBXXXorLater("1.13")) {
-            var getVoxelShape = PackageType.NMS.getMethod("Block", "a", PackageType.NMS.getClass("IBlockData"), PackageType.NMS.getClass("IBlockAccess"), position.getClass());
-            return PackageType.NMS.invokeMethod(getVoxelShape.invoke(nmsBlock, blockData, world, position), "VoxelShape", "a");
+            var name = PackageType.getVersionName().equals("v1_13_R2") ? "i" : "g";
+            var getVoxelShape = PackageType.NMS.getMethod("IBlockData", name, PackageType.NMS.getClass("IBlockAccess"), position.getClass());
+            return PackageType.NMS.invokeMethod(getVoxelShape.invoke(blockData, world, position), "VoxelShape", "a");
         } else {
-            var getAxisAlignedBB = PackageType.NMS.getMethod("Block", "a", PackageType.NMS.getClass("IBlockData"), PackageType.NMS.getClass("IBlockAccess"), position.getClass());
-            return getAxisAlignedBB.invoke(nmsBlock, blockData, world, position);
+            var name = Utils.isCBXXXorLater("1.11") ? "b" : "a";
+            var getAxisAlignedBB = PackageType.NMS.getMethod("Block", name, PackageType.NMS.getClass("IBlockData"), PackageType.NMS.getClass("IBlockAccess"), position.getClass());
+            return getAxisAlignedBB.invoke(PackageType.NMS.invokeMethod(blockData, "IBlockData", "getBlock"), blockData, world, position);
         }
     }
     

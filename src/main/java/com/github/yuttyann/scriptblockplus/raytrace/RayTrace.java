@@ -64,12 +64,12 @@ public class RayTrace {
     }
 
     @NotNull
-    public Set<Location> rayTraceBlocks(@NotNull Player player, final double distance, final double raySize, final boolean square) {
+    public Set<Location> rayTraceBlocks(@NotNull Player player, final double distance, final double accuracy, final boolean square) {
         var rayTrace = new AdvancedRayTrace(player);
         var locations = new LinkedHashSet<Location>();
-        for(var position : rayTrace.traverse(distance, raySize)) {
+        for(var position : rayTrace.traverse(distance, accuracy)) {
             var location = position.toLocation(world);
-            if(rayTrace.intersects(new SBBoundingBox(location.getBlock(), square), distance, raySize)){
+            if(rayTrace.intersects(new SBBoundingBox(location.getBlock(), square), distance, accuracy)){
                 locations.add(location);
             }
         }
