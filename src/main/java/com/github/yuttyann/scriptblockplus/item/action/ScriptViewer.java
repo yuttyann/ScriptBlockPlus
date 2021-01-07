@@ -7,9 +7,6 @@ import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.item.ChangeSlot;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.RunItem;
-import com.github.yuttyann.scriptblockplus.item.action.task.GlowTask;
-import com.github.yuttyann.scriptblockplus.item.action.task.LookTask;
-import com.github.yuttyann.scriptblockplus.item.action.task.ParticleTask;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -30,12 +27,7 @@ public class ScriptViewer extends ItemAction {
     public static final Set<SBPlayer> PLAYERS = new HashSet<>();
 
     static {
-        if (ProtocolLib.INSTANCE.has()) {
-            new LookTask().runTaskTimer(ScriptBlock.getInstance(), 0L, 2L);
-            new GlowTask().runTaskTimer(ScriptBlock.getInstance(), 0L, 20L);
-        } else {
-            new ParticleTask().runTaskTimer(ScriptBlock.getInstance(), 0L, 10L);
-        }
+        new TickRunnable().runTaskTimer(ScriptBlock.getInstance(), 0L, 1L);
     }
 
     public ScriptViewer() {
