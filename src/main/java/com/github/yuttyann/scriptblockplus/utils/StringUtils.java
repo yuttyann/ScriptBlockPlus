@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * ScriptBlockPlus StringUtils クラス
@@ -44,10 +43,30 @@ public final class StringUtils {
         return result;
     }
 
-    @Deprecated
     @NotNull
-    public static String[] split(@Nullable String source, @NotNull String delimiter) {
-        return isEmpty(source) ? ArrayUtils.EMPTY_STRING_ARRAY : source.split(Pattern.quote(delimiter));
+    public static String[] split(@Nullable String source, @NotNull char delimiter) {
+        if (isEmpty(source)) {
+            return ArrayUtils.EMPTY_STRING_ARRAY;   
+        }
+        var list = new ArrayList<String>();
+        var chars = source.toCharArray();
+        int start = 0;
+        boolean match = false;
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == delimiter) {
+                if (!match) {
+                    list.add(source.substring(start, i));
+                    match = true;
+                }
+                start = i + 1;
+            } else {
+                match = false;
+            }
+        }
+        if (!match) {
+            list.add(source.substring(start, chars.length));
+        }
+        return list.toArray(String[]::new);
     }
 
     @NotNull

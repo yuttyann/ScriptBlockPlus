@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus;
 
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Location;
@@ -166,7 +167,7 @@ public class BlockCoords {
      */
     @NotNull
     public static Location fromString(@NotNull World world, @NotNull String coords) {
-        var xyz = coords.split(",");
+        var xyz = StringUtils.split(coords, ',');
         if (xyz.length != 3) {
             throw new IllegalArgumentException();
         }
@@ -182,7 +183,7 @@ public class BlockCoords {
      */
     @NotNull
     public static Location fromString(@NotNull String fullCoords) {
-        var wxyz = fullCoords.split(",");
+        var wxyz = StringUtils.split(fullCoords, ',');
         if (wxyz.length != 4) {
             throw new IllegalArgumentException();
         }

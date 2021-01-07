@@ -28,14 +28,14 @@ public class BlockType extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         var block = getLocation().getBlock();
-        return Stream.of(getOptionValue().split(",")).anyMatch(s -> equals(block, s));
+        return Stream.of(StringUtils.split(getOptionValue(), ',')).anyMatch(s -> equals(block, s));
     }
 
     private boolean equals(@NotNull Block block, @NotNull String type) {
         if (StringUtils.isEmpty(type)) {
             return false;
         }
-        var array = type.split(":");
+        var array = StringUtils.split(type, ':');
         if (Calculation.REALNUMBER_PATTERN.matcher(array[0]).matches()) {
             Utils.sendColorMessage(getSBPlayer(), "§cNumerical values can not be used");
             return false;

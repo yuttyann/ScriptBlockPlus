@@ -24,14 +24,14 @@ public class BypassGroup extends BaseOption {
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
             throw new UnsupportedOperationException();
         }
-        var array = getOptionValue().split("/");
+        var array = StringUtils.split(getOptionValue(), '/');
         if (array.length < 2) {
             throw new IllegalArgumentException("Insufficient parameters");
         }
         var player = getSBPlayer().getPlayer();
         return CommandLog.supplier(player.getWorld(), () -> {
-            var world = array[1];
-            var group = array.length > 2 ? array[2] : world;
+            var world = array.length > 2 ? array[1] : null;
+            var group = array.length > 2 ? array[2] : array[1];
             if (vaultPermission.playerInGroup(world, player, group)) {
                 return Utils.dispatchCommand(player, StringUtils.setColor(array[0]));
             } else {

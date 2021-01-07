@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -63,7 +62,7 @@ public final class SBLoader {
             return new ArrayList<>();
         }
         var uuids = new ArrayList<UUID>();
-        StreamUtils.forEach(author.split(","), s -> uuids.add(UUID.fromString(s.trim())));
+        StreamUtils.forEach(StringUtils.split(author, ','), s -> uuids.add(UUID.fromString(s.trim())));
         return uuids;
     }
 
@@ -84,7 +83,7 @@ public final class SBLoader {
     @NotNull
     private SBLoader createPath(@NotNull Location location) {
         this.location = location;
-        this.path = Objects.requireNonNull(location.getWorld()).getName() + "." + BlockCoords.getCoords(location);
+        this.path = location.getWorld().getName() + "." + BlockCoords.getCoords(location);
         return this;
     }
 }

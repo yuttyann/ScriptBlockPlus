@@ -34,7 +34,7 @@ public class Calculation extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = getOptionValue().split(" ");
+        var array = StringUtils.split(getOptionValue(), ' ');
         var player = getPlayer();
         var value1 = parse(player, array[0]);
         var value2 = parse(player, array[2]);

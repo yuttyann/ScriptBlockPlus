@@ -25,7 +25,7 @@ public class EntityCount {
         }
     }
 
-    public static int next() {
+    public static synchronized int next() {
         try {
             if (Utils.isCBXXXorLater("1.14")) {
                 return ((AtomicInteger) ENTITY_COUNT.get(null)).incrementAndGet();

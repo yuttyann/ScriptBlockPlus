@@ -7,6 +7,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -38,8 +39,9 @@ public class Delay extends BaseOption implements Runnable {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = getOptionValue().split("/");
-        saveDelay = array.length <= 1 || Boolean.parseBoolean(array[1]);
+        var array = StringUtils.split(getOptionValue(), '/');
+        this.saveDelay = array.length <= 1 || Boolean.parseBoolean(array[1]);
+
         if (saveDelay && DELAY_SET.contains(new TimerTemp(getUniqueId(), getLocation(), getScriptKey()))) {
             SBConfig.ACTIVE_DELAY.send(getSBPlayer());
         } else {

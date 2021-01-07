@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.event.block.Action;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +30,7 @@ public class ScriptAction extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         Action action = getTempMap().get(KEY);
-        return Arrays.stream(getOptionValue().split(",")).allMatch(s -> equals(action, s));
+        return Arrays.stream(StringUtils.split(getOptionValue(), ',')).allMatch(s -> equals(action, s));
     }
 
     private boolean equals(@Nullable Action action, @NotNull String type) {

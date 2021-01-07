@@ -36,7 +36,7 @@ public class ActionBar extends BaseOption implements Runnable {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = getOptionValue().split("/");
+        var array = StringUtils.split(getOptionValue(), '/');
         this.message = StringUtils.setColor(array[0]);
         if (array.length > 1) {
             this.stay = Integer.parseInt(array[1]);

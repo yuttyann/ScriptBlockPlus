@@ -70,7 +70,7 @@ public final class Utils {
     }
 
     public static int getVersionInt(@NotNull String source) {
-        var version = source.split("\\.");
+        var version = split(source, '.');
         if (version.length < 1) {
             return -1;
         }
@@ -117,7 +117,7 @@ public final class Utils {
         command = command.startsWith("/") ? command.substring(1) : command;
         var commandSender = sender instanceof SBPlayer ? ((SBPlayer) sender).getPlayer() : sender;
         if (CommandSelector.INSTANCE.has(command)) {
-            List<String> commands = CommandSelector.INSTANCE.build(commandSender, command);
+            var commands = CommandSelector.INSTANCE.build(commandSender, command);
             return commands.stream().allMatch(s -> Bukkit.dispatchCommand(commandSender, s));
         }
         return Bukkit.dispatchCommand(commandSender, command);

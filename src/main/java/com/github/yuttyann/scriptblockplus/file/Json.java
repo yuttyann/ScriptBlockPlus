@@ -179,8 +179,9 @@ public abstract class Json<T> {
 
     public final void remove(@NotNull T value) {
         int hash = value.hashCode();
-        list.removeIf(t -> t.hashCode() == hash);
-        saveFile();
+        if (list.removeIf(t -> t.hashCode() == hash)) {
+            saveFile();
+        }
     }
 
     private boolean equalParams(@NotNull Object[] args) {

@@ -5,6 +5,8 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,7 +28,7 @@ public class Perm extends BaseOption {
         if (!vaultPermission.isEnabled()) {
             throw new UnsupportedOperationException();
         }
-        var array = getOptionValue().split("/");
+        var array = StringUtils.split(getOptionValue(), '/');
         var world = array.length > 1 ? array[0] : null;
         var permission = array.length > 1 ? array[1] : array[0];
 

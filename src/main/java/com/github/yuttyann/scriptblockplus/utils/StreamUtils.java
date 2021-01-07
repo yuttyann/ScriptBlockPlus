@@ -38,10 +38,32 @@ public final class StreamUtils {
         }
     }
 
+    public static <T> boolean anyMatch(@NotNull T[] array, Predicate<T> filter) {
+        for (var t : array) {
+            if (filter.test(t)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static <T> boolean anyMatch(@NotNull Collection<T> collection, Predicate<T> filter) {
+        for (var t : collection) {
+            if (filter.test(t)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static <T> void filter(@NotNull T t, Predicate<T> filter, @NotNull Consumer<T> action) {
         if (filter.test(t)) {
             action.accept(t);
         }
+    }
+
+    public static <T> void filterNot(@NotNull T t, Predicate<T> filter, @NotNull Consumer<T> action) {
+        filter(t, Predicate.not(filter), action);
     }
     
     public static <T> void ifAction(@NotNull boolean value, @NotNull Runnable runnable) {

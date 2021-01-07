@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -28,8 +29,8 @@ public class PlaySound extends BaseOption implements Runnable {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = getOptionValue().split("/");
-        var param = array[0].split("-");
+        var array = StringUtils.split(getOptionValue(), '/');
+        var param = StringUtils.split(array[0], '-');
         var delay = param.length > 3 ? Long.parseLong(param[3]) : 0;
         this.sound = Sound.valueOf(param[0].toUpperCase());
         this.volume = Integer.parseInt(param[1]);
