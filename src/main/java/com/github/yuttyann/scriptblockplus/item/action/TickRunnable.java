@@ -33,12 +33,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TickRunnable extends BukkitRunnable {
 
-    private static final String KEY_LOCATION = Utils.randomUUID();
-    private static final String KEY_LOCATION_TEMP = Utils.randomUUID();
+    private static final String KEY = Utils.randomUUID();
+    private static final String KEY_TEMP = Utils.randomUUID();
+    private static final boolean HAS_PROTOCOLLIB = ProtocolLib.INSTANCE.has();
     private static final GlowEntityPacket GLOW_ENTITY_PACKET = ProtocolLib.GLOW_ENTITY;
 
     private int tick = 0;
-    private boolean hasProtocolLib = ProtocolLib.INSTANCE.has();
 
     @Override
     public final void run() {
@@ -49,7 +49,6 @@ public class TickRunnable extends BukkitRunnable {
         } finally {
             if (++tick > 20) {
                 this.tick = 0;
-                this.hasProtocolLib = ProtocolLib.INSTANCE.has();
             }
         }
     }
@@ -58,13 +57,16 @@ public class TickRunnable extends BukkitRunnable {
         if (!sbPlayer.isOnline()) {
             return;
         }
-        lookBlocks(sbPlayer);
-        if (hasProtocolLib && tick % 5 == 0) {
-            sendParticles(sbPlayer, true);
-        }
-        if (tick % 10 == 0) {
-            spawnGlowEntity(sbPlayer);
-            if (!hasProtocolLib) {
+        if (HAS_PROTOCOLLIB) {
+            lookBlocks(sbPlayer);
+            if (tick % 5 == 0) {
+                sendParticles(sbPlayer, true);
+            }
+            if (tick % 10 == 0) {
+                spawnGlowEntity(sbPlayer);
+            }
+        } else {
+            if (tick % 10 == 0) {
                 sendParticles(sbPlayer, false);
             }
         }
@@ -72,20 +74,19 @@ public class TickRunnable extends BukkitRunnable {
 
     private void lookBlocks(@NotNull SBPlayer sbPlayer) {
         var player = sbPlayer.getPlayer();
-        var rayTrace = new RayTrace(player.getWorld());
-        var rayResult = rayTrace.rayTraceBlocks(player, getDistance(player));
-        var locations = getLocations(sbPlayer, KEY_LOCATION);
-        var tempLocations = getLocations(sbPlayer, KEY_LOCATION_TEMP);
-        StreamUtils.filterNot(locations, Set::isEmpty, Set::clear);
-        StreamUtils.filterNot(tempLocations, Set::isEmpty, Set::clear);
+        var rayResult = RayTrace.INSTANCE.rayTraceBlocks(player, getDistance(player));
+        StreamUtils.filterNot(getLocations(sbPlayer, KEY), Set::isEmpty, Set::clear);
+        StreamUtils.filterNot(getLocations(sbPlayer, KEY_TEMP), Set::isEmpty, Set::clear);
         if (rayResult == null) {
             return;
         }
+        var locations = getLocations(sbPlayer, KEY);
+        var tempLocations = getLocations(sbPlayer, KEY_TEMP);
         destroyEntity(sbPlayer, rayResult.getHitBlock().getLocation(), locations);
         destroyEntity(sbPlayer, rayResult.getRelative().getLocation(), locations);
         if (locations.size() > 0) {
             tempLocations.addAll(locations);
-            for (var location : rayTrace.rayTraceBlocks(player, getDistance(player), 0.01D, true)) {
+            for (var location : RayTrace.INSTANCE.rayTraceBlocks(player, getDistance(player), 0.01D, true)) {
                 var blockLocation = location.getBlock().getLocation();
                 if (tempLocations.contains(blockLocation)) {
                     break;
@@ -100,7 +101,7 @@ public class TickRunnable extends BukkitRunnable {
     private void spawnGlowEntity(@NotNull SBPlayer sbPlayer) {
         var region = new PlayerRegion(sbPlayer.getPlayer(), 20);
         var blocks = getBlocks(new CuboidRegionBlocks(region));
-        var locations = getLocations(sbPlayer, KEY_LOCATION);
+        var locations = getLocations(sbPlayer, KEY);
         for (var block : blocks) {
             if (locations.size() > 0 && StreamUtils.anyMatch(locations, l -> block.getLocation().equals(l))) {
                 continue;
@@ -121,7 +122,7 @@ public class TickRunnable extends BukkitRunnable {
 
     private void sendParticles(@NotNull SBPlayer sbPlayer, final boolean hasProtocolLib) {
         if (hasProtocolLib) {
-            for (var location : getLocations(sbPlayer, KEY_LOCATION_TEMP)) {
+            for (var location : getLocations(sbPlayer, KEY_TEMP)) {
                 var block = location.getBlock();
                 boolean isAIR = block.getType() == Material.AIR;
                 spawnParticlesOnBlock(sbPlayer.getPlayer(), block, isAIR ? Color.BLUE : Color.GREEN);

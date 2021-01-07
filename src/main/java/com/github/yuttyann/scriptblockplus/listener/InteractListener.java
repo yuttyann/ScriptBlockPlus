@@ -40,7 +40,7 @@ public class InteractListener implements Listener {
         }
         var hand = EquipmentSlot.HAND;
         var item = player.getInventory().getItemInMainHand();
-        var rayResult = new RayTrace(player.getWorld()).rayTraceBlocks(player, 4.5D);
+        var rayResult = RayTrace.INSTANCE.rayTraceBlocks(player, 4.5D);
         if (rayResult == null) {
             callEvent(new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR, item, null, BlockFace.SOUTH, hand), true);
         } else {

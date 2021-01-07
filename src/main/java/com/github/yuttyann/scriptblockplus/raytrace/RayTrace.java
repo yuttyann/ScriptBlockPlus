@@ -7,7 +7,6 @@ import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -19,11 +18,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class RayTrace {
 
-    private final World world;
-
-    public RayTrace(@NotNull World world) {
-        this.world = world;
-    }
+    public static final RayTrace INSTANCE = new RayTrace();
 
     @Nullable
     public RayResult rayTraceBlocks(@NotNull Player player, final double distance) {
@@ -47,6 +42,7 @@ public class RayTrace {
                 } else {
                     arguments = new Object[] { vec3d1, vec3d2, false };
                 }
+                var world = player.getWorld();
                 var nmsWorld = PackageType.CB.invokeMethod(world, "CraftWorld", "getHandle");
                 var rayTrace = PackageType.NMS.invokeMethod(nmsWorld, "World", "rayTrace", arguments);
                 if (rayTrace != null) {
@@ -65,6 +61,7 @@ public class RayTrace {
 
     @NotNull
     public Set<Location> rayTraceBlocks(@NotNull Player player, final double distance, final double accuracy, final boolean square) {
+        var world = player.getWorld();
         var rayTrace = new AdvancedRayTrace(player);
         var locations = new LinkedHashSet<Location>();
         for(var position : rayTrace.traverse(distance, accuracy)) {
