@@ -25,6 +25,11 @@ public class RayResult {
     }
 
     @NotNull
+    public Block getRelative() {
+        return block.getRelative(blockFace);
+    }
+
+    @NotNull
     public BlockFace getHitBlockFace() {
         return blockFace;
     }

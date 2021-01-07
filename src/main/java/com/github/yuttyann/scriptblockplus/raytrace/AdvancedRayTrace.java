@@ -40,17 +40,17 @@ public final class AdvancedRayTrace {
     }
 
     @NotNull
-    public List<Vector> traverse(final double distance, final double raySize) {
+    public List<Vector> traverse(final double distance, final double accuracy) {
         var positions = new ArrayList<Vector>();
-        for (double d = 0.0D; d <= distance; d += raySize) {
+        for (double d = 0.0D; d <= distance; d += accuracy) {
             positions.add(getPostion(d));
         }
         return positions;
     }
 
     @Nullable
-    public Vector positionOfIntersection(@NotNull Vector min, @NotNull Vector max, final double distance, final double raySize) {
-        var positions = traverse(distance, raySize);
+    public Vector positionOfIntersection(@NotNull Vector min, @NotNull Vector max, final double distance, final double accuracy) {
+        var positions = traverse(distance, accuracy);
         for (var position : positions) {
             if (intersects(position, min, max)) {
                 return position;
@@ -59,8 +59,8 @@ public final class AdvancedRayTrace {
         return null;
     }
 
-    public boolean intersects(@NotNull Vector min, @NotNull Vector max, final double distance, final double raySize) {
-        var positions = traverse(distance, raySize);
+    public boolean intersects(@NotNull Vector min, @NotNull Vector max, final double distance, final double accuracy) {
+        var positions = traverse(distance, accuracy);
         for (var position : positions) {
             if (intersects(position, min, max)) {
                 return true;
@@ -70,8 +70,8 @@ public final class AdvancedRayTrace {
     }
 
     @Nullable
-    public Vector positionOfIntersection(@NotNull SBBoundingBox boundingBox, final double distance, final double raySize) {
-        var positions = traverse(distance, raySize);
+    public Vector positionOfIntersection(@NotNull SBBoundingBox boundingBox, final double distance, final double accuracy) {
+        var positions = traverse(distance, accuracy);
         for (var position : positions) {
             if (intersects(position, boundingBox.getMin(), boundingBox.getMax())) {
                 return position;
@@ -80,8 +80,8 @@ public final class AdvancedRayTrace {
         return null;
     }
 
-    public boolean intersects(@NotNull SBBoundingBox boundingBox, final double distance, final double raySize) {
-        var positions = traverse(distance, raySize);
+    public boolean intersects(@NotNull SBBoundingBox boundingBox, final double distance, final double accuracy) {
+        var positions = traverse(distance, accuracy);
         for (var position : positions) {
             if (intersects(position, boundingBox.getMin(), boundingBox.getMax())) {
                 return true;
