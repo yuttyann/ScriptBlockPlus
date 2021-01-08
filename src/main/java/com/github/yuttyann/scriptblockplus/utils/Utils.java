@@ -80,10 +80,10 @@ public final class Utils {
         if (version.length < 1) {
             return -1;
         }
-		int result = (Integer.parseInt(version[0]) * 100000) + (Integer.parseInt(version[1]) * 1000);
-		if (version.length == 3) {
-			result += Integer.parseInt(version[2]);
-		}
+        int result = (Integer.parseInt(version[0]) * 100000) + (Integer.parseInt(version[1]) * 1000);
+        if (version.length == 3) {
+            result += Integer.parseInt(version[2]);
+        }
         return result;
     }
 

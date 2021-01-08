@@ -24,7 +24,7 @@ public class ScriptEdit {
 
     public void setScriptLine(@Nullable String script) {
         this.script = script;
-	}
+    }
 
     @NotNull
     public ScriptKey getScriptKey() {
