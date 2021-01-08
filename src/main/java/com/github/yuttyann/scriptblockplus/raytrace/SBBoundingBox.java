@@ -31,7 +31,7 @@ public class SBBoundingBox {
                 this.max = boundingBox.getMax();
             } else {
                 try {
-                    var axisAlignedBB = getAxisAlignedBB(block);
+                    var axisAlignedBB = PackageType.getAxisAlignedBB(block);
                     if (axisAlignedBB == null) {
                         setSquare(block);
                     } else {
@@ -60,22 +60,6 @@ public class SBBoundingBox {
     private void setVector(double x1, double y1, double z1, double x2, double y2, double z2) {
         this.min = new Vector(Math.min(x1, x2), Math.min(y1, y2), Math.min(z1, z2));
         this.max = new Vector(Math.max(x1, x2), Math.max(y1, y2), Math.max(z1, z2));
-    }
-
-    @NotNull
-    private Object getAxisAlignedBB(@NotNull Block block) throws ReflectiveOperationException {
-        var world = PackageType.CB.invokeMethod(block.getWorld(), "CraftWorld", "getHandle");
-        var position = PackageType.NMS.newInstance("BlockPosition", block.getX(), block.getY(), block.getZ());
-        var blockData = PackageType.NMS.invokeMethod(world, "WorldServer", "getType", position);
-        if (Utils.isCBXXXorLater("1.13")) {
-            var name = PackageType.getVersionName().equals("v1_13_R2") ? "i" : "g";
-            var getVoxelShape = PackageType.NMS.getMethod("IBlockData", name, PackageType.NMS.getClass("IBlockAccess"), position.getClass());
-            return PackageType.NMS.invokeMethod(getVoxelShape.invoke(blockData, world, position), "VoxelShape", "a");
-        } else {
-            var name = Utils.isCBXXXorLater("1.11") ? "b" : "a";
-            var getAxisAlignedBB = PackageType.NMS.getMethod("Block", name, PackageType.NMS.getClass("IBlockData"), PackageType.NMS.getClass("IBlockAccess"), position.getClass());
-            return getAxisAlignedBB.invoke(PackageType.NMS.invokeMethod(blockData, "IBlockData", "getBlock"), blockData, world, position);
-        }
     }
     
     @NotNull

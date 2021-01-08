@@ -54,6 +54,12 @@ public final class Utils {
         return SERVER_VERSION;
     }
 
+    @NotNull
+    public static String getPackageVersion() {
+        var name = Bukkit.getServer().getClass().getPackage().getName();
+        return name.substring(name.lastIndexOf('.') + 1);
+    }
+
     public static boolean isCBXXXorLater(@NotNull String version) {
         Boolean result = VC_CACHE.get(version);
         if (result == null) {

@@ -74,7 +74,7 @@ public class TickRunnable extends BukkitRunnable {
 
     private void lookBlocks(@NotNull SBPlayer sbPlayer) {
         var player = sbPlayer.getPlayer();
-        var rayResult = RayTrace.INSTANCE.rayTraceBlocks(player, getDistance(player));
+        var rayResult = RayTrace.rayTraceBlocks(player, getDistance(player));
         StreamUtils.filterNot(getLocations(sbPlayer, KEY), Set::isEmpty, Set::clear);
         StreamUtils.filterNot(getLocations(sbPlayer, KEY_TEMP), Set::isEmpty, Set::clear);
         if (rayResult == null) {
@@ -86,7 +86,7 @@ public class TickRunnable extends BukkitRunnable {
         destroyEntity(sbPlayer, rayResult.getRelative().getLocation(), locations);
         if (locations.size() > 0) {
             tempLocations.addAll(locations);
-            for (var location : RayTrace.INSTANCE.rayTraceBlocks(player, getDistance(player), 0.01D, true)) {
+            for (var location : RayTrace.rayTraceBlocks(player, getDistance(player), 0.01D, true)) {
                 var blockLocation = location.getBlock().getLocation();
                 if (tempLocations.contains(blockLocation)) {
                     break;
