@@ -61,7 +61,7 @@ public class ActionBar extends BaseOption implements Runnable {
 
     public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
         if (Utils.isCBXXXorLater("1.12.2")) {
-            var command = "title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
+            var command = "minecraft:title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
             Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Utils.dispatchCommand(sbPlayer, command));
         } else if (ProtocolLib.INSTANCE.has()) {
             try {

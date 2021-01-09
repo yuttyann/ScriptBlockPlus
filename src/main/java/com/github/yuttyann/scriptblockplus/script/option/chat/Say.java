@@ -22,7 +22,7 @@ public class Say extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var command = "say " + getOptionValue();
+        var command = "minecraft:say " + getOptionValue();
         return Utils.tempPerm(getSBPlayer(), Permission.MINECRAFT_COMMAND_SAY, () -> Utils.dispatchCommand(getSBPlayer(), command));
     }
 }

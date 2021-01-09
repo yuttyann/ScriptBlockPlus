@@ -45,7 +45,7 @@ public class Title extends BaseOption {
         if (Utils.isCBXXXorLater("1.12")) {
             sbPlayer.getPlayer().sendTitle(title, subtitle, fadeIn, stay, fadeOut);
         } else {
-            var prefix = "title " + sbPlayer.getName();
+            var prefix = "minecraft:title " + sbPlayer.getName();
             Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> {
                 Utils.dispatchCommand(sbPlayer, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
                 Utils.dispatchCommand(sbPlayer, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
