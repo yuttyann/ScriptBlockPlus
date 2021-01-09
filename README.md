@@ -18,12 +18,14 @@ ScriptBlockPlus [Java11](https://jdk.java.net/) [MC1.9-1.16.x] [![](https://jitp
 
 対応プラットフォーム
 -----------
-**[`BukkitAPI`](https://hub.spigotmc.org/javadocs/bukkit/overview-summary.html)を実装しているのであれば**基本的に動作します。  
-**★以下動作を確認済みのプラットフォーム一覧★**<br>
-・**[CraftBukkit](https://www.spigotmc.org/)**<br>
+**[`BukkitAPI`](https://hub.spigotmc.org/javadocs/bukkit/overview-summary.html)を実装しているのであれば**基本的に動作します。<br>
+[**`net.minecraft.server`**](https://sodocumentation.net/ja/bukkit/topic/9576/nms)が見つからなかった場合は、**NMS依存の機能が強制的に無効**になります。<br>
+**★以下、動作確認済みのプラットフォーム★**<br>
 ・**[Spigot](https://www.spigotmc.org/)**<br>
 ・**[PaperMC](https://papermc.io/)**<br>
-・**[CatServer](http://catserver.moe/)**<br>
+・**[AkarinPRJ](https://akarin.app/)**<br>
+・**[CatServer](https://github.com/Luohuayu/CatServer)**(**Java11**では動作しません)<br>
+
 
 **★バージョン"1.13-1.13.1"の動作について★**<br>
 サーバーが"**JAVA9**"以降に対応していないことが原因で、**エラーが発生する不具合が存在します。**<br>
