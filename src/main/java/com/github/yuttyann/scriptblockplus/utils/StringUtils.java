@@ -106,7 +106,7 @@ public final class StringUtils {
     public static String createString(@NotNull String[] args, int start) {
         var builder = new StringBuilder();
         for (int i = start; i < args.length; i++) {
-            builder.append(args[i]).append(i == (args.length - 1) ? "" : " ");
+            builder.append(args[i]).append(i == (args.length - 1) ? Character.MIN_VALUE : ' ');
         }
         return builder.toString();
     }

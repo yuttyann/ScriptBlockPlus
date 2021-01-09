@@ -58,7 +58,7 @@ public interface ObjectMap {
      * @return {@link Character} - 指定されたキーがマップされている値
      */
     default char getChar(@NotNull String key) {
-        return get(key, '\u0000');
+        return get(key, Character.MIN_VALUE);
     }
 
     /**
