@@ -14,15 +14,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class VaultEconomy extends HookPlugin {
 
-    public static final VaultEconomy INSTANCE = VaultEconomy.setupEconomy();
+    public static final VaultEconomy INSTANCE = new VaultEconomy();
 
-    private final String name;
-    private final Economy economy;
-
-    private VaultEconomy(@Nullable Economy economy) {
-        this.name = economy == null ? "None" : economy.getName();
-        this.economy = economy;
-    }
+    private String name;
+    private Economy economy;
 
     @Override
     @NotNull
@@ -31,15 +26,21 @@ public final class VaultEconomy extends HookPlugin {
     }
 
     @NotNull
-    private static VaultEconomy setupEconomy() {
+    public VaultEconomy setupEconomy() {
         var provider = Bukkit.getServicesManager().getRegistration(Economy.class);
         if (provider != null) {
-            var vault = new VaultEconomy(provider.getProvider());
+            var vault = setVaultEconomy(provider.getProvider());
             if (vault.isEnabled()) {
                 return vault;
             }
         }
-        return new VaultEconomy(null);
+        return setVaultEconomy(null);
+    }
+
+    private VaultEconomy setVaultEconomy(@Nullable Economy economy) {
+        this.name = economy == null ? "None" : economy.getName();
+        this.economy = economy;
+        return this;
     }
 
     public boolean isEnabled() {

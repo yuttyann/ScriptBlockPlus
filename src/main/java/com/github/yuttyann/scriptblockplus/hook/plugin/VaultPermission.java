@@ -14,15 +14,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class VaultPermission extends HookPlugin {
 
-    public static final VaultPermission INSTANCE = VaultPermission.setupPermission();
+    public static final VaultPermission INSTANCE = new VaultPermission();
 
-    private final String name;
-    private final Permission permission;
-
-    private VaultPermission(@Nullable Permission permission) {
-        this.name = permission == null ? "None" : permission.getName();
-        this.permission = permission;
-    }
+    private String name;
+    private Permission permission;
 
     @Override
     @NotNull
@@ -31,15 +26,21 @@ public final class VaultPermission extends HookPlugin {
     }
 
     @NotNull
-    private static VaultPermission setupPermission() {
+    public VaultPermission setupPermission() {
         var provider = Bukkit.getServicesManager().getRegistration(Permission.class);
         if (provider != null) {
-            var vault = new VaultPermission(provider.getProvider());
+            var vault = setVaultPermission(provider.getProvider());
             if (vault.isEnabled()) {
                 return vault;
             }
         }
-        return new VaultPermission(null);
+        return setVaultPermission(null);
+    }
+
+    private VaultPermission setVaultPermission(@Nullable Permission permission) {
+        this.name = permission == null ? "None" : permission.getName();
+        this.permission = permission;
+        return this;
     }
 
     public boolean isEnabled() {
