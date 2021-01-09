@@ -35,8 +35,9 @@ public class GlowEntityPacket {
         StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> new EntityActionListener().register());
     }
 
-    private final int TYPE_ID = PackageType.HAS_NMS ? PackageType.getMagmaCubeId() : -1;
-    private final int SIZE_ID = PackageType.HAS_NMS ? PackageType.getSlimeSizeId() : -1;
+    private static final int TYPE_ID = PackageType.HAS_NMS ? PackageType.getMagmaCubeId() : -1;
+    private static final int SIZE_ID = PackageType.HAS_NMS ? PackageType.getSlimeSizeId() : -1;
+
     private final Multimap<UUID, GlowEntity> GLOW_ENTITIES = HashMultimap.create();
 
     @NotNull

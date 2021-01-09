@@ -66,14 +66,14 @@ public enum PackageType {
     public static final boolean HAS_NMS;
 
     static {
-        boolean result;
+        boolean hasNMS;
         try {
-            NMS.getClass("Entity");
-            result = true;
+            Class.forName(NMS + ".Entity");
+            hasNMS = true;
         } catch (ClassNotFoundException e) {
-            result = false;
+            hasNMS = false;
         }
-        HAS_NMS = result;
+        HAS_NMS = hasNMS;
     }
 
     private static final Map<String, Object> CACHE = new HashMap<>();
@@ -385,6 +385,18 @@ public enum PackageType {
             var getAxisAlignedBB = NMS.getMethod("Block", name, NMS.getClass("IBlockData"), NMS.getClass("IBlockAccess"), position.getClass());
             return getAxisAlignedBB.invoke(NMS.invokeMethod(blockData, "IBlockData", "getBlock"), blockData, world, position);
         }
+    }
+
+    @NotNull
+    public static Map<String, Integer> getItemRegistry() throws ReflectiveOperationException {
+        var map = new HashMap<String, Integer>();
+        var registory = NMS.getField("Item", "REGISTRY").get(null);
+        var registorySimple = (Map<?, ?>) NMS.getField(true, "RegistrySimple", "c").get(registory);
+        var getId = NMS.getMethod("Item", "getId", NMS.getClass("Item"));
+        for (var entry : registorySimple.entrySet()) {
+            map.put(entry.getKey().toString(), (int) getId.invoke(null, entry.getValue()));
+        }
+        return map;
     }
 
     @NotNull
