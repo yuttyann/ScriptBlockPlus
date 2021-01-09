@@ -40,11 +40,6 @@ public class ItemCost extends BaseOption {
         int amount = Integer.parseInt(array[1]);
         var create = array.length > 2 ? StringUtils.createString(array, 2) : null;
         var name = StringUtils.setColor(create);
-        System.out.println("------------------------------");
-        System.out.println("ItemType: " + material);
-        System.out.println("ItemDamage: " + damage);
-        System.out.println("ItemAmount: " + amount);
-        System.out.println("ItemName: " + name);
 
         var player = getPlayer();
         var inventory = player.getInventory();
