@@ -44,10 +44,12 @@ public final class RayTrace {
             }
             return new RayResult(rayTraceResult.getHitBlock(), rayTraceResult.getHitBlockFace());
         } else {
-            try {
-                return PackageType.rayTraceBlocks(player, distance);
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
+            if (PackageType.HAS_NMS) {
+                try {
+                    return PackageType.rayTraceBlocks(player, distance);
+                } catch (ReflectiveOperationException e) {
+                    e.printStackTrace();
+                }  
             }
             return null;
         }

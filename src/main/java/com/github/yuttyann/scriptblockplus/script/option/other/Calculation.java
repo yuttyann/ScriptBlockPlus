@@ -79,6 +79,9 @@ public class Calculation extends BaseOption {
             return count;
         }
         if (source.startsWith("%player_ping_") && source.endsWith("%")) {
+            if (!PackageType.HAS_NMS) {
+                return 0;
+            }
             source = source.substring("%player_ping_".length(), source.length() - 1);
             var target = Bukkit.getPlayer(source);
             if (target == null) {
@@ -105,6 +108,9 @@ public class Calculation extends BaseOption {
             case "%player_count%":
                 return new PlayerCountJson(getUniqueId()).load(getLocation(), getScriptKey()).getAmount();
             case "%player_ping%":
+                if (!PackageType.HAS_NMS) {
+                    return 0;
+                }
                 var handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
                 return PackageType.NMS.getField("EntityPlayer", "ping").getInt(handle);
             case "%player_x%":

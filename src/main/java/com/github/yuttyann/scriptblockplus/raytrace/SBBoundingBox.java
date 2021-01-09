@@ -30,23 +30,27 @@ public class SBBoundingBox {
                 this.min = boundingBox.getMin();
                 this.max = boundingBox.getMax();
             } else {
-                try {
-                    var axisAlignedBB = PackageType.getAxisAlignedBB(block);
-                    if (axisAlignedBB == null) {
-                        setSquare(block);
-                    } else {
-                        var fields = axisAlignedBB.getClass().getFields();
-                        double minX = fields[0].getDouble(axisAlignedBB);
-                        double minY = fields[1].getDouble(axisAlignedBB);
-                        double minZ = fields[2].getDouble(axisAlignedBB);
-                        double maxX = fields[3].getDouble(axisAlignedBB);
-                        double maxY = fields[4].getDouble(axisAlignedBB);
-                        double maxZ = fields[5].getDouble(axisAlignedBB);
-                        int x = block.getX(), y = block.getY(), z = block.getZ(); 
-                        setVector(x + minX, y + minY, z + minZ, x + maxX, y + maxY, z + maxZ);
+                if (PackageType.HAS_NMS) {
+                    try {
+                        var axisAlignedBB = PackageType.getAxisAlignedBB(block);
+                        if (axisAlignedBB == null) {
+                            setSquare(block);
+                        } else {
+                            var fields = axisAlignedBB.getClass().getFields();
+                            double minX = fields[0].getDouble(axisAlignedBB);
+                            double minY = fields[1].getDouble(axisAlignedBB);
+                            double minZ = fields[2].getDouble(axisAlignedBB);
+                            double maxX = fields[3].getDouble(axisAlignedBB);
+                            double maxY = fields[4].getDouble(axisAlignedBB);
+                            double maxZ = fields[5].getDouble(axisAlignedBB);
+                            int x = block.getX(), y = block.getY(), z = block.getZ(); 
+                            setVector(x + minX, y + minY, z + minZ, x + maxX, y + maxY, z + maxZ);
+                        }
+                    } catch (ReflectiveOperationException e) {
+                        e.printStackTrace();
                     }
-                } catch (ReflectiveOperationException e) {
-                    e.printStackTrace();
+                } else {
+                    setSquare(block);
                 }
             }
         }

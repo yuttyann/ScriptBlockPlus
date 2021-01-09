@@ -44,10 +44,10 @@ public class ScriptAction extends BaseOption {
     }
 
     @Nullable
-    private Action getAction(@NotNull String actionType) {
-        if (actionType.equalsIgnoreCase("left")) {
+    private Action getAction(@NotNull String action) {
+        if (action.equalsIgnoreCase("left")) {
             return Action.LEFT_CLICK_BLOCK;
-        } else if (actionType.equalsIgnoreCase("right")) {
+        } else if (action.equalsIgnoreCase("right")) {
             return Action.RIGHT_CLICK_BLOCK;
         }
         return null;

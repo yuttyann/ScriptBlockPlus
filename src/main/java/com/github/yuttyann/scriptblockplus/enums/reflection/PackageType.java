@@ -63,6 +63,19 @@ public enum PackageType {
         }
     }
 
+    public static final boolean HAS_NMS;
+
+    static {
+        boolean result;
+        try {
+            NMS.getClass("Entity");
+            result = true;
+        } catch (ClassNotFoundException e) {
+            result = false;
+        }
+        HAS_NMS = result;
+    }
+
     private static final Map<String, Object> CACHE = new HashMap<>();
 
     private final String path;
@@ -229,6 +242,9 @@ public enum PackageType {
 
     @Nullable
     public Class<?> getClass(@NotNull String className) throws IllegalArgumentException, ClassNotFoundException {
+        if (!HAS_NMS) {
+            throw new UnsupportedOperationException("NMS not found.");
+        }
         if (StringUtils.isEmpty(className)) {
             throw new IllegalArgumentException();
         }
@@ -244,7 +260,7 @@ public enum PackageType {
 
     @NotNull
     private String createKey(@NotNull ReturnType returnType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
-        if (StringUtils.isEmpty(className)) {
+        if (!HAS_NMS || StringUtils.isEmpty(className)) {
             return "null";
         }
         var rName = returnType + "";

@@ -22,8 +22,7 @@ public class BlockScriptJson extends Json<BlockScript> {
     }
 
     public static boolean has(@NotNull Location location, @NotNull ScriptKey scriptKey) {
-        var scriptJson = new BlockScriptJson(scriptKey);
-        return scriptJson.exists() && scriptJson.load().has(location);
+        return has(location, new BlockScriptJson(scriptKey));
     }
 
     public static boolean has(@NotNull Location location, @NotNull BlockScriptJson scriptJson) {

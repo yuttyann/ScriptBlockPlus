@@ -29,7 +29,7 @@ public class ItemHand extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         var array = StringUtils.split(getOptionValue(), ' ');
-        var param = StringUtils.split(array[0], ':');
+        var param = StringUtils.split(ItemUtils.removeKey(array[0]), ':');
         if (Calculation.REALNUMBER_PATTERN.matcher(param[0]).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }

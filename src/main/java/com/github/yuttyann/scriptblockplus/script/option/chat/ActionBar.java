@@ -69,7 +69,7 @@ public class ActionBar extends BaseOption implements Runnable {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-        } else {
+        } else if (PackageType.HAS_NMS) {
             try {
                 PackageType.sendActionBar(sbPlayer.getPlayer(), message);
             } catch (ReflectiveOperationException e) {

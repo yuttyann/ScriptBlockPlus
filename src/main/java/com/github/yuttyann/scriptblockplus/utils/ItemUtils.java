@@ -5,30 +5,73 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 /**
  * ScriptBlockPlus ItemUtils クラス
+ * 
  * @author yuttyann44581
  */
 public class ItemUtils {
+
+    public static final String MINECRAFT = "minecraft:";
+
+    private static final boolean HAS_NAMESPACED_KEY;
+    private static final Map<String, Material> KEY_NAMES;
+
+    static {    
+        HAS_NAMESPACED_KEY = StreamUtils.anyMatch(Material.class.getMethods(), s -> s.getName().equals("getKey"));
+        if (HAS_NAMESPACED_KEY) {
+            KEY_NAMES = null;
+        } else {
+            KEY_NAMES = new HashMap<>();
+            StreamUtils.forEach(Material.values(), m -> KEY_NAMES.put(MINECRAFT + m.name().toLowerCase(Locale.ROOT), m));
+        }
+    }
 
     @SuppressWarnings("deprecation")
     public static int getDamage(@NotNull ItemStack item) {
         if (Utils.isCBXXXorLater("1.13")) {
             var meta = item.getItemMeta();
-            return meta == null ? 0 : ((org.bukkit.inventory.meta.Damageable) meta).getDamage();
+            return meta == null ? 0 : ((Damageable) meta).getDamage();
         }
         return item.getDurability();
     }
 
     @NotNull
+    public static String getKey(@NotNull Material material) {
+        if (HAS_NAMESPACED_KEY) {
+            return material.getKey().toString();
+        }
+        var filter = (Predicate<Entry<?, ?>>) (e) -> e.getValue() == material;
+        return KEY_NAMES.entrySet().stream().filter(filter).findFirst().get().getKey();
+    }
+
+    @NotNull
+    public static String removeKey(@NotNull String name) {
+        return StringUtils.removeStart(name, ItemUtils.MINECRAFT);
+    }
+
+    @NotNull
     public static Material getMaterial(@NotNull String name) {
-        var type = Material.getMaterial(name.toUpperCase());
-        return type == null ? Material.AIR : type;
+        var material = (Material) null;
+        if (HAS_NAMESPACED_KEY) {
+            material = Material.matchMaterial(name);
+        } else {
+            name = removeKey(name);
+            name = name.toUpperCase(Locale.ENGLISH);
+            name = name.replaceAll("\\s+", "_").replaceAll("\\W", "");
+            material = Material.getMaterial(name);
+        }
+        return material == null ? Material.AIR : material;
     }
 
     @NotNull
@@ -85,11 +128,11 @@ public class ItemUtils {
         return getName(item, item.getType().name());
     }
 
-    public static boolean isItem(@Nullable ItemStack item, @Nullable Material type, @NotNull String name) {
-        return isItem(item, type, name::equals);
+    public static boolean isItem(@Nullable ItemStack item, @Nullable Material material, @NotNull String name) {
+        return isItem(item, material, name::equals);
     }
 
-    public static boolean isItem(@Nullable ItemStack item, @Nullable Material type, @NotNull Predicate<String> name) {
-        return item != null && type != null && item.getType() == type && name.test(getName(item));
+    public static boolean isItem(@Nullable ItemStack item, @Nullable Material material, @NotNull Predicate<String> name) {
+        return item != null && material != null && item.getType() == material && name.test(getName(item));
     }
 }

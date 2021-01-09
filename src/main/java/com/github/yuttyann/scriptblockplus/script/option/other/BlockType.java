@@ -5,10 +5,10 @@ import java.util.stream.Stream;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,12 +35,12 @@ public class BlockType extends BaseOption {
         if (StringUtils.isEmpty(type)) {
             return false;
         }
-        var array = StringUtils.split(type, ':');
+        var array = StringUtils.split(ItemUtils.removeKey(type), ':');
         if (Calculation.REALNUMBER_PATTERN.matcher(array[0]).matches()) {
             Utils.sendColorMessage(getSBPlayer(), "§cNumerical values can not be used");
             return false;
         }
-        var material = Material.getMaterial(array[0]);
+        var material = ItemUtils.getMaterial(array[0]);
         if (material == null || !material.isBlock()) {
             return false;
         }

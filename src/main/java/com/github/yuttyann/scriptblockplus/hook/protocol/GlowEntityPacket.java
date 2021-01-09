@@ -35,8 +35,8 @@ public class GlowEntityPacket {
         StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> new EntityActionListener().register());
     }
 
-    private final int TYPE_ID = PackageType.getMagmaCubeId();
-    private final int SIZE_ID = PackageType.getSlimeSizeId();
+    private final int TYPE_ID = PackageType.HAS_NMS ? PackageType.getMagmaCubeId() : -1;
+    private final int SIZE_ID = PackageType.HAS_NMS ? PackageType.getSlimeSizeId() : -1;
     private final Multimap<UUID, GlowEntity> GLOW_ENTITIES = HashMultimap.create();
 
     @NotNull
@@ -132,7 +132,7 @@ public class GlowEntityPacket {
         if (GLOW_ENTITIES.isEmpty()) {
             return false;
         }
-        Predicate<GlowEntity> filter = g -> g.equals(location.getX(), location.getY(), location.getZ());
+        var filter = (Predicate<GlowEntity>) g -> g.equals(location.getX(), location.getY(), location.getZ());
         return GLOW_ENTITIES.get(sbPlayer.getUniqueId()).stream().anyMatch(filter);
     }
 

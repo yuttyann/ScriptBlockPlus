@@ -4,6 +4,7 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableLocation;
 
@@ -103,6 +104,7 @@ public class SBClipboard {
             scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
             scriptParam.setAmount(amount);
             scriptJson.saveFile();
+            TimerOption.removeAll(location, scriptKey);
             PlayerCountJson.clear(location, scriptKey);
             SBConfig.SCRIPT_PASTE.replace(scriptKey).send(sbPlayer);
             SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), location, scriptKey).console();
