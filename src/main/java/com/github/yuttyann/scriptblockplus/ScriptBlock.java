@@ -2,11 +2,13 @@ package com.github.yuttyann.scriptblockplus;
 
 import com.github.yuttyann.scriptblockplus.command.BaseCommand;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.listener.*;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.action.BlockSelector;
@@ -44,20 +46,29 @@ public class ScriptBlock extends JavaPlugin {
             return;
         }
 
-        // 旧ScriptBlockが導入されていた場合は無効化
-        var plugin = getServer().getPluginManager().getPlugin("ScriptBlock");
-        if (plugin != null) {
-            getServer().getPluginManager().disablePlugin(plugin);
+        // NMSが見つからなかった場合警告
+        if (!PackageType.HAS_NMS) {
+            getLogger().warning("NMS(" + PackageType.NMS + ") not found.");
+            getLogger().warning("Disables some functions.");
         }
 
         // 全ファイルの読み込み
         SBFiles.reload();
 
         // Vaultが導入されているのか確認
-        if (!VaultEconomy.INSTANCE.has()) {
+        if (VaultEconomy.INSTANCE.has()) {
+            VaultEconomy.INSTANCE.setupEconomy();
+            VaultPermission.INSTANCE.setupPermission();
+        } else {
             SBConfig.NOT_VAULT.send();
             getServer().getPluginManager().disablePlugin(this);
             return;
+        }
+
+        // 旧ScriptBlockが導入されていた場合は無効化
+        var plugin = getServer().getPluginManager().getPlugin("ScriptBlock");
+        if (plugin != null) {
+            getServer().getPluginManager().disablePlugin(plugin);
         }
 
         // アップデート処理
