@@ -1,5 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script;
 
+import java.util.Objects;
+
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import org.bukkit.Location;
@@ -61,5 +63,10 @@ public class ScriptEdit {
             sbPlayer.setScriptEdit(null);
         }
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(scriptKey, actionType);
     }
 }
