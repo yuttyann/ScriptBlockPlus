@@ -9,6 +9,12 @@ ScriptBlockPlus [Java11](https://jdk.java.net/) [MC1.9-1.16.x] [![](https://jitp
 -----------
 [Releases](https://github.com/yuttyann/ScriptBlockPlus/releases)または[Yuttyann Files](https://file.yuttyann44581.net/)から`ScriptBlockPlus`のダウンロードを行ってください。<br>
 その後前提プラグインである[`Vault`](https://dev.bukkit.org/projects/vault)をダウンロードを行い`plugins`フォルダへ保存すれば完了です。<br>
+
+### JAVA8版
+別の[レポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。<br>
+古いプラットフォームのサーバーで**Java11**が動作しない場合はご利用ください。<br>
+但し、基本的にはサポートを行っていない事と、近いうちに更新停止することをご了承ください。<br>
+
 ### 連携プラグイン
 | Plugin | Description | Version |
 |:---|:---|:---:|
@@ -24,7 +30,7 @@ ScriptBlockPlus [Java11](https://jdk.java.net/) [MC1.9-1.16.x] [![](https://jitp
 ・**[Spigot](https://www.spigotmc.org/)**<br>
 ・**[PaperMC](https://papermc.io/)**<br>
 ・**[AkarinPRJ](https://akarin.app/)**<br>
-・**[CatServer](https://github.com/Luohuayu/CatServer)**(**Java11**では動作しません)<br>
+・**[CatServer](https://github.com/Luohuayu/CatServer)**`(Java11では動作しません)`<br>
 
 
 **★バージョン"1.13-1.13.1"の動作について★**<br>
