@@ -5,6 +5,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -388,15 +389,15 @@ public enum PackageType {
     }
 
     @NotNull
-    public static Map<String, Integer> getItemRegistry() throws ReflectiveOperationException {
-        var map = new HashMap<String, Integer>();
+    public static Map<String, Material> getItemRegistry() throws ReflectiveOperationException {
+        var items = new HashMap<String, Material>();
+        var material = CB_UTIL.getMethod("CraftMagicNumbers", "getMaterial", NMS.getClass("Item"));
         var registory = NMS.getField("Item", "REGISTRY").get(null);
         var registorySimple = (Map<?, ?>) NMS.getField(true, "RegistrySimple", "c").get(registory);
-        var getId = NMS.getMethod("Item", "getId", NMS.getClass("Item"));
         for (var entry : registorySimple.entrySet()) {
-            map.put(entry.getKey().toString(), (int) getId.invoke(null, entry.getValue()));
+            items.put(entry.getKey().toString(), (Material) material.invoke(null, entry.getValue()));
         }
-        return map;
+        return items;
     }
 
     @NotNull

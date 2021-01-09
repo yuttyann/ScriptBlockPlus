@@ -24,65 +24,35 @@ import java.util.function.Predicate;
 public class ItemUtils {
 
     private static final String MINECRAFT = "minecraft:";
-    private static final Map<String, Material> KEY_NAMES;
+    private static final Map<String, Material> KEY_MATERIALS;
 
     static {
         if (Utils.isCBXXXorLater("1.13")) {
-            KEY_NAMES = null;
+            KEY_MATERIALS = null;
         } else {
-            KEY_NAMES = new HashMap<>();
+            KEY_MATERIALS = new HashMap<>();
             if (PackageType.HAS_NMS) {
                 try {
-                    var getMaterial = Material.class.getMethod("getMaterial", int.class);
-                    for (var entry : PackageType.getItemRegistry().entrySet()) {
-                        KEY_NAMES.put(entry.getKey(), (Material) getMaterial.invoke(null, entry.getValue()));
-                    }
+                    KEY_MATERIALS.putAll(PackageType.getItemRegistry());
                 } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
                 }
-            } else {
-                StreamUtils.forEach(Material.values(), m -> KEY_NAMES.put(m.name().toLowerCase(Locale.ROOT), m));
             }
         }
-    }
-
-    @SuppressWarnings("deprecation")
-    public static int getDamage(@NotNull ItemStack item) {
-        if (Utils.isCBXXXorLater("1.13")) {
-            var meta = item.getItemMeta();
-            return meta == null ? 0 : ((Damageable) meta).getDamage();
-        }
-        return item.getDurability();
-    }
-
-    @NotNull
-    public static String getKey(@NotNull Material material) {
-        if (KEY_NAMES == null) {
-            return material.getKey().toString();
-        }
-        var filter = (Predicate<Entry<?, ?>>) (e) -> e.getValue() == material;
-        return KEY_NAMES.entrySet().stream().filter(filter).findFirst().get().getKey();
-    }
-
-    @NotNull
-    public static String removeMinecraftKey(@NotNull String name) {
-        return StringUtils.removeStart(name, ItemUtils.MINECRAFT);
     }
 
     @NotNull
     public static Material getMaterial(@NotNull String name) {
-        var material = (Material) null;
-        if (KEY_NAMES == null) {
-            material = Material.matchMaterial(name);
-        } else {
-            material = KEY_NAMES.get(name.startsWith(MINECRAFT) ? name : MINECRAFT + name);
-            if (material == null) {
-                name = removeMinecraftKey(name);
-                name = name.toUpperCase(Locale.ENGLISH);
-                name = name.replaceAll("\\s+", "_").replaceAll("\\W", "");
-                material = Material.getMaterial(name);
+        if (KEY_MATERIALS != null) {
+            var material = KEY_MATERIALS.get(name.startsWith(MINECRAFT) ? name : MINECRAFT + name);
+            if (material != null) {
+                return material;
             }
         }
+        name = removeMinecraftKey(name);
+        name = name.toUpperCase(Locale.ENGLISH);
+        name = name.replaceAll("\\s+", "_").replaceAll("\\W", "");
+        var material = Material.getMaterial(name);
         return material == null ? Material.AIR : material;
     }
 
@@ -120,9 +90,23 @@ public class ItemUtils {
     }
 
     @NotNull
-    public static ItemStack[] getHandItems(Player player) {
+    public static ItemStack[] getHandItems(@NotNull Player player) {
         var inventory = player.getInventory();
         return new ItemStack[] { inventory.getItemInMainHand(), inventory.getItemInOffHand() };
+    }
+
+    @NotNull
+    public static String getKey(@NotNull Material material) {
+        if (KEY_MATERIALS == null) {
+            return material.getKey().toString();
+        }
+        var filter = (Predicate<Entry<?, ?>>) (e) -> e.getValue() == material;
+        return KEY_MATERIALS.entrySet().stream().filter(filter).findFirst().get().getKey();
+    }
+
+    @NotNull
+    public static String removeMinecraftKey(@NotNull String name) {
+        return StringUtils.removeStart(name, MINECRAFT);
     }
 
     @NotNull
@@ -138,6 +122,15 @@ public class ItemUtils {
     @NotNull
     public static String getName(@NotNull ItemStack item) {
         return getName(item, item.getType().name());
+    }
+
+    @SuppressWarnings("deprecation")
+    public static int getDamage(@NotNull ItemStack item) {
+        if (Utils.isCBXXXorLater("1.13")) {
+            var meta = item.getItemMeta();
+            return meta == null ? 0 : ((Damageable) meta).getDamage();
+        }
+        return item.getDurability();
     }
 
     public static boolean isItem(@Nullable ItemStack item, @Nullable Material material, @NotNull String name) {
