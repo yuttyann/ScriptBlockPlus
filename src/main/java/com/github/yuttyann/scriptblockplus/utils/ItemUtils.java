@@ -3,7 +3,6 @@ package com.github.yuttyann.scriptblockplus.utils;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -87,12 +86,6 @@ public class ItemUtils {
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         item.setItemMeta(meta);
         return item;
-    }
-
-    @NotNull
-    public static ItemStack[] getHandItems(@NotNull Player player) {
-        var inventory = player.getInventory();
-        return new ItemStack[] { inventory.getItemInMainHand(), inventory.getItemInOffHand() };
     }
 
     @NotNull

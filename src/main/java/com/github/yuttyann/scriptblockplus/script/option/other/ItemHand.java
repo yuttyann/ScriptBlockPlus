@@ -7,6 +7,7 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,8 +41,8 @@ public class ItemHand extends BaseOption {
         var name = StringUtils.setColor(create);
 
         var player = getPlayer();
-        var items = ItemUtils.getHandItems(player);
-        if (Arrays.stream(items).noneMatch(i -> equals(i, material, name, amount, damage))) {
+        var handItems = getHandItems(player);
+        if (Arrays.stream(handItems).noneMatch(i -> equals(i, material, name, amount, damage))) {
             SBConfig.ERROR_HAND.replace(material, amount, damage, name).send(player);
             return false;
         }
@@ -53,5 +54,11 @@ public class ItemHand extends BaseOption {
             return false;
         }
         return ItemUtils.isItem(item, material, StringUtils.isEmpty(name) ? item.getType().name() : name);
+    }
+
+    @NotNull
+    private ItemStack[] getHandItems(@NotNull Player player) {
+        var inventory = player.getInventory();
+        return new ItemStack[] { inventory.getItemInMainHand(), inventory.getItemInOffHand() };
     }
 }
