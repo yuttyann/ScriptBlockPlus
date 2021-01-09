@@ -1,5 +1,6 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,18 +23,26 @@ import java.util.function.Predicate;
  */
 public class ItemUtils {
 
-    public static final String MINECRAFT = "minecraft:";
-
-    private static final boolean HAS_NAMESPACED_KEY;
+    private static final String MINECRAFT = "minecraft:";
     private static final Map<String, Material> KEY_NAMES;
 
-    static {    
-        HAS_NAMESPACED_KEY = StreamUtils.anyMatch(Material.class.getMethods(), s -> s.getName().equals("getKey"));
-        if (HAS_NAMESPACED_KEY) {
+    static {
+        if (Utils.isCBXXXorLater("1.13")) {
             KEY_NAMES = null;
         } else {
             KEY_NAMES = new HashMap<>();
-            StreamUtils.forEach(Material.values(), m -> KEY_NAMES.put(MINECRAFT + m.name().toLowerCase(Locale.ROOT), m));
+            if (PackageType.HAS_NMS) {
+                try {
+                    var getMaterial = Material.class.getMethod("getMaterial", int.class);
+                    for (var entry : PackageType.getItemRegistry().entrySet()) {
+                        KEY_NAMES.put(entry.getKey(), (Material) getMaterial.invoke(null, entry.getValue()));
+                    }
+                } catch (ReflectiveOperationException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                StreamUtils.forEach(Material.values(), m -> KEY_NAMES.put(m.name().toLowerCase(Locale.ROOT), m));
+            }
         }
     }
 
@@ -48,7 +57,7 @@ public class ItemUtils {
 
     @NotNull
     public static String getKey(@NotNull Material material) {
-        if (HAS_NAMESPACED_KEY) {
+        if (KEY_NAMES == null) {
             return material.getKey().toString();
         }
         var filter = (Predicate<Entry<?, ?>>) (e) -> e.getValue() == material;
@@ -56,20 +65,23 @@ public class ItemUtils {
     }
 
     @NotNull
-    public static String removeKey(@NotNull String name) {
+    public static String removeMinecraftKey(@NotNull String name) {
         return StringUtils.removeStart(name, ItemUtils.MINECRAFT);
     }
 
     @NotNull
     public static Material getMaterial(@NotNull String name) {
         var material = (Material) null;
-        if (HAS_NAMESPACED_KEY) {
+        if (KEY_NAMES == null) {
             material = Material.matchMaterial(name);
         } else {
-            name = removeKey(name);
-            name = name.toUpperCase(Locale.ENGLISH);
-            name = name.replaceAll("\\s+", "_").replaceAll("\\W", "");
-            material = Material.getMaterial(name);
+            material = KEY_NAMES.get(name.startsWith(MINECRAFT) ? name : MINECRAFT + name);
+            if (material == null) {
+                name = removeMinecraftKey(name);
+                name = name.toUpperCase(Locale.ENGLISH);
+                name = name.replaceAll("\\s+", "_").replaceAll("\\W", "");
+                material = Material.getMaterial(name);
+            }
         }
         return material == null ? Material.AIR : material;
     }

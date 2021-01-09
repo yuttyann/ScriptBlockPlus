@@ -31,14 +31,20 @@ public class ItemCost extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         var array = StringUtils.split(getOptionValue(), ' ');
-        var param = StringUtils.split(ItemUtils.removeKey(array[0]), ':');
+        var param = StringUtils.split(ItemUtils.removeMinecraftKey(array[0]), ':');
         if (Calculation.REALNUMBER_PATTERN.matcher(param[0]).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }
         var material = ItemUtils.getMaterial(param[0]);
         int damage = param.length > 1 ? Integer.parseInt(param[1]) : 0;
         int amount = Integer.parseInt(array[1]);
-        var name = StringUtils.setColor(array.length > 2 ? StringUtils.createString(array, 2) : null);
+        var create = array.length > 2 ? StringUtils.createString(array, 2) : null;
+        var name = StringUtils.setColor(create);
+        System.out.println("------------------------------");
+        System.out.println("ItemType: " + material);
+        System.out.println("ItemDamage: " + damage);
+        System.out.println("ItemAmount: " + amount);
+        System.out.println("ItemName: " + name);
 
         var player = getPlayer();
         var inventory = player.getInventory();

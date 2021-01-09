@@ -35,7 +35,7 @@ public class BlockType extends BaseOption {
         if (StringUtils.isEmpty(type)) {
             return false;
         }
-        var array = StringUtils.split(ItemUtils.removeKey(type), ':');
+        var array = StringUtils.split(ItemUtils.removeMinecraftKey(type), ':');
         if (Calculation.REALNUMBER_PATTERN.matcher(array[0]).matches()) {
             Utils.sendColorMessage(getSBPlayer(), "§cNumerical values can not be used");
             return false;
