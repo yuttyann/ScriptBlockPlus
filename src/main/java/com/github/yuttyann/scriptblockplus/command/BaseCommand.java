@@ -9,9 +9,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * ScriptBlockPlus BaseCommand コマンドクラス
@@ -110,6 +110,6 @@ public abstract class BaseCommand extends CommandUsage implements CommandExecuto
     }
 
     protected final boolean equals(@NotNull String source, @NotNull String... anothers) {
-        return Arrays.stream(anothers).anyMatch(s -> equals(source, s));
+        return Stream.of(anothers).anyMatch(s -> equals(source, s));
     }
 }

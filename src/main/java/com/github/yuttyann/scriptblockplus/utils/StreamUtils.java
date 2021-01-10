@@ -56,13 +56,13 @@ public final class StreamUtils {
         return false;
     }
 
-    public static <T> void filter(@NotNull T t, Predicate<T> filter, @NotNull Consumer<T> action) {
+    public static <T> void filter(@NotNull T t, @NotNull Predicate<T> filter, @NotNull Consumer<T> action) {
         if (filter.test(t)) {
             action.accept(t);
         }
     }
 
-    public static <T> void filterNot(@NotNull T t, Predicate<T> filter, @NotNull Consumer<T> action) {
+    public static <T> void filterNot(@NotNull T t, @NotNull Predicate<T> filter, @NotNull Consumer<T> action) {
         filter(t, Predicate.not(filter), action);
     }
     

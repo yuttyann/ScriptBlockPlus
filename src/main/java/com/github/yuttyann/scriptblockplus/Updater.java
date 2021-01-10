@@ -22,7 +22,6 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * ScriptBlockPlus Updater クラス
@@ -173,7 +172,7 @@ public final class Updater {
 
     @NotNull
     private Document getDocument(@NotNull String name) throws ParserConfigurationException, SAXException, IOException {
-        InputStream is = FileUtils.getWebFile("https://xml.yuttyann44581.net/uploads/" + name + ".xml");
-        return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(Objects.requireNonNull(is));
+        var builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        return builder.parse(FileUtils.getWebFile("https://xml.yuttyann44581.net/uploads/" + name + ".xml"));
     }
 }

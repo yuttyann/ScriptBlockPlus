@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * ScriptBlockPlus Lang クラス
@@ -25,7 +26,7 @@ public final class Lang {
 
     public Lang(@NotNull Plugin plugin, @NotNull String language, @NotNull String filePath, @NotNull String directory) {
         this.plugin = plugin;
-        this.language = StringUtils.isEmpty(language) ? DEFAULT_LANGUAGE : language.toLowerCase();
+        this.language = StringUtils.isEmpty(language) ? DEFAULT_LANGUAGE : language.toLowerCase(Locale.ROOT);
         this.filePath = filePath;
         this.directory = directory;
     }

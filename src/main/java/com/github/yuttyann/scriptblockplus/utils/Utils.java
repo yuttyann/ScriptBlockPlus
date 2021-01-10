@@ -30,6 +30,7 @@ import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
  */
 public final class Utils {
 
+    public static final String MINECRAFT = "minecraft:";
     public static final String DATE_PATTERN = "yyyy/MM/dd HH:mm:ss";
 
     private static final String SERVER_VERSION = getServerVersion();

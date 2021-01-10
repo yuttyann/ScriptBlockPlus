@@ -10,7 +10,6 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus ItemCost オプションクラス
@@ -31,7 +30,7 @@ public class ItemCost extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         var array = StringUtils.split(getOptionValue(), ' ');
-        var param = StringUtils.split(ItemUtils.removeMinecraftKey(array[0]), ':');
+        var param = StringUtils.split(StringUtils.removeStart(array[0], Utils.MINECRAFT), ':');
         if (Calculation.REALNUMBER_PATTERN.matcher(param[0]).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }
@@ -39,17 +38,17 @@ public class ItemCost extends BaseOption {
         int damage = param.length > 1 ? Integer.parseInt(param[1]) : 0;
         int amount = Integer.parseInt(array[1]);
         var create = array.length > 2 ? StringUtils.createString(array, 2) : null;
-        var name = StringUtils.setColor(create);
+        var name = StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create);
 
         var player = getPlayer();
         var inventory = player.getInventory();
+        var inventoryItems = inventory.getContents();
         if (!getTempMap().has(KEY_OPTION)) {
-            getTempMap().put(KEY_OPTION, copyItems(inventory.getContents()));
+            getTempMap().put(KEY_OPTION, copyItems(inventoryItems));
         }
-        var items = inventory.getContents();
         int result = amount;
-        for (var item : items) {
-            if (equals(item, material, name, damage)) {
+        for (var item : inventoryItems) {
+            if (item != null && ItemUtils.getDamage(item) == damage && ItemUtils.isItem(item, material, name)) {
                 result -= result > 0 ? setAmount(item, item.getAmount() - result) : 0;
             }
         }
@@ -57,7 +56,7 @@ public class ItemCost extends BaseOption {
             SBConfig.ERROR_ITEM.replace(material, amount, damage, name).send(player);
             return false;
         }
-        inventory.setContents(items);
+        inventory.setContents(inventoryItems);
         return true;
     }
 
@@ -67,18 +66,11 @@ public class ItemCost extends BaseOption {
         return oldAmount;
     }
 
-    private boolean equals(@Nullable ItemStack item, @Nullable Material material, @NotNull String name, int damage) {
-        if (item == null || ItemUtils.getDamage(item) != damage) {
-            return false;
-        }
-        return ItemUtils.isItem(item, material, StringUtils.isEmpty(name) ? item.getType().name() : name);
-    }
-
     @NotNull
-    private ItemStack[] copyItems(ItemStack[] items) {
+    private ItemStack[] copyItems(@NotNull ItemStack[] items) {
         var copy = new ItemStack[items.length];
         for (int i = 0; i < copy.length; i++) {
-            copy[i] = (items[i] == null ? new ItemStack(Material.AIR) : items[i].clone());
+            copy[i] = items[i] == null ? new ItemStack(Material.AIR) : items[i].clone();
         }
         return copy;
     }

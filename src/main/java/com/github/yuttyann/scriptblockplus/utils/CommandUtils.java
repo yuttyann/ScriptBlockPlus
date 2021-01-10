@@ -16,6 +16,7 @@ import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -251,7 +252,7 @@ public class CommandUtils {
     public static int getIntRelative(String arg, String rel, Entity e) {
         int relInt = 0;
         if (arg.startsWith("~")) {
-            switch (rel.toLowerCase()) {
+            switch (rel.toLowerCase(Locale.ROOT)) {
                 case "x":
                     relInt = e.getLocation().getBlockX();
                     break;
@@ -267,7 +268,7 @@ public class CommandUtils {
             // TODO: Fix code. The currently just acts the same as ~. This should move the
             // entity relative to what its looking at.
 
-            switch (rel.toLowerCase()) {
+            switch (rel.toLowerCase(Locale.ROOT)) {
                 case "x":
                     relInt = e.getLocation().getBlockX();
                     break;
@@ -420,7 +421,7 @@ public class CommandUtils {
 
     private static String getType(String arg) {
         if (hasTag(SelectorType.TYPE, arg))
-            return arg.toLowerCase().split("=")[1].replace("!", "");
+            return arg.toLowerCase(Locale.ROOT).split("=")[1].replace("!", "");
         return "Player";
     }
 
@@ -442,7 +443,7 @@ public class CommandUtils {
     }
 
     private static String getTeam(String arg) {
-        return arg.toLowerCase().replace("!", "").split("=")[1];
+        return arg.toLowerCase(Locale.ROOT).replace("!", "").split("=")[1];
     }
 
     private static int getValueAsInteger(String arg) {
@@ -450,7 +451,7 @@ public class CommandUtils {
     }
 
     private static GameMode getM(String arg) {
-        String[] split = arg.replace("!", "").toLowerCase().split("=");
+        String[] split = arg.replace("!", "").toLowerCase(Locale.ROOT).split("=");
         String returnType = split[1];
         if (returnType.equalsIgnoreCase("0") || returnType.equalsIgnoreCase("s")
                 || returnType.equalsIgnoreCase("survival"))
@@ -705,7 +706,7 @@ public class CommandUtils {
     }
 
     private static boolean isInverted(String arg) {
-        return arg.toLowerCase().split("!").length != 1;
+        return arg.toLowerCase(Locale.ROOT).split("!").length != 1;
     }
 
     private static int getInt(String arg) {
@@ -748,7 +749,7 @@ public class CommandUtils {
     }
 
     private static boolean hasTag(SelectorType type, String arg) {
-        return arg.toLowerCase().startsWith(type.getName());
+        return arg.toLowerCase(Locale.ROOT).startsWith(type.getName());
     }
 
     enum SelectorType {

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * ScriptBlockPlus CommandUsage クラス
@@ -36,11 +37,11 @@ public abstract class CommandUsage {
             SBConfig.NOT_PERMISSION.send(sender);
             return;
         }
-        var commandName = command.getName();
+        var name = command.getName();
         if (baseCommand.isAliases() && command.getAliases().size() > 0) {
-            commandName = command.getAliases().get(0).toLowerCase();
+            name = command.getAliases().get(0).toLowerCase(Locale.ROOT);
         }
-        var prefix = "§b/" + commandName + " ";
+        var prefix = "§b/" + name + " ";
         sender.sendMessage("§d========== " + command.getName() + " Commands ==========");
         StreamUtils.fForEach(list, CommandData::hasMessage, c -> sender.sendMessage(text(c, prefix)));
     }

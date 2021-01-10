@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -32,7 +33,7 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
      * @param name - スクリプトキーの名前
      */
     public ScriptKey(@NotNull String name) {
-        this.name = name.toUpperCase();
+        this.name = name.toUpperCase(Locale.ROOT);
 
         var scriptKey = KEYS.get(this.name);
         this.ordinal = scriptKey == null ? KEYS.size() : scriptKey.ordinal;
@@ -47,7 +48,7 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
      */
     @NotNull
     public String getName() {
-        return name.toLowerCase();
+        return name.toLowerCase(Locale.ROOT);
     }
 
     /**
@@ -108,7 +109,7 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
      */
     @NotNull
     public static ScriptKey valueOf(@NotNull String name) {
-        var scriptKey = KEYS.get(name.toUpperCase());
+        var scriptKey = KEYS.get(name.toUpperCase(Locale.ROOT));
         if (scriptKey == null) {
             throw new NullPointerException(name + " does not exist");
         }

@@ -66,7 +66,7 @@ public final class SBConstructor<T> {
     @Nullable
     private <R extends T> Constructor<R> getConstructor(@NotNull Class<R> clazz) {
         try {
-            Constructor<R> constructor = clazz.getDeclaredConstructor(ArrayUtils.EMPTY_CLASS_ARRAY);
+            var constructor = clazz.getDeclaredConstructor(ArrayUtils.EMPTY_CLASS_ARRAY);
             constructor.setAccessible(true);
             return constructor;
         } catch (ReflectiveOperationException e) {

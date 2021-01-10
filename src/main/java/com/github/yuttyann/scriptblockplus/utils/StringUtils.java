@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 /**
  * ScriptBlockPlus StringUtils クラス
@@ -64,6 +65,9 @@ public final class StringUtils {
             }
         }
         if (!match) {
+            if (list.size() == 0) {
+                return new String[] { source };
+            }
             list.add(source.substring(start, chars.length));
         }
         return list.toArray(String[]::new);
@@ -104,11 +108,9 @@ public final class StringUtils {
 
     @NotNull
     public static String createString(@NotNull String[] args, int start) {
-        var builder = new StringBuilder();
-        for (int i = start; i < args.length; i++) {
-            builder.append(args[i]).append(i == (args.length - 1) ? Character.MIN_VALUE : ' ');
-        }
-        return builder.toString();
+        var joiner = new StringJoiner(" ");
+        IntStream.range(start, args.length).forEach((i) -> joiner.add(args[i]));
+        return joiner.toString();
     }
 
     @NotNull

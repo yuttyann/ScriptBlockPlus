@@ -22,37 +22,19 @@ import java.util.function.Predicate;
  */
 public class ItemUtils {
 
-    private static final String MINECRAFT = "minecraft:";
     private static final Map<String, Material> KEY_MATERIALS;
 
     static {
-        if (Utils.isCBXXXorLater("1.13")) {
-            KEY_MATERIALS = null;
-        } else {
+        if (!Utils.isCBXXXorLater("1.13") && PackageType.HAS_NMS) {
             KEY_MATERIALS = new HashMap<>();
-            if (PackageType.HAS_NMS) {
-                try {
-                    KEY_MATERIALS.putAll(PackageType.getItemRegistry());
-                } catch (ReflectiveOperationException e) {
-                    e.printStackTrace();
-                }
+            try {
+                KEY_MATERIALS.putAll(PackageType.getItemRegistry());
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
             }
+        } else {
+            KEY_MATERIALS = null;
         }
-    }
-
-    @NotNull
-    public static Material getMaterial(@NotNull String name) {
-        if (KEY_MATERIALS != null) {
-            var material = KEY_MATERIALS.get(name.startsWith(MINECRAFT) ? name : MINECRAFT + name);
-            if (material != null) {
-                return material;
-            }
-        }
-        name = removeMinecraftKey(name);
-        name = name.toUpperCase(Locale.ENGLISH);
-        name = name.replaceAll("\\s+", "_").replaceAll("\\W", "");
-        var material = Material.getMaterial(name);
-        return material == null ? Material.AIR : material;
     }
 
     @NotNull
@@ -89,6 +71,22 @@ public class ItemUtils {
     }
 
     @NotNull
+    public static Material getMaterial(@NotNull String name) {
+        if (KEY_MATERIALS != null) {
+            var filter = name.toLowerCase(Locale.ROOT);
+            filter = filter.startsWith(Utils.MINECRAFT) ? filter : Utils.MINECRAFT + filter;
+            if (KEY_MATERIALS.containsKey(filter)) {
+                return KEY_MATERIALS.get(filter);
+            }
+        }
+        name = StringUtils.removeStart(name, Utils.MINECRAFT);
+        name = name.toUpperCase(Locale.ROOT);
+        name = name.replaceAll("\\s+", "_").replaceAll("\\W", "");
+        var material = Material.getMaterial(name);
+        return material == null ? Material.AIR : material;
+    }
+
+    @NotNull
     public static String getKey(@NotNull Material material) {
         if (KEY_MATERIALS == null) {
             return material.getKey().toString();
@@ -98,8 +96,8 @@ public class ItemUtils {
     }
 
     @NotNull
-    public static String removeMinecraftKey(@NotNull String name) {
-        return StringUtils.removeStart(name, MINECRAFT);
+    public static String getName(@NotNull ItemStack item) {
+        return getName(item, item.getType().name());
     }
 
     @NotNull
@@ -112,25 +110,20 @@ public class ItemUtils {
         return meta == null ? def : meta.hasDisplayName() ? meta.getDisplayName() : def;
     }
 
-    @NotNull
-    public static String getName(@NotNull ItemStack item) {
-        return getName(item, item.getType().name());
-    }
-
     @SuppressWarnings("deprecation")
     public static int getDamage(@NotNull ItemStack item) {
         if (Utils.isCBXXXorLater("1.13")) {
             var meta = item.getItemMeta();
-            return meta == null ? 0 : ((Damageable) meta).getDamage();
+            return meta instanceof Damageable ? ((Damageable) meta).getDamage() : 0;
         }
         return item.getDurability();
     }
 
     public static boolean isItem(@Nullable ItemStack item, @Nullable Material material, @NotNull String name) {
-        return isItem(item, material, name::equals);
+        return isItem(item, material, i -> name.equals(getName(i)));
     }
 
-    public static boolean isItem(@Nullable ItemStack item, @Nullable Material material, @NotNull Predicate<String> name) {
-        return item != null && material != null && item.getType() == material && name.test(getName(item));
+    public static boolean isItem(@Nullable ItemStack item, @Nullable Material material, @NotNull Predicate<ItemStack> filter) {
+        return (item == null || material == null) ? false : item.getType() == material && filter.test(item);
     }
 }

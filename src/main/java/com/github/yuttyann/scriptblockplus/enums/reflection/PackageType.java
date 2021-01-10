@@ -264,7 +264,7 @@ public enum PackageType {
         if (!HAS_NMS || StringUtils.isEmpty(className)) {
             return "null";
         }
-        var rName = returnType + "";
+        var rName = returnType.toString();
         int lastLength = objects == null ? -1 : objects.length - 1;
         if (lastLength == -1) {
             if (name != null) {

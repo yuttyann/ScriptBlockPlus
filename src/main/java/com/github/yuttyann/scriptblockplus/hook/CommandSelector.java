@@ -12,9 +12,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * ScriptBlockPlus CommandSelector クラス
@@ -43,7 +43,7 @@ public final class CommandSelector {
     }
 
     public boolean has(@NotNull String command) {
-        return Arrays.stream(SELECTOR_NAMES).anyMatch(command::contains);
+        return Stream.of(SELECTOR_NAMES).anyMatch(command::contains);
     }
 
     @NotNull
