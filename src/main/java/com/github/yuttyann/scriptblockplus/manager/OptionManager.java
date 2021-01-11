@@ -1,6 +1,5 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
-import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
@@ -56,8 +55,8 @@ public final class OptionManager {
         OPTION_MAP.updateOrdinal();
     }
 
-    public static void register(@NotNull OptionIndex priority, @NotNull Class<? extends BaseOption> optionClass) {
-        OPTION_MAP.put(priority, optionClass);
+    public static void register(@NotNull OptionIndex optionIndex, @NotNull Class<? extends BaseOption> optionClass) {
+        OPTION_MAP.put(optionIndex, optionClass);
         OPTION_MAP.updateOrdinal();
     }
 
@@ -87,20 +86,6 @@ public final class OptionManager {
     @NotNull
     public static Option newInstance(@NotNull String syntax) {
         return get(syntax).newInstance();
-    }
-
-    @NotNull
-    public static Option newInstance(@NotNull Class<? extends Option> optionClass, @NotNull InstanceType instanceType) {
-        for (var option : OPTION_MAP.values()) {
-            if (!optionClass.equals(option.getClass())) {
-                continue;
-            }
-            if (instanceType == InstanceType.REFLECTION) {
-                return new SBConstructor<>(optionClass).newInstance(InstanceType.REFLECTION);
-            }
-            return option.newInstance();
-        }
-        throw new NullPointerException("Option[" + optionClass.getName() + "] does not exist");
     }
 
     @NotNull

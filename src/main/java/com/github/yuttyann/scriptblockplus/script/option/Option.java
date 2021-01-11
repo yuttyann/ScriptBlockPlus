@@ -1,7 +1,7 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
 import com.github.yuttyann.scriptblockplus.enums.InstanceType;
-import com.github.yuttyann.scriptblockplus.manager.OptionManager;
+import com.github.yuttyann.scriptblockplus.manager.SBConstructor;
 import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -17,20 +17,21 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
     public static final String PERMISSION_PREFIX = "scriptblockplus.option.";
     public static final String PERMISSION_ALL = PERMISSION_PREFIX + "*";
 
-    private final String name;
-    private final String syntax;
     private final int length;
+    private final String name, syntax;
+    private final SBConstructor<Option> sbConstructor;
 
     private int ordinal = -1;
 
-    {
+    protected Option() {
         var optionTag = getClass().getAnnotation(OptionTag.class);
         if (optionTag == null) {
             throw new NullPointerException("Annotation not found [OptionTag]");
         }
         this.name = optionTag.name();
         this.syntax = optionTag.syntax();
-        this.length = this.syntax.length();
+        this.length = syntax.length();
+        this.sbConstructor = new SBConstructor<>(this);
     }
 
     /**
@@ -40,7 +41,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
     @Override
     @NotNull
     public Option newInstance() {
-        return OptionManager.newInstance(getClass(), InstanceType.REFLECTION);
+        return sbConstructor.newInstance(InstanceType.REFLECTION);
     }
 
     /**
@@ -104,7 +105,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
      * @return {@link String} - 正常だった場合はtrue
      */
     public final boolean isOption(@NotNull String script) {
-        return script.length() > length && script.indexOf(syntax) == 0;
+        return script.length() >= length && script.indexOf(syntax) == 0;
     }
 
     /**
