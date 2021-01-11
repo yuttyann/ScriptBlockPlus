@@ -1,7 +1,5 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import java.util.Locale;
-
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
@@ -32,7 +30,7 @@ public class Execute extends BaseOption {
     protected boolean isValid() throws Exception {
         var array = StringUtils.split(getOptionValue(), '/');
         var wxyz = StringUtils.split(array[1], ',');
-        var scriptKey = ScriptKey.valueOf(array[0].toUpperCase(Locale.ROOT));
+        var scriptKey = ScriptKey.valueOf(array[0]);
         int x = Integer.parseInt(wxyz[1]), y = Integer.parseInt(wxyz[2]), z = Integer.parseInt(wxyz[3]);
         return API.read(getPlayer(), new Location(Utils.getWorld(wxyz[0]), x, y, z), scriptKey, 0);
     }
