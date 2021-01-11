@@ -19,7 +19,6 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
     private final int length;
     private final String name, syntax;
-    private final SBConstructor<Option> sbConstructor;
 
     private int ordinal = -1;
 
@@ -31,7 +30,6 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
         this.name = optionTag.name();
         this.syntax = optionTag.syntax();
         this.length = syntax.length();
-        this.sbConstructor = new SBConstructor<>(this);
     }
 
     /**
@@ -41,7 +39,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
     @Override
     @NotNull
     public Option newInstance() {
-        return sbConstructor.newInstance(InstanceType.REFLECTION);
+        return new SBConstructor<>(getClass()).newInstance(InstanceType.REFLECTION);
     }
 
     /**
