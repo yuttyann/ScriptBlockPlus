@@ -120,10 +120,10 @@ public class ItemUtils {
     }
 
     public static boolean isItem(@Nullable ItemStack item, @Nullable Material material, @NotNull String name) {
-        return isItem(item, material, i -> name.equals(getName(i)));
+        return isItem(item, material, name::equals);
     }
 
-    public static boolean isItem(@Nullable ItemStack item, @Nullable Material material, @NotNull Predicate<ItemStack> filter) {
-        return (item == null || material == null) ? false : item.getType() == material && filter.test(item);
+    public static boolean isItem(@Nullable ItemStack item, @Nullable Material material, @NotNull Predicate<String> filter) {
+        return (item == null || material == null) ? false : item.getType() == material && filter.test(getName(item));
     }
 }

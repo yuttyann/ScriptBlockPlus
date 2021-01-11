@@ -69,7 +69,7 @@ public class Calculation extends BaseOption {
         }
         if (source.startsWith("%player_others_in_range_") && source.endsWith("%")) {
             source = source.substring("%player_others_in_range_".length(), source.length() - 1);
-            var world = Objects.requireNonNull(player.getLocation().getWorld());
+            var world = player.getLocation().getWorld();
             int count = 0, result = Integer.parseInt(source) * Integer.parseInt(source);
             for (var worldPlayer : world.getPlayers()) {
                 if (player != worldPlayer && player.getLocation().distanceSquared(worldPlayer.getLocation()) <= result) {
@@ -96,8 +96,7 @@ public class Calculation extends BaseOption {
         }
         if (source.startsWith("%objective_score_") && source.endsWith("%")) {
             source = source.substring("%objective_score_".length(), source.length() - 1);
-            var scoreboard = Objects.requireNonNull(Bukkit.getScoreboardManager());
-            var objective = scoreboard.getMainScoreboard().getObjective(source);
+            var objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(source);
             return objective == null ? 0 : objective.getScore(player.getName()).getScore();
         }
         switch (source) {

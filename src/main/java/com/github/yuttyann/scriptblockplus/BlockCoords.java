@@ -9,13 +9,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * ScriptBlockPlus BlockCoords クラス
  * @author yuttyann44581
  */
-public class BlockCoords {
+public final class BlockCoords {
 
     private final World world;
 
@@ -156,7 +155,7 @@ public class BlockCoords {
      */
     @NotNull
     public static String getFullCoords(@NotNull Location location) {
-        return Objects.requireNonNull(location.getWorld()).getName() + ", " + getCoords(location);
+        return location.getWorld().getName() + ", " + getCoords(location);
     }
 
     /**

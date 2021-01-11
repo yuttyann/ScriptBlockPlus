@@ -24,7 +24,7 @@ public final class OptionManager {
 
     private static final OptionMap OPTION_MAP = new OptionMap();
 
-    static {
+    public static void registerDefaults() {
         OPTION_MAP.put(new ScriptAction());
         OPTION_MAP.put(new BlockType());
         OPTION_MAP.put(new Group());
@@ -66,13 +66,22 @@ public final class OptionManager {
     }
 
     public static boolean has(@NotNull String syntax) {
-        return OPTION_MAP.values().stream().anyMatch(o -> o.isOption(syntax));
+        for (var option : OPTION_MAP.values()) {
+            if (option.isOption(syntax)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @NotNull
     private static Option get(@NotNull String syntax) {
-        var option = OPTION_MAP.values().stream().filter(o -> o.isOption(syntax)).findFirst();
-        return option.orElseThrow(() -> new NullPointerException("Option does not exist."));
+        for (var option : OPTION_MAP.values()) {
+            if (option.isOption(syntax)) {
+                return option;
+            }
+        }
+        throw new NullPointerException("Option[" + syntax + "] does not exist.");
     }
 
     @NotNull
@@ -91,7 +100,7 @@ public final class OptionManager {
             }
             return option.newInstance();
         }
-        throw new NullPointerException(optionClass.getName() + " does not exist");
+        throw new NullPointerException("Option[" + optionClass.getName() + "] does not exist");
     }
 
     @NotNull

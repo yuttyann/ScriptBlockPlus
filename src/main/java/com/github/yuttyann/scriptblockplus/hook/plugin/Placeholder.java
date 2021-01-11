@@ -17,6 +17,8 @@ public final class Placeholder extends HookPlugin {
 
     public static final Placeholder INSTANCE = new Placeholder();
 
+    private Placeholder() { }
+
     @Override
     @NotNull
     public String getPluginName() {

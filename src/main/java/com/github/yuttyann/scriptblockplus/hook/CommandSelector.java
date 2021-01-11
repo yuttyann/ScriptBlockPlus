@@ -27,6 +27,8 @@ public final class CommandSelector {
     private final static String SELECTOR_SUFFIX = "aeprs";
     private final static String[] SELECTOR_NAMES = { "@a", "@e", "@p", "@r", "@s" };
 
+    private CommandSelector() { }
+
     private class Index {
 
         private final int start;

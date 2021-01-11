@@ -18,7 +18,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * ScriptBlockPlus PackageType 列挙型
@@ -104,15 +103,13 @@ public enum PackageType {
         return path;
     }
 
-    @Nullable
     public void setFieldValue(@NotNull String className, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {
         getField(false, className, fieldName).set(instance, value);
     }
 
-    @Nullable
     public void setFieldValue(boolean declared, @NotNull String className, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {
         if (StringUtils.isEmpty(className)) {
-            className = Objects.requireNonNull(instance).getClass().getSimpleName();
+            className = instance.getClass().getSimpleName();
         }
         getField(declared, className, fieldName).set(instance, value);
     }
@@ -151,7 +148,7 @@ public enum PackageType {
     @Nullable
     public Object invokeMethod(boolean declared, @Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Object... arguments) throws ReflectiveOperationException {
         if (StringUtils.isEmpty(className)) {
-            className = Objects.requireNonNull(instance).getClass().getSimpleName();
+            className = instance.getClass().getSimpleName();
         }
         if (arguments == null) {
             arguments = ArrayUtils.EMPTY_OBJECT_ARRAY;

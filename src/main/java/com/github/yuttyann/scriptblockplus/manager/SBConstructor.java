@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
-import java.util.Objects;
 
 /**
  * ScriptBlockPlus SBConstructor クラス
@@ -21,11 +20,11 @@ public final class SBConstructor<T> {
     private Constructor<? extends T> constructor;
 
     public SBConstructor(@NotNull Class<? extends T> clazz) {
-        this.constructor = getConstructor(Objects.requireNonNull(clazz));
+        this.constructor = getConstructor(clazz);
     }
 
     public SBConstructor(@NotNull SBInstance<? extends T> sbInstance) {
-        this.sbInstance = Objects.requireNonNull(sbInstance);
+        this.sbInstance = sbInstance;
     }
 
     @NotNull
@@ -46,7 +45,7 @@ public final class SBConstructor<T> {
         case REFLECTION:
             try {
                 if (constructor == null) {
-                    constructor = Objects.requireNonNull(getConstructor(getDeclaringClass()));
+                    constructor = getConstructor(getDeclaringClass());
                 }
                 T t = constructor.newInstance(ArrayUtils.EMPTY_OBJECT_ARRAY);
                 if (!(t instanceof SBInstance)) {

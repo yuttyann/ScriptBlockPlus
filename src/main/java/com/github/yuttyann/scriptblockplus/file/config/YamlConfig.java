@@ -235,7 +235,7 @@ public class YamlConfig {
 
     @NotNull
     public String getString(@NotNull String path, @NotNull String def) {
-        return Objects.requireNonNull(yaml.getString(path, def));
+        return yaml.getString(path, def);
     }
 
     @Nullable
@@ -245,7 +245,7 @@ public class YamlConfig {
 
     @NotNull
     public Object get(@NotNull String path, @NotNull Object def) {
-        return Objects.requireNonNull(yaml.get(path, def));
+        return yaml.get(path, def);
     }
 
     @Nullable
@@ -267,7 +267,7 @@ public class YamlConfig {
 
     @NotNull
     public Color getColor(@NotNull String path, @NotNull Color def) {
-        return Objects.requireNonNull(yaml.getColor(path, def));
+        return yaml.getColor(path, def);
     }
 
     @Nullable
@@ -277,7 +277,7 @@ public class YamlConfig {
 
     @NotNull
     public ItemStack getItemStack(@NotNull String path, @NotNull ItemStack def) {
-        return Objects.requireNonNull(yaml.getItemStack(path, def));
+        return yaml.getItemStack(path, def);
     }
 
     @Nullable
@@ -287,7 +287,7 @@ public class YamlConfig {
 
     @NotNull
     public Vector getVector(@NotNull String path, @NotNull Vector def) {
-        return Objects.requireNonNull(yaml.getVector(path, def));
+        return yaml.getVector(path, def);
     }
 
     @NotNull

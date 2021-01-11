@@ -7,7 +7,6 @@ import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -24,7 +23,7 @@ public final class CuboidRegionBlocks {
     private int count = -1;
 
     public CuboidRegionBlocks(@NotNull Region region) {
-        this.world = Objects.requireNonNull(region.getWorld());
+        this.world = region.getWorld();
         this.min = new UnmodifiableLocation(region.getMinimumPoint());
         this.max = new UnmodifiableLocation(region.getMaximumPoint());
     }

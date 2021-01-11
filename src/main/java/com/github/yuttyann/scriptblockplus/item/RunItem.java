@@ -7,8 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 /**
  * ScriptBlockPlus RunItem クラス
  * @author yuttyann44581
@@ -22,7 +20,7 @@ public class RunItem {
     private final boolean isAIR;
     private final boolean isSneaking;
 
-    public RunItem(@NotNull Player player, @Nullable ItemStack item, @Nullable Location location, @NotNull Action action) {
+    public RunItem(@NotNull Player player, @NotNull ItemStack item, @Nullable Location location, @NotNull Action action) {
         this.player = player;
         this.item = item;
         this.location = location;
@@ -38,7 +36,7 @@ public class RunItem {
 
     @NotNull
     public ItemStack getItem() {
-        return Objects.requireNonNull(item);
+        return item;
     }
 
     @Nullable

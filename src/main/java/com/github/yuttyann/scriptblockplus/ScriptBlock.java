@@ -19,6 +19,7 @@ import com.github.yuttyann.scriptblockplus.listener.trigger.HitTrigger;
 import com.github.yuttyann.scriptblockplus.listener.trigger.InteractTrigger;
 import com.github.yuttyann.scriptblockplus.listener.trigger.WalkTrigger;
 import com.github.yuttyann.scriptblockplus.manager.APIManager;
+import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
@@ -95,6 +96,9 @@ public class ScriptBlock extends JavaPlugin {
         ItemAction.register(new ScriptViewer());
         ItemAction.register(new ScriptEditor());
         ItemAction.register(new BlockSelector());
+
+        // オプションを予め登録
+        OptionManager.registerDefaults();
 
         // コマンドの登録
         BaseCommand.register("scriptblockplus", new ScriptBlockPlusCommand(this));

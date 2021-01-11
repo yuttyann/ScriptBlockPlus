@@ -10,7 +10,6 @@ import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 
 import static com.github.yuttyann.scriptblockplus.file.config.ConfigKeys.*;
@@ -123,7 +122,7 @@ public final class SBConfig {
         var s = r.getValue();
         s = replace(s, "%player%", r.getArg(0, String.class));
         s = replace(s, "%scriptkey%", r.getArg(2, ScriptKey.class).getName());
-        s = replace(s, "%world%", Objects.requireNonNull(l.getWorld()).getName());
+        s = replace(s, "%world%", l.getWorld().getName());
         s = replace(s, "%coords%", BlockCoords.getCoords(l));
         return s;
     };

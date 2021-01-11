@@ -22,6 +22,8 @@ public class ProtocolLib extends HookPlugin {
     public static final ProtocolLib INSTANCE = new ProtocolLib();
     public static final GlowEntityPacket GLOW_ENTITY = new GlowEntityPacket();
 
+    private ProtocolLib() { }
+
     @Override
     @NotNull
     public String getPluginName() {

@@ -58,7 +58,7 @@ public final class BaseSBPlayer extends PlayerMap {
     @NotNull
     public Player getPlayer() {
         var player = isOnline() ? this.player : Bukkit.getPlayer(uuid);
-        return Objects.requireNonNull(player, "Player cannot be null");
+        return Objects.requireNonNull(player, "Player not found.");
     }
 
     @Override
