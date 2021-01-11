@@ -71,6 +71,10 @@ public abstract class Json<T> {
         }
     }
 
+    public static void clear() {
+        LIST_CACHE.clear();
+    }
+
     @NotNull
     protected String getId() {
         return id;
