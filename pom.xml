@@ -10,16 +10,17 @@
 
   <licenses>
     <license>
-      <name>GNU Lesser General Public License version 3</name>
-      <url>http://www.gnu.org/licenses/lgpl-3.0.en.html</url>
+      <name>GNU General Public License Version 3</name>
+      <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
 
   <properties>
+    <java.version>11</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
   </properties>
 
   <build>
@@ -52,12 +53,12 @@
         <version>3.2.0</version>
         <configuration>
           <author>true</author>
-          <source>11</source>
+          <source>${java.version}</source>
           <show>protected</show>
           <locale>ja_JP</locale>
-          <charset>UTF-8</charset>
-          <encoding>UTF-8</encoding>
-          <docencoding>UTF-8</docencoding>
+          <charset>${project.build.sourceEncoding}</charset>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <docencoding>${project.build.sourceEncoding}</docencoding>
           <destDir>javadoc-latest</destDir>
           <bottom><![CDATA[<b>Yuttyann, 2021</b>]]></bottom>
         </configuration>
