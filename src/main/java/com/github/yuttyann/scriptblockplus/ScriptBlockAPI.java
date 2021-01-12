@@ -53,7 +53,7 @@ public interface ScriptBlockAPI {
 
     /**
      * 指定したエンドプロセスを登録します。
-     * @param endProcessClass - エンドプロセスの継承クラス
+     * @param endProcessClass - エンドプロセスのクラス
      */
     void registerEndProcess(@NotNull Class<? extends EndProcess> endProcessClass);
 

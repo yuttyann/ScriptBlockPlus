@@ -66,7 +66,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
     @Override
     public CommandData[] getUsages() {
         var typeNodes = Permission.getTypeNodes(true);
-        return new CommandData[] { new CommandData(SBConfig.TOOL_COMMAND.getValue(), Permission.COMMAND_TOOL.getNode()),
+        return new CommandData[] {
+                new CommandData(SBConfig.TOOL_COMMAND.getValue(), Permission.COMMAND_TOOL.getNode()),
                 new CommandData(SBConfig.RELOAD_COMMAND.getValue(), Permission.COMMAND_RELOAD.getNode()),
                 new CommandData(SBConfig.BACKUP_COMMAND.getValue(), Permission.COMMAND_BACKUP.getNode()),
                 new CommandData(SBConfig.CHECKVER_COMMAND.getValue(), Permission.COMMAND_CHECKVER.getNode()),
@@ -78,7 +79,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                 new CommandData(SBConfig.VIEW_COMMAND.getValue(), typeNodes),
                 new CommandData(SBConfig.RUN_COMMAND.getValue(), typeNodes),
                 new CommandData(SBConfig.SELECTOR_PASTE_COMMAND.getValue(), Permission.COMMAND_SELECTOR.getNode()),
-                new CommandData(SBConfig.SELECTOR_REMOVE_COMMAND.getValue(), Permission.COMMAND_SELECTOR.getNode()) };
+                new CommandData(SBConfig.SELECTOR_REMOVE_COMMAND.getValue(), Permission.COMMAND_SELECTOR.getNode())
+        };
     }
 
     @Override
