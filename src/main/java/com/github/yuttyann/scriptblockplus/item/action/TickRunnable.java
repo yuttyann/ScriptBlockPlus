@@ -182,21 +182,12 @@ public class TickRunnable extends BukkitRunnable {
     }
 
     private boolean destroyEntity(@NotNull SBPlayer sbPlayer, @NotNull Location location, @NotNull Set<Location> locations) {
-        if (!hasBlockScript(location)) {
+        if (!BlockScriptJson.has(location)) {
             return false;
         }
         GLOW_ENTITY_PACKET.destroyGlowEntity(sbPlayer, location);
         locations.add(location);
         return true;
-    }
-
-    private boolean hasBlockScript(@NotNull Location location) {
-        for (var scriptKey : ScriptKey.values()) {
-            if (BlockScriptJson.has(location, scriptKey)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void spawnParticlesOnBlock(@NotNull Player player, @NotNull Block block, @Nullable Color color) {

@@ -107,9 +107,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                 return doExport(sender, args);
             } else if (equals(args[0], ScriptKey.types()) && equals(args[1], "remove", "view")) {
                 return setAction(sender, args);
-            } else if (equals(args[0], "selector") && equals(args[1], "remove")) {
-                return doSelector(sender, args);
-            } else if (equals(args[0], "selector") && equals(args[1], "paste")) {
+            } else if (equals(args[0], "selector") && equals(args[1], "paste", "remove")) {
                 return doSelector(sender, args);
             }
         } else if (args.length > 2) {
@@ -118,6 +116,10 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             } else if (equals(args[0], ScriptKey.types())) {
                 if (args.length == 6 && equals(args[1], "run")) {
                     return doRun(sender, args);
+                } else if (args.length == 3 && equals(args[1], "redstone") && equals(args[2], "disable")) {
+                    return setAction(sender, args);
+                } else if (args.length == 4 && equals(args[1], "redstone") && equals(args[2], "enable")) {
+                    return setAction(sender, args);
                 } else if (equals(args[1], "create", "add")) {
                     return setAction(sender, args);
                 }
@@ -290,13 +292,17 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         }
         var actionType = ActionType.valueOf(args[1].toUpperCase(Locale.ROOT));
         var scriptEdit = new ScriptEdit(scriptKey, actionType);
-        if (args.length > 2 && (actionType == ActionType.CREATE || actionType == ActionType.ADD)) {
+        if (actionType == ActionType.REDSTONE) {
+            if (args.length == 4 && equals(args[2], "enable")) {
+                scriptEdit.setValue(args[3]);
+            }
+        } else if (args.length > 2 && (actionType == ActionType.CREATE || actionType == ActionType.ADD)) {
             var script = StringUtils.createString(args, 2).trim();
             if (!isScripts(script)) {
                 SBConfig.ERROR_SCRIPT_CHECK.send(sbPlayer);
                 return true;
             }
-            scriptEdit.setScriptLine(script);
+            scriptEdit.setValue(script);
         }
         sbPlayer.setScriptEdit(scriptEdit);
         SBConfig.SUCCESS_ACTION_DATA.replace(scriptKey.getName() + "-" + actionType.getName()).send(sbPlayer);

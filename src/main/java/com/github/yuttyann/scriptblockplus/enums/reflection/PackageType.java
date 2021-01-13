@@ -20,9 +20,12 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +35,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +43,7 @@ import java.util.Map;
  * @author yuttyann44581
  */
 public enum PackageType {
+    MJN("com.mojang.brigadier"),
     NMS("net.minecraft.server." + Utils.getPackageVersion()),
     CB("org.bukkit.craftbukkit." + Utils.getPackageVersion()),
     CB_BLOCK(CB, "block"),
@@ -343,19 +348,17 @@ public enum PackageType {
     }
 
     public static void sendActionBar(@NotNull Player player, @NotNull String text) throws ReflectiveOperationException {
-        var chatSerializer = "IChatBaseComponent$ChatSerializer";
-        var component = NMS.invokeMethod(null, chatSerializer, "a", "{\"text\": \"" + text + "\"}");
+        var component = NMS.invokeMethod(null, "IChatBaseComponent$ChatSerializer", "a", "{\"text\": \"" + text + "\"}");
         var classes = new Class<?>[] { NMS.getClass("IChatBaseComponent"), byte.class };
         Object value = (byte) 2;
         if (Utils.isCBXXXorLater("1.12")) {
             value = NMS.getEnumValueOf("ChatMessageType", "GAME_INFO");
             classes[1] = value.getClass();
         }
-        var packetClass = NMS.getClass("Packet");
         var handle = CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
         var connection = NMS.getField("EntityPlayer", "playerConnection").get(handle);
         var packetChat = NMS.getConstructor("PacketPlayOutChat", classes).newInstance(component, value);
-        NMS.getMethod("PlayerConnection", "sendPacket", packetClass).invoke(connection, packetChat);
+        NMS.getMethod("PlayerConnection", "sendPacket", NMS.getClass("Packet")).invoke(connection, packetChat);
     }
 
     @Nullable
@@ -399,6 +402,25 @@ public enum PackageType {
             return getAxisAlignedBB.invoke(NMS.invokeMethod(blockData, "IBlockData", "getBlock"), blockData, world, position);
         }
     }
+
+    @NotNull
+    public static Entity[] selectEntities(@NotNull Location location, @NotNull String selector) throws ReflectiveOperationException {
+        var argmentEntity = Utils.isCBXXXorLater("1.14") ? "multipleEntities" : "b";
+        var entitySelector = Utils.isCBXXXorLater("1.14") ? "getEntities" : "b";
+		var vector = toNMSVec3D(location.toVector());
+		var entity = NMS.invokeMethod(null, "ArgumentEntity", argmentEntity);
+		var reader = MJN.newInstance("StringReader", selector);
+		var server = CB.invokeMethod(Bukkit.getServer(), "CraftServer", "getServer");
+		var command = NMS.invokeMethod(server, "MinecraftServer", "getServerCommandListener");
+		var wrapper = NMS.invokeMethod(command, "CommandListenerWrapper", "a", vector);
+		var parse = NMS.invokeMethod(entity, "ArgumentEntity", "parse", reader, true);
+        var nmsList = (List<?>) NMS.invokeMethod(parse, "EntitySelector", entitySelector, wrapper);
+        var entities = new Entity[nmsList.size()];
+        for (int i = 0; i < nmsList.size(); i++) {
+            entities[i] = (Entity) PackageType.NMS.invokeMethod(nmsList.get(i), "Entity", "getBukkitEntity");
+        }
+		return entities;
+	}
 
     @NotNull
     public static Map<String, Material> getItemRegistry() throws ReflectiveOperationException {

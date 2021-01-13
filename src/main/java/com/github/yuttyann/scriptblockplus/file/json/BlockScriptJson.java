@@ -36,6 +36,15 @@ public class BlockScriptJson extends Json<BlockScript> {
         super(scriptKey.getName());
     }
 
+    public static boolean has(@NotNull Location location) {
+        for (var scriptKey : ScriptKey.values()) {
+            if (has(location, new BlockScriptJson(scriptKey))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean has(@NotNull Location location, @NotNull ScriptKey scriptKey) {
         return has(location, new BlockScriptJson(scriptKey));
     }

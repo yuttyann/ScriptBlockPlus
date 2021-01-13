@@ -41,7 +41,12 @@ public enum ActionType {
     /**
      * スクリプトの詳細
      */
-    VIEW("view");
+    VIEW("view"),
+
+    /**
+     * レッドストーンの動作
+     */
+    REDSTONE("redstone");
 
     private final String name;
 

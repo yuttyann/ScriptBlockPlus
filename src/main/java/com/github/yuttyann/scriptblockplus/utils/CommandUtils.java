@@ -57,6 +57,7 @@ public class CommandUtils {
      *
      * @param arg    the argument that we are testing for
      * @param sender the sender of the command
+     * @param location Location as a starting point
      * @return The entities that match the criteria
      * "@p", "@a", "@e", "@r"
      * <p>
@@ -66,16 +67,18 @@ public class CommandUtils {
      * <p>
      * All selectors can be inverted.
      */
-    public static Entity[] getTargets(CommandSender sender, String arg) {
+    public static Entity[] getTargets(CommandSender sender, Location location, String arg) {
         Entity[] ents;
-        Location loc = null;
-        if (sender instanceof Player) {
-            loc = ((Player) sender).getLocation();
-        } else if (sender instanceof BlockCommandSender) {
-            // Center of block.
-            loc = ((BlockCommandSender) sender).getBlock().getLocation().add(0.5, 0, 0.5);
-        } else if (sender instanceof CommandMinecart) {
-            loc = ((CommandMinecart) sender).getLocation();
+        Location loc = location;
+        if (loc == null) {
+            if (sender instanceof Player) {
+                loc = ((Player) sender).getLocation();
+            } else if (sender instanceof BlockCommandSender) {
+                // Center of block.
+                loc = ((BlockCommandSender) sender).getBlock().getLocation().add(0.5, 0, 0.5);
+            } else if (sender instanceof CommandMinecart) {
+                loc = ((CommandMinecart) sender).getLocation();
+            }
         }
         String[] tags = getTags(arg);
 
@@ -246,7 +249,7 @@ public class CommandUtils {
      * @return The first entity retrieved.
      */
     public static Entity getTarget(CommandSender sender, String arg) {
-        Entity[] e = getTargets(sender, arg);
+        Entity[] e = getTargets(sender, null, arg);
         if (e.length == 0)
             return null;
         return e[0];

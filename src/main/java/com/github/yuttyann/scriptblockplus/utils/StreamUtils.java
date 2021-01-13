@@ -18,6 +18,7 @@ package com.github.yuttyann.scriptblockplus.utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -39,6 +40,15 @@ public final class StreamUtils {
         return array;
     }
 
+    public static <T> Optional<T> filterFirst(@NotNull Collection<T> collection, @NotNull Predicate<T> filter) {
+        for (var t : collection) {
+            if (filter.test(t)) {
+                return t == null ? Optional.empty() : Optional.of(t);
+            }
+        }
+        return Optional.empty();
+    }
+
     public static <T> void fForEach(@NotNull T[] array, @NotNull Predicate<T> filter, @NotNull Consumer<T> action) {
         forEach(array, t -> filter(t, filter, action));
     }
@@ -54,7 +64,7 @@ public final class StreamUtils {
     }
 
     public static <T> boolean anyMatch(@NotNull T[] array, Predicate<T> filter) {
-        for (var t : array) {
+        for (T t : array) {
             if (filter.test(t)) {
                 return true;
             }
@@ -63,7 +73,7 @@ public final class StreamUtils {
     }
 
     public static <T> boolean anyMatch(@NotNull Collection<T> collection, Predicate<T> filter) {
-        for (var t : collection) {
+        for (T t : collection) {
             if (filter.test(t)) {
                 return true;
             }

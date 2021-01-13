@@ -22,9 +22,12 @@ import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Set;
+import java.util.Map.Entry;
 
 /**
  * ScriptBlockPlus BlockScript クラス
+ * 
  * @author yuttyann44581
  */
 public class BlockScript {
@@ -39,6 +42,16 @@ public class BlockScript {
         this.scriptKey = scriptKey;
     }
 
+    @NotNull
+    public Set<Entry<String, ScriptParam>> getEntrySet() {
+        return scripts.entrySet();
+    }
+
+    @NotNull
+    public ScriptKey getScriptKey() {
+        return scriptKey;
+    }
+
     public boolean has(@NotNull Location location) {
         var fullCoords = BlockCoords.getFullCoords(location);
         var scriptParam = scripts.get(fullCoords);
@@ -46,10 +59,6 @@ public class BlockScript {
             return false;
         }
         return scriptParam.getAuthor().size() > 0;
-    }
-
-    public void remove(@NotNull Location location) {
-        scripts.remove(BlockCoords.getFullCoords(location));
     }
 
     @NotNull
@@ -62,8 +71,8 @@ public class BlockScript {
         return scriptParam;
     }
 
-    public ScriptKey getScriptKey() {
-        return scriptKey;
+    public void remove(@NotNull Location location) {
+        scripts.remove(BlockCoords.getFullCoords(location));
     }
 
     @Override

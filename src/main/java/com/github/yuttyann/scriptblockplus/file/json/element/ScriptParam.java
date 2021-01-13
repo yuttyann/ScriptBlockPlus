@@ -17,6 +17,7 @@ package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -34,6 +35,9 @@ public class ScriptParam {
 
     @SerializedName("lastedit")
     private String lastedit;
+
+    @SerializedName("selector")
+    private String selector;
 
     @SerializedName("amount")
     private int amount = -1;
@@ -60,8 +64,17 @@ public class ScriptParam {
         return lastedit;
     }
 
-    public void setLastEdit(@NotNull String time) {
+    public void setLastEdit(@Nullable String time) {
         this.lastedit = time;
+    }
+
+    @NotNull
+    public String getSelector() {
+        return selector;
+    }
+
+    public void setSelector(@Nullable String selector) {
+        this.selector = selector;
     }
 
     public int getAmount() {

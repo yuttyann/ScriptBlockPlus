@@ -21,10 +21,12 @@ import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -121,6 +123,20 @@ public final class SBOperation {
         scriptParam.getScript().forEach(s -> player.sendMessage("§6- §b" + s));
         player.sendMessage("----------------------------------");
         SBConfig.CONSOLE_SCRIPT_VIEW.replace(player.getName(), location, scriptKey).console();
+    }
+
+    public void redstone(@NotNull Player player, @NotNull Location location, @Nullable String selector) {
+        if (!BlockScriptJson.has(location, scriptJson)) {
+            SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
+            return;
+        }
+        var scriptParam = scriptJson.load().get(location);
+        scriptParam.setSelector(selector);
+        scriptJson.saveFile();
+        if (StringUtils.isEmpty(selector)) {
+            SBConfig.SCRIPT_REMOVE.replace(scriptKey).send(player);
+            SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), location, scriptKey).console();
+        }
     }
 
     @NotNull

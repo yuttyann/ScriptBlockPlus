@@ -20,6 +20,7 @@ import com.github.yuttyann.scriptblockplus.enums.reflection.ClassType;
 import com.github.yuttyann.scriptblockplus.file.json.FieldExclusion;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.google.common.base.Charsets;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -155,7 +156,7 @@ public abstract class Json<T> {
             throw new IllegalArgumentException("Classes do not match " + equal);
         }
         int hash = hashCode(args);
-        var value = list.stream().filter(t -> t.hashCode() == hash).findFirst();
+        var value = StreamUtils.filterFirst(list, t -> t.hashCode() == hash);
         if (!value.isPresent()) {
             T instance = newInstance(args);
             list.add(instance);
@@ -181,7 +182,7 @@ public abstract class Json<T> {
             throw new IllegalArgumentException("Classes do not match " + equal);
         }
         int hash = hashCode(args);
-        return list.stream().filter(t -> t.hashCode() == hash).findFirst().isPresent();
+        return StreamUtils.filterFirst(list, t -> t.hashCode() == hash).isPresent();
     }
 
     protected int hashCode(@NotNull Object[] args) {

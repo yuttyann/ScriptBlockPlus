@@ -15,12 +15,14 @@
  */
 package com.github.yuttyann.scriptblockplus.hook;
 
+import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
 import com.github.yuttyann.scriptblockplus.utils.CommandUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -33,6 +35,7 @@ import java.util.stream.Stream;
 
 /**
  * ScriptBlockPlus CommandSelector クラス
+ * 
  * @author yuttyann44581
  */
 public final class CommandSelector {
@@ -42,7 +45,8 @@ public final class CommandSelector {
     private final static String SELECTOR_SUFFIX = "aeprs";
     private final static String[] SELECTOR_NAMES = { "@a", "@e", "@p", "@r", "@s" };
 
-    private CommandSelector() { }
+    private CommandSelector() {
+    }
 
     private class Index {
 
@@ -146,15 +150,27 @@ public final class CommandSelector {
 
     @NotNull
     private String getName(@NotNull Entity entity) {
-        return (entity instanceof Player) ? entity.getName() : entity.getUniqueId().toString();
+        return entity instanceof Player ? entity.getName() : entity.getUniqueId().toString();
     }
 
     @NotNull
-    private Entity[] getTargets(@NotNull CommandSender sender, @NotNull String selector) {
+    public Entity[] getTargets(@NotNull CommandSender sender, @NotNull String selector) {
         if (Utils.isCBXXXorLater("1.13.2")) {
             return Bukkit.selectEntities(sender, selector).toArray(new Entity[0]);
         }
-        return CommandUtils.getTargets(sender, selector);
+        return CommandUtils.getTargets(sender, null, selector);
+    }
+
+    @NotNull
+    public Entity[] getTargets(@NotNull Location location, @NotNull String selector) {
+        if (PackageType.HAS_NMS && Utils.isCBXXXorLater("1.13.2")) {
+            try {
+                return PackageType.selectEntities(location, selector);
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
+        }
+        return CommandUtils.getTargets(null, location, selector);
     }
 
     private int getIntRelative(@NotNull String target, @NotNull String relative, @NotNull Entity entity) {
