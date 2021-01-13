@@ -116,11 +116,9 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             } else if (equals(args[0], ScriptKey.types())) {
                 if (args.length == 6 && equals(args[1], "run")) {
                     return doRun(sender, args);
-                } else if (args.length == 3 && equals(args[1], "redstone") && equals(args[2], "disable")) {
-                    return setAction(sender, args);
-                } else if (args.length == 4 && equals(args[1], "redstone") && equals(args[2], "enable")) {
-                    return setAction(sender, args);
                 } else if (equals(args[1], "create", "add")) {
+                    return setAction(sender, args);
+                } else if (args.length < 5 && equals(args[1], "redstone") && equals(args[2], "enable", "disable")) {
                     return setAction(sender, args);
                 }
             }

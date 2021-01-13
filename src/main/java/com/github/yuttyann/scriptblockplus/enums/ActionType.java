@@ -44,7 +44,7 @@ public enum ActionType {
     VIEW("view"),
 
     /**
-     * レッドストーンの動作
+     * レッドストーンの動力
      */
     REDSTONE("redstone");
 
