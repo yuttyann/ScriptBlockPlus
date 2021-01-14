@@ -25,6 +25,7 @@ import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.config.YamlConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.hook.CommandSelector;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -78,15 +79,16 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                 new CommandData(SBConfig.REMOVE_COMMAND.getValue(), typeNodes),
                 new CommandData(SBConfig.VIEW_COMMAND.getValue(), typeNodes),
                 new CommandData(SBConfig.RUN_COMMAND.getValue(), typeNodes),
+                new CommandData(SBConfig.REDSTONE_COMMAND.getValue(), typeNodes),
                 new CommandData(SBConfig.SELECTOR_PASTE_COMMAND.getValue(), Permission.COMMAND_SELECTOR.getNode()),
                 new CommandData(SBConfig.SELECTOR_REMOVE_COMMAND.getValue(), Permission.COMMAND_SELECTOR.getNode())
         };
     }
 
     @Override
-    public boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-            String[] args) {
-        if (args.length == 1) {
+    public boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        int length = args.length;
+        if (length == 1) {
             if (equals(args[0], "tool")) {
                 return doTool(sender);
             } else if (equals(args[0], "reload")) {
@@ -102,7 +104,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             } else if (equals(args[0], "datamigr")) {
                 return doDataMigr(sender);
             }
-        } else if (args.length == 2) {
+        }
+        if (length == 2) {
             if (equals(args[0], "export") && equals(args[1], "sound", "material")) {
                 return doExport(sender, args);
             } else if (equals(args[0], ScriptKey.types()) && equals(args[1], "remove", "view")) {
@@ -110,15 +113,20 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             } else if (equals(args[0], "selector") && equals(args[1], "paste", "remove")) {
                 return doSelector(sender, args);
             }
-        } else if (args.length > 2) {
-            if (args.length < 5 && equals(args[0], "selector") && equals(args[1], "paste")) {
+        }
+        if (length == 3 && equals(args[0], ScriptKey.types()) && equals(args[1], "redstone") && equals(args[2], "false")) {
+            return setAction(sender, args);
+        }
+        if (length > 3 && equals(args[0], ScriptKey.types()) && equals(args[1], "redstone") && equals(args[2], "true")) {
+            return setAction(sender, args);
+        }
+        if (length > 2) {
+            if (length < 5 && equals(args[0], "selector") && equals(args[1], "paste")) {
                 return doSelector(sender, args);
             } else if (equals(args[0], ScriptKey.types())) {
-                if (args.length == 6 && equals(args[1], "run")) {
+                if (length == 6 && equals(args[1], "run")) {
                     return doRun(sender, args);
                 } else if (equals(args[1], "create", "add")) {
-                    return setAction(sender, args);
-                } else if (args.length < 5 && equals(args[1], "redstone") && equals(args[2], "enable", "disable")) {
                     return setAction(sender, args);
                 }
             }
@@ -290,11 +298,13 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         }
         var actionType = ActionType.valueOf(args[1].toUpperCase(Locale.ROOT));
         var scriptEdit = new ScriptEdit(scriptKey, actionType);
-        if (actionType == ActionType.REDSTONE) {
-            if (args.length == 4 && equals(args[2], "enable")) {
-                scriptEdit.setValue(args[3]);
+        if (actionType == ActionType.REDSTONE && equals(args[2], "true")) {
+            var selector = StringUtils.createString(args, 3).trim();
+            if (selector.startsWith("@s") || !CommandSelector.INSTANCE.has(selector)) {
+                selector = "@p";
             }
-        } else if (args.length > 2 && (actionType == ActionType.CREATE || actionType == ActionType.ADD)) {
+            scriptEdit.setValue(selector);
+        } else if (actionType == ActionType.CREATE || actionType == ActionType.ADD) {
             var script = StringUtils.createString(args, 2).trim();
             if (!isScripts(script)) {
                 SBConfig.ERROR_SCRIPT_CHECK.send(sbPlayer);
@@ -370,7 +380,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             } else if (equals(args[0], ScriptKey.types())) {
                 if (Permission.has(sender, ScriptKey.valueOf(args[0]), true)) {
                     var prefix = args[1].toLowerCase(Locale.ROOT);
-                    var answers = new String[] { "create", "add", "remove", "view", "run" };
+                    var answers = new String[] { "create", "add", "remove", "view", "run", "redstone" };
                     StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
                 }
             }
@@ -399,6 +409,14 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                         var answers = OptionManager.getSyntaxs();
                         Arrays.sort(answers);
                         StreamUtils.fForEach(answers, s -> s.startsWith(prefix), s -> empty.add(s.trim()));
+                    } else if (args.length == 3 && equals(args[1], "redstone")) {
+                        var prefix = args[2].toLowerCase(Locale.ROOT);
+                        var answers = new String[] { "true", "false" };
+                        StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
+                    } else if (args.length == 4 && equals(args[1], "redstone") && equals(args[2], "true")) {
+                        var prefix = args[3].toLowerCase(Locale.ROOT);
+                        var answers = new String[] { "@a", "@e", "@p", "@r" };
+                        StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
                     }
                 }
             }

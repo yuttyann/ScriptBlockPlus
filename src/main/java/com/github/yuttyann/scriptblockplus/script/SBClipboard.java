@@ -100,7 +100,7 @@ public class SBClipboard {
         try {
             sbPlayer.setSBClipboard(this);
             SBConfig.SCRIPT_COPY.replace(scriptKey).send(sbPlayer);
-            SBConfig.CONSOLE_SCRIPT_COPY.replace(sbPlayer.getName(), location, scriptKey).console();
+            SBConfig.CONSOLE_SCRIPT_EDIT.replace(location, scriptKey).console();
         } finally {
             sbPlayer.setScriptEdit(null);
         }
@@ -122,7 +122,7 @@ public class SBClipboard {
             TimerOption.removeAll(location, scriptKey);
             PlayerCountJson.clear(location, scriptKey);
             SBConfig.SCRIPT_PASTE.replace(scriptKey).send(sbPlayer);
-            SBConfig.CONSOLE_SCRIPT_PASTE.replace(sbPlayer.getName(), location, scriptKey).console();
+            SBConfig.CONSOLE_SCRIPT_EDIT.replace(sbPlayer.getName(), location, scriptKey).console();
         } finally {
             sbPlayer.setScriptEdit(null);
             sbPlayer.setSBClipboard(null);

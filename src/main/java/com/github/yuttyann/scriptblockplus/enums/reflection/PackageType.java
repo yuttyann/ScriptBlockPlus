@@ -37,6 +37,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * ScriptBlockPlus PackageType 列挙型
@@ -96,7 +97,7 @@ public enum PackageType {
         HAS_NMS = hasNMS;
     }
 
-    private static final Map<String, Object> CACHE = new HashMap<>();
+    private static final Map<Integer, Object> REFLECTION_CACHE = new HashMap<>();
 
     private final String path;
 
@@ -109,7 +110,7 @@ public enum PackageType {
     }
 
     public static void clear() {
-        CACHE.clear();
+        REFLECTION_CACHE.clear();
     }
 
     @NotNull
@@ -141,8 +142,8 @@ public enum PackageType {
 
     @Nullable
     public Field getField(boolean declared, @NotNull String className, @NotNull String fieldName) throws ReflectiveOperationException {
-        var key = createKey(ReturnType.FIELD, className, fieldName, null);
-        var field = (Field) CACHE.get(key);
+        var hash = createHash(ReturnType.FIELD, className, fieldName, null);
+        var field = (Field) REFLECTION_CACHE.get(hash);
         if (field == null) {
             if (declared) {
                 field = getClass(className).getDeclaredField(fieldName);
@@ -150,7 +151,7 @@ public enum PackageType {
             } else {
                 field = getClass(className).getField(fieldName);
             }
-            CACHE.put(key, field);
+            REFLECTION_CACHE.put(hash, field);
         }
         return field;
     }
@@ -191,8 +192,8 @@ public enum PackageType {
         if (parameterTypes == null) {
             parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        var key = createKey(ReturnType.METHOD, className, methodName, parameterTypes);
-        var method = (Method) CACHE.get(key);
+        var hash = createHash(ReturnType.METHOD, className, methodName, parameterTypes);
+        var method = (Method) REFLECTION_CACHE.get(hash);
         if (method == null) {
             if (declared) {
                 method = getClass(className).getDeclaredMethod(methodName, parameterTypes);
@@ -200,7 +201,7 @@ public enum PackageType {
             } else {
                 method = getClass(className).getMethod(methodName, parameterTypes);
             }
-            CACHE.put(key, method);
+            REFLECTION_CACHE.put(hash, method);
         }
         return method;
     }
@@ -238,8 +239,8 @@ public enum PackageType {
         if (parameterTypes == null) {
             parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        var key = createKey(ReturnType.CONSTRUCTOR, className, null, parameterTypes);
-        var constructor = (Constructor<?>) CACHE.get(key);
+        var hash = createHash(ReturnType.CONSTRUCTOR, className, null, parameterTypes);
+        var constructor = (Constructor<?>) REFLECTION_CACHE.get(hash);
         if (constructor == null) {
             if (declared) {
                 constructor = getClass(className).getDeclaredConstructor(parameterTypes);
@@ -247,7 +248,7 @@ public enum PackageType {
             } else {
                 constructor = getClass(className).getConstructor(parameterTypes);
             }
-            CACHE.put(key, constructor);
+            REFLECTION_CACHE.put(hash, constructor);
         }
         return constructor;
     }
@@ -266,43 +267,33 @@ public enum PackageType {
         if (StringUtils.isEmpty(className)) {
             throw new IllegalArgumentException();
         }
-        var pass = this + "." + className;
-        var key = ReturnType.CLASS + pass;
-        var clazz = (Class<?>) CACHE.get(key);
+        var hash = createHash(ReturnType.CLASS, className, null, null);
+        var clazz = (Class<?>) REFLECTION_CACHE.get(hash);
         if (clazz == null) {
-            clazz = Class.forName(pass);
-            CACHE.put(key, clazz);
+            clazz = Class.forName(this + "." + className);
+            REFLECTION_CACHE.put(hash, clazz);
         }
         return clazz;
     }
 
     @NotNull
-    private String createKey(@NotNull ReturnType returnType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
+    private int createHash(@NotNull ReturnType returnType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
         if (!HAS_NMS || StringUtils.isEmpty(className)) {
-            return "null";
+            return 0;
         }
-        var rName = returnType.toString();
-        int lastLength = objects == null ? -1 : objects.length - 1;
-        if (lastLength == -1) {
-            if (name != null) {
-                return rName + this + "." + className + "=" + name + "[]";
-            }
-            return rName + this + "." + className;
+        int baseHash = returnType.toString().hashCode() + toString().hashCode() + className.hashCode();
+        if (objects == null) {
+            return name == null ? 11 * baseHash : 21 * (baseHash + name.hashCode());
         }
-        var builder = new StringBuilder();
-        boolean notEmptyName = StringUtils.isNotEmpty(name);
-        builder.append(rName).append(this).append('.').append(className).append(notEmptyName ? '=' : '[');
-        if (notEmptyName) {
-            builder.append(name).append('[');
+        int hash = 1;
+        int prime = 31;
+        hash = prime * hash + baseHash;
+        hash = prime * hash + String.valueOf(name).hashCode();
+        hash = prime * hash + Boolean.hashCode(StringUtils.isNotEmpty(name));
+        for (var object : objects) {
+            hash += Objects.hashCode(object);
         }
-        for (int i = 0; i < objects.length; i++) {
-            builder.append(objects[i] == null ? null : objects[i].getName());
-            if (i == lastLength) {
-                return builder.append(']').toString();
-            }
-            builder.append(',');
-        }
-        return builder.toString();
+        return hash;
     }
 
     public static int getMagmaCubeId() {
@@ -407,20 +398,20 @@ public enum PackageType {
     public static Entity[] selectEntities(@NotNull Location location, @NotNull String selector) throws ReflectiveOperationException {
         var argmentEntity = Utils.isCBXXXorLater("1.14") ? "multipleEntities" : "b";
         var entitySelector = Utils.isCBXXXorLater("1.14") ? "getEntities" : "b";
-		var vector = toNMSVec3D(location.toVector());
-		var entity = NMS.invokeMethod(null, "ArgumentEntity", argmentEntity);
-		var reader = MJN.newInstance("StringReader", selector);
-		var server = CB.invokeMethod(Bukkit.getServer(), "CraftServer", "getServer");
-		var command = NMS.invokeMethod(server, "MinecraftServer", "getServerCommandListener");
-		var wrapper = NMS.invokeMethod(command, "CommandListenerWrapper", "a", vector);
-		var parse = NMS.invokeMethod(entity, "ArgumentEntity", "parse", reader, true);
+        var vector = toNMSVec3D(location.toVector());
+        var entity = NMS.invokeMethod(null, "ArgumentEntity", argmentEntity);
+        var reader = MJN.newInstance("StringReader", selector);
+        var server = CB.invokeMethod(Bukkit.getServer(), "CraftServer", "getServer");
+        var command = NMS.invokeMethod(server, "MinecraftServer", "getServerCommandListener");
+        var wrapper = NMS.invokeMethod(command, "CommandListenerWrapper", "a", vector);
+        var parse = NMS.invokeMethod(entity, "ArgumentEntity", "parse", reader, true);
         var nmsList = (List<?>) NMS.invokeMethod(parse, "EntitySelector", entitySelector, wrapper);
         var entities = new Entity[nmsList.size()];
         for (int i = 0; i < nmsList.size(); i++) {
             entities[i] = (Entity) PackageType.NMS.invokeMethod(nmsList.get(i), "Entity", "getBukkitEntity");
         }
-		return entities;
-	}
+        return entities;
+    }
 
     @NotNull
     public static Map<String, Material> getItemRegistry() throws ReflectiveOperationException {

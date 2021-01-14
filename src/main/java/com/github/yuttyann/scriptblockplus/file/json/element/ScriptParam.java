@@ -64,11 +64,11 @@ public class ScriptParam {
         return lastedit;
     }
 
-    public void setLastEdit(@Nullable String time) {
+    public void setLastEdit(@NotNull String time) {
         this.lastedit = time;
     }
 
-    @NotNull
+    @Nullable
     public String getSelector() {
         return selector;
     }
@@ -95,6 +95,11 @@ public class ScriptParam {
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, script, lastedit);
+        int hash = 1;
+        int prime = 31;
+        hash = prime * hash + author.hashCode();
+        hash = prime * hash + script.hashCode();
+        hash = prime * hash + lastedit.hashCode();
+        return hash;
     }
 }

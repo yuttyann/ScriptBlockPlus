@@ -72,6 +72,7 @@ public class ScriptEdit {
                     break;
                 case VIEW:
                     sbOperation.view(player, location);
+                    break;
                 case REDSTONE:
                     sbOperation.redstone(player, location, value);
                     break;

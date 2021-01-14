@@ -77,7 +77,7 @@ public final class SBOperation {
         TimerOption.removeAll(location, scriptKey);
         PlayerCountJson.clear(location, scriptKey);
         SBConfig.SCRIPT_CREATE.replace(scriptKey).send(player);
-        SBConfig.CONSOLE_SCRIPT_CREATE.replace(player.getName(), location, scriptKey).console();
+        SBConfig.CONSOLE_SCRIPT_EDIT.replace(location, scriptKey).console();
     }
 
     public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
@@ -92,7 +92,7 @@ public final class SBOperation {
         scriptJson.saveFile();
         TimerOption.removeAll(location, scriptKey);
         SBConfig.SCRIPT_ADD.replace(scriptKey).send(player);
-        SBConfig.CONSOLE_SCRIPT_ADD.replace(player.getName(), location, scriptKey).console();
+        SBConfig.CONSOLE_SCRIPT_EDIT.replace(location, scriptKey).console();
     }
 
     public void remove(@NotNull Player player, @NotNull Location location) {
@@ -105,7 +105,7 @@ public final class SBOperation {
         TimerOption.removeAll(location, scriptKey);
         PlayerCountJson.clear(location, scriptKey);
         SBConfig.SCRIPT_REMOVE.replace(scriptKey).send(player);
-        SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), location, scriptKey).console();
+        SBConfig.CONSOLE_SCRIPT_EDIT.replace(location, scriptKey).console();
     }
 
     public void view(@NotNull Player player, @NotNull Location location) {
@@ -115,14 +115,16 @@ public final class SBOperation {
         }
         var scriptParam = scriptJson.load().get(location);
         var playerCount = new PlayerCountJson(player.getUniqueId()).load(location, scriptKey);
+        var selector = scriptParam.getSelector();
         player.sendMessage("--------- [ Script Views ] ---------");
         player.sendMessage("§eAuthor: §a" + getAuthors(scriptParam));
         player.sendMessage("§eUpdate: §a" + scriptParam.getLastEdit());
         player.sendMessage("§eMyCount: §a" + playerCount.getAmount());
+        player.sendMessage("§eRedstone: §" + (selector == null ? "cfalse" : "atrue §d: §a" + selector));
         player.sendMessage("§eScripts:");
         scriptParam.getScript().forEach(s -> player.sendMessage("§6- §b" + s));
         player.sendMessage("----------------------------------");
-        SBConfig.CONSOLE_SCRIPT_VIEW.replace(player.getName(), location, scriptKey).console();
+        SBConfig.CONSOLE_SCRIPT_VIEW.replace(location, scriptKey).console();
     }
 
     public void redstone(@NotNull Player player, @NotNull Location location, @Nullable String selector) {
@@ -130,13 +132,14 @@ public final class SBOperation {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        var scriptParam = scriptJson.load().get(location);
-        scriptParam.setSelector(selector);
+        scriptJson.load().get(location).setSelector(selector);
         scriptJson.saveFile();
         if (StringUtils.isEmpty(selector)) {
-            SBConfig.SCRIPT_REMOVE.replace(scriptKey).send(player);
-            SBConfig.CONSOLE_SCRIPT_REMOVE.replace(player.getName(), location, scriptKey).console();
+            SBConfig.SCRIPT_REDSTONE_DISABLE.replace(scriptKey).send(player);
+        } else {
+            SBConfig.SCRIPT_REDSTONE_ENABLE.replace(scriptKey).send(player);
         }
+        SBConfig.CONSOLE_SCRIPT_EDIT.replace(location, scriptKey).console();
     }
 
     @NotNull

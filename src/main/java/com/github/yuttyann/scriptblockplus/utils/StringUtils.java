@@ -124,7 +124,7 @@ public final class StringUtils {
     @NotNull
     public static String createString(@NotNull String[] args, int start) {
         var joiner = new StringJoiner(" ");
-        IntStream.range(start, args.length).forEach((i) -> joiner.add(args[i]));
+        IntStream.range(start, args.length).forEach(i -> joiner.add(args[i]));
         return joiner.toString();
     }
 

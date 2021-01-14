@@ -63,8 +63,8 @@ public final class CommandSelector {
         }
     }
 
-    public boolean has(@NotNull String command) {
-        return Stream.of(SELECTOR_NAMES).anyMatch(command::contains);
+    public boolean has(@NotNull String text) {
+        return Stream.of(SELECTOR_NAMES).anyMatch(text::contains);
     }
 
     @NotNull

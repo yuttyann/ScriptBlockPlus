@@ -122,7 +122,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
         }
         if (!sortScripts(blockScript.get(location).getScript())) {
             SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptKey).send(sbPlayer);
-            SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(sbPlayer.getName(), location, scriptKey).console();
+            SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(location, scriptKey).console();
             return false;
         }
         Bukkit.getPluginManager().callEvent(new ScriptReadStartEvent(ramdomId, this));
@@ -149,7 +149,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
         }
         EndProcessManager.forEach(e -> e.success(this));
         new PlayerCountJson(sbPlayer.getUniqueId()).action(PlayerCount::add, location, scriptKey);
-        SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(sbPlayer.getName(), location, scriptKey).console();
+        SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(location, scriptKey).console();
         return true;
     }
     
