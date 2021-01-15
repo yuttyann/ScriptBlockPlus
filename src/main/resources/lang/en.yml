@@ -9,13 +9,14 @@ ToolCommandMessage: 'tool - get the scriptblock tools'
 ReloadCommandMessage: 'reload - reload the plugin'
 BackupCommandMessage: 'backup - make a backup of the plugin data'
 CheckVerCommandMessage: 'checkver - check new version'
-DataMigrCommandMessage: 'datamigr - migrate old data from ScriptBlock to ScriptBlockPlus'
-ExportCommandMessage: 'export <sound | material> - output BukkitAPI Sound and Material as text'
+DataMigrCommandMessage: 'datamigr - migrate old data from scriptblock to scriptblockplus'
+ExportCommandMessage: 'export <sound | material> - output bukkitapi sound and material as text'
 CreateCommandMessage: '<scriptkey> create <options> - create new scriptblock'
 AddCommandMessage: '<scriptkey> add <options> - add new script to the block'
 RemoveCommandMessage: '<scriptkey> remove - remove script of block'
 ViewCommandMessage: '<scriptkey> view - view the script of block'
 RunCommandMessage: '<scriptkey> run <world> <x> <y> <z> - execute the specified script'
+RedstoneCommandMessage: '<scriptkey> redstone <needs> [selector] - set if the scriptblock works with redstone'
 SelectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - paste scriptblock for selected area'
 SelectorRemoveCommandMessage: 'selector remove - remove scriptblock for selected area'
 
@@ -75,7 +76,7 @@ UpdateDownloadEndMessage: '&6Download completed!|~File name: %filename%|~File si
 # %pluginname%    : Name of the updated plugin
 # %latestversion% : Latest version
 # %details%       : update information
-UpdateCheckMessage: '&bNew version available!|~v%latestversion% the latest ver.|~Name: %pluginname%|~☆Change log☆|~%details%'
+UpdateCheckMessage: '&bNew version available!|~v%latestversion% the latest ver.|~Name: %pluginname%|~>>>Change log<<<|~%details%'
 
 # There are no placeholders
 ErrorUpdateMessage: '&cError occured while checking new version.'
@@ -84,8 +85,10 @@ ErrorUpdateMessage: '&cError occured while checking new version.'
 ScriptCopyMessage: '&aCopy the scriptblock for the "%scriptkey%" scriptkey.'
 ScriptPasteMessage: '&aPaste the scriptblock for the "%scriptkey%" scriptkey.'
 ScriptCreateMessage: '&aCreate the scriptblock for the "%scriptkey%" scriptkey.'
-ScriptAddMessage: '&aAdd the script to the scriptblock of the "INTERACT" scriptkey.'
+ScriptAddMessage: '&aAdd the script to the scriptblock of the "%scriptkey%" scriptkey.'
 ScriptRemoveMessage: '&cRemove the scriptblock for the "%scriptkey%" scriptkey.'
+ScriptRedstoneEnableMessage: '&aThe scriptblock for the "%scriptkey%" scriptkey now works with Redstone.'
+ScriptRedstoneDisableMessage: '&cThe scriptblock for the "%scriptkey%" scriptkey no longer works with Redstone.'
 
 # There are no placeholders
 NotSelectionMessage: '&cBlockSelector area not selected.'
@@ -116,8 +119,8 @@ ActiveDelayMessage: '&cThis scriptblock is in delay, you cant use it now.'
 # %second% : second
 ActiveCooldownMessage: '&cThis scriptblock is in cooldown [%hour%h %minute%m %second%s]'
 
-# %actiontype% : Type of action
-SuccActionDataMessage: '&aActiontype "%actiontype%" selected.'
+# %action% : Type of action
+SuccActionDataMessage: '&aAction "%action%" selected.'
 
 # There are no placeholders
 ErrorActionDataMessage: '&cInvaild setting.'
@@ -142,22 +145,17 @@ ErrorItemMessage: '&cThe items in your inventory is not vaild, you must keep in 
 ErrorCostMessage: '&cYou need money "%cost%" to do this.'
 
 # %scriptkey%  : Script key
-# %player%     : Player ID
 # %world%      : The name of the world
 # %coords%     : Coordinate(x, y, z)
-ConsoleScriptCopyMessage: '&aCreator"%player%"、Key"%scriptkey%"、Location"%world%, %coords%" has been copied.'
-ConsoleScriptPasteMessage: '&aCreator"%player%"、Key"%scriptkey%"、Location"%world%, %coords%" has been pasted.'
-ConsoleScriptCreateMessage: '&aCreator"%player%"、Key"%scriptkey%"、Location"%world%, %coords%" has been created.'
-ConsoleScriptAddMessage: '&aOperator"%player%"、Key"%scriptkey%"、Location"%world%, %coords%" has been added new script.'
-ConsoleScriptRemoveMessage: '&cOperator"%player%"、Key"%scriptkey%"、Location"%world%, %coords%" has been removed.'
-ConsoleScriptViewMessage: '&aOperator"%player%"、Key"%scriptkey%"、Location"%world%, %coords%" has been viewed.'
-ConsoleSuccScriptExecMessage: '&aOperator"%player%"、Key"%scriptkey%"、Location"%world%, %coords%" executed successfully.'
-ConsoleErrorScriptExecMessage: '&cOperator"%player%"、Key"%scriptkey%"、Location"%world%, %coords%" fail to execute.'
+ConsoleScriptEditMessage: '&aCreator[Key"%scriptkey%", Location"%world%, %coords%"] has been edited.'
+ConsoleScriptViewMessage: '&aOperator[Key"%scriptkey%", Location"%world%, %coords%"] has been viewed.'
+ConsoleSuccScriptExecMessage: '&aOperator[Key"%scriptkey%", Location"%world%, %coords%"] executed successfully.'
+ConsoleErrorScriptExecMessage: '&cOperator[Key"%scriptkey%", Location"%world%, %coords%"] fail to execute.'
 
 # %scriptkey%  : Script key
 # %blockcount% : Block amount
 # %world%      : The name of the world
 # %mincoords%  : Minimum coordinate(x, y, z)
 # %maxcoords%  : Maximum coordinate(x, y, z)
-ConsoleSelectorPasteMessage: '&aKey"%scriptkey%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been pasted.'
-ConsoleSelectorRemoveMessage: '&cKey"%scriptkey%" LocationMin"%world%, %mincoords%", Max"%world%, %maxcoords%" has been removed.'
+ConsoleSelectorPasteMessage: '&aSelectorPaste[Key"%scriptkey%", Min"%world%, %mincoords%", Max"%world%, %maxcoords%"] has been pasted.'
+ConsoleSelectorRemoveMessage: '&cSelectorRemove[Key"%scriptkey%", Min"%world%, %mincoords%", Max"%world%, %maxcoords%"] has been removed.'

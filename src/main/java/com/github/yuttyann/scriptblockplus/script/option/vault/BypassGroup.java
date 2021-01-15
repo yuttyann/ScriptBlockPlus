@@ -43,16 +43,17 @@ public class BypassGroup extends BaseOption {
         if (array.length < 2) {
             throw new IllegalArgumentException("Insufficient parameters");
         }
-        var player = getSBPlayer().getPlayer();
+        var player = getPlayer();
+        var command = StringUtils.setColor(array[0]);
         return CommandLog.supplier(player.getWorld(), () -> {
             var world = array.length > 2 ? array[1] : null;
             var group = array.length > 2 ? array[2] : array[1];
             if (vaultPermission.playerInGroup(world, player, group)) {
-                return Utils.dispatchCommand(player, StringUtils.setColor(array[0]));
+                return Utils.dispatchCommand(player, getLocation(), command);
             } else {
                 try {
                     vaultPermission.playerAddGroup(world, player, group);
-                    return Utils.dispatchCommand(player, StringUtils.setColor(array[0]));
+                    return Utils.dispatchCommand(player, getLocation(), command);
                 } finally {
                     vaultPermission.playerRemoveGroup(world, player, group);
                 }

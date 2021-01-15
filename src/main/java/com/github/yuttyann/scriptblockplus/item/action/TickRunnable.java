@@ -194,7 +194,7 @@ public class TickRunnable extends BukkitRunnable {
         if (color == null) {
             color = block.getType() == Material.AIR ? Color.AQUA : Color.LIME;
         }
-        double x = block.getX(), y = block.getY(), z = block.getZ(), a = 1;
+        double x = block.getX(), y = block.getY(), z = block.getZ(), a = 1D;
         if (Utils.isCBXXXorLater("1.13")) {
             var dust = new DustOptions(color, 1);
             player.spawnParticle(Particle.REDSTONE, x, y, z, 0, 0, 0, 0, dust);

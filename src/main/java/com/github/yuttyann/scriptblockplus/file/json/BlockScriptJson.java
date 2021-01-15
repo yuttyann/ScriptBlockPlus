@@ -17,7 +17,7 @@ package com.github.yuttyann.scriptblockplus.file.json;
 
 import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.SBLoader;
-import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import org.bukkit.Location;
@@ -29,7 +29,7 @@ import java.util.LinkedHashSet;
  * ScriptBlockPlus BlockScriptJson クラス
  * @author yuttyann44581
  */
-@JsonOptions(path = "json/blockscript", file = "{id}.json")
+@JsonTag(path = "json/blockscript")
 public class BlockScriptJson extends Json<BlockScript> {
 
     public BlockScriptJson(@NotNull ScriptKey scriptKey) {

@@ -114,7 +114,7 @@ public final class SBOperation {
             return;
         }
         var scriptParam = scriptJson.load().get(location);
-        var playerCount = new PlayerCountJson(player.getUniqueId()).load(location, scriptKey);
+        var playerCount = new PlayerCountJson(player).load(location, scriptKey);
         var selector = scriptParam.getSelector();
         player.sendMessage("--------- [ Script Views ] ---------");
         player.sendMessage("§eAuthor: §a" + getAuthors(scriptParam));
@@ -132,7 +132,10 @@ public final class SBOperation {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        scriptJson.load().get(location).setSelector(selector);
+        var scriptParam = scriptJson.load().get(location);
+        scriptParam.getAuthor().add(player.getUniqueId());
+        scriptParam.setSelector(selector);
+        scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptJson.saveFile();
         if (StringUtils.isEmpty(selector)) {
             SBConfig.SCRIPT_REDSTONE_DISABLE.replace(scriptKey).send(player);

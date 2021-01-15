@@ -20,11 +20,11 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -379,6 +379,24 @@ public enum PackageType {
     }
 
     @NotNull
+    public static Entity[] selectEntities(@NotNull CommandSender sender, @NotNull Location location, @NotNull String selector) throws ReflectiveOperationException {
+        var argmentEntity = Utils.isCBXXXorLater("1.14") ? "multipleEntities" : "b";
+        var entitySelector = Utils.isCBXXXorLater("1.14") ? "getEntities" : "b";
+        var vector = toNMSVec3D(location.toVector());
+        var entity = NMS.invokeMethod(null, "ArgumentEntity", argmentEntity);
+        var reader = MJN.newInstance("StringReader", selector);
+        var listener = CB_COMMAND.getMethod("VanillaCommandWrapper", "getListener", CommandSender.class).invoke(null, sender);
+        var wrapper = NMS.invokeMethod(listener, "CommandListenerWrapper", "a", vector);
+        var parse = NMS.invokeMethod(entity, "ArgumentEntity", "parse", reader, true);
+        var nmsList = (List<?>) NMS.invokeMethod(parse, "EntitySelector", entitySelector, wrapper);
+        var entities = new Entity[nmsList.size()];
+        for (int i = 0; i < nmsList.size(); i++) {
+            entities[i] = (Entity) PackageType.NMS.invokeMethod(nmsList.get(i), "Entity", "getBukkitEntity");
+        }
+        return entities;
+    }
+
+    @NotNull
     public static Object getAxisAlignedBB(@NotNull Block block) throws ReflectiveOperationException {
         var world = CB.invokeMethod(block.getWorld(), "CraftWorld", "getHandle");
         var position = NMS.newInstance("BlockPosition", block.getX(), block.getY(), block.getZ());
@@ -392,25 +410,6 @@ public enum PackageType {
             var getAxisAlignedBB = NMS.getMethod("Block", name, NMS.getClass("IBlockData"), NMS.getClass("IBlockAccess"), position.getClass());
             return getAxisAlignedBB.invoke(NMS.invokeMethod(blockData, "IBlockData", "getBlock"), blockData, world, position);
         }
-    }
-
-    @NotNull
-    public static Entity[] selectEntities(@NotNull Location location, @NotNull String selector) throws ReflectiveOperationException {
-        var argmentEntity = Utils.isCBXXXorLater("1.14") ? "multipleEntities" : "b";
-        var entitySelector = Utils.isCBXXXorLater("1.14") ? "getEntities" : "b";
-        var vector = toNMSVec3D(location.toVector());
-        var entity = NMS.invokeMethod(null, "ArgumentEntity", argmentEntity);
-        var reader = MJN.newInstance("StringReader", selector);
-        var server = CB.invokeMethod(Bukkit.getServer(), "CraftServer", "getServer");
-        var command = NMS.invokeMethod(server, "MinecraftServer", "getServerCommandListener");
-        var wrapper = NMS.invokeMethod(command, "CommandListenerWrapper", "a", vector);
-        var parse = NMS.invokeMethod(entity, "ArgumentEntity", "parse", reader, true);
-        var nmsList = (List<?>) NMS.invokeMethod(parse, "EntitySelector", entitySelector, wrapper);
-        var entities = new Entity[nmsList.size()];
-        for (int i = 0; i < nmsList.size(); i++) {
-            entities[i] = (Entity) PackageType.NMS.invokeMethod(nmsList.get(i), "Entity", "getBukkitEntity");
-        }
-        return entities;
     }
 
     @NotNull

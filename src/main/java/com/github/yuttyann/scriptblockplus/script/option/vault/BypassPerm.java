@@ -43,16 +43,17 @@ public class BypassPerm extends BaseOption {
         if (array.length < 2) {
             throw new IllegalArgumentException("Insufficient parameters");
         }
-        var player = getSBPlayer().getPlayer();
+        var player = getPlayer();
+        var command = StringUtils.setColor(array[0]);
         return CommandLog.supplier(player.getWorld(), () -> {
             var world = array.length > 2 ? array[1] : null;
             var permission = array.length > 2 ? array[2] : array[1];
             if (vaultPermission.playerHas(world, player, permission)) {
-                return Utils.dispatchCommand(player, StringUtils.setColor(array[0]));
+                return Utils.dispatchCommand(player, getLocation(), command);
             } else {
                 try {
                     vaultPermission.playerAdd(world, player, permission);
-                    return Utils.dispatchCommand(player, StringUtils.setColor(array[0]));
+                    return Utils.dispatchCommand(player, getLocation(), command);
                 } finally {
                     vaultPermission.playerRemove(world, player, permission);
                 }

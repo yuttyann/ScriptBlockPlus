@@ -13,26 +13,30 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.file.json;
+package com.github.yuttyann.scriptblockplus.file.json.annotation;
 
-import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 /**
- * ScriptBlockPlus FieldExclusion クラス
+ * ScriptBlockPlus JsonOptions 注釈
  * @author yuttyann44581
  */
-public class FieldExclusion implements ExclusionStrategy {
+@Target(TYPE)
+@Retention(RUNTIME)
+public @interface JsonTag {
 
-    @Override
-    public boolean shouldSkipField(@NotNull FieldAttributes field) {
-        return field.getAnnotation(Exclude.class) != null;
-    }
+    @NotNull
+    String path();
 
-    @Override
-    public boolean shouldSkipClass(@NotNull Class<?> clazz) {
-        return false;
-    }
+    @NotNull
+    String file() default "{id}.json";
+
+    @NotNull
+    Class<?>[] classes() default { };
 }

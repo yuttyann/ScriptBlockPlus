@@ -52,10 +52,8 @@ public final class BaseSBPlayer extends PlayerMap {
         return PLAYERS;
     }
 
-    public void setOnline(boolean isOnline) {
-        synchronized(this) {
-            this.player = (this.isOnline = isOnline) ? Bukkit.getPlayer(uuid) : null;
-        }
+    public synchronized void setOnline(boolean isOnline) {
+        this.player = (this.isOnline = isOnline) ? Bukkit.getPlayer(uuid) : null;
     }
 
     @Override

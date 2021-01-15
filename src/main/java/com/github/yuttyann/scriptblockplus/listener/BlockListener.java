@@ -25,6 +25,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -59,7 +60,7 @@ public class BlockListener implements Listener {
             if (StringUtils.isEmpty(selector) || !CommandSelector.INSTANCE.has(selector)) {
                 continue;
             }
-            for (var target : CommandSelector.INSTANCE.getTargets(location, selector)) {
+            for (var target : CommandSelector.INSTANCE.getTargets(Bukkit.getConsoleSender(), location, selector)) {
                 if (!(target instanceof Player)) {
                     continue;
                 }

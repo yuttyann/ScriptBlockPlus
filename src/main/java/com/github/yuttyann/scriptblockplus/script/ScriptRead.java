@@ -148,7 +148,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
             }
         }
         EndProcessManager.forEach(e -> e.success(this));
-        new PlayerCountJson(sbPlayer.getUniqueId()).action(PlayerCount::add, location, scriptKey);
+        new PlayerCountJson(sbPlayer).action(PlayerCount::add, location, scriptKey);
         SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(location, scriptKey).console();
         return true;
     }

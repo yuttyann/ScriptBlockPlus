@@ -39,16 +39,12 @@ public abstract class PlayerMap implements SBPlayer {
     private static final String KEY_SB_CLIPBOARD = Utils.randomUUID();
     private static final String KEY_OLD_BLOCK_COORDS = Utils.randomUUID();
 
-    private final ObjectMap objectMap;
-
-    protected PlayerMap() {
-        this.objectMap = new ObjMap();
-    }
+    private ObjectMap objectMap;
 
     @NotNull
     @Override
     public final ObjectMap getObjectMap() {
-        return objectMap;
+        return objectMap == null ? objectMap = new ObjMap() : objectMap;
     }
 
     private static class ObjMap implements ObjectMap {
@@ -85,7 +81,7 @@ public abstract class PlayerMap implements SBPlayer {
     @Override
     @NotNull
     public Region getRegion() {
-        CuboidRegion region = getObjectMap().get(KEY_REGION);
+        var region = (CuboidRegion) getObjectMap().get(KEY_REGION);
         if (region == null) {
             getObjectMap().put(KEY_REGION, region = new CuboidRegion());
         }

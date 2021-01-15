@@ -38,7 +38,8 @@ public class Command extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
+        var player = getPlayer();
         var command = StringUtils.setColor(getOptionValue());
-        return CommandLog.supplier(getSBPlayer().getWorld(), () -> Utils.dispatchCommand(getSBPlayer(), command));
+        return CommandLog.supplier(player.getWorld(), () -> Utils.dispatchCommand(player, getLocation(), command));
     }
 }

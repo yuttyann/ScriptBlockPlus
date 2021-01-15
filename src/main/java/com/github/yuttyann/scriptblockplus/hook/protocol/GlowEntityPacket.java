@@ -92,11 +92,8 @@ public class GlowEntityPacket {
     }
 
     public void destroyGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
-        if (!has(sbPlayer, location)) {
-            return;
-        }
-        Predicate<GlowEntity> filter = g -> g.equals(location.getX(), location.getY(), location.getZ());
-        GLOW_ENTITIES.get(sbPlayer.getUniqueId()).stream().filter(filter).findFirst().ifPresent(this::destroyGlowEntity);
+        var filter = (Predicate<GlowEntity>) g -> g.equals(location.getX(), location.getY(), location.getZ());
+        StreamUtils.filterFirst(GLOW_ENTITIES.get(sbPlayer.getUniqueId()), filter).ifPresent(this::destroyGlowEntity);
     }
 
     public void destroyGlowEntity(@NotNull GlowEntity glowEntity) {
@@ -149,9 +146,10 @@ public class GlowEntityPacket {
             return false;
         }
         var filter = (Predicate<GlowEntity>) g -> g.equals(location.getX(), location.getY(), location.getZ());
-        return GLOW_ENTITIES.get(sbPlayer.getUniqueId()).stream().anyMatch(filter);
+        return StreamUtils.anyMatch(GLOW_ENTITIES.get(sbPlayer.getUniqueId()), filter);
     }
 
+    @NotNull
     private PacketContainer createEntity(final int id, @NotNull UUID uuid, @NotNull Vector vector) {
         var packetType = PacketType.Play.Server.SPAWN_ENTITY_LIVING;
         var spawnEntity = ProtocolLibrary.getProtocolManager().createPacket(packetType);
@@ -162,6 +160,7 @@ public class GlowEntityPacket {
         return spawnEntity;
     }
 
+    @NotNull
     private PacketContainer createMetadata(final int id) {
         var packetType = PacketType.Play.Server.ENTITY_METADATA;
         var entityMetadata = ProtocolLibrary.getProtocolManager().createPacket(packetType);

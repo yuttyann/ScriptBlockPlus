@@ -57,7 +57,6 @@ public interface ScriptBlockAPI {
      */
     void registerEndProcess(@NotNull Class<? extends EndProcess> endProcessClass);
 
-
     /**
      * {@link SBEdit}を取得します。
      * @param scriptKey - スクリプトキー

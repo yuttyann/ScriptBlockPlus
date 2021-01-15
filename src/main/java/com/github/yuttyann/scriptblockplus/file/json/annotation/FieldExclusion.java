@@ -15,28 +15,23 @@
  */
 package com.github.yuttyann.scriptblockplus.file.json.annotation;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
- * ScriptBlockPlus JsonOptions 注釈
+ * ScriptBlockPlus FieldExclusion クラス
  * @author yuttyann44581
  */
-@Target(TYPE)
-@Retention(RUNTIME)
-public @interface JsonOptions {
+public class FieldExclusion implements ExclusionStrategy {
 
-    @NotNull
-    String path();
+    @Override
+    public boolean shouldSkipField(@NotNull FieldAttributes field) {
+        return field.getAnnotation(Exclude.class) != null;
+    }
 
-    @NotNull
-    String file();
-
-    @NotNull
-    Class<?>[] classes() default { };
+    @Override
+    public boolean shouldSkipClass(@NotNull Class<?> clazz) {
+        return false;
+    }
 }

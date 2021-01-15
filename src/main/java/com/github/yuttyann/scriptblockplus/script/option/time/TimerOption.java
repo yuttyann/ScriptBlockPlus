@@ -20,6 +20,7 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.PlayerTempJson;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.google.common.collect.Sets;
 
 import org.bukkit.Location;
@@ -41,7 +42,7 @@ public abstract class TimerOption extends BaseOption {
     @NotNull
     protected final <T> Optional<T> get(@NotNull Set<T> set, @NotNull TimerTemp timerTemp) {
         int hash = timerTemp.hashCode();
-        return set.stream().filter(t -> t.hashCode() == hash).findFirst();
+        return StreamUtils.filterFirst(set, t -> t.hashCode() == hash);
     }
 
     @NotNull

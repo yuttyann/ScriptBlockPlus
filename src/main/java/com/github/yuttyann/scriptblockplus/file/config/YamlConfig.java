@@ -515,8 +515,8 @@ public class YamlConfig {
         return yaml.getByteList(path);
     }
 
-    @NotNull
     @Override
+    @NotNull
     public String toString() {
         return yaml.toString();
     }
@@ -524,8 +524,8 @@ public class YamlConfig {
     @Nullable
     protected Object getDefault(@NotNull String path) {
         Validate.notNull(path, "Path cannot be null");
-        Configuration root = getRoot();
-        Configuration defaults = root == null ? null : root.getDefaults();
+        var root = getRoot();
+        var defaults = root == null ? null : root.getDefaults();
         return defaults == null ? null : defaults.get(MemorySection.createPath(yaml, path));
     }
 }

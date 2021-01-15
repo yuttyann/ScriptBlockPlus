@@ -39,15 +39,15 @@ public class BypassOP extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var player = getSBPlayer().getPlayer();
+        var player = getPlayer();
         var command = StringUtils.setColor(getOptionValue());
         return CommandLog.supplier(player.getWorld(), () -> {
             if (player.isOp()) {
-                return Utils.dispatchCommand(player, command);
+                return Utils.dispatchCommand(player, getLocation(), command);
             } else {
                 try {
                     player.setOp(true);
-                    return Utils.dispatchCommand(player, command);
+                    return Utils.dispatchCommand(player, getLocation(), command);
                 } finally {
                     player.setOp(false);
                 }

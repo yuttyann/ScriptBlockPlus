@@ -17,12 +17,14 @@ package com.github.yuttyann.scriptblockplus.file.json;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.Json;
-import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonOptions;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.common.collect.Sets;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -33,11 +35,19 @@ import java.util.UUID;
  * ScriptBlockPlus PlayerCountJson クラス
  * @author yuttyann44581
  */
-@JsonOptions(path = "json/playercount", file = "{id}.json", classes = { Location.class, ScriptKey.class })
+@JsonTag(path = "json/playercount", classes = { Location.class, ScriptKey.class })
 public class PlayerCountJson extends Json<PlayerCount> {
 
     public PlayerCountJson(@NotNull UUID uuid) {
         super(uuid);
+    }
+
+    public PlayerCountJson(@NotNull SBPlayer sbPlayer) {
+        super(sbPlayer.getUniqueId());
+    }
+
+    public PlayerCountJson(@NotNull OfflinePlayer offlinePlayer) {
+        super(offlinePlayer.getUniqueId());
     }
 
     @Override

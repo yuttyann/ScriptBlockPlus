@@ -118,6 +118,6 @@ public class UnmodifiableLocation extends Location {
     @Override
     @NotNull
     public Location clone() {
-        return new UnmodifiableLocation(super.clone());
+        return super.clone();
     }
 }

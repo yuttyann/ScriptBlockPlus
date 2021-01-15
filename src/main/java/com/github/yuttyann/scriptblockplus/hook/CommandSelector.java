@@ -18,6 +18,7 @@ package com.github.yuttyann.scriptblockplus.hook;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
 import com.github.yuttyann.scriptblockplus.utils.CommandUtils;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -27,10 +28,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -68,18 +71,22 @@ public final class CommandSelector {
     }
 
     @NotNull
-    public List<String> build(@NotNull CommandSender sender, @NotNull String command) {
+    public List<String> build(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
+        int modCount = 0;
         var indexList = new ArrayList<Index>();
         var commandList = new ArrayList<String>();
-        commandList.add(parse(command.toCharArray(), sender, indexList));
+        commandList.add(parse(command, sender, indexList));
         for (int i = 0; i < indexList.size(); i++) {
             var selector = indexList.get(i).substring(command);
-            var entities = getTargets(sender, selector);
-            if ((entities == null || entities.length == 0) && selector.startsWith("@p") && sender instanceof Player) {
-                entities = new Entity[] { (Entity) sender };
-            }
-            if (entities == null) {
-                continue;
+            var entities = getTargets(sender, location, selector);
+            if (isEmpty(entities)) {
+                if (StreamUtils.anyMatch(SELECTOR_NAMES, s -> selector.startsWith(s + "["))) {
+                    continue;
+                } else if (selector.startsWith("@p") && sender instanceof Player) {
+                    entities = new Entity[] { (Entity) sender };
+                } else {
+                    continue;
+                }
             }
             boolean works = true;
             for (int j = 1; j < entities.length; j++) {
@@ -90,18 +97,25 @@ public final class CommandSelector {
                 commandList.add(StringUtils.replace(commandList.get(0), "{" + i + "}", getName(entities[j])));
             }
             if (!works || entities.length == 0 || entities[0] == null) {
-                return Collections.singletonList(command);
+                return Collections.emptyList();
             } else {
                 int index = i;
                 var name = getName(entities[0]);
                 commandList.replaceAll(s -> StringUtils.replace(s, "{" + index + "}", name));
             }
+            modCount++;
         }
-        return commandList;
+        if (modCount > 0 && modCount != indexList.size()) {
+            var name = sender.getName();
+            var stream = IntStream.of(indexList.size());
+            stream.forEach(i -> commandList.replaceAll(s -> StringUtils.replace(s, "{" + i + "}", name)));
+        }
+        return modCount == 0 ? Collections.emptyList() : commandList;
     }
 
     @NotNull
-    private String parse(char[] chars, @NotNull CommandSender sender, @NotNull List<Index> indexList) {
+    private String parse(@NotNull String source, @NotNull CommandSender sender, @NotNull List<Index> indexList) {
+        var chars = source.toCharArray();
         var builder = new StringBuilder();
         for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
             int type = i + 1, tag = i + 2;
@@ -148,6 +162,10 @@ public final class CommandSelector {
         return builder.toString();
     }
 
+    private boolean isEmpty(@Nullable Entity[] array) {
+        return array == null || array.length == 0;
+    }
+
     @NotNull
     private String getName(@NotNull Entity entity) {
         return entity instanceof Player ? entity.getName() : entity.getUniqueId().toString();
@@ -162,15 +180,18 @@ public final class CommandSelector {
     }
 
     @NotNull
-    public Entity[] getTargets(@NotNull Location location, @NotNull String selector) {
-        if (PackageType.HAS_NMS && Utils.isCBXXXorLater("1.13.2")) {
+    public Entity[] getTargets(@NotNull CommandSender sender, @Nullable Location location, @NotNull String selector) {
+        if (!PackageType.HAS_NMS || location == null) {
+            return getTargets(sender, selector);
+        }
+        if (Utils.isCBXXXorLater("1.13.2")) {
             try {
-                return PackageType.selectEntities(location, selector);
+                return PackageType.selectEntities(sender, location, selector);
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }
         }
-        return CommandUtils.getTargets(null, location, selector);
+        return CommandUtils.getTargets(sender, location, selector);
     }
 
     private int getIntRelative(@NotNull String target, @NotNull String relative, @NotNull Entity entity) {

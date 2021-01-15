@@ -40,6 +40,6 @@ public class Console extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         var command = StringUtils.setColor(getOptionValue());
-        return CommandLog.supplier(getSBPlayer().getWorld(), () -> Utils.dispatchCommand(Bukkit.getConsoleSender(), command));
+        return CommandLog.supplier(getSBPlayer().getWorld(), () -> Utils.dispatchCommand(Bukkit.getConsoleSender(), getLocation(), command));
     }
 }

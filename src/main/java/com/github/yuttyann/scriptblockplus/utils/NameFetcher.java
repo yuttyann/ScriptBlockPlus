@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,12 +57,12 @@ public final class NameFetcher {
 
     @Nullable
     public static JsonObject getJsonObject(@NotNull String url) throws IOException {
-        InputStream webFile = FileUtils.getWebFile(url);
+        var webFile = FileUtils.getWebFile(url);
         if (webFile == null) {
             return null;
         }
         try (var reader = new BufferedReader(new InputStreamReader(webFile))) {
-            String line = reader.readLine();
+            var line = reader.readLine();
             return StringUtils.isEmpty(line) ? null : new Gson().fromJson(line, JsonObject.class);
         }
     }

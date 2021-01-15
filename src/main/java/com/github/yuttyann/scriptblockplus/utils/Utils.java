@@ -23,6 +23,7 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.google.common.base.Splitter;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
@@ -136,10 +137,14 @@ public final class Utils {
     }
 
     public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull String command) {
+        return dispatchCommand(sender, null, command);
+    }
+
+    public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
         command = command.startsWith("/") ? command.substring(1) : command;
         var commandSender = sender instanceof SBPlayer ? ((SBPlayer) sender).getPlayer() : sender;
         if (CommandSelector.INSTANCE.has(command)) {
-            var commands = CommandSelector.INSTANCE.build(commandSender, command);
+            var commands = CommandSelector.INSTANCE.build(commandSender, location, command);
             return commands.stream().allMatch(s -> Bukkit.dispatchCommand(commandSender, s));
         }
         return Bukkit.dispatchCommand(commandSender, command);

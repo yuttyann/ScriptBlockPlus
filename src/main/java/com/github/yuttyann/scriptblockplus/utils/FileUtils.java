@@ -23,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * ScriptBlockPlus FileUtils クラス
@@ -37,11 +36,11 @@ public final class FileUtils {
             return null;
         }
         try {
-            URL url = plugin.getClass().getClassLoader().getResource(filePath);
+            var url = plugin.getClass().getClassLoader().getResource(filePath);
             if (url == null) {
                 return null;
             }
-            URLConnection connection = url.openConnection();
+            var connection = url.openConnection();
             connection.setUseCaches(false);
             return connection.getInputStream();
         } catch (IOException e) {
@@ -80,9 +79,7 @@ public final class FileUtils {
         if (!parent.exists()) {
             parent.mkdirs();
         }
-        var is = getWebFile(url);
-        var fos = new FileOutputStream(file);
-        try (is; fos) {
+        try (var is = getWebFile(url); var fos = new FileOutputStream(file)) {
             if (is == null) {
                 return;
             }
@@ -110,7 +107,7 @@ public final class FileUtils {
     }
 
     public static boolean isEmpty(@NotNull File file) {
-        String[] array = file.list();
+        var array = file.list();
         return array == null || array.length == 0;
     }
 }

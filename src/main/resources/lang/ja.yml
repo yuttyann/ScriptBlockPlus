@@ -87,8 +87,8 @@ ScriptPasteMessage: '&aブロック"%scriptkey%"にスクリプトをペース�
 ScriptCreateMessage: '&aブロック"%scriptkey%"のスクリプトを作成しました。'
 ScriptAddMessage: '&aブロック"%scriptkey%"にスクリプトを追加しました。'
 ScriptRemoveMessage: '&cブロック"%scriptkey%"のスクリプトを削除しました。'
-ScriptRedstoneEnableMessage: '&aブロック"%scriptkey%"のスクリプトを動力で実行する様にしました。'
-ScriptRedstoneDisableMessage: '&cブロック"%scriptkey%"のスクリプトを動力で実行しない様にしました。'
+ScriptRedstoneEnableMessage: '&aブロック"%scriptkey%"の動力による動作を有効にしました。'
+ScriptRedstoneDisableMessage: '&cブロック"%scriptkey%"の動力による動作を無効にしました。'
 
 # プレースホルダはありません
 NotSelectionMessage: '&cBlockSelectorで座標を選択してください。'
