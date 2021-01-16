@@ -22,7 +22,6 @@ import java.lang.annotation.Target;
 
 /**
  * ScriptBlockPlus Exclude 注釈
- * 
  * @author yuttyann44581
  */
 @Retention(RetentionPolicy.RUNTIME)

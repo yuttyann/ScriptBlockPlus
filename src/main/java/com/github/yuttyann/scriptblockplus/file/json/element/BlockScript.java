@@ -27,7 +27,6 @@ import java.util.Map.Entry;
 
 /**
  * ScriptBlockPlus BlockScript クラス
- * 
  * @author yuttyann44581
  */
 public class BlockScript {

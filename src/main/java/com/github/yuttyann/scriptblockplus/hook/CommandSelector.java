@@ -38,7 +38,6 @@ import java.util.stream.Stream;
 
 /**
  * ScriptBlockPlus CommandSelector クラス
- * 
  * @author yuttyann44581
  */
 public final class CommandSelector {
