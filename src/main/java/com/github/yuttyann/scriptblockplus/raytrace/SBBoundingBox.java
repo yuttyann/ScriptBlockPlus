@@ -28,12 +28,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SBBoundingBox {
 
-    private Vector min;
-    private Vector max;
+    private double minX, minY, minZ;
+    private double maxX, maxY, maxZ;
 
     public SBBoundingBox(@NotNull Vector min, @NotNull Vector max) {
-        this.min = min;
-        this.max = max;
+        setVector(min, max);
     }
 
     public SBBoundingBox(@NotNull Block block, final boolean square) {
@@ -41,9 +40,10 @@ public class SBBoundingBox {
             setSquare(block);
         } else {
             if (Utils.isCBXXXorLater("1.13.2")) {
-                var boundingBox = block.getBoundingBox();
-                this.min = boundingBox.getMin();
-                this.max = boundingBox.getMax();
+                var box = block.getBoundingBox();
+                double minX = box.getMinX(), minY = box.getMinY(), minZ = box.getMinZ();
+                double maxX = box.getMaxX(), maxY = box.getMaxY(), maxZ = box.getMaxZ();
+                setXYZ(minX, minY, minZ, maxX, maxY, maxZ);
             } else {
                 if (PackageType.HAS_NMS) {
                     try {
@@ -59,7 +59,7 @@ public class SBBoundingBox {
                             double maxY = fields[4].getDouble(axisAlignedBB);
                             double maxZ = fields[5].getDouble(axisAlignedBB);
                             int x = block.getX(), y = block.getY(), z = block.getZ(); 
-                            setVector(x + minX, y + minY, z + minZ, x + maxX, y + maxY, z + maxZ);
+                            setXYZ(x + minX, y + minY, z + minZ, x + maxX, y + maxY, z + maxZ);
                         }
                     } catch (ReflectiveOperationException e) {
                         e.printStackTrace();
@@ -71,23 +71,45 @@ public class SBBoundingBox {
         }
     }
 
+    public double getMinX() {
+        return minX;
+    }
+
+    public double getMinY() {
+        return minY;
+    }
+
+    public double getMinZ() {
+        return minZ;
+    }
+
+    public double getMaxX() {
+        return maxX;
+    }
+
+    public double getMaxY() {
+        return maxY;
+    }
+
+    public double getMaxZ() {
+        return maxZ;
+    }
+
     private void setSquare(@NotNull Block block) {
         int x = block.getX(), y = block.getY(), z = block.getZ();
-        setVector(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D);
+        setXYZ(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D);
     }
 
-    private void setVector(double x1, double y1, double z1, double x2, double y2, double z2) {
-        this.min = new Vector(Math.min(x1, x2), Math.min(y1, y2), Math.min(z1, z2));
-        this.max = new Vector(Math.max(x1, x2), Math.max(y1, y2), Math.max(z1, z2));
-    }
-    
-    @NotNull
-    public Vector getMin() {
-        return min;
+    private void setVector(@NotNull Vector min, @NotNull Vector max) {
+        setXYZ(min.getX(), min.getY(), min.getZ(), max.getX(), max.getY(), max.getZ());
     }
 
-    @NotNull
-    public Vector getMax() {
-        return max;
+    private void setXYZ(double x1, double y1, double z1, double x2, double y2, double z2) {
+        this.minX = Math.min(x1, x2);
+        this.minY = Math.min(y1, y2);
+        this.minZ = Math.min(z1, z2);
+        this.maxX = Math.max(x1, x2);
+        this.maxY = Math.max(y1, y2);
+        this.maxZ = Math.max(z1, z2);
     }
 }

@@ -25,7 +25,6 @@ import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.FluidCollisionMode;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -67,9 +66,7 @@ public final class RayTrace {
                 }
             } else {
                 // 疑似的に再現、ブロックの側面取得の精度は劣る
-                var locations = rayTraceLocations(player, distance, 0.05D, true);
-                var blocks = new LinkedHashSet<Block>(locations.size());
-                locations.forEach(l -> blocks.add(l.getBlock()));
+                var blocks = rayTraceBlocks(player, distance, 0.05D, true);
                 if (blocks.size() > 1) {
                     Block old = null, now = null;
                     var iterator = blocks.iterator();
@@ -92,22 +89,24 @@ public final class RayTrace {
     }
 
     @NotNull
-    public static Set<Location> rayTraceLocations(@NotNull Player player, final double distance, final double accuracy, final boolean square) {
+    public static Set<Block> rayTraceBlocks(@NotNull Player player, final double distance, final double accuracy, final boolean square) {
         var world = player.getWorld();
+        var blocks = new LinkedHashSet<Block>();
         var rayTrace = new RayTrace(player);
-        var locations = new LinkedHashSet<Location>();
         for(var position : rayTrace.traverse(distance, accuracy)) {
             var location = position.toLocation(world);
             if(rayTrace.intersects(new SBBoundingBox(location.getBlock(), square), distance, accuracy)){
-                locations.add(location);
+                blocks.add(location.getBlock());
             }
         }
-        return locations;
+        return blocks;
     }
 
     @NotNull
     public Vector getPostion(final double distance) {
-        return start.clone().add(direction.clone().multiply(distance));
+        var vector1 = new Vector(start.getX(), start.getY(), start.getZ());
+        var vector2 = new Vector(direction.getX(), direction.getY(), direction.getZ());
+        return vector1.add(vector2.multiply(distance));
     }
 
     public boolean isOnLine(@NotNull Vector position) {
@@ -131,7 +130,7 @@ public final class RayTrace {
     public Vector positionOfIntersection(@NotNull Vector min, @NotNull Vector max, final double distance, final double accuracy) {
         var positions = traverse(distance, accuracy);
         for (var position : positions) {
-            if (intersects(position, min, max)) {
+            if (intersects(position, new SBBoundingBox(min, max))) {
                 return position;
             }
         }
@@ -141,7 +140,7 @@ public final class RayTrace {
     public boolean intersects(@NotNull Vector min, @NotNull Vector max, final double distance, final double accuracy) {
         var positions = traverse(distance, accuracy);
         for (var position : positions) {
-            if (intersects(position, min, max)) {
+            if (intersects(position, new SBBoundingBox(min, max))) {
                 return true;
             }
         }
@@ -152,7 +151,7 @@ public final class RayTrace {
     public Vector positionOfIntersection(@NotNull SBBoundingBox boundingBox, final double distance, final double accuracy) {
         var positions = traverse(distance, accuracy);
         for (var position : positions) {
-            if (intersects(position, boundingBox.getMin(), boundingBox.getMax())) {
+            if (intersects(position, boundingBox)) {
                 return position;
             }
         }
@@ -162,19 +161,19 @@ public final class RayTrace {
     public boolean intersects(@NotNull SBBoundingBox boundingBox, final double distance, final double accuracy) {
         var positions = traverse(distance, accuracy);
         for (var position : positions) {
-            if (intersects(position, boundingBox.getMin(), boundingBox.getMax())) {
+            if (intersects(position, boundingBox)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean intersects(@NotNull Vector position, @NotNull Vector min, @NotNull Vector max) {
-        if (position.getX() < min.getX() || position.getX() > max.getX()) {
+    public static boolean intersects(@NotNull Vector position, @NotNull SBBoundingBox boundingBox) {
+        if (position.getX() < boundingBox.getMinX() || position.getX() > boundingBox.getMaxX()) {
             return false;
-        } else if (position.getY() < min.getY() || position.getY() > max.getY()) {
+        } else if (position.getY() < boundingBox.getMinY() || position.getY() > boundingBox.getMaxY()) {
             return false;
-        } else if (position.getZ() < min.getZ() || position.getZ() > max.getZ()) {
+        } else if (position.getZ() < boundingBox.getMinZ() || position.getZ() > boundingBox.getMaxZ()) {
             return false;
         }
         return true;

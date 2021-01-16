@@ -101,8 +101,8 @@ public class TickRunnable extends BukkitRunnable {
         destroyEntity(sbPlayer, rayResult.getRelative().getLocation(), locations);
         if (locations.size() > 0) {
             tempLocations.addAll(locations);
-            for (var location : RayTrace.rayTraceLocations(player, getDistance(player), 0.01D, true)) {
-                var blockLocation = location.getBlock().getLocation();
+            for (var block : RayTrace.rayTraceBlocks(player, getDistance(player), 0.01D, true)) {
+                var blockLocation = block.getLocation();
                 if (tempLocations.contains(blockLocation)) {
                     break;
                 }
