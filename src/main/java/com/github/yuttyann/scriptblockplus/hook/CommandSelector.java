@@ -147,6 +147,7 @@ public final class CommandSelector {
                             if (--m == 0) {
                                 textIndex.end = l;
                                 i += Math.max(textIndex.end - textIndex.start, 0);
+                                break;
                             }
                         }
                     }
