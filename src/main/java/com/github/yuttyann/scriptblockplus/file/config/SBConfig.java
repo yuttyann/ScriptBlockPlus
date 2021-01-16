@@ -165,12 +165,12 @@ public final class SBConfig {
     public static final ReplaceKey EXPORT_END = replaceKey(stringKey("ExportEndMessage", ""), "%name%");
 
     /**
-     * Parameter: {@link String} fileName, {@link String} filePath, {@link String} fileSize
+     * Parameter: {@link String} name, {@link String} path, {@link String} size
      */
     public static final ReplaceKey UPDATE_DOWNLOAD_END = replaceKey(stringKey("UpdateDownloadEndMessage", ""), "%name%", "%path%", "%size%");
 
     /**
-     * Parameter: {@link String} pluginName, {@link String} latestVersion, {@link List}&lt;{@link String}&gt; details
+     * Parameter: {@link String} name, {@link String} version, {@link List}&lt;{@link String}&gt; details
      */
     public static final ReplaceKey UPDATE_CHECK = replaceKey(stringKey("UpdateCheckMessage", ""), FUNCTION_UPDATE_CHECK);
 
@@ -240,7 +240,7 @@ public final class SBConfig {
     public static final ReplaceKey ACTIVE_COOLDOWN = replaceKey(stringKey("ActiveCooldownMessage", ""), "%hour%", "%minute%", "%second%");
 
     /**
-     * Parameter: {@link String} scriptKey-actionName
+     * Parameter: {@link String} scriptKey-actionType
      */
     public static final ReplaceKey SUCCESS_ACTION_DATA = replaceKey(stringKey("SuccActionDataMessage", ""), "%action%");
 
@@ -280,12 +280,12 @@ public final class SBConfig {
     public static final ReplaceKey CONSOLE_SCRIPT_VIEW = replaceKey(stringKey("ConsoleScriptViewMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
     /**
-     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptKey} scriptKey
+     * Parameter: {@link Location} location, {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey CONSOLE_SUCCESS_SCRIPT_EXECUTE = replaceKey(stringKey("ConsoleSuccScriptExecMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 
     /**
-     * Parameter: {@link String} playerName, {@link Location} location, {@link ScriptKey} scriptKey
+     * Parameter: {@link Location} location, {@link ScriptKey} scriptKey
      */
     public static final ReplaceKey CONSOLE_ERROR_SCRIPT_EXECUTE = replaceKey(stringKey("ConsoleErrorScriptExecMessage", ""), FUNCTION_CONSOLE_SCRIPT);
 

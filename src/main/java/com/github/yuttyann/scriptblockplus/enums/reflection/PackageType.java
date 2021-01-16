@@ -382,7 +382,7 @@ public enum PackageType {
     public static Entity[] selectEntities(@NotNull CommandSender sender, @NotNull Location location, @NotNull String selector) throws ReflectiveOperationException {
         var argmentEntity = Utils.isCBXXXorLater("1.14") ? "multipleEntities" : "b";
         var entitySelector = Utils.isCBXXXorLater("1.14") ? "getEntities" : "b";
-        var vector = toNMSVec3D(location.toVector());
+        var vector = toNMSVec3D(location.clone().add(0.5D, 0.5D, 0.5D).toVector());
         var entity = NMS.invokeMethod(null, "ArgumentEntity", argmentEntity);
         var reader = MJN.newInstance("StringReader", selector);
         var listener = CB_COMMAND.getMethod("VanillaCommandWrapper", "getListener", CommandSender.class).invoke(null, sender);
