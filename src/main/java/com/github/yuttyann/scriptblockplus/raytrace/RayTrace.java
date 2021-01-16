@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * ScriptBlockPlus AdvancedRayTrace クラス
+ * ScriptBlockPlus RayTrace クラス
  * @author yuttyann44581
  */
 public final class RayTrace {
