@@ -171,8 +171,8 @@ public final class Updater {
             return false;
         }
         try (
-               var reader1 = new BufferedReader(new FileReader(file)); 
-               var reader2 = new BufferedReader(new InputStreamReader(new URL(url).openStream()))
+                var reader1 = new BufferedReader(new FileReader(file)); 
+                var reader2 = new BufferedReader(new InputStreamReader(new URL(url).openStream()))
             ) {
             while (reader1.ready() && reader2.ready()) {
                 if (!reader1.readLine().equals(reader2.readLine())) {
