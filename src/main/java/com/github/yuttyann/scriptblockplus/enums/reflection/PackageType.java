@@ -355,8 +355,8 @@ public enum PackageType {
     @Nullable
     public static RayResult rayTraceBlocks(@NotNull Player player, final double distance) throws ReflectiveOperationException {
         var eyeLocation = player.getEyeLocation();
-        var vec3d1 = toNMSVec3D(eyeLocation.toVector());
-        var vec3d2 = toNMSVec3D(eyeLocation.toVector().add(eyeLocation.getDirection().normalize().multiply(distance)));
+        var vec3d1 = toVec3D(eyeLocation.toVector());
+        var vec3d2 = toVec3D(eyeLocation.toVector().add(eyeLocation.getDirection().normalize().multiply(distance)));
         var arguments = (Object[]) null;
         if (Utils.isCBXXXorLater("1.13")) {
             var NEVER = NMS.getEnumValueOf("FluidCollisionOption", "NEVER");
@@ -382,7 +382,7 @@ public enum PackageType {
     public static Entity[] selectEntities(@NotNull CommandSender sender, @NotNull Location location, @NotNull String selector) throws ReflectiveOperationException {
         var argmentEntity = Utils.isCBXXXorLater("1.14") ? "multipleEntities" : "b";
         var entitySelector = Utils.isCBXXXorLater("1.14") ? "getEntities" : "b";
-        var vector = toNMSVec3D(location.clone().add(0.5D, 0.5D, 0.5D).toVector());
+        var vector = toVec3D(location.toVector());
         var entity = NMS.invokeMethod(null, "ArgumentEntity", argmentEntity);
         var reader = MJN.newInstance("StringReader", selector);
         var listener = CB_COMMAND.getMethod("VanillaCommandWrapper", "getListener", CommandSender.class).invoke(null, sender);
@@ -425,7 +425,7 @@ public enum PackageType {
     }
 
     @NotNull
-    public static Object toNMSVec3D(@NotNull Vector vector) throws ReflectiveOperationException {
+    public static Object toVec3D(@NotNull Vector vector) throws ReflectiveOperationException {
         return NMS.newInstance("Vec3D", vector.getX(), vector.getY(), vector.getZ());
     }
 }

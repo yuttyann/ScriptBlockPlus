@@ -132,7 +132,7 @@ public final class CommandSelector {
                             break;
                         }
                     }
-                    builder.append(getIntRelative(tempBuilder.toString(), xyz, (Entity) sender));
+                    builder.append(getRelative(tempBuilder.toString(), xyz, (Entity) sender));
                     k++;
                 }
             } else if (chars[i] == '@' && type < chars.length && SELECTOR_SUFFIX.indexOf(chars[type]) > -1) {
@@ -194,18 +194,18 @@ public final class CommandSelector {
         return CommandUtils.getTargets(sender, location, selector);
     }
 
-    private int getIntRelative(@NotNull String target, @NotNull String relative, @NotNull Entity entity) {
+    private double getRelative(@NotNull String target, @NotNull String relative, @NotNull Entity entity) {
         int number = 0;
         if (StringUtils.isNotEmpty(target) && Calculation.REALNUMBER_PATTERN.matcher(target).matches()) {
             number = Integer.parseInt(target);
         }
         switch (relative) {
             case "x":
-                return entity.getLocation().getBlockX() + number;
+                return entity.getLocation().getX() + number;
             case "y":
-                return entity.getLocation().getBlockY() + number;
+                return entity.getLocation().getY() + number;
             case "z":
-                return entity.getLocation().getBlockZ() + number;
+                return entity.getLocation().getZ() + number;
             default:
                 return 0;
         }
