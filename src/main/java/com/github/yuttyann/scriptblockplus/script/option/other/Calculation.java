@@ -74,7 +74,7 @@ public class Calculation extends BaseOption {
         }
         if (source.startsWith("%player_count_") && source.endsWith("%")) {
             source = source.substring("%player_count_".length(), source.length() - 1);
-            var array = source.split("/");
+            var array = StringUtils.split(source, '/');
             if (array.length < 1 || array.length > 2) {
                 return 0;
             }

@@ -39,7 +39,6 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -167,7 +166,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         }
         var player = (Player) sender;
         var inventory = player.getInventory();
-        ItemAction.getItems().forEach(i -> inventory.addItem(new ItemStack(i.getItem())));
+        ItemAction.getItems().forEach(i -> inventory.addItem(i.getItem().clone()));
         Utils.updateInventory(player);
         SBConfig.GIVE_TOOL.send(player);
         return true;

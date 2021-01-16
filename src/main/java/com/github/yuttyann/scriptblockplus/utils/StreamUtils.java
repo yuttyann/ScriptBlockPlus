@@ -52,7 +52,7 @@ public final class StreamUtils {
     }
 
     public static <T> Optional<T> filterFirst(@NotNull T[] array, @NotNull Predicate<T> filter) {
-        for (var t : array) {
+        for (T t : array) {
             if (filter.test(t)) {
                 return t == null ? Optional.empty() : Optional.of(t);
             }
@@ -61,7 +61,7 @@ public final class StreamUtils {
     }
 
     public static <T> Optional<T> filterFirst(@NotNull Collection<T> collection, @NotNull Predicate<T> filter) {
-        for (var t : collection) {
+        for (T t : collection) {
             if (filter.test(t)) {
                 return t == null ? Optional.empty() : Optional.of(t);
             }

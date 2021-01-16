@@ -105,7 +105,7 @@ public class ItemUtils {
         if (KEY_MATERIALS == null) {
             return material.getKey().toString();
         }
-        var filter = (Predicate<Entry<?, ?>>) (e) -> e.getValue() == material;
+        var filter = (Predicate<Entry<?, ?>>) e -> e.getValue() == material;
         return KEY_MATERIALS.entrySet().stream().filter(filter).findFirst().get().getKey();
     }
 
