@@ -15,7 +15,8 @@ CreateCommandMessage: '<交互方式> create <脚本内容> - 创建脚本方块
 AddCommandMessage: '<交互方式> add <脚本内容> - 添加脚本方块'
 RemoveCommandMessage: '<交互方式> remove - 移除脚本方块'
 ViewCommandMessage: '<交互方式> view - 查看方块的脚本'
-RunCommandMessage: '<交互方式> run <世界名> <x> <y> <z> - 执行指定的脚本'
+RunCommandMessage: '<交互方式> run <世界名> <x> <y> <z> - 执行脚本块'
+RedstoneCommandMessage: '<scriptkey> redstone <needs> [selector] - 设置脚本块是否与红石一起使用'
 SelectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - 粘贴选区内的脚本方块'
 SelectorRemoveCommandMessage: 'selector remove - 移除选区内的脚本方块'
 
@@ -67,25 +68,27 @@ UpdateDownloadStartMessage: '&6开始下载最新版本ScriptBlockPlus...如果�
 ExportStartMessage: '&7将BukkitAPI的"%name%"输出到文本....'
 ExportEndMessage: '&bBukkitAPI"%name%"输出完成。'
 
-# %filename% : 文件名
-# %filepath% : 文件路径
-# %filesize% : 文件大小
-UpdateDownloadEndMessage: '&6新更新下载完成|~文件名: %filename%|~文件大小: %filesize%|~文件路径: %filepath%'
+# %name% : 文件名
+# %path% : 文件路径
+# %size% : 文件大小
+UpdateDownloadEndMessage: '&6新更新下载完成|~文件名: %name%|~文件大小: %size%|~文件路径: %path%'
 
-# %pluginname%    : 插件名
-# %latestversion% : 最新版本
-# %details%       : 更新内容
-UpdateCheckMessage: '&b新版本插件可用|~v%latestversion% 最新版本|~插件名: %pluginname%|~☆更新内容☆|~%details%'
+# %name%    : 插件名
+# %version% : 最新版本
+# %details% : 更新内容
+UpdateCheckMessage: '&b新版本插件可用|~v%version% 最新版本|~插件名: %name%|~☆更新内容☆|~%details%'
 
 # 沒有佔位符
 ErrorUpdateMessage: '&c查询更新失败，可能是国内网络导致的，建议去这个中文搬运帖查看更新http://www.mcbbs.net/thread-691900-1-1.html'
 
 # %scriptkey% : 脚本键
-ScriptCopyMessage: '&a复制一个种类是"%scriptkey%"的脚本'
-ScriptPasteMessage: '&a粘贴一个种类是"%scriptkey%"的脚本'
-ScriptCreateMessage: '&a创建一个种类是"%scriptkey%"的脚本'
-ScriptAddMessage: '&a添加一个种类是"%scriptkey%"的脚本'
-ScriptRemoveMessage: '&c删除一个种类是"%scriptkey%"的脚本'
+ScriptCopyMessage: '&a复制一个脚本键是"%scriptkey%"的脚本'
+ScriptPasteMessage: '&a粘贴一个脚本键是"%scriptkey%"的脚本'
+ScriptCreateMessage: '&a创建一个脚本键是"%scriptkey%"的脚本'
+ScriptAddMessage: '&a添加一个脚本键是"%scriptkey%"的脚本'
+ScriptRemoveMessage: '&c删除一个脚本键是"%scriptkey%"的脚本'
+ScriptRedstoneEnableMessage: '&a启用脚本键"%scriptkey%"的红石操作'
+ScriptRedstoneDisableMessage: '&c禁用脚本键"%scriptkey%"的红石行为'
 
 # 沒有佔位符
 NotSelectionMessage: '&cBlockSelector坐标范围未选择'
@@ -116,8 +119,8 @@ ActiveDelayMessage: '&c该脚本在延迟中 你暂时不能使用'
 # %second% : 秒
 ActiveCooldownMessage: '&c脚本还在冷却中 [%hour%时%minute%分%second%秒]'
 
-# %actiontype% : 动作类型
-SuccActionDataMessage: '&a脚本键"%actiontype%"的设定已选定。请点击需要生效的方块'
+# %action% : 动作类型
+SuccActionDataMessage: '&a动作类型"%action%"的设定已选定。请点击需要生效的方块'
 
 # 沒有佔位符
 ErrorActionDataMessage: '&c设定出现错误'
@@ -142,17 +145,12 @@ ErrorItemMessage: '&c您的背包内物品不满足条件，所需物品必须�
 ErrorCostMessage: '&c你的金钱至少应该有"%result%"，执行这个脚本需要花费金钱"%cost%"'
 
 # %scriptkey%  : 脚本键
-# %player%     : 玩家ID
 # %world%      : 世界名
 # %coords%     : 坐标(x, y, z)
-ConsoleScriptCopyMessage: '&a创建者"%player%"、脚本键"%scriptkey%"、位置"%world%, %coords%"脚本已被复制'
-ConsoleScriptPasteMessage: '&a创建者"%player%"、脚本键"%scriptkey%"、位置"%world%, %coords%"脚本已被粘贴'
-ConsoleScriptCreateMessage: '&a创建者"%player%"、脚本键"%scriptkey%"、位置"%world%, %coords%"脚本已被创建'
-ConsoleScriptAddMessage: '&a更新者"%player%"、脚本键"%scriptkey%"、位置"%world%, %coords%"脚本已被添加'
-ConsoleScriptRemoveMessage: '&c删除者"%player%"、脚本键"%scriptkey%"、位置"%world%, %coords%"脚本已被删除'
-ConsoleScriptViewMessage: '&a执行者"%player%"、脚本键"%scriptkey%"、位置"%world%, %coords%"脚本正在被预览'
-ConsoleSuccScriptExecMessage: '&a执行者"%player%"、脚本键"%scriptkey%"、位置"%world%, %coords%"脚本被触发了'
-ConsoleErrorScriptExecMessage: '&c执行者"%player%"、脚本键"%scriptkey%"、位置"%world%, %coords%"脚本触发失败'
+ConsoleScriptEditMessage: '&a[脚本键"%scriptkey%"、位置"%world%, %coords%"]脚本已被编辑'
+ConsoleScriptViewMessage: '&a[脚本键"%scriptkey%"、位置"%world%, %coords%"]脚本正在被预览'
+ConsoleSuccScriptExecMessage: '&a[脚本键"%scriptkey%"、位置"%world%, %coords%"]脚本被触发了'
+ConsoleErrorScriptExecMessage: '&c[脚本键"%scriptkey%"、位置"%world%, %coords%"]脚本触发失败'
 
 # %scriptkey%  : 脚本键
 # %blockcount% : 方块数量
@@ -160,5 +158,5 @@ ConsoleErrorScriptExecMessage: '&c执行者"%player%"、脚本键"%scriptkey%"�
 # %world%      : 世界名
 # %mincoords%  : 最小位置(x, y, z)
 # %maxcoords%  : 最大位置(x, y, z)
-ConsoleSelectorPasteMessage: '&a脚本键"%scriptkey%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已完成粘贴'
-ConsoleSelectorRemoveMessage: '&c脚本键"%scriptkey%"位置范围Min"%world%, %mincoords%", Max"%world%, %maxcoords%"已被删除'
+ConsoleSelectorPasteMessage: '&a[脚本键"%scriptkey%", 最小值"%world%, %mincoords%", 最大值"%world%, %maxcoords%"]已完成粘贴'
+ConsoleSelectorRemoveMessage: '&c[脚本键"%scriptkey%", 最小值"%world%, %mincoords%", 最大值"%world%, %maxcoords%"]已被删除'

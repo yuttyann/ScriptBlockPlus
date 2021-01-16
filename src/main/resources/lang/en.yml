@@ -68,15 +68,15 @@ UpdateDownloadStartMessage: '&6Start downloading the latest ScriptBlockPlus...'
 ExportStartMessage: '&7Outputing BukkitAPI %name% to text ....'
 ExportEndMessage: '&bOutput of BukkitAPI''s Sound is complete.'
 
-# %filename% : Downloaded file name
-# %filepath% : File save destination
-# %filesize% : File capacity
-UpdateDownloadEndMessage: '&6Download completed!|~File name: %filename%|~File size: %filesize%|~File path: %filepath%'
+# %name% : Downloaded file name
+# %path% : File save destination
+# %size% : File capacity
+UpdateDownloadEndMessage: '&6Download completed!|~File name: %name%|~File size: %size%|~File path: %path%'
 
-# %pluginname%    : Name of the updated plugin
-# %latestversion% : Latest version
-# %details%       : update information
-UpdateCheckMessage: '&bNew version available!|~v%latestversion% the latest ver.|~Name: %pluginname%|~>>>Change log<<<|~%details%'
+# %name%    : Name of the updated plugin
+# %version% : Latest version
+# %details% : update information
+UpdateCheckMessage: '&bNew version available!|~v%version% the latest ver.|~Name: %name%|~>>>Change log<<<|~%details%'
 
 # There are no placeholders
 ErrorUpdateMessage: '&cError occured while checking new version.'
@@ -147,15 +147,15 @@ ErrorCostMessage: '&cYou need money "%cost%" to do this.'
 # %scriptkey%  : Script key
 # %world%      : The name of the world
 # %coords%     : Coordinate(x, y, z)
-ConsoleScriptEditMessage: '&aCreator[Key"%scriptkey%", Location"%world%, %coords%"] has been edited.'
-ConsoleScriptViewMessage: '&aOperator[Key"%scriptkey%", Location"%world%, %coords%"] has been viewed.'
-ConsoleSuccScriptExecMessage: '&aOperator[Key"%scriptkey%", Location"%world%, %coords%"] executed successfully.'
-ConsoleErrorScriptExecMessage: '&cOperator[Key"%scriptkey%", Location"%world%, %coords%"] fail to execute.'
+ConsoleScriptEditMessage: '&a[Key"%scriptkey%", Location"%world%, %coords%"] has been edited.'
+ConsoleScriptViewMessage: '&a[Key"%scriptkey%", Location"%world%, %coords%"] has been viewed.'
+ConsoleSuccScriptExecMessage: '&a[Key"%scriptkey%", Location"%world%, %coords%"] executed successfully.'
+ConsoleErrorScriptExecMessage: '&c[Key"%scriptkey%", Location"%world%, %coords%"] fail to execute.'
 
 # %scriptkey%  : Script key
 # %blockcount% : Block amount
 # %world%      : The name of the world
 # %mincoords%  : Minimum coordinate(x, y, z)
 # %maxcoords%  : Maximum coordinate(x, y, z)
-ConsoleSelectorPasteMessage: '&aSelectorPaste[Key"%scriptkey%", Min"%world%, %mincoords%", Max"%world%, %maxcoords%"] has been pasted.'
-ConsoleSelectorRemoveMessage: '&cSelectorRemove[Key"%scriptkey%", Min"%world%, %mincoords%", Max"%world%, %maxcoords%"] has been removed.'
+ConsoleSelectorPasteMessage: '&a[Key"%scriptkey%", Min"%world%, %mincoords%", Max"%world%, %maxcoords%"] has been pasted.'
+ConsoleSelectorRemoveMessage: '&c[Key"%scriptkey%", Min"%world%, %mincoords%", Max"%world%, %maxcoords%"] has been removed.'

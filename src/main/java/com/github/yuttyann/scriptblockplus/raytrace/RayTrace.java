@@ -20,12 +20,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
-
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -63,14 +64,35 @@ public final class RayTrace {
                     return PackageType.rayTraceBlocks(player, distance);
                 } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
-                }  
+                }
+            } else {
+                // 疑似的に再現、ブロックの側面取得の精度は劣る
+                var locations = rayTraceLocations(player, distance, 0.05D, true);
+                var blocks = new LinkedHashSet<Block>(locations.size());
+                locations.forEach(l -> blocks.add(l.getBlock()));
+                if (blocks.size() > 1) {
+                    Block old = null, now = null;
+                    var iterator = blocks.iterator();
+                    var blockCoords = new BlockCoords(player.getEyeLocation());
+                    while (iterator.hasNext()) {
+                        old = now;
+                        now = iterator.next();
+                        if (blockCoords.equals(now.getLocation())) {
+                            continue;
+                        }
+                        if (old != null && now.getType().isOccluding()) {
+                            var blockFace = now.getFace(old);
+                            return new RayResult(now, blockFace);
+                        }
+                    }   
+                }
             }
             return null;
         }
     }
-    
+
     @NotNull
-    public static Set<Location> rayTraceBlocks(@NotNull Player player, final double distance, final double accuracy, final boolean square) {
+    public static Set<Location> rayTraceLocations(@NotNull Player player, final double distance, final double accuracy, final boolean square) {
         var world = player.getWorld();
         var rayTrace = new RayTrace(player);
         var locations = new LinkedHashSet<Location>();

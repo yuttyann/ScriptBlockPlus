@@ -46,6 +46,6 @@ public class RayResult {
 
     @NotNull
     public BlockFace getHitBlockFace() {
-        return blockFace;
+        return blockFace == null ? BlockFace.SELF : blockFace;
     }
 }

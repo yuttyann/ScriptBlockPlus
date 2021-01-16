@@ -50,7 +50,7 @@ public final class Utils {
     public static final String DATE_PATTERN = "yyyy/MM/dd HH:mm:ss";
 
     private static final String SERVER_VERSION = getServerVersion();
-    private static final Map<String, Boolean> VC_CACHE = new HashMap<>();
+    private static final Map<String, Boolean> VERSION_CACHE = new HashMap<>();
 
     @NotNull
     public static String randomUUID() {
@@ -78,9 +78,9 @@ public final class Utils {
     }
 
     public static boolean isCBXXXorLater(@NotNull String version) {
-        Boolean result = VC_CACHE.get(version);
+        Boolean result = VERSION_CACHE.get(version);
         if (result == null) {
-            VC_CACHE.put(version, result = isUpperVersion(getServerVersion(), version));
+            VERSION_CACHE.put(version, result = isUpperVersion(getServerVersion(), version));
         }
         return result;
     }
@@ -112,7 +112,7 @@ public final class Utils {
     public static void sendColorMessage(@NotNull CommandSender sender, @Nullable String message) {
         var color = "";
         var text = replace(setColor(isEmpty(message) ? "" : message), "\\n", "|~");
-        for (String line : Splitter.on("|~").omitEmptyStrings().split(text)) {
+        for (var line : Splitter.on("|~").omitEmptyStrings().split(text)) {
             sender.sendMessage(line = (color + line));
             if (line.indexOf('§') > -1) {
                 color = getColors(line);

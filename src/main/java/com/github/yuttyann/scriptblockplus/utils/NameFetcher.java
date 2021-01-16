@@ -35,22 +35,22 @@ public final class NameFetcher {
 
     private static final String URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
-    private static final Map<UUID, String> CACHE = new HashMap<>();
+    private static final Map<UUID, String> NAME_CACHE = new HashMap<>();
 
     public static void clear() {
-        CACHE.clear();
+        NAME_CACHE.clear();
     }
 
     @NotNull
     public static String getName(@NotNull UUID uuid) throws IOException {
-        var name = CACHE.get(uuid);
+        var name = NAME_CACHE.get(uuid);
         if (name == null) {
             var json = getJsonObject(URL + StringUtils.replace(uuid.toString(), "-", ""));
             var error = json.get("errorMessage").getAsString();
             if (StringUtils.isNotEmpty(error)) {
                 throw new IllegalStateException(error);
             }
-            CACHE.put(uuid, name = json.get("name").getAsString());
+            NAME_CACHE.put(uuid, name = json.get("name").getAsString());
         }
         return name;
     }

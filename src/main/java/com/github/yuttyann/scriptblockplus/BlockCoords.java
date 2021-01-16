@@ -223,11 +223,22 @@ public final class BlockCoords {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (!(obj instanceof BlockCoords)) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof BlockCoords) {
+            var blockCoords = (BlockCoords) obj;
+            return x == blockCoords.x && y == blockCoords.y && z == blockCoords.z && world.equals(blockCoords.world);
+        }
+        return false;
+    }
+
+    public boolean equals(@Nullable Location location) {
+        if (location == null) {
             return false;
         }
-        var blockCoords = (BlockCoords) obj;
-        return x == blockCoords.x && y == blockCoords.y && z == blockCoords.z && world.equals(blockCoords.world);
+        int blockX = location.getBlockX(), blockY = location.getBlockY(), blockZ = location.getBlockZ();
+        return x == blockX && y == blockY && z == blockZ && world.equals(location.getWorld());
     }
 
     @Override

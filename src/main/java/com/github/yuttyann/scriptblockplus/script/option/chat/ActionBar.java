@@ -90,6 +90,8 @@ public class ActionBar extends BaseOption implements Runnable {
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }
+        } else {
+            Utils.sendColorMessage(sbPlayer, "§cActionBar: §r" + message);
         }
     }
 }

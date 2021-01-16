@@ -94,8 +94,8 @@ public final class SBConfig {
     // Functions (Private)
     private static Function<ReplaceKey, String> FUNCTION_UPDATE_CHECK = r -> {
         var s = r.getValue();
-        s = replace(s, "%pluginname%", r.getArg(0, String.class));
-        s = replace(s, "%latestversion%", r.getArg(1, String.class));
+        s = replace(s, "%name%", r.getArg(0, String.class));
+        s = replace(s, "%version%", r.getArg(1, String.class));
         if (s.contains("%details%")) {
             @SuppressWarnings("unchecked")
             var l = (List<String>) r.getArg(2, List.class);
@@ -167,7 +167,7 @@ public final class SBConfig {
     /**
      * Parameter: {@link String} fileName, {@link String} filePath, {@link String} fileSize
      */
-    public static final ReplaceKey UPDATE_DOWNLOAD_END = replaceKey(stringKey("UpdateDownloadEndMessage", ""), "%filename%", "%filepath%", "%filesize%");
+    public static final ReplaceKey UPDATE_DOWNLOAD_END = replaceKey(stringKey("UpdateDownloadEndMessage", ""), "%name%", "%path%", "%size%");
 
     /**
      * Parameter: {@link String} pluginName, {@link String} latestVersion, {@link List}&lt;{@link String}&gt; details
