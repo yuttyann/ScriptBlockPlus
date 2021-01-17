@@ -36,6 +36,10 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus BlockListener クラス
+ * @author yuttyann44581
+ */
 public class BlockListener implements Listener {
 
     private static final int LENGTH = "tag{".length();
