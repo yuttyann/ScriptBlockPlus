@@ -101,6 +101,24 @@ public final class StreamUtils {
         return false;
     }
 
+    public static <T> boolean allMatch(@NotNull T[] array, Predicate<T> filter) {
+        for (T t : array) {
+            if (!filter.test(t)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static <T> boolean allMatch(@NotNull Collection<T> collection, Predicate<T> filter) {
+        for (T t : collection) {
+            if (!filter.test(t)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static <T> void filter(@NotNull T t, @NotNull Predicate<T> filter, @NotNull Consumer<T> action) {
         if (filter.test(t)) {
             action.accept(t);

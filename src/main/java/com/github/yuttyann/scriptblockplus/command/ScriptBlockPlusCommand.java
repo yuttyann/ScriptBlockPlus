@@ -35,6 +35,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.*;
 import com.google.common.base.Charsets;
+
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -414,6 +415,10 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                         StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
                     } else if (args.length == 4 && equals(args[1], "redstone") && equals(args[2], "true")) {
                         var prefix = args[3].toLowerCase(Locale.ROOT);
+                        var answers = new String[] { "tag{op=}", "tag{perm=}", "tag{op=,perm=}", "@a", "@e", "@p", "@r" };
+                        StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
+                    } else if (args.length == 5 && equals(args[1], "redstone") && equals(args[2], "true") && args[3].startsWith("tag{")) {
+                        var prefix = args[4].toLowerCase(Locale.ROOT);
                         var answers = new String[] { "@a", "@e", "@p", "@r" };
                         StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
                     }
