@@ -77,6 +77,7 @@ public class CuboidRegionPaste {
         scriptParam.getAuthor().add(sbClipboard.getSBPlayer().getUniqueId());
         scriptParam.setScript(sbClipboard.getScript());
         scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        scriptParam.setSelector(sbClipboard.getSelector());
         scriptParam.setAmount(sbClipboard.getAmount());
         locations.add(location);
         return true;
