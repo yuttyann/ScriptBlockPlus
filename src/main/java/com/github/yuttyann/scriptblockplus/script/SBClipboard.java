@@ -25,6 +25,7 @@ import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableLocati
 
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -86,7 +87,7 @@ public class SBClipboard {
         return script;
     }
 
-    @NotNull
+    @Nullable
     public String getSelector() {
         return selector;
     }
