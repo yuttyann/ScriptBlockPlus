@@ -22,7 +22,9 @@ public enum Tag {
 
     @NotNull
     public static Tag[] getTags() {
-        return TAGS;
+        var tags = new Tag[TAGS.length];
+        System.arraycopy(TAGS, 0, tags, 0, TAGS.length);
+        return tags;
     }
 
     @NotNull
