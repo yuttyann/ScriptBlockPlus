@@ -68,6 +68,7 @@ public class Calculation extends BaseOption {
         return false;
     }
 
+    @NotNull
     private Object parse(@NotNull Player player, @NotNull String source) throws Exception {
         if (REALNUMBER_PATTERN.matcher(source).matches()) {
             return Double.parseDouble(source);
@@ -204,7 +205,7 @@ public class Calculation extends BaseOption {
         }
     }
 
-    private boolean result(@NotNull String operator, Object value1, Object value2) {
+    private boolean result(@NotNull String operator, @NotNull Object value1, @NotNull Object value2) {
         if (!(value1 instanceof Number && value2 instanceof Number)) {
             switch (operator) {
                 case "==":
