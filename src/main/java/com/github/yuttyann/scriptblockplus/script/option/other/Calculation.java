@@ -55,7 +55,7 @@ public class Calculation extends BaseOption {
         var value2 = parse(player, array[2]);
         var operator = array[1];
 
-        if (result(value1, value2, operator)) {
+        if (result(operator, value1, value2)) {
             return true;
         }
         if (array.length > 3) {
@@ -204,9 +204,16 @@ public class Calculation extends BaseOption {
         }
     }
 
-    private boolean result(Object value1, Object value2, @NotNull String operator) {
+    private boolean result(@NotNull String operator, Object value1, Object value2) {
         if (!(value1 instanceof Number && value2 instanceof Number)) {
-            return operator.equals("==") && Objects.equals(value1, value2);
+            switch (operator) {
+                case "==":
+                    return Objects.equals(value1, value2);
+                case "!=":
+                    return !Objects.equals(value1, value2);
+                default:
+                    return false;
+            }
         }
         double v1 = Double.parseDouble(value1.toString());
         double v2 = Double.parseDouble(value2.toString());

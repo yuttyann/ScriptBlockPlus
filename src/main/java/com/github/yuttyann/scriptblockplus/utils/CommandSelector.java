@@ -13,20 +13,22 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.hook;
+package com.github.yuttyann.scriptblockplus.utils;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
-import com.github.yuttyann.scriptblockplus.utils.CommandUtils;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ProxiedCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.CommandMinecart;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,15 +44,10 @@ import java.util.stream.Stream;
  */
 public final class CommandSelector {
 
-    public static final CommandSelector INSTANCE = new CommandSelector();
-
     private final static String SELECTOR_SUFFIX = "aeprs";
     private final static String[] SELECTOR_NAMES = { "@a", "@e", "@p", "@r", "@s" };
 
-    private CommandSelector() {
-    }
-
-    private class Index {
+    private static class Index {
 
         private final int start;
         private int end = 0;
@@ -65,12 +62,12 @@ public final class CommandSelector {
         }
     }
 
-    public boolean has(@NotNull String text) {
+    public static boolean has(@NotNull String text) {
         return Stream.of(SELECTOR_NAMES).anyMatch(text::contains);
     }
 
     @NotNull
-    public List<String> build(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
+    public static List<String> build(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
         int modCount = 0;
         var indexList = new ArrayList<Index>();
         var commandList = new ArrayList<String>();
@@ -78,7 +75,7 @@ public final class CommandSelector {
         for (int i = 0; i < indexList.size(); i++) {
             var selector = indexList.get(i).substring(command);
             var entities = getTargets(sender, location, selector);
-            if (isEmpty(entities)) {
+            if (entities == null || entities.length == 0) {
                 if (StreamUtils.anyMatch(SELECTOR_NAMES, s -> selector.startsWith(s + "["))) {
                     continue;
                 } else if (selector.startsWith("@p") && sender instanceof Player) {
@@ -113,7 +110,7 @@ public final class CommandSelector {
     }
 
     @NotNull
-    private String parse(@NotNull String source, @NotNull CommandSender sender, @NotNull List<Index> indexList) {
+    private static String parse(@NotNull String source, @NotNull CommandSender sender, @NotNull List<Index> indexList) {
         var chars = source.toCharArray();
         var builder = new StringBuilder();
         for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
@@ -162,39 +159,49 @@ public final class CommandSelector {
         return builder.toString();
     }
 
-    private boolean isEmpty(@Nullable Entity[] array) {
-        return array == null || array.length == 0;
-    }
-
     @NotNull
-    private String getName(@NotNull Entity entity) {
-        return entity instanceof Player ? entity.getName() : entity.getUniqueId().toString();
-    }
-
-    @NotNull
-    public Entity[] getTargets(@NotNull CommandSender sender, @NotNull String selector) {
+    public static Entity[] getTargets(@NotNull CommandSender sender, @Nullable Location location, @NotNull String selector) {
+        selector = Placeholder.INSTANCE.replace(getWorld(sender, location), selector);
         if (Utils.isCBXXXorLater("1.13.2")) {
-            return Bukkit.selectEntities(sender, selector).toArray(new Entity[0]);
-        }
-        return CommandUtils.getTargets(sender, null, selector);
-    }
-
-    @NotNull
-    public Entity[] getTargets(@NotNull CommandSender sender, @Nullable Location location, @NotNull String selector) {
-        if (!PackageType.HAS_NMS || location == null) {
-            return getTargets(sender, selector);
-        }
-        if (Utils.isCBXXXorLater("1.13.2")) {
-            try {
-                return PackageType.selectEntities(sender, location, selector);
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
+            if (PackageType.HAS_NMS) {
+                try {
+                    return PackageType.selectEntities(sender, location, selector);
+                } catch (ReflectiveOperationException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                return Bukkit.selectEntities(sender, selector).toArray(Entity[]::new);
             }
         }
         return CommandUtils.getTargets(sender, location, selector);
     }
 
-    private double getRelative(@NotNull String target, @NotNull String relative, @NotNull Entity entity) {
+    private static World getWorld(@NotNull CommandSender sender, @Nullable Location location) {
+        if (location != null) {
+            return location.getWorld();
+        }
+        var world = (World) null;
+        if (sender instanceof ProxiedCommandSender) {
+            sender = ((ProxiedCommandSender) sender).getCallee();
+        }
+        if (sender instanceof Player) {
+            world = ((Player) sender).getWorld();
+        } else if (sender instanceof SBPlayer) {
+            world = ((SBPlayer) sender).getWorld();
+        } else if (sender instanceof BlockCommandSender) {
+            world = ((BlockCommandSender) sender).getBlock().getWorld();
+        } else if (sender instanceof CommandMinecart) {
+            world = ((CommandMinecart) sender).getWorld();
+        }
+        return world == null ? Bukkit.getWorlds().get(0) : world;
+    } 
+
+    @NotNull
+    private static String getName(@NotNull Entity entity) {
+        return entity instanceof Player ? entity.getName() : entity.getUniqueId().toString();
+    }
+
+    private static double getRelative(@NotNull String target, @NotNull String relative, @NotNull Entity entity) {
         int number = 0;
         if (StringUtils.isNotEmpty(target) && Calculation.REALNUMBER_PATTERN.matcher(target).matches()) {
             number = Integer.parseInt(target);

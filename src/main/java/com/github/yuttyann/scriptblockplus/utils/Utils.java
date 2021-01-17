@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.utils;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.CommandLog;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.hook.CommandSelector;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.google.common.base.Splitter;
 
@@ -143,8 +142,8 @@ public final class Utils {
     public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
         command = command.startsWith("/") ? command.substring(1) : command;
         var commandSender = sender instanceof SBPlayer ? ((SBPlayer) sender).getPlayer() : sender;
-        if (CommandSelector.INSTANCE.has(command)) {
-            var commands = CommandSelector.INSTANCE.build(commandSender, location, command);
+        if (CommandSelector.has(command)) {
+            var commands = CommandSelector.build(commandSender, location, command);
             return commands.stream().allMatch(s -> Bukkit.dispatchCommand(commandSender, s));
         }
         return Bukkit.dispatchCommand(commandSender, command);

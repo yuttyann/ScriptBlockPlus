@@ -27,7 +27,6 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.WrappedDataWatcherObject;
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
-import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.google.common.collect.HashMultimap;
@@ -44,11 +43,6 @@ import org.jetbrains.annotations.NotNull;
  * @author yuttyann44581
  */
 public class GlowEntityPacket {
-
-    static {
-        // エンティティのクリックを検知
-        StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> new EntityActionListener().register());
-    }
 
     private static final int TYPE_ID = PackageType.HAS_NMS ? PackageType.getMagmaCubeId() : -1;
     private static final int SIZE_ID = PackageType.HAS_NMS ? PackageType.getSlimeSizeId() : -1;

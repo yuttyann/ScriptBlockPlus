@@ -19,13 +19,13 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.enums.Tag;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.config.YamlConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.hook.CommandSelector;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -35,6 +35,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.*;
 import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -300,7 +301,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         var scriptEdit = new ScriptEdit(scriptKey, actionType);
         if (actionType == ActionType.REDSTONE && equals(args[2], "true")) {
             var selector = StringUtils.createString(args, 3).trim();
-            if (selector.startsWith("@s") || !CommandSelector.INSTANCE.has(selector)) {
+            if (selector.startsWith("@s") || !CommandSelector.has(selector)) {
                 selector = "@p";
             }
             scriptEdit.setValue(selector);
@@ -415,7 +416,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                         StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
                     } else if (args.length == 4 && equals(args[1], "redstone") && equals(args[2], "true")) {
                         var prefix = args[3].toLowerCase(Locale.ROOT);
-                        var answers = new String[] { "tag{op=}", "tag{perm=}", "tag{op=,perm=}", "@a", "@e", "@p", "@r" };
+                        var answers = Lists.newArrayList("@a", "@e", "@p", "@r");
+                        StreamUtils.forEach(Tag.getTags(), t -> answers.add("tag{" + t.getPrefix() + "}"));
                         StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
                     } else if (args.length == 5 && equals(args[1], "redstone") && equals(args[2], "true") && args[3].startsWith("tag{")) {
                         var prefix = args[4].toLowerCase(Locale.ROOT);

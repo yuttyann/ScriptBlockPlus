@@ -20,7 +20,10 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
+
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,8 +57,16 @@ public final class Placeholder extends HookPlugin {
 
     @NotNull
     public String replace(@NotNull Player player, @NotNull String source) {
-        source = StringUtils.replace(source, "<player>", player.getName());
         source = StringUtils.replace(source, "<world>", player.getWorld().getName());
+        source = StringUtils.replace(source, "<player>", player.getName());
         return has() ? set(player, source) : source;
+    }
+
+    @NotNull
+    public String replace(@NotNull World world, @NotNull String source) {
+        source = StringUtils.replace(source, "<world>", world.getName());
+        source = StringUtils.replace(source, "<online>", Bukkit.getOnlinePlayers().size());
+        source = StringUtils.replace(source, "<players>", world.getPlayers().size());
+        return source;
     }
 }
