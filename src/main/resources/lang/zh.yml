@@ -16,7 +16,7 @@ AddCommandMessage: '<交互方式> add <脚本内容> - 添加脚本方块'
 RemoveCommandMessage: '<交互方式> remove - 移除脚本方块'
 ViewCommandMessage: '<交互方式> view - 查看方块的脚本'
 RunCommandMessage: '<交互方式> run <世界名> <x> <y> <z> - 执行脚本块'
-RedstoneCommandMessage: '<scriptkey> redstone <needs> [tag] [selector] - 设置脚本块是否与红石一起使用'
+RedstoneCommandMessage: '<scriptkey> redstone <needs> [filter] [selector] - 设置脚本块是否与红石一起使用'
 SelectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - 粘贴选区内的脚本方块'
 SelectorRemoveCommandMessage: 'selector remove - 移除选区内的脚本方块'
 

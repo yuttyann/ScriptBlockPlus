@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.enums.Tag;
+import com.github.yuttyann.scriptblockplus.enums.Filter;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
@@ -417,9 +417,9 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                     } else if (args.length == 4 && equals(args[1], "redstone") && equals(args[2], "true")) {
                         var prefix = args[3].toLowerCase(Locale.ROOT);
                         var answers = Lists.newArrayList("@a", "@e", "@p", "@r");
-                        StreamUtils.forEach(Tag.getTags(), t -> answers.add("tag{" + t.getPrefix() + "}"));
+                        StreamUtils.forEach(Filter.getFilters(), t -> answers.add(Filter.getPrefix() + t.getSyntax() + "}"));
                         StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);
-                    } else if (args.length == 5 && equals(args[1], "redstone") && equals(args[2], "true") && args[3].startsWith("tag{")) {
+                    } else if (args.length == 5 && equals(args[1], "redstone") && equals(args[2], "true") && args[3].startsWith(Filter.getPrefix())) {
                         var prefix = args[4].toLowerCase(Locale.ROOT);
                         var answers = new String[] { "@a", "@e", "@p", "@r" };
                         StreamUtils.fForEach(answers, s -> s.startsWith(prefix), empty::add);

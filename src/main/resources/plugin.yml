@@ -23,7 +23,7 @@ commands:
            /<command> <scriptkey> remove - remove script of block
            /<command> <scriptkey> view - view the script of block
            /<command> <scriptkey> run <world> <x> <y> <z> - execute the specified script
-           /<command> <scriptkey> redstone <needs> [tag] [selector] - set if the scriptblock works with redstone
+           /<command> <scriptkey> redstone <needs> [filter] [selector] - set if the scriptblock works with redstone
            /<command> selector paste <pasteonair> [overwrite] - paste scriptblock for selected area
            /<command> selector remove - remove scriptblock for selected area
 

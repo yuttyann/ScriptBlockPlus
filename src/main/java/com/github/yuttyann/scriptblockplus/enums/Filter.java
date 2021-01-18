@@ -15,40 +15,47 @@
  */
 package com.github.yuttyann.scriptblockplus.enums;
 
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ScriptBlockPlus Tag 列挙型
+ * ScriptBlockPlus Filter 列挙型
  * @author yuttyann44581
  */
-public enum Tag {
+public enum Filter {
     OP("op="),
     PERM("perm="),
     LIMIT("limit="),
     NONE("");
 
-    private static final Tag[] TAGS = { OP, PERM, LIMIT };
+    private static final Filter[] FILTERS = { OP, PERM, LIMIT };
 
-    private final String prefix;
+    private final String syntax;
 
-    Tag(@NotNull String prefix) {
-        this.prefix = prefix;
+    Filter(@NotNull String syntax) {
+        this.syntax = syntax;
     }
 
     @NotNull
-    public static Tag[] getTags() {
-        var tags = new Tag[TAGS.length];
-        System.arraycopy(TAGS, 0, tags, 0, TAGS.length);
-        return tags;
+    public String getValue(@NotNull String source) {
+        return StringUtils.removeStart(source, syntax);
     }
 
     @NotNull
-    public String getPrefix() {
-        return prefix;
+    public String getSyntax() {
+        return syntax;
     }
 
     @NotNull
-    public String substring(@NotNull String source) {
-        return source.substring(prefix.length(), source.length());
+    public static String getPrefix() {
+        return "filter{";
+    }
+
+    @NotNull
+    public static Filter[] getFilters() {
+        var filters = new Filter[FILTERS.length];
+        System.arraycopy(FILTERS, 0, filters, 0, FILTERS.length);
+        return filters;
     }
 }

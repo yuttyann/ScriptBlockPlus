@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.Tag;
+import com.github.yuttyann.scriptblockplus.enums.Filter;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -42,66 +42,66 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BlockListener implements Listener {
 
-    private static final int LENGTH = "tag{".length();
-    private static final TagValue[] EMPTY_ARRAY = new TagValue[0];
+    private static final int LENGTH = Filter.getPrefix().length();
     private static final Set<String> REDSTONE_FLAG = new HashSet<>();
+    private static final FilterValue[] EMPTY_FILTER_ARRAY = new FilterValue[0];
 
-    private class TagSplit {
+    private class FilterSplit {
 
-        private final String tags;
+        private final String filters;
         private final String selector;
 
-        private TagSplit(@NotNull String source) {
-            if (source.startsWith("tag{")) {
+        private FilterSplit(@NotNull String source) {
+            if (source.startsWith(Filter.getPrefix())) {
                 int end = source.indexOf("}");
-                this.tags = source.substring(LENGTH, end).trim();
+                this.filters = source.substring(LENGTH, end).trim();
                 this.selector = source.substring(end + 1, source.length()).trim();
             } else {
-                this.tags = null;
+                this.filters = null;
                 this.selector = source;
             }
-        }
-
-        @Nullable
-        public TagValue[] getTagValues() {
-            if (StringUtils.isEmpty(tags)) {
-                return EMPTY_ARRAY;
-            }
-            var array = StringUtils.split(tags, ',');
-            return StreamUtils.toArray(array, TagValue::new, TagValue[]::new);
         }
 
         @NotNull
         public String getSelector() {
             return selector;
         }
+
+        @Nullable
+        public FilterValue[] getFilterValues() {
+            if (StringUtils.isEmpty(filters)) {
+                return EMPTY_FILTER_ARRAY;
+            }
+            var array = StringUtils.split(filters, ',');
+            return StreamUtils.toArray(array, FilterValue::new, FilterValue[]::new);
+        }
     }
 
-    private class TagValue {
+    private class FilterValue {
 
-        private final Tag tag;
         private final String value;
+        private final Filter filter;
 
-        private TagValue(@NotNull String source) {
-            for (var tag : Tag.values()) {
-                if (source.startsWith(tag.getPrefix())) {
-                    this.tag = tag;
-                    this.value = tag.substring(source);
+        private FilterValue(@NotNull String source) {
+            for (var filter : Filter.values()) {
+                if (source.startsWith(filter.getSyntax())) {
+                    this.value = filter.getValue(source);
+                    this.filter = filter;
                     return;
                 }
             }
-            this.tag = Tag.NONE;
-            this.value = "null";
-        }
-
-        @NotNull
-        public Tag getTag() {
-            return tag;
+            this.value = null;
+            this.filter = Filter.NONE;
         }
 
         @Nullable
         public String getValue() {
             return value;
+        }
+
+        @NotNull
+        public Filter getFilter() {
+            return filter;
         }
     }
 
@@ -130,14 +130,14 @@ public class BlockListener implements Listener {
                 continue;
             }
             var index = new int[] { 0 };
-            var tagSplit = new TagSplit(selector);
-            var tagValues = tagSplit.getTagValues();
-            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), location, tagSplit.getSelector())) {
+            var filterSplit = new FilterSplit(selector);
+            var filterValues = filterSplit.getFilterValues();
+            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), location, filterSplit.getSelector())) {
                 if (!(target instanceof Player)) {
                     continue;
                 }
                 var player = (Player) target;
-                if (tagValues.length > 0 && !StreamUtils.allMatch(tagValues, t -> has(player, t, index[0]))) {
+                if (filterValues.length > 0 && !StreamUtils.allMatch(filterValues, t -> has(player, t, index[0]))) {
                     continue;
                 }
                 index[0]++;
@@ -147,12 +147,12 @@ public class BlockListener implements Listener {
         }
     }
 
-    public boolean has(@NotNull Player player, @NotNull TagValue tagValue, int index) {
-        var value = tagValue.getValue();
+    public boolean has(@NotNull Player player, @NotNull FilterValue filterValue, int index) {
+        var value = filterValue.getValue();
         if (StringUtils.isEmpty(value)) {
             return false;
         }
-        switch (tagValue.getTag()) {
+        switch (filterValue.getFilter()) {
             case OP:
                 return Boolean.parseBoolean(value) ? player.isOp() : !player.isOp();
             case PERM:
