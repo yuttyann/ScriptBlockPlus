@@ -29,6 +29,7 @@ import com.github.yuttyann.scriptblockplus.enums.TeamColor;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.utils.nms.NMSHelper;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
@@ -44,8 +45,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class GlowEntityPacket {
 
-    private static final int TYPE_ID = PackageType.HAS_NMS ? PackageType.getMagmaCubeId() : -1;
-    private static final int SIZE_ID = PackageType.HAS_NMS ? PackageType.getSlimeSizeId() : -1;
+    private static final int TYPE_ID = PackageType.HAS_NMS ? NMSHelper.getMagmaCubeId() : -1;
+    private static final int SIZE_ID = PackageType.HAS_NMS ? NMSHelper.getSlimeSizeId() : -1;
 
     private final Multimap<UUID, GlowEntity> GLOW_ENTITIES = HashMultimap.create();
 

@@ -34,6 +34,7 @@ import com.github.yuttyann.scriptblockplus.region.CuboidRegionRemove;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.*;
+import com.github.yuttyann.scriptblockplus.utils.nms.CommandSelector;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 

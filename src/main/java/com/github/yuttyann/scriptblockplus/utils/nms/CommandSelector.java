@@ -13,12 +13,15 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.utils;
+package com.github.yuttyann.scriptblockplus.utils.nms;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.google.common.collect.Lists;
 
 import org.bukkit.Bukkit;
@@ -90,13 +93,13 @@ public final class CommandSelector {
                     works = false;
                     break;
                 }
-                commandList.add(StringUtils.replace(commandList.get(0), "{" + i + "}", getName(entities[j])));
+                commandList.add(StringUtils.replace(commandList.get(0), "{" + i + "}", getEntityName(entities[j])));
             }
             if (!works || entities.length == 0 || entities[0] == null) {
                 return Collections.emptyList();
             } else {
                 int index = i;
-                var name = getName(entities[0]);
+                var name = getEntityName(entities[0]);
                 commandList.replaceAll(s -> StringUtils.replace(s, "{" + index + "}", name));
             }
             modCount++;
@@ -162,16 +165,14 @@ public final class CommandSelector {
     @NotNull
     public static Entity[] getTargets(@NotNull CommandSender sender, @Nullable Location location, @NotNull String selector) {
         selector = Placeholder.INSTANCE.replace(getWorld(sender, location), selector);
-        if (Utils.isCBXXXorLater("1.13.2")) {
-            if (PackageType.HAS_NMS) {
-                try {
-                    return PackageType.selectEntities(sender, location, selector);
-                } catch (ReflectiveOperationException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                return Bukkit.selectEntities(sender, selector).toArray(Entity[]::new);
+        if (PackageType.HAS_NMS && Utils.isCBXXXorLater("1.13")) {
+            try {
+                return NMSHelper.selectEntities(sender, location, selector);
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
             }
+        } else if (Utils.isCBXXXorLater("1.13.2")) {
+            return Bukkit.selectEntities(sender, selector).toArray(Entity[]::new);
         }
         return CommandUtils.getTargets(sender, location, selector);
     }
@@ -195,10 +196,10 @@ public final class CommandSelector {
             world = ((CommandMinecart) sender).getWorld();
         }
         return world == null ? Bukkit.getWorlds().get(0) : world;
-    } 
+    }
 
     @NotNull
-    private static String getName(@NotNull Entity entity) {
+    private static String getEntityName(@NotNull Entity entity) {
         return entity instanceof Player ? entity.getName() : entity.getUniqueId().toString();
     }
 

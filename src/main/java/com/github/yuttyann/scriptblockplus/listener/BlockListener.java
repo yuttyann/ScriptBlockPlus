@@ -23,11 +23,12 @@ import com.github.yuttyann.scriptblockplus.enums.Filter;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
-import com.github.yuttyann.scriptblockplus.utils.CommandSelector;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.nms.CommandSelector;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -132,7 +133,7 @@ public class BlockListener implements Listener {
             var index = new int[] { 0 };
             var filterSplit = new FilterSplit(selector);
             var filterValues = filterSplit.getFilterValues();
-            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), location, filterSplit.getSelector())) {
+            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), setCenter(location), filterSplit.getSelector())) {
                 if (!(target instanceof Player)) {
                     continue;
                 }
@@ -162,5 +163,13 @@ public class BlockListener implements Listener {
             default:
                 return false;
         }
+    }
+
+    @NotNull
+    private Location setCenter(@NotNull Location location) {
+        location.setX(location.getBlockX() + 0.5D);
+        location.setY(location.getBlockY());
+        location.setZ(location.getBlockZ() + 0.5D);
+        return location;
     }
 }

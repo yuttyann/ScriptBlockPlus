@@ -17,6 +17,8 @@ package com.github.yuttyann.scriptblockplus.utils;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.utils.nms.NMSHelper;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +44,7 @@ public class ItemUtils {
         if (!Utils.isCBXXXorLater("1.13") && PackageType.HAS_NMS) {
             KEY_MATERIALS = new HashMap<>();
             try {
-                KEY_MATERIALS.putAll(PackageType.getItemRegistry());
+                KEY_MATERIALS.putAll(NMSHelper.getItemRegistry());
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }

@@ -62,7 +62,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
     public ScriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptKey scriptKey) {
         location.setX(location.getBlockX() + 0.5D);
-        location.setY(location.getBlockY() + 0.5D);
+        location.setY(location.getBlockY());
         location.setZ(location.getBlockZ() + 0.5D);
         this.initialize = true;
         this.sbPlayer = SBPlayer.fromPlayer(player);

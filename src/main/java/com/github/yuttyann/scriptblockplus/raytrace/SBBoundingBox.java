@@ -17,6 +17,7 @@ package com.github.yuttyann.scriptblockplus.raytrace;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.nms.NMSHelper;
 
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
@@ -47,7 +48,7 @@ public class SBBoundingBox {
             } else {
                 if (PackageType.HAS_NMS) {
                     try {
-                        var axisAlignedBB = PackageType.getAxisAlignedBB(block);
+                        var axisAlignedBB = NMSHelper.getAxisAlignedBB(block);
                         if (axisAlignedBB == null) {
                             setSquare(block);
                         } else {

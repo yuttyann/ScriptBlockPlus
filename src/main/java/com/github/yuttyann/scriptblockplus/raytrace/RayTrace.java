@@ -23,6 +23,7 @@ import java.util.Set;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.nms.NMSHelper;
 
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.block.Block;
@@ -60,7 +61,7 @@ public final class RayTrace {
         } else {
             if (PackageType.HAS_NMS) {
                 try {
-                    return PackageType.rayTraceBlocks(player, distance);
+                    return NMSHelper.rayTraceBlocks(player, distance);
                 } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
                 }
