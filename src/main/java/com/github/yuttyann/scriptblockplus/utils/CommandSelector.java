@@ -122,7 +122,7 @@ public final class CommandSelector {
                     var xyz = k == 0 ? "x" : k == 1 ? "y" : k == 2 ? "z" : "x";
                     var tempBuilder = new StringBuilder();
                     for (int l = type; l < chars.length; l++) {
-                        if ("0123456789".indexOf(chars[l]) > -1) {
+                        if ("+-.0123456789".indexOf(chars[l]) > -1) {
                             i++;
                             tempBuilder.append(chars[l]);
                         } else {
@@ -202,9 +202,10 @@ public final class CommandSelector {
     }
 
     private static double getRelative(@NotNull String target, @NotNull String relative, @NotNull Entity entity) {
-        int number = 0;
+        double number = 0;
+        target = StringUtils.removeStart(target, "+");
         if (StringUtils.isNotEmpty(target) && Calculation.REALNUMBER_PATTERN.matcher(target).matches()) {
-            number = Integer.parseInt(target);
+            number = Double.parseDouble(target);
         }
         switch (relative) {
             case "x":
