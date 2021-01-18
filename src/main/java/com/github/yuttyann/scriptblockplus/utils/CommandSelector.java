@@ -176,6 +176,7 @@ public final class CommandSelector {
         return CommandUtils.getTargets(sender, location, selector);
     }
 
+    @NotNull
     private static World getWorld(@NotNull CommandSender sender, @Nullable Location location) {
         if (location != null) {
             return location.getWorld();
@@ -202,7 +203,7 @@ public final class CommandSelector {
     }
 
     private static double getRelative(@NotNull String target, @NotNull String relative, @NotNull Entity entity) {
-        double number = 0;
+        double number = 0.0D;
         target = StringUtils.removeStart(target, "+");
         if (StringUtils.isNotEmpty(target) && Calculation.REALNUMBER_PATTERN.matcher(target).matches()) {
             number = Double.parseDouble(target);
