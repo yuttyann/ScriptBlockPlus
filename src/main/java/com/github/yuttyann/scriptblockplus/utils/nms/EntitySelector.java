@@ -18,6 +18,7 @@ package com.github.yuttyann.scriptblockplus.utils.nms;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -148,7 +149,8 @@ public final class EntitySelector {
         private final String value;
         private final SelectorType selectorType;
 
-        private String cache;
+        private String cacheValue;
+        private Boolean cacheInverted;
 
         private TagValue(@NotNull String source) {
             for (var selectorType : SelectorType.values()) {
@@ -163,12 +165,18 @@ public final class EntitySelector {
         }
 
         public boolean isInverted() {
-            return StringUtils.isNotEmpty(value) && value.indexOf("!") == 0;
+            if (cacheInverted == null) {
+                cacheInverted = StringUtils.isNotEmpty(value) && value.indexOf("!") == 0;
+            }
+            return cacheInverted;
         }
 
         @Nullable
         public String getValue() {
-            return cache == null ? cache = (isInverted() ? value.substring(1) : value) : cache;
+            if (cacheValue == null) {
+                cacheValue = isInverted() ? value.substring(1) : value;
+            }
+            return cacheValue;
         }
 
         @NotNull
@@ -263,7 +271,7 @@ public final class EntitySelector {
     }
 
     @NotNull
-    private static Location copy(@NotNull CommandSender sender, @Nullable Location location) {
+    public static Location copy(@NotNull CommandSender sender, @Nullable Location location) {
         if (location == null) {
             if (sender instanceof Entity) {
                 location = ((Entity) sender).getLocation();
@@ -330,17 +338,15 @@ public final class EntitySelector {
     }
 
     private static boolean setXYZ(@NotNull Location location, @NotNull TagValue tagValue) {
-        // チルダ文法を使えるようにする
-        var value = tagValue.getValue();
         switch (tagValue.selectorType) {
             case X:
-                location.setX(Double.parseDouble(value));
+                location.setX(getRelative(location, "x", tagValue.getValue()));
                 break;
             case Y:
-                location.setY(Double.parseDouble(value));
+                location.setY(getRelative(location, "y", tagValue.getValue()));
                 break;
             case Z:
-                location.setZ(Double.parseDouble(value));
+                location.setZ(getRelative(location, "z", tagValue.getValue()));
                 break;
             default:
                 return false;
@@ -348,6 +354,41 @@ public final class EntitySelector {
         return true;
     }
 
+    public static double getRelative(@NotNull Location location, @NotNull String relative, @NotNull String value) {
+        double number = StringUtils.isNotEmpty(value) ? Double.parseDouble(value) : 0.0D;
+        if (value.startsWith("~")) {
+            value = value.substring(1);
+            switch (relative.toLowerCase(Locale.ROOT)) {
+                case "x":
+                    return location.getX() + number;
+                case "y":
+                    return location.getY() + number;
+                case "z":
+                    return location.getZ() + number;
+                default:
+                    return 0.0D;
+            }
+        } else if (value.startsWith("^")) {
+            value = value.substring(1);
+            var empty = new Location(location.getWorld(), 0, 0, 0);
+            switch (relative.toLowerCase(Locale.ROOT)) {
+                case "x":
+                    empty.setYaw(Location.normalizeYaw(location.getYaw() - 90));
+                    empty.setPitch(location.getPitch());
+                    return location.getX() + empty.getDirection().normalize().multiply(number).getX();
+                case "y":
+                    empty.setYaw(location.getYaw());
+                    empty.setPitch(location.getPitch() - 90);
+                    return location.getY() + empty.getDirection().normalize().multiply(number).getY();
+                case "z":
+                    return location.getZ() + location.getDirection().normalize().multiply(number).getX();
+                default:
+                    return 0.0D;
+            }
+        }
+        return number;
+    }
+    
     private static boolean isDRange(@NotNull Entity entity, @NotNull Location location, @NotNull TagValue tagValue) {
         if (!entity.getWorld().equals(location.getWorld())) {
             return false;

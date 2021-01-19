@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.utils.nms;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.option.other.Calculation;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -118,12 +117,12 @@ public final class CommandSelector {
         var builder = new StringBuilder();
         for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
             int type = i + 1, tag = i + 2;
-            if (chars[i] == '~' || chars[i] == '^') {
+            if ((chars[i] == '~' || chars[i] == '^') && (sender instanceof Entity || sender instanceof BlockCommandSender)) {
                 if (k >= 3) {
                     builder.append(sender.getName());
                 } else {
-                    var xyz = k == 0 ? "x" : k == 1 ? "y" : k == 2 ? "z" : "x";
-                    var tempBuilder = new StringBuilder();
+                    var relative = k == 0 ? "x" : k == 1 ? "y" : k == 2 ? "z" : "x";
+                    var tempBuilder = new StringBuilder().append(chars[i]);
                     for (int l = type; l < chars.length; l++) {
                         if ("+-.0123456789".indexOf(chars[l]) > -1) {
                             i++;
@@ -132,7 +131,8 @@ public final class CommandSelector {
                             break;
                         }
                     }
-                    builder.append(getRelative(tempBuilder.toString(), xyz, (Entity) sender));
+                    var location = EntitySelector.copy(sender, null);
+                    builder.append(EntitySelector.getRelative(location, relative, tempBuilder.toString()));
                     k++;
                 }
             } else if (chars[i] == '@' && type < chars.length && SELECTOR_SUFFIX.indexOf(chars[type]) > -1) {
@@ -201,23 +201,5 @@ public final class CommandSelector {
     @NotNull
     private static String getEntityName(@NotNull Entity entity) {
         return entity instanceof Player ? entity.getName() : entity.getUniqueId().toString();
-    }
-
-    private static double getRelative(@NotNull String target, @NotNull String relative, @NotNull Entity entity) {
-        double number = 0.0D;
-        target = StringUtils.removeStart(target, "+");
-        if (StringUtils.isNotEmpty(target) && Calculation.REALNUMBER_PATTERN.matcher(target).matches()) {
-            number = Double.parseDouble(target);
-        }
-        switch (relative) {
-            case "x":
-                return entity.getLocation().getX() + number;
-            case "y":
-                return entity.getLocation().getY() + number;
-            case "z":
-                return entity.getLocation().getZ() + number;
-            default:
-                return 0;
-        }
     }
 }
