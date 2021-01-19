@@ -197,7 +197,7 @@ public final class EntitySelector {
                     entities.add(player);
                     break;
                 }
-                if (limit > count) {
+                if (limit >= count) {
                     break;
                 }
                 count++;
@@ -219,7 +219,7 @@ public final class EntitySelector {
                     entities.add(player);
                     break;
                 }
-                if (limit > count) {
+                if (limit >= count) {
                     break;
                 }
                 count++;
@@ -247,7 +247,7 @@ public final class EntitySelector {
                 if (!StreamUtils.allMatch(values, t -> canBeAccepted(entity, location, t))) {
                     continue;
                 }
-                if (limit != -1 && limit > count) {
+                if (limit != -1 && limit >= count) {
                     break;
                 }
                 count++;
@@ -259,7 +259,7 @@ public final class EntitySelector {
                 entities.add((Entity) sender);
             }
         }
-		return entities.size() > 0 ? entities.toArray(Entity[]::new) : EMPTY_ENTITY_ARRAY;
+        return entities.size() > 0 ? entities.toArray(Entity[]::new) : EMPTY_ENTITY_ARRAY;
     }
 
     @NotNull
@@ -329,7 +329,7 @@ public final class EntitySelector {
         return -1;
     }
 
-	private static boolean setXYZ(@NotNull Location location, @NotNull TagValue tagValue) {
+    private static boolean setXYZ(@NotNull Location location, @NotNull TagValue tagValue) {
         // チルダ文法を使えるようにする
         var value = tagValue.getValue();
         switch (tagValue.selectorType) {
@@ -345,7 +345,7 @@ public final class EntitySelector {
             default:
                 return false;
         }
-		return true;
+        return true;
     }
 
     private static boolean isDRange(@NotNull Entity entity, @NotNull Location location, @NotNull TagValue tagValue) {
@@ -370,7 +370,7 @@ public final class EntitySelector {
             default:
                 return false;
         }
-        return value > (base - .35D) && value < (base + Double.parseDouble(tagValue.getValue()) + 1.35D);
+        return value > (base - 0.35D) && value < (base + Double.parseDouble(tagValue.getValue()) + 1.35D);
     }
 
     private static boolean isR(@NotNull Entity entity, @NotNull Location location, @NotNull TagValue tagValue) {
