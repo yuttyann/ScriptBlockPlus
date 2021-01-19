@@ -19,12 +19,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
-import java.util.regex.Pattern;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -38,6 +37,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
+
 /**
  * ScriptBlockPlus EntitySelector クラス
  * <p>
@@ -49,7 +50,7 @@ public final class EntitySelector {
     private static final Entity[] EMPTY_ENTITY_ARRAY = new Entity[0];
     private static final TagValue[] EMPTY_TAG_VALUE_ARRAY = new TagValue[0];
     
-    private enum SelectorType {
+    private enum Tag {
         X("x="),
         Y("y="),
         Z("z="),
@@ -70,12 +71,18 @@ public final class EntitySelector {
         TEAM("team="),
         TYPE("type="),
         NAME("name="),
-        SCORE("score_(.*?)="),
-        SCORE_MIN("score_(.*?)_min=");
+        SCORE("score_<name>=", "score_", "="),
+        SCORE_MIN("score_<name>_min=", "score_", "_min=");
     
-        private final String syntax;
+        private final String syntax, prefix, suffix;
 
-        SelectorType(@NotNull String syntax) {
+        Tag(@NotNull String syntax) {
+            this(syntax, syntax, syntax);
+        }
+
+        Tag(@NotNull String syntax, @NotNull String prefix, @NotNull String suffix) {
+            this.prefix = prefix;
+            this.suffix = suffix;
             this.syntax = syntax;
         }
 
@@ -84,45 +91,34 @@ public final class EntitySelector {
             switch (this) {
                 case SCORE:
                 case SCORE_MIN:
-                    var pattern = Pattern.compile(syntax).matcher(source);
-                    if (!pattern.find()) {
-                        var syntax = "score_<name>" + (this == SCORE_MIN ? "_min=.." : "=..");
-                        throw new IllegalArgumentException("Incorrect grammar Example: " + syntax);
-                    }
-                    var group = pattern.group(1);
-                    var result = "score_" + group + (this == SCORE_MIN ? "_min" : "");
-                    return StringUtils.removeStart(source, result) + "*" + group;
+                    var objective = source.substring(prefix.length(), source.lastIndexOf(suffix));
+                    return removeStart(source, prefix + objective + suffix) + "*" + objective;
                 default:
-                    return StringUtils.removeStart(source, syntax);
+                    return removeStart(source, syntax);
             }
-        }
-
-        @NotNull
-        public String getSyntax() {
-            return syntax;
         }
 
         public boolean has(@NotNull String source) {
             switch (this) {
                 case SCORE:
+                    return source.startsWith(prefix) && source.lastIndexOf(SCORE_MIN.suffix) == -1;
                 case SCORE_MIN:
-                    return source.matches("score_(.*?)_min=");
+                    return source.startsWith(prefix) && source.lastIndexOf(suffix) > 0;
                 default:
                     return source.startsWith(syntax);
             }
         }
     }
 
-    private static class SelectorSplit {
+    private static class TagSplit {
 
-        private final String tags;
-        private final String selector;
+        private final String tags, selector;
 
-        private SelectorSplit(@NotNull String source) {
+        private TagSplit(@NotNull String source) {
             if (source.startsWith("@") && source.indexOf("[") > 0) {
-                int end = source.indexOf("[");
-                this.tags = source.substring(end + 1, source.length()).trim();
-                this.selector = source.substring(0, end).trim();
+                int start = source.indexOf("[");
+                this.tags = source.substring(start + 1, source.length() - 1).trim();
+                this.selector = source.substring(0, start).trim();
             } else {
                 this.tags = null;
                 this.selector = source;
@@ -136,39 +132,36 @@ public final class EntitySelector {
 
         @Nullable
         public TagValue[] getTagValues() {
-            if (StringUtils.isEmpty(tags)) {
+            if (isEmpty(tags)) {
                 return EMPTY_TAG_VALUE_ARRAY;
             }
-            var array = StringUtils.split(tags, ',');
-            return StreamUtils.toArray(array, TagValue::new, TagValue[]::new);
+            return StreamUtils.toArray(split(tags, ','), TagValue::new, TagValue[]::new);
         }
     }
 
     private static class TagValue {
 
+        private final Tag tag;
         private final String value;
-        private final SelectorType selectorType;
 
         private String cacheValue;
         private Boolean cacheInverted;
 
         private TagValue(@NotNull String source) {
-            for (var selectorType : SelectorType.values()) {
-                if (selectorType.has(source)) {
-                    this.value = selectorType.getValue(source);
-                    this.selectorType = selectorType;
+            for (var tag : Tag.values()) {
+                if (tag.has(source)) {
+                    this.tag = tag;
+                    this.value = tag.getValue(source);
                     return;
                 }
             }
+            this.tag = null;
             this.value = null;
-            this.selectorType = null;
         }
 
-        public boolean isInverted() {
-            if (cacheInverted == null) {
-                cacheInverted = StringUtils.isNotEmpty(value) && value.indexOf("!") == 0;
-            }
-            return cacheInverted;
+        @NotNull
+        public Tag getTag() {
+            return tag;
         }
 
         @Nullable
@@ -179,95 +172,113 @@ public final class EntitySelector {
             return cacheValue;
         }
 
-        @NotNull
-        public SelectorType getSelectorType() {
-            return selectorType;
+        public boolean isInverted() {
+            if (cacheInverted == null) {
+                cacheInverted = isNotEmpty(value) && value.indexOf("!") == 0;
+            }
+            return cacheInverted;
         }
     }
 
     @NotNull
     public static Entity[] getEntities(@NotNull CommandSender sender, @Nullable Location start, @NotNull String selector) {
-        var split = new SelectorSplit(selector);
-        var prefix = split.getSelector();
-        var values = split.getTagValues();
-        var entities = new ArrayList<>();
+        var result = new ArrayList<>();
         var location = copy(sender, start);
-        if (prefix.equals("@p")) {
-            int count = 0;
-            int limit = getLimit(values);
+        var tagSplit = new TagSplit(selector);
+        var tagValues = tagSplit.getTagValues();
+        if (selector.startsWith("@p")) {
             var players = location.getWorld().getPlayers();
-            players.sort(Comparator.comparing(p -> p.getLocation().distance(location), Comparator.naturalOrder()));
+            if (players.size() == 0) {
+                return EMPTY_ENTITY_ARRAY;
+            }
+            int count = 0;
+            int limit = getLimit(tagValues);
+            if (limit >= 0) {
+                players.sort(Comparator.comparing(p -> p.getLocation().distance(location), Comparator.naturalOrder()));
+            } else {
+                players.sort(Comparator.comparing(p -> p.getLocation().distance(location), Comparator.reverseOrder()));
+                limit = -limit;
+            }
             for (var player : players) {
-                if (!StreamUtils.allMatch(values, t -> canBeAccepted(player, location, t))) {
+                if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(player, location, t))) {
                     continue;
                 }
-                if (limit == -1) {
-                    entities.add(player);
-                    break;
-                }
-                if (limit >= count) {
+                if (limit <= count) {
                     break;
                 }
                 count++;
-                entities.add(player);
+                result.add(player);
             }
         }
-        if (prefix.equals("@r")) {
-            int count = 0;
-            int limit = getLimit(values);
+        if (selector.startsWith("@r")) {
             var players = location.getWorld().getPlayers();
-            var list = IntStream.of(players.size()).boxed().collect(Collectors.toList());
-            for (int i = 0; i < players.size(); i++) {
-                Collections.shuffle(list);
-                var player = players.get(list.get(0));
-                if (!StreamUtils.allMatch(values, t -> canBeAccepted(player, location, t))) {
-                    continue;
-                }
-                if (limit == -1) {
-                    entities.add(player);
-                    break;
-                }
-                if (limit >= count) {
-                    break;
-                }
-                count++;
-                entities.add(player);
+            if (players.size() == 0) {
+                return EMPTY_ENTITY_ARRAY;
             }
-        }
-        if (prefix.equals("@a")) {
             int count = 0;
-            int limit = getLimit(values);
-            for (var player : location.getWorld().getPlayers()) {
-                if (!StreamUtils.allMatch(values, t -> canBeAccepted(player, location, t))) {
+            int limit = getLimit(tagValues);
+            var randomInts = IntStream.range(0, players.size()).boxed().collect(Collectors.toList());
+            Collections.shuffle(randomInts, new Random());
+            for (int value : randomInts) {
+                var player = players.get(value);
+                if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(player, location, t))) {
                     continue;
                 }
-                if (limit != -1 && limit > count) {
+                if (limit <= count) {
                     break;
                 }
                 count++;
-                entities.add(player);
+                result.add(player);
             }
         }
-        if (prefix.equals("@e")) {
+        if (selector.startsWith("@a")) {
+            var players = location.getWorld().getPlayers();
+            if (players.size() == 0) {
+                return EMPTY_ENTITY_ARRAY;
+            }
             int count = 0;
-            int limit = getLimit(values);
-            for (var entity : location.getWorld().getEntities()) {
-                if (!StreamUtils.allMatch(values, t -> canBeAccepted(entity, location, t))) {
+            int limit = players.size();
+            if (hasTag(tagValues, Tag.C)) {
+                limit = getLimit(tagValues);
+            }
+            for (var player : players) {
+                if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(player, location, t))) {
                     continue;
                 }
-                if (limit != -1 && limit >= count) {
+                if (limit <= count) {
                     break;
                 }
                 count++;
-                entities.add(entity);
+                result.add(player);
             }
         }
-        if (prefix.equals("@s")) {
-            if (sender instanceof Entity && StreamUtils.allMatch(values, t -> canBeAccepted((Entity) sender, location, t))) {
-                entities.add((Entity) sender);
+        if (selector.startsWith("@e")) {
+            var entities = location.getWorld().getEntities();
+            if (entities.size() == 0) {
+                return EMPTY_ENTITY_ARRAY;
+            }
+            int count = 0;
+            int limit = entities.size();
+            if (hasTag(tagValues, Tag.C)) {
+                limit = getLimit(tagValues);
+            }
+            for (var entity : entities) {
+                if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(entity, location, t))) {
+                    continue;
+                }
+                if (limit <= count) {
+                    break;
+                }
+                count++;
+                result.add(entity);
             }
         }
-        return entities.size() > 0 ? entities.toArray(Entity[]::new) : EMPTY_ENTITY_ARRAY;
+        if (selector.startsWith("@s")) {
+            if (sender instanceof Entity && StreamUtils.allMatch(tagValues, t -> canBeAccepted((Entity) sender, location, t))) {
+                result.add((Entity) sender);
+            }
+        }
+        return result.size() > 0 ? result.toArray(Entity[]::new) : EMPTY_ENTITY_ARRAY;
     }
 
     @NotNull
@@ -287,7 +298,7 @@ public final class EntitySelector {
         if (tagValue.value == null) {
             return false;
         }
-        switch (tagValue.selectorType) {
+        switch (tagValue.tag) {
             case C:
                 return true;
             case X:
@@ -327,18 +338,22 @@ public final class EntitySelector {
                 return false;
         }
     }
+    
+    private static boolean hasTag(@NotNull TagValue[] tagValues, @NotNull Tag tag) {
+        return StreamUtils.anyMatch(tagValues, t -> t.getTag() == tag);
+    }
 
     private static int getLimit(@NotNull TagValue[] tagValues) {
         for (var tagValue : tagValues) {
-            if (tagValue.selectorType == SelectorType.C) {
+            if (tagValue.tag == Tag.C) {
                 return Integer.parseInt(tagValue.getValue());
             }
         }
-        return -1;
+        return 1;
     }
 
     private static boolean setXYZ(@NotNull Location location, @NotNull TagValue tagValue) {
-        switch (tagValue.selectorType) {
+        switch (tagValue.tag) {
             case X:
                 location.setX(getRelative(location, "x", tagValue.getValue()));
                 break;
@@ -392,9 +407,8 @@ public final class EntitySelector {
         if (!entity.getWorld().equals(location.getWorld())) {
             return false;
         }
-        var base = (double) 0.0D;
-        var value = (double) 0.0D;
-        switch (tagValue.selectorType) {
+        double base = 0.0D, value = 0.0D;
+        switch (tagValue.tag) {
             case DX:
                 base = location.getX();
                 value = entity.getLocation().getX();
@@ -417,21 +431,21 @@ public final class EntitySelector {
         if (!entity.getWorld().equals(location.getWorld())) {
             return false;
         }
-        if (tagValue.selectorType == SelectorType.R) {
+        if (tagValue.tag == Tag.R) {
             return isLessThan(tagValue, location.distance(entity.getLocation()));
         }
         return isGreaterThan(tagValue, location.distance(entity.getLocation()));
     }
 
     private static boolean isRX(@NotNull Entity entity, @NotNull TagValue tagValue) {
-        if (tagValue.selectorType == SelectorType.RX) {
+        if (tagValue.tag == Tag.RX) {
             return isGreaterThan(tagValue, entity.getLocation().getYaw());
         }
         return isLessThan(tagValue, entity.getLocation().getYaw());
     }
 
     private static boolean isRY(@NotNull Entity entity, @NotNull TagValue tagValue) {
-        if (tagValue.selectorType == SelectorType.RY) {
+        if (tagValue.tag == Tag.RY) {
             return isGreaterThan(tagValue, entity.getLocation().getPitch());
         }
         return isLessThan(tagValue, entity.getLocation().getPitch());
@@ -439,7 +453,7 @@ public final class EntitySelector {
 
     private static boolean isL(@NotNull Entity entity, @NotNull TagValue tagValue) {
         if (entity instanceof Player) {
-            if (tagValue.selectorType == SelectorType.L) {
+            if (tagValue.tag == Tag.L) {
                 return isLessThan(tagValue, ((Player) entity).getTotalExperience());
             }
             return isGreaterThan(tagValue, ((Player) entity).getTotalExperience());
@@ -510,8 +524,8 @@ public final class EntitySelector {
     }
 
     private static boolean isScore(@NotNull Entity entity, @NotNull TagValue tagValue) {
-        var array = StringUtils.split(tagValue.getValue(), '*');
-        boolean isScore = tagValue.selectorType == SelectorType.SCORE;
+        var array = split(tagValue.getValue(), '*');
+        boolean isScore = tagValue.tag == Tag.SCORE;
         for (var objective : Bukkit.getScoreboardManager().getMainScoreboard().getObjectives()) {
             if (!objective.getName().equals(array[1])) {
                 continue;

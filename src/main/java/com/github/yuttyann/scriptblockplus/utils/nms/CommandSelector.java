@@ -31,7 +31,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ProxiedCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.minecart.CommandMinecart;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -186,14 +185,12 @@ public final class CommandSelector {
         if (sender instanceof ProxiedCommandSender) {
             sender = ((ProxiedCommandSender) sender).getCallee();
         }
-        if (sender instanceof Player) {
-            world = ((Player) sender).getWorld();
+        if (sender instanceof Entity) {
+            world = ((Entity) sender).getWorld();
         } else if (sender instanceof SBPlayer) {
             world = ((SBPlayer) sender).getWorld();
         } else if (sender instanceof BlockCommandSender) {
             world = ((BlockCommandSender) sender).getBlock().getWorld();
-        } else if (sender instanceof CommandMinecart) {
-            world = ((CommandMinecart) sender).getWorld();
         }
         return world == null ? Bukkit.getWorlds().get(0) : world;
     }
