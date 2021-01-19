@@ -174,7 +174,7 @@ public final class CommandSelector {
         } else if (Utils.isCBXXXorLater("1.13.2")) {
             return Bukkit.selectEntities(sender, selector).toArray(Entity[]::new);
         }
-        return CommandUtils.getTargets(sender, location, selector);
+        return EntitySelector.getEntities(sender, location, selector);
     }
 
     @NotNull
