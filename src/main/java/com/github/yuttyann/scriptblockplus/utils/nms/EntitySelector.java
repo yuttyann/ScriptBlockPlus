@@ -380,7 +380,7 @@ public final class EntitySelector {
                     empty.setPitch(location.getPitch() - 90);
                     return location.getY() + empty.getDirection().normalize().multiply(number).getY();
                 case "z":
-                    return location.getZ() + location.getDirection().normalize().multiply(number).getX();
+                    return location.getZ() + location.getDirection().normalize().multiply(number).getZ();
                 default:
                     return 0.0D;
             }
