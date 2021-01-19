@@ -138,7 +138,7 @@ public class BlockListener implements Listener {
                     continue;
                 }
                 var player = (Player) target;
-                if (filterValues.length > 0 && !StreamUtils.allMatch(filterValues, t -> has(player, t, index[0]))) {
+                if (!StreamUtils.allMatch(filterValues, t -> has(player, t, index[0]))) {
                     continue;
                 }
                 index[0]++;
