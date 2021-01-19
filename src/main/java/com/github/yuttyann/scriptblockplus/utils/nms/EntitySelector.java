@@ -127,7 +127,7 @@ public final class EntitySelector {
 
         @NotNull
         public String getSelector() {
-            return selector;
+            return selector.toLowerCase(Locale.ROOT);
         }
 
         @Nullable
@@ -186,97 +186,106 @@ public final class EntitySelector {
         var location = copy(sender, start);
         var tagSplit = new TagSplit(selector);
         var tagValues = tagSplit.getTagValues();
-        if (selector.startsWith("@p")) {
-            var players = location.getWorld().getPlayers();
-            if (players.size() == 0) {
+        switch (tagSplit.getSelector()) {
+            case "@p": {
+                var players = location.getWorld().getPlayers();
+                if (players.size() == 0) {
+                    return EMPTY_ENTITY_ARRAY;
+                }
+                int count = 0;
+                int limit = getLimit(tagValues);
+                if (limit >= 0) {
+                    players.sort(Comparator.comparing(p -> p.getLocation().distance(location), Comparator.naturalOrder()));
+                } else {
+                    players.sort(Comparator.comparing(p -> p.getLocation().distance(location), Comparator.reverseOrder()));
+                    limit = -limit;
+                }
+                for (var player : players) {
+                    if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(player, location, t))) {
+                        continue;
+                    }
+                    if (limit <= count) {
+                        break;
+                    }
+                    count++;
+                    result.add(player);
+                }
+                break;
+            }
+            case "@a": {
+                var players = location.getWorld().getPlayers();
+                if (players.size() == 0) {
+                    return EMPTY_ENTITY_ARRAY;
+                }
+                int count = 0;
+                int limit = players.size();
+                if (hasTag(tagValues, Tag.C)) {
+                    limit = getLimit(tagValues);
+                }
+                for (var player : players) {
+                    if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(player, location, t))) {
+                        continue;
+                    }
+                    if (limit <= count) {
+                        break;
+                    }
+                    count++;
+                    result.add(player);
+                }
+                break;
+            }
+            case "@r": {
+                var players = location.getWorld().getPlayers();
+                if (players.size() == 0) {
+                    return EMPTY_ENTITY_ARRAY;
+                }
+                int count = 0;
+                int limit = getLimit(tagValues);
+                var randomInts = IntStream.range(0, players.size()).boxed().collect(Collectors.toList());
+                Collections.shuffle(randomInts, new Random());
+                for (int value : randomInts) {
+                    var player = players.get(value);
+                    if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(player, location, t))) {
+                        continue;
+                    }
+                    if (limit <= count) {
+                        break;
+                    }
+                    count++;
+                    result.add(player);
+                }
+                break;
+            }
+            case "@e": {
+                var entities = location.getWorld().getEntities();
+                if (entities.size() == 0) {
+                    return EMPTY_ENTITY_ARRAY;
+                }
+                int count = 0;
+                int limit = entities.size();
+                if (hasTag(tagValues, Tag.C)) {
+                    limit = getLimit(tagValues);
+                }
+                for (var entity : entities) {
+                    if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(entity, location, t))) {
+                        continue;
+                    }
+                    if (limit <= count) {
+                        break;
+                    }
+                    count++;
+                    result.add(entity);
+                }
+                break;
+            }
+            case "@s": {
+                if (sender instanceof Entity && StreamUtils.allMatch(tagValues, t -> canBeAccepted((Entity) sender, location, t))) {
+                    result.add((Entity) sender);
+                }
+                break;
+            }
+            default:
                 return EMPTY_ENTITY_ARRAY;
-            }
-            int count = 0;
-            int limit = getLimit(tagValues);
-            if (limit >= 0) {
-                players.sort(Comparator.comparing(p -> p.getLocation().distance(location), Comparator.naturalOrder()));
-            } else {
-                players.sort(Comparator.comparing(p -> p.getLocation().distance(location), Comparator.reverseOrder()));
-                limit = -limit;
-            }
-            for (var player : players) {
-                if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(player, location, t))) {
-                    continue;
-                }
-                if (limit <= count) {
-                    break;
-                }
-                count++;
-                result.add(player);
-            }
-        }
-        if (selector.startsWith("@r")) {
-            var players = location.getWorld().getPlayers();
-            if (players.size() == 0) {
-                return EMPTY_ENTITY_ARRAY;
-            }
-            int count = 0;
-            int limit = getLimit(tagValues);
-            var randomInts = IntStream.range(0, players.size()).boxed().collect(Collectors.toList());
-            Collections.shuffle(randomInts, new Random());
-            for (int value : randomInts) {
-                var player = players.get(value);
-                if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(player, location, t))) {
-                    continue;
-                }
-                if (limit <= count) {
-                    break;
-                }
-                count++;
-                result.add(player);
-            }
-        }
-        if (selector.startsWith("@a")) {
-            var players = location.getWorld().getPlayers();
-            if (players.size() == 0) {
-                return EMPTY_ENTITY_ARRAY;
-            }
-            int count = 0;
-            int limit = players.size();
-            if (hasTag(tagValues, Tag.C)) {
-                limit = getLimit(tagValues);
-            }
-            for (var player : players) {
-                if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(player, location, t))) {
-                    continue;
-                }
-                if (limit <= count) {
-                    break;
-                }
-                count++;
-                result.add(player);
-            }
-        }
-        if (selector.startsWith("@e")) {
-            var entities = location.getWorld().getEntities();
-            if (entities.size() == 0) {
-                return EMPTY_ENTITY_ARRAY;
-            }
-            int count = 0;
-            int limit = entities.size();
-            if (hasTag(tagValues, Tag.C)) {
-                limit = getLimit(tagValues);
-            }
-            for (var entity : entities) {
-                if (!StreamUtils.allMatch(tagValues, t -> canBeAccepted(entity, location, t))) {
-                    continue;
-                }
-                if (limit <= count) {
-                    break;
-                }
-                count++;
-                result.add(entity);
-            }
-        }
-        if (selector.startsWith("@s")) {
-            if (sender instanceof Entity && StreamUtils.allMatch(tagValues, t -> canBeAccepted((Entity) sender, location, t))) {
-                result.add((Entity) sender);
-            }
         }
         return result.size() > 0 ? result.toArray(Entity[]::new) : EMPTY_ENTITY_ARRAY;
     }
