@@ -355,9 +355,8 @@ public final class EntitySelector {
     }
 
     public static double getRelative(@NotNull Location location, @NotNull String relative, @NotNull String value) {
-        double number = StringUtils.isNotEmpty(value) ? Double.parseDouble(value) : 0.0D;
         if (value.startsWith("~")) {
-            value = value.substring(1);
+            double number = value.length() == 1 ? 0.0D : Double.parseDouble(value.substring(1));
             switch (relative.toLowerCase(Locale.ROOT)) {
                 case "x":
                     return location.getX() + number;
@@ -369,8 +368,8 @@ public final class EntitySelector {
                     return 0.0D;
             }
         } else if (value.startsWith("^")) {
-            value = value.substring(1);
             var empty = new Location(location.getWorld(), 0, 0, 0);
+            double number = value.length() == 1 ? 0.0D : Double.parseDouble(value.substring(1));
             switch (relative.toLowerCase(Locale.ROOT)) {
                 case "x":
                     empty.setYaw(Location.normalizeYaw(location.getYaw() - 90));
@@ -386,7 +385,7 @@ public final class EntitySelector {
                     return 0.0D;
             }
         }
-        return number;
+        return Double.parseDouble(value);
     }
     
     private static boolean isDRange(@NotNull Entity entity, @NotNull Location location, @NotNull TagValue tagValue) {
