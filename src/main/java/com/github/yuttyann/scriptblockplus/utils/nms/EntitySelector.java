@@ -303,6 +303,15 @@ public final class EntitySelector {
         return new Location(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
+    private static int getLimit(@NotNull TagValue[] tagValues) {
+        for (var tagValue : tagValues) {
+            if (tagValue.tag == Tag.C) {
+                return Integer.parseInt(tagValue.getValue());
+            }
+        }
+        return 1;
+    }
+
     private static boolean canBeAccepted(@NotNull Entity entity, @NotNull Location location, @NotNull TagValue tagValue) {
         if (tagValue.value == null) {
             return false;
@@ -350,15 +359,6 @@ public final class EntitySelector {
     
     private static boolean hasTag(@NotNull TagValue[] tagValues, @NotNull Tag tag) {
         return StreamUtils.anyMatch(tagValues, t -> t.getTag() == tag);
-    }
-
-    private static int getLimit(@NotNull TagValue[] tagValues) {
-        for (var tagValue : tagValues) {
-            if (tagValue.tag == Tag.C) {
-                return Integer.parseInt(tagValue.getValue());
-            }
-        }
-        return 1;
     }
 
     private static boolean setXYZ(@NotNull Location location, @NotNull TagValue tagValue) {
