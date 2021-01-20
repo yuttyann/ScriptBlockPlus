@@ -31,14 +31,14 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static com.github.yuttyann.scriptblockplus.enums.reflection.PackageType.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.raytrace.RayResult;
+
+import static com.github.yuttyann.scriptblockplus.enums.reflection.PackageType.*;
 
 /**
  * ScriptBlockPlus NMSHelper クラス

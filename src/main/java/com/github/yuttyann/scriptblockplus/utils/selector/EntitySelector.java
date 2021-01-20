@@ -25,6 +25,7 @@ import java.util.stream.IntStream;
 
 import com.github.yuttyann.scriptblockplus.enums.Argment;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -38,8 +39,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 
 /**
  * ScriptBlockPlus EntitySelector クラス
@@ -55,7 +54,7 @@ public final class EntitySelector {
 
     @NotNull
     public static Entity[] getEntities(@NotNull CommandSender sender, @Nullable Location start, @NotNull String argment) {
-        var result = new ArrayList<>();
+        var result = new ArrayList<Entity>();
         var location = copy(sender, start);
         var selector = new Selector(argment);
         var argments = selector.getArgments();
@@ -424,7 +423,7 @@ public final class EntitySelector {
     }
 
     private static boolean isScore(@NotNull Entity entity, @NotNull ArgmentValue argmentValue) {
-        var array = split(argmentValue.getValue(), '*');
+        var array = StringUtils.split(argmentValue.getValue(), '*');
         boolean isScore = argmentValue.getArgment() == Argment.SCORE;
         for (var objective : Bukkit.getScoreboardManager().getMainScoreboard().getObjectives()) {
             if (!objective.getName().equals(array[1])) {
