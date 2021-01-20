@@ -39,6 +39,7 @@ public final class OptionManager {
     private static final OptionMap OPTION_MAP = new OptionMap();
 
     public static void registerDefaults() {
+        OPTION_MAP.clear();
         OPTION_MAP.put(new ScriptAction());
         OPTION_MAP.put(new BlockType());
         OPTION_MAP.put(new Group());

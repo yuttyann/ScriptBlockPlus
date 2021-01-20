@@ -13,11 +13,12 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.utils.nms;
+package com.github.yuttyann.scriptblockplus.utils.selector;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -114,6 +115,7 @@ public final class CommandSelector {
     private static String parse(@NotNull String source, @NotNull CommandSender sender, @NotNull List<Index> indexList) {
         var chars = source.toCharArray();
         var builder = new StringBuilder();
+        var location = (Location) null;
         for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
             int type = i + 1, tag = i + 2;
             if ((chars[i] == '~' || chars[i] == '^') && (sender instanceof Entity || sender instanceof BlockCommandSender)) {
@@ -130,8 +132,11 @@ public final class CommandSelector {
                             break;
                         }
                     }
-                    var location = EntitySelector.copy(sender, null);
-                    builder.append(EntitySelector.getRelative(location, relative, tempBuilder.toString()));
+                    if (location == null) {
+                        location = EntitySelector.copy(sender, null);
+                    }
+                    location.add(EntitySelector.getRelative(location, relative, tempBuilder.toString()));
+                    builder.append('{').append(relative).append('}');
                     k++;
                 }
             } else if (chars[i] == '@' && type < chars.length && SELECTOR_SUFFIX.indexOf(chars[type]) > -1) {
@@ -158,7 +163,13 @@ public final class CommandSelector {
                 builder.append(chars[i]);
             }
         }
-        return builder.toString();
+        var result = builder.toString();
+        if (location != null) {
+            result = StringUtils.replace(result, "{x}", location.getX());
+            result = StringUtils.replace(result, "{y}", location.getY());
+            result = StringUtils.replace(result, "{z}", location.getZ());
+        }
+        return result;
     }
 
     @NotNull

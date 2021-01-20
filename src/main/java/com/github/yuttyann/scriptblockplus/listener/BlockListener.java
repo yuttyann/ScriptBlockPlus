@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.nms.CommandSelector;
+import com.github.yuttyann.scriptblockplus.utils.selector.CommandSelector;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -49,8 +49,7 @@ public class BlockListener implements Listener {
 
     private class FilterSplit {
 
-        private final String filters;
-        private final String selector;
+        private final String filters, selector;
 
         private FilterSplit(@NotNull String source) {
             if (source.startsWith(Filter.getPrefix())) {

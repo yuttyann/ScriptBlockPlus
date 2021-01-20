@@ -19,8 +19,11 @@ import org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 /**
  * ScriptBlockPlus ClassType 列挙型
@@ -37,6 +40,7 @@ public enum ClassType {
     BOOLEAN(boolean.class, Boolean.class);
 
     private static final Map<Class<?>, ClassType> CLASS = new HashMap<>();
+    private static final Map<Integer, Class<?>[]> CLASS_CACHE = new HashMap<>();
 
     private final Class<?> primitive;
     private final Class<?> reference;
@@ -51,6 +55,10 @@ public enum ClassType {
     ClassType(@NotNull Class<?> primitive, @NotNull Class<?> reference) {
         this.primitive = primitive;
         this.reference = reference;
+    }
+
+    public static void clear() {
+        CLASS_CACHE.clear();
     }
 
     @NotNull
@@ -81,54 +89,46 @@ public enum ClassType {
     }
 
     @NotNull
-    public static Class<?>[] getPrimitive(Class<?>[] classes) {
+    public static Class<?>[] getPrimitive(@Nullable Class<?>[] classes) {
         if (classes == null || classes.length == 0) {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        int length = classes.length;
-        var types = new Class<?>[length];
-        for (int index = 0; index < length; index++) {
-            types[index] = getPrimitive(classes[index]);
-        }
-        return types;
+        return StreamUtils.toArray(classes, c -> getPrimitive(c), Class<?>[]::new);
     }
 
     @NotNull
-    public static Class<?>[] getReference(Class<?>[] classes) {
+    public static Class<?>[] getReference(@Nullable Class<?>[] classes) {
         if (classes == null || classes.length == 0) {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        int length = classes.length;
-        var types = new Class<?>[length];
-        for (int index = 0; index < length; index++) {
-            types[index] = getReference(classes[index]);
-        }
-        return types;
+        return StreamUtils.toArray(classes, c -> getReference(c), Class<?>[]::new);
     }
 
     @NotNull
-    public static Class<?>[] getPrimitive(Object[] objects) {
+    public static Class<?>[] getPrimitive(@Nullable Object[] objects) {
         if (objects == null || objects.length == 0) {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        int length = objects.length;
-        var types = new Class<?>[length];
-        for (int index = 0; index < length; index++) {
-            types[index] = getPrimitive(objects[index].getClass());
+        int hash = Arrays.hashCode(objects);
+        var classes = CLASS_CACHE.get(hash);
+        if (classes == null) {
+            classes = StreamUtils.toArray(objects, o -> getPrimitive(o.getClass()), Class<?>[]::new);
+            CLASS_CACHE.put(hash, classes);
         }
-        return types;
+        return classes;
     }
 
     @NotNull
-    public static Class<?>[] getReference(Object[] objects) {
+    public static Class<?>[] getReference(@Nullable Object[] objects) {
         if (objects == null || objects.length == 0) {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        int length = objects.length;
-        var types = new Class<?>[length];
-        for (int index = 0; index < length; index++) {
-            types[index] = getReference(objects[index].getClass());
+        int hash = Arrays.hashCode(objects);
+        var classes = CLASS_CACHE.get(hash);
+        if (classes == null) {
+            classes = StreamUtils.toArray(objects, o -> getReference(o.getClass()), Class<?>[]::new);
+            CLASS_CACHE.put(hash, classes);
         }
-        return types;
+        return classes;
     }
 }

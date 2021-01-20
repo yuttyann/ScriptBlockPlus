@@ -91,6 +91,12 @@ public final class OptionMap extends HashMap<String, Option> {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void clear() {
+        super.clear();
+        LINKED_LIST.clear();
+    }
+
     @NotNull
     public List<Option> list() {
         var list = new ArrayList<Option>(values());

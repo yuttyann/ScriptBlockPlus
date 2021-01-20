@@ -16,8 +16,8 @@
 package com.github.yuttyann.scriptblockplus.raytrace;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import com.github.yuttyann.scriptblockplus.utils.nms.NMSHelper;
 
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;

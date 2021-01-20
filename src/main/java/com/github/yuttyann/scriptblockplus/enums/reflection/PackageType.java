@@ -125,6 +125,15 @@ public enum PackageType {
         getField(declared, className, fieldName).set(instance, value);
     }
 
+    public Object getFieldValue(@NotNull String className, @NotNull String fieldName, @Nullable Object instance) throws ReflectiveOperationException {
+        return getField(false, className, fieldName).get(instance);
+    }
+
+    
+    public Object getFieldValue(boolean declared, @NotNull String className, @NotNull String fieldName, @Nullable Object instance) throws ReflectiveOperationException {
+        return getField(declared, className, fieldName).get(instance);
+    }
+
     @Nullable
     public Field getField(@NotNull String className, @NotNull String fieldName) throws ReflectiveOperationException {
         return getField(false, className, fieldName);
@@ -158,13 +167,18 @@ public enum PackageType {
 
     @Nullable
     public Object invokeMethod(boolean declared, @Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Object... arguments) throws ReflectiveOperationException {
+        return invokeMethod(declared, instance, className, methodName, ClassType.getPrimitive(arguments), arguments);
+    }
+
+    @Nullable
+    public Object invokeMethod(boolean declared, @Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Class<?>[] parameterTypes, @Nullable Object... arguments) throws ReflectiveOperationException {
         if (StringUtils.isEmpty(className)) {
             className = instance.getClass().getSimpleName();
         }
         if (arguments == null) {
             arguments = ArrayUtils.EMPTY_OBJECT_ARRAY;
         }
-        return getMethod(declared, className, methodName, ClassType.getPrimitive(arguments)).invoke(instance, arguments);
+        return getMethod(declared, className, methodName, parameterTypes).invoke(instance, arguments);
     }
 
     @Nullable
@@ -208,10 +222,15 @@ public enum PackageType {
 
     @Nullable
     public Object newInstance(boolean declared, @NotNull String className, @Nullable Object... arguments) throws ReflectiveOperationException {
+        return newInstance(declared, className, ClassType.getPrimitive(arguments), arguments);
+    }
+
+    @Nullable
+    public Object newInstance(boolean declared, @NotNull String className, @Nullable Class<?>[] parameterTypes, @Nullable Object... arguments) throws ReflectiveOperationException {
         if (arguments == null || arguments.length == 0) {
             return getClass(className).getConstructor(ArrayUtils.EMPTY_CLASS_ARRAY).newInstance();
         }
-        return getConstructor(declared, className, ClassType.getPrimitive(arguments)).newInstance(arguments);
+        return getConstructor(declared, className, parameterTypes).newInstance(arguments);
     }
 
     @Nullable

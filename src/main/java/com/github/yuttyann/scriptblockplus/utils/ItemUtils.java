@@ -17,7 +17,6 @@ package com.github.yuttyann.scriptblockplus.utils;
 
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.utils.nms.NMSHelper;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;

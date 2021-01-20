@@ -114,7 +114,7 @@ public class ScriptBlock extends JavaPlugin {
         ItemAction.register(new ScriptEditor());
         ItemAction.register(new BlockSelector());
 
-        // オプションを予め登録
+        // オプションを登録
         OptionManager.registerDefaults();
 
         // コマンドの登録

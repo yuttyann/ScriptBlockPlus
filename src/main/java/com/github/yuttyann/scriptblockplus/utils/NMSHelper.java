@@ -13,10 +13,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.utils.nms;
-
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+package com.github.yuttyann.scriptblockplus.utils;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.raytrace.RayResult;
 
 /**
@@ -95,11 +93,10 @@ public final class NMSHelper {
         var classes = new Class<?>[] { NMS.getClass("IChatBaseComponent"), byte.class };
         Object value = (byte) 2;
         if (Utils.isCBXXXorLater("1.12")) {
-            value = NMS.getEnumValueOf("ChatMessageType", "GAME_INFO");
-            classes[1] = value.getClass();
+            classes[1] = (value = NMS.getEnumValueOf("ChatMessageType", "GAME_INFO")).getClass();
         }
         var handle = CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
-        var connection = NMS.getField("EntityPlayer", "playerConnection").get(handle);
+        var connection = NMS.getFieldValue("EntityPlayer", "playerConnection", handle);
         var packetChat = NMS.getConstructor("PacketPlayOutChat", classes).newInstance(component, value);
         NMS.getMethod("PlayerConnection", "sendPacket", NMS.getClass("Packet")).invoke(connection, packetChat);
     }
@@ -120,32 +117,29 @@ public final class NMSHelper {
         var nmsWorld = CB.invokeMethod(world, "CraftWorld", "getHandle");
         var rayTrace = NMS.invokeMethod(nmsWorld, "World", "rayTrace", arguments);
         if (rayTrace != null) {
-            var enumDirection = NMS.getField("MovingObjectPosition", "direction");
+            var direction = NMS.getFieldValue("MovingObjectPosition", "direction", rayTrace);
             var position = NMS.invokeMethod(rayTrace, "MovingObjectPosition", "a");
             int x = (int) NMS.invokeMethod(position, "BaseBlockPosition", "getX");
             int y = (int) NMS.invokeMethod(position, "BaseBlockPosition", "getY");
             int z = (int) NMS.invokeMethod(position, "BaseBlockPosition", "getZ");
-            return new RayResult(world.getBlockAt(x, y, z), BlockFace.valueOf(((Enum<?>) enumDirection.get(rayTrace)).name()));
+            return new RayResult(world.getBlockAt(x, y, z), BlockFace.valueOf(((Enum<?>) direction).name()));
         }
         return null;
     }
 
-    @NotNull
-    public static Entity[] selectEntities(@NotNull CommandSender sender, @NotNull Location location, @NotNull String selector) throws ReflectiveOperationException {
-        var argmentEntity = Utils.isCBXXXorLater("1.14") ? "multipleEntities" : "b";
-        var entitySelector = Utils.isCBXXXorLater("1.14") ? "getEntities" : "b";
-        var vector = toVec3D(location.toVector());
-        var entity = NMS.invokeMethod(null, "ArgumentEntity", argmentEntity);
-        var reader = MJN.newInstance("StringReader", selector);
-        var wrapper = NMS.invokeMethod(getICommandListener(sender), "CommandListenerWrapper", "a", vector);
-        var parse = NMS.invokeMethod(entity, "ArgumentEntity", "parse", getParseArgments(reader));
-        var nmsList = (List<?>) NMS.invokeMethod(parse, "EntitySelector", entitySelector, wrapper);
-        return StreamUtils.toArray(nmsList, e -> getBukkitEntity(e), Entity[]::new);
-    }
+    // 定数にすることでインスタンスの生成を高速化
+    private static final Object[] ARGMENT_ENTITY = { false, false };
+    private static final Class<?>[] ARGMENT_ENTITY_CLASS = { boolean.class, boolean.class };
 
     @NotNull
-    private static Object[] getParseArgments(@NotNull Object reader) {
-        return Utils.isCBXXXorLater("1.13.2") ? new Object[] { reader, true } : new Object[] { reader };
+    public static Entity[] selectEntities(@NotNull CommandSender sender, @NotNull Location location, @NotNull String selector) throws ReflectiveOperationException {
+        var vector = toVec3D(location.toVector());
+        var reader = MJN.newInstance("StringReader", selector);
+        var entity = NMS.newInstance(true, "ArgumentEntity", ARGMENT_ENTITY_CLASS, ARGMENT_ENTITY);
+        var wrapper = NMS.invokeMethod(getICommandListener(sender), "CommandListenerWrapper", "a", vector);
+        var parse = NMS.invokeMethod(entity, "ArgumentEntity", "parse", Utils.isCBXXXorLater("1.13.2") ? new Object[] { reader, true } : new Object[] { reader });
+        var nmsList = (List<?>) NMS.invokeMethod(parse, "EntitySelector", Utils.isCBXXXorLater("1.14") ? "getEntities" : "b", wrapper);
+        return StreamUtils.toArray(nmsList, e -> getBukkitEntity(e), Entity[]::new);
     }
 
     @Nullable
@@ -163,6 +157,9 @@ public final class NMSHelper {
         if (Utils.isCBXXXorLater("1.13.2")) {
             return CB_COMMAND.getMethod("VanillaCommandWrapper", "getListener", CommandSender.class).invoke(null, sender);
         }
+        if (sender instanceof SBPlayer) {
+            sender = ((SBPlayer) sender).getPlayer();
+        }
         if (sender instanceof Player) {
             var entity = CB_ENTITY.invokeMethod(sender, "CraftPlayer", "getHandle");
             return NMS.invokeMethod(entity, "Entity", "getCommandListener");
@@ -174,7 +171,7 @@ public final class NMSHelper {
             return NMS.invokeMethod(command, "CommandBlockListenerAbstract", "getWrapper");
         } else if (sender instanceof RemoteConsoleCommandSender) {
             var server = NMS.invokeMethod(null, "MinecraftServer", "getServer");
-            var remote = NMS.getField("DedicatedServer", "remoteControlCommandListener").get(server);
+            var remote = NMS.getFieldValue("DedicatedServer", "remoteControlCommandListener", server);
             return NMS.invokeMethod(remote, "RemoteControlCommandListener", "f");
         } else if (sender instanceof ConsoleCommandSender) {
             var server = CB.invokeMethod(sender.getServer(), "CraftServer", "getServer");
@@ -192,12 +189,12 @@ public final class NMSHelper {
         var blockData = NMS.invokeMethod(world, "WorldServer", "getType", position);
         if (Utils.isCBXXXorLater("1.13")) {
             var name = Utils.getPackageVersion().equals("v1_13_R2") ? "i" : "g";
-            var getVoxelShape = NMS.getMethod("IBlockData", name, NMS.getClass("IBlockAccess"), position.getClass());
-            return NMS.invokeMethod(getVoxelShape.invoke(blockData, world, position), "VoxelShape", "a");
+            var voxelShape = NMS.getMethod("IBlockData", name, NMS.getClass("IBlockAccess"), position.getClass());
+            return NMS.invokeMethod(voxelShape.invoke(blockData, world, position), "VoxelShape", "a");
         } else {
             var name = Utils.isCBXXXorLater("1.11") ? "b" : "a";
-            var getAxisAlignedBB = NMS.getMethod("Block", name, NMS.getClass("IBlockData"), NMS.getClass("IBlockAccess"), position.getClass());
-            return getAxisAlignedBB.invoke(NMS.invokeMethod(blockData, "IBlockData", "getBlock"), blockData, world, position);
+            var axisAlignedBB = NMS.getMethod("Block", name, NMS.getClass("IBlockData"), NMS.getClass("IBlockAccess"), position.getClass());
+            return axisAlignedBB.invoke(NMS.invokeMethod(blockData, "IBlockData", "getBlock"), blockData, world, position);
         }
     }
 
@@ -205,8 +202,8 @@ public final class NMSHelper {
     public static Map<String, Material> getItemRegistry() throws ReflectiveOperationException {
         var items = new HashMap<String, Material>();
         var material = CB_UTIL.getMethod("CraftMagicNumbers", "getMaterial", NMS.getClass("Item"));
-        var registory = NMS.getField("Item", "REGISTRY").get(null);
-        var registorySimple = (Map<?, ?>) NMS.getField(true, "RegistrySimple", "c").get(registory);
+        var registory = NMS.getFieldValue("Item", "REGISTRY", null);
+        var registorySimple = (Map<?, ?>) NMS.getFieldValue(true, "RegistrySimple", "c", registory);
         for (var entry : registorySimple.entrySet()) {
             items.put(entry.getKey().toString(), (Material) material.invoke(null, entry.getValue()));
         }

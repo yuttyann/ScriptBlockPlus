@@ -23,9 +23,9 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
+import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import com.github.yuttyann.scriptblockplus.utils.nms.NMSHelper;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;

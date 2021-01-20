@@ -20,6 +20,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.Filter;
+import com.github.yuttyann.scriptblockplus.enums.reflection.ClassType;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
@@ -34,7 +35,7 @@ import com.github.yuttyann.scriptblockplus.region.CuboidRegionRemove;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.*;
-import com.github.yuttyann.scriptblockplus.utils.nms.CommandSelector;
+import com.github.yuttyann.scriptblockplus.utils.selector.CommandSelector;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 
@@ -179,10 +180,11 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         if (!hasPermission(sender, Permission.COMMAND_RELOAD, false)) {
             return false;
         }
-        Json.clear();
         SBFiles.reload();
-        NameFetcher.clear();
+        Json.clear();
+        ClassType.clear();
         PackageType.clear();
+        NameFetcher.clear();
         setUsage(getUsages());
         SBConfig.ALL_FILE_RELOAD.send(sender);
         return true;

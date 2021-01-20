@@ -28,8 +28,8 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher.WrappedDataWatcherObje
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import com.github.yuttyann.scriptblockplus.utils.nms.NMSHelper;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
