@@ -117,33 +117,12 @@ public final class CommandSelector {
         var builder = new StringBuilder();
         var location = (Location) null;
         for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
-            int type = i + 1, tag = i + 2;
-            if ((chars[i] == '~' || chars[i] == '^') && (sender instanceof Entity || sender instanceof BlockCommandSender)) {
-                if (k >= 3) {
-                    builder.append(sender.getName());
-                } else {
-                    var relative = k == 0 ? "x" : k == 1 ? "y" : k == 2 ? "z" : "x";
-                    var tempBuilder = new StringBuilder().append(chars[i]);
-                    for (int l = type; l < chars.length; l++) {
-                        if ("+-.0123456789".indexOf(chars[l]) > -1) {
-                            i++;
-                            tempBuilder.append(chars[l]);
-                        } else {
-                            break;
-                        }
-                    }
-                    if (location == null) {
-                        location = EntitySelector.copy(sender, null);
-                    }
-                    location.add(EntitySelector.getRelative(location, relative, tempBuilder.toString()));
-                    builder.append('{').append(relative).append('}');
-                    k++;
-                }
-            } else if (chars[i] == '@' && type < chars.length && SELECTOR_SUFFIX.indexOf(chars[type]) > -1) {
+            int one = i + 1, two = one + 1;
+            if (chars[i] == '@' && one < chars.length && SELECTOR_SUFFIX.indexOf(chars[one]) > -1) {
                 var textIndex = new Index(i);
-                textIndex.end = type;
-                if (tag < chars.length && chars[tag] == '[') {
-                    for (int l = tag, m = 0; l < chars.length; l++) {
+                textIndex.end = one;
+                if (two < chars.length && chars[two] == '[') {
+                    for (int l = two, m = 0; l < chars.length; l++) {
                         if (chars[l] == '[') {
                             m++;
                         } else if (chars[l] == ']') {
@@ -159,6 +138,27 @@ public final class CommandSelector {
                 }
                 indexList.add(textIndex);
                 builder.append('{').append(j++).append('}');
+            } else if ((chars[i] == '~' || chars[i] == '^') && (sender instanceof Entity || sender instanceof BlockCommandSender)) {
+                if (k >= 3) {
+                    builder.append(sender.getName());
+                } else {
+                    var relative = k == 0 ? "x" : k == 1 ? "y" : k == 2 ? "z" : "x";
+                    var tempBuilder = new StringBuilder().append(chars[i]);
+                    for (int l = one; l < chars.length; l++) {
+                        if ("+-.0123456789".indexOf(chars[l]) > -1) {
+                            i++;
+                            tempBuilder.append(chars[l]);
+                        } else {
+                            break;
+                        }
+                    }
+                    if (location == null) {
+                        location = EntitySelector.copy(sender, null);
+                    }
+                    location.add(EntitySelector.getRelative(location, relative, tempBuilder.toString()));
+                    builder.append('{').append(relative).append('}');
+                    k++;
+                }
             } else {
                 builder.append(chars[i]);
             }
