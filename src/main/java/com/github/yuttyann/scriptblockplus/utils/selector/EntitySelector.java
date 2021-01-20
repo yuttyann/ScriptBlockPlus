@@ -175,8 +175,8 @@ public final class EntitySelector {
         return new Location(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
-    private static int getLimit(@NotNull ArgmentValue[] argmentValues) {
-        for (var argmentValue : argmentValues) {
+    private static int getLimit(@NotNull ArgmentValue[] argments) {
+        for (var argmentValue : argments) {
             if (argmentValue.getArgment() == Argment.C) {
                 return Integer.parseInt(argmentValue.getValue());
             }
@@ -229,8 +229,8 @@ public final class EntitySelector {
         }
     }
     
-    private static boolean hasTag(@NotNull ArgmentValue[] argmentValues, @NotNull Argment tag) {
-        return StreamUtils.anyMatch(argmentValues, t -> t.getArgment() == tag);
+    private static boolean hasTag(@NotNull ArgmentValue[] argments, @NotNull Argment tag) {
+        return StreamUtils.anyMatch(argments, t -> t.getArgment() == tag);
     }
 
     private static boolean setXYZ(@NotNull Location location, @NotNull ArgmentValue argmentValue) {
