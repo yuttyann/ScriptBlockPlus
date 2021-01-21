@@ -19,13 +19,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.Filter;
 import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.selector.CommandSelector;
+import com.github.yuttyann.scriptblockplus.utils.selector.filter.FilterSplit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -35,7 +35,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus BlockListener クラス
@@ -43,67 +42,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BlockListener implements Listener {
 
-    private static final int LENGTH = Filter.getPrefix().length();
     private static final Set<String> REDSTONE_FLAG = new HashSet<>();
-    private static final FilterValue[] EMPTY_FILTER_ARRAY = new FilterValue[0];
-
-    private class FilterSplit {
-
-        private final String filters, selector;
-
-        private FilterSplit(@NotNull String source) {
-            if (source.startsWith(Filter.getPrefix())) {
-                int end = source.indexOf("}");
-                this.filters = source.substring(LENGTH, end).trim();
-                this.selector = source.substring(end + 1, source.length()).trim();
-            } else {
-                this.filters = null;
-                this.selector = source;
-            }
-        }
-
-        @NotNull
-        public String getSelector() {
-            return selector;
-        }
-
-        @Nullable
-        public FilterValue[] getFilterValues() {
-            if (StringUtils.isEmpty(filters)) {
-                return EMPTY_FILTER_ARRAY;
-            }
-            var array = StringUtils.split(filters, ',');
-            return StreamUtils.toArray(array, FilterValue::new, FilterValue[]::new);
-        }
-    }
-
-    private class FilterValue {
-
-        private final String value;
-        private final Filter filter;
-
-        private FilterValue(@NotNull String source) {
-            for (var filter : Filter.values()) {
-                if (source.startsWith(filter.getSyntax())) {
-                    this.value = filter.getValue(source);
-                    this.filter = filter;
-                    return;
-                }
-            }
-            this.value = null;
-            this.filter = Filter.NONE;
-        }
-
-        @Nullable
-        public String getValue() {
-            return value;
-        }
-
-        @NotNull
-        public Filter getFilter() {
-            return filter;
-        }
-    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPhysics(BlockPhysicsEvent event) {
@@ -137,30 +76,13 @@ public class BlockListener implements Listener {
                     continue;
                 }
                 var player = (Player) target;
-                if (!StreamUtils.allMatch(filterValues, t -> has(player, t, index[0]))) {
+                if (!StreamUtils.allMatch(filterValues, t -> t.has(player, index[0]))) {
                     continue;
                 }
                 index[0]++;
                 REDSTONE_FLAG.add(fullCoords);
                 new ScriptRead(player, location, scriptKey).read(0);
             }
-        }
-    }
-
-    public boolean has(@NotNull Player player, @NotNull FilterValue filterValue, int index) {
-        var value = filterValue.getValue();
-        if (StringUtils.isEmpty(value)) {
-            return false;
-        }
-        switch (filterValue.getFilter()) {
-            case OP:
-                return Boolean.parseBoolean(value) ? player.isOp() : !player.isOp();
-            case PERM:
-                return player.hasPermission(value);
-            case LIMIT:
-                return index < Integer.parseInt(value);
-            default:
-                return false;
         }
     }
 
