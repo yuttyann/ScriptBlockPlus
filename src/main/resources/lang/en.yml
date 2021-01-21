@@ -29,7 +29,7 @@ BlockSelector:
 - '&6Left-click: &eSpecify the block as Pos1.'
 - '&6Right-click: &eSpecify the block as Pos2.'
 - '&6Shift+Leftclick: &eSpecify Player as Pos1.'
-- '&6Shift+Rightclick: &eSpecify Player as Pos1.'
+- '&6Shift+Rightclick: &eSpecify Player as Pos2.'
 
 ## ===== ScriptEditor ===== ##
 # %scriptkey% : Script key
