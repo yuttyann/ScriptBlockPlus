@@ -13,59 +13,55 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.utils.selector.filter;
+package com.github.yuttyann.scriptblockplus.selector.entity;
 
-import com.github.yuttyann.scriptblockplus.enums.Filter;
+import com.github.yuttyann.scriptblockplus.enums.Argment;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * ScriptBlockPlus FilterValue クラス
+ * ScriptBlockPlus ArgmentValue クラス
  * @author yuttyann44581
  */
-public final class FilterValue {
+public final class ArgmentValue {
 
-    private final Filter filter;
+    private final Argment argment;
     private final String value;
 
-    public FilterValue(@NotNull String source) {
-        for (var filter : Filter.values()) {
-            if (source.startsWith(filter.getSyntax())) {
-                this.filter = filter;
-                this.value = filter.getValue(source);
+    private String cacheValue;
+    private Boolean cacheInverted;
+
+    public ArgmentValue(@NotNull String source) {
+        for (var argment : Argment.values()) {
+            if (argment.has(source)) {
+                this.argment = argment;
+                this.value = argment.getValue(source);
                 return;
             }
         }
-        this.filter = Filter.NONE;
+        this.argment = null;
         this.value = null;
     }
 
     @NotNull
-    public Filter getFilter() {
-        return filter;
+    public Argment getArgment() {
+        return argment;
     }
 
     @Nullable
     public String getValue() {
-        return value;
+        if (cacheValue == null && StringUtils.isNotEmpty(value)) {
+            cacheValue = isInverted() ? value.substring(1) : value;
+        }
+        return cacheValue;
     }
 
-    public boolean has(@NotNull Player player, int index) {
-        if (StringUtils.isEmpty(value)) {
-            return false;
+    public boolean isInverted() {
+        if (cacheInverted == null && StringUtils.isNotEmpty(value)) {
+            cacheInverted = value.indexOf("!") == 0;
         }
-        switch (filter) {
-            case OP:
-                return Boolean.parseBoolean(value) ? player.isOp() : !player.isOp();
-            case PERM:
-                return player.hasPermission(value);
-            case LIMIT:
-                return index < Integer.parseInt(value);
-            default:
-                return false;
-        }
+        return cacheInverted;
     }
 }

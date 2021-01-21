@@ -13,10 +13,9 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.utils.selector;
+package com.github.yuttyann.scriptblockplus.selector.filter;
 
-import java.util.Locale;
-
+import com.github.yuttyann.scriptblockplus.enums.Filter;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -24,37 +23,38 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * ScriptBlockPlus Selector クラス
+ * ScriptBlockPlus FilterSplit クラス
  * @author yuttyann44581
  */
-public final class Selector {
+public final class FilterSplit {
 
-    private static final ArgmentValue[] EMPTY_ARGMENTS_ARRAY = new ArgmentValue[0];
+    private static final int LENGTH = Filter.getPrefix().length();
+    private static final FilterValue[] EMPTY_FILTER_ARRAY = new FilterValue[0];
+    
+    private final String selector, filters;
 
-    private final String argments, selector;
-
-    public Selector(@NotNull String source) {
-        if (source.startsWith("@") && source.indexOf("[") != -1 && source.lastIndexOf("]") != -1) {
-            int start = source.indexOf("[");
-            this.argments = source.substring(start + 1, source.length() - 1).trim();
-            this.selector = source.substring(0, start).trim();
+    public FilterSplit(@NotNull String source) {
+        if (source.startsWith(Filter.getPrefix()) && source.indexOf("}") != -1) {
+            int end = source.indexOf("}");
+            this.selector = source.substring(end + 1, source.length()).trim();
+            this.filters = source.substring(LENGTH, end).trim();
         } else {
-            this.argments = null;
             this.selector = source;
+            this.filters = null;
         }
-    }
-
-    @Nullable
-    public ArgmentValue[] getArgments() {
-        if (StringUtils.isEmpty(argments)) {
-            return EMPTY_ARGMENTS_ARRAY;
-        }
-        var array = StringUtils.split(argments, ',');
-        return StreamUtils.toArray(array, ArgmentValue::new, ArgmentValue[]::new);
     }
 
     @NotNull
     public String getSelector() {
-        return selector.toLowerCase(Locale.ROOT);
+        return selector;
+    }
+
+    @Nullable
+    public FilterValue[] getFilterValues() {
+        if (StringUtils.isEmpty(filters)) {
+            return EMPTY_FILTER_ARRAY;
+        }
+        var array = StringUtils.split(filters, ',');
+        return StreamUtils.toArray(array, FilterValue::new, FilterValue[]::new);
     }
 }

@@ -24,8 +24,8 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.selector.CommandSelector;
-import com.github.yuttyann.scriptblockplus.utils.selector.filter.FilterSplit;
+import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
+import com.github.yuttyann.scriptblockplus.selector.filter.FilterSplit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

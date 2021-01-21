@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.CommandLog;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.utils.selector.CommandSelector;
+import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
 import com.google.common.base.Splitter;
 
 import org.bukkit.Bukkit;

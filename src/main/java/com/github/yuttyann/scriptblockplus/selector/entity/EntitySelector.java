@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.utils.selector;
+package com.github.yuttyann.scriptblockplus.selector.entity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,21 +54,21 @@ public final class EntitySelector {
     private static final Entity[] EMPTY_ENTITY_ARRAY = new Entity[0];
 
     @NotNull
-    public static Entity[] getEntities(@NotNull CommandSender sender, @Nullable Location start, @NotNull String argment) {
+    public static Entity[] getEntities(@NotNull CommandSender sender, @Nullable Location start, @NotNull String selector) {
         var result = new ArrayList<Entity>();
         var location = copy(sender, start);
-        var selector = new Selector(argment);
-        var argments = selector.getArgments();
-        switch (selector.getSelector()) {
+        var argmentSplit = new ArgmentSplit(selector);
+        var argmentValues = argmentSplit.getArgmentValues();
+        switch (argmentSplit.getSelector()) {
             case "@p": {
                 var players = location.getWorld().getPlayers();
                 if (players.size() == 0) {
                     return EMPTY_ENTITY_ARRAY;
                 }
                 int count = 0;
-                int limit = sort(getLimit(argments, 1), location, players);
+                int limit = sort(getLimit(argmentValues, 1), location, players);
                 for (var player : players) {
-                    if (!StreamUtils.allMatch(argments, t -> canBeAccepted(player, location, t))) {
+                    if (!StreamUtils.allMatch(argmentValues, t -> canBeAccepted(player, location, t))) {
                         continue;
                     }
                     if (limit <= count) {
@@ -85,9 +85,9 @@ public final class EntitySelector {
                     return EMPTY_ENTITY_ARRAY;
                 }
                 int count = 0;
-                int limit = sort(getLimit(argments, players.size()), location, players);
+                int limit = sort(getLimit(argmentValues, players.size()), location, players);
                 for (var player : players) {
-                    if (!StreamUtils.allMatch(argments, t -> canBeAccepted(player, location, t))) {
+                    if (!StreamUtils.allMatch(argmentValues, t -> canBeAccepted(player, location, t))) {
                         continue;
                     }
                     if (limit <= count) {
@@ -104,12 +104,12 @@ public final class EntitySelector {
                     return EMPTY_ENTITY_ARRAY;
                 }
                 int count = 0;
-                int limit = getLimit(argments, 1);
+                int limit = getLimit(argmentValues, 1);
                 var randomInts = IntStream.range(0, players.size()).boxed().collect(Collectors.toList());
                 Collections.shuffle(randomInts, new Random());
                 for (int value : randomInts) {
                     var player = players.get(value);
-                    if (!StreamUtils.allMatch(argments, t -> canBeAccepted(player, location, t))) {
+                    if (!StreamUtils.allMatch(argmentValues, t -> canBeAccepted(player, location, t))) {
                         continue;
                     }
                     if (limit <= count) {
@@ -126,9 +126,9 @@ public final class EntitySelector {
                     return EMPTY_ENTITY_ARRAY;
                 }
                 int count = 0;
-                int limit = sort(getLimit(argments, entities.size()), location, entities);
+                int limit = sort(getLimit(argmentValues, entities.size()), location, entities);
                 for (var entity : entities) {
-                    if (!StreamUtils.allMatch(argments, t -> canBeAccepted(entity, location, t))) {
+                    if (!StreamUtils.allMatch(argmentValues, t -> canBeAccepted(entity, location, t))) {
                         continue;
                     }
                     if (limit <= count) {
@@ -140,7 +140,7 @@ public final class EntitySelector {
                 break;
             }
             case "@s": {
-                if (sender instanceof Entity && StreamUtils.allMatch(argments, t -> canBeAccepted((Entity) sender, location, t))) {
+                if (sender instanceof Entity && StreamUtils.allMatch(argmentValues, t -> canBeAccepted((Entity) sender, location, t))) {
                     result.add((Entity) sender);
                 }
                 break;
@@ -177,8 +177,8 @@ public final class EntitySelector {
         return limit;
     }
 
-    private static int getLimit(@NotNull ArgmentValue[] argments, int other) {
-        for (var argmentValue : argments) {
+    private static int getLimit(@NotNull ArgmentValue[] argmentValues, int other) {
+        for (var argmentValue : argmentValues) {
             if (argmentValue.getArgment() == Argment.C) {
                 return Integer.parseInt(argmentValue.getValue());
             }
@@ -254,15 +254,15 @@ public final class EntitySelector {
             double number = value.length() == 1 ? 0.0D : Double.parseDouble(value.substring(1));
             switch (relative.toLowerCase(Locale.ROOT)) {
                 case "x": {
-                    var empty = new Location(location.getWorld(), 0, 0, 0);
-                    empty.setYaw(normalizeYaw(location.getYaw() - 90));
+                    var empty = new Location(location.getWorld(), 0.0D, 0.0D, 0.0D);
+                    empty.setYaw(normalizeYaw(location.getYaw() - 90.0F));
                     empty.setPitch(location.getPitch());
                     return empty.getDirection().normalize().multiply(number);
                 }
                 case "y": {
-                    var empty = new Location(location.getWorld(), 0, 0, 0);
+                    var empty = new Location(location.getWorld(), 0.0D, 0.0D, 0.0D);
                     empty.setYaw(location.getYaw());
-                    empty.setPitch(location.getPitch() - 90);
+                    empty.setPitch(location.getPitch() - 90.0F);
                     return empty.getDirection().normalize().multiply(number);
                 }
                 case "z":
@@ -279,11 +279,11 @@ public final class EntitySelector {
             }
             switch (relative.toLowerCase(Locale.ROOT)) {
                 case "x":
-                    return new Vector(number, 0, 0);
+                    return new Vector(number, 0.0D, 0.0D);
                 case "y":
-                    return new Vector(0, number, 0);
+                    return new Vector(0.0D, number, 0.0D);
                 case "z":
-                    return new Vector(0, 0, number);
+                    return new Vector(0.0D, 0.0D, number);
                 default:
                     return new Vector();
             }
@@ -291,11 +291,11 @@ public final class EntitySelector {
     }
 
     private static float normalizeYaw(float yaw) {
-        yaw %= 360.0f;
-        if (yaw >= 180.0f) {
-            yaw -= 360.0f;
-        } else if (yaw < -180.0f) {
-            yaw += 360.0f;
+        yaw %= 360.0F;
+        if (yaw >= 180.0F) {
+            yaw -= 360.0F;
+        } else if (yaw < -180.0F) {
+            yaw += 360.0F;
         }
         return yaw;
     }
