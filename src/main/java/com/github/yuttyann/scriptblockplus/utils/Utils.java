@@ -145,7 +145,7 @@ public final class Utils {
         var commandSender = sender instanceof SBPlayer ? ((SBPlayer) sender).getPlayer() : sender;
         if (CommandSelector.has(command)) {
             var commands = CommandSelector.build(commandSender, location, command);
-            return commands.stream().allMatch(s -> Bukkit.dispatchCommand(commandSender, s));
+            return StreamUtils.allMatch(commands, s -> Bukkit.dispatchCommand(commandSender, s));
         }
         return Bukkit.dispatchCommand(commandSender, command);
     }

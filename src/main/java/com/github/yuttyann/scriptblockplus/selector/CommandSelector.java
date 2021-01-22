@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * ScriptBlockPlus CommandSelector クラス
@@ -66,8 +65,8 @@ public final class CommandSelector {
         }
     }
 
-    public static boolean has(@NotNull String text) {
-        return Stream.of(SELECTOR_NAMES).anyMatch(text::contains);
+    public static boolean has(@NotNull String source) {
+        return StreamUtils.anyMatch(SELECTOR_NAMES, source::contains);
     }
 
     @NotNull

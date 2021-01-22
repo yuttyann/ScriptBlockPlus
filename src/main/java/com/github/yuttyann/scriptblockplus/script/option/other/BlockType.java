@@ -15,12 +15,11 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import java.util.stream.Stream;
-
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -42,8 +41,9 @@ public class BlockType extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
+        var array = StringUtils.split(getOptionValue(), ',');
         var block = getLocation().getBlock();
-        return Stream.of(StringUtils.split(getOptionValue(), ',')).anyMatch(s -> equals(block, s));
+        return StreamUtils.anyMatch(array, s -> equals(block, s));
     }
 
     private boolean equals(@NotNull Block block, @NotNull String type) {
