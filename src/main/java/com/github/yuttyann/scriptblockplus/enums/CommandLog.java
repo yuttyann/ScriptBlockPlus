@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 /**
- * ScriptBlockPlus HideCommandLog 列挙型
+ * ScriptBlockPlus CommandLog 列挙型
  * @author yuttyann44581
  */
 @SuppressWarnings("deprecation")
