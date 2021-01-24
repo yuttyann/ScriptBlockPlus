@@ -50,7 +50,7 @@ public abstract class BaseJson<T> {
     protected final String id;
 
     @SerializedName(value = "elements", alternate = { "infos" })
-	protected List<T> list = new ArrayList<>();
+    protected List<T> list = new ArrayList<>();
 
     BaseJson(@NotNull UUID uuid) {
         this(uuid.toString());

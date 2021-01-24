@@ -27,12 +27,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class SingleJson<T> extends BaseJson<T> {
 
-	public SingleJson(@NotNull UUID uuid) {
+    public SingleJson(@NotNull UUID uuid) {
         super(uuid);
     }
 
-	public SingleJson(@NotNull String id) {
-		super(id);
+    public SingleJson(@NotNull String id) {
+        super(id);
     }
 
     @NotNull
