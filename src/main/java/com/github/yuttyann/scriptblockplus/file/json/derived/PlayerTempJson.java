@@ -13,27 +13,29 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.file.json.annotation;
+package com.github.yuttyann.scriptblockplus.file.json.derived;
 
+import com.github.yuttyann.scriptblockplus.file.json.SingleJson;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTemp;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.util.UUID;
 
 /**
- * ScriptBlockPlus JsonOptions 注釈
+ * ScriptBlockPlus PlayerTempJson クラス
  * @author yuttyann44581
  */
-@Target(TYPE)
-@Retention(RUNTIME)
-public @interface JsonTag {
+@JsonTag(path = "json/playertemp")
+public class PlayerTempJson extends SingleJson<PlayerTemp> {
 
-    @NotNull
-    String path();
+    public PlayerTempJson(@NotNull UUID uuid) {
+        super(uuid);
+    }
 
+    @Override
     @NotNull
-    String file() default "{id}.json";
+    public PlayerTemp newInstance() {
+        return new PlayerTemp();
+    }
 }

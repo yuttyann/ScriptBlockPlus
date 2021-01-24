@@ -15,9 +15,9 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.file.json.PlayerTempJson;
+import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -74,7 +74,7 @@ public abstract class TimerOption extends BaseOption {
     }
 
     public static void removeAll(@NotNull Set<Location> locations, @NotNull ScriptKey scriptKey) {
-        for (var name : Json.getNames(PlayerTempJson.class)) {
+        for (var name : BaseJson.getNames(PlayerTempJson.class)) {
             var uuid = UUID.fromString(name);
             var tempJson = new PlayerTempJson(uuid);
             if (!tempJson.exists()) {

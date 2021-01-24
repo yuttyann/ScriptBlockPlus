@@ -15,27 +15,43 @@
  */
 package com.github.yuttyann.scriptblockplus.file.json;
 
-import com.github.yuttyann.scriptblockplus.file.Json;
-import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
-import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTemp;
+import java.util.UUID;
+import java.util.function.Consumer;
+
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
 /**
- * ScriptBlockPlus PlayerTempJson クラス
+ * ScriptBlockPlus SingleJson クラス
+ * @param <T> 値の型
  * @author yuttyann44581
  */
-@JsonTag(path = "json/playertemp")
-public class PlayerTempJson extends Json<PlayerTemp> {
+public abstract class SingleJson<T> extends BaseJson<T> {
 
-    public PlayerTempJson(@NotNull UUID uuid) {
+	public SingleJson(@NotNull UUID uuid) {
         super(uuid);
     }
 
-    @Override
+	public SingleJson(@NotNull String id) {
+		super(id);
+    }
+
     @NotNull
-    public PlayerTemp newInstance(@NotNull Object[] args) {
-        return new PlayerTemp();
+    protected abstract T newInstance();
+
+    @NotNull
+    public final T load() {
+        if (list.isEmpty()) {
+            list.add(newInstance());
+        }
+        return list.get(0);
+    }
+
+    public final boolean has() {
+        return !list.isEmpty();
+    }
+
+    public final void action(@NotNull Consumer<T> action) {
+        action.accept(load());
+        saveFile();
     }
 }

@@ -13,14 +13,13 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.file;
+package com.github.yuttyann.scriptblockplus.file.json;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.reflection.ClassType;
+import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.FieldExclusion;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.google.common.base.Charsets;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -33,53 +32,41 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
- * ScriptBlockPlus Json クラス
+ * ScriptBlockPlus BaseJson クラス
  * @param <T> 値の型
  * @author yuttyann44581
  */
-public abstract class Json<T> {
+public abstract class BaseJson<T> {
 
     @Exclude
     private static final Map<Integer, List<?>> LIST_CACHE = new HashMap<>();
 
     @Exclude
-    private final JsonTag jsonTag;
-
-    @Exclude
-    private final File file;
-
-    @Exclude
-    private final Class<?>[] classes;
+    protected final File file;
 
     @SerializedName("id")
-    private final String id;
+    protected final String id;
 
     @SerializedName(value = "elements", alternate = { "infos" })
-    private List<T> list = new ArrayList<>();
+	protected List<T> list = new ArrayList<>();
 
-    {
-        this.jsonTag = getClass().getAnnotation(JsonTag.class);
-    }
-
-    public Json(@NotNull UUID uuid) {
+    BaseJson(@NotNull UUID uuid) {
         this(uuid.toString());
     }
 
     @SuppressWarnings("unchecked")
-    public Json(@NotNull String id) {
+    BaseJson(@NotNull String id) {
         this.id = id;
-        this.file = getFile(jsonTag);
-        this.classes = jsonTag.classes();
+        this.file = getJsonFile();
 
         int hash = hashCode();
         if (LIST_CACHE.containsKey(hash)) {
             this.list = (List<T>) LIST_CACHE.get(hash);
         } else {
             try {
-                Optional.ofNullable((Json<T>) loadFile()).ifPresent(j -> list.addAll(j.list));
+                Optional.ofNullable((BaseJson<T>) loadFile()).ifPresent(j -> list.addAll(j.list));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -92,17 +79,17 @@ public abstract class Json<T> {
     }
 
     @NotNull
-    protected String getId() {
+    public final String getId() {
         return id;
     }
 
     @NotNull
-    protected File getFile() {
+    public final File getFile() {
         return file;
     }
 
     @Nullable
-    private Json<?> loadFile() throws IOException {
+    private BaseJson<?> loadFile() throws IOException {
         if (!file.exists()) {
             return null;
         }
@@ -115,7 +102,7 @@ public abstract class Json<T> {
         }
     }
 
-    public void saveFile() {
+    public final void saveFile() {
         var parent = file.getParentFile();
         if (!parent.exists()) {
             parent.mkdirs();
@@ -130,7 +117,7 @@ public abstract class Json<T> {
         }
     }
 
-    public void deleteFile() {
+    public final void deleteFile() {
         try {
             LIST_CACHE.remove(hashCode());
         } finally {
@@ -138,63 +125,8 @@ public abstract class Json<T> {
         }
     }
 
-    @NotNull
-    public final T load() {
-        if (classes.length > 0) {
-            throw new IllegalArgumentException("Please specify the parameter " + Arrays.toString(classes));
-        }
-        if (list.isEmpty()) {
-            list.add(newInstance(ArrayUtils.EMPTY_OBJECT_ARRAY));
-        }
-        return list.get(0);
-    }
-
-    @NotNull
-    public final T load(@NotNull Object... args) {
-        if (!equalParams(args)) {
-            String equal = Arrays.toString(ClassType.getReference(args)) + " != " + Arrays.toString(classes);
-            throw new IllegalArgumentException("Classes do not match " + equal);
-        }
-        int hash = hashCode(args);
-        var value = StreamUtils.filterFirst(list, t -> t.hashCode() == hash);
-        if (!value.isPresent()) {
-            T instance = newInstance(args);
-            list.add(instance);
-            return instance;
-        }
-        return value.get();
-    }
-
     public final boolean exists() {
         return file.exists();
-    }
-
-    public final boolean has() {
-        if (classes.length > 0) {
-            throw new IllegalArgumentException("Please specify the parameter " + Arrays.toString(classes));
-        }
-        return !list.isEmpty();
-    }
-
-    public final boolean has(@NotNull Object... args) {
-        if (!equalParams(args)) {
-            String equal = Arrays.toString(ClassType.getReference(args)) + " != " + Arrays.toString(classes);
-            throw new IllegalArgumentException("Classes do not match " + equal);
-        }
-        int hash = hashCode(args);
-        return StreamUtils.filterFirst(list, t -> t.hashCode() == hash).isPresent();
-    }
-
-    protected int hashCode(@NotNull Object[] args) {
-        return Objects.hash(args);
-    }
-
-    @NotNull
-    protected abstract T newInstance(@NotNull Object[] args);
-
-    public final void action(@NotNull Consumer<T> action, @NotNull Object... args) {
-        action.accept(args.length == 0 ? load() : load(args));
-        saveFile();
     }
 
     public final void remove(@NotNull T value) {
@@ -204,20 +136,9 @@ public abstract class Json<T> {
         }
     }
 
-    private boolean equalParams(@NotNull Object[] args) {
-        if (args.length != classes.length) {
-            return false;
-        }
-        for (int i = 0; i < args.length; i++) {
-            if (!classes[i].isAssignableFrom(args[i].getClass())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     @NotNull
-    private File getFile(@NotNull JsonTag jsonTag) {
+    private File getJsonFile() {
+        var jsonTag = getClass().getAnnotation(JsonTag.class);
         var path = jsonTag.path() + SBFiles.S + jsonTag.file();
         path = StringUtils.replace(path, "/", SBFiles.S);
         path = StringUtils.replace(path, "{id}", id);
@@ -225,7 +146,7 @@ public abstract class Json<T> {
     }
 
     @NotNull
-    public static String[] getNames(@NotNull Class<? extends Json<?>> jsonClass) {
+    public static String[] getNames(@NotNull Class<? extends BaseJson<?>> jsonClass) {
         var jsonTag = jsonClass.getAnnotation(JsonTag.class);
         var folder = new File(ScriptBlock.getInstance().getDataFolder(), jsonTag.path());
         if (folder.exists()) {
@@ -250,10 +171,10 @@ public abstract class Json<T> {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (!(obj instanceof Json)) {
+        if (!(obj instanceof BaseJson)) {
             return false;
         }
-        var json = (Json<?>) obj;
+        var json = (BaseJson<?>) obj;
         return Objects.equals(id, json.id) && Objects.equals(list, json.list);
     }
 }

@@ -13,10 +13,10 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.file.json;
+package com.github.yuttyann.scriptblockplus.file.json.derived;
 
-import com.github.yuttyann.scriptblockplus.file.Json;
 import com.github.yuttyann.scriptblockplus.file.SBLoader;
+import com.github.yuttyann.scriptblockplus.file.json.SingleJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
@@ -30,10 +30,21 @@ import java.util.LinkedHashSet;
  * @author yuttyann44581
  */
 @JsonTag(path = "json/blockscript")
-public class BlockScriptJson extends Json<BlockScript> {
+public class BlockScriptJson extends SingleJson<BlockScript> {
 
     public BlockScriptJson(@NotNull ScriptKey scriptKey) {
         super(scriptKey.getName());
+    }
+
+    @NotNull
+    public ScriptKey getScriptKey() {
+        return ScriptKey.valueOf(getId());
+    }
+
+    @Override
+    @NotNull
+    public BlockScript newInstance() {
+        return new BlockScript(getScriptKey());
     }
 
     public static boolean has(@NotNull Location location) {
@@ -51,17 +62,6 @@ public class BlockScriptJson extends Json<BlockScript> {
 
     public static boolean has(@NotNull Location location, @NotNull BlockScriptJson scriptJson) {
         return scriptJson.exists() && scriptJson.load().has(location);
-    }
-
-    @NotNull
-    public ScriptKey getScriptKey() {
-        return ScriptKey.valueOf(getId());
-    }
-
-    @Override
-    @NotNull
-    public BlockScript newInstance(@NotNull Object[] args) {
-        return new BlockScript(getScriptKey());
     }
 
     public static void convart(@NotNull ScriptKey scriptKey) {

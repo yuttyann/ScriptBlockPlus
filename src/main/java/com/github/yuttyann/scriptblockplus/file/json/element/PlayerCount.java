@@ -19,8 +19,6 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 /**
  * ScriptBlockPlus PlayerCount クラス
  * @author yuttyann44581
@@ -75,6 +73,10 @@ public class PlayerCount {
 
     @Override
     public int hashCode() {
-        return Objects.hash(fullCoords, scriptKey);
+        int hash = 1;
+        int prime = 31;
+        hash = prime * hash + fullCoords.hashCode();
+        hash = prime * hash + scriptKey.hashCode();
+        return hash;
     }
 }

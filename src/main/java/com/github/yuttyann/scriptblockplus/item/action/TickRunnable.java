@@ -18,7 +18,7 @@ package com.github.yuttyann.scriptblockplus.item.action;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.hook.protocol.GlowEntity;
 import com.github.yuttyann.scriptblockplus.hook.protocol.GlowEntityPacket;

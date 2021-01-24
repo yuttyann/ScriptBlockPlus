@@ -18,8 +18,8 @@ package com.github.yuttyann.scriptblockplus.region;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.github.yuttyann.scriptblockplus.file.json.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.Utils;

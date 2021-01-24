@@ -13,10 +13,11 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.file.json;
+package com.github.yuttyann.scriptblockplus.file.json.derived;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.file.Json;
+import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
+import com.github.yuttyann.scriptblockplus.file.json.MultiJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -27,16 +28,16 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * ScriptBlockPlus PlayerCountJson クラス
  * @author yuttyann44581
  */
-@JsonTag(path = "json/playercount", classes = { Location.class, ScriptKey.class })
-public class PlayerCountJson extends Json<PlayerCount> {
+@JsonTag(path = "json/playercount")
+public class PlayerCountJson extends MultiJson<PlayerCount> {
 
     public PlayerCountJson(@NotNull UUID uuid) {
         super(uuid);
@@ -51,14 +52,18 @@ public class PlayerCountJson extends Json<PlayerCount> {
     }
 
     @Override
-    protected int hashCode(@NotNull Object[] args) {
-        return Objects.hash(BlockCoords.getFullCoords((Location) args[0]), args[1]);
+    @NotNull
+    public PlayerCount newInstance(@NotNull Object... args) {
+        return new PlayerCount((String) args[0], (ScriptKey) args[1]);
     }
 
-    @Override
     @NotNull
-    public PlayerCount newInstance(@NotNull Object[] args) {
-        return new PlayerCount(BlockCoords.getFullCoords((Location) args[0]), (ScriptKey) args[1]);
+    public PlayerCount load(@NotNull Location location, @NotNull ScriptKey scriptKey) {
+        return super.load(BlockCoords.getCoords(location), scriptKey);
+    }
+
+    public void action(@NotNull Consumer<PlayerCount> action, @NotNull Location location, @NotNull ScriptKey scriptKey) {
+        super.action(action, BlockCoords.getCoords(location), scriptKey);
     }
 
     public static void clear(@NotNull Location location, @NotNull ScriptKey scriptKey) {
@@ -66,15 +71,15 @@ public class PlayerCountJson extends Json<PlayerCount> {
     }
 
     public static void clear(@NotNull Set<Location> locations, @NotNull ScriptKey scriptKey) {
-        var args = new Object[] { (Location) null, scriptKey };
-        for (String id : Json.getNames(PlayerCountJson.class)) {
+        var args = new Object[] { (String) null, scriptKey };
+        for (String id : BaseJson.getNames(PlayerCountJson.class)) {
             var countJson = new PlayerCountJson(UUID.fromString(id));
             if (!countJson.exists()) {
                 continue;
             }
             boolean modifiable = false;
             for (var location : locations) {
-                args[0] = location;
+                args[0] = BlockCoords.getFullCoords(location);
                 if (!countJson.has(args)) {
                     continue;
                 }
