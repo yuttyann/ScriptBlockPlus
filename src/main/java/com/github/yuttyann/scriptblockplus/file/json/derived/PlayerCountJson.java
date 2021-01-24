@@ -59,11 +59,11 @@ public class PlayerCountJson extends MultiJson<PlayerCount> {
 
     @NotNull
     public PlayerCount load(@NotNull Location location, @NotNull ScriptKey scriptKey) {
-        return super.load(BlockCoords.getCoords(location), scriptKey);
+        return super.load(BlockCoords.getFullCoords(location), scriptKey);
     }
 
     public void action(@NotNull Consumer<PlayerCount> action, @NotNull Location location, @NotNull ScriptKey scriptKey) {
-        super.action(action, BlockCoords.getCoords(location), scriptKey);
+        super.action(action, BlockCoords.getFullCoords(location), scriptKey);
     }
 
     public static void clear(@NotNull Location location, @NotNull ScriptKey scriptKey) {
