@@ -193,6 +193,7 @@ public abstract class BaseJson<T> {
     /**
      * フォルダ内の全てのファイルの名前を取得します。
      * @throws NullPointerException {@link JsonTag}が見つからなかった時にスローされます。
+     * @param jsonClass - {@link BaseJson}を継承したクラス
      * @return {@link String}[] - 全てのファイルの名前
      */
     @NotNull
