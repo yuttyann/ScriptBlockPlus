@@ -359,11 +359,11 @@ public final class EntitySelector {
     }
 
     private static boolean isLessThan(@NotNull ArgmentValue argmentValue, double value) {
-        return (value < Double.parseDouble(argmentValue.getValue())) != argmentValue.isInverted();
+        return argmentValue.isInverted() != value < Double.parseDouble(argmentValue.getValue());
     }
 
     private static boolean isGreaterThan(@NotNull ArgmentValue argmentValue, double value) {
-        return (value > Double.parseDouble(argmentValue.getValue())) != argmentValue.isInverted();
+        return argmentValue.isInverted() != value > Double.parseDouble(argmentValue.getValue());
     }
 
     private static boolean isM(@NotNull Entity entity, @NotNull ArgmentValue argmentValue) {

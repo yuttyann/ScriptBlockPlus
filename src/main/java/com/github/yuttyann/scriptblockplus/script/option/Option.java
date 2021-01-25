@@ -40,7 +40,7 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
     protected Option() {
         var optionTag = getClass().getAnnotation(OptionTag.class);
         if (optionTag == null) {
-            throw new NullPointerException("Annotation not found [OptionTag]");
+            throw new NullPointerException("Annotation not found @OptionTag()");
         }
         this.name = optionTag.name();
         this.syntax = optionTag.syntax();

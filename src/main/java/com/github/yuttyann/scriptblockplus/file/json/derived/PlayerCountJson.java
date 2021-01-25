@@ -53,7 +53,7 @@ public class PlayerCountJson extends MultiJson<PlayerCount> {
 
     @Override
     @NotNull
-    public PlayerCount newInstance(@NotNull Object... args) {
+    protected PlayerCount newInstance(@NotNull Object... args) {
         return new PlayerCount((String) args[0], (ScriptKey) args[1]);
     }
 

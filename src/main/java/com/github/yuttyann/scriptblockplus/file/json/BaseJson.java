@@ -35,9 +35,10 @@ import java.util.*;
 
 /**
  * ScriptBlockPlus BaseJson クラス
- * @param <T> 値の型
+ * @param <T> シリアライズ化を行う値の型
  * @author yuttyann44581
  */
+@SuppressWarnings("unchecked")
 public abstract class BaseJson<T> {
 
     @Exclude
@@ -46,19 +47,26 @@ public abstract class BaseJson<T> {
     @Exclude
     protected final File file;
 
-    @SerializedName("id")
-    protected final String id;
+    @SerializedName(value = "name", alternate = { "id" })
+    protected final String name;
 
     @SerializedName(value = "elements", alternate = { "infos" })
     protected List<T> list = new ArrayList<>();
 
+    /**
+     * コンストラクタ
+     * @param uuid - ファイルの名前
+     */
     BaseJson(@NotNull UUID uuid) {
         this(uuid.toString());
     }
 
-    @SuppressWarnings("unchecked")
-    BaseJson(@NotNull String id) {
-        this.id = id;
+    /**
+     * コンストラクタ
+     * @param name - ファイルの名前
+     */
+    BaseJson(@NotNull String name) {
+        this.name = name;
         this.file = getJsonFile();
 
         int hash = hashCode();
@@ -74,34 +82,64 @@ public abstract class BaseJson<T> {
         }
     }
 
+    /**
+     * キャッシュされている要素をすべて削除します。
+     */
     public static void clear() {
         LIST_CACHE.clear();
     }
 
+    /**
+     * 拡張子を除いたファイルの名前を取得します。
+     * @return {@link String} - ファイルの名前
+     */
     @NotNull
-    public final String getId() {
-        return id;
+    public final String getName() {
+        return name;
     }
 
+    /**
+     * ファイルを取得します。
+     * @return {@link File} - ファイル
+     */
     @NotNull
     public final File getFile() {
         return file;
     }
 
-    @Nullable
-    private BaseJson<?> loadFile() throws IOException {
-        if (!file.exists()) {
-            return null;
-        }
-        var parent = file.getParentFile();
-        if (!parent.exists()) {
-            parent.mkdirs();
-        }
-        try (var reader = new JsonReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8))) {
-            return new GsonBuilder().setExclusionStrategies(new FieldExclusion()).create().fromJson(reader, getClass());
+    /**
+     * ファイルが存在するのか確認します。
+     * @return {@link boolean} - ファイルが存在する場合はtrue
+     */
+    public final boolean exists() {
+        return file.exists();
+    }
+
+    /**
+     * キャッシュされた要素を含め、ファイルを削除します。
+     */
+    public final void deleteFile() {
+        try {
+            LIST_CACHE.remove(hashCode());
+        } finally {
+            file.delete();
         }
     }
 
+    /**
+     * 指定した要素を削除します。
+     * @param value - 要素
+     */
+    public final void remove(@NotNull T value) {
+        int hash = value.hashCode();
+        if (list.removeIf(t -> t.hashCode() == hash)) {
+            saveFile();
+        }
+    }
+
+    /**
+     * JSONのシリアライズを行います。
+     */
     public final void saveFile() {
         var parent = file.getParentFile();
         if (!parent.exists()) {
@@ -117,37 +155,52 @@ public abstract class BaseJson<T> {
         }
     }
 
-    public final void deleteFile() {
-        try {
-            LIST_CACHE.remove(hashCode());
-        } finally {
-            file.delete();
+    /**
+     * JSONのデシリアライズを行います。
+     * @return {@link BaseJson} - JSON
+     */
+    @Nullable
+    private BaseJson<?> loadFile() throws IOException {
+        if (!file.exists()) {
+            return null;
+        }
+        var parent = file.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        try (var reader = new JsonReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8))) {
+            return new GsonBuilder().setExclusionStrategies(new FieldExclusion()).create().fromJson(reader, getClass());
         }
     }
 
-    public final boolean exists() {
-        return file.exists();
-    }
-
-    public final void remove(@NotNull T value) {
-        int hash = value.hashCode();
-        if (list.removeIf(t -> t.hashCode() == hash)) {
-            saveFile();
-        }
-    }
-
+    /**
+     * JSONのファイルを取得します。
+     * @throws NullPointerException {@link JsonTag}が見つからなかった時にスローされます。
+     * @return {@link File} - JSONのファイル
+     */
     @NotNull
     private File getJsonFile() {
         var jsonTag = getClass().getAnnotation(JsonTag.class);
+        if (jsonTag == null) {
+            throw new NullPointerException("Annotation not found @JsonTag()");
+        }
         var path = jsonTag.path() + SBFiles.S + jsonTag.file();
         path = StringUtils.replace(path, "/", SBFiles.S);
-        path = StringUtils.replace(path, "{id}", id);
-        return new File(ScriptBlock.getInstance().getDataFolder(), path);
+        path = StringUtils.replace(path, "{id}", name);
+        return new File(ScriptBlock.getInstance().getDataFolder(), path + ".json");
     }
 
+    /**
+     * フォルダ内の全てのファイルの名前を取得します。
+     * @throws NullPointerException {@link JsonTag}が見つからなかった時にスローされます。
+     * @return {@link String}[] - 全てのファイルの名前
+     */
     @NotNull
     public static String[] getNames(@NotNull Class<? extends BaseJson<?>> jsonClass) {
         var jsonTag = jsonClass.getAnnotation(JsonTag.class);
+        if (jsonTag == null) {
+            throw new NullPointerException("Annotation not found @JsonTag()");
+        }
         var folder = new File(ScriptBlock.getInstance().getDataFolder(), jsonTag.path());
         if (folder.exists()) {
             var files = folder.list();
@@ -171,10 +224,13 @@ public abstract class BaseJson<T> {
 
     @Override
     public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (!(obj instanceof BaseJson)) {
             return false;
         }
         var json = (BaseJson<?>) obj;
-        return Objects.equals(id, json.id) && Objects.equals(list, json.list);
+        return Objects.equals(name, json.name) && Objects.equals(list, json.list);
     }
 }

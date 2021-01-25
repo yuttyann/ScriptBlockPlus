@@ -35,7 +35,7 @@ public class PlayerTempJson extends SingleJson<PlayerTemp> {
 
     @Override
     @NotNull
-    public PlayerTemp newInstance() {
+    protected PlayerTemp newInstance() {
         return new PlayerTemp();
     }
 }

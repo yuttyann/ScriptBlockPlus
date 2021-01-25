@@ -38,12 +38,12 @@ public class BlockScriptJson extends SingleJson<BlockScript> {
 
     @NotNull
     public ScriptKey getScriptKey() {
-        return ScriptKey.valueOf(getId());
+        return ScriptKey.valueOf(getName());
     }
 
     @Override
     @NotNull
-    public BlockScript newInstance() {
+    protected BlockScript newInstance() {
         return new BlockScript(getScriptKey());
     }
 

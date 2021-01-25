@@ -35,5 +35,5 @@ public @interface JsonTag {
     String path();
 
     @NotNull
-    String file() default "{id}.json";
+    String file() default "{id}";
 }

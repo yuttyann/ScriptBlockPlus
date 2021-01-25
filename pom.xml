@@ -52,6 +52,13 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.2.0</version>
         <configuration>
+          <tags>
+            <tag>
+              <name>apiNote</name>
+              <placement>a</placement>
+              <head>API Note:</head>
+            </tag>
+          </tags>
           <author>true</author>
           <source>${java.version}</source>
           <show>protected</show>

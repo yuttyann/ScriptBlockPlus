@@ -130,17 +130,18 @@ public abstract class TriggerListener<E extends Event> implements Listener {
     /**
      * トリガーを生成します。
      * <p>
-     * nullを返した場合は処理を行わずに終了します。
+     * また、{@code null}を返した場合は処理を行わずに終了します。
+     *
+     * @apiNote
      * <pre>
-     * 　
-     * // 実装例
+     * 実装例です。
      * &#064;Override
      * &#064;Nullable
      * protected Trigger create(&#064;NotNull ExampleEvent event) {
      *     return new Trigger(event.getPlayer(), event.getBlock(), event);
      * }
      * </pre>
-     * 
+     *
      * @param event - イベント
      * @return {@link Trigger} - トリガー
      */
@@ -149,16 +150,18 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
     /**
      * 各プロセスから呼び出されます。
+     *
+     * @apiNote
      * <pre>
-     * 　
+     * 実装例です。
      * // プロセスの進行度
      * Progress.PERM  = パーミッションの判定
      * Progress.EVENT = イベントの生成
      * Progress.READ  = スクリプトの実行
-     * 
+     *
      * // 進行度を取得します。
      * Progress progress = trigger.getProgress();
-     * 
+     *
      * // 実装例（イベントの作成時に絶対に処理が中断される）
      * &#064;Override
      * &#064;NotNull
@@ -171,7 +174,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
      *     }
      * }
      * </pre>
-     * 
+     *
      * @param trigger - トリガー
      * @return {@link Result} - {@link Result#FAILURE}の場合は処理を中断します。
      */

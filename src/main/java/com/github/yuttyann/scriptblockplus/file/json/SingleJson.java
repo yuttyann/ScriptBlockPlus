@@ -22,22 +22,38 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus SingleJson クラス
- * @param <T> 値の型
+ * @param <T> シリアライズ化を行う値の型
  * @author yuttyann44581
  */
 public abstract class SingleJson<T> extends BaseJson<T> {
 
+    /**
+     * コンストラクタ
+     * @param uuid - ファイルの名前
+     */
     public SingleJson(@NotNull UUID uuid) {
         super(uuid);
     }
 
+    /**
+     * コンストラクタ
+     * @param id - ファイルの名前
+     */
     public SingleJson(@NotNull String id) {
         super(id);
     }
 
+    /**
+     * インスタンスを生成します。
+     * @return {@link T} - インスタンス
+     */
     @NotNull
     protected abstract T newInstance();
 
+    /**
+     * 要素を取得します。
+     * @return {@link T} - 要素
+     */
     @NotNull
     public final T load() {
         if (list.isEmpty()) {
@@ -46,10 +62,18 @@ public abstract class SingleJson<T> extends BaseJson<T> {
         return list.get(0);
     }
 
+    /**
+     * 要素が存在するのか確認します。
+     * @return {@link boolean} - 要素が存在する場合はtrue
+     */
     public final boolean has() {
         return !list.isEmpty();
     }
 
+    /**
+     * 処理を行った後に要素を保存します。
+     * @param action - 処理
+     */
     public final void action(@NotNull Consumer<T> action) {
         action.accept(load());
         saveFile();
