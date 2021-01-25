@@ -40,10 +40,10 @@ public abstract class MultiJson<T> extends BaseJson<T> {
 
     /**
      * コンストラクタ
-     * @param id - ファイルの名前
+     * @param name - ファイルの名前
      */
-    public MultiJson(@NotNull String id) {
-        super(id);
+    public MultiJson(@NotNull String name) {
+        super(name);
     }
 
     /**

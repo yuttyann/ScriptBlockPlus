@@ -37,10 +37,10 @@ public abstract class SingleJson<T> extends BaseJson<T> {
 
     /**
      * コンストラクタ
-     * @param id - ファイルの名前
+     * @param name - ファイルの名前
      */
-    public SingleJson(@NotNull String id) {
-        super(id);
+    public SingleJson(@NotNull String name) {
+        super(name);
     }
 
     /**
