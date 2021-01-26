@@ -147,6 +147,9 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
 
     @Override
     public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj instanceof ScriptKey) {
             var scriptKey = (ScriptKey) obj;
             return name.equals(scriptKey.name) && ordinal == scriptKey.ordinal;

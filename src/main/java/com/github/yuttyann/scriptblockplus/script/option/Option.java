@@ -143,6 +143,9 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
 
     @Override
     public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj instanceof Option) {
             var option = (Option) obj;
             return name.equals(option.name) && syntax.equals(option.syntax);

@@ -19,6 +19,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -96,6 +97,7 @@ public enum CommandLog {
         }
     }
 
+    @Nullable
     public static <T> T supplier(@NotNull World world, @NotNull Supplier<T> supplier) {
         var logAdmin = CommandLog.getLogAdmin(world);
         var commandFeedBack = CommandLog.getCommandFeedBack(world);

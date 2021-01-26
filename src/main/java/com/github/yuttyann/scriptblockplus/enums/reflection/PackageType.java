@@ -125,11 +125,12 @@ public enum PackageType {
         getField(declared, className, fieldName).set(instance, value);
     }
 
+    @Nullable
     public Object getFieldValue(@NotNull String className, @NotNull String fieldName, @Nullable Object instance) throws ReflectiveOperationException {
         return getField(false, className, fieldName).get(instance);
     }
 
-    
+    @Nullable
     public Object getFieldValue(boolean declared, @NotNull String className, @NotNull String fieldName, @Nullable Object instance) throws ReflectiveOperationException {
         return getField(declared, className, fieldName).get(instance);
     }

@@ -16,7 +16,6 @@
 package com.github.yuttyann.scriptblockplus.file.config;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.ActionType;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionBlocks;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
@@ -94,11 +93,11 @@ public final class SBConfig {
     // Functions (Private)
     private static Function<ReplaceKey, String> FUNCTION_UPDATE_CHECK = r -> {
         var s = r.getValue();
-        s = replace(s, "%name%", r.getArg(0, String.class));
-        s = replace(s, "%version%", r.getArg(1, String.class));
+        s = replace(s, "%name%", r.getArgment(0, String.class));
+        s = replace(s, "%version%", r.getArgment(1, String.class));
         if (s.contains("%details%")) {
             @SuppressWarnings("unchecked")
-            var l = (List<String>) r.getArg(2, List.class);
+            var l = (List<String>) r.getArgment(2, List.class);
             var b = new StringBuilder(l.size());
             for (int i = 0; i < l.size(); i++) {
                 var info = removeStart(l.get(i), "$");
@@ -111,40 +110,40 @@ public final class SBConfig {
     };
 
     private static Function<ReplaceKey, String> FUNCTION_SCRIPT_TYPE = r -> {
-        return replace(r.getValue(), "%scriptkey%", r.getArg(0, ScriptKey.class).getName());
+        return replace(r.getValue(), "%scriptkey%", r.getArgment(0, ScriptKey.class).getName());
     };
 
     private static Function<ReplaceKey, String> FUNCTION_OPTION_FAILED = r -> {
-        var t = r.getArg(1, Throwable.class);
+        var t = r.getArgment(1, Throwable.class);
         var s = r.getValue();
-        s = replace(s, "%option%", r.getArg(0, Option.class).getName());
+        s = replace(s, "%option%", r.getArgment(0, Option.class).getName());
         s = replace(s, "%cause%", t.getClass().getSimpleName() + (t.getMessage() == null ? "" : " \"" + t.getMessage() + "\""));
         return s;
     };
 
     private static Function<ReplaceKey, String> FUNCTION_ITEM = r -> {
-        var m = r.getArg(0, Material.class);
-        var n = r.getArg(3, String.class);
+        var m = r.getArgment(0, Material.class);
+        var n = r.getArgment(3, String.class);
         var s = r.getValue();
         s = replace(s, "%material%", String.valueOf(m));
-        s = replace(s, "%amount%", r.getArg(1, Integer.class));
-        s = replace(s, "%damage%", r.getArg(2, Integer.class));
+        s = replace(s, "%amount%", r.getArgment(1, Integer.class));
+        s = replace(s, "%damage%", r.getArgment(2, Integer.class));
         s = replace(s, "%name%", isEmpty(n) ? String.valueOf(m) : n);
         return s;
     };
 
     private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SCRIPT = r -> {
         var s = r.getValue();
-        s = replace(s, "%scriptkey%", r.getArg(1, ScriptKey.class).getName());
-        s = replace(s, "%world%", r.getArg(0, Location.class).getWorld().getName());
-        s = replace(s, "%coords%", BlockCoords.getCoords(r.getArg(0, Location.class)));
+        s = replace(s, "%scriptkey%", r.getArgment(1, ScriptKey.class).getName());
+        s = replace(s, "%world%", r.getArgment(0, Location.class).getWorld().getName());
+        s = replace(s, "%coords%", BlockCoords.getCoords(r.getArgment(0, Location.class)));
         return s;
     };
 
     private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SELECTOR = r -> {
-        var c = r.getArg(1, CuboidRegionBlocks.class);
+        var c = r.getArgment(1, CuboidRegionBlocks.class);
         var s = r.getValue();
-        s = replace(s, "%scriptkey%", r.getArg(0, String.class));
+        s = replace(s, "%scriptkey%", r.getArgment(0, String.class));
         s = replace(s, "%blockcount%", c.getCount());
         s = replace(s, "%world%", c.getWorld().getName());
         s = replace(s, "%mincoords%", BlockCoords.getCoords(c.getMinimumPoint()));
@@ -157,145 +156,145 @@ public final class SBConfig {
     /**
      * Parameter: {@link String} name
      */
-    public static final ReplaceKey EXPORT_START = replaceKey(stringKey("ExportStartMessage", ""), "%name%");
+    public static final ReplaceKey EXPORT_START = replaceKey("ExportStartMessage", "", "%name%");
 
     /**
      * Parameter: {@link String} name
      */
-    public static final ReplaceKey EXPORT_END = replaceKey(stringKey("ExportEndMessage", ""), "%name%");
+    public static final ReplaceKey EXPORT_END = replaceKey("ExportEndMessage", "", "%name%");
 
     /**
      * Parameter: {@link String} name, {@link String} path, {@link String} size
      */
-    public static final ReplaceKey UPDATE_DOWNLOAD_END = replaceKey(stringKey("UpdateDownloadEndMessage", ""), "%name%", "%path%", "%size%");
+    public static final ReplaceKey UPDATE_DOWNLOAD_END = replaceKey("UpdateDownloadEndMessage", "", "%name%", "%path%", "%size%");
 
     /**
      * Parameter: {@link String} name, {@link String} version, {@link List}&lt;{@link String}&gt; details
      */
-    public static final ReplaceKey UPDATE_CHECK = replaceKey(stringKey("UpdateCheckMessage", ""), FUNCTION_UPDATE_CHECK);
+    public static final ReplaceKey UPDATE_CHECK = replaceKey("UpdateCheckMessage", "", FUNCTION_UPDATE_CHECK);
 
     /**
      * Parameter: {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey SCRIPT_COPY = replaceKey(stringKey("ScriptCopyMessage", ""), FUNCTION_SCRIPT_TYPE);
+    public static final ReplaceKey SCRIPT_COPY = replaceKey("ScriptCopyMessage", "", FUNCTION_SCRIPT_TYPE);
 
     /**
      * Parameter: {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey SCRIPT_PASTE = replaceKey(stringKey("ScriptPasteMessage", ""), FUNCTION_SCRIPT_TYPE);
+    public static final ReplaceKey SCRIPT_PASTE = replaceKey("ScriptPasteMessage", "", FUNCTION_SCRIPT_TYPE);
 
     /**
      * Parameter: {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey SCRIPT_CREATE = replaceKey(stringKey("ScriptCreateMessage", ""), FUNCTION_SCRIPT_TYPE);
+    public static final ReplaceKey SCRIPT_CREATE = replaceKey("ScriptCreateMessage", "", FUNCTION_SCRIPT_TYPE);
 
     /**
      * Parameter: {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey SCRIPT_ADD = replaceKey(stringKey("ScriptAddMessage", ""), FUNCTION_SCRIPT_TYPE);
+    public static final ReplaceKey SCRIPT_ADD = replaceKey("ScriptAddMessage", "", FUNCTION_SCRIPT_TYPE);
 
     /**
      * Parameter: {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey SCRIPT_REMOVE = replaceKey(stringKey("ScriptRemoveMessage", ""), FUNCTION_SCRIPT_TYPE);
+    public static final ReplaceKey SCRIPT_REMOVE = replaceKey("ScriptRemoveMessage", "", FUNCTION_SCRIPT_TYPE);
 
     /**
      * Parameter: {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey SCRIPT_REDSTONE_ENABLE = replaceKey(stringKey("ScriptRedstoneEnableMessage", ""), FUNCTION_SCRIPT_TYPE);
+    public static final ReplaceKey SCRIPT_REDSTONE_ENABLE = replaceKey("ScriptRedstoneEnableMessage", "", FUNCTION_SCRIPT_TYPE);
 
     /**
      * Parameter: {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey SCRIPT_REDSTONE_DISABLE = replaceKey(stringKey("ScriptRedstoneDisableMessage", ""), FUNCTION_SCRIPT_TYPE);
+    public static final ReplaceKey SCRIPT_REDSTONE_DISABLE = replaceKey("ScriptRedstoneDisableMessage", "", FUNCTION_SCRIPT_TYPE);
 
     /**
      * Parameter: {@link String} world, {@link String} coords
      */
-    public static final ReplaceKey SELECTOR_POS1 = replaceKey(stringKey("SelectorPos1Message", ""), "%world%", "%coords%");
+    public static final ReplaceKey SELECTOR_POS1 = replaceKey("SelectorPos1Message", "", "%world%", "%coords%");
 
     /**
      * Parameter: {@link String} world, {@link String} coords
      */
-    public static final ReplaceKey SELECTOR_POS2 = replaceKey(stringKey("SelectorPos2Message", ""), "%world%", "%coords%");
+    public static final ReplaceKey SELECTOR_POS2 = replaceKey("SelectorPos2Message", "", "%world%", "%coords%");
 
     /**
      * Parameter: {@link String} scriptKey, {@link Integer} blockCount
      */
-    public static final ReplaceKey SELECTOR_PASTE = replaceKey(stringKey("SelectorPasteMessage", ""), "%scriptkey%", "%blockcount%");
+    public static final ReplaceKey SELECTOR_PASTE = replaceKey("SelectorPasteMessage", "", "%scriptkey%", "%blockcount%");
 
     /**
      * Parameter: {@link String} scriptKey, {@link Integer} blockCount
      */
-    public static final ReplaceKey SELECTOR_REMOVE = replaceKey(stringKey("SelectorRemoveMessage", ""), "%scriptkey%", "%blockcount%");
+    public static final ReplaceKey SELECTOR_REMOVE = replaceKey("SelectorRemoveMessage", "", "%scriptkey%", "%blockcount%");
 
     /**
      * Parameter: {@link Option} option, {@link Throwable} throwable
      */
-    public static final ReplaceKey OPTION_FAILED_TO_EXECUTE = replaceKey(stringKey("OptionFailedToExecuteMessage", ""), FUNCTION_OPTION_FAILED);
+    public static final ReplaceKey OPTION_FAILED_TO_EXECUTE = replaceKey("OptionFailedToExecuteMessage", "", FUNCTION_OPTION_FAILED);
 
     /**
      * Parameter: {@link Integer} hour, {@link Integer} minute, {@link Integer} second
      */
-    public static final ReplaceKey ACTIVE_COOLDOWN = replaceKey(stringKey("ActiveCooldownMessage", ""), "%hour%", "%minute%", "%second%");
+    public static final ReplaceKey ACTIVE_COOLDOWN = replaceKey("ActiveCooldownMessage", "", "%hour%", "%minute%", "%second%");
 
     /**
-     * Parameter: {@link String} scriptKey-actionType
+     * Parameter: {@link String} scriptKey-actionKey
      */
-    public static final ReplaceKey SUCCESS_ACTION_DATA = replaceKey(stringKey("SuccActionDataMessage", ""), "%action%");
+    public static final ReplaceKey SUCCESS_ACTION_DATA = replaceKey("SuccActionDataMessage", "", "%action%");
 
     /**
      * Parameter: {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey ERROR_SCRIPT_EXECUTE = replaceKey(stringKey("ErrorScriptExecMessage", ""), FUNCTION_SCRIPT_TYPE);
+    public static final ReplaceKey ERROR_SCRIPT_EXECUTE = replaceKey("ErrorScriptExecMessage", "", FUNCTION_SCRIPT_TYPE);
 
     /**
      * Parameter: {@link String} group
      */
-    public static final ReplaceKey ERROR_GROUP = replaceKey(stringKey("ErrorGroupMessage", ""), "%group%");
+    public static final ReplaceKey ERROR_GROUP = replaceKey("ErrorGroupMessage", "", "%group%");
 
     /**
      * Parameter: {@link Material} material, {@link Integer} amount, {@link Integer} damage, {@link String} name
      */
-    public static final ReplaceKey ERROR_HAND = replaceKey(stringKey("ErrorHandMessage", ""), FUNCTION_ITEM);
+    public static final ReplaceKey ERROR_HAND = replaceKey("ErrorHandMessage", "", FUNCTION_ITEM);
 
     /**
      * Parameter: {@link Material} material, {@link Integer} amount, {@link Integer} damage, {@link String} name
      */
-    public static final ReplaceKey ERROR_ITEM = replaceKey(stringKey("ErrorItemMessage", ""), FUNCTION_ITEM);
+    public static final ReplaceKey ERROR_ITEM = replaceKey("ErrorItemMessage", "", FUNCTION_ITEM);
 
     /**
      * Parameter: {@link Double} cost, {@link Double} result
      */
-    public static final ReplaceKey ERROR_COST = replaceKey(stringKey("ErrorCostMessage", ""), "%cost%", "%result%");
-
-    /**
-     * Parameter: {@link Location} location, {@link ScriptKey} scriptKey, {@link ActionType} actionType
-     */
-    public static final ReplaceKey CONSOLE_SCRIPT_EDIT = replaceKey(stringKey("ConsoleScriptCopyMessage", ""), FUNCTION_CONSOLE_SCRIPT);
+    public static final ReplaceKey ERROR_COST = replaceKey("ErrorCostMessage", "", "%cost%", "%result%");
 
     /**
      * Parameter: {@link Location} location, {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey CONSOLE_SCRIPT_VIEW = replaceKey(stringKey("ConsoleScriptViewMessage", ""), FUNCTION_CONSOLE_SCRIPT);
+    public static final ReplaceKey CONSOLE_SCRIPT_EDIT = replaceKey("ConsoleScriptEditMessage", "", FUNCTION_CONSOLE_SCRIPT);
 
     /**
      * Parameter: {@link Location} location, {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey CONSOLE_SUCCESS_SCRIPT_EXECUTE = replaceKey(stringKey("ConsoleSuccScriptExecMessage", ""), FUNCTION_CONSOLE_SCRIPT);
+    public static final ReplaceKey CONSOLE_SCRIPT_VIEW = replaceKey("ConsoleScriptViewMessage", "", FUNCTION_CONSOLE_SCRIPT);
 
     /**
      * Parameter: {@link Location} location, {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey CONSOLE_ERROR_SCRIPT_EXECUTE = replaceKey(stringKey("ConsoleErrorScriptExecMessage", ""), FUNCTION_CONSOLE_SCRIPT);
+    public static final ReplaceKey CONSOLE_SUCCESS_SCRIPT_EXECUTE = replaceKey("ConsoleSuccScriptExecMessage", "", FUNCTION_CONSOLE_SCRIPT);
+
+    /**
+     * Parameter: {@link Location} location, {@link ScriptKey} scriptKey
+     */
+    public static final ReplaceKey CONSOLE_ERROR_SCRIPT_EXECUTE = replaceKey("ConsoleErrorScriptExecMessage", "", FUNCTION_CONSOLE_SCRIPT);
 
     /**
      * Parameter: {@link ScriptKey} scriptKey, {@link CuboidRegionBlocks} regionBlocks
      */
-    public static final ReplaceKey CONSOLE_SELECTOR_PASTE = replaceKey(stringKey("ConsoleSelectorPasteMessage", ""), FUNCTION_CONSOLE_SELECTOR);
+    public static final ReplaceKey CONSOLE_SELECTOR_PASTE = replaceKey("ConsoleSelectorPasteMessage", "", FUNCTION_CONSOLE_SELECTOR);
 
     /**
      * Parameter: {@link ScriptKey} scriptKey, {@link CuboidRegionBlocks} regionBlocks
      */
-    public static final ReplaceKey CONSOLE_SELECTOR_REMOVE = replaceKey(stringKey("ConsoleSelectorRemoveMessage", ""), FUNCTION_CONSOLE_SELECTOR);
+    public static final ReplaceKey CONSOLE_SELECTOR_REMOVE = replaceKey("ConsoleSelectorRemoveMessage", "", FUNCTION_CONSOLE_SELECTOR);
 }

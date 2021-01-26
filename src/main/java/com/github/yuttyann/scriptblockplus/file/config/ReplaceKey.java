@@ -49,7 +49,7 @@ public class ReplaceKey implements ConfigKey<String> {
     }
 
     @NotNull
-    public final <T> T getArg(final int index, @NotNull Class<T> classOf) {
+    public final <T> T getArgment(final int index, @NotNull Class<T> classOf) {
         return classOf.cast(args[index]);
     }
 

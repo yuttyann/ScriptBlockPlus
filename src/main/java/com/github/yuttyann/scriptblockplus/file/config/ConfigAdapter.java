@@ -25,6 +25,7 @@ import java.util.Map;
  * @param <T> 値の型
  * @author yuttyann44581
  */
+@SuppressWarnings("unchecked")
 public class ConfigAdapter<T> {
 
     private final Map<String, Object> map;
@@ -34,7 +35,6 @@ public class ConfigAdapter<T> {
     }
 
     @Nullable
-    @SuppressWarnings("unchecked")
     public T get(@NotNull String key) {
         return (T) map.get(key);
     }

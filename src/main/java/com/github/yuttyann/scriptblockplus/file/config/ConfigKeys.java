@@ -60,13 +60,13 @@ public class ConfigKeys {
     }
 
     @NotNull
-    public static ReplaceKey replaceKey(@NotNull ConfigKey<String> configKey, @NotNull String... replaceKeys) {
-        return new ReplaceKey(configKey, replaceKeys);
+    public static ReplaceKey replaceKey(@NotNull String key, @NotNull String def, @NotNull String... replaceKeys) {
+        return new ReplaceKey(stringKey(key, def), replaceKeys);
     }
 
     @NotNull
-    public static ReplaceKey replaceKey(@NotNull ConfigKey<String> configKey, @NotNull Function<ReplaceKey, String> function) {
-        return new FunctionalReplaceKey(configKey, function);
+    public static ReplaceKey replaceKey(@NotNull String key, @NotNull String def, @NotNull Function<ReplaceKey, String> function) {
+        return new FunctionalReplaceKey(stringKey(key, def), function);
     }
 
     private static class ElementKey<T> implements ConfigKey<T> {

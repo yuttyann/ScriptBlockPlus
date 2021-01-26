@@ -18,10 +18,10 @@ package com.github.yuttyann.scriptblockplus.enums;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ScriptBlockPlus ActionType 列挙型
+ * ScriptBlockPlus ActionKey 列挙型
  * @author yuttyann44581
  */
-public enum ActionType {
+public enum ActionKey {
 
     /**
      * スクリプトの作成
@@ -50,7 +50,7 @@ public enum ActionType {
 
     private final String name;
 
-    ActionType(@NotNull String name) {
+    ActionKey(@NotNull String name) {
         this.name = name;
     }
 

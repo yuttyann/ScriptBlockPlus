@@ -18,6 +18,7 @@ package com.github.yuttyann.scriptblockplus.enums;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus Argment 列挙型
@@ -52,13 +53,13 @@ public enum Argment {
     private final String syntax, prefix, suffix;
 
     Argment(@NotNull String syntax) {
-        this(syntax, syntax, syntax);
+        this(syntax, null, null);
     }
 
-    Argment(@NotNull String syntax, @NotNull String prefix, @NotNull String suffix) {
+    Argment(@NotNull String syntax, @Nullable String prefix, @Nullable String suffix) {
+        this.syntax = syntax;
         this.prefix = prefix;
         this.suffix = suffix;
-        this.syntax = syntax;
     }
 
     @NotNull
