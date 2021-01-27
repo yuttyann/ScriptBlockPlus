@@ -77,7 +77,7 @@ public final class OptionManager {
     }
 
     public static void sort(@NotNull List<String> scripts) {
-        scripts.sort(Comparator.comparingInt(s -> get(s).ordinal()));
+        scripts.sort(Comparator.comparing(OptionManager::get));
     }
 
     public static boolean has(@NotNull String syntax) {

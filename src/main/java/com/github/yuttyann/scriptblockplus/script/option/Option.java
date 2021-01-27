@@ -84,16 +84,6 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
     }
 
     /**
-     * オプションの序数を取得します
-     * <p>
-     * ※オプションの順番により変動
-     * @return {@link Integer} - 序数
-     */
-    public final int ordinal() {
-        return ordinal;
-    }
-
-    /**
      * パーミッションノードを取得します。
      * @return {@link String} - パーミッションノード
      */
