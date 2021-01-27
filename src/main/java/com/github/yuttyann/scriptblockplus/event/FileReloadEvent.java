@@ -27,8 +27,8 @@ public class FileReloadEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    @NotNull
     @Override
+    @NotNull
     public HandlerList getHandlers() {
         return HANDLERS;
     }

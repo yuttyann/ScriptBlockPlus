@@ -127,8 +127,8 @@ public class BlockClickEvent extends PlayerEvent implements Cancellable {
         cancelled = cancel;
     }
 
-    @NotNull
     @Override
+    @NotNull
     public HandlerList getHandlers() {
         return HANDLERS;
     }
