@@ -72,7 +72,7 @@ public enum ClassType {
     }
 
     @Nullable
-    public static ClassType fromClass(Class<?> clazz) {
+    public static ClassType fromClass(@NotNull Class<?> clazz) {
         return CLASS.get(clazz);
     }
 

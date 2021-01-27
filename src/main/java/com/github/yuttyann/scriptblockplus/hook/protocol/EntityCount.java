@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  * ScriptBlockPlus EntityCount クラス
  * @author yuttyann44581
  */
-public class EntityCount {
+public final class EntityCount {
 
     private static final Field ENTITY_COUNT;
 

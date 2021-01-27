@@ -155,8 +155,8 @@ public class TickRunnable extends BukkitRunnable {
 
     @NotNull
     private Set<Block> getBlocks(@NotNull CuboidRegionBlocks regionBlocks) {
-        var result = new HashSet<Block>();
         var blocks = regionBlocks.getBlocks();
+        var result = new HashSet<Block>(blocks.size());
         for (var scriptKey : ScriptKey.values()) {
             var blockScript = new BlockScriptJson(scriptKey).load();
             for (var block : blocks) {

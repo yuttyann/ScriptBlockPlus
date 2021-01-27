@@ -34,7 +34,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus GlowEntityPacket クラス
  * @author yuttyann44581
  */
-public class GlowEntityPacket {
+public final class GlowEntityPacket {
 
     private static final int TYPE_ID = PackageType.HAS_NMS ? NMSHelper.getMagmaCubeId() : -1;
     private static final int SIZE_ID = PackageType.HAS_NMS ? NMSHelper.getSlimeSizeId() : -1;
@@ -57,7 +56,7 @@ public class GlowEntityPacket {
 
     @NotNull
     public TeamColor getTeamColor(@NotNull Block block) {
-        return block.getType() == Material.AIR ? TeamColor.BLUE : TeamColor.GREEN;
+        return block.getType().name().endsWith("AIR") ? TeamColor.BLUE : TeamColor.GREEN;
     }
 
     @NotNull
@@ -175,7 +174,7 @@ public class GlowEntityPacket {
     }
 
     @NotNull
-    private WrappedDataWatcherObject createObject(final int index, @NotNull Class<?> clazz) {
-        return new WrappedDataWatcherObject(index, Registry.get(clazz));
+    private WrappedDataWatcherObject createObject(final int index, @NotNull Class<?> type) {
+        return new WrappedDataWatcherObject(index, Registry.get(type));
     }
 }

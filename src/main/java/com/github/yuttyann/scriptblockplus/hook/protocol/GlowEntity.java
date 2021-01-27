@@ -30,7 +30,7 @@ import static org.bukkit.util.NumberConversions.floor;
  * ScriptBlockPlus GlowEntity クラス
  * @author yuttyann44581
  */
-public class GlowEntity {
+public final class GlowEntity {
         
     private final int id;
     private final UUID uuid;
@@ -38,7 +38,7 @@ public class GlowEntity {
     private final Vector vector;
     private final SBPlayer sbPlayer;
 
-    public GlowEntity(int id, @NotNull UUID uuid, @NotNull Team team, @NotNull Vector vector, @NotNull SBPlayer sbPlayer) {
+    GlowEntity(int id, @NotNull UUID uuid, @NotNull Team team, @NotNull Vector vector, @NotNull SBPlayer sbPlayer) {
         this.id = id;
         this.uuid = uuid;
         this.team = team;
