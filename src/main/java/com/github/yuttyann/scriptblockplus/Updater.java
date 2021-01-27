@@ -15,10 +15,9 @@
  */
 package com.github.yuttyann.scriptblockplus;
 
-import com.github.yuttyann.scriptblockplus.file.SBFiles;
+import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -125,11 +124,11 @@ public final class Updater {
             return false;
         }
         var data = plugin.getDataFolder();
-        var logFile = new File(data, "update" + SBFiles.S + "ChangeLog.txt");
+        var logFile = new SBFile(data, "update/ChangeLog.txt");
         boolean sameLogs = !logFile.exists() || !logEquals(changeLogURL, logFile), failure = false;
         SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(sender);
         if (SBConfig.AUTO_DOWNLOAD.getValue()) {
-            var jarFile = new File(data, "update" + SBFiles.S + "jar" + SBFiles.S + getJarName());
+            var jarFile = new SBFile(data, "update/jar/" + getJarName());
             try {
                 SBConfig.UPDATE_DOWNLOAD_START.send(sender);
                 FileUtils.downloadFile(changeLogURL, logFile);
@@ -140,7 +139,7 @@ public final class Updater {
             } finally {
                 if (jarFile.exists() && !failure) {
                     String fileName = jarFile.getName();
-                    String filePath = StringUtils.replace(jarFile.getPath(), File.separator, "/");
+                    String filePath = jarFile.getPath().replace(File.separatorChar, '/');
                     SBConfig.UPDATE_DOWNLOAD_END.replace(fileName, filePath, getSize(jarFile.length())).send(sender);
                 }
             }

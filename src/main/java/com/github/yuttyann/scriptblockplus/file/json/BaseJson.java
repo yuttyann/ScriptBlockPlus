@@ -16,7 +16,7 @@
 package com.github.yuttyann.scriptblockplus.file.json;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.file.SBFiles;
+import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.FieldExclusion;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
@@ -184,10 +184,8 @@ public abstract class BaseJson<T> {
         if (jsonTag == null) {
             throw new NullPointerException("Annotation not found @JsonTag()");
         }
-        var path = jsonTag.path() + SBFiles.S + jsonTag.file();
-        path = StringUtils.replace(path, "/", SBFiles.S);
-        path = StringUtils.replace(path, "{id}", name);
-        return new File(ScriptBlock.getInstance().getDataFolder(), path + ".json");
+        var path = StringUtils.replace(jsonTag.path() + "/" + jsonTag.file(), "{id}", name);
+        return new SBFile(ScriptBlock.getInstance().getDataFolder(), path + ".json");
     }
 
     /**
@@ -202,7 +200,7 @@ public abstract class BaseJson<T> {
         if (jsonTag == null) {
             throw new NullPointerException("Annotation not found @JsonTag()");
         }
-        var folder = new File(ScriptBlock.getInstance().getDataFolder(), jsonTag.path());
+        var folder = new SBFile(ScriptBlock.getInstance().getDataFolder(), jsonTag.path());
         if (folder.exists()) {
             var files = folder.list();
             var names = new String[files.length];

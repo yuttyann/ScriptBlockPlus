@@ -59,7 +59,7 @@ public final class Lang {
     public String getPath() {
         var path = directory + "/" + language + ".yml";
         var code = FileUtils.getResource(plugin, path) != null ? language : DEFAULT_LANGUAGE;
-        var file = new File(plugin.getDataFolder(), StringUtils.replace(this.filePath, "{code}", code));
+        var file = new SBFile(plugin.getDataFolder(), StringUtils.replace(this.filePath, "{code}", code));
         return !file.exists() && !code.equals(language) ? directory + "/" + code + ".yml" : path;
     }
 
@@ -67,7 +67,7 @@ public final class Lang {
     public File getFile() {
         var path = directory + "/" + language + ".yml";
         var code = FileUtils.getResource(plugin, path) != null ? language : DEFAULT_LANGUAGE;
-        var file = new File(plugin.getDataFolder(), StringUtils.replace(this.filePath, "{code}", code));
+        var file = new SBFile(plugin.getDataFolder(), StringUtils.replace(this.filePath, "{code}", code));
         if (!file.exists()) {
             if (!code.equals(language)) {
                 path = directory + "/" + code + ".yml";

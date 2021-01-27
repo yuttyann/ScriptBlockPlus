@@ -22,6 +22,7 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.Filter;
 import com.github.yuttyann.scriptblockplus.enums.reflection.ClassType;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.config.YamlConfig;
@@ -142,8 +143,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             return false;
         }
         var type = args[1].toLowerCase(Locale.ROOT);
-        var path = "export" + SBFiles.S + type + "_v" + Utils.getServerVersion() + "_.txt";
-        var file = new File(getPlugin().getDataFolder(), path);
+        var path = "export/" + type + "_v" + Utils.getServerVersion() + "_.txt";
+        var file = new SBFile(getPlugin().getDataFolder(), path);
         var parent = file.getParentFile();
         if (!parent.exists()) {
             parent.mkdirs();
@@ -208,7 +209,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             FileVisitor<Path> fileVisitor = new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path path, BasicFileAttributes attributes) throws IOException {
-                    if (!path.toString().contains(SBFiles.S + "backup" + SBFiles.S)) {
+                    if (!path.toString().contains(SBFile.setSeparator("/backup/"))) {
                         var targetFile = target.resolve(source.relativize(path));
                         var parentDir = targetFile.getParent();
                         Files.createDirectories(parentDir);
@@ -236,9 +237,9 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         if (!hasPermission(sender, Permission.COMMAND_DATAMIGR)) {
             return false;
         }
-        var path = "plugins" + SBFiles.S + "ScriptBlock" + SBFiles.S + "BlocksData" + SBFiles.S;
-        var interactFile = new File(path + "interact_Scripts.yml");
-        var walkFile = new File(path + "walk_Scripts.yml");
+        var path = "plugins/ScriptBlock/BlocksData/";
+        var interactFile = new SBFile(path + "interact_Scripts.yml");
+        var walkFile = new SBFile(path + "walk_Scripts.yml");
         if (!walkFile.exists() && !interactFile.exists()) {
             SBConfig.NOT_SCRIPT_BLOCK_FILE.send(sender);
         } else {

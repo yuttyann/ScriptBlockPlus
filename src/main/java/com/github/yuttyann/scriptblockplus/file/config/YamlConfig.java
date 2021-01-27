@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.file.config;
 
+import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -80,7 +81,7 @@ public class YamlConfig {
 
     @NotNull
     public static YamlConfig load(@NotNull Plugin plugin, @NotNull String filePath, boolean isCopyFile) {
-        return load(plugin, new File(plugin.getDataFolder(), filePath), isCopyFile);
+        return load(plugin, new SBFile(plugin.getDataFolder(), filePath), isCopyFile);
     }
 
     @NotNull
