@@ -131,7 +131,6 @@ public abstract class TriggerListener<E extends Event> implements Listener {
      * トリガーを生成します。
      * <p>
      * また、{@code null}を返した場合は処理を行わずに終了します。
-     *
      * @apiNote
      * <pre>
      * 実装例です。
@@ -141,7 +140,6 @@ public abstract class TriggerListener<E extends Event> implements Listener {
      *     return new Trigger(event.getPlayer(), event.getBlock(), event);
      * }
      * </pre>
-     *
      * @param event - イベント
      * @return {@link Trigger} - トリガー
      */
@@ -150,7 +148,6 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
     /**
      * 各プロセスから呼び出されます。
-     *
      * @apiNote
      * <pre>
      * 実装例です。
@@ -174,7 +171,6 @@ public abstract class TriggerListener<E extends Event> implements Listener {
      *     }
      * }
      * </pre>
-     *
      * @param trigger - トリガー
      * @return {@link Result} - {@link Result#FAILURE}の場合は処理を中断します。
      */
