@@ -19,7 +19,6 @@ import com.github.yuttyann.scriptblockplus.enums.Argment;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus ArgmentValue クラス
@@ -41,8 +40,7 @@ public final class ArgmentValue {
                 return;
             }
         }
-        this.argment = null;
-        this.value = null;
+        throw new NullPointerException("Argment[" + source + "] not found");
     }
 
     @NotNull
@@ -50,7 +48,7 @@ public final class ArgmentValue {
         return argment;
     }
 
-    @Nullable
+    @NotNull
     public String getValue() {
         if (cacheValue == null && StringUtils.isNotEmpty(value)) {
             cacheValue = isInverted() ? value.substring(1) : value;

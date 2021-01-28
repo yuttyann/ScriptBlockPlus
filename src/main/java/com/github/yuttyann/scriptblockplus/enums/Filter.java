@@ -26,10 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public enum Filter {
     OP("op="),
     PERM("perm="),
-    LIMIT("limit="),
-    NONE("");
-
-    private static final Filter[] FILTERS = { OP, PERM, LIMIT };
+    LIMIT("limit=");
 
     private final String syntax;
 
@@ -50,12 +47,5 @@ public enum Filter {
     @NotNull
     public static String getPrefix() {
         return "filter{";
-    }
-
-    @NotNull
-    public static Filter[] getFilters() {
-        var filters = new Filter[FILTERS.length];
-        System.arraycopy(FILTERS, 0, filters, 0, FILTERS.length);
-        return filters;
     }
 }

@@ -20,7 +20,6 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus FilterValue クラス
@@ -39,8 +38,7 @@ public final class FilterValue {
                 return;
             }
         }
-        this.filter = Filter.NONE;
-        this.value = null;
+        throw new NullPointerException("Filter[" + source + "] not found");
     }
 
     @NotNull
@@ -48,7 +46,7 @@ public final class FilterValue {
         return filter;
     }
 
-    @Nullable
+    @NotNull
     public String getValue() {
         return value;
     }

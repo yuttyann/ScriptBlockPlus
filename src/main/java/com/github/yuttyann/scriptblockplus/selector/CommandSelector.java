@@ -55,8 +55,9 @@ public final class CommandSelector {
         private final int start;
         private int end = 0;
 
-        private Index(int start) {
+        private Index(int start, int end) {
             this.start = start;
+            this.end = end;
         }
 
         @NotNull
@@ -80,7 +81,7 @@ public final class CommandSelector {
             if (entities == null || entities.length == 0) {
                 if (StreamUtils.anyMatch(SELECTOR_NAMES, s -> selector.startsWith(s + "["))) {
                     continue;
-                } else if (selector.startsWith("@p") && sender instanceof Player) {
+                } else if (selector.startsWith(SELECTOR_NAMES[2]) && sender instanceof Player) {
                     entities = new Entity[] { (Entity) sender };
                 } else {
                     continue;
@@ -119,16 +120,15 @@ public final class CommandSelector {
         for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
             int one = i + 1, two = one + 1;
             if (chars[i] == '@' && one < chars.length && SELECTOR_SUFFIX.indexOf(chars[one]) > -1) {
-                var textIndex = new Index(i);
-                textIndex.end = one;
+                var index = new Index(i, one);
                 if (two < chars.length && chars[two] == '[') {
                     for (int l = two, m = 0; l < chars.length; l++) {
                         if (chars[l] == '[') {
                             m++;
                         } else if (chars[l] == ']') {
                             if (--m == 0) {
-                                textIndex.end = l;
-                                i += Math.max(textIndex.end - textIndex.start, 0);
+                                index.end = l;
+                                i += Math.max(index.end - index.start, 0);
                                 break;
                             }
                         }
@@ -136,18 +136,18 @@ public final class CommandSelector {
                 } else {
                     i++;
                 }
-                indexList.add(textIndex);
+                indexList.add(index);
                 builder.append('{').append(j++).append('}');
             } else if ((chars[i] == '~' || chars[i] == '^') && (sender instanceof Entity || sender instanceof BlockCommandSender)) {
                 if (k >= 3) {
                     builder.append(sender.getName());
                 } else {
-                    var relative = k == 0 ? "x" : k == 1 ? "y" : k == 2 ? "z" : "x";
+                    var axes = k == 0 ? "x" : k == 1 ? "y" : k == 2 ? "z" : "x";
                     var tempBuilder = new StringBuilder().append(chars[i]);
                     for (int l = one; l < chars.length; l++) {
                         if ("+-.0123456789".indexOf(chars[l]) > -1) {
-                            i++;
                             tempBuilder.append(chars[l]);
+                            i++;
                         } else {
                             break;
                         }
@@ -155,8 +155,8 @@ public final class CommandSelector {
                     if (location == null) {
                         location = EntitySelector.copy(sender, null);
                     }
-                    location.add(EntitySelector.getRelative(location, relative, tempBuilder.toString()));
-                    builder.append('{').append(relative).append('}');
+                    EntitySelector.setLocation(location, axes, tempBuilder.toString());
+                    builder.append('{').append(axes).append('}');
                     k++;
                 }
             } else {

@@ -51,6 +51,7 @@ public final class StreamUtils {
         return newArray;
     }
 
+    @NotNull
     public static <T> Optional<T> filterFirst(@NotNull T[] array, @NotNull Predicate<T> filter) {
         for (T t : array) {
             if (filter.test(t)) {
@@ -60,6 +61,7 @@ public final class StreamUtils {
         return Optional.empty();
     }
 
+    @NotNull
     public static <T> Optional<T> filterFirst(@NotNull Collection<T> collection, @NotNull Predicate<T> filter) {
         for (T t : collection) {
             if (filter.test(t)) {

@@ -21,7 +21,6 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus Selector クラス
@@ -49,7 +48,7 @@ public final class ArgmentSplit {
         return selector.toLowerCase(Locale.ROOT);
     }
 
-    @Nullable
+    @NotNull
     public ArgmentValue[] getArgmentValues() {
         if (StringUtils.isEmpty(argments)) {
             return EMPTY_ARGMENTS_ARRAY;

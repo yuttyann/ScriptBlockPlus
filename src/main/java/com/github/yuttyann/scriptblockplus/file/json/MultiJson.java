@@ -19,8 +19,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -79,13 +77,14 @@ public abstract class MultiJson<T> extends BaseJson<T> {
     @NotNull
     protected final T load(@NotNull Object... args) {
         int hash = Objects.hash(args);
-        var value = StreamUtils.filterFirst(list, t -> t.hashCode() == hash);
-        if (!value.isPresent()) {
-            T instance = newInstance(args);
-            list.add(instance);
-            return instance;
+        for (T t : list) {
+            if (t.hashCode() == hash) {
+                return t;
+            }
         }
-        return value.get();
+        T instance = newInstance(args);
+        list.add(instance);
+        return instance;
     }
 
     /**

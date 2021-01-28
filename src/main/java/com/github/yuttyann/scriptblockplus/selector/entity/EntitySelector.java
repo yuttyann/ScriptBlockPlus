@@ -37,7 +37,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -164,7 +163,6 @@ public final class EntitySelector {
         return new Location(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
-    @NotNull
     private static int sort(int limit, @NotNull Location location, @NotNull List<? extends Entity> entities) {
         var order = (Comparator<Double>) null;
         if (limit >= 0) {
@@ -234,13 +232,13 @@ public final class EntitySelector {
     private static boolean setXYZ(@NotNull Location location, @NotNull ArgmentValue argmentValue) {
         switch (argmentValue.getArgment()) {
             case X:
-                location.add(getRelative(location, "x", argmentValue.getValue()));
+                setLocation(location, "x", argmentValue.getValue());
                 break;
             case Y:
-                location.add(getRelative(location, "y", argmentValue.getValue()));
+                setLocation(location, "y", argmentValue.getValue());
                 break;
             case Z:
-                location.add(getRelative(location, "z", argmentValue.getValue()));
+                setLocation(location, "z", argmentValue.getValue());
                 break;
             default:
                 return false;
@@ -248,44 +246,53 @@ public final class EntitySelector {
         return true;
     }
 
-    @NotNull
-    public static Vector getRelative(@NotNull Location location, @NotNull String relative, @NotNull String value) {
+    public static void setLocation(@NotNull Location location, @NotNull String axes, @NotNull String value) {
         if (value.startsWith("^")) {
             double number = value.length() == 1 ? 0.0D : Double.parseDouble(value.substring(1));
-            switch (relative.toLowerCase(Locale.ROOT)) {
+            switch (axes.toLowerCase(Locale.ROOT)) {
                 case "x": {
                     var empty = new Location(location.getWorld(), 0.0D, 0.0D, 0.0D);
                     empty.setYaw(normalizeYaw(location.getYaw() - 90.0F));
                     empty.setPitch(location.getPitch());
-                    return empty.getDirection().normalize().multiply(number);
+                    location.add(empty.getDirection().normalize().multiply(number));
+                    break;
                 }
                 case "y": {
                     var empty = new Location(location.getWorld(), 0.0D, 0.0D, 0.0D);
                     empty.setYaw(location.getYaw());
                     empty.setPitch(location.getPitch() - 90.0F);
-                    return empty.getDirection().normalize().multiply(number);
+                    location.add(empty.getDirection().normalize().multiply(number));
+                    break;
                 }
                 case "z":
-                    return location.getDirection().normalize().multiply(number);
-                default:
-                    return new Vector();
+                    location.add(location.getDirection().normalize().multiply(number));
+                    break;
+            }
+        } else if (value.startsWith("~")) {
+            double number = value.length() == 1 ? 0.0D : Double.parseDouble(value.substring(1));
+            switch (axes.toLowerCase(Locale.ROOT)) {
+                case "x":
+                    location.add(number, 0.0D, 0.0D);
+                    break;
+                case "y":
+                    location.add(0.0D, number, 0.0D);
+                    break;
+                case "z":
+                    location.add(0.0D, 0.0D, number);
+                    break;
             }
         } else {
-            double number = 0.0D;
-            if (!value.startsWith("~")) {
-                number = Double.parseDouble(value);
-            } else if (value.length() > 1) {
-                number = Double.parseDouble(value.substring(1));
-            }
-            switch (relative.toLowerCase(Locale.ROOT)) {
+            double number = Double.parseDouble(value);
+            switch (axes.toLowerCase(Locale.ROOT)) {
                 case "x":
-                    return new Vector(number, 0.0D, 0.0D);
+                    location.setX(number);
+                    break;
                 case "y":
-                    return new Vector(0.0D, number, 0.0D);
+                    location.setY(number);
+                    break;
                 case "z":
-                    return new Vector(0.0D, 0.0D, number);
-                default:
-                    return new Vector();
+                    location.setZ(number);
+                    break;
             }
         }
     }
@@ -375,6 +382,7 @@ public final class EntitySelector {
         return false;
     }
 
+    @Nullable
     private static GameMode getMode(@NotNull String value) {
         if (value.equalsIgnoreCase("0") || value.equalsIgnoreCase("s") || value.equalsIgnoreCase("survival")) {
             return GameMode.SURVIVAL;
