@@ -51,7 +51,10 @@ public final class OptionMap {
     @NotNull
     public Option getOption(@NotNull String syntax) {
         var sbInstance = getInstance(syntax);
-        return Objects.requireNonNull(sbInstance, "Option[" + syntax + "] does not exist").get();
+        if (sbInstance == null) {
+            throw new NullPointerException("Option[" + syntax + "] does not exist");
+        }
+        return sbInstance.get();
     }
 
     @Nullable
