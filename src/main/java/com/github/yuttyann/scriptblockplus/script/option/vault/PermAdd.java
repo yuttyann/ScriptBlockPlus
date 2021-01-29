@@ -17,11 +17,8 @@ package com.github.yuttyann.scriptblockplus.script.option.vault;
 
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus PermAdd オプションクラス
@@ -29,12 +26,6 @@ import org.jetbrains.annotations.NotNull;
  */
 @OptionTag(name = "perm_add", syntax = "@permADD:")
 public class PermAdd extends BaseOption {
-
-    @Override
-    @NotNull
-    public Option newInstance() {
-        return new PermAdd();
-    }
 
     @Override
     protected boolean isValid() throws Exception {

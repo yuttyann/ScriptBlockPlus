@@ -15,15 +15,16 @@
  */
 package com.github.yuttyann.scriptblockplus.manager;
 
-import com.github.yuttyann.scriptblockplus.enums.InstanceType;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndInventory;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndMoneyCost;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * ScriptBlockPlus EndProcessManager クラス
@@ -31,19 +32,19 @@ import java.util.function.Consumer;
  */
 public final class EndProcessManager {
 
-    private static final List<SBConstructor<? extends EndProcess>> ENDPROCESS_LIST = new ArrayList<>();
+    private static final List<SBInstance<EndProcess>> ENDPROCESS_LIST = new ArrayList<>();
 
     static {
-        register(new SBConstructor<>(new EndInventory()));
-        register(new SBConstructor<>(new EndMoneyCost()));
+        register(() -> new EndInventory());
+        register(() -> new EndMoneyCost());
     }
 
-    public static void register(@NotNull SBConstructor<EndProcess> endProcess) {
-        ENDPROCESS_LIST.add(endProcess);
+    public static void register(@NotNull Supplier<EndProcess> newInstance) {
+        ENDPROCESS_LIST.add(new SBInstance<>(newInstance));
     }
 
     public static void forEach(@NotNull Consumer<EndProcess> action) {
-        ENDPROCESS_LIST.forEach(c -> action.accept(c.newInstance(InstanceType.SBINSTANCE)));
+        ENDPROCESS_LIST.forEach(c -> action.accept(c.newInstance()));
     }
 
     public static void forEachFinally(@NotNull Consumer<EndProcess> action, @NotNull Runnable runnable) {
@@ -55,10 +56,10 @@ public final class EndProcessManager {
     }
 
     @NotNull
-    public static EndProcess newInstance(@NotNull Class<? extends EndProcess> endProcess, @NotNull InstanceType instanceType) {
-        for (var constructor : ENDPROCESS_LIST) {
-            if (constructor.getDeclaringClass().equals(endProcess)) {
-                return constructor.newInstance(instanceType);
+    public static EndProcess newInstance(@NotNull Class<? extends EndProcess> endProcess) {
+        for (var sbInstance : ENDPROCESS_LIST) {
+            if (sbInstance.getDeclaringClass().equals(endProcess)) {
+                return sbInstance.newInstance();
             }
         }
         throw new NullPointerException(endProcess.getName() + " does not exist");

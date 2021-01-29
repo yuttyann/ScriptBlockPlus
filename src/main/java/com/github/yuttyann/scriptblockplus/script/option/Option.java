@@ -15,9 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option;
 
-import com.github.yuttyann.scriptblockplus.enums.InstanceType;
-import com.github.yuttyann.scriptblockplus.manager.SBConstructor;
-import com.github.yuttyann.scriptblockplus.script.SBInstance;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus Option オプションクラス
  * @author yuttyann44581
  */
-public abstract class Option implements SBInstance<Option>, Comparable<Option> {
+public abstract class Option implements Comparable<Option> {
 
     public static final String PERMISSION_PREFIX = "scriptblockplus.option.";
     public static final String PERMISSION_ALL = PERMISSION_PREFIX + "*";
@@ -45,16 +42,6 @@ public abstract class Option implements SBInstance<Option>, Comparable<Option> {
         this.name = optionTag.name();
         this.syntax = optionTag.syntax();
         this.length = syntax.length();
-    }
-
-    /**
-     * インスタンスを生成します。
-     * @return {@link Option} - オプション
-     */
-    @Override
-    @NotNull
-    public Option newInstance() {
-        return new SBConstructor<>(getClass()).newInstance(InstanceType.REFLECTION);
     }
 
     /**

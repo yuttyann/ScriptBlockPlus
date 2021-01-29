@@ -13,21 +13,40 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.enums;
+package com.github.yuttyann.scriptblockplus.manager;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 /**
- * ScriptBlockPlus InstanceType 列挙型
+ * ScriptBlockPlus SBInstance クラス
+ * @param <T> インスタンスの型
  * @author yuttyann44581
  */
-public enum InstanceType {
+@SuppressWarnings("unchecked")
+public final class SBInstance<T> {
 
-    /**
-     * リフレクションを使用しない場合
-     */
-    SBINSTANCE,
+    private T instance;
+    private Supplier<T> newInstance;
 
-    /**
-     * リフレクションを使用する場合
-     */
-    REFLECTION
+    public SBInstance(@NotNull Supplier<T> newInstance) {
+        this.newInstance = newInstance;
+        this.instance = newInstance();
+    }
+
+    @NotNull
+    public T get() {
+        return (T) instance;
+    }
+
+    @NotNull
+    public T newInstance() {
+        return newInstance.get();
+    }
+
+    @NotNull
+    public Class<T> getDeclaringClass() {
+        return (Class<T>) instance.getClass();
+    }
 }

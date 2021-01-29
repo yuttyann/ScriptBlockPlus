@@ -15,8 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus.manager;
 
-import com.github.yuttyann.scriptblockplus.enums.InstanceType;
-import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -31,8 +29,7 @@ import java.util.*;
  * ScriptBlockPlus OptionMap クラス
  * @author yuttyann44581
  */
-@SuppressWarnings("serial")
-public final class OptionMap extends HashMap<String, Option> {
+public final class OptionMap {
 
     private static final Field ORDINAL;
 
@@ -48,67 +45,88 @@ public final class OptionMap extends HashMap<String, Option> {
         }
     }
 
-    private final LinkedList<String> LINKED_LIST = new LinkedList<>();
+    private final List<String> SYNTAXES = new ArrayList<>();
+    private final Map<String, SBInstance<Option>> SBINSTANCES = new HashMap<>();
 
-    @Nullable
-    public <T extends BaseOption> Option put(@NotNull T option) {
-        var syntax = option.getSyntax();
-        if (!containsKey(syntax)) {
-            LINKED_LIST.add(syntax);
-        }
-        return super.put(syntax, option);
+    @NotNull
+    public Option getOption(@NotNull String syntax) {
+        var sbInstance = getInstance(syntax);
+        return Objects.requireNonNull(sbInstance, "Option[" + syntax + "] does not exist").get();
     }
 
     @Nullable
-    public Option put(@NotNull OptionIndex optionIndex, @NotNull Class<? extends BaseOption> optionClass) {
-        var syntax = addSyntax(optionIndex, optionClass.getAnnotation(OptionTag.class).syntax());
-        return super.put(syntax, new SBConstructor<>(optionClass).newInstance(InstanceType.REFLECTION));
+    public SBInstance<Option> getInstance(@NotNull String syntax) {
+        for (int i = 0; i < SYNTAXES.size(); i++) {
+            var value = SYNTAXES.get(i);
+            if (syntax.indexOf(value) == 0) {
+                return SBINSTANCES.get(value);
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public SBInstance<Option> put(@NotNull SBInstance<Option> sbInstance) {
+        var syntax = sbInstance.get().getSyntax();
+        if (!SBINSTANCES.containsKey(syntax)) {
+            SYNTAXES.add(syntax);
+        }
+        return SBINSTANCES.put(syntax, sbInstance);
+    }
+
+    @Nullable
+    public SBInstance<Option> put(@NotNull OptionIndex optionIndex, @NotNull SBInstance<Option> sbInstance) {
+        return SBINSTANCES.put(addSyntax(optionIndex, sbInstance.getDeclaringClass()), sbInstance);
     }
 
     @NotNull
-    private String addSyntax(@NotNull OptionIndex optionIndex, @NotNull String syntax) {
-        if (!containsKey(syntax)) {
+    private String addSyntax(@NotNull OptionIndex optionIndex, @NotNull Class<Option> optionClass) {
+        var syntax = optionClass.getAnnotation(OptionTag.class).syntax();
+        if (!SBINSTANCES.containsKey(syntax)) {
             switch (optionIndex.getIndexType()) {
                 case TOP:
-                    LINKED_LIST.addFirst(syntax);
+                    SYNTAXES.add(0, syntax);
                     break;
                 case LAST:
-                    LINKED_LIST.addLast(syntax);
+                    SYNTAXES.add(syntax);
                     break;
                 default:
-                    int index = LINKED_LIST.indexOf(optionIndex.getSyntax());
+                    int index = SYNTAXES.indexOf(optionIndex.getSyntax());
                     int amount = optionIndex.getIndexType().getAmount();
-                    LINKED_LIST.add(Math.min(Math.max(index + amount, 0), LINKED_LIST.size()), syntax);
+                    SYNTAXES.add(Math.min(Math.max(index + amount, 0), SYNTAXES.size()), syntax);
                     break;
             }
         }
         return syntax;
     }
 
-    @Override
-    @Deprecated
-    public Option put(@Nullable String key, @Nullable Option value) {
-        throw new UnsupportedOperationException();
+    public void remove(@NotNull Object key) {
+        SYNTAXES.remove(key);
+        SBINSTANCES.remove(key);
     }
 
-    @Override
     public void clear() {
-        super.clear();
-        LINKED_LIST.clear();
+        SYNTAXES.clear();
+        SBINSTANCES.clear();
     }
 
     @NotNull
-    public List<Option> list() {
-        var list = new ArrayList<Option>(values());
-        list.sort(Option::compareTo);
+    public List<SBInstance<Option>> list() {
+        var list = new ArrayList<SBInstance<Option>>(SBINSTANCES.values());
+        list.sort((c1, c2) -> c1.get().compareTo(c2.get()));
         return list;
     }
 
-    void updateOrdinal() {
+    @NotNull
+    public Collection<SBInstance<Option>> values() {
+        return SBINSTANCES.values();
+    }
+
+    public synchronized void updateOrdinal() {
         try {
             int index = 0;
-            for (String syntax : LINKED_LIST) {
-                ORDINAL.setInt(super.get(syntax), index++);
+            for (String syntax : SYNTAXES) {
+                ORDINAL.setInt(SBINSTANCES.get(syntax).get(), index++);
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();

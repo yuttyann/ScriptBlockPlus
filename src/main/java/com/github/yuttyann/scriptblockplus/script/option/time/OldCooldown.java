@@ -16,7 +16,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,12 +30,6 @@ import java.util.UUID;
 public class OldCooldown extends TimerOption {
 
     public static final UUID UUID_OLDCOOLDOWN = UUID.nameUUIDFromBytes(OldCooldown.class.getName().getBytes());
-
-    @Override
-    @NotNull
-    public Option newInstance() {
-        return new OldCooldown();
-    }
 
     @Override
     protected boolean isValid() throws Exception {

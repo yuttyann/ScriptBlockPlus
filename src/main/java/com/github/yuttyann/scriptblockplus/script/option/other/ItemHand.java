@@ -17,7 +17,6 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -35,12 +34,6 @@ import java.util.stream.Stream;
  */
 @OptionTag(name = "itemhand", syntax = "@hand:")
 public class ItemHand extends BaseOption {
-
-    @Override
-    @NotNull
-    public Option newInstance() {
-        return new ItemHand();
-    }
 
     @Override
     protected boolean isValid() throws Exception {

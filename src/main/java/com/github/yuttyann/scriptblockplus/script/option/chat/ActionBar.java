@@ -21,7 +21,6 @@ import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -43,12 +42,6 @@ public class ActionBar extends BaseOption implements Runnable {
     private int tick, stay;
     private String message;
     private BukkitTask task;
-
-    @Override
-    @NotNull
-    public Option newInstance() {
-        return new ActionBar();
-    }
 
     @Override
     protected boolean isValid() throws Exception {

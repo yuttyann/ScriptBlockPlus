@@ -16,7 +16,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,12 +27,6 @@ import java.util.Optional;
  */
 @OptionTag(name = "cooldown", syntax = "@cooldown:")
 public class Cooldown extends TimerOption {
-
-    @Override
-    @NotNull
-    public Option newInstance() {
-        return new Cooldown();
-    }
 
     @Override
     protected boolean isValid() throws Exception {

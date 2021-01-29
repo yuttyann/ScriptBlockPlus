@@ -18,11 +18,8 @@ package com.github.yuttyann.scriptblockplus.script.option.vault;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus Perm オプションクラス
@@ -30,12 +27,6 @@ import org.jetbrains.annotations.NotNull;
  */
 @OptionTag(name = "permission", syntax = "@perm:")
 public class Perm extends BaseOption {
-
-    @Override
-    @NotNull
-    public Option newInstance() {
-        return new Perm();
-    }
 
     @Override
     protected boolean isValid() throws Exception {

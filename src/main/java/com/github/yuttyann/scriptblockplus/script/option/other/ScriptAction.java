@@ -17,7 +17,6 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -34,12 +33,6 @@ import org.jetbrains.annotations.Nullable;
 public class ScriptAction extends BaseOption {
 
     public static final String KEY = Utils.randomUUID();
-
-    @Override
-    @NotNull
-    public Option newInstance() {
-        return new ScriptAction();
-    }
 
     @Override
     protected boolean isValid() throws Exception {

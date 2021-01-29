@@ -19,12 +19,10 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Location;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus Execute オプションクラス
@@ -34,12 +32,6 @@ import org.jetbrains.annotations.NotNull;
 public class Execute extends BaseOption {
 
     private static final ScriptBlockAPI API = ScriptBlock.getInstance().getAPI();
-
-    @Override
-    @NotNull
-    public Option newInstance() {
-        return new Execute();
-    }
 
     @Override
     protected boolean isValid() throws Exception {

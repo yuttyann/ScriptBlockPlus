@@ -16,7 +16,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -32,12 +31,6 @@ import org.jetbrains.annotations.NotNull;
  */
 @OptionTag(name = "blocktype", syntax = "@blocktype:")
 public class BlockType extends BaseOption {
-
-    @Override
-    @NotNull
-    public Option newInstance() {
-        return new BlockType();
-    }
 
     @Override
     protected boolean isValid() throws Exception {

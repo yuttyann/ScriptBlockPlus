@@ -23,10 +23,11 @@ import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
-import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * ScriptBlockPlus APIManager クラス
@@ -44,20 +46,17 @@ public final class APIManager implements ScriptBlockAPI {
 
     @Override
     public boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptKey scriptKey, int index) {
-        if (!BlockScriptJson.has(location, scriptKey)) {
-            return false;
-        }
         return new ScriptRead(player, location, scriptKey).read(index);
     }
 
     @Override
-    public void registerOption(@NotNull OptionIndex optionIndex, @NotNull Class<? extends BaseOption> optionClass) {
-        OptionManager.register(optionIndex, optionClass);
+    public void registerOption(@NotNull OptionIndex optionIndex, @NotNull Supplier<Option> newInstance) {
+        OptionManager.register(optionIndex, newInstance);
     }
 
     @Override
-    public void registerEndProcess(@NotNull Class<? extends EndProcess> endProcessClass) {
-        EndProcessManager.register(new SBConstructor<>(endProcessClass));
+    public void registerEndProcess(@NotNull Supplier<EndProcess> newInstance) {
+        EndProcessManager.register(newInstance);
     }
 
     @Override
