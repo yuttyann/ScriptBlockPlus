@@ -27,6 +27,7 @@ import java.util.stream.IntStream;
 import com.github.yuttyann.scriptblockplus.enums.Argment;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -35,6 +36,7 @@ import org.bukkit.Location;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -417,7 +419,20 @@ public final class EntitySelector {
     }
 
     private static boolean isType(@NotNull Entity entity, @NotNull ArgmentValue argmentValue) {
-        return argmentValue.isInverted() != entity.getType().name().equalsIgnoreCase(argmentValue.getValue());
+        return argmentValue.isInverted() != (entity.getType() == getEntityType(argmentValue.getValue()));
+    }
+
+    @NotNull
+    @SuppressWarnings("deprecation")
+    public static EntityType getEntityType(@NotNull String name) {
+        name = StringUtils.removeStart(name, Utils.MINECRAFT);
+        name = name.replaceAll("\\s+", "_").replaceAll("\\W", "");
+        for (var entityType : EntityType.values()) {
+            if (name.equalsIgnoreCase(entityType.name()) || name.equalsIgnoreCase(entityType.getName())) {
+                return entityType;
+            }
+        }
+        return null;
     }
 
     private static boolean isName(@NotNull Entity entity, @NotNull ArgmentValue argmentValue) {

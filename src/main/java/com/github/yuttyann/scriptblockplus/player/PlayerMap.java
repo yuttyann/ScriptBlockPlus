@@ -41,12 +41,13 @@ public abstract class PlayerMap implements SBPlayer {
 
     private ObjectMap objectMap;
 
-    @NotNull
     @Override
+    @NotNull
     public final ObjectMap getObjectMap() {
         return objectMap == null ? objectMap = new ObjMap() : objectMap;
     }
 
+    @SuppressWarnings("unchecked")
     private static class ObjMap implements ObjectMap {
 
         private final Map<String, Object> objectMap;
@@ -62,7 +63,6 @@ public abstract class PlayerMap implements SBPlayer {
 
         @Override
         @Nullable
-        @SuppressWarnings("unchecked")
         public <T> T get(@NotNull String key) {
             return (T) objectMap.get(key);
         }

@@ -87,17 +87,15 @@ public class ItemUtils {
 
     @NotNull
     public static Material getMaterial(@NotNull String name) {
+        name = StringUtils.removeStart(name, Utils.MINECRAFT);
+        name = name.replaceAll("\\s+", "_").replaceAll("\\W", "");
         if (KEY_MATERIALS != null) {
-            var filter = name.toLowerCase(Locale.ROOT);
-            filter = filter.startsWith(Utils.MINECRAFT) ? filter : Utils.MINECRAFT + filter;
-            if (KEY_MATERIALS.containsKey(filter)) {
-                return KEY_MATERIALS.get(filter);
+            var key = name.toLowerCase(Locale.ROOT);
+            if (KEY_MATERIALS.containsKey(key)) {
+                return KEY_MATERIALS.get(key);
             }
         }
-        name = StringUtils.removeStart(name, Utils.MINECRAFT);
-        name = name.toUpperCase(Locale.ROOT);
-        name = name.replaceAll("\\s+", "_").replaceAll("\\W", "");
-        var material = Material.getMaterial(name);
+        var material = Material.getMaterial(name.toUpperCase(Locale.ROOT));
         return material == null ? Material.AIR : material;
     }
 

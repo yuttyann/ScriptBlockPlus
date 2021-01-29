@@ -56,7 +56,7 @@ public enum PackageType {
     CB_UPDATER(CB, "updater"),
     CB_UTIL(CB, "util");
 
-    private enum ReturnType {
+    private enum HashType {
         CLASS("class_"),
         FIELD("field_"),
         METHOD("method_"),
@@ -64,7 +64,7 @@ public enum PackageType {
 
         private final String name;
 
-        ReturnType(@NotNull String name) {
+        HashType(@NotNull String name) {
             this.name = name;
         }
 
@@ -142,7 +142,7 @@ public enum PackageType {
 
     @Nullable
     public Field getField(boolean declared, @NotNull String className, @NotNull String fieldName) throws ReflectiveOperationException {
-        var hash = createHash(ReturnType.FIELD, className, fieldName, null);
+        var hash = createHash(HashType.FIELD, className, fieldName, null);
         var field = (Field) REFLECTION_CACHE.get(hash);
         if (field == null) {
             if (declared) {
@@ -197,7 +197,7 @@ public enum PackageType {
         if (parameterTypes == null) {
             parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        var hash = createHash(ReturnType.METHOD, className, methodName, parameterTypes);
+        var hash = createHash(HashType.METHOD, className, methodName, parameterTypes);
         var method = (Method) REFLECTION_CACHE.get(hash);
         if (method == null) {
             if (declared) {
@@ -249,7 +249,7 @@ public enum PackageType {
         if (parameterTypes == null) {
             parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        var hash = createHash(ReturnType.CONSTRUCTOR, className, null, parameterTypes);
+        var hash = createHash(HashType.CONSTRUCTOR, className, null, parameterTypes);
         var constructor = (Constructor<?>) REFLECTION_CACHE.get(hash);
         if (constructor == null) {
             if (declared) {
@@ -277,7 +277,7 @@ public enum PackageType {
         if (StringUtils.isEmpty(className)) {
             throw new IllegalArgumentException();
         }
-        var hash = createHash(ReturnType.CLASS, className, null, null);
+        var hash = createHash(HashType.CLASS, className, null, null);
         var clazz = (Class<?>) REFLECTION_CACHE.get(hash);
         if (clazz == null) {
             clazz = Class.forName(this + "." + className);
@@ -287,18 +287,18 @@ public enum PackageType {
     }
 
     @NotNull
-    private int createHash(@NotNull ReturnType returnType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
+    private int createHash(@NotNull HashType hashType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
         if (!HAS_NMS || StringUtils.isEmpty(className)) {
             return 0;
         }
-        int baseHash = returnType.toString().hashCode() + toString().hashCode() + className.hashCode();
+        int baseHash = hashType.toString().hashCode() + toString().hashCode() + className.hashCode();
         if (objects == null) {
             return name == null ? 11 * baseHash : 21 * (baseHash + name.hashCode());
         }
         int hash = 1;
         int prime = 31;
         hash = prime * hash + baseHash;
-        hash = prime * hash + String.valueOf(name).hashCode();
+        hash = prime * hash + (name == null ? "null" : name).hashCode();
         hash = prime * hash + Boolean.hashCode(StringUtils.isNotEmpty(name));
         for (var object : objects) {
             hash += Objects.hashCode(object);
