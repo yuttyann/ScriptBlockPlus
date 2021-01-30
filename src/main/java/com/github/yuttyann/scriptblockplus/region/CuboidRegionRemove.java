@@ -51,14 +51,11 @@ public class CuboidRegionRemove {
         return regionBlocks;
     }
 
-    public void init() {
-        scriptKeys.clear();
-    }
-
+    @NotNull
     public CuboidRegionRemove remove() {
-        init();
+        scriptKeys.clear();
         var blocks = regionBlocks.getBlocks();
-        var locations = new HashSet<Location>(regionBlocks.getCount());
+        var locations = new HashSet<Location>();
         for (var scriptKey : ScriptKey.values()) {
             var scriptJson = new BlockScriptJson(scriptKey);
             if (!scriptJson.exists()) {

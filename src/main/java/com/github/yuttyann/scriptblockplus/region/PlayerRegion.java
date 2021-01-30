@@ -56,22 +56,17 @@ public class PlayerRegion implements Region {
     @Override
     @NotNull
     public Location getMinimumPoint() {
-        return toLocation(x - range, y - range, z - range);
+        return new Location(world, x - range, y - range, z - range);
     }
 
     @Override
     @NotNull
     public Location getMaximumPoint() {
-        return toLocation(x + range, y + range, z + range);
+        return new Location(world, x + range, y + range, z + range);
     }
 
     @Override
     public boolean hasPositions() {
         return true;
-    }
-
-    @NotNull
-    private Location toLocation(double x, double y, double z) {
-        return new Location(world, x, y, z);
     }
 }

@@ -23,6 +23,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static java.lang.Math.min;
+import static java.lang.Math.max;
+
 /**
  * ScriptBlockPlus CuboidRegion クラス
  * @author yuttyann44581
@@ -64,29 +67,23 @@ public class CuboidRegion implements Region {
     @Override
     @NotNull
     public Location getMinimumPoint() {
-        return toLocation(min(pos1.getX(), pos2.getX()), min(pos1.getY(), pos2.getY()), min(pos1.getZ(), pos2.getZ()));
+        double minX = min(pos1.getX(), pos2.getX());
+        double minY = min(pos1.getY(), pos2.getY());
+        double minZ = min(pos1.getZ(), pos2.getZ());
+        return new Location(world, minX, minY, minZ);
     }
 
     @Override
     @NotNull
     public Location getMaximumPoint() {
-        return toLocation(max(pos1.getX(), pos2.getX()), max(pos1.getY(), pos2.getY()), max(pos1.getZ(), pos2.getZ()));
+        double maxX = max(pos1.getX(), pos2.getX());
+        double maxY = max(pos1.getY(), pos2.getY());
+        double maxZ = max(pos1.getZ(), pos2.getZ());
+        return new Location(world, maxX, maxY, maxZ);
     }
 
     @Override
     public boolean hasPositions() {
         return world != null && pos1 != null && pos2 != null;
-    }
-
-    private Location toLocation(double x, double y, double z) {
-        return new Location(world, x, y, z);
-    }
-
-    private double min(double a, double b) {
-        return Math.min(a, b);
-    }
-
-    private double max(double a, double b) {
-        return Math.max(a, b);
     }
 }
