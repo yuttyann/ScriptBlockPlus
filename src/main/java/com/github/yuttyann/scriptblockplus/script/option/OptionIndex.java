@@ -67,7 +67,7 @@ public class OptionIndex {
     }
 
     /**
-     * 指定したオプションより一つ後に追加。
+     * 指定したオプションより一つ後に追加します。
      * @param optionClass - オプションのクラス
      * @return {@link OptionIndex} - オプションインデックス
      */
