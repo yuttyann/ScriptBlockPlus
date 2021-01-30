@@ -23,6 +23,7 @@ import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
 import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
@@ -52,6 +53,13 @@ public final class APIManager implements ScriptBlockAPI {
     @Override
     public void registerOption(@NotNull OptionIndex optionIndex, @NotNull Supplier<Option> newInstance) {
         OptionManager.register(optionIndex, newInstance);
+        OptionManager.update();
+    }
+
+    @Override
+    public void unregisterOption(@NotNull Class<? extends BaseOption> optionClass) {
+        OptionManager.unregister(optionClass);
+        OptionManager.update();
     }
 
     @Override

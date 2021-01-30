@@ -89,7 +89,6 @@ public class ScriptBlock extends JavaPlugin {
         }
 
         // アップデート処理
-        updater = new Updater(this);
         checkUpdate(Bukkit.getConsoleSender(), false);
 
         // スクリプトの形式を".yml"から".json"へ移行
@@ -133,6 +132,9 @@ public class ScriptBlock extends JavaPlugin {
      * @param latestMessage - trueの場合は送信先にアップデートのメッセージを表示します。
      */
     public void checkUpdate(@NotNull CommandSender sender, boolean latestMessage) {
+        if (updater == null) {
+            updater = new Updater(this);
+        }
         var thread = new Thread(() -> {
             try {
                 updater.init();

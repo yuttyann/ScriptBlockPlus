@@ -81,12 +81,10 @@ public final class OptionManager {
 
     public static void register(@NotNull OptionIndex optionIndex, @NotNull Supplier<Option> newInstance) {
         OPTION_MAP.put(optionIndex, new SBInstance<Option>(newInstance));
-        OPTION_MAP.updateOrdinal();
     }
 
     public static void unregister(@NotNull Class<? extends BaseOption> optionClass) {
         OPTION_MAP.remove(optionClass.getAnnotation(OptionTag.class).syntax());
-        OPTION_MAP.updateOrdinal();
     }
 
     public static void sort(@NotNull List<String> scripts) {

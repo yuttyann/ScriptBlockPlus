@@ -17,6 +17,7 @@ package com.github.yuttyann.scriptblockplus;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
 
@@ -52,6 +53,12 @@ public interface ScriptBlockAPI {
      * @param newInstance - インスタンスを生成する処理
      */
     void registerOption(@NotNull OptionIndex optionIndex, @NotNull Supplier<Option> newInstance);
+
+    /**
+     * 指定したオプションを削除します。
+     * @param optionClass - オプションのクラス
+     */
+    void unregisterOption(@NotNull Class<? extends BaseOption> optionClass);
 
     /**
      * 指定したエンドプロセスを登録します。
