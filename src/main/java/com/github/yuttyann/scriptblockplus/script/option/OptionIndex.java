@@ -17,6 +17,7 @@ package com.github.yuttyann.scriptblockplus.script.option;
 
 import com.github.yuttyann.scriptblockplus.enums.IndexType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus OptionIndex クラス
@@ -24,31 +25,69 @@ import org.jetbrains.annotations.NotNull;
  */
 public class OptionIndex {
 
-    private final String syntax;
     private final IndexType indexType;
+    private final OptionTag optionTag;
 
     /**
      * コンストラクタ
      * @param indexType - スクリプトの追加位置
-     * @param optionClass - オプションのクラス
+     * @param optionTag - オプションタグ
      */
-    public OptionIndex(@NotNull IndexType indexType, @NotNull Class<? extends BaseOption> optionClass) {
-        this.syntax = optionClass.getAnnotation(OptionTag.class).syntax();
+    private OptionIndex(@NotNull IndexType indexType, @Nullable OptionTag optionTag) {
         this.indexType = indexType;
+        this.optionTag = optionTag;
     }
 
     /**
-     * オプションの構文を取得します。
-     * @return {@link String} - オプションの構文
+     * オプションを先頭に追加します。
+     * @return {@link OptionIndex} - オプションインデックス
      */
     @NotNull
-    public String getSyntax() {
-        return syntax;
+    public static OptionIndex top() {
+        return new OptionIndex(IndexType.TOP, null);
     }
 
     /**
-     * スクリプトの追加方法を取得します。
-     * @return {@link IndexType} - スクリプトの追加方法
+     * オプションを最後尾に追加します。
+     * @return {@link OptionIndex} - オプションインデックス
+     */
+    @NotNull
+    public static OptionIndex last() {
+        return new OptionIndex(IndexType.LAST, null);
+    }
+
+    /**
+     * 指定したオプションより一つ前に追加します。
+     * @param optionClass - オプションのクラス
+     * @return {@link OptionIndex} - オプションインデックス
+     */
+    @NotNull
+    public static OptionIndex before(@NotNull Class<? extends BaseOption> optionClass) {
+        return new OptionIndex(IndexType.BEFORE, optionClass.getAnnotation(OptionTag.class));
+    }
+
+    /**
+     * 指定したオプションより一つ後に追加。
+     * @param optionClass - オプションのクラス
+     * @return {@link OptionIndex} - オプションインデックス
+     */
+    @NotNull
+    public static OptionIndex after(@NotNull Class<? extends BaseOption> optionClass) {
+        return new OptionIndex(IndexType.AFTER, optionClass.getAnnotation(OptionTag.class));
+    }
+
+    /**
+     * オプションタグを取得します。
+     * @return {@link OptionTag} - オプションタグ
+     */
+    @Nullable
+    public OptionTag getOptionTag() {
+        return optionTag;
+    }
+
+    /**
+     * オプションの追加位置を取得します。
+     * @return {@link IndexType} - オプションの追加位置
      */
     @NotNull
     public IndexType getIndexType() {

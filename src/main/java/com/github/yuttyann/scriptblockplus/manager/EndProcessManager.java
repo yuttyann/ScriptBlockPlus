@@ -35,8 +35,8 @@ public final class EndProcessManager {
     private static final List<SBInstance<EndProcess>> ENDPROCESS_LIST = new ArrayList<>();
 
     static {
-        register(() -> new EndInventory());
-        register(() -> new EndMoneyCost());
+        register(EndInventory::new);
+        register(EndMoneyCost::new);
     }
 
     public static void register(@NotNull Supplier<EndProcess> newInstance) {

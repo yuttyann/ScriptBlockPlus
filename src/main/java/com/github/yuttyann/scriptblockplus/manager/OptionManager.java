@@ -15,8 +15,10 @@
  */
 package com.github.yuttyann.scriptblockplus.manager;
 
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.script.option.chat.*;
 import com.github.yuttyann.scriptblockplus.script.option.other.*;
 import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
@@ -38,36 +40,38 @@ public final class OptionManager {
 
     private static final OptionMap OPTION_MAP = new OptionMap();
 
-    public static void registerDefaults() {
-        OPTION_MAP.clear();
-        register(() -> new ScriptAction());
-        register(() -> new BlockType());
-        register(() -> new Group());
-        register(() -> new Perm());
-        register(() -> new Calculation());
-        register(() -> new OldCooldown());
-        register(() -> new Cooldown());
-        register(() -> new Delay());
-        register(() -> new ItemHand());
-        register(() -> new ItemCost());
-        register(() -> new MoneyCost());
-        register(() -> new GroupAdd());
-        register(() -> new GroupRemove());
-        register(() -> new PermAdd());
-        register(() -> new PermRemove());
-        register(() -> new Say());
-        register(() -> new Server());
-        register(() -> new ToPlayer());
-        register(() -> new PlaySound());
-        register(() -> new Title());
-        register(() -> new ActionBar());
-        register(() -> new BypassOP());
-        register(() -> new BypassPerm());
-        register(() -> new BypassGroup());
-        register(() -> new Command());
-        register(() -> new Console());
-        register(() -> new Execute());
-        register(() -> new Amount());
+    static {
+        register(ScriptAction::new);
+        register(BlockType::new);
+        register(Group::new);
+        register(Perm::new);
+        register(Calculation::new);
+        register(OldCooldown::new);
+        register(Cooldown::new);
+        register(Delay::new);
+        register(ItemHand::new);
+        register(ItemCost::new);
+        register(MoneyCost::new);
+        register(GroupAdd::new);
+        register(GroupRemove::new);
+        register(PermAdd::new);
+        register(PermRemove::new);
+        register(Say::new);
+        register(Server::new);
+        register(ToPlayer::new);
+        register(PlaySound::new);
+        register(Title::new);
+        register(ActionBar::new);
+        register(BypassOP::new);
+        register(BypassPerm::new);
+        register(BypassGroup::new);
+        register(Command::new);
+        register(Console::new);
+        register(Execute::new);
+        register(Amount::new);
+    }
+
+    public static void update() {
         OPTION_MAP.updateOrdinal();
     }
 
@@ -77,6 +81,11 @@ public final class OptionManager {
 
     public static void register(@NotNull OptionIndex optionIndex, @NotNull Supplier<Option> newInstance) {
         OPTION_MAP.put(optionIndex, new SBInstance<Option>(newInstance));
+        OPTION_MAP.updateOrdinal();
+    }
+
+    public static void unregister(@NotNull Class<? extends BaseOption> optionClass) {
+        OPTION_MAP.remove(optionClass.getAnnotation(OptionTag.class).syntax());
         OPTION_MAP.updateOrdinal();
     }
 

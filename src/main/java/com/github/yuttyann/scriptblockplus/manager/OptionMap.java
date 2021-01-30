@@ -17,7 +17,6 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
-import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +46,11 @@ public final class OptionMap {
 
     private final List<String> SYNTAXES = new ArrayList<>();
     private final Map<String, SBInstance<Option>> SBINSTANCES = new HashMap<>();
+
+    public void clear() {
+        SYNTAXES.clear();
+        SBINSTANCES.clear();
+    }
 
     @NotNull
     public Option getOption(@NotNull String syntax) {
@@ -79,12 +83,7 @@ public final class OptionMap {
 
     @Nullable
     public SBInstance<Option> put(@NotNull OptionIndex optionIndex, @NotNull SBInstance<Option> sbInstance) {
-        return SBINSTANCES.put(addSyntax(optionIndex, sbInstance.getDeclaringClass()), sbInstance);
-    }
-
-    @NotNull
-    private String addSyntax(@NotNull OptionIndex optionIndex, @NotNull Class<Option> optionClass) {
-        var syntax = optionClass.getAnnotation(OptionTag.class).syntax();
+        var syntax = sbInstance.get().getSyntax();
         if (!SBINSTANCES.containsKey(syntax)) {
             switch (optionIndex.getIndexType()) {
                 case TOP:
@@ -94,28 +93,24 @@ public final class OptionMap {
                     SYNTAXES.add(syntax);
                     break;
                 default:
-                    int index = SYNTAXES.indexOf(optionIndex.getSyntax());
+                    int index = SYNTAXES.indexOf(optionIndex.getOptionTag().syntax());
                     int amount = optionIndex.getIndexType().getAmount();
                     SYNTAXES.add(Math.min(Math.max(index + amount, 0), SYNTAXES.size()), syntax);
                     break;
             }
         }
-        return syntax;
+        return SBINSTANCES.put(syntax, sbInstance);
     }
 
-    public void remove(@NotNull Object key) {
+    @Nullable
+    public SBInstance<Option> remove(@NotNull Object key) {
         SYNTAXES.remove(key);
-        SBINSTANCES.remove(key);
-    }
-
-    public void clear() {
-        SYNTAXES.clear();
-        SBINSTANCES.clear();
+        return SBINSTANCES.remove(key);
     }
 
     @NotNull
     public List<SBInstance<Option>> list() {
-        var list = new ArrayList<SBInstance<Option>>(SBINSTANCES.values());
+        var list = new ArrayList<SBInstance<Option>>(values());
         list.sort((c1, c2) -> c1.get().compareTo(c2.get()));
         return list;
     }
