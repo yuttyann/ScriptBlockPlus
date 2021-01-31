@@ -21,6 +21,8 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,14 +52,15 @@ public class Title extends BaseOption {
     }
 
     public static void send(@NotNull SBPlayer sbPlayer, @Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) {
+        var player = sbPlayer.getPlayer();
         if (Utils.isCBXXXorLater("1.12")) {
-            sbPlayer.getPlayer().sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+            player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
         } else {
             var prefix = "minecraft:title " + sbPlayer.getName();
             Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> {
-                Utils.dispatchCommand(sbPlayer, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
-                Utils.dispatchCommand(sbPlayer, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
-                Utils.dispatchCommand(sbPlayer, prefix + " title {\"text\":\"" + title + "\"}");
+                Bukkit.dispatchCommand(player, prefix + " times " + fadeIn + " " + stay + " " + fadeOut);
+                Bukkit.dispatchCommand(player, prefix + " subtitle {\"text\":\"" + subtitle + "\"}");
+                Bukkit.dispatchCommand(player, prefix + " title {\"text\":\"" + title + "\"}");
                 return true;
             });
         }

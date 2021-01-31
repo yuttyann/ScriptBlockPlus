@@ -16,6 +16,8 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.event.DelayEndEvent;
+import com.github.yuttyann.scriptblockplus.event.DelayRunEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -68,8 +70,13 @@ public class Delay extends BaseOption implements Runnable {
         }
         var sbRead = (ScriptRead) getTempMap();
         if (getSBPlayer().isOnline()) {
-            sbRead.setInitialize(true);
-            sbRead.read(getScriptIndex() + 1);
+            Bukkit.getPluginManager().callEvent(new DelayRunEvent(sbRead));
+            try {
+                sbRead.setInitialize(true);
+                sbRead.read(getScriptIndex() + 1);
+            } finally {
+                Bukkit.getPluginManager().callEvent(new DelayEndEvent(sbRead));
+            }
         } else {
             EndProcessManager.forEachFinally(e -> e.failed(sbRead), () -> sbRead.clear());
         }

@@ -69,23 +69,24 @@ public class ActionBar extends BaseOption implements Runnable {
     }
 
     public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
+        var player = sbPlayer.getPlayer();
         if (Utils.isCBXXXorLater("1.12.2")) {
             var command = "minecraft:title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
-            Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Utils.dispatchCommand(sbPlayer, command));
+            Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Bukkit.dispatchCommand(player, command));
         } else if (ProtocolLib.INSTANCE.has()) {
             try {
-                ProtocolLib.INSTANCE.sendActionBar(sbPlayer.getPlayer(), message);
+                ProtocolLib.INSTANCE.sendActionBar(player, message);
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
         } else if (PackageType.HAS_NMS) {
             try {
-                NMSHelper.sendActionBar(sbPlayer.getPlayer(), message);
+                NMSHelper.sendActionBar(player, message);
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }
         } else {
-            Utils.sendColorMessage(sbPlayer, "§cActionBar: §r" + message);
+            Utils.sendColorMessage(player, "§cActionBar: §r" + message);
         }
     }
 }

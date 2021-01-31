@@ -13,25 +13,41 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.script.option.chat;
+package com.github.yuttyann.scriptblockplus.event;
 
-import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.script.SBRead;
 
-import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * ScriptBlockPlus Say オプションクラス
+ * ScriptBlockPlus DelayEndEvent イベントクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "say", syntax = "@say ")
-public class Say extends BaseOption {
+public class DelayEndEvent extends Event {
+
+    private static final HandlerList HANDLERS = new HandlerList();
+
+    private final SBRead sbRead;
+
+    public DelayEndEvent(@NotNull SBRead sbRead) {
+        this.sbRead = sbRead;
+    }
+    
+    @NotNull
+    public SBRead getSBRead() {
+        return sbRead;
+    }
 
     @Override
-    protected boolean isValid() throws Exception {
-        var command = "minecraft:say " + getOptionValue();
-        return Utils.tempPerm(getSBPlayer(), Permission.MINECRAFT_COMMAND_SAY, () -> Bukkit.dispatchCommand(getPlayer(), command));
+    @NotNull
+    public HandlerList getHandlers() {
+        return HANDLERS;
+    }
+
+    @NotNull
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 }
