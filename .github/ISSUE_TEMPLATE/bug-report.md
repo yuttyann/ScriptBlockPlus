@@ -11,8 +11,8 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **Server/サーバー**  
-Type: (For example Spigot etc...)
-Version: (For example 1.16.4 etc...)
+Type: (For example Spigot etc...)  
+Version: (For example 1.16.4 etc...)  
 Plugins: (For example ScriptBlockPlus-2.0.7 / ProtocolLib-4.5.1 etc...)
 
 **To Reproduce/再現手順**  
