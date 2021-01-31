@@ -5,7 +5,7 @@
 
 ## ===== Commands ===== ##
 # プレースホルダはありません
-ToolCommandMessage: 'tool - 実行者に補助ツールを配布します。'
+ToolCommandMessage: 'tool - 送信者に補助ツールを配布します。'
 ReloadCommandMessage: 'reload - 全てのファイルの再読み込みを行います。'
 BackupCommandMessage: 'backup - プラグインデータのバックアップを作成します。'
 CheckVerCommandMessage: 'checkver - 最新のプラグインが存在するかチェックします。'

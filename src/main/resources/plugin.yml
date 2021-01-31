@@ -12,20 +12,20 @@ commands:
     description: ScriptBlockPlus Commands
     aliases: [sbp]
     usage: |
-           /<command> tool - get the scriptblock tools
-           /<command> reload - reload the plugin
-           /<command> backup - make a backup of the plugin data
-           /<command> checkver - check new version
-           /<command> datamigr - migrate old data from scriptblock to scriptblockplus
-           /<command> export <sound | material> - output bukkitapi sound and material as text
-           /<command> <scriptkey> create <options> - create new scriptblock
-           /<command> <scriptkey> add <options> - add new script to the block
-           /<command> <scriptkey> remove - remove script of block
-           /<command> <scriptkey> view - view the script of block
-           /<command> <scriptkey> run <world> <x> <y> <z> - execute the specified script
-           /<command> <scriptkey> redstone <needs> [filter] [selector] - set if the scriptblock works with redstone
-           /<command> selector paste <pasteonair> [overwrite] - paste scriptblock for selected area
-           /<command> selector remove - remove scriptblock for selected area
+           /<command> tool - Distribute the tools to the sender.
+           /<command> reload - Reload the plugin.
+           /<command> backup - Make a backup of the plugin data.
+           /<command> checkver - Check new version.
+           /<command> datamigr - Migrate old data from ScriptBlock to ScriptBlockPlus.
+           /<command> export <sound | material> - Output BukkitAPI sound and material as Text.
+           /<command> <scriptkey> create <options> - Create a new script to the block.
+           /<command> <scriptkey> add <options> - Add a new script to the block.
+           /<command> <scriptkey> remove - Remove the script from the block.
+           /<command> <scriptkey> view - View the script for the block.
+           /<command> <scriptkey> run <world> <x> <y> <z> - Execute the specified script.
+           /<command> <scriptkey> redstone <needs> [filter] [selector] - Set if the script works with Redstone.
+           /<command> selector paste <pasteonair> [overwrite] - Paste the script into the selection.
+           /<command> selector remove - Remove the script into the selection.
 
 permissions:
   scriptblockplus.*:

@@ -5,20 +5,20 @@
 
 ## ===== Commands ===== ##
 # There are no placeholders
-ToolCommandMessage: 'tool - get the scriptblock tools'
-ReloadCommandMessage: 'reload - reload the plugin'
-BackupCommandMessage: 'backup - make a backup of the plugin data'
-CheckVerCommandMessage: 'checkver - check new version'
-DataMigrCommandMessage: 'datamigr - migrate old data from scriptblock to scriptblockplus'
-ExportCommandMessage: 'export <sound | material> - output bukkitapi sound and material as text'
-CreateCommandMessage: '<scriptkey> create <options> - create new scriptblock'
-AddCommandMessage: '<scriptkey> add <options> - add new script to the block'
-RemoveCommandMessage: '<scriptkey> remove - remove script of block'
-ViewCommandMessage: '<scriptkey> view - view the script of block'
-RunCommandMessage: '<scriptkey> run <world> <x> <y> <z> - execute the specified script'
-RedstoneCommandMessage: '<scriptkey> redstone <needs> [filter] [selector] - set if the scriptblock works with redstone'
-SelectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - paste scriptblock for selected area'
-SelectorRemoveCommandMessage: 'selector remove - remove scriptblock for selected area'
+ToolCommandMessage: 'tool - Distribute the tools to the sender.'
+ReloadCommandMessage: 'reload - Reload the plugin.'
+BackupCommandMessage: 'backup - Make a backup of the plugin data.'
+CheckVerCommandMessage: 'checkver - Check new version.'
+DataMigrCommandMessage: 'datamigr - Migrate old data from ScriptBlock to ScriptBlockPlus.'
+ExportCommandMessage: 'export <sound | material> - Output BukkitAPI sound and material as Text.'
+CreateCommandMessage: '<scriptkey> create <options> - Create a new script to the block.'
+AddCommandMessage: '<scriptkey> add <options> - Add a new script to the block.'
+RemoveCommandMessage: '<scriptkey> remove - Remove the script from the block.'
+ViewCommandMessage: '<scriptkey> view - View the script for the block.'
+RunCommandMessage: '<scriptkey> run <world> <x> <y> <z> - Execute the specified script.'
+RedstoneCommandMessage: '<scriptkey> redstone <needs> [filter] [selector] - Set if the script works with Redstone.'
+SelectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - Paste the script into the selection.'
+SelectorRemoveCommandMessage: 'selector remove - Remove the script into the selection.'
 
 # &(code) : you can use color code
 
@@ -82,13 +82,13 @@ UpdateCheckMessage: '&bNew version available!|~v%version% the latest ver.|~Name:
 ErrorUpdateMessage: '&cError occured while checking new version.'
 
 # %scriptkey% : Script key
-ScriptCopyMessage: '&aCopy the scriptblock for the "%scriptkey%" scriptkey.'
-ScriptPasteMessage: '&aPaste the scriptblock for the "%scriptkey%" scriptkey.'
-ScriptCreateMessage: '&aCreate the scriptblock for the "%scriptkey%" scriptkey.'
-ScriptAddMessage: '&aAdd the script to the scriptblock of the "%scriptkey%" scriptkey.'
-ScriptRemoveMessage: '&cRemove the scriptblock for the "%scriptkey%" scriptkey.'
-ScriptRedstoneEnableMessage: '&aThe scriptblock for the "%scriptkey%" scriptkey now works with Redstone.'
-ScriptRedstoneDisableMessage: '&cThe scriptblock for the "%scriptkey%" scriptkey no longer works with Redstone.'
+ScriptCopyMessage: '&aCopy the script for the "%scriptkey%" scriptkey.'
+ScriptPasteMessage: '&aPaste the script for the "%scriptkey%" scriptkey.'
+ScriptCreateMessage: '&aCreate the script for the "%scriptkey%" scriptkey.'
+ScriptAddMessage: '&aAdd the script to the script of the "%scriptkey%" scriptkey.'
+ScriptRemoveMessage: '&cRemove the script for the "%scriptkey%" scriptkey.'
+ScriptRedstoneEnableMessage: '&aThe script for the "%scriptkey%" scriptkey now works with Redstone.'
+ScriptRedstoneDisableMessage: '&cThe script for the "%scriptkey%" scriptkey no longer works with Redstone.'
 
 # There are no placeholders
 NotSelectionMessage: '&cBlockSelector area not selected.'
@@ -104,20 +104,20 @@ SelectorPos2Message: '&bI chose the end point "%coords%".'
 
 # %scriptkey%  : Script key
 # %blockcount% : Block amount
-SelectorPasteMessage: '&aScriptblock "%scriptkey%" has been pasted from selected area.'
-SelectorRemoveMessage: '&cScriptblock "%scriptkey%" has been removed from selected area.'
+SelectorPasteMessage: '&aScript "%scriptkey%" has been pasted from selected area.'
+SelectorRemoveMessage: '&cScript "%scriptkey%" has been removed from selected area.'
 
 # %option% : Name of the option where the error occurred
 # %cause%  : Cause of error
 OptionFailedToExecuteMessage: '&cError occured while executing script "%option%"|~&cPossible reason: %cause%'
 
 # There are no placeholders
-ActiveDelayMessage: '&cThis scriptblock is in delay, you cant use it now.'
+ActiveDelayMessage: '&cThis script is in delay, you cant use it now.'
 
 # %hour%   : hour
 # %minute% : minute
 # %second% : second
-ActiveCooldownMessage: '&cThis scriptblock is in cooldown [%hour%h %minute%m %second%s]'
+ActiveCooldownMessage: '&cThis script is in cooldown [%hour%h %minute%m %second%s]'
 
 # %action% : Type of action
 SuccActionDataMessage: '&aAction "%action%" selected.'
@@ -128,17 +128,17 @@ ErrorScriptCheckMessage: '&cInvaild script.'
 ErrorScriptFileCheckMessage: '&cNo script file.'
 
 # %scriptkey% : Script key
-ErrorScriptExecMessage: '&cFail to execute script from the scriptblock of the "%scriptkey%" scriptkey.'
+ErrorScriptExecMessage: '&cFailed to execute script for the "%scriptkey%" scriptkey.'
 
-# %group% : Permission group name
-ErrorGroupMessage: '&cOnly players in group "%group%" can interact with this scriptblock.'
+# %group% : Group name
+ErrorGroupMessage: '&cOnly members of the group "%group%" can run the script.'
 
 # %material% : Type of item
 # %amount%   : Amount of item
 # %damage%   : Damage value of item
 # %name%     : Item name
-ErrorHandMessage: '&cThe items you hold in hand is not vaild, you must hold at least "%name%(%material%:%damage%)" with amount "%amount%x"'
-ErrorItemMessage: '&cThe items in your inventory is not vaild, you must keep in your inventory at least "%name%(%material%:%damage%)" with amount "%amount%x"'
+ErrorHandMessage: '&cThe items you hold in hand is not vaild,|~you must hold at least "%name%(%material%:%damage%)" with amount "%amount%x"'
+ErrorItemMessage: '&cThe items in your inventory is not vaild,|~you must keep in your inventory at least "%name%(%material%:%damage%)" with amount "%amount%x"'
 
 # %cost%   : Required amount
 # %result% : Missing amount
