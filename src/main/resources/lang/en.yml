@@ -10,7 +10,6 @@ ReloadCommandMessage: 'reload - Reload the plugin.'
 BackupCommandMessage: 'backup - Make a backup of the plugin data.'
 CheckVerCommandMessage: 'checkver - Check new version.'
 DataMigrCommandMessage: 'datamigr - Migrate old data from ScriptBlock to ScriptBlockPlus.'
-ExportCommandMessage: 'export <sound | material> - Output BukkitAPI sound and material as Text.'
 CreateCommandMessage: '<scriptkey> create <options> - Create a new script to the block.'
 AddCommandMessage: '<scriptkey> add <options> - Add a new script to the block.'
 RemoveCommandMessage: '<scriptkey> remove - Remove the script from the block.'
@@ -63,10 +62,6 @@ NotScriptBlockFileMessage: '&cNo ScriptBlock File.'
 DataMigrStartMessage: '&7Start migrating from Scriptblock....'
 DataMigrEndMessage: '&bMigrating completed.'
 UpdateDownloadStartMessage: '&6Start downloading the latest ScriptBlockPlus...'
-
-# %name% : name of the class(Sound, Material)
-ExportStartMessage: '&7Outputing BukkitAPI %name% to text ....'
-ExportEndMessage: '&bOutput of BukkitAPI''s Sound is complete.'
 
 # %name% : Downloaded file name
 # %path% : File save destination

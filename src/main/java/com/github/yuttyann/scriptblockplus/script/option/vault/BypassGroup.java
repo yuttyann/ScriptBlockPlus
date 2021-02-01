@@ -22,6 +22,10 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
+/**
+ * ScriptBlockPlus BypassGroup オプションクラス
+ * @author yuttyann44581
+ */
 @OptionTag(name = "bypass_group", syntax = "@bypassGROUP:")
 public class BypassGroup extends BaseOption {
 

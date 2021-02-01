@@ -10,7 +10,6 @@ ReloadCommandMessage: 'reload - 重载插件'
 BackupCommandMessage: 'backup - 备份插件数据'
 CheckVerCommandMessage: 'checkver - 查询最新版本'
 DataMigrCommandMessage: 'datamigr - 将ScriptBlock的旧数据转移至ScriptBlockPlus'
-ExportCommandMessage: 'export <sound | material> - 将BukkitAPI声音和材质输出为文本'
 CreateCommandMessage: '<交互方式> create <脚本内容> - 创建脚本方块'
 AddCommandMessage: '<交互方式> add <脚本内容> - 添加脚本方块'
 RemoveCommandMessage: '<交互方式> remove - 移除脚本方块'
@@ -63,10 +62,6 @@ NotScriptBlockFileMessage: '&cScriptBlock无数据或者数据损坏'
 DataMigrStartMessage: '&7开始从ScriptBlock转移数据....'
 DataMigrEndMessage: '&b数据转移完毕'
 UpdateDownloadStartMessage: '&6开始下载最新版本ScriptBlockPlus...如果发生卡顿 请不要启用自动更新'
-
-# %name% : 班级名称(Sound, Material)
-ExportStartMessage: '&7将BukkitAPI的"%name%"输出到文本....'
-ExportEndMessage: '&bBukkitAPI"%name%"输出完成。'
 
 # %name% : 文件名
 # %path% : 文件路径

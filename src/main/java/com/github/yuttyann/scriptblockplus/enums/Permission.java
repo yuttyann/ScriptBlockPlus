@@ -32,7 +32,6 @@ public enum Permission {
     COMMAND_BACKUP("scriptblockplus.command.backup"),
     COMMAND_CHECKVER("scriptblockplus.command.checkver"),
     COMMAND_DATAMIGR("scriptblockplus.command.datamigr"),
-    COMMAND_EXPORT("scriptblockplus.command.export"),
     /*
     COMMAND_INTERACT("scriptblockplus.command.interact"),
     COMMAND_BREAK("scriptblockplus.command.break"),

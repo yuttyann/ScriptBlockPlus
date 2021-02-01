@@ -9,8 +9,7 @@ ToolCommandMessage: 'tool - 送信者に補助ツールを配布します。'
 ReloadCommandMessage: 'reload - 全てのファイルの再読み込みを行います。'
 BackupCommandMessage: 'backup - プラグインデータのバックアップを作成します。'
 CheckVerCommandMessage: 'checkver - 最新のプラグインが存在するかチェックします。'
-DataMigrCommandMessage: 'datamigr - ScriptBlockのスクリプトをPlusに移行します。'
-ExportCommandMessage: 'export <sound | material> - BukkitAPIのSound、MaterialをTXTに出力します。'
+DataMigrCommandMessage: 'datamigr - ScriptBlockのスクリプトをSBPlusへ移行します。'
 CreateCommandMessage: '<scriptkey> create <options> - ブロックにスクリプトを設定します。'
 AddCommandMessage: '<scriptkey> add <options> - ブロックにスクリプトを追加します。'
 RemoveCommandMessage: '<scriptkey> remove - ブロックのスクリプトを削除します。'
@@ -63,10 +62,6 @@ NotScriptBlockFileMessage: '&cScriptBlockのデータファイルが見つかり
 DataMigrStartMessage: '&7ScriptBlockのスクリプトを移行しています....'
 DataMigrEndMessage: '&bスクリプトの移行が完了しました。'
 UpdateDownloadStartMessage: '&6最新のプラグインをダウンロードしています...'
-
-# %name% : クラス名(Sound, Material)
-ExportStartMessage: '&7BukkitAPIの"%name%"をTXTに出力しています....'
-ExportEndMessage: '&bBukkitAPIの"%name%"の出力が完了しました。'
 
 # %name% : ファイル名
 # %path% : ファイルパス

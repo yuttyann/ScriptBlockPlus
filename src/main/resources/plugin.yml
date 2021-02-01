@@ -17,7 +17,6 @@ commands:
            /<command> backup - Make a backup of the plugin data.
            /<command> checkver - Check new version.
            /<command> datamigr - Migrate old data from ScriptBlock to ScriptBlockPlus.
-           /<command> export <sound | material> - Output BukkitAPI sound and material as Text.
            /<command> <scriptkey> create <options> - Create a new script to the block.
            /<command> <scriptkey> add <options> - Add a new script to the block.
            /<command> <scriptkey> remove - Remove the script from the block.
@@ -48,7 +47,6 @@ permissions:
       scriptblockplus.command.backup: true
       scriptblockplus.command.checkver: true
       scriptblockplus.command.datamigr: true
-      scriptblockplus.command.export: true
       scriptblockplus.command.interact: true
       scriptblockplus.command.break: true
       scriptblockplus.command.walk: true
@@ -69,8 +67,6 @@ permissions:
   scriptblockplus.command.checkver:
     default: false
   scriptblockplus.command.datamigr:
-    default: false
-  scriptblockplus.command.export:
     default: false
   scriptblockplus.command.interact:
     default: false

@@ -59,7 +59,6 @@ public final class SBConfig {
     public static final ConfigKey<String> BACKUP_COMMAND = stringKey("BackupCommandMessage", "");
     public static final ConfigKey<String> CHECKVER_COMMAND = stringKey("CheckVerCommandMessage", "");
     public static final ConfigKey<String> DATAMIGR_COMMAND = stringKey("DatamigrCommandMessage", "");
-    public static final ConfigKey<String> EXPORT_COMMAND = stringKey("ExportCommandMessage", "");
     public static final ConfigKey<String> CREATE_COMMAND = stringKey("CreateCommandMessage", "");
     public static final ConfigKey<String> ADD_COMMAND = stringKey("AddCommandMessage", "");
     public static final ConfigKey<String> REMOVE_COMMAND = stringKey("RemoveCommandMessage", "");
@@ -153,16 +152,6 @@ public final class SBConfig {
 
 
     // Replace Keys
-    /**
-     * Parameter: {@link String} name
-     */
-    public static final ReplaceKey EXPORT_START = replaceKey("ExportStartMessage", "", "%name%");
-
-    /**
-     * Parameter: {@link String} name
-     */
-    public static final ReplaceKey EXPORT_END = replaceKey("ExportEndMessage", "", "%name%");
-
     /**
      * Parameter: {@link String} name, {@link String} path, {@link String} size
      */
