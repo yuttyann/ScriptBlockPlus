@@ -178,7 +178,7 @@ public abstract class BaseJson<E extends BaseElement> {
      */
     private final void loadList(@NotNull File file) {
         var path = file.getPath();
-        if (file.getPath().lastIndexOf(SBFile.setSeparator(jsonTag.path())) == -1) {
+        if (path.lastIndexOf(SBFile.setSeparator(jsonTag.path())) == -1) {
             throw new IllegalArgumentException("File: " + file.getPath() + ", JsonTag: " + jsonTag.path());
         }
         this.name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.lastIndexOf('.'));
