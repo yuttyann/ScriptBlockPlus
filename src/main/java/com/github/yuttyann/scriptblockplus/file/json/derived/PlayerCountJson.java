@@ -51,9 +51,9 @@ public class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount
 
     @Override
     @NotNull
-	protected PlayerCount newInstance(@NotNull ScriptKey scriptKey, @NotNull BlockCoords location) {
-		return new PlayerCount(scriptKey, location);
-	}
+    protected PlayerCount newInstance(@NotNull ScriptKey scriptKey, @NotNull BlockCoords location) {
+        return new PlayerCount(scriptKey, location);
+    }
 
     @NotNull
     public static PlayerCountJson get(@NotNull UUID uuid) {

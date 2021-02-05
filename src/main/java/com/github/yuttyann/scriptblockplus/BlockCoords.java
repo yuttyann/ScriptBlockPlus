@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BlockCoords {
 
-	private final World world;
+    private final World world;
 
     private int x;
     private int y;

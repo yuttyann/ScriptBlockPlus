@@ -31,9 +31,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BlockCoordsDeserializer implements JsonDeserializer<BlockCoords> {
 
-	@Override
-	@NotNull
-	public BlockCoords deserialize(@NotNull JsonElement json, @NotNull Type typeOfT, @NotNull JsonDeserializationContext context) throws JsonParseException {
-		return BlockCoords.fromString(json.getAsString());
-	}
+    @Override
+    @NotNull
+    public BlockCoords deserialize(@NotNull JsonElement json, @NotNull Type typeOfT, @NotNull JsonDeserializationContext context) throws JsonParseException {
+        return BlockCoords.fromString(json.getAsString());
+    }
 }
