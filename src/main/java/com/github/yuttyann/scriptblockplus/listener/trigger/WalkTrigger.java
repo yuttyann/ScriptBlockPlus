@@ -42,7 +42,7 @@ public class WalkTrigger extends TriggerListener<PlayerMoveEvent> {
 
     @Override
     @Nullable
-    public Trigger create(@NotNull PlayerMoveEvent event) { // 改善予定
+    public Trigger create(@NotNull PlayerMoveEvent event) {
         var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
         var blockCoords = ((BaseSBPlayer) sbPlayer).getDirectOldBlockCoords();
         if (compare(sbPlayer, sbPlayer.getLocation(), blockCoords)) {
