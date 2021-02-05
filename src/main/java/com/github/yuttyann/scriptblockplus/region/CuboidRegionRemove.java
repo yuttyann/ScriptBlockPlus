@@ -19,7 +19,9 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
+import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.github.yuttyann.scriptblockplus.utils.ReuseIterator;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,23 +66,27 @@ public class CuboidRegionRemove {
             if (!scriptJson.has()) {
                 continue;
             }
-            boolean modifiable = false;
             iterator.reset();
+            var removed = false;
             while (iterator.hasNext()) {
                 var blockCoords = iterator.next();
                 if (lightRemove(blockCoords, scriptJson)) {
-                    modifiable = true;
-                    blocks.add(blockCoords);
-                    scriptKeys.add(scriptKey);
+                    removed = true;
+                    if (!blocks.contains(blockCoords)) {
+                        blocks.add(BlockCoords.copy(blockCoords));
+                        ProtocolLib.GLOW_ENTITY.broadcastDestroyGlowEntity(blockCoords);
+                    }
                 }
             }
-            if (modifiable) {
+            if (removed) {
+                scriptKeys.add(scriptKey);
                 scriptJson.saveFile();
             }
         }
+        var reuseIterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
         for (var scriptKey : scriptKeys) {
-            PlayerTempJson.removeAll(scriptKey, blocks);
-            PlayerCountJson.removeAll(scriptKey, blocks);
+            PlayerTempJson.removeAll(scriptKey, reuseIterator);
+            PlayerCountJson.removeAll(scriptKey, reuseIterator);
         }
         this.iterator = iterator;
         return this;

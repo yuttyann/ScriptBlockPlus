@@ -27,8 +27,6 @@ import com.github.yuttyann.scriptblockplus.utils.ReuseIterator;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -60,28 +58,28 @@ public class PlayerTempJson extends SingleJson<PlayerTemp> {
     }
 
     public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
-        removeAll(scriptKey, Collections.singleton(blockCoords));
+        removeAll(scriptKey, new ReuseIterator<>(new BlockCoords[] { blockCoords }));
     }
 
-    public static synchronized void removeAll(@NotNull ScriptKey scriptKey, @NotNull Set<BlockCoords> blocks) {
-        var iterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
+    public static synchronized void removeAll(@NotNull ScriptKey scriptKey, @NotNull ReuseIterator<BlockCoords> reuseIterator) {
         var timerTemp = TimerTemp.empty();
         for (var json : getFiles(PlayerTempJson.class)) {
             var tempJson = new PlayerTempJson(json);
             if (!tempJson.has()) {
                 continue;
             }
-            boolean modifiable = false;
-            while (iterator.hasNext()) {
+            var removed = false;
+            reuseIterator.reset();
+            while (reuseIterator.hasNext()) {
                 var timer = tempJson.load().getTimerTemp();
-                var blockCoords = iterator.next();
+                var blockCoords = reuseIterator.next();
                 if (timer.size() > 0) {
                     timer.remove(timerTemp.setUniqueId(null).setScriptKey(scriptKey).setBlockCoords(blockCoords));
                     timer.remove(timerTemp.setUniqueId(UUID.fromString(tempJson.getName())));
-                    modifiable = true;
+                    removed = true;
                 }
             }
-            if (modifiable) {
+            if (removed) {
                 tempJson.saveFile();
             }
         }

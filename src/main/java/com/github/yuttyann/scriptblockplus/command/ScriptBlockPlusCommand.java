@@ -304,8 +304,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                 SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
                 return true;
             }
-            boolean pasteonair = args.length > 2 && Boolean.parseBoolean(args[2]);
-            boolean overwrite = args.length > 3 && Boolean.parseBoolean(args[3]);
+            var pasteonair = args.length > 2 && Boolean.parseBoolean(args[2]);
+            var overwrite = args.length > 3 && Boolean.parseBoolean(args[3]);
             try {
                 var sbClipboard = sbPlayer.getSBClipboard().get();
                 var regionPaste = new CuboidRegionPaste(region, sbClipboard).paste(pasteonair, overwrite);

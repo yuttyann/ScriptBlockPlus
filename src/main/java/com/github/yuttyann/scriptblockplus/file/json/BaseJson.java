@@ -56,7 +56,7 @@ public abstract class BaseJson<E extends BaseElement> {
     private static final String INDENT = "  ";
 
     @Exclude
-    private final JsonTag jsonTag;
+    private final JsonTag jsonTag = getClass().getAnnotation(JsonTag.class);
 
     @Exclude
     private File file;
@@ -77,18 +77,12 @@ public abstract class BaseJson<E extends BaseElement> {
     protected List<E> list = Collections.emptyList();
     
     static {
+        GSON_BUILDER.setPrettyPrinting();
         GSON_BUILDER.setExclusionStrategies(new FieldExclusion());
         GSON_BUILDER.registerTypeAdapter(BlockCoords.class, new BlockCoordsSerializer());
         GSON_BUILDER.registerTypeAdapter(BlockCoords.class, new BlockCoordsDeserializer());
         GSON_BUILDER.registerTypeAdapter(UnmodifiableBlockCoords.class, new BlockCoordsSerializer());
         GSON_BUILDER.registerTypeAdapter(UnmodifiableBlockCoords.class, new BlockCoordsDeserializer());
-    }
-
-    {
-        this.jsonTag = getClass().getAnnotation(JsonTag.class);
-        if (jsonTag == null) {
-            throw new NullPointerException("Annotation not found @JsonTag()");
-        }
     }
 
     /**
@@ -98,6 +92,9 @@ public abstract class BaseJson<E extends BaseElement> {
      * @param json - JSONのファイル
      */
     protected BaseJson(@NotNull File json) {
+        if (jsonTag == null) {
+            throw new NullPointerException("Annotation not found @JsonTag()");
+        }
         loadList(json);
     }
 
@@ -106,7 +103,44 @@ public abstract class BaseJson<E extends BaseElement> {
      * @param name - ファイルの名前
      */
     protected BaseJson(@NotNull String name) {
+        if (jsonTag == null) {
+            throw new NullPointerException("Annotation not found @JsonTag()");
+        }
         loadList(name);
+    }
+
+    /**
+     * 要素の読み込みを行います。
+     * @param file - ファイル
+     */
+    private final void loadList(@NotNull File file) {
+        var path = file.getPath();
+        if (path.lastIndexOf(SBFile.setSeparator(jsonTag.path())) == -1) {
+            throw new IllegalArgumentException("File: " + file.getPath() + ", JsonTag: " + jsonTag.path());
+        }
+        this.name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.lastIndexOf('.'));
+        this.file = file;
+        try {
+            var json = loadFile();
+            this.list = json == null ? new ArrayList<>() : (List<E>) loadFile().list;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 要素の読み込みを行います。
+     * @param name - ファイルの名前
+     */
+    private final void loadList(@NotNull String name) {
+        this.name = name;
+        this.file = getJsonFile(jsonTag);
+        try {
+            var json = loadFile();
+            this.list = json == null ? new ArrayList<>() : (List<E>) loadFile().list;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -170,40 +204,6 @@ public abstract class BaseJson<E extends BaseElement> {
      */
     public final void reload() {
         StreamUtils.ifAction(name != null, () -> loadList(name));
-    }
-
-    /**
-     * 要素の読み込みを行います。
-     * @param file - ファイル
-     */
-    private final void loadList(@NotNull File file) {
-        var path = file.getPath();
-        if (path.lastIndexOf(SBFile.setSeparator(jsonTag.path())) == -1) {
-            throw new IllegalArgumentException("File: " + file.getPath() + ", JsonTag: " + jsonTag.path());
-        }
-        this.name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.lastIndexOf('.'));
-        this.file = file;
-        try {
-            var json = loadFile();
-            this.list = json == null ? new ArrayList<>() : (List<E>) loadFile().list;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 要素の読み込みを行います。
-     * @param name - ファイル名
-     */
-    private final void loadList(@NotNull String name) {
-        this.name = name;
-        this.file = getJsonFile(jsonTag);
-        try {
-            var json = loadFile();
-            this.list = json == null ? new ArrayList<>() : (List<E>) loadFile().list;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

@@ -24,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus ReuseIterator クラス
+ * <p>
+ * 繰り返し検索を行えるようにするイテラトラ
  * @param <T> 値の型
  * @author yuttyann44581
  */
@@ -35,10 +37,14 @@ public class ReuseIterator<T> implements Iterator<T> {
     private int cursor;
     private boolean hasNext;
 
-    public ReuseIterator(@NotNull Collection<T> collection, @NotNull IntFunction<T[]> generator) {
-        this.array = collection.toArray(generator);
+    public ReuseIterator(@NotNull T[] array) {
+        this.array = array;
         this.length = array.length;
         hasNext();
+    }
+
+    public ReuseIterator(@NotNull Collection<T> collection, @NotNull IntFunction<T[]> generator) {
+        this(collection.toArray(generator));
     }
 
     public void reset() {

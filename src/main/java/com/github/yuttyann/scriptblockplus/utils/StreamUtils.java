@@ -32,6 +32,18 @@ import java.util.function.Predicate;
  */
 public final class StreamUtils {
 
+    /**
+     * ScriptBlockPlus ThrowableConsumer インターフェイス
+     * <p>
+     * {@link Consumer}で例外処理を出来るようにしたインターフェイスです。
+     * @author yuttyann44581
+     */
+    @FunctionalInterface
+    public interface ThrowableConsumer<T> {
+
+        void accept(T t) throws Exception;
+    }
+
     @NotNull
     public static <T, R> R[] toArray(@NotNull T[] array, @NotNull Function<T, R> mapper, @NotNull IntFunction<R[]> generator) {
         var newArray = generator.apply(array.length);

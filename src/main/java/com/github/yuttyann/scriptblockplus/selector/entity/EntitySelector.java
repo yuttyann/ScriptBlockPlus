@@ -57,7 +57,7 @@ public final class EntitySelector {
     @NotNull
     public static Entity[] getEntities(@NotNull CommandSender sender, @Nullable Location start, @NotNull String selector) {
         var result = new ArrayList<Entity>();
-        var location = copy(sender, start);
+        var location = setCenter(copy(sender, start));
         var argmentSplit = new ArgmentSplit(selector);
         var argmentValues = argmentSplit.getArgmentValues();
         switch (argmentSplit.getSelector()) {
@@ -150,6 +150,14 @@ public final class EntitySelector {
                 return EMPTY_ENTITY_ARRAY;
         }
         return result.size() > 0 ? result.toArray(Entity[]::new) : EMPTY_ENTITY_ARRAY;
+    }
+
+    @NotNull
+    private static Location setCenter(@NotNull Location location) {
+        location.setX(location.getBlockX() + 0.5D);
+        location.setY(location.getBlockY());
+        location.setZ(location.getBlockZ() + 0.5D);
+        return location;
     }
 
     @NotNull
@@ -445,13 +453,13 @@ public final class EntitySelector {
 
     private static boolean isScore(@NotNull Entity entity, @NotNull ArgmentValue argmentValue) {
         var array = StringUtils.split(argmentValue.getValue(), '*');
-        boolean isScore = argmentValue.getArgment() == Argment.SCORE;
+        var scoreArgment = argmentValue.getArgment() == Argment.SCORE;
         for (var objective : Bukkit.getScoreboardManager().getMainScoreboard().getObjectives()) {
             if (!objective.getName().equals(array[1])) {
                 continue;
             }
             int score = objective.getScore(entity instanceof Player ? entity.getName() : entity.getUniqueId().toString()).getScore();
-            if (argmentValue.isInverted() != (isScore ? score <= Integer.parseInt(array[0]) : score >= Integer.parseInt(array[0]))) {
+            if (argmentValue.isInverted() != (scoreArgment ? score <= Integer.parseInt(array[0]) : score >= Integer.parseInt(array[0]))) {
                 return true;
             }
         }

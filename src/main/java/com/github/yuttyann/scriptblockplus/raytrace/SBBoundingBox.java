@@ -69,7 +69,7 @@ public class SBBoundingBox {
     }
 
     public void setBlock(@NotNull Block block, final boolean square) {
-        if (square || block.getType().name().endsWith("AIR")) {
+        if (square || Utils.isAIR(block.getType())) {
             setSquare(block);
         } else {
             if (Utils.isCBXXXorLater("1.13.2")) {

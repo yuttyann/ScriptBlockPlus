@@ -218,6 +218,6 @@ public final class NMSHelper {
 
     @NotNull
     public static Object toVec3D(@NotNull Vector vector) throws ReflectiveOperationException {
-        return NMS.newInstance("Vec3D", vector.getX(), vector.getY(), vector.getZ());
+        return NMS.newInstance("Vec3D", vector.getBlockX() + 0.5D, (double) vector.getBlockY(), vector.getBlockZ() + 0.5D);
     }
 }

@@ -23,7 +23,6 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.block.Block;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,24 +33,33 @@ import org.jetbrains.annotations.Nullable;
 public final class GlowEntity {
         
     private final int id;
+    private final int x, y, z;
+    
     private final UUID uuid;
-    private final Vector vector;
     private final SBPlayer sbPlayer;
     private final TeamColor teamColor;
 
-    private boolean[] flags = ArrayUtils.EMPTY_BOOLEAN_ARRAY;
-
     private boolean dead;
+    private boolean[] flag = ArrayUtils.EMPTY_BOOLEAN_ARRAY;
 
-    GlowEntity(int id, @NotNull UUID uuid, @NotNull Vector vector, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, final int flagSize) {
+    private GlowEntity(final int id, @NotNull UUID uuid, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) {
         this.id = id;
+        this.x = blockCoords.getX();
+        this.y = blockCoords.getY();
+        this.z = blockCoords.getZ();
         this.uuid = uuid;
-        this.vector = vector;
         this.sbPlayer = sbPlayer;
         this.teamColor = teamColor;
         if (flagSize > 0) {
-            this.flags = new boolean[flagSize];
+            this.flag = new boolean[flagSize];
         }
+    }
+
+    @NotNull
+    static GlowEntity create(@NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) {
+        var glowEntity = new GlowEntity(EntityCount.next(), UUID.randomUUID(), sbPlayer, teamColor, blockCoords, flagSize);
+        teamColor.getTeam().addEntry(glowEntity.uuid.toString());
+        return glowEntity;
     }
 
     public int getId() {
@@ -59,15 +67,15 @@ public final class GlowEntity {
     }
 
     public int getX() {
-        return vector.getBlockX();
+        return x;
     }
 
     public int getY() {
-        return vector.getBlockY();
+        return y;
     }
 
     public int getZ() {
-        return vector.getBlockZ();
+        return z;
     }
 
     @NotNull
@@ -89,8 +97,8 @@ public final class GlowEntity {
         return teamColor.getTeam().removeEntry(uuid.toString());
     }
 
-    public boolean[] getFlags() {
-        return flags;
+    public boolean[] getFlag() {
+        return flag;
     }
 
     void setDead(boolean dead) {
@@ -101,12 +109,12 @@ public final class GlowEntity {
         return dead;
     }
 
-    public boolean equals(@NotNull Block block) {
+    public boolean compare(@NotNull Block block) {
         return getX() == block.getX() && getY() == block.getY() && getZ() == block.getZ();
     }
 
-    public boolean equals(@NotNull BlockCoords blockCoords) {
-        return getX() == blockCoords.getX() && getY() == blockCoords.getY() && getZ() == blockCoords.getZ();
+    public boolean compare(@NotNull BlockCoords blockCoords) {
+        return blockCoords.compare(getX(), getY(), getZ());
     }
 
     @Override
@@ -114,21 +122,11 @@ public final class GlowEntity {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GlowEntity)) {
-            return false;
-        }
-        var glow = (GlowEntity) obj;
-        return glow.id == id && glow.uuid.equals(uuid) && glow.vector.equals(vector) && glow.sbPlayer.equals(sbPlayer);
+        return obj instanceof GlowEntity ? ((GlowEntity) obj).id == id : false;
     }
-    
+
     @Override
     public int hashCode() {
-        int hash = 1;
-        int prime = 16;
-        hash = prime * hash + id;
-        hash = prime * hash + uuid.hashCode();
-        hash = prime * hash + vector.hashCode();
-        hash = prime * hash + sbPlayer.getUniqueId().hashCode();
-        return hash;
+        return id;
     }
 }

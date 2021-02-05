@@ -30,13 +30,11 @@ import com.github.yuttyann.scriptblockplus.enums.TeamColor;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ArrayListMultimap;
 
 import org.bukkit.block.Block;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus GlowEntityPacket クラス
@@ -47,93 +45,138 @@ public final class GlowEntityPacket {
     private static final int TYPE_ID = PackageType.HAS_NMS ? NMSHelper.getMagmaCubeId() : -1;
     private static final int SIZE_ID = PackageType.HAS_NMS ? NMSHelper.getSlimeSizeId() : -1;
 
-    private final Multimap<UUID, GlowEntity> GLOW_ENTITIES = HashMultimap.create();
+    private final ArrayListMultimap<UUID, GlowEntity> GLOW_ENTITIES = ArrayListMultimap.create();
 
     @NotNull
-    public Multimap<UUID, GlowEntity> getEntities() {
+    public ArrayListMultimap<UUID, GlowEntity> getEntities() {
         return GLOW_ENTITIES;
     }
 
-    @NotNull
-    public TeamColor getTeamColor(@NotNull Block block) {
-        return block.getType().name().endsWith("AIR") ? TeamColor.BLUE : TeamColor.GREEN;
+    public boolean has(@NotNull SBPlayer sbPlayer, @NotNull Block block) {
+        return getGlowEntity(sbPlayer, block) != null;
     }
 
-    @NotNull
-    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block, @NotNull TeamColor teamColor) {
+    public boolean has(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords) {
+        return getGlowEntity(sbPlayer, blockCoords) != null;
+    }
+
+    @Nullable
+    public GlowEntity getGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block) {
+        if (GLOW_ENTITIES.isEmpty()) {
+            return null;
+        }
+        var glowEntities = GLOW_ENTITIES.get(sbPlayer.getUniqueId());
+        if (glowEntities.isEmpty()) {
+            return null;
+        }
+        for (int i = 0, l = glowEntities.size(); i < l; i++) {
+            var glowEntity = glowEntities.get(i);
+            if (glowEntity.compare(block)) {
+                return glowEntity;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public GlowEntity getGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords) {
+        if (GLOW_ENTITIES.isEmpty()) {
+            return null;
+        }
+        var glowEntities = GLOW_ENTITIES.get(sbPlayer.getUniqueId());
+        if (glowEntities.isEmpty()) {
+            return null;
+        }
+        for (int i = 0, l = glowEntities.size(); i < l; i++) {
+            var glowEntity = glowEntities.get(i);
+            if (glowEntity.compare(blockCoords)) {
+                return glowEntity;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block, @NotNull TeamColor teamColor) throws InvocationTargetException {
         return spawnGlowEntity(sbPlayer, BlockCoords.of(block), teamColor, 0);
     }
     
-    @NotNull
-    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block, @NotNull TeamColor teamColor, final int flagSize) {
+    @Nullable
+    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block, @NotNull TeamColor teamColor, final int flagSize) throws InvocationTargetException {
         return spawnGlowEntity(sbPlayer, BlockCoords.of(block), teamColor, flagSize);
     }
 
-    @NotNull
-    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull TeamColor teamColor) {
+    @Nullable
+    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull TeamColor teamColor) throws InvocationTargetException {
         return spawnGlowEntity(sbPlayer, blockCoords, teamColor, 0);
     }
 
-    @NotNull
-    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull TeamColor teamColor, final int flagSize) {
-        // エンティティのID
-        int id = EntityCount.next();
-        var uuid = UUID.randomUUID();
-
-        // チームを取得、エンティティの登録
-        teamColor.getTeam().addEntry(uuid.toString());
-
-        // パケットを送信
-        var vector = blockCoords.toVector();
-        try {
-            var protocolManager = ProtocolLibrary.getProtocolManager();
-            protocolManager.sendServerPacket(sbPlayer.getPlayer(), createEntity(id, uuid, vector));
-            protocolManager.sendServerPacket(sbPlayer.getPlayer(), createMetadata(id));
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+    @Nullable
+    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull TeamColor teamColor, final int flagSize) throws InvocationTargetException {
+        if (has(sbPlayer, blockCoords)) {
+            return null;
         }
-
-        // エンティティのデータをまとめたクラスを返す
-        var glowEntity = new GlowEntity(id, uuid, vector, sbPlayer, teamColor, flagSize);
-        GLOW_ENTITIES.get(sbPlayer.getUniqueId()).add(glowEntity);
+        var glowEntity = GlowEntity.create(sbPlayer, teamColor, blockCoords, flagSize);
+        GLOW_ENTITIES.put(sbPlayer.getUniqueId(), glowEntity);
+        sendPacket(sbPlayer, createEntity(glowEntity.getId(), glowEntity.getUniqueId(), blockCoords));
+        sendPacket(sbPlayer, createMetadata(glowEntity.getId()));
         return glowEntity;
     }
 
-    public void destroyGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block) {
-        destroyGlowEntity(sbPlayer, BlockCoords.of(block));
-    }
-
-    public void destroyGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords) {
-        if (!GLOW_ENTITIES.isEmpty()) {
-            var glowEntities = GLOW_ENTITIES.get(sbPlayer.getUniqueId());
-            StreamUtils.filterFirst(glowEntities, g -> g.equals(blockCoords)).ifPresent(this::destroyGlowEntity);
+    public boolean destroyGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block) throws InvocationTargetException {
+        var glowEntity = getGlowEntity(sbPlayer, block);
+        if (glowEntity != null) {
+            return destroyGlowEntity(glowEntity);
         }
+        return false;
     }
 
-    public void destroyGlowEntity(@NotNull GlowEntity glowEntity) {
+    public boolean destroyGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords) throws InvocationTargetException {
+        var glowEntity = getGlowEntity(sbPlayer, blockCoords);
+        if (glowEntity != null) {
+            return destroyGlowEntity(glowEntity);
+        }
+        return false;
+    }
+
+    public boolean destroyGlowEntity(@NotNull GlowEntity glowEntity) throws InvocationTargetException {
         if (glowEntity.isDead()) {
-            return;
+            return false;
         }
         var uuid = glowEntity.getSBPlayer().getUniqueId();
-        try {
-            var player = glowEntity.getSBPlayer().getPlayer();
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, createDestroy(new int[] { glowEntity.getId() }));
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } finally {
-            glowEntity.setDead(true);
-            glowEntity.removeEntry();
-            GLOW_ENTITIES.remove(uuid, glowEntity);
+        sendPacket(glowEntity.getSBPlayer(), createDestroy(new int[] { glowEntity.getId() }));
+        glowEntity.setDead(true);
+        glowEntity.removeEntry();
+        GLOW_ENTITIES.remove(uuid, glowEntity);
+        return true;
+    }
+
+    public boolean broadcastDestroyGlowEntity(@NotNull BlockCoords blockCoords) {
+        if (GLOW_ENTITIES.isEmpty()) {
+            return false;
         }
+        var id = new int[1];
+        var removed = false;
+        var iterator = GLOW_ENTITIES.values().iterator();
+        while (iterator.hasNext()) {
+            var glowEntity = iterator.next();
+            if (glowEntity.compare(blockCoords)) {
+                id[0] = glowEntity.getId();
+                sendPacket(createDestroy(id));
+                glowEntity.setDead(true);
+                glowEntity.removeEntry();
+                iterator.remove();
+                removed = true;
+            }
+        }
+        return removed;
     }
 
     public void destroyAll(@NotNull SBPlayer sbPlayer) {
         var glowEntities = GLOW_ENTITIES.get(sbPlayer.getUniqueId());
         if (!glowEntities.isEmpty()) {
             try {
-                var ids = createIds(glowEntities);
-                var player = sbPlayer.getPlayer();
-                ProtocolLibrary.getProtocolManager().sendServerPacket(player, createDestroy(ids));
+                sendPacket(sbPlayer, createDestroy(createIds(glowEntities)));
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             } finally {
@@ -147,8 +190,7 @@ public final class GlowEntityPacket {
         var glowEntities = GLOW_ENTITIES.values();
         if (!glowEntities.isEmpty()) {
             try {
-                var ids = createIds(glowEntities);
-                ProtocolLibrary.getProtocolManager().broadcastServerPacket(createDestroy(ids));
+                sendPacket(createDestroy(createIds(glowEntities)));
             } finally {
                 glowEntities.forEach(g -> { g.setDead(true); g.removeEntry(); });
                 GLOW_ENTITIES.clear();
@@ -156,19 +198,21 @@ public final class GlowEntityPacket {
         }
     }
 
-    public boolean has(@NotNull SBPlayer sbPlayer, @NotNull Block block) {
-        return !GLOW_ENTITIES.isEmpty() && StreamUtils.anyMatch(GLOW_ENTITIES.get(sbPlayer.getUniqueId()), g -> g.equals(block));
+    private void sendPacket(@NotNull PacketContainer packet) {
+        ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
     }
 
-    public boolean has(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords) {
-        return !GLOW_ENTITIES.isEmpty() && StreamUtils.anyMatch(GLOW_ENTITIES.get(sbPlayer.getUniqueId()), g -> g.equals(blockCoords));
+    private void sendPacket(@NotNull SBPlayer sbPlayer, @NotNull PacketContainer packet) throws InvocationTargetException {
+        if (sbPlayer.isOnline()) {
+            ProtocolLibrary.getProtocolManager().sendServerPacket(sbPlayer.getPlayer(), packet);
+        }
     }
 
     @NotNull
-    private PacketContainer createEntity(final int id, @NotNull UUID uuid, @NotNull Vector vector) {
+    private PacketContainer createEntity(final int id, @NotNull UUID uuid, @NotNull BlockCoords blockCoords) {
         var packetType = PacketType.Play.Server.SPAWN_ENTITY_LIVING;
         var spawnEntity = ProtocolLibrary.getProtocolManager().createPacket(packetType);
-        double x = vector.getX() + 0.5D, y = vector.getY(), z = vector.getZ() + 0.5D;
+        double x = blockCoords.getX() + 0.5D, y = blockCoords.getY(), z = blockCoords.getZ() + 0.5D;
         spawnEntity.getUUIDs().write(0, uuid);
         spawnEntity.getIntegers().write(0, id).write(1, TYPE_ID);
         spawnEntity.getDoubles().write(0, x).write(1, y).write(2, z);

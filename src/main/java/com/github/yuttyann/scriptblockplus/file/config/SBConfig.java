@@ -100,8 +100,8 @@ public final class SBConfig {
             var b = new StringBuilder(l.size());
             for (int i = 0; i < l.size(); i++) {
                 var info = removeStart(l.get(i), "$");
-                boolean isTree = l.get(i).startsWith("$");
-                b.append(isTree ? "  - " : "・").append(info).append(i == (l.size() - 1) ? "" : "|~");
+                var tree = l.get(i).startsWith("$");
+                b.append(tree ? "  - " : "・").append(info).append(i == (l.size() - 1) ? "" : "|~");
             }
             s = replace(s, "%details%", b.toString());
         }

@@ -104,7 +104,7 @@ public abstract class BaseCommand extends CommandUsage implements CommandExecuto
         if (isPlayer && !isPlayer(sender)) {
             return false;
         }
-        boolean has = permission.has(sender);
+        var has = permission.has(sender);
         if (!has) {
             isIgnoreUsage = true;
             SBConfig.NOT_PERMISSION.send(sender);

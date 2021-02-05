@@ -18,14 +18,15 @@ package com.github.yuttyann.scriptblockplus.region;
 import java.util.HashSet;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.github.yuttyann.scriptblockplus.utils.ReuseIterator;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,25 +64,25 @@ public class CuboidRegionPaste {
         var iterator = new CuboidRegionIterator(region);
         while (iterator.hasNext()) {
             var blockCoords = iterator.next();
-            if (!pasteonair && blockCoords.getBlock().getType() == Material.AIR) {
+            if (!pasteonair && Utils.isAIR(blockCoords.getBlock().getType())) {
                 continue;
             }
-            if (lightPaste(blockCoords, overwrite)) {
-                blocks.add(blockCoords);
+            var scriptJson = sbClipboard.getBlockScriptJson();
+            if (!overwrite && scriptJson.has() && scriptJson.load().has(blockCoords)) {
+                continue;
             }
+            blocks.add(blockCoords = BlockCoords.copy(blockCoords));
+            lightPaste(blockCoords, scriptJson);
         }
-        PlayerTempJson.removeAll(scriptKey, blocks);
-        PlayerCountJson.removeAll(scriptKey, blocks);
+        var reuseIterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
+        PlayerTempJson.removeAll(scriptKey, reuseIterator);
+        PlayerCountJson.removeAll(scriptKey, reuseIterator);
         StreamUtils.ifAction(blocks.size() > 0, sbClipboard::save);
         this.iterator = iterator;
         return this;
     }
 
-    private boolean lightPaste(@NotNull BlockCoords blockCoords, boolean overwrite) {
-        var scriptJson = sbClipboard.getBlockScriptJson();
-        if (scriptJson.has() && scriptJson.load().has(blockCoords) && !overwrite) {
-            return false;
-        }
+    private void lightPaste(@NotNull BlockCoords blockCoords, @NotNull BlockScriptJson scriptJson) {
         var scriptParam = scriptJson.load().get(blockCoords);
         scriptParam.setAuthor(sbClipboard.getAuthor());
         scriptParam.getAuthor().add(sbClipboard.getSBPlayer().getUniqueId());
@@ -89,6 +90,5 @@ public class CuboidRegionPaste {
         scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptParam.setSelector(sbClipboard.getSelector());
         scriptParam.setAmount(sbClipboard.getAmount());
-        return true;
     }
 }

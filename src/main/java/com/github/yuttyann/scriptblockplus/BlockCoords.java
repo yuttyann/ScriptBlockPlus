@@ -373,7 +373,7 @@ public class BlockCoords {
 
     @Override
     public int hashCode() {
-        return (x ^ (z << 8)) ^ (y << 16) ^ world.hashCode();
+        return (x ^ (z << 12)) ^ (y << 24) ^ world.hashCode();
     }
 
     @Override

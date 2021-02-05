@@ -66,8 +66,8 @@ public final class StringUtils {
         }
         var list = new ArrayList<String>();
         var chars = source.toCharArray();
+        var match = false;
         int start = 0;
-        boolean match = false;
         for (int i = 0; i < chars.length; i++) {
             if (chars[i] == delimiter) {
                 if (!match) {

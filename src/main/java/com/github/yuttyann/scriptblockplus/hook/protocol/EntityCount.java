@@ -23,6 +23,8 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 /**
  * ScriptBlockPlus EntityCount クラス
+ * <p>
+ * エンティティのIDを生成します。
  * @author yuttyann44581
  */
 public final class EntityCount {
@@ -45,9 +47,9 @@ public final class EntityCount {
             if (Utils.isCBXXXorLater("1.14")) {
                 return ((AtomicInteger) ENTITY_COUNT.get(null)).incrementAndGet();
             }
-            int entityId = ENTITY_COUNT.getInt(null);
-            ENTITY_COUNT.set(null, ++entityId);
-            return entityId;
+            int nextId = ENTITY_COUNT.getInt(null) + 1;
+            ENTITY_COUNT.set(null, nextId);
+            return nextId;
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }

@@ -47,11 +47,12 @@ public final class Updater {
     private final String pluginName;
     private final String pluginVersion;
 
-    private String latestVersion;
+    private String latest;
     private String downloadURL;
     private String changeLogURL;
+
+    private boolean update;
     private List<String> details;
-    private boolean isUpperVersion;
 
     public Updater(@NotNull Plugin plugin) {
         this.plugin = plugin;
@@ -66,67 +67,62 @@ public final class Updater {
 
     @NotNull
     public String getJarName() {
-        return pluginName + " v" + latestVersion + ".jar";
-    }
-
-    public void init() {
-        latestVersion = null;
-        downloadURL = null;
-        changeLogURL = null;
-        details = null;
-        isUpperVersion = false;
+        return pluginName + " v" + latest + ".jar";
     }
 
     public void load() throws Exception {
         if(!SBConfig.UPDATE_CHECKER.getValue()){
-            isUpperVersion = false;
+            update = false;
             return;
         }
+        update = false;
+        details = null;
+        latest = downloadURL = changeLogURL = null;
         var rootChildren = getDocument(pluginName).getDocumentElement().getChildNodes();
         for (int i = 0; i < rootChildren.getLength(); i++) {
-            Node uNode = rootChildren.item(i);
-            if (uNode.getNodeType() != Node.ELEMENT_NODE) {
+            var updateNode = rootChildren.item(i);
+            if (updateNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
-            if (uNode.getNodeName().equals("update")) {
-                latestVersion = ((Element) uNode).getAttribute("version");
+            if (updateNode.getNodeName().equals("update")) {
+                this.latest = ((Element) updateNode).getAttribute("version");
             }
-            var updateChildren = uNode.getChildNodes();
+            var updateChildren = updateNode.getChildNodes();
             for (int j = 0; j < updateChildren.getLength(); j++) {
-                Node cNode = updateChildren.item(j);
-                if (cNode.getNodeType() != Node.ELEMENT_NODE) {
+                var node = updateChildren.item(j);
+                if (node.getNodeType() != Node.ELEMENT_NODE) {
                     continue;
                 }
-                switch (cNode.getNodeName()) {
+                switch (node.getNodeName()) {
                 case "download":
-                    downloadURL = ((Element) cNode).getAttribute("url");
+                    this.downloadURL = ((Element) node).getAttribute("url");
                     break;
                 case "changelog":
-                    changeLogURL = ((Element) cNode).getAttribute("url");
+                    this.changeLogURL = ((Element) node).getAttribute("url");
                     break;
                 case "details":
-                    var detailsChildren = cNode.getChildNodes();
-                    details = new ArrayList<>(detailsChildren.getLength());
+                    var detailsChildren = node.getChildNodes();
+                    this.details = new ArrayList<>(detailsChildren.getLength());
                     for (int k = 0; k < detailsChildren.getLength(); k++) {
-                        Node dNode = detailsChildren.item(k);
-                        if (dNode.getNodeType() == Node.ELEMENT_NODE) {
-                            details.add(((Element) dNode).getAttribute("info"));
+                        Node detailsNode = detailsChildren.item(k);
+                        if (detailsNode.getNodeType() == Node.ELEMENT_NODE) {
+                            details.add(((Element) detailsNode).getAttribute("info"));
                         }
                     }
                 }
             }
         }
-        isUpperVersion = Utils.getVersionInt(latestVersion) > Utils.getVersionInt(pluginVersion);
+        this.update = Utils.getVersionInt(latest) > Utils.getVersionInt(pluginVersion);
     }
 
     public boolean run(@NotNull CommandSender sender) {
-        if (!SBConfig.UPDATE_CHECKER.getValue() || !isUpperVersion) {
+        if (!SBConfig.UPDATE_CHECKER.getValue() || !update) {
             return false;
         }
         var data = plugin.getDataFolder();
         var logFile = new SBFile(data, "update/ChangeLog.txt");
         boolean sameLogs = !logFile.exists() || !logEquals(changeLogURL, logFile), failure = false;
-        SBConfig.UPDATE_CHECK.replace(pluginName, latestVersion, details).send(sender);
+        SBConfig.UPDATE_CHECK.replace(pluginName, latest, details).send(sender);
         if (SBConfig.AUTO_DOWNLOAD.getValue()) {
             var jarFile = new SBFile(data, "update/jar/" + getJarName());
             try {

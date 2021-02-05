@@ -68,7 +68,7 @@ public class BlockListener implements Listener {
             var index = new int[] { 0 };
             var filterSplit = new FilterSplit(selector);
             var filterValues = filterSplit.getFilterValues();
-            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), blockCoords.toLocation(), filterSplit.getSelector(), true)) {
+            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), blockCoords.toLocation(), filterSplit.getSelector())) {
                 if (!(target instanceof Player)) {
                     continue;
                 }

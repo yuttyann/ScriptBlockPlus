@@ -45,7 +45,7 @@ public final class Placeholder extends HookPlugin {
 
     @NotNull
     @SuppressWarnings("deprecation")
-    public String set(@NotNull Player player, @NotNull String source) {
+    public String setPlaceholder(@NotNull Player player, @NotNull String source) {
         var version = PlaceholderAPIPlugin.getInstance().getDescription().getVersion();
         if (Utils.isUpperVersion("2.8.8", version)) {
             source = PlaceholderAPI.setPlaceholders((OfflinePlayer) player, source);
@@ -59,7 +59,7 @@ public final class Placeholder extends HookPlugin {
     public String replace(@NotNull Player player, @NotNull String source) {
         source = StringUtils.replace(source, "<world>", player.getWorld().getName());
         source = StringUtils.replace(source, "<player>", player.getName());
-        return has() ? set(player, source) : source;
+        return has() ? setPlaceholder(player, source) : source;
     }
 
     @NotNull

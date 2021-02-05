@@ -28,8 +28,6 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -71,27 +69,26 @@ public class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount
     }
 
     public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
-        removeAll(scriptKey, Collections.singleton(blockCoords));
+        removeAll(scriptKey, new ReuseIterator<>(new BlockCoords[] { blockCoords }));
     }
 
-    public static synchronized void removeAll(@NotNull ScriptKey scriptKey, @NotNull Set<BlockCoords> blocks) {
-        var iterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
+    public static synchronized void removeAll(@NotNull ScriptKey scriptKey, @NotNull ReuseIterator<BlockCoords> reuseIterator) {
         for (var json : getFiles(PlayerCountJson.class)) {
             var countJson = new PlayerCountJson(json);
-            boolean modifiable = false;
-            while (iterator.hasNext()) {
-                var blockCoords = iterator.next();
+            var removed = false;
+            reuseIterator.reset();
+            while (reuseIterator.hasNext()) {
+                var blockCoords = reuseIterator.next();
                 var playerCount = countJson.fastLoad(scriptKey, blockCoords);
                 if (playerCount == null) {
                     continue;
                 }
                 if (playerCount.getAmount() > 0) {
-                    modifiable = true;
+                    removed = true;
                     countJson.remove(scriptKey, blockCoords);
                 }
             }
-            iterator.reset();
-            if (modifiable) {
+            if (removed) {
                 countJson.saveFile();
             }
         }

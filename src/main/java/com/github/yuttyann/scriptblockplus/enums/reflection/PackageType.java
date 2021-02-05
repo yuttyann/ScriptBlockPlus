@@ -293,7 +293,7 @@ public enum PackageType {
         }
         int baseHash = hashType.toString().hashCode() + toString().hashCode() + className.hashCode();
         if (objects == null) {
-            return Integer.valueOf(name == null ? 11 * baseHash : 21 * (baseHash + name.hashCode()));
+            return Integer.valueOf(name == null ? 11 * baseHash : 23 * (baseHash + name.hashCode()));
         }
         int hash = 1;
         int prime = 31;
