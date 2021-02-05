@@ -19,6 +19,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.TriggerEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
@@ -27,7 +28,6 @@ import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -191,44 +191,56 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         if (trigger == null) {
             return;
         }
-        var block = trigger.getBlock();
-        var location = block.getLocation();
-        if (!BlockScriptJson.has(location, scriptKey)) {
+        var blockCoords = trigger.getBlockCoords();
+        if (!BlockScriptJson.has(scriptKey, blockCoords)) {
             return;
         }
         var player = trigger.getPlayer();
+        trigger.block = blockCoords.getBlock();
         if (!trigger.call(Progress.PERM) || !Permission.has(player, scriptKey, false)) {
             SBConfig.NOT_PERMISSION.send(player);
             return;
         }
-        trigger.triggerEvent = new TriggerEvent(player, block, scriptKey);
+        trigger.triggerEvent = new TriggerEvent(player, trigger.getBlock(), scriptKey);
         if (!trigger.call(Progress.EVENT) || trigger.isCancelled()) {
             return;
         }
-        trigger.scriptRead = new ScriptRead(player, location, scriptKey);
-        StreamUtils.ifAction(trigger.call(Progress.READ), () -> trigger.scriptRead.read(0));
+        trigger.scriptRead = new ScriptRead(player, blockCoords, scriptKey);
+        if (trigger.call(Progress.READ)) {
+            trigger.scriptRead.read(0);
+        }
     }
 
     protected class Trigger {
 
-        private final Player player;
-        private final Block block;
         private final E event;
+        private final Player player;
+        private final BlockCoords blockCoords;
 
+        private Block block;
         private Progress progress;
         private ScriptRead scriptRead;
         private TriggerEvent triggerEvent;
 
         /**
          * コンストラクタ
-         * @param player - プレイヤー
-         * @param block - ブロック
          * @param event - イベント
+         * @param player - プレイヤー
+         * @param blockCoords - ブロック
          */
-        public Trigger(@NotNull Player player, @NotNull Block block, @NotNull E event) {
-            this.player = player;
-            this.block = block;
+        public Trigger(@NotNull E event, @NotNull Player player, @NotNull BlockCoords blockCoords) {
             this.event = event;
+            this.player = player;
+            this.blockCoords = blockCoords;
+        }
+
+        /**
+         * {@link Bukkit}のイベントを取得します。
+         * @return {@link Event} - イベント
+         */
+        @NotNull
+        public E getEvent() {
+            return event;
         }
 
         /**
@@ -242,7 +254,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
         /**
          * ブロックを取得します。
-         * @return {@link Block} - ブロック
+         * @return {@link Block} - ブロックを取得します。
          */
         @NotNull
         public Block getBlock() {
@@ -250,12 +262,12 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         }
 
         /**
-         * {@link Bukkit}のイベントを取得します。
-         * @return {@link Event} - イベント
+         * ブロックの座標を取得します。
+         * @return {@link Block} - ブロックの座標を取得します。
          */
         @NotNull
-        public E getEvent() {
-            return event;
+        public BlockCoords getBlockCoords() {
+            return blockCoords;
         }
 
         /**

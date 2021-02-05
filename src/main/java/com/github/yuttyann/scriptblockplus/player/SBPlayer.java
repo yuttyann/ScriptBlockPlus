@@ -67,7 +67,7 @@ public interface SBPlayer extends CommandSender {
 
     /**
      * プレイヤーがオンラインの場合にtrueを返します。
-     * @return {@link Boolean} - プレイヤーがオンラインの場合はtrue
+     * @return {@link Boolean} - プレイヤーがオンラインの場合は{@code true}
      */
     boolean isOnline();
 
@@ -163,21 +163,21 @@ public interface SBPlayer extends CommandSender {
 
     /**
      * {@link ScriptEdit}を取得します。
-     * @return {@link Optional}&lt;{@link ScriptEdit}&gt; - {@link ScriptEdit}
+     * @return {@link Optional}&lt;{@link ScriptEdit}&gt;
      */
     @NotNull
     Optional<ScriptEdit> getScriptEdit();
 
     /**
      * {@link SBClipboard}を取得します。
-     * @return {@link Optional}&lt;{@link SBClipboard}&gt; - {@link SBClipboard}
+     * @return {@link Optional}&lt;{@link SBClipboard}&gt;
      */
     @NotNull
     Optional<SBClipboard> getSBClipboard();
 
     /**
      * {@link BlockCoords}を取得します。
-     * @return {@link Optional}&lt;{@link BlockCoords}&gt; - {@link BlockCoords}
+     * @return {@link Optional}&lt;{@link BlockCoords}&gt;
      */
     @NotNull
     Optional<BlockCoords> getOldBlockCoords();

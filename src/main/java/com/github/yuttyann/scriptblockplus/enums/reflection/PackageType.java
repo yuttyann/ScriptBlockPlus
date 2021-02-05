@@ -287,13 +287,13 @@ public enum PackageType {
     }
 
     @NotNull
-    private int createHash(@NotNull HashType hashType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
+    private Integer createHash(@NotNull HashType hashType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
         if (!HAS_NMS || StringUtils.isEmpty(className)) {
-            return 0;
+            throw new IllegalArgumentException();
         }
         int baseHash = hashType.toString().hashCode() + toString().hashCode() + className.hashCode();
         if (objects == null) {
-            return name == null ? 11 * baseHash : 21 * (baseHash + name.hashCode());
+            return Integer.valueOf(name == null ? 11 * baseHash : 21 * (baseHash + name.hashCode()));
         }
         int hash = 1;
         int prime = 31;
@@ -303,6 +303,6 @@ public enum PackageType {
         for (var object : objects) {
             hash += Objects.hashCode(object);
         }
-        return hash;
+        return Integer.valueOf(hash);
     }
 }

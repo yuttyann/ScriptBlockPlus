@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.listener.trigger;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
@@ -42,6 +43,6 @@ public class BreakTrigger extends TriggerListener<BlockBreakEvent> {
         if (ItemAction.has(player, player.getInventory().getItemInMainHand(), true)) {
             event.setCancelled(true);
         }
-        return event.isCancelled() ? null : new Trigger(player, event.getBlock(), event);
+        return event.isCancelled() ? null : new Trigger(event, player, BlockCoords.of(event.getBlock()));
     }
 }

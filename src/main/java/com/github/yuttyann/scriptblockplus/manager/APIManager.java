@@ -15,9 +15,11 @@
  */
 package com.github.yuttyann.scriptblockplus.manager;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -26,7 +28,6 @@ import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
-import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Location;
@@ -47,7 +48,7 @@ public final class APIManager implements ScriptBlockAPI {
 
     @Override
     public boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptKey scriptKey, int index) {
-        return new ScriptRead(player, location, scriptKey).read(index);
+        return new ScriptRead(player, BlockCoords.of(location), scriptKey).read(index);
     }
 
     @Override
@@ -94,43 +95,43 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-            sbOperation.create(player, location, script);
+            sbOperation.create(player, BlockCoords.of(location), script);
         }
 
         @Override
         public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-            sbOperation.add(player, location, script);
+            sbOperation.add(player, BlockCoords.of(location), script);
         }
 
         @Override
         public void remove(@NotNull Player player, @NotNull Location location) {
-            sbOperation.remove(player, location);
+            sbOperation.remove(player, BlockCoords.of(location));
         }
 
         @Override
         public void view(@NotNull Player player, @NotNull Location location) {
-            sbOperation.view(player, location);
+            sbOperation.view(player, BlockCoords.of(location));
         }
     }
 
     @Override
     @NotNull
-    public SBFile getSBFile(@NotNull Location location, @NotNull ScriptKey scriptKey) {
-        return new SFile(location, scriptKey);
+    public SBFile getSBFile(@NotNull ScriptKey scriptKey, @NotNull Location location) {
+        return new SFile(scriptKey, location);
     }
 
     private static class SFile implements SBFile {
 
-        private final Location location;
         private final ScriptKey scriptKey;
         private final ScriptParam scriptParam;
+        private final BlockCoords blockCoords;
         private final BlockScriptJson scriptJson;
 
-        public SFile(@NotNull Location location, @NotNull ScriptKey scriptKey) {
-            this.location = location;
+        public SFile(@NotNull ScriptKey scriptKey, @NotNull Location location) {
             this.scriptKey = scriptKey;
-            this.scriptJson = new BlockScriptJson(scriptKey);
-            this.scriptParam = scriptJson.load().get(location);
+            this.scriptJson = BlockScriptJson.get(scriptKey);
+            this.blockCoords = BlockCoords.of(location);
+            this.scriptParam = scriptJson.load().get(blockCoords);
         }
 
         @Override
@@ -139,14 +140,13 @@ public final class APIManager implements ScriptBlockAPI {
         }
 
         @Override
-        public boolean has() {
-            return scriptJson.load().has(location);
+        public void reload() {
+            scriptJson.reload();
         }
 
         @Override
-        @Nullable
-        public Location getLocation() {
-            return location;
+        public boolean has() {
+            return scriptJson.load().has(blockCoords);
         }
 
         @Override
@@ -156,9 +156,9 @@ public final class APIManager implements ScriptBlockAPI {
         }
 
         @Override
-        @NotNull
-        public Set<UUID> getAuthor() {
-            return scriptParam.getAuthor();
+        @Nullable
+        public Location getLocation() {
+            return blockCoords.toLocation();
         }
 
         @Override
@@ -168,13 +168,24 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         @NotNull
-        public List<String> getScript() {
-            return scriptParam.getScript();
+        public Set<UUID> getAuthor() {
+            return scriptParam.getAuthor();
         }
 
         @Override
         public void setScript(@NotNull List<String> script) {
             scriptParam.setScript(script);
+        }
+
+        @Override
+        @NotNull
+        public List<String> getScript() {
+            return scriptParam.getScript();
+        }
+
+        @Override
+        public void setLastEdit() {
+            scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         }
 
         @Override
@@ -184,13 +195,14 @@ public final class APIManager implements ScriptBlockAPI {
         }
 
         @Override
-        public void setLastEdit() {
-            scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        public void setSelector(@Nullable String selector) {
+            scriptParam.setSelector(selector);
         }
 
-        @Override
-        public int getAmount() {
-            return scriptParam.getAmount();
+        @Override  
+        @Nullable
+        public String getSelector() {
+            return scriptParam.getSelector();
         }
 
         @Override
@@ -209,10 +221,15 @@ public final class APIManager implements ScriptBlockAPI {
         }
 
         @Override
+        public int getAmount() {
+            return scriptParam.getAmount();
+        }
+
+        @Override
         public void remove() {
-            TimerOption.removeAll(location, scriptKey);
-            PlayerCountJson.clear(location, scriptKey);
-            scriptJson.load().remove(location);
+            PlayerTempJson.removeAll(scriptKey, blockCoords);
+            PlayerCountJson.removeAll(scriptKey, blockCoords);
+            scriptJson.load().remove(blockCoords);
         }
     }
 }

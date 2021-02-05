@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.item;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.event.RunItemEvent;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -107,7 +108,7 @@ public abstract class ItemAction implements Cloneable {
     public static boolean callRun(@NotNull Player player, @Nullable ItemStack item, @Nullable Location location, @NotNull Action action) {
         var itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player)).findFirst();
         if (itemAction.isPresent()) {
-            var runItem = new RunItem(player, item, location, action);
+            var runItem = new RunItem(item, player, action, location == null ? null : BlockCoords.of(location));
             var runItemEvent = new RunItemEvent(runItem);
             Bukkit.getPluginManager().callEvent(runItemEvent);
             if (!runItemEvent.isCancelled()) {

@@ -13,29 +13,25 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.hook;
+package com.github.yuttyann.scriptblockplus.file.json;
 
-import org.bukkit.Bukkit;
+import java.util.Objects;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ScriptBlockPlus HookPlugin クラス
+ * ScriptBlockPlus BaseElement クラス
  * @author yuttyann44581
  */
-public abstract class HookPlugin {
+public abstract class BaseElement {
 
     /**
-     * プラグイン名を取得します。
-     * @return プラグイン名
+     * 引数同士を比較します。
+     * @param argment1 - 引数1
+     * @param argment2 - 引数2
+     * @return {@link boolean} - 引数が一致するのかどうか
      */
-    @NotNull
-    public abstract String getPluginName();
-
-    /**
-     * プラグインが有効なのか確認します。
-     * @return プラグインが有効な場合は{@code true}
-     */
-    public final boolean has() {
-        return Bukkit.getPluginManager().isPluginEnabled(getPluginName());
+    protected boolean isArgment(@NotNull Object argment1, @NotNull Object argment2) {
+        return Objects.equals(argment1, argment2);
     }
 }

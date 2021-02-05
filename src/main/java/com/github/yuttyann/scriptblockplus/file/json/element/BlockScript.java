@@ -16,34 +16,27 @@
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
-import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.Set;
-import java.util.Map.Entry;
 
 /**
  * ScriptBlockPlus BlockScript クラス
  * @author yuttyann44581
  */
-public class BlockScript {
+public class BlockScript extends BaseElement {
 
     @SerializedName(value = "scriptkey", alternate = { "scripttype" })
     private final ScriptKey scriptKey;
 
     @SerializedName("scripts")
-    private final HashMap<String, ScriptParam> scripts = new HashMap<>();
+    private final HashMap<BlockCoords, ScriptParam> scripts = new HashMap<>();
 
     public BlockScript(@NotNull ScriptKey scriptKey) {
         this.scriptKey = scriptKey;
-    }
-
-    @NotNull
-    public Set<Entry<String, ScriptParam>> getEntrySet() {
-        return scripts.entrySet();
     }
 
     @NotNull
@@ -51,9 +44,8 @@ public class BlockScript {
         return scriptKey;
     }
 
-    public boolean has(@NotNull Location location) {
-        var fullCoords = BlockCoords.getFullCoords(location);
-        var scriptParam = scripts.get(fullCoords);
+    public boolean has(@NotNull BlockCoords blockCoords) {
+        var scriptParam = scripts.get(blockCoords);
         if (scriptParam == null) {
             return false;
         }
@@ -61,21 +53,15 @@ public class BlockScript {
     }
 
     @NotNull
-    public ScriptParam get(@NotNull Location location) {
-        var fullCoords = BlockCoords.getFullCoords(location);
-        var scriptParam = scripts.get(fullCoords);
+    public ScriptParam get(@NotNull BlockCoords blockCoords) {
+        var scriptParam = scripts.get(blockCoords);
         if (scriptParam == null) {
-            scripts.put(fullCoords, scriptParam = new ScriptParam());
+            scripts.put(blockCoords, scriptParam = new ScriptParam());
         }
         return scriptParam;
     }
 
-    public void remove(@NotNull Location location) {
-        scripts.remove(BlockCoords.getFullCoords(location));
-    }
-
-    @Override
-    public int hashCode() {
-        return scriptKey.hashCode();
+    public void remove(@NotNull BlockCoords location) {
+        scripts.remove(location);
     }
 }

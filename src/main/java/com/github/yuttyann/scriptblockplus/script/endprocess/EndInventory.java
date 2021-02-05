@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EndInventory implements EndProcess {
 
-    public static final ItemStack[] EMPTY_ARRAY = new ItemStack[0];
+    private static final ItemStack[] EMPTY_ARRAY = new ItemStack[0];
 
     @Override
     public void success(@NotNull SBRead sbRead) {
@@ -39,21 +39,11 @@ public class EndInventory implements EndProcess {
 
     @Override
     public void failed(@NotNull SBRead sbRead) {
-        var items = sbRead.get(ItemCost.KEY_OPTION, EMPTY_ARRAY);
-        if (items.length > 0) {
-            var sbPlayer = sbRead.getSBPlayer();
-            if (sbPlayer.isOnline()) {
-                try {
-                    sbPlayer.getInventory().setContents(items);
-                } finally {
-                    Utils.updateInventory(sbPlayer.getPlayer());
-                }
-            } else {
-                var objectMap = sbRead.getSBPlayer().getObjectMap();
-                if (!objectMap.has(ItemCost.KEY_PLAYER)) {
-                    objectMap.put(ItemCost.KEY_PLAYER, items);
-                }
-            }
+        var sbPlayer = sbRead.getSBPlayer();
+        var inventoryItems = sbRead.get(ItemCost.KEY_OPTION, EMPTY_ARRAY);
+        if (inventoryItems.length > 0 && sbPlayer.isOnline()) {
+            sbPlayer.getInventory().setContents(inventoryItems);
+            Utils.updateInventory(sbPlayer.getPlayer());
         }
     }
 }

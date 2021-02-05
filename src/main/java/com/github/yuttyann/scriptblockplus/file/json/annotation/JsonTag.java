@@ -36,4 +36,7 @@ public @interface JsonTag {
 
     @NotNull
     String file() default "{id}";
+
+    @NotNull
+    String plugin() default "ScriptBlockPlus";
 }

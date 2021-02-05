@@ -15,13 +15,14 @@
  */
 package com.github.yuttyann.scriptblockplus.region;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 
-import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -33,12 +34,14 @@ import java.util.Set;
  */
 public class CuboidRegionRemove {
 
+    private final Region region;
     private final Set<ScriptKey> scriptKeys;
-    private final CuboidRegionBlocks regionBlocks;
+
+    private CuboidRegionIterator iterator;
 
     public CuboidRegionRemove(@NotNull Region region) {
+        this.region = region;
         this.scriptKeys = new LinkedHashSet<>();
-        this.regionBlocks = new CuboidRegionBlocks(region);
     }
 
     @NotNull
@@ -46,41 +49,48 @@ public class CuboidRegionRemove {
         return scriptKeys;
     }
 
-    @NotNull
-    public CuboidRegionBlocks getRegionBlocks() {
-        return regionBlocks;
+    @Nullable
+    public CuboidRegionIterator result() {
+        return iterator;
     }
 
     @NotNull
     public CuboidRegionRemove remove() {
         scriptKeys.clear();
-        var blocks = regionBlocks.getBlocks();
-        var locations = new HashSet<Location>();
-        for (var scriptKey : ScriptKey.values()) {
-            var scriptJson = new BlockScriptJson(scriptKey);
-            if (!scriptJson.exists()) {
+        var blocks = new HashSet<BlockCoords>();
+        var iterator = new CuboidRegionIterator(region);
+        for (var scriptKey : ScriptKey.iterable()) {
+            var scriptJson = BlockScriptJson.get(scriptKey);
+            if (!scriptJson.has()) {
                 continue;
             }
-            for (var block : blocks) {
-                if (lightRemove(locations, block.getLocation(), scriptJson)) {
+            boolean modifiable = false;
+            iterator.reset();
+            while (iterator.hasNext()) {
+                var blockCoords = iterator.next();
+                if (lightRemove(blockCoords, scriptJson)) {
+                    modifiable = true;
+                    blocks.add(blockCoords);
                     scriptKeys.add(scriptKey);
                 }
             }
-            scriptJson.saveFile();
+            if (modifiable) {
+                scriptJson.saveFile();
+            }
         }
         for (var scriptKey : scriptKeys) {
-            TimerOption.removeAll(locations, scriptKey);
-            PlayerCountJson.clear(locations, scriptKey);
+            PlayerTempJson.removeAll(scriptKey, blocks);
+            PlayerCountJson.removeAll(scriptKey, blocks);
         }
+        this.iterator = iterator;
         return this;
     }
     
-    private boolean lightRemove(@NotNull Set<Location> locations, @NotNull Location location, @NotNull BlockScriptJson scriptJson) {
-        if (!BlockScriptJson.has(location, scriptJson)) {
+    private boolean lightRemove(@NotNull BlockCoords blockCoords, @NotNull BlockScriptJson scriptJson) {
+        if (!scriptJson.has() || !scriptJson.load().has(blockCoords)) {
             return false;
         }
-        scriptJson.load().remove(location);
-        locations.add(location);
+        scriptJson.load().remove(blockCoords);
         return true;
     }
 }

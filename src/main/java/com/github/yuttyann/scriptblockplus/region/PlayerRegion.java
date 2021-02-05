@@ -15,7 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus.region;
 
-import org.bukkit.Location;
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,8 @@ public class PlayerRegion implements Region {
     private final int y;
     private final int z;
     private final int range;
+
+    private BlockCoords min, max;
 
     public PlayerRegion(@NotNull Player player, int range) {
         var location = player.getLocation();
@@ -54,19 +57,19 @@ public class PlayerRegion implements Region {
     }
 
     @Override
-    @NotNull
-    public Location getMinimumPoint() {
-        return new Location(world, x - range, y - range, z - range);
-    }
-
-    @Override
-    @NotNull
-    public Location getMaximumPoint() {
-        return new Location(world, x + range, y + range, z + range);
-    }
-
-    @Override
     public boolean hasPositions() {
         return true;
+    }
+
+    @Override
+    @NotNull
+    public BlockCoords getMinimumPoint() {
+        return min == null ? this.min = BlockCoords.of(world, x - range, y - range, z - range) : min;
+    }
+
+    @Override
+    @NotNull
+    public BlockCoords getMaximumPoint() {
+        return max == null ? this.max = BlockCoords.of(world, x + range, y + range, z + range) : max;
     }
 }

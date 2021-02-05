@@ -33,7 +33,6 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Supplier;
@@ -169,12 +168,7 @@ public final class Utils {
 
     @Nullable
     public static String getName(@NotNull UUID uuid) {
-        try {
-            var player = Bukkit.getOfflinePlayer(uuid);
-            return !player.hasPlayedBefore() ? NameFetcher.getName(uuid) : player.getName();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        var player = Bukkit.getOfflinePlayer(uuid);
+        return !player.hasPlayedBefore() ? "null" : player.getName();
     }
 }

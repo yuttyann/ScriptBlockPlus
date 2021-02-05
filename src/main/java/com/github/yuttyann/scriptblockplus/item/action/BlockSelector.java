@@ -49,32 +49,30 @@ public class BlockSelector extends ItemAction {
 
     @Override
     public void run(@NotNull RunItem runItem) {
-        var location = runItem.getLocation();
+        var blockCoords = runItem.getBlockCoords();
         var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
         var region = ((CuboidRegion) sbPlayer.getRegion());
         switch (runItem.getAction()) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
                 if (runItem.isSneaking()) {
-                    region.setVector1((location = sbPlayer.getLocation()).toVector());
-                } else if (!runItem.isAIR() && location != null) {
-                    region.setVector1(location.toVector());
+                    region.setPos1(blockCoords = BlockCoords.of(sbPlayer.getLocation()));
+                } else if (!runItem.isAIR() && blockCoords != null) {
+                    region.setPos1(BlockCoords.copy(blockCoords));
                 }
-                if (location != null) {
-                    region.setWorld(location.getWorld());
-                    SBConfig.SELECTOR_POS1.replace(region.getName(), BlockCoords.getCoords(location)).send(sbPlayer);
+                if (blockCoords != null) {
+                    SBConfig.SELECTOR_POS1.replace(region.getName(), blockCoords.getCoords()).send(sbPlayer);
                 }
                 break;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
                 if (runItem.isSneaking()) {
-                    region.setVector2((location = sbPlayer.getLocation()).toVector());
-                } else if (!runItem.isAIR() && location != null) {
-                    region.setVector2(location.toVector());
+                    region.setPos2(blockCoords = BlockCoords.of(sbPlayer.getLocation()));
+                } else if (!runItem.isAIR() && blockCoords != null) {
+                    region.setPos2(BlockCoords.copy(blockCoords));
                 }
-                if (location != null) {
-                    region.setWorld(location.getWorld());
-                    SBConfig.SELECTOR_POS2.replace(region.getName(), BlockCoords.getCoords(location)).send(sbPlayer);
+                if (blockCoords != null) {
+                    SBConfig.SELECTOR_POS2.replace(region.getName(), blockCoords.getCoords()).send(sbPlayer);
                 }
                 break;
             default:

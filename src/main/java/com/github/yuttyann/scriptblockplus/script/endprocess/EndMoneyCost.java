@@ -27,9 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class EndMoneyCost implements EndProcess {
 
     @Override
-    public void success(@NotNull SBRead sbRead) {
-        
-    }
+    public void success(@NotNull SBRead sbRead) { }
 
     @Override
     public void failed(@NotNull SBRead sbRead) {

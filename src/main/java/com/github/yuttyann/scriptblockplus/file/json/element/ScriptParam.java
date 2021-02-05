@@ -42,21 +42,26 @@ public class ScriptParam {
     @SerializedName("amount")
     private int amount = -1;
 
+    public void setAuthor(@NotNull Set<UUID> author) {
+        this.author = new LinkedHashSet<>(author);
+    }
+
     @NotNull
     public Set<UUID> getAuthor() {
         return author;
     }
 
-    public void setAuthor(@NotNull Set<UUID> author) {
-        this.author = author;
+    public void setScript(@NotNull List<String> script) {
+        this.script = new LinkedList<>(script);
     }
 
+    @NotNull
     public List<String> getScript() {
         return script;
     }
 
-    public void setScript(@NotNull List<String> script) {
-        this.script = script;
+    public void setLastEdit(@NotNull String time) {
+        this.lastedit = time;
     }
 
     @NotNull
@@ -64,8 +69,8 @@ public class ScriptParam {
         return lastedit;
     }
 
-    public void setLastEdit(@NotNull String time) {
-        this.lastedit = time;
+    public void setSelector(@Nullable String selector) {
+        this.selector = selector;
     }
 
     @Nullable
@@ -73,33 +78,19 @@ public class ScriptParam {
         return selector;
     }
 
-    public void setSelector(@Nullable String selector) {
-        this.selector = selector;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
+    public synchronized void setAmount(int amount) {
         this.amount = amount;
     }
 
-    public void addAmount(int amount) {
+    public synchronized void addAmount(int amount) {
         this.amount += amount;
     }
 
-    public void subtractAmount(int amount) {
+    public synchronized void subtractAmount(int amount) {
         this.amount = Math.max(this.amount - amount, 0);
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 1;
-        int prime = 31;
-        hash = prime * hash + author.hashCode();
-        hash = prime * hash + script.hashCode();
-        hash = prime * hash + lastedit.hashCode();
-        return hash;
+    public synchronized int getAmount() {
+        return amount;
     }
 }

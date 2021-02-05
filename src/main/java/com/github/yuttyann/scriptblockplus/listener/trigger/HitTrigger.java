@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.listener.trigger;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -53,7 +54,7 @@ public class HitTrigger extends TriggerListener<ProjectileHitEvent> {
         if (block == null || !(shooter instanceof Player)) {
             return null;
         }
-        return new Trigger((Player) shooter, block, event);
+        return new Trigger(event, (Player) shooter, BlockCoords.of(block));
     }
 
     @Override

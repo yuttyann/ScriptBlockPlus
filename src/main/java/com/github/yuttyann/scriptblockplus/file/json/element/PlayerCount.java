@@ -15,55 +15,31 @@
  */
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.file.json.multi.TwoJson.TwoElement;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus PlayerCount クラス
  * @author yuttyann44581
  */
-public class PlayerCount {
-
-    @SerializedName("fullcoords")
-    private final String fullCoords;
+public class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
 
     @SerializedName(value = "scriptkey", alternate = { "scripttype" })
     private final ScriptKey scriptKey;
 
+    @SerializedName(value = "blockcoords", alternate = { "fullcoords" })
+    private final BlockCoords blockCoords;
+
     @SerializedName("amount")
     private int amount;
 
-    public PlayerCount(@NotNull String fullCoords, @NotNull ScriptKey scriptKey) {
-        this.fullCoords = fullCoords;
+    public PlayerCount(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
         this.scriptKey = scriptKey;
-    }
-
-    public int add() {
-        synchronized(this) {
-            return ++amount;
-        }
-    }
-
-    public int subtract() {
-        synchronized(this) {
-            return amount < 1 ? --amount : 0;
-        }
-    }
-
-    public void setAmount(int amount) {
-        synchronized(this) {
-            this.amount = Math.min(amount, 0);
-        }
-    }
-
-    public synchronized int getAmount() {
-        return amount;
-    }
-
-    @NotNull
-    public String getFullCoords() {
-        return fullCoords;
+        this.blockCoords = blockCoords;
     }
 
     @NotNull
@@ -71,12 +47,29 @@ public class PlayerCount {
         return scriptKey;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 1;
-        int prime = 31;
-        hash = prime * hash + fullCoords.hashCode();
-        hash = prime * hash + scriptKey.hashCode();
-        return hash;
+    @NotNull
+    public BlockCoords getBlockCoords() {
+        return blockCoords;
     }
+
+    public synchronized void setAmount(int amount) {
+        this.amount = Math.min(amount, 0);
+    }
+
+    public synchronized int add() {
+        return ++amount;
+    }
+
+    public synchronized int subtract() {
+        return amount > 0 ? --amount : 0;
+    }
+
+    public synchronized int getAmount() {
+        return amount;
+    }
+
+	@Override
+	public boolean isElement(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+		return isArgment(this.scriptKey, scriptKey) && isArgment(this.blockCoords, blockCoords);
+	}
 }

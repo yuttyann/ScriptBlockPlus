@@ -19,7 +19,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +39,6 @@ public enum ClassType {
     BOOLEAN(boolean.class, Boolean.class);
 
     private static final Map<Class<?>, ClassType> CLASS = new HashMap<>();
-    private static final Map<Integer, Class<?>[]> CLASS_CACHE = new HashMap<>();
 
     private final Class<?> primitive;
     private final Class<?> reference;
@@ -55,10 +53,6 @@ public enum ClassType {
     ClassType(@NotNull Class<?> primitive, @NotNull Class<?> reference) {
         this.primitive = primitive;
         this.reference = reference;
-    }
-
-    public static void clear() {
-        CLASS_CACHE.clear();
     }
 
     @NotNull
@@ -109,13 +103,7 @@ public enum ClassType {
         if (objects == null || objects.length == 0) {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        int hash = Arrays.hashCode(objects);
-        var classes = CLASS_CACHE.get(hash);
-        if (classes == null) {
-            classes = StreamUtils.toArray(objects, o -> getPrimitive(o.getClass()), Class<?>[]::new);
-            CLASS_CACHE.put(hash, classes);
-        }
-        return classes;
+        return StreamUtils.toArray(objects, o -> getPrimitive(o.getClass()), Class<?>[]::new);
     }
 
     @NotNull
@@ -123,12 +111,6 @@ public enum ClassType {
         if (objects == null || objects.length == 0) {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        int hash = Arrays.hashCode(objects);
-        var classes = CLASS_CACHE.get(hash);
-        if (classes == null) {
-            classes = StreamUtils.toArray(objects, o -> getReference(o.getClass()), Class<?>[]::new);
-            CLASS_CACHE.put(hash, classes);
-        }
-        return classes;
+        return StreamUtils.toArray(objects, o -> getReference(o.getClass()), Class<?>[]::new);
     }
 }

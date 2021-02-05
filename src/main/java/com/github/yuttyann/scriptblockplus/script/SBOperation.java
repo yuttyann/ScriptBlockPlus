@@ -15,15 +15,15 @@
  */
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.option.time.TimerOption;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +42,7 @@ public final class SBOperation {
 
     public SBOperation(@NotNull ScriptKey scriptKey) {
         this.scriptKey = scriptKey;
-        this.scriptJson = new BlockScriptJson(scriptKey);
+        this.scriptJson = BlockScriptJson.get(scriptKey);
     }
 
     @NotNull
@@ -68,53 +68,53 @@ public final class SBOperation {
         return scriptParam.getAuthor().stream().map(Utils::getName).collect(Collectors.joining(", "));
     }
 
-    public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-        var scriptParam = scriptJson.load().get(location);
+    public void create(@NotNull Player player, @NotNull BlockCoords blockCoords, @NotNull String script) {
+        var scriptParam = scriptJson.load().get(blockCoords);
         scriptParam.getAuthor().add(player.getUniqueId());
         scriptParam.setScript(Collections.singletonList(script));
         scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptJson.saveFile();
-        TimerOption.removeAll(location, scriptKey);
-        PlayerCountJson.clear(location, scriptKey);
+        PlayerTempJson.removeAll(scriptKey, blockCoords);
+        PlayerCountJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_CREATE.replace(scriptKey).send(player);
-        SBConfig.CONSOLE_SCRIPT_EDIT.replace(location, scriptKey).console();
+        SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }
 
-    public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-        if (!BlockScriptJson.has(location, scriptJson)) {
+    public void add(@NotNull Player player, @NotNull BlockCoords blockCoords, @NotNull String script) {
+        if (!BlockScriptJson.has(blockCoords, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        var scriptParam = scriptJson.load().get(location);
+        var scriptParam = scriptJson.load().get(blockCoords);
         scriptParam.getAuthor().add(player.getUniqueId());
         scriptParam.getScript().add(script);
         scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptJson.saveFile();
-        TimerOption.removeAll(location, scriptKey);
+        PlayerTempJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_ADD.replace(scriptKey).send(player);
-        SBConfig.CONSOLE_SCRIPT_EDIT.replace(location, scriptKey).console();
+        SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }
 
-    public void remove(@NotNull Player player, @NotNull Location location) {
-        if (!BlockScriptJson.has(location, scriptJson)) {
+    public void remove(@NotNull Player player, @NotNull BlockCoords blockCoords) {
+        if (!BlockScriptJson.has(blockCoords, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        scriptJson.load().remove(location);
+        scriptJson.load().remove(blockCoords);
         scriptJson.saveFile();
-        TimerOption.removeAll(location, scriptKey);
-        PlayerCountJson.clear(location, scriptKey);
+        PlayerTempJson.removeAll(scriptKey, blockCoords);
+        PlayerCountJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_REMOVE.replace(scriptKey).send(player);
-        SBConfig.CONSOLE_SCRIPT_EDIT.replace(location, scriptKey).console();
+        SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }
 
-    public void view(@NotNull Player player, @NotNull Location location) {
-        if (!BlockScriptJson.has(location, scriptJson)) {
+    public void view(@NotNull Player player, @NotNull BlockCoords blockCoords) {
+        if (!BlockScriptJson.has(blockCoords, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        var scriptParam = scriptJson.load().get(location);
-        var playerCount = new PlayerCountJson(player).load(location, scriptKey);
+        var scriptParam = scriptJson.load().get(blockCoords);
+        var playerCount = PlayerCountJson.get(player).load(scriptKey, blockCoords);
         var selector = scriptParam.getSelector();
         player.sendMessage("--------- [ Script Views ] ---------");
         player.sendMessage("§eAuthor: §a" + getAuthors(scriptParam));
@@ -124,15 +124,15 @@ public final class SBOperation {
         player.sendMessage("§eScripts:");
         scriptParam.getScript().forEach(s -> player.sendMessage("§6- §b" + s));
         player.sendMessage("----------------------------------");
-        SBConfig.CONSOLE_SCRIPT_VIEW.replace(location, scriptKey).console();
+        SBConfig.CONSOLE_SCRIPT_VIEW.replace(scriptKey, blockCoords).console();
     }
 
-    public void redstone(@NotNull Player player, @NotNull Location location, @Nullable String selector) {
-        if (!BlockScriptJson.has(location, scriptJson)) {
+    public void redstone(@NotNull Player player, @NotNull BlockCoords blockCoords, @Nullable String selector) {
+        if (!BlockScriptJson.has(blockCoords, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        var scriptParam = scriptJson.load().get(location);
+        var scriptParam = scriptJson.load().get(blockCoords);
         scriptParam.getAuthor().add(player.getUniqueId());
         scriptParam.setSelector(selector);
         scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
@@ -142,11 +142,11 @@ public final class SBOperation {
         } else {
             SBConfig.SCRIPT_REDSTONE_ENABLE.replace(scriptKey).send(player);
         }
-        SBConfig.CONSOLE_SCRIPT_EDIT.replace(location, scriptKey).console();
+        SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }
 
     @NotNull
-    public SBClipboard clipboard(@NotNull SBPlayer sbPlayer, @NotNull Location location) {
-        return new SBClipboard(sbPlayer, location, scriptJson);
+    public SBClipboard clipboard(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords) {
+        return new SBClipboard(sbPlayer, blockCoords, scriptJson);
     }
 }

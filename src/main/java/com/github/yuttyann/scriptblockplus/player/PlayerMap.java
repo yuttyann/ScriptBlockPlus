@@ -21,6 +21,7 @@ import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,6 +41,13 @@ public abstract class PlayerMap implements SBPlayer {
     private static final String KEY_OLD_BLOCK_COORDS = Utils.randomUUID();
 
     private ObjectMap objectMap;
+
+    public final void init() {
+        if (objectMap == null) {
+            objectMap.clear();
+            objectMap = null;
+        }
+    }
 
     @Override
     @NotNull
@@ -103,16 +111,31 @@ public abstract class PlayerMap implements SBPlayer {
         getObjectMap().put(KEY_OLD_BLOCK_COORDS, blockCoords);
     }
 
+    @Nullable
+    public ScriptEdit getDirectScriptEdit() {
+        return getObjectMap().get(KEY_SCRIPT_EDIT);
+    }
+
     @Override
     @NotNull
     public Optional<ScriptEdit> getScriptEdit() {
         return Optional.ofNullable(getObjectMap().get(KEY_SCRIPT_EDIT));
     }
 
+    @Nullable
+    public SBClipboard getDirectSBClipboard() {
+        return getObjectMap().get(KEY_SB_CLIPBOARD);
+    }
+
     @Override
     @NotNull
     public Optional<SBClipboard> getSBClipboard() {
         return Optional.ofNullable(getObjectMap().get(KEY_SB_CLIPBOARD));
+    }
+
+    @Nullable
+    public BlockCoords getDirectOldBlockCoords() {
+        return getObjectMap().get(KEY_OLD_BLOCK_COORDS);
     }
 
     @Override

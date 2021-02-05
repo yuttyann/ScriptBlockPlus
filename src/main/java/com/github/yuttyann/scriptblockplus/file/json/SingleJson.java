@@ -15,47 +15,49 @@
  */
 package com.github.yuttyann.scriptblockplus.file.json;
 
-import java.util.UUID;
+import java.io.File;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus SingleJson クラス
- * @param <T> シリアライズ化を行う値の型
+ * @param <E> エレメントの型
  * @author yuttyann44581
  */
-public abstract class SingleJson<T> extends BaseJson<T> {
+public abstract class SingleJson<E extends BaseElement> extends BaseJson<E> {
 
     /**
      * コンストラクタ
-     * @param uuid - ファイルの名前
+     * <p>
+     * 必ずシリアライズ、デシリアライズ化が可能なファイルを指定してください。
+     * @param json - JSONのファイル
      */
-    public SingleJson(@NotNull UUID uuid) {
-        super(uuid);
+    protected SingleJson(@NotNull File json) {
+        super(json);
     }
 
     /**
      * コンストラクタ
      * @param name - ファイルの名前
      */
-    public SingleJson(@NotNull String name) {
+    protected SingleJson(@NotNull String name) {
         super(name);
     }
 
     /**
      * インスタンスを生成します。
-     * @return {@link T} - インスタンス
+     * @return {@link E} - インスタンス
      */
     @NotNull
-    protected abstract T newInstance();
+    protected abstract E newInstance();
 
     /**
      * 要素を取得します。
-     * @return {@link T} - 要素
+     * @return {@link E} - 要素
      */
     @NotNull
-    public final T load() {
+    public final E load() {
         if (list.isEmpty()) {
             list.add(newInstance());
         }
@@ -64,17 +66,24 @@ public abstract class SingleJson<T> extends BaseJson<T> {
 
     /**
      * 要素が存在するのか確認します。
-     * @return {@link boolean} - 要素が存在する場合はtrue
+     * @return {@link boolean} - 要素が存在する場合は{@code true}
      */
     public final boolean has() {
         return !list.isEmpty();
     }
 
     /**
+     * 要素を削除します。
+     */
+    public final void remove() {
+        list.clear();
+    }
+
+    /**
      * 処理を行った後に要素を保存します。
      * @param action - 処理
      */
-    public final void action(@NotNull Consumer<T> action) {
+    public final void action(@NotNull Consumer<E> action) {
         action.accept(load());
         saveFile();
     }

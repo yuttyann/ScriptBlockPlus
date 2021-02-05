@@ -22,7 +22,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.Location;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -43,8 +43,8 @@ public final class SBLoader {
     private static final String KEY_LASTEDIT = ".LastEdit";
 
     private String path;
-    private Location location;
     private YamlConfig scriptFile;
+    private BlockCoords blockCoords;
 
     public SBLoader(@NotNull ScriptKey scriptKey) {
         var filePath = "scripts/" + scriptKey.getName() + ".yml";
@@ -66,8 +66,8 @@ public final class SBLoader {
     }
 
     @NotNull
-    public Location getLocation() {
-        return location;
+    public BlockCoords getBlockCoords() {
+        return blockCoords;
     }
 
     @NotNull
@@ -96,9 +96,9 @@ public final class SBLoader {
     }
 
     @NotNull
-    private SBLoader createPath(@NotNull Location location) {
-        this.location = location;
-        this.path = location.getWorld().getName() + "." + BlockCoords.getCoords(location);
+    private SBLoader createPath(@NotNull BlockCoords blockCoords) {
+        this.blockCoords = blockCoords;
+        this.path = blockCoords.getWorld().getName() + "." + blockCoords.getCoords();
         return this;
     }
 }

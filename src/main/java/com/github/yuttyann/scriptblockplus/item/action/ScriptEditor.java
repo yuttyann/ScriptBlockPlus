@@ -58,13 +58,13 @@ public class ScriptEditor extends ItemAction {
     @Override
     public void run(@NotNull RunItem runItem) {
         var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
-        var location = Optional.ofNullable(runItem.getLocation());
         var scriptKey = sbPlayer.getObjectMap().get(KEY, ScriptKey.INTERACT);
+        var blockCoords = Optional.ofNullable(runItem.getBlockCoords());
         switch (runItem.getAction()) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
-                if (runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {
-                    new SBOperation(scriptKey).remove(sbPlayer.getPlayer(), location.get());
+                if (runItem.isSneaking() && !runItem.isAIR() && blockCoords.isPresent()) {
+                    new SBOperation(scriptKey).remove(sbPlayer.getPlayer(), blockCoords.get());
                 } else if (!runItem.isSneaking()) {
                     sbPlayer.getObjectMap().put(KEY, scriptKey = getNextType(scriptKey));
                     ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptKey);
@@ -74,11 +74,11 @@ public class ScriptEditor extends ItemAction {
             case RIGHT_CLICK_BLOCK:
                 if (runItem.isSneaking() && !runItem.isAIR()) {
                     var sbClipboard = sbPlayer.getSBClipboard();
-                    if (!location.isPresent() || !sbClipboard.isPresent() || !sbClipboard.get().paste(location.get(), true)) {
+                    if (!blockCoords.isPresent() || !sbClipboard.isPresent() || !sbClipboard.get().paste(blockCoords.get(), true)) {
                         SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
                     }
-                } else if (!runItem.isSneaking() && !runItem.isAIR() && location.isPresent()) {
-                    new SBOperation(scriptKey).clipboard(sbPlayer, location.get()).copy();
+                } else if (!runItem.isSneaking() && !runItem.isAIR() && blockCoords.isPresent()) {
+                    new SBOperation(scriptKey).clipboard(sbPlayer, blockCoords.get()).copy();
                 }
                 break;
             default:

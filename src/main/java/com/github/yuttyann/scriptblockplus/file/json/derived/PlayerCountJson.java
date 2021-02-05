@@ -16,79 +16,81 @@
 package com.github.yuttyann.scriptblockplus.file.json.derived;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
-import com.github.yuttyann.scriptblockplus.file.json.MultiJson;
+import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
+import com.github.yuttyann.scriptblockplus.file.json.multi.TwoJson;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.google.common.collect.Sets;
+import com.github.yuttyann.scriptblockplus.utils.ReuseIterator;
 
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 /**
  * ScriptBlockPlus PlayerCountJson クラス
  * @author yuttyann44581
  */
 @JsonTag(path = "json/playercount")
-public class PlayerCountJson extends MultiJson<PlayerCount> {
+public class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount> {
 
-    public PlayerCountJson(@NotNull UUID uuid) {
-        super(uuid);
+    private static final CacheJson<UUID> CACHE_JSON = new CacheJson<>(PlayerCountJson.class, PlayerCountJson::new);
+    
+    private PlayerCountJson(@NotNull File json) {
+        super(json);
     }
 
-    public PlayerCountJson(@NotNull SBPlayer sbPlayer) {
-        super(sbPlayer.getUniqueId());
-    }
-
-    public PlayerCountJson(@NotNull OfflinePlayer offlinePlayer) {
-        super(offlinePlayer.getUniqueId());
+    protected PlayerCountJson(@NotNull UUID uuid) {
+        super(uuid.toString());
     }
 
     @Override
     @NotNull
-    protected PlayerCount newInstance(@NotNull Object... args) {
-        return new PlayerCount((String) args[0], (ScriptKey) args[1]);
+	protected PlayerCount newInstance(@NotNull ScriptKey scriptKey, @NotNull BlockCoords location) {
+		return new PlayerCount(scriptKey, location);
+	}
+
+    @NotNull
+    public static PlayerCountJson get(@NotNull UUID uuid) {
+        return newJson(uuid, CACHE_JSON);
     }
 
     @NotNull
-    public PlayerCount load(@NotNull Location location, @NotNull ScriptKey scriptKey) {
-        return super.load(BlockCoords.getFullCoords(location), scriptKey);
+    public static PlayerCountJson get(@NotNull SBPlayer sbPlayer) {
+        return get(sbPlayer.getUniqueId());
     }
 
-    public void action(@NotNull Consumer<PlayerCount> action, @NotNull Location location, @NotNull ScriptKey scriptKey) {
-        super.action(action, BlockCoords.getFullCoords(location), scriptKey);
+    @NotNull
+    public static PlayerCountJson get(@NotNull OfflinePlayer player) {
+        return get(player.getUniqueId());
     }
 
-    public static void clear(@NotNull Location location, @NotNull ScriptKey scriptKey) {
-        clear(Sets.newHashSet(location), scriptKey);
+    public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+        removeAll(scriptKey, Collections.singleton(blockCoords));
     }
 
-    public static void clear(@NotNull Set<Location> locations, @NotNull ScriptKey scriptKey) {
-        var args = new Object[] { (String) null, scriptKey };
-        for (String id : BaseJson.getNames(PlayerCountJson.class)) {
-            var countJson = new PlayerCountJson(UUID.fromString(id));
-            if (!countJson.exists()) {
-                continue;
-            }
+    public static synchronized void removeAll(@NotNull ScriptKey scriptKey, @NotNull Set<BlockCoords> blocks) {
+        var iterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
+        for (var json : getFiles(PlayerCountJson.class)) {
+            var countJson = new PlayerCountJson(json);
             boolean modifiable = false;
-            for (var location : locations) {
-                args[0] = BlockCoords.getFullCoords(location);
-                if (!countJson.has(args)) {
+            while (iterator.hasNext()) {
+                var blockCoords = iterator.next();
+                var playerCount = countJson.fastLoad(scriptKey, blockCoords);
+                if (playerCount == null) {
                     continue;
                 }
-                var playerCount = countJson.load(args);
                 if (playerCount.getAmount() > 0) {
                     modifiable = true;
-                    countJson.remove(playerCount);
+                    countJson.remove(scriptKey, blockCoords);
                 }
             }
+            iterator.reset();
             if (modifiable) {
                 countJson.saveFile();
             }

@@ -17,14 +17,15 @@ package com.github.yuttyann.scriptblockplus.hook.protocol;
 
 import java.util.UUID;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.enums.TeamColor;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 
-import org.bukkit.scoreboard.Team;
+import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import static org.bukkit.util.NumberConversions.floor;
 
 /**
  * ScriptBlockPlus GlowEntity クラス
@@ -34,16 +35,23 @@ public final class GlowEntity {
         
     private final int id;
     private final UUID uuid;
-    private final Team team;
     private final Vector vector;
     private final SBPlayer sbPlayer;
+    private final TeamColor teamColor;
 
-    GlowEntity(int id, @NotNull UUID uuid, @NotNull Team team, @NotNull Vector vector, @NotNull SBPlayer sbPlayer) {
+    private boolean[] flags = ArrayUtils.EMPTY_BOOLEAN_ARRAY;
+
+    private boolean dead;
+
+    GlowEntity(int id, @NotNull UUID uuid, @NotNull Vector vector, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, final int flagSize) {
         this.id = id;
         this.uuid = uuid;
-        this.team = team;
         this.vector = vector;
         this.sbPlayer = sbPlayer;
+        this.teamColor = teamColor;
+        if (flagSize > 0) {
+            this.flags = new boolean[flagSize];
+        }
     }
 
     public int getId() {
@@ -51,38 +59,61 @@ public final class GlowEntity {
     }
 
     public int getX() {
-        return (int) vector.getX();
+        return vector.getBlockX();
     }
 
     public int getY() {
-        return (int) vector.getY();
+        return vector.getBlockY();
     }
 
     public int getZ() {
-        return (int) vector.getZ();
+        return vector.getBlockZ();
     }
 
     @NotNull
     public UUID getUniqueId() {
         return uuid;
     }
-
-    @NotNull
-    public Team getTeam() {
-        return team;
-    }
     
     @NotNull
-    public SBPlayer getSender() {
+    public SBPlayer getSBPlayer() {
         return sbPlayer;
     }
 
-    public boolean equals(final double x, final double y, final double z) {
-        return getX() == floor(x) && getY() == floor(y) && getZ() == floor(z);
+    @NotNull
+    public TeamColor getTeamColor() {
+        return teamColor;
+    }
+
+    public boolean removeEntry() {
+        return teamColor.getTeam().removeEntry(uuid.toString());
+    }
+
+    public boolean[] getFlags() {
+        return flags;
+    }
+
+    void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public boolean equals(@NotNull Block block) {
+        return getX() == block.getX() && getY() == block.getY() && getZ() == block.getZ();
+    }
+
+    public boolean equals(@NotNull BlockCoords blockCoords) {
+        return getX() == blockCoords.getX() && getY() == blockCoords.getY() && getZ() == blockCoords.getZ();
     }
 
     @Override
     public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
         if (!(obj instanceof GlowEntity)) {
             return false;
         }
@@ -93,7 +124,7 @@ public final class GlowEntity {
     @Override
     public int hashCode() {
         int hash = 1;
-        int prime = 31;
+        int prime = 16;
         hash = prime * hash + id;
         hash = prime * hash + uuid.hashCode();
         hash = prime * hash + vector.hashCode();

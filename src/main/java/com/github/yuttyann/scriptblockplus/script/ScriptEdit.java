@@ -15,9 +15,9 @@
  */
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.ActionKey;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,8 +51,8 @@ public class ScriptEdit {
         return actionKey;
     }
 
-    public boolean perform(@NotNull SBPlayer sbPlayer, @Nullable Location location) {
-        if (location == null) {
+    public boolean perform(@NotNull SBPlayer sbPlayer, @Nullable BlockCoords blockCoords) {
+        if (blockCoords == null) {
             return false;
         }
         try {
@@ -60,19 +60,19 @@ public class ScriptEdit {
             var sbOperation = new SBOperation(scriptKey);
             switch (actionKey) {
                 case CREATE:
-                    sbOperation.create(player, location, value);
+                    sbOperation.create(player, blockCoords, value);
                     break;
                 case ADD:
-                    sbOperation.add(player, location, value);
+                    sbOperation.add(player, blockCoords, value);
                     break;
                 case REMOVE:
-                    sbOperation.remove(player, location);
+                    sbOperation.remove(player, blockCoords);
                     break;
                 case VIEW:
-                    sbOperation.view(player, location);
+                    sbOperation.view(player, blockCoords);
                     break;
                 case REDSTONE:
-                    sbOperation.redstone(player, location, value);
+                    sbOperation.redstone(player, blockCoords, value);
                     break;
             }
         } finally {

@@ -32,44 +32,16 @@ public class SBBoundingBox {
     private double minX, minY, minZ;
     private double maxX, maxY, maxZ;
 
+    public SBBoundingBox() {
+        setXYZ(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+    }
+
     public SBBoundingBox(@NotNull Vector min, @NotNull Vector max) {
         setVector(min, max);
     }
 
     public SBBoundingBox(@NotNull Block block, final boolean square) {
-        if (square || block.getType().name().endsWith("AIR")) {
-            setSquare(block);
-        } else {
-            if (Utils.isCBXXXorLater("1.13.2")) {
-                var box = block.getBoundingBox();
-                double minX = box.getMinX(), minY = box.getMinY(), minZ = box.getMinZ();
-                double maxX = box.getMaxX(), maxY = box.getMaxY(), maxZ = box.getMaxZ();
-                setXYZ(minX, minY, minZ, maxX, maxY, maxZ);
-            } else {
-                if (PackageType.HAS_NMS) {
-                    try {
-                        var axisAlignedBB = NMSHelper.getAxisAlignedBB(block);
-                        if (axisAlignedBB == null) {
-                            setSquare(block);
-                        } else {
-                            var fields = axisAlignedBB.getClass().getFields();
-                            double minX = fields[0].getDouble(axisAlignedBB);
-                            double minY = fields[1].getDouble(axisAlignedBB);
-                            double minZ = fields[2].getDouble(axisAlignedBB);
-                            double maxX = fields[3].getDouble(axisAlignedBB);
-                            double maxY = fields[4].getDouble(axisAlignedBB);
-                            double maxZ = fields[5].getDouble(axisAlignedBB);
-                            int x = block.getX(), y = block.getY(), z = block.getZ(); 
-                            setXYZ(x + minX, y + minY, z + minZ, x + maxX, y + maxY, z + maxZ);
-                        }
-                    } catch (ReflectiveOperationException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    setSquare(block);
-                }
-            }
-        }
+        setBlock(block, square);
     }
 
     public double getMinX() {
@@ -96,16 +68,56 @@ public class SBBoundingBox {
         return maxZ;
     }
 
-    private void setSquare(@NotNull Block block) {
+    public void setBlock(@NotNull Block block, final boolean square) {
+        if (square || block.getType().name().endsWith("AIR")) {
+            setSquare(block);
+        } else {
+            if (Utils.isCBXXXorLater("1.13.2")) {
+                var box = block.getBoundingBox();
+                double minX = box.getMinX(), minY = box.getMinY(), minZ = box.getMinZ();
+                double maxX = box.getMaxX(), maxY = box.getMaxY(), maxZ = box.getMaxZ();
+                setXYZ(minX, minY, minZ, maxX, maxY, maxZ);
+            } else {
+                try {
+                    setAxisAlignedBB(block);
+                } catch (ReflectiveOperationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void setAxisAlignedBB(@NotNull Block block) throws ReflectiveOperationException {
+        if (PackageType.HAS_NMS) {
+            setSquare(block);
+            return;
+        }
+        var axisAlignedBB = NMSHelper.getAxisAlignedBB(block);
+        if (axisAlignedBB == null) {
+            setSquare(block);
+        } else {
+            var fields = axisAlignedBB.getClass().getFields();
+            double minX = fields[0].getDouble(axisAlignedBB);
+            double minY = fields[1].getDouble(axisAlignedBB);
+            double minZ = fields[2].getDouble(axisAlignedBB);
+            double maxX = fields[3].getDouble(axisAlignedBB);
+            double maxY = fields[4].getDouble(axisAlignedBB);
+            double maxZ = fields[5].getDouble(axisAlignedBB);
+            int x = block.getX(), y = block.getY(), z = block.getZ(); 
+            setXYZ(x + minX, y + minY, z + minZ, x + maxX, y + maxY, z + maxZ);
+        }
+    }
+
+    public void setSquare(@NotNull Block block) {
         int x = block.getX(), y = block.getY(), z = block.getZ();
         setXYZ(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D);
     }
 
-    private void setVector(@NotNull Vector min, @NotNull Vector max) {
+    public void setVector(@NotNull Vector min, @NotNull Vector max) {
         setXYZ(min.getX(), min.getY(), min.getZ(), max.getX(), max.getY(), max.getZ());
     }
 
-    private void setXYZ(double x1, double y1, double z1, double x2, double y2, double z2) {
+    public void setXYZ(double x1, double y1, double z1, double x2, double y2, double z2) {
         this.minX = Math.min(x1, x2);
         this.minY = Math.min(y1, y2);
         this.minZ = Math.min(z1, z2);

@@ -28,13 +28,11 @@ import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
 import com.github.yuttyann.scriptblockplus.selector.filter.FilterSplit;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus BlockListener クラス
@@ -42,36 +40,35 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BlockListener implements Listener {
 
-    private static final Set<String> REDSTONE_FLAG = new HashSet<>();
+    private static final Set<BlockCoords> REDSTONE_FLAG = new HashSet<>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPhysics(BlockPhysicsEvent event) {
-        var location = event.getBlock().getLocation();
-        var fullCoords = BlockCoords.getFullCoords(location);
+        var blockCoords = BlockCoords.of(event.getBlock());
         if (!event.getBlock().isBlockIndirectlyPowered()) {
-            REDSTONE_FLAG.remove(fullCoords);
+            REDSTONE_FLAG.remove(blockCoords);
             return;
         }
-        if (REDSTONE_FLAG.contains(fullCoords)) {
+        if (REDSTONE_FLAG.contains(blockCoords)) {
             return;
         }
-        for (var scriptKey : ScriptKey.values()) {
-            var scriptJson = new BlockScriptJson(scriptKey);
+        for (var scriptKey : ScriptKey.iterable()) {
+            var scriptJson = BlockScriptJson.get(scriptKey);
             if (!scriptJson.exists()) {
                 continue;
             }
             var blockScript = scriptJson.load();
-            if (!blockScript.has(location)) {
+            if (!blockScript.has(blockCoords)) {
                 continue;
             }
-            var selector = blockScript.get(location).getSelector();
+            var selector = blockScript.get(blockCoords).getSelector();
             if (StringUtils.isEmpty(selector) || !CommandSelector.has(selector)) {
                 continue;
             }
             var index = new int[] { 0 };
             var filterSplit = new FilterSplit(selector);
             var filterValues = filterSplit.getFilterValues();
-            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), setCenter(location), filterSplit.getSelector())) {
+            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), blockCoords.toLocation(), filterSplit.getSelector(), true)) {
                 if (!(target instanceof Player)) {
                     continue;
                 }
@@ -80,17 +77,9 @@ public class BlockListener implements Listener {
                     continue;
                 }
                 index[0]++;
-                REDSTONE_FLAG.add(fullCoords);
-                new ScriptRead(player, location, scriptKey).read(0);
+                REDSTONE_FLAG.add(blockCoords);
+                new ScriptRead(player, blockCoords, scriptKey).read(0);
             }
         }
-    }
-
-    @NotNull
-    private Location setCenter(@NotNull Location location) {
-        location.setX(location.getBlockX() + 0.5D);
-        location.setY(location.getBlockY());
-        location.setZ(location.getBlockZ() + 0.5D);
-        return location;
     }
 }

@@ -20,7 +20,6 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.ActionKey;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.Filter;
-import com.github.yuttyann.scriptblockplus.enums.reflection.ClassType;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
@@ -152,9 +151,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         }
         SBFiles.reload();
         BaseJson.clear();
-        ClassType.clear();
         PackageType.clear();
-        NameFetcher.clear();
         setUsage(getUsages());
         SBConfig.ALL_FILE_RELOAD.send(sender);
         return true;
@@ -231,7 +228,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             return;
         }
         var scriptFile = YamlConfig.load(getPlugin(), file, false);
-        var scriptJson = new BlockScriptJson(scriptKey);
+        var scriptJson = BlockScriptJson.get(scriptKey);
         var blockScript = scriptJson.load();
         for (var name : scriptFile.getKeys()) {
             var world = Utils.getWorld(name);
@@ -311,10 +308,10 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             boolean overwrite = args.length > 3 && Boolean.parseBoolean(args[3]);
             try {
                 var sbClipboard = sbPlayer.getSBClipboard().get();
-                var regionPaste = new CuboidRegionPaste(sbClipboard, region).paste(pasteonair, overwrite);
+                var regionPaste = new CuboidRegionPaste(region, sbClipboard).paste(pasteonair, overwrite);
                 var scriptKeyName = regionPaste.getScriptKey().getName();
-                SBConfig.SELECTOR_PASTE.replace(scriptKeyName, regionPaste.getRegionBlocks().getCount()).send(sbPlayer);
-                SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptKeyName, regionPaste.getRegionBlocks()).console();
+                SBConfig.SELECTOR_PASTE.replace(scriptKeyName, regionPaste.result().getVolume()).send(sbPlayer);
+                SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptKeyName, regionPaste.result()).console();
             } finally {
                 sbPlayer.setSBClipboard(null);
             }
@@ -325,8 +322,8 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                 SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
             } else {
                 var types = scriptKeys.stream().map(ScriptKey::getName).collect(Collectors.joining(", "));
-                SBConfig.SELECTOR_REMOVE.replace(types, regionRemove.getRegionBlocks().getCount()).send(player);
-                SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, regionRemove.getRegionBlocks()).console();
+                SBConfig.SELECTOR_REMOVE.replace(types, regionRemove.result().getVolume()).send(player);
+                SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, regionRemove.result()).console();
             }
         }
         return true;

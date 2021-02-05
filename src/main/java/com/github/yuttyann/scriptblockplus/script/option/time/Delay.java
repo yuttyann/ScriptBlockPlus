@@ -19,6 +19,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.DelayEndEvent;
 import com.github.yuttyann.scriptblockplus.event.DelayRunEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.element.TimerTemp;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
@@ -37,7 +38,7 @@ import java.util.Set;
 @OptionTag(name = "delay", syntax = "@delay:")
 public class Delay extends BaseOption implements Runnable {
 
-    public static final Set<TimerTemp> DELAY_SET = new HashSet<>();
+    private static final Set<TimerTemp> DELAYS = new HashSet<>();
 
     private boolean saveDelay;
 
@@ -51,11 +52,11 @@ public class Delay extends BaseOption implements Runnable {
         var array = StringUtils.split(getOptionValue(), '/');
         this.saveDelay = array.length <= 1 || Boolean.parseBoolean(array[1]);
 
-        if (saveDelay && DELAY_SET.contains(new TimerTemp(getUniqueId(), getLocation(), getScriptKey()))) {
+        if (saveDelay && DELAYS.contains(new TimerTemp(getUniqueId(), getScriptKey(), getBlockCoords()))) {
             SBConfig.ACTIVE_DELAY.send(getSBPlayer());
         } else {
             if (saveDelay) {
-                DELAY_SET.add(new TimerTemp(getUniqueId(), getLocation(), getScriptKey()));
+                DELAYS.add(new TimerTemp(getUniqueId(), getScriptKey(), getBlockCoords()));
             }
             ((ScriptRead) getTempMap()).setInitialize(false);
             Bukkit.getScheduler().runTaskLater(ScriptBlock.getInstance(), this, Long.parseLong(array[0]));
@@ -66,7 +67,7 @@ public class Delay extends BaseOption implements Runnable {
     @Override
     public void run() {
         if (saveDelay) {
-            DELAY_SET.remove(new TimerTemp(getUniqueId(), getLocation(), getScriptKey()));
+            DELAYS.remove(new TimerTemp(getUniqueId(), getScriptKey(), getBlockCoords()));
         }
         var sbRead = (ScriptRead) getTempMap();
         if (getSBPlayer().isOnline()) {

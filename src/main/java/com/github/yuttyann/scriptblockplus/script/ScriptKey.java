@@ -101,6 +101,15 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
     }
 
     /**
+     * スクリプトキーのイテラブルを取得します。
+     * @return {@link Iterable}&lt;{@link ScriptKey}&gt; - スクリプトキーのイテラブル
+     */
+    @NotNull
+    public static Iterable<ScriptKey> iterable() {
+        return KEYS.values();
+    }
+
+    /**
      * 指定したスクリプトキーを取得します。
      * @throws NullPointerException スクリプトキーが見つからなかったときにスローされます。
      * @param ordinal - スクリプトキーの序数
@@ -132,6 +141,7 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
     }
 
     @Override
+    @NotNull
     public String toString() {
         return name;
     }
@@ -140,7 +150,7 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
     public int hashCode() {
         int hash = 1;
         int prime = 31;
-        hash = prime * hash + ordinal;
+        hash = prime * hash + (ordinal + 1);
         hash = prime * hash + name.hashCode();
         return hash;
     }

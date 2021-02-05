@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
@@ -30,7 +31,7 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableLocation;
+import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -50,25 +51,22 @@ public class ScriptRead extends ScriptMap implements SBRead {
     private boolean initialize;
 
     // 初期宣言
-    protected SBPlayer sbPlayer;
-    protected Location location;
-    protected ScriptKey scriptKey;
-    protected BlockScript blockScript;
+    protected final SBPlayer sbPlayer;
+    protected final ScriptKey scriptKey;
+    protected final BlockCoords blockCoords;
+    protected final BlockScript blockScript;
 
     // ScriptRead#read(int) から
     protected int index;
     protected String value;
     protected List<String> scripts;
 
-    public ScriptRead(@NotNull Player player, @NotNull Location location, @NotNull ScriptKey scriptKey) {
-        location.setX(location.getBlockX() + 0.5D);
-        location.setY(location.getBlockY());
-        location.setZ(location.getBlockZ() + 0.5D);
+    public ScriptRead(@NotNull Player player, @NotNull BlockCoords blockCoords, @NotNull ScriptKey scriptKey) {
         this.initialize = true;
         this.sbPlayer = SBPlayer.fromPlayer(player);
-        this.location = new UnmodifiableLocation(location);
         this.scriptKey = scriptKey;
-        this.blockScript = new BlockScriptJson(scriptKey).load();
+        this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
+        this.blockScript = BlockScriptJson.get(scriptKey).load();
     }
     
     public final void setInitialize(boolean initialize) {
@@ -87,14 +85,20 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
     @Override
     @NotNull
-    public Location getLocation() {
-        return location;
+    public ScriptKey getScriptKey() {
+        return scriptKey;
     }
 
     @Override
     @NotNull
-    public ScriptKey getScriptKey() {
-        return scriptKey;
+    public Location getLocation() {
+        return blockCoords.toLocation();
+    }
+
+    @Override
+    @NotNull
+    public BlockCoords getBlockCoords() {
+        return blockCoords;
     }
 
     @Override
@@ -116,13 +120,13 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
     @Override
     public boolean read(final int index) {
-        if (!blockScript.has(location)) {
+        if (!blockScript.has(blockCoords)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
             return false;
         }
-        if (!sortScripts(blockScript.get(location).getScript())) {
+        if (!sortScripts(blockScript.get(blockCoords).getScript())) {
             SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptKey).send(sbPlayer);
-            SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(location, scriptKey).console();
+            SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(blockCoords, scriptKey).console();
             return false;
         }
         Bukkit.getPluginManager().callEvent(new ScriptReadStartEvent(ramdomId, this));
@@ -148,8 +152,8 @@ public class ScriptRead extends ScriptMap implements SBRead {
             }
         }
         EndProcessManager.forEach(e -> e.success(this));
-        new PlayerCountJson(sbPlayer).action(PlayerCount::add, location, scriptKey);
-        SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(location, scriptKey).console();
+        PlayerCountJson.get(sbPlayer).action(PlayerCount::add, scriptKey, blockCoords);
+        SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(scriptKey, blockCoords).console();
         return true;
     }
     

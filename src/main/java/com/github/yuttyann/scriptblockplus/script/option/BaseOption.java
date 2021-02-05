@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
@@ -38,6 +39,19 @@ import java.util.UUID;
 public abstract class BaseOption extends Option {
 
     private SBRead sbRead;
+
+    /**
+     * {@link SBRead}の{@link ObjectMap}を取得します。
+     * <p>
+     * {@link UUID}によって管理されているため、重複することはありません。
+     * <p>
+     * 一時的なデータなため、終了後に初期化されます。
+     * @return {@link ObjectMap} - データ構造
+     */
+    @NotNull
+    protected final ObjectMap getTempMap() {
+        return sbRead;
+    }
 
     /**
      * {@link ScriptBlock}の{@link SBPlayer}を取得します。
@@ -67,21 +81,30 @@ public abstract class BaseOption extends Option {
     }
 
     /**
-     * オプションの値を取得します。
-     * @return {@link String} - オプションの値
+     * スクリプトキーを取得します。
+     * @return {@link ScriptKey} - スクリプトキー
      */
     @NotNull
-    protected final String getOptionValue() {
-        return sbRead.getOptionValue();
+    protected final ScriptKey getScriptKey() {
+        return sbRead.getScriptKey();
     }
 
     /**
-     * スクリプトの座標を取得します。
+     * {@link Bukkit}の{@link Location}を取得します。
      * @return {@link Location} - スクリプトの座標
      */
     @NotNull
     protected final Location getLocation() {
         return sbRead.getLocation();
+    }
+    
+    /**
+     * {@link ScriptBlock}の{@link BlockCoords}を取得します。
+     * @return {@link BlockCoords} - スクリプトの座標
+     */
+    @NotNull
+    protected final BlockCoords getBlockCoords() {
+        return sbRead.getBlockCoords();
     }
 
     /**
@@ -94,25 +117,12 @@ public abstract class BaseOption extends Option {
     }
 
     /**
-     * スクリプトキーを取得します。
-     * @return {@link ScriptKey} - スクリプトキー
+     * オプションの値を取得します。
+     * @return {@link String} - オプションの値
      */
     @NotNull
-    protected final ScriptKey getScriptKey() {
-        return sbRead.getScriptKey();
-    }
-
-    /**
-     * {@link SBRead}の{@link ObjectMap}を取得します。
-     * <p>
-     * {@link UUID}によって管理されているため、重複することはありません。
-     * <p>
-     * 一時的なデータなため、終了後に初期化されます。
-     * @return {@link ObjectMap} - データ構造
-     */
-    @NotNull
-    protected final ObjectMap getTempMap() {
-        return sbRead;
+    protected final String getOptionValue() {
+        return sbRead.getOptionValue();
     }
 
     /**
@@ -126,14 +136,14 @@ public abstract class BaseOption extends Option {
     /**
      * オプションの処理を実行します。
      * @throws Exception オプションの処理内で例外が発生した時にスローされます。
-     * @return {@link Boolean} - 有効な場合はtrue
+     * @return {@link Boolean} - 有効な場合は{@code true}
      */
     protected abstract boolean isValid() throws Exception;
 
     /**
      * オプションの処理を実行します。
      * @param sbRead - {@link SBRead}
-     * @return {@link Boolean} - 有効な場合はtrue
+     * @return {@link Boolean} - 有効な場合は{@code true}
      */
     @Override
     @Deprecated

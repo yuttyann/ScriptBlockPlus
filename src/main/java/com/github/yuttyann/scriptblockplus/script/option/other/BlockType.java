@@ -35,7 +35,7 @@ public class BlockType extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         var array = StringUtils.split(getOptionValue(), ',');
-        var block = getLocation().getBlock();
+        var block = getBlockCoords().getBlock();
         return StreamUtils.anyMatch(array, s -> equals(block, s));
     }
 

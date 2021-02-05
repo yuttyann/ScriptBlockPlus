@@ -63,6 +63,9 @@ public final class StreamUtils {
 
     @NotNull
     public static <T> Optional<T> filterFirst(@NotNull Collection<T> collection, @NotNull Predicate<T> filter) {
+        if (collection.isEmpty()) {
+            return Optional.empty();
+        }
         for (T t : collection) {
             if (filter.test(t)) {
                 return t == null ? Optional.empty() : Optional.of(t);
@@ -95,6 +98,9 @@ public final class StreamUtils {
     }
 
     public static <T> boolean anyMatch(@NotNull Collection<T> collection, Predicate<T> filter) {
+        if (collection.isEmpty()) {
+            return false;
+        }
         for (T t : collection) {
             if (filter.test(t)) {
                 return true;
@@ -113,6 +119,9 @@ public final class StreamUtils {
     }
 
     public static <T> boolean allMatch(@NotNull Collection<T> collection, Predicate<T> filter) {
+        if (collection.isEmpty()) {
+            return false;
+        }
         for (T t : collection) {
             if (!filter.test(t)) {
                 return false;

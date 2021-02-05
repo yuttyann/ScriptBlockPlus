@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.listener.trigger;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.BlockClickEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
@@ -48,19 +49,18 @@ public class InteractTrigger extends TriggerListener<BlockClickEvent> {
         if (event.isInvalid() || event.getHand() != EquipmentSlot.HAND || block == null) {
             return null;
         }
-        return new Trigger(event.getPlayer(), block, event);
+        if (isPowered(block) || isOpen(block) || isDisableArm(event.getAction())) {
+            return null;
+        }
+        return new Trigger(event, event.getPlayer(), BlockCoords.of(block));
     }
 
     @Override
     @NotNull
     protected Result handle(@NotNull Trigger trigger) {
         switch (trigger.getProgress()) {
-            case EVENT:
-                var block = trigger.getBlock();
-                var action = trigger.getEvent().getAction();
-                return isPowered(block) || isOpen(block) || isDisableArm(action) ? Result.FAILURE : Result.SUCCESS;
             case READ:
-                trigger.getTempMap().ifPresent(m -> m.put(ScriptAction.KEY, trigger.getEvent().getAction()));
+                trigger.getTempMap().get().put(ScriptAction.KEY, trigger.getEvent().getAction());
                 return Result.SUCCESS;
             default:
                 return super.handle(trigger);

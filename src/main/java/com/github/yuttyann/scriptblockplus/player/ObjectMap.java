@@ -116,7 +116,7 @@ public interface ObjectMap {
     /**
      * 指定されたキーがマップされている値を返します。
      * <p>
-     * このマップにそのキーのマッピングが含まれていない場合はnullを返します。
+     * このマップにそのキーのマッピングが含まれていない場合は{@code null}を返します。
      * @param key - キー
      * @param <T> 戻り値の型
      * @return {@link T} - 指定されたキーがマップされている値
@@ -148,7 +148,7 @@ public interface ObjectMap {
     /**
      * 指定されたキーに値がマップされている場合にtrueを返します。
      * @param key - キー
-     * @return {@link Boolean} - 指定されたキーに値がマップされている場合はtrue
+     * @return {@link Boolean} - 指定されたキーに値がマップされている場合は{@code true}
      */
     default boolean has(@NotNull String key) {
         return get(key) != null;

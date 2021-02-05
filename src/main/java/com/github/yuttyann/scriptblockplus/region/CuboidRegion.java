@@ -15,13 +15,13 @@
  */
 package com.github.yuttyann.scriptblockplus.region;
 
-import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 
 import static java.lang.Math.min;
 import static java.lang.Math.max;
@@ -32,58 +32,53 @@ import static java.lang.Math.max;
  */
 public class CuboidRegion implements Region {
 
-    private World world;
-    private Vector pos1;
-    private Vector pos2;
+    private BlockCoords pos1;
+    private BlockCoords pos2;
 
-    public void setWorld(@Nullable World world) {
-        if (this.world != null && !Objects.equals(this.world, world)) {
-            setVector1(null);
-            setVector2(null);
-        }
-        this.world = world;
-    }
-
-    public void setVector1(@Nullable Vector pos1) {
+    public void setPos1(@Nullable BlockCoords pos1) {
         this.pos1 = pos1;
     }
 
-    public void setVector2(@Nullable Vector pos2) {
+    public void setPos2(@Nullable BlockCoords pos2) {
         this.pos2 = pos2;
     }
 
     @Override
     @Nullable
     public World getWorld() {
-        return world;
+        if (pos1 != null && pos2 != null && Objects.equals(pos1.getWorld(), pos2.getWorld())) {
+            return pos1.getWorld();
+        }
+        return null;
     }
 
     @Override
     @NotNull
     public String getName() {
+        var world = getWorld();
         return world == null ? "null" : world.getName();
     }
 
     @Override
+    public boolean hasPositions() {
+        return getWorld() != null && pos1 != null && pos2 != null;
+    }
+
+    @Override
     @NotNull
-    public Location getMinimumPoint() {
+    public BlockCoords getMinimumPoint() {
         double minX = min(pos1.getX(), pos2.getX());
         double minY = min(pos1.getY(), pos2.getY());
         double minZ = min(pos1.getZ(), pos2.getZ());
-        return new Location(world, minX, minY, minZ);
+        return BlockCoords.of(getWorld(), minX, minY, minZ);
     }
 
     @Override
     @NotNull
-    public Location getMaximumPoint() {
+    public BlockCoords getMaximumPoint() {
         double maxX = max(pos1.getX(), pos2.getX());
         double maxY = max(pos1.getY(), pos2.getY());
         double maxZ = max(pos1.getZ(), pos2.getZ());
-        return new Location(world, maxX, maxY, maxZ);
-    }
-
-    @Override
-    public boolean hasPositions() {
-        return world != null && pos1 != null && pos2 != null;
+        return BlockCoords.of(getWorld(), maxX, maxY, maxZ);
     }
 }

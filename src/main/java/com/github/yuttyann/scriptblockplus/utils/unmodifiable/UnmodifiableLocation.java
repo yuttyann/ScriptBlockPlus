@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus UnmodifiableLocation クラス
  * @author yuttyann44581
  */
-public class UnmodifiableLocation extends Location {
+public final class UnmodifiableLocation extends Location {
 
     public UnmodifiableLocation(@NotNull Location location) {
         super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
@@ -33,86 +33,86 @@ public class UnmodifiableLocation extends Location {
 
     @Override
     public void setWorld(@Nullable World world) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public void setX(double x) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public void setY(double y) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public void setZ(double z) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public void setYaw(float yaw) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public void setPitch(float pitch) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     @NotNull
     public Location setDirection(@NotNull Vector vector) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     @NotNull
     public Location add(@NotNull Location vec) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     @NotNull
     public Location add(@NotNull Vector vec) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     @NotNull
     public Location add(double x, double y, double z) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     @NotNull
     public Location subtract(@NotNull Location vec) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     @NotNull
     public Location subtract(@NotNull Vector vec) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     @NotNull
     public Location subtract(double x, double y, double z) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     @NotNull
     public Location multiply(double m) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     @NotNull
     public Location zero() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override

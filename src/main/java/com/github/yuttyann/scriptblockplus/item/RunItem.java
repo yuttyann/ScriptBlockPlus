@@ -15,7 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus.item;
 
-import org.bukkit.Location;
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
@@ -28,20 +29,21 @@ import org.jetbrains.annotations.Nullable;
  */
 public class RunItem {
 
-    private final Player player;
     private final ItemStack item;
-    private final Location location;
+    private final Player player;
     private final Action action;
-    private final boolean isAIR;
-    private final boolean isSneaking;
+    private final BlockCoords blockCoords;
 
-    public RunItem(@NotNull Player player, @NotNull ItemStack item, @Nullable Location location, @NotNull Action action) {
-        this.player = player;
+    public RunItem(@NotNull ItemStack item, @NotNull Player player, @NotNull Action action, @Nullable BlockCoords blockCoords) {
         this.item = item;
-        this.location = location;
+        this.player = player;
         this.action = action;
-        this.isAIR = action.name().endsWith("_CLICK_AIR");
-        this.isSneaking = player.isSneaking();
+        this.blockCoords = blockCoords;
+    }
+
+    @NotNull
+    public ItemStack getItem() {
+        return item;
     }
 
     @NotNull
@@ -50,25 +52,20 @@ public class RunItem {
     }
 
     @NotNull
-    public ItemStack getItem() {
-        return item;
-    }
-
-    @Nullable
-    public Location getLocation() {
-        return location;
-    }
-
-    @NotNull
     public Action getAction() {
         return action;
     }
 
+    @Nullable
+    public BlockCoords getBlockCoords() {
+        return blockCoords;
+    }
+
     public boolean isAIR() {
-        return isAIR;
+        return action.name().endsWith("_CLICK_AIR");
     }
 
     public boolean isSneaking() {
-        return isSneaking;
+        return player.isSneaking();
     }
 }

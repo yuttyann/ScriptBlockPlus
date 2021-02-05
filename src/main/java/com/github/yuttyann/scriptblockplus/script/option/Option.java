@@ -92,7 +92,7 @@ public abstract class Option implements Comparable<Option> {
     /**
      * 指定されたスクリプト内のオプションが正常なのか確認します。
      * @param script - スクリプト
-     * @return {@link String} - 正常だった場合はtrue
+     * @return {@link String} - 正常だった場合は{@code true}
      */
     public final boolean isOption(@NotNull String script) {
         return script.length() >= length && script.indexOf(syntax) == 0;
@@ -109,7 +109,7 @@ public abstract class Option implements Comparable<Option> {
     /**
      * オプションを呼び出します。
      * @param sbRead - {@link SBRead}
-     * @return {@link String} - 有効な場合はtrue
+     * @return {@link String} - 有効な場合は{@code true}
      */
     public abstract boolean callOption(@NotNull SBRead sbRead);
 

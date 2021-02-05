@@ -13,8 +13,9 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.file.json.annotation;
+package com.github.yuttyann.scriptblockplus.file.json.builder;
 
+import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import org.jetbrains.annotations.NotNull;

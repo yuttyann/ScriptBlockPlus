@@ -72,11 +72,11 @@ public final class RayTrace {
                 if (blocks.size() > 1) {
                     Block old = null, now = null;
                     var iterator = blocks.iterator();
-                    var blockCoords = new BlockCoords(player.getEyeLocation());
+                    var location = player.getEyeLocation();
                     while (iterator.hasNext()) {
                         old = now;
                         now = iterator.next();
-                        if (blockCoords.equals(now.getLocation())) {
+                        if (BlockCoords.compare(location, now.getLocation())) {
                             continue;
                         }
                         if (old != null && now.getType().isOccluding()) {
@@ -95,9 +95,11 @@ public final class RayTrace {
         var world = player.getWorld();
         var blocks = new LinkedHashSet<Block>();
         var rayTrace = new RayTrace(player);
+        var boundingBox = new SBBoundingBox();
         for(var position : rayTrace.traverse(distance, accuracy)) {
             var location = position.toLocation(world);
-            if(rayTrace.intersects(new SBBoundingBox(location.getBlock(), square), distance, accuracy)){
+            boundingBox.setBlock(location.getBlock(), square);
+            if(rayTrace.intersects(boundingBox, distance, accuracy)){
                 blocks.add(location.getBlock());
             }
         }
@@ -152,7 +154,8 @@ public final class RayTrace {
     @Nullable
     public Vector positionOfIntersection(@NotNull SBBoundingBox boundingBox, final double distance, final double accuracy) {
         var positions = traverse(distance, accuracy);
-        for (var position : positions) {
+        for (int i = 0; i < positions.size(); i++) {
+            var position = positions.get(i);
             if (intersects(position, boundingBox)) {
                 return position;
             }
@@ -162,8 +165,8 @@ public final class RayTrace {
 
     public boolean intersects(@NotNull SBBoundingBox boundingBox, final double distance, final double accuracy) {
         var positions = traverse(distance, accuracy);
-        for (var position : positions) {
-            if (intersects(position, boundingBox)) {
+        for (int i = 0; i < positions.size(); i++) {
+            if (intersects(positions.get(i), boundingBox)) {
                 return true;
             }
         }

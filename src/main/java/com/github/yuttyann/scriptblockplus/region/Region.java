@@ -15,6 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus.region;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
@@ -41,22 +43,22 @@ public interface Region {
     String getName();
 
     /**
+     * 座標が設定されている場合は{@code true}を返します。
+     * @return {@link Boolean} - 座標が設定されている場合は{@code true}
+     */
+    boolean hasPositions();
+
+    /**
      * 最小座標を取得します。
      * @return {@link Location} - 最小座標
      */
     @NotNull
-    Location getMinimumPoint();
+    BlockCoords getMinimumPoint();
 
     /**
      * 最大座標を取得します。
      * @return {@link Location} - 最大座標
      */
     @NotNull
-    Location getMaximumPoint();
-
-    /**
-     * 座標が設定されている場合はtrueを返します。
-     * @return {@link Boolean} - 座標が設定されている場合はtrue
-     */
-    boolean hasPositions();
+    BlockCoords getMaximumPoint();
 }

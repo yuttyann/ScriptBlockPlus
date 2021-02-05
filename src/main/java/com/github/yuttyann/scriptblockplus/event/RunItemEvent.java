@@ -15,8 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus.event;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.item.RunItem;
-import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
@@ -43,14 +43,14 @@ public class RunItemEvent extends PlayerEvent implements Cancellable {
         return runItem.getItem();
     }
 
-    @Nullable
-    public Location getLocation() {
-        return runItem.getLocation();
-    }
-
     @NotNull
     public Action getAction() {
         return runItem.getAction();
+    }
+
+    @Nullable
+    public BlockCoords getBlockCoords() {
+        return runItem.getBlockCoords();
     }
 
     public boolean isAIR() {

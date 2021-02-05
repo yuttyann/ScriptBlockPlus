@@ -37,53 +37,53 @@ public final class UnmodifiableItemStack extends ItemStack {
 
     @Override
     public void setType(@NotNull Material type) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public void setAmount(int amount) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public void setData(@Nullable MaterialData data) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     @Deprecated
     public void setDurability(short durability) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public void addEnchantment(@NotNull Enchantment ench, int level) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public void addEnchantments(@NotNull Map<Enchantment, Integer> enchantments) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public void addUnsafeEnchantment(@NotNull Enchantment ench, int level) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public void addUnsafeEnchantments(@NotNull Map<Enchantment, Integer> enchantments) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public int removeEnchantment(@NotNull Enchantment ench) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override
     public boolean setItemMeta(@Nullable ItemMeta meta) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName());
     }
 
     @Override

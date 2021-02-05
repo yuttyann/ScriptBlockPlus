@@ -71,13 +71,16 @@ public final class CommandSelector {
     }
 
     @NotNull
-    public static List<String> build(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
+    public static List<String> build(@NotNull CommandSender sender, @Nullable Location start, @NotNull String command) {
         int modCount = 0;
         var indexList = new ArrayList<Index>();
         var commandList = Lists.newArrayList(parse(command, sender, indexList));
         for (int i = 0; i < indexList.size(); i++) {
+            if (i == 0) {
+                start = setCenter(EntitySelector.copy(sender, start));
+            }
             var selector = indexList.get(i).substring(command);
-            var entities = getTargets(sender, location, selector);
+            var entities = getTargets(sender, start, selector, false);
             if (entities == null || entities.length == 0) {
                 if (StreamUtils.anyMatch(SELECTOR_NAMES, s -> selector.startsWith(s + "["))) {
                     continue;
@@ -173,18 +176,19 @@ public final class CommandSelector {
     }
 
     @NotNull
-    public static Entity[] getTargets(@NotNull CommandSender sender, @Nullable Location location, @NotNull String selector) {
-        selector = Placeholder.INSTANCE.replace(getWorld(sender, location), selector);
+    public static Entity[] getTargets(@NotNull CommandSender sender, @Nullable Location start, @NotNull String selector, final boolean copy) {
+        start = copy ? setCenter(EntitySelector.copy(sender, start)) : start;
+        selector = Placeholder.INSTANCE.replace(getWorld(sender, start), selector);
         if (PackageType.HAS_NMS && Utils.isCBXXXorLater("1.13")) {
             try {
-                return NMSHelper.selectEntities(sender, location, selector);
+                return NMSHelper.selectEntities(sender, start, selector);
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }
         } else if (Utils.isCBXXXorLater("1.13.2")) {
             return Bukkit.selectEntities(sender, selector).toArray(Entity[]::new);
         }
-        return EntitySelector.getEntities(sender, location, selector);
+        return EntitySelector.getEntities(sender, start, selector);
     }
 
     @NotNull
@@ -204,6 +208,14 @@ public final class CommandSelector {
             world = ((BlockCommandSender) sender).getBlock().getWorld();
         }
         return world == null ? Bukkit.getWorlds().get(0) : world;
+    }
+
+    @NotNull
+    private static Location setCenter(@NotNull Location location) {
+        location.setX(location.getBlockX() + 0.5D);
+        location.setY(location.getBlockY());
+        location.setZ(location.getBlockZ() + 0.5D);
+        return location;
     }
 
     @NotNull

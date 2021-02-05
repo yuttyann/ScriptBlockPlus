@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.listener;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.event.BlockClickEvent;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.raytrace.RayTrace;
@@ -116,7 +117,7 @@ public class InteractListener implements Listener {
                 if (ItemAction.callRun(sbPlayer.getPlayer(), blockEvent.getItem(), blockEvent.getLocation(), blockEvent.getAction())) {
                     invalid.set(true);
                 } else if (blockEvent.getAction().name().endsWith("_CLICK_BLOCK")) {
-                    sbPlayer.getScriptEdit().ifPresent(s -> invalid.set(s.perform(sbPlayer, blockEvent.getLocation())));
+                    sbPlayer.getScriptEdit().ifPresent(s -> invalid.set(s.perform(sbPlayer, BlockCoords.of(blockEvent.getBlock()))));
                 }
                 blockEvent.setInvalid(invalid.get());
             }

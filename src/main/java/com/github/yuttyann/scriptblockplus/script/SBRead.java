@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -49,18 +50,25 @@ public interface SBRead extends ObjectMap {
     }
 
     /**
-     * スクリプトの座標を取得します。
+     * スクリプトキーを取得します。
+     * @return {@link ScriptKey} - スクリプトキー
+     */
+    @NotNull
+    ScriptKey getScriptKey();
+
+    /**
+     * {@link Bukkit}の{@link Location}を取得します。
      * @return {@link Location} - スクリプトの座標
      */
     @NotNull
     Location getLocation();
 
     /**
-     * スクリプトキーを取得します。
-     * @return {@link ScriptKey} - スクリプトキー
+     * {@link ScriptBlock}の{@link BlockCoords}を取得します。
+     * @return {@link BlockCoords} - スクリプトの座標
      */
     @NotNull
-    ScriptKey getScriptKey();
+    BlockCoords getBlockCoords();
 
     /**
      * スクリプトの一覧を取得します。
@@ -85,7 +93,7 @@ public interface SBRead extends ObjectMap {
     /**
      * スクリプトを実行します。
      * @param index - 開始位置
-     * @return {@link Boolean} - 実行に成功した場合はtrue
+     * @return {@link Boolean} - 実行に成功した場合は{@code true}
      */
     boolean read(final int index);
 }
