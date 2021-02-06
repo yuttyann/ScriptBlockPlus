@@ -22,11 +22,12 @@ import org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import io.netty.util.collection.IntObjectHashMap;
+import io.netty.util.collection.IntObjectMap;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -87,7 +88,7 @@ public enum PackageType {
         HAS_NMS = hasNMS;
     }
 
-    private static final Map<Integer, Object> REFLECTION_CACHE = new HashMap<>();
+    private static final IntObjectMap<Object> REFLECTION_CACHE = new IntObjectHashMap<>();
 
     private final String path;
 
@@ -287,13 +288,13 @@ public enum PackageType {
     }
 
     @NotNull
-    private Integer createHash(@NotNull HashType hashType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
+    private int createHash(@NotNull HashType hashType, @NotNull String className, @Nullable String name, @Nullable Class<?>[] objects) {
         if (!HAS_NMS || StringUtils.isEmpty(className)) {
             throw new IllegalArgumentException();
         }
         int baseHash = hashType.toString().hashCode() + toString().hashCode() + className.hashCode();
         if (objects == null) {
-            return Integer.valueOf(name == null ? 11 * baseHash : 23 * (baseHash + name.hashCode()));
+            return name == null ? 11 * baseHash : 23 * (baseHash + name.hashCode());
         }
         int hash = 1;
         int prime = 31;
@@ -303,6 +304,6 @@ public enum PackageType {
         for (var object : objects) {
             hash += Objects.hashCode(object);
         }
-        return Integer.valueOf(hash);
+        return hash;
     }
 }

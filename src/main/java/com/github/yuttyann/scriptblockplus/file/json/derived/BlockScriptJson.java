@@ -40,6 +40,16 @@ public class BlockScriptJson extends SingleJson<BlockScript> {
         super(scriptKey.getName());
     }
 
+    @Override
+    protected boolean isTemporary() {
+        return false;
+    }
+
+    @Override
+    protected boolean isCacheFileExists() {
+        return false;
+    }
+
     @NotNull
     public ScriptKey getScriptKey() {
         return ScriptKey.valueOf(getName());
@@ -49,11 +59,6 @@ public class BlockScriptJson extends SingleJson<BlockScript> {
     @NotNull
     protected BlockScript newInstance() {
         return new BlockScript(getScriptKey());
-    }
-
-    @Override
-    protected boolean isTemporary() {
-        return false;
     }
 
     @NotNull

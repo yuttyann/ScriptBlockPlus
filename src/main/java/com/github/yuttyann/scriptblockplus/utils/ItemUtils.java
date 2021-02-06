@@ -132,11 +132,11 @@ public class ItemUtils {
         return item.getDurability();
     }
 
-    public static boolean isItem(@Nullable ItemStack item, @Nullable Material material, @NotNull String name) {
-        return isItem(item, material, name::equals);
+    public static boolean compare(@Nullable ItemStack item, @Nullable Material material, @NotNull String name) {
+        return compare(item, material, name::equals);
     }
 
-    public static boolean isItem(@Nullable ItemStack item, @Nullable Material material, @NotNull Predicate<String> filter) {
+    public static boolean compare(@Nullable ItemStack item, @Nullable Material material, @NotNull Predicate<String> filter) {
         return (item == null || material == null) ? false : item.getType() == material && filter.test(getName(item));
     }
 }

@@ -45,7 +45,12 @@ public class PlayerTempJson extends SingleJson<PlayerTemp> {
     protected PlayerTempJson(@NotNull UUID uuid) {
         super(uuid.toString());
     }
-    
+
+    @Override
+    protected boolean isTemporary() {
+        return false;
+    }
+
     @Override
     @NotNull
     protected PlayerTemp newInstance() {

@@ -56,7 +56,7 @@ public class ItemCost extends BaseOption {
         }
         int result = amount;
         for (var item : inventoryItems) {
-            if (item != null && ItemUtils.getDamage(item) == damage && ItemUtils.isItem(item, material, name)) {
+            if (item != null && ItemUtils.getDamage(item) == damage && ItemUtils.compare(item, material, name)) {
                 result -= result > 0 ? setAmount(item, item.getAmount() - result) : 0;
             }
         }

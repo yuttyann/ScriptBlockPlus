@@ -85,10 +85,4 @@ public final class UnmodifiableItemStack extends ItemStack {
     public boolean setItemMeta(@Nullable ItemMeta meta) {
         throw new UnsupportedOperationException(this.getClass().getName());
     }
-
-    @Override
-    @NotNull
-    public ItemStack clone() {
-        return super.clone();
-    }
 }

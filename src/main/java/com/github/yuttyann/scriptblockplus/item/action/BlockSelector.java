@@ -38,16 +38,6 @@ public class BlockSelector extends ItemAction {
     }
 
     @Override
-    public boolean hasPermission(@NotNull Permissible permissible) {
-        return Permission.TOOL_BLOCK_SELECTOR.has(permissible);
-    }
-
-    @Override
-    public void slot(@NotNull ChangeSlot changeSlot) {
-
-    }
-
-    @Override
     public void run(@NotNull RunItem runItem) {
         var blockCoords = runItem.getBlockCoords();
         var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
@@ -77,5 +67,13 @@ public class BlockSelector extends ItemAction {
                 break;
             default:
         }
+    }
+
+    @Override
+    public void slot(@NotNull ChangeSlot changeSlot) { }
+
+    @Override
+    public boolean hasPermission(@NotNull Permissible permissible) {
+        return Permission.TOOL_BLOCK_SELECTOR.has(permissible);
     }
 }

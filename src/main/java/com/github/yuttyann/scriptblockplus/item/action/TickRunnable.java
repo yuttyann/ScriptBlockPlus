@@ -15,7 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus.item.action;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -213,7 +212,7 @@ public class TickRunnable extends BukkitRunnable {
         }
     }
 
-    private boolean destroyEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull Set<BlockCoords> blocks) throws InvocationTargetException {
+    private boolean destroyEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull Set<BlockCoords> blocks) throws Exception {
         if (!BlockScriptJson.has(blockCoords)) {
             return false;
         }

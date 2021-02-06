@@ -44,18 +44,6 @@ public class ScriptEditor extends ItemAction {
     }
 
     @Override
-    public boolean hasPermission(@NotNull Permissible permissible) {
-        return Permission.TOOL_SCRIPT_EDITOR.has(permissible);
-    }
-
-    @Override
-    public void slot(@NotNull ChangeSlot changeSlot) {
-        var sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
-        var scriptKey = sbPlayer.getObjectMap().get(KEY, ScriptKey.INTERACT);
-        ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptKey);
-    }
-
-    @Override
     public void run(@NotNull RunItem runItem) {
         var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
         var scriptKey = sbPlayer.getObjectMap().get(KEY, ScriptKey.INTERACT);
@@ -83,6 +71,18 @@ public class ScriptEditor extends ItemAction {
                 break;
             default:
         }
+    }
+
+    @Override
+    public void slot(@NotNull ChangeSlot changeSlot) {
+        var sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
+        var scriptKey = sbPlayer.getObjectMap().get(KEY, ScriptKey.INTERACT);
+        ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptKey);
+    }
+
+    @Override
+    public boolean hasPermission(@NotNull Permissible permissible) {
+        return Permission.TOOL_SCRIPT_EDITOR.has(permissible);
     }
 
     @NotNull

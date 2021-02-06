@@ -22,7 +22,6 @@ import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.builder.BlockCoordsDeserializer;
 import com.github.yuttyann.scriptblockplus.file.json.builder.BlockCoordsSerializer;
 import com.github.yuttyann.scriptblockplus.file.json.builder.FieldExclusion;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
 import com.google.common.base.Charsets;
 import com.google.gson.GsonBuilder;
@@ -35,6 +34,9 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import io.netty.util.collection.IntObjectHashMap;
+import io.netty.util.collection.IntObjectMap;
+
 import java.io.*;
 import java.util.*;
 
@@ -46,8 +48,44 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public abstract class BaseJson<E extends BaseElement> {
 
+    /**
+     * ScriptBlockPlus Status 列挙型
+     * <p>
+     * キャッシュの状態を表す列挙型
+     * @author yuttyann44581
+     */
+    public enum Status {
+        /**
+         * キャッシュが生成されていない状態
+         * <p>
+         * デフォルトの状態です。
+        */
+        NO_CACHE,
+
+        /**
+         * キャッシュを保持している状態
+         * <p>
+         * 生成方法は{@link BaseJson#newJson(Object, CacheJson)}を参照してください。
+        */
+        KEEP_CACHE,
+
+        /**
+         * キャッシュが削除されている状態
+         * <p>
+         * この状態のインスタンスを保持し続けないでください。
+        */
+        CLEAR_CACHE,
+
+        /**
+         * キャッシュしているファイルが削除された状態
+         * <p>
+         * この状態のインスタンスは保存できません。
+        */
+        DELETE_CACHE;
+    }
+
     @Exclude
-    private static final Map<Integer, BaseJson<?>> JSON_CACHE = new HashMap<>();
+    private static final IntObjectMap<BaseJson<?>> JSON_CACHE = new IntObjectHashMap<>();
 
     @Exclude
     private static final GsonBuilder GSON_BUILDER = new GsonBuilder();
@@ -56,7 +94,10 @@ public abstract class BaseJson<E extends BaseElement> {
     private static final String INDENT = "  ";
 
     @Exclude
-    private final JsonTag jsonTag = getClass().getAnnotation(JsonTag.class);
+    private final JsonTag JSON_TAG = getClass().getAnnotation(JsonTag.class);
+
+    @Exclude
+    private int cacheId;
 
     @Exclude
     private File file;
@@ -65,10 +106,7 @@ public abstract class BaseJson<E extends BaseElement> {
     private File parent;
 
     @Exclude
-    private Integer hash;
-
-    @Exclude
-    private boolean cache;
+    private Status status;
 
     @SerializedName(value = "name", alternate = { "id" })
     protected String name;
@@ -92,10 +130,22 @@ public abstract class BaseJson<E extends BaseElement> {
      * @param json - JSONのファイル
      */
     protected BaseJson(@NotNull File json) {
-        if (jsonTag == null) {
+        if (JSON_TAG == null) {
             throw new NullPointerException("Annotation not found @JsonTag()");
         }
-        loadList(json);
+        var path = json.getPath();
+        if (path.lastIndexOf(SBFile.setSeparator(JSON_TAG.path())) == -1) {
+            throw new IllegalArgumentException("File: " + json.getPath() + ", JsonTag: " + JSON_TAG.path());
+        }
+        this.name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.lastIndexOf('.'));
+        this.file = json;
+        try {
+            var baseJson = loadFile();
+            this.list = baseJson == null ? new ArrayList<>() : baseJson.list;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        noCache();
     }
 
     /**
@@ -103,44 +153,18 @@ public abstract class BaseJson<E extends BaseElement> {
      * @param name - ファイルの名前
      */
     protected BaseJson(@NotNull String name) {
-        if (jsonTag == null) {
+        if (JSON_TAG == null) {
             throw new NullPointerException("Annotation not found @JsonTag()");
         }
-        loadList(name);
-    }
-
-    /**
-     * 要素の読み込みを行います。
-     * @param file - ファイル
-     */
-    private final void loadList(@NotNull File file) {
-        var path = file.getPath();
-        if (path.lastIndexOf(SBFile.setSeparator(jsonTag.path())) == -1) {
-            throw new IllegalArgumentException("File: " + file.getPath() + ", JsonTag: " + jsonTag.path());
-        }
-        this.name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.lastIndexOf('.'));
-        this.file = file;
-        try {
-            var json = loadFile();
-            this.list = json == null ? new ArrayList<>() : (List<E>) loadFile().list;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 要素の読み込みを行います。
-     * @param name - ファイルの名前
-     */
-    private final void loadList(@NotNull String name) {
         this.name = name;
-        this.file = getJsonFile(jsonTag);
+        this.file = getJsonFile(JSON_TAG);
         try {
-            var json = loadFile();
-            this.list = json == null ? new ArrayList<>() : (List<E>) loadFile().list;
+            var baseJson = loadFile();
+            this.list = baseJson == null ? new ArrayList<>() : baseJson.list;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        noCache();
     }
 
     /**
@@ -157,15 +181,18 @@ public abstract class BaseJson<E extends BaseElement> {
      */
     @NotNull
     protected static <T, R extends BaseJson<?>> R newJson(@NotNull T argment, @NotNull CacheJson<T> cacheJson) {
-        var hash = hashCode(argment, cacheJson.getJsonClass());
-        var json = JSON_CACHE.get(hash);
-        if (json == null) {
-            json = cacheJson.newInstance(argment);
-            json.hash = hash;
-            json.cache = true;
-            JSON_CACHE.put(hash, json);
+        var hash = hash(argment, cacheJson.getJsonClass());
+        var baseJson = JSON_CACHE.get(hash);
+        if (baseJson == null) {
+            baseJson = cacheJson.newInstance(argment);
+            if (baseJson.isCacheFileExists() && !baseJson.exists()) {
+                return (R) baseJson;
+            }
+            baseJson.keepCache();
+            baseJson.setCacheId(hash);
+            JSON_CACHE.put(hash, baseJson);
         }
-        return (R) json;
+        return (R) baseJson;
     }
 
     /**
@@ -181,7 +208,7 @@ public abstract class BaseJson<E extends BaseElement> {
      * キャッシュされた全ての要素を削除します。
      */
     public static void clear() {
-        JSON_CACHE.forEach((k, v) -> v.nonCache());
+        JSON_CACHE.forEach((k, v) -> v.clearCache());
         JSON_CACHE.clear();
     }
 
@@ -192,7 +219,7 @@ public abstract class BaseJson<E extends BaseElement> {
     public static final void clear(@NotNull Class<? extends BaseJson<?>> jsonClass) {
        JSON_CACHE.entrySet().removeIf(e -> {
            if (e.getValue().getClass().equals(jsonClass)) {
-                e.getValue().nonCache();
+                e.getValue().clearCache();
                 return true;
            }
            return false;
@@ -203,7 +230,13 @@ public abstract class BaseJson<E extends BaseElement> {
      * 要素の再読み込みを行います。
      */
     public final void reload() {
-        StreamUtils.ifAction(name != null, () -> loadList(name));
+        Objects.requireNonNull(file, "Please load the file");
+        try {
+            var baseJson = loadFile();
+            this.list = baseJson == null ? new ArrayList<>() : baseJson.list;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -232,25 +265,77 @@ public abstract class BaseJson<E extends BaseElement> {
     public final File getParentFile() {
         Validate.notNull(file, "Please load the file");
         if (parent == null) {
-            parent = file.getParentFile();
+            this.parent = file.getParentFile();
         }
         return parent;
     }
 
     /**
-     * ファイルが存在するのか確認します。
-     * @return {@link boolean} - ファイルが存在する場合は{@code true}
+     * キャッシュIDを設定します。
+     * @param cacheId - キャッシュID
      */
-    public final boolean exists() {
-        return file.exists();
+    private void setCacheId(final int id) {
+        this.cacheId = id;
     }
 
     /**
-     * キャッシュが存在するのかどうか。
-     * @return {@link boolean} - 削除を行う場合は{@code true}
+     * キャッシュIDを取得します。
+     * @return {@link int} - キャッシュID
      */
-    public final boolean isCache() {
-        return cache;
+    public int getCacheId() {
+        return cacheId;
+    }
+
+    /**
+     * キャッシュが生成されていない状態に設定します。
+     * <p>
+     * 値が設定されていない場合のみ設定される。
+     */
+    private void noCache() {
+        if (getStatus() == null) {
+            this.status = Status.NO_CACHE;
+        }
+    }
+
+    /**
+     * キャッシュを保持している状態に設定します。
+     * <p>
+     * キャッシュが生成されていない場合のみ設定される。
+     */
+    private void keepCache() {
+        if (getStatus() == Status.NO_CACHE) {
+            this.status = Status.KEEP_CACHE;
+        }
+    }
+
+    /**
+     * キャッシュが削除されている状態に設定します。
+     * <p>
+     * キャッシュが保存されている場合のみ設定される。
+     */
+    private void clearCache() {
+        if (getStatus() == Status.KEEP_CACHE) {
+            this.status = Status.CLEAR_CACHE;
+        }
+    }
+
+    /**
+     * キャッシュしているファイルが削除された状態に設定します。
+     * <p>
+     * キャッシュが保存されている場合のみ設定される。
+     */
+    private void deleteCache() {
+        if (getStatus() == Status.KEEP_CACHE) {
+            this.status = Status.DELETE_CACHE;
+        }
+    }
+
+    /**
+     * キャッシュの状態を取得します。
+     * @return {@link Status} - キャッシュの状態
+     */
+    public final Status getStatus() {
+        return status;
     }
 
     /**
@@ -262,10 +347,19 @@ public abstract class BaseJson<E extends BaseElement> {
     }
 
     /**
-     * キャッシュの判定をオフにします。
+     * ファイルが存在する時のみキャッシュを保存するのかどうか。
+     * @return {@link boolean} - ファイルが存在する時のみキャッシュを保存する場合は{@code true}
      */
-    private void nonCache() {
-        this.cache = false;
+    protected boolean isCacheFileExists() {
+        return true;
+    }
+
+    /**
+     * ファイルが存在するのか確認します。
+     * @return {@link boolean} - ファイルが存在する場合は{@code true}
+     */
+    public final boolean exists() {
+        return file.exists();
     }
 
     /**
@@ -273,9 +367,9 @@ public abstract class BaseJson<E extends BaseElement> {
      */
     public final void deleteFile() {
         try {
-            if (isCache() && hash != null) {
-                JSON_CACHE.remove(hash);
-                nonCache();
+            if (getStatus() == Status.KEEP_CACHE) {
+                deleteCache();
+                JSON_CACHE.remove(getCacheId());
             }
         } finally {
             file.delete();
@@ -286,6 +380,9 @@ public abstract class BaseJson<E extends BaseElement> {
      * JSONのシリアライズを行います。
      */
     public final void saveFile() {
+        if (getStatus() == Status.DELETE_CACHE) {
+            return;
+        }
         if (!getParentFile().exists()) {
             getParentFile().mkdirs();
         }
@@ -297,9 +394,9 @@ public abstract class BaseJson<E extends BaseElement> {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (isTemporary() && isCache() && hash != null) {
-                JSON_CACHE.remove(hash);
-                nonCache();
+            if (isTemporary() && getStatus() == Status.KEEP_CACHE) {
+                clearCache();
+                JSON_CACHE.remove(getCacheId());
             }
         }
     }
@@ -309,7 +406,7 @@ public abstract class BaseJson<E extends BaseElement> {
      * @return {@link BaseJson} - JSON
      */
     @Nullable
-    private BaseJson<?> loadFile() throws IOException {
+    private BaseJson<E> loadFile() throws IOException {
         if (!file.exists()) {
             return null;
         }
@@ -317,7 +414,7 @@ public abstract class BaseJson<E extends BaseElement> {
             getParentFile().mkdirs();
         }
         try (var reader = new JsonReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8))) {
-            return GSON_BUILDER.create().fromJson(reader, getClass());
+            return (BaseJson<E>) GSON_BUILDER.create().fromJson(reader, getClass());
         }
     }
 
@@ -364,24 +461,26 @@ public abstract class BaseJson<E extends BaseElement> {
     }
 
     /**
-     * キャッシュデータのハッシュコードを取得します。
-     * @return {@link Integer} - ハッシュコード
+     * ハッシュコードを生成します。
+     * @param argment - 引数
+     * @param jsonClass - JSONのクラス
+     * @return {@link int} - ハッシュコード
      */
-    @Nullable
-    private Integer hash() {
+    @NotNull
+    private static int hash(@NotNull Object argment, @NotNull Class<?> jsonClass) {
+        int hash = 1;
+        int prime = 31;
+        hash = prime * hash + Objects.hashCode(argment);
+        hash = prime * hash + jsonClass.hashCode();
         return hash;
     }
 
     @Override
     public int hashCode() {
-        return hashCode(name, getClass());
-    }
-
-    private static int hashCode(@NotNull Object obj, @NotNull Class<?> jsonClass) {
         int hash = 1;
         int prime = 31;
-        hash = prime * hash + obj.hashCode();
-        hash = prime * hash + jsonClass.hashCode();
+        hash = prime * hash + name.hashCode();
+        hash = prime * hash + file.hashCode();
         return hash;
     }
 
@@ -393,7 +492,7 @@ public abstract class BaseJson<E extends BaseElement> {
         if (!(obj instanceof BaseJson)) {
             return false;
         }
-        var json = (BaseJson<?>) obj;
-        return Objects.equals(name, json.name) && Objects.equals(file, json.file);
+        var baseJson = (BaseJson<?>) obj;
+        return Objects.equals(name, baseJson.name) && Objects.equals(file, baseJson.file);
     }
 }

@@ -49,16 +49,6 @@ public class ScriptViewer extends ItemAction {
     }
 
     @Override
-    public boolean hasPermission(@NotNull Permissible permissible) {
-        return Permission.TOOL_SCRIPT_VIEWER.has(permissible);
-    }
-
-    @Override
-    public void slot(@NotNull ChangeSlot changeSlot) {
-
-    }
-
-    @Override
     public void run(@NotNull RunItem runItem) {
         var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
         switch (runItem.getAction()) {
@@ -75,5 +65,13 @@ public class ScriptViewer extends ItemAction {
                 break;
             default:
         }
+    }
+
+    @Override
+    public void slot(@NotNull ChangeSlot changeSlot) { }
+
+    @Override
+    public boolean hasPermission(@NotNull Permissible permissible) {
+        return Permission.TOOL_SCRIPT_VIEWER.has(permissible);
     }
 }
