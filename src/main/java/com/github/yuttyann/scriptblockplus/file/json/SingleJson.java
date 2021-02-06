@@ -16,7 +16,10 @@
 package com.github.yuttyann.scriptblockplus.file.json;
 
 import java.io.File;
+import java.util.List;
 import java.util.function.Consumer;
+
+import com.github.yuttyann.scriptblockplus.utils.collection.SingleList;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +46,16 @@ public abstract class SingleJson<E extends BaseElement> extends BaseJson<E> {
      */
     protected SingleJson(@NotNull String name) {
         super(name);
+    }
+
+    /**
+     * {@link SingleList}&lt;{@link E}&gt;を生成します。
+     * @return {@link SingleList}&lt;{@link E}&gt; - リスト
+     */
+    @Override
+    @NotNull
+    protected final List<E> createList() {
+        return new SingleList<>();
     }
 
     /**

@@ -22,7 +22,7 @@ import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
 import com.github.yuttyann.scriptblockplus.file.json.multi.TwoJson;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.github.yuttyann.scriptblockplus.utils.ReuseIterator;
+import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
 
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;

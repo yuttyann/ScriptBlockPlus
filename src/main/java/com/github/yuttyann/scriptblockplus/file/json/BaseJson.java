@@ -55,6 +55,7 @@ public abstract class BaseJson<E extends BaseElement> {
      * @author yuttyann44581
      */
     public enum Status {
+        
         /**
          * キャッシュが生成されていない状態
          * <p>
@@ -75,13 +76,6 @@ public abstract class BaseJson<E extends BaseElement> {
          * この状態のインスタンスを保持し続けないでください。
         */
         CLEAR_CACHE,
-
-        /**
-         * キャッシュしているファイルが削除された状態
-         * <p>
-         * この状態のインスタンスは保存できません。
-        */
-        DELETE_CACHE;
     }
 
     @Exclude
@@ -97,13 +91,13 @@ public abstract class BaseJson<E extends BaseElement> {
     private final JsonTag JSON_TAG = getClass().getAnnotation(JsonTag.class);
 
     @Exclude
-    private int cacheId;
-
-    @Exclude
     private File file;
 
     @Exclude
     private File parent;
+
+    @Exclude
+    private int cacheId;
 
     @Exclude
     private Status status;
@@ -140,8 +134,7 @@ public abstract class BaseJson<E extends BaseElement> {
         this.name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.lastIndexOf('.'));
         this.file = json;
         try {
-            var baseJson = loadFile();
-            this.list = baseJson == null ? new ArrayList<>() : baseJson.list;
+            setList(createList(), loadFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -159,12 +152,47 @@ public abstract class BaseJson<E extends BaseElement> {
         this.name = name;
         this.file = getJsonFile(JSON_TAG);
         try {
-            var baseJson = loadFile();
-            this.list = baseJson == null ? new ArrayList<>() : baseJson.list;
+            setList(createList(), loadFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
         noCache();
+    }
+
+    /**
+     * 新しいリストに要素を追加します。
+     */
+    private void setList(@NotNull List<E> newList, @NotNull BaseJson<E> baseJson) {
+        if (baseJson != null) {
+            var jsonList = baseJson.list;
+            if (newList instanceof ArrayList) {
+                newList = jsonList;
+            } else {
+                newList.addAll(jsonList);
+            }
+        }
+        this.list = newList;
+    }
+
+    /**
+     * {@link ArrayList}&lt;{@link E}&gt;を生成します。
+     * @return {@link ArrayList}&lt;{@link E}&gt; - リスト
+     */
+    @NotNull
+    protected List<E> createList() {
+        return new ArrayList<>();
+    }
+
+    /**
+     * 要素の再読み込みを行います。
+     */
+    public final void reload() {
+        Objects.requireNonNull(file, "Please load the file");
+        try {
+            setList(createList(), loadFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -227,19 +255,6 @@ public abstract class BaseJson<E extends BaseElement> {
     }
 
     /**
-     * 要素の再読み込みを行います。
-     */
-    public final void reload() {
-        Objects.requireNonNull(file, "Please load the file");
-        try {
-            var baseJson = loadFile();
-            this.list = baseJson == null ? new ArrayList<>() : baseJson.list;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * 拡張子を除いたファイルの名前を取得します。
      * @return {@link String} - ファイルの名前
      */
@@ -274,8 +289,10 @@ public abstract class BaseJson<E extends BaseElement> {
      * キャッシュIDを設定します。
      * @param cacheId - キャッシュID
      */
-    private void setCacheId(final int id) {
-        this.cacheId = id;
+    private void setCacheId(final int cacheId) {
+        if (this.cacheId == 0) {
+            this.cacheId = cacheId;
+        }
     }
 
     /**
@@ -320,17 +337,6 @@ public abstract class BaseJson<E extends BaseElement> {
     }
 
     /**
-     * キャッシュしているファイルが削除された状態に設定します。
-     * <p>
-     * キャッシュが保存されている場合のみ設定される。
-     */
-    private void deleteCache() {
-        if (getStatus() == Status.KEEP_CACHE) {
-            this.status = Status.DELETE_CACHE;
-        }
-    }
-
-    /**
      * キャッシュの状態を取得します。
      * @return {@link Status} - キャッシュの状態
      */
@@ -364,25 +370,27 @@ public abstract class BaseJson<E extends BaseElement> {
 
     /**
      * キャッシュされた要素を含め、ファイルを削除します。
+     * @return {@link boolean} - 削除に成功した場合は{@code true}
      */
-    public final void deleteFile() {
+    public final boolean deleteFile() {
+        if (!exists()) {
+            return false;
+        }
         try {
             if (getStatus() == Status.KEEP_CACHE) {
-                deleteCache();
+                clearCache();
                 JSON_CACHE.remove(getCacheId());
             }
         } finally {
             file.delete();
         }
+        return true;
     }
 
     /**
-     * JSONのシリアライズを行います。
+     * JSONのシリアライズ化を行います。
      */
     public final void saveFile() {
-        if (getStatus() == Status.DELETE_CACHE) {
-            return;
-        }
         if (!getParentFile().exists()) {
             getParentFile().mkdirs();
         }
@@ -402,12 +410,12 @@ public abstract class BaseJson<E extends BaseElement> {
     }
 
     /**
-     * JSONのデシリアライズを行います。
+     * JSONのデシリアライズ化を行います。
      * @return {@link BaseJson} - JSON
      */
     @Nullable
     private BaseJson<E> loadFile() throws IOException {
-        if (!file.exists()) {
+        if (!exists()) {
             return null;
         }
         if (!getParentFile().exists()) {
