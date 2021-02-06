@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class SingleList<E> extends AbstractList<E> implements RandomAccess, Serializable {
 
-	private static final long serialVersionUID = -850266659953923568L;
+    private static final long serialVersionUID = -850266659953923568L;
 
     private int size;
     private E element;
@@ -87,7 +87,7 @@ public final class SingleList<E> extends AbstractList<E> implements RandomAccess
 
     @Override
     public boolean addAll(int index, Collection<? extends E> collection) {
-        return super.addAll(collection);
+        return addAll(collection);
     }
 
     @Override
@@ -147,19 +147,19 @@ public final class SingleList<E> extends AbstractList<E> implements RandomAccess
 
             private boolean hasNext = true;
 
-			@Override
-			public boolean hasNext() {
-				return hasNext;
-			}
+            @Override
+            public boolean hasNext() {
+                return hasNext;
+            }
 
-			@Override
-			public E next() {
+            @Override
+            public E next() {
                 if (hasNext) {
                     hasNext = false;
                     return element;
                 }
                 throw new NoSuchElementException();
-			}
+            }
         };
     }
 

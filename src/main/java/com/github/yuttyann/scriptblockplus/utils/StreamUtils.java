@@ -33,9 +33,9 @@ import java.util.function.Predicate;
 public final class StreamUtils {
 
     /**
-     * ScriptBlockPlus ThrowableConsumer インターフェイス
+     * ScriptBlockPlus ThrowableConsumer インターフェース
      * <p>
-     * {@link Consumer}で例外処理を出来るようにしたインターフェイスです。
+     * {@link Consumer}で例外処理を出来るようにしたインターフェースです。
      * @author yuttyann44581
      */
     @FunctionalInterface

@@ -74,6 +74,10 @@ public interface ScriptBlockAPI {
     @NotNull
     SBEdit getSBEdit(@NotNull ScriptKey scriptKey);
 
+    /**
+     * ScriptBlockPlus SBEdit インターフェース
+     * @author yuttyann44581
+     */
     interface SBEdit {
 
         /**
@@ -127,6 +131,10 @@ public interface ScriptBlockAPI {
      */
     SBFile getSBFile(@NotNull ScriptKey scriptKey, @NotNull Location location);
 
+    /**
+     * ScriptBlockPlus SBFile インターフェース
+     * @author yuttyann44581
+     */
     interface SBFile {
 
         /**

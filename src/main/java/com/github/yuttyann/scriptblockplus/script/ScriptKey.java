@@ -15,7 +15,9 @@
  */
 package com.github.yuttyann.scriptblockplus.script;
 
+import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,20 +42,27 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
     public static final ScriptKey WALK = new ScriptKey("walk");
     public static final ScriptKey HIT = new ScriptKey("hit");
 
-    private final String name;
-    private final int ordinal;
+    @Exclude
+    private final String lowerName;
 
+    @SerializedName("name")
+    private final String upperName;
+
+    @SerializedName("ordinal")
+    private final int ordinal;
+ 
     /**
      * コンストラクタ
      * @param name - スクリプトキーの名前
      */
     public ScriptKey(@NotNull String name) {
-        this.name = name.toUpperCase(Locale.ROOT);
+        this.lowerName = name.toLowerCase(Locale.ROOT);
+        this.upperName = name.toUpperCase(Locale.ROOT);
 
-        var scriptKey = KEYS.get(this.name);
+        var scriptKey = KEYS.get(this.upperName);
         this.ordinal = scriptKey == null ? KEYS.size() : scriptKey.ordinal;
         if (scriptKey == null) {
-            KEYS.put(this.name, this);
+            KEYS.put(this.upperName, this);
         }
     }
 
@@ -63,7 +72,7 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
      */
     @NotNull
     public String getName() {
-        return name.toLowerCase(Locale.ROOT);
+        return lowerName;
     }
 
     /**
@@ -88,7 +97,7 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
      */
     @NotNull
     public static String[] types() {
-        return StreamUtils.toArray(KEYS.values(), t -> t.name, String[]::new);
+        return StreamUtils.toArray(KEYS.values(), t -> t.upperName, String[]::new);
     }
 
     /**
@@ -143,7 +152,7 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
     @Override
     @NotNull
     public String toString() {
-        return name;
+        return upperName;
     }
 
     @Override
@@ -151,7 +160,7 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
         int hash = 1;
         int prime = 31;
         hash = prime * hash + (ordinal + 1);
-        hash = prime * hash + name.hashCode();
+        hash = prime * hash + upperName.hashCode();
         return hash;
     }
 
@@ -162,7 +171,7 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
         }
         if (obj instanceof ScriptKey) {
             var scriptKey = (ScriptKey) obj;
-            return name.equals(scriptKey.name) && ordinal == scriptKey.ordinal;
+            return upperName.equals(scriptKey.upperName) && ordinal == scriptKey.ordinal;
         }
         return false;
     }

@@ -139,11 +139,11 @@ public class ScriptRead extends ScriptMap implements SBRead {
     }
 
     protected boolean perform(final int index) {
+        if (!sbPlayer.isOnline()) {
+            EndProcessManager.forEach(e -> e.failed(this));
+            return false;
+        }
         for (this.index = index; this.index < scripts.size(); this.index++) {
-            if (!sbPlayer.isOnline()) {
-                EndProcessManager.forEach(e -> e.failed(this));
-                return false;
-            }
             var script = scripts.get(this.index);
             var option = OptionManager.newInstance(script);
             this.value = Placeholder.INSTANCE.replace(getPlayer(), option.getValue(script));
