@@ -73,6 +73,6 @@ public class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
 
     @Override
     public boolean isElement(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
-        return isArgment(this.scriptKey, scriptKey) && isArgment(this.blockCoords, blockCoords);
+        return compare(this.scriptKey, scriptKey) && compare(this.blockCoords, blockCoords);
     }
 }

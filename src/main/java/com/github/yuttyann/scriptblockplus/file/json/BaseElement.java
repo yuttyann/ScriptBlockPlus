@@ -31,7 +31,7 @@ public abstract class BaseElement {
      * @param argment2 - 引数2
      * @return {@link boolean} - 引数が一致するのかどうか
      */
-    protected boolean isArgment(@NotNull Object argment1, @NotNull Object argment2) {
+    protected boolean compare(@NotNull Object argment1, @NotNull Object argment2) {
         return Objects.equals(argment1, argment2);
     }
 }
