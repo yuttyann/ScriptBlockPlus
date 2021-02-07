@@ -17,6 +17,9 @@ package com.github.yuttyann.scriptblockplus.utils.collection;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Predicate;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus IntMap インターフェース
@@ -87,4 +90,22 @@ public interface IntMap<V> extends Map<Integer, V> {
      * @return iterable object of the mapping contained in this map.
      */
     Iterable<IntEntry<V>> iterable();
+
+    /**
+     * Removes all of the elements of this iterable that satisfy the given predicate.
+     * Errors or runtime exceptions thrown during iteration or by the predicate are relayed to the caller.
+     * @param filter a predicate which returns true for elements to be removed.
+     * @return {@code true} if any elements were removed.
+     */
+    default boolean removeIf(@NotNull Predicate<? super IntEntry<V>> filter) {
+        var removed = false;
+        var iterator = iterable().iterator();
+        while (iterator.hasNext()) {
+            if (filter.test(iterator.next())) {
+                iterator.remove();
+                removed = true;
+            }
+        }
+        return removed;
+    }
 }

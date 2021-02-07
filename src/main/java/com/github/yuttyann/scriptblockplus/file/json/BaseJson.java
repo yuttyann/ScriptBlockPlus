@@ -241,7 +241,7 @@ public abstract class BaseJson<E extends BaseElement> {
      * キャッシュされた全ての要素を削除します。
      */
     public static void clear() {
-        JSON_CACHE.values().forEach(BaseJson::clearCache);
+        JSON_CACHE.iterable().forEach(e -> e.value().clearCache());
         JSON_CACHE.clear();
     }
 
@@ -250,12 +250,12 @@ public abstract class BaseJson<E extends BaseElement> {
      * @param jsonClass - JSONのクラス 
      */
     public static final void clear(@NotNull Class<? extends BaseJson<?>> jsonClass) {
-       JSON_CACHE.values().removeIf(v -> {
-           if (v.getClass().equals(jsonClass)) {
-                v.clearCache();
+        JSON_CACHE.removeIf(e -> {
+            if (e.value().getClass().equals(jsonClass)) {
+                e.value().clearCache();
                 return true;
-           }
-           return false;
+            }
+            return false;
         });
     }
 
