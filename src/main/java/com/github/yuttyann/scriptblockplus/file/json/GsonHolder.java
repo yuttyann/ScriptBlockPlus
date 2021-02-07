@@ -60,7 +60,7 @@ public final class GsonHolder {
      * 処理の終了後に設定を更新します。
      * @param action - 処理
      */
-    public synchronized void builder(@NotNull Consumer<GsonBuilder> action) {
+    public void builder(@NotNull Consumer<GsonBuilder> action) {
         try {
             action.accept(gsonBuilder);
         } finally {
@@ -71,7 +71,7 @@ public final class GsonHolder {
     /**
      * 設定を更新します。
      */
-    public synchronized void update() {
+    public void update() {
         this.gson = gsonBuilder.create();
         if (LEGACY_GSON) {
             legacy();
