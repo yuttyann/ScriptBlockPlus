@@ -31,12 +31,28 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface JsonTag {
 
+    /**
+     * ディレクトリのパス
+     * <p>
+     * 例(json/testフォルダを指定する場合): {@code json/test}
+     * @return ディレクトリのパス
+     */
     @NotNull
     String path();
 
+    /**
+     * ファイルの名前
+     * @return ファイルの名前
+     */
     @NotNull
     String file() default "{id}";
 
+    /**
+     * プラグインID
+     * <p>
+     * 指定したプラグインのフォルダ内にファイルを生成します。
+     * @return プラグインID
+     */
     @NotNull
     String plugin() default "ScriptBlockPlus";
 }
