@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * ScriptBlockPlus PlayerTemp クラス
+ * ScriptBlockPlus PlayerCooldown クラス
  * @author yuttyann44581
  */
 public class PlayerTemp extends BaseElement {

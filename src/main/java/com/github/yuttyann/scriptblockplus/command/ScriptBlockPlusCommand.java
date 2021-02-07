@@ -334,7 +334,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         if (args.length == 1) {
             var prefix = args[0].toLowerCase(Locale.ROOT);
             var set = setCommandPermissions(sender, new LinkedHashSet<String>());
-            StreamUtils.fForEach(set, s -> StringUtils.startsWith(s, prefix), empty::add);
+            StreamUtils.fForEach(set, s -> StringUtils.isNotEmpty(s) && s.startsWith(prefix), empty::add);
         } else if (args.length == 2) {
             if (equals(args[0], "selector")) {
                 if (Permission.COMMAND_SELECTOR.has(sender)) {

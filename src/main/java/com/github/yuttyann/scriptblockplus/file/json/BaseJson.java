@@ -19,9 +19,12 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
 import com.github.yuttyann.scriptblockplus.file.json.builder.BlockCoordsDeserializer;
 import com.github.yuttyann.scriptblockplus.file.json.builder.BlockCoordsSerializer;
 import com.github.yuttyann.scriptblockplus.file.json.builder.FieldExclusion;
+import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
+import com.github.yuttyann.scriptblockplus.utils.collection.IntHashMap;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
 import com.google.common.base.Charsets;
 import com.google.gson.GsonBuilder;
@@ -33,9 +36,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import io.netty.util.collection.IntObjectHashMap;
-import io.netty.util.collection.IntObjectMap;
 
 import java.io.*;
 import java.util.*;
@@ -79,10 +79,10 @@ public abstract class BaseJson<E extends BaseElement> {
     }
 
     @Exclude
-    private static final IntObjectMap<BaseJson<?>> JSON_CACHE = new IntObjectHashMap<>();
+    private static final IntMap<BaseJson<?>> JSON_CACHE = IntHashMap.create();
 
     @Exclude
-    private static final GsonBuilder GSON_BUILDER = new GsonBuilder();
+    private static final GsonHolder GSON_HOLDER = new GsonHolder(new GsonBuilder());
 
     @Exclude
     private static final String INDENT = "  ";
@@ -102,19 +102,24 @@ public abstract class BaseJson<E extends BaseElement> {
     @Exclude
     private Status status;
 
+    @LegacyName(alternate = { "id" })
     @SerializedName(value = "name", alternate = { "id" })
     protected String name;
 
+    @LegacyName(alternate = { "infos" })
     @SerializedName(value = "elements", alternate = { "infos" })
     protected List<E> list = Collections.emptyList();
-    
+
     static {
-        GSON_BUILDER.setPrettyPrinting();
-        GSON_BUILDER.setExclusionStrategies(new FieldExclusion());
-        GSON_BUILDER.registerTypeAdapter(BlockCoords.class, new BlockCoordsSerializer());
-        GSON_BUILDER.registerTypeAdapter(BlockCoords.class, new BlockCoordsDeserializer());
-        GSON_BUILDER.registerTypeAdapter(UnmodifiableBlockCoords.class, new BlockCoordsSerializer());
-        GSON_BUILDER.registerTypeAdapter(UnmodifiableBlockCoords.class, new BlockCoordsDeserializer());
+        GSON_HOLDER.builder(b -> {
+            b.serializeNulls();
+            b.setPrettyPrinting();
+            b.setExclusionStrategies(new FieldExclusion());
+            b.registerTypeAdapter(BlockCoords.class, new BlockCoordsSerializer());
+            b.registerTypeAdapter(BlockCoords.class, new BlockCoordsDeserializer());
+            b.registerTypeAdapter(UnmodifiableBlockCoords.class, new BlockCoordsSerializer());
+            b.registerTypeAdapter(UnmodifiableBlockCoords.class, new BlockCoordsDeserializer());
+        });
     }
 
     /**
@@ -224,19 +229,19 @@ public abstract class BaseJson<E extends BaseElement> {
     }
 
     /**
-     * {@link GsonBuilder}を取得します。
-     * @return {@link GsonBuilder}
+     * {@link GsonHolder}を取得します。
+     * @return {@link GsonHolder}
      */
     @NotNull
-    protected static GsonBuilder getGsonBuilder() {
-        return GSON_BUILDER;
+    protected static GsonHolder getGsonHolder() {
+        return GSON_HOLDER;
     }
 
     /**
      * キャッシュされた全ての要素を削除します。
      */
     public static void clear() {
-        JSON_CACHE.forEach((k, v) -> v.clearCache());
+        JSON_CACHE.values().forEach(BaseJson::clearCache);
         JSON_CACHE.clear();
     }
 
@@ -245,9 +250,9 @@ public abstract class BaseJson<E extends BaseElement> {
      * @param jsonClass - JSONのクラス 
      */
     public static final void clear(@NotNull Class<? extends BaseJson<?>> jsonClass) {
-       JSON_CACHE.entrySet().removeIf(e -> {
-           if (e.getValue().getClass().equals(jsonClass)) {
-                e.getValue().clearCache();
+       JSON_CACHE.values().removeIf(v -> {
+           if (v.getClass().equals(jsonClass)) {
+                v.clearCache();
                 return true;
            }
            return false;
@@ -397,7 +402,7 @@ public abstract class BaseJson<E extends BaseElement> {
         try {
             try (var writer = new JsonWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8))) {
                 writer.setIndent(INDENT);
-                GSON_BUILDER.create().toJson(this, getClass(), writer);
+                GSON_HOLDER.getGson().toJson(this, getClass(), writer);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -422,7 +427,7 @@ public abstract class BaseJson<E extends BaseElement> {
             getParentFile().mkdirs();
         }
         try (var reader = new JsonReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8))) {
-            return (BaseJson<E>) GSON_BUILDER.create().fromJson(reader, getClass());
+            return (BaseJson<E>) GSON_HOLDER.getGson().fromJson(reader, getClass());
         }
     }
 

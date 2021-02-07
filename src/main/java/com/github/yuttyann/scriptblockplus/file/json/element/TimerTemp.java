@@ -16,6 +16,7 @@
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
@@ -41,9 +42,11 @@ public final class TimerTemp {
     @SerializedName("uuid")
     private UUID uuid;
 
+    @LegacyName(alternate = { "scripttype", "scriptType" })
     @SerializedName(value = "scriptkey", alternate = { "scripttype", "scriptType" })
     private ScriptKey scriptKey;
 
+    @LegacyName(alternate = { "fullcoords", "fullCoords" })
     @SerializedName(value = "blockcoords", alternate = { "fullcoords", "fullCoords" })
     private BlockCoords blockCoords;
 
@@ -120,15 +123,15 @@ public final class TimerTemp {
             return false;
         }
         var timerTemp = (TimerTemp) obj;
-        return Objects.equals(uuid, timerTemp.uuid) && blockCoords.equals(timerTemp.blockCoords) && scriptKey.equals(timerTemp.scriptKey);
+        return Objects.equals(uuid, timerTemp.uuid) && Objects.equals(blockCoords, timerTemp.blockCoords) && Objects.equals(scriptKey, timerTemp.scriptKey);
     }
 
     @Override
     public int hashCode() {
         int hash = 1;
         int prime = uuid == null ? 31 : 11;
-        hash = prime * hash + scriptKey.hashCode();
-        hash = prime * hash + blockCoords.hashCode();
+        hash = prime * hash + Objects.hash(scriptKey);
+        hash = prime * hash + Objects.hash(blockCoords);
         return hash;
     }
 }

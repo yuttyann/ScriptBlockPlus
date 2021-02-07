@@ -92,14 +92,17 @@ public final class Utils {
         return false;
     }
 
-    public static int getVersionInt(@NotNull String source) {
-        var version = split(source, '.');
-        if (version.length < 1) {
-            return -1;
+    public static int getVersionInt(@NotNull String version) {
+        int dot1 = version.indexOf('.', 0);
+        int dot2 = version.indexOf('.', dot1 + 1);
+        if (dot1 < 0) {
+            throw new IllegalArgumentException("Invalid Version: " + version);
         }
-        int result = (Integer.parseInt(version[0]) * 100000) + (Integer.parseInt(version[1]) * 1000);
-        if (version.length == 3) {
-            result += Integer.parseInt(version[2]);
+        int part1 = Integer.parseInt(version, 0, dot1, 10);
+        int part2 = Integer.parseInt(version, dot1 + 1, dot2 < 0 ? version.length() : dot2, 10);
+        int result = (part1 * 100000) + (part2 * 1000);
+        if (dot2 >= 0) {
+            result += Integer.parseInt(version, dot2 + 1, version.length(), 10);
         }
         return result;
     }

@@ -17,13 +17,12 @@ package com.github.yuttyann.scriptblockplus.enums.reflection;
 
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.collection.IntHashMap;
+import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import io.netty.util.collection.IntObjectHashMap;
-import io.netty.util.collection.IntObjectMap;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -88,7 +87,7 @@ public enum PackageType {
         HAS_NMS = hasNMS;
     }
 
-    private static final IntObjectMap<Object> REFLECTION_CACHE = new IntObjectHashMap<>();
+    private static final IntMap<Object> REFLECTION_CACHE = IntHashMap.create();
 
     private final String path;
 

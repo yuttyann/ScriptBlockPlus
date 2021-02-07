@@ -16,6 +16,7 @@
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
 import com.github.yuttyann.scriptblockplus.file.json.multi.TwoJson.TwoElement;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
@@ -28,9 +29,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
 
+    @LegacyName(alternate = { "scripttype" })
     @SerializedName(value = "scriptkey", alternate = { "scripttype" })
     private final ScriptKey scriptKey;
 
+    @LegacyName(alternate = { "fullcoords" })
     @SerializedName(value = "blockcoords", alternate = { "fullcoords" })
     private final BlockCoords blockCoords;
 

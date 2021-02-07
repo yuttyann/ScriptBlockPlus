@@ -130,11 +130,17 @@ public final class StringUtils {
 
     @NotNull
     public static String removeStart(@NotNull String source, @NotNull String prefix) {
-        return isNotEmpty(prefix) ? (startsWith(source, prefix) ? source.substring(prefix.length()) : source) : source;
+        if (isNotEmpty(source) && isNotEmpty(prefix) & source.startsWith(prefix)) {
+            return source.substring(prefix.length());
+        }
+        return source;
     }
 
-    public static boolean startsWith(@Nullable String source, @NotNull String prefix) {
-        return isNotEmpty(source) && source.startsWith(prefix);
+    public static String removeEnd(@NotNull String source, @NotNull String suffix) {
+        if (isNotEmpty(source) && isNotEmpty(suffix) && source.endsWith(suffix)) {
+            return source.substring(0, source.length() - suffix.length());
+        }
+        return source;
     }
 
     public static boolean isNotEmpty(@Nullable String source) {
