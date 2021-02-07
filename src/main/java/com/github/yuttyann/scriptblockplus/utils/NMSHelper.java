@@ -101,11 +101,24 @@ public final class NMSHelper {
         NMS.getMethod("PlayerConnection", "sendPacket", NMS.getClass("Packet")).invoke(connection, packetChat);
     }
 
+    private static final double R = 0.017453292D;
+
     @Nullable
     public static RayResult rayTraceBlocks(@NotNull Player player, final double distance) throws ReflectiveOperationException {
-        var eyeLocation = player.getEyeLocation();
-        var vec3d1 = toVec3D(eyeLocation.toVector());
-        var vec3d2 = toVec3D(eyeLocation.toVector().add(eyeLocation.getDirection().normalize().multiply(distance)));
+        var location = player.getLocation();
+        double x = location.getX();
+        double y = location.getY() + player.getEyeHeight();
+        double z = location.getZ();
+        float yaw = location.getYaw();
+        float pitch = location.getPitch();
+        float f1 = (float) Math.cos((-yaw * R) - Math.PI);
+        float f2 = (float) Math.sin((-yaw * R) - Math.PI);
+        float f3 = (float) -Math.cos(-pitch * R);
+        float f4 = (float) Math.sin(-pitch * R);
+        float f5 = f2 * f3;
+        float f6 = f1 * f3;
+        var vec3d1 = newVec3D(x, y, z);
+        var vec3d2 = newVec3D(x + (f5 * distance), y + (f4 * distance), z + (f6 * distance));
         var arguments = (Object[]) null;
         if (Utils.isCBXXXorLater("1.13")) {
             var NEVER = NMS.getEnumValueOf("FluidCollisionOption", "NEVER");
@@ -119,10 +132,10 @@ public final class NMSHelper {
         if (rayTrace != null) {
             var direction = NMS.getFieldValue("MovingObjectPosition", "direction", rayTrace);
             var position = NMS.invokeMethod(rayTrace, "MovingObjectPosition", "a");
-            int x = (int) NMS.invokeMethod(position, "BaseBlockPosition", "getX");
-            int y = (int) NMS.invokeMethod(position, "BaseBlockPosition", "getY");
-            int z = (int) NMS.invokeMethod(position, "BaseBlockPosition", "getZ");
-            return new RayResult(world.getBlockAt(x, y, z), BlockFace.valueOf(((Enum<?>) direction).name()));
+            int bx = (int) NMS.invokeMethod(position, "BaseBlockPosition", "getX");
+            int by = (int) NMS.invokeMethod(position, "BaseBlockPosition", "getY");
+            int bz = (int) NMS.invokeMethod(position, "BaseBlockPosition", "getZ");
+            return new RayResult(world.getBlockAt(bx, by, bz), BlockFace.valueOf(((Enum<?>) direction).name()));
         }
         return null;
     }
@@ -217,7 +230,12 @@ public final class NMSHelper {
     }
 
     @NotNull
-    public static Object toVec3D(@NotNull Vector vector) throws ReflectiveOperationException {
-        return NMS.newInstance("Vec3D", vector.getBlockX() + 0.5D, (double) vector.getBlockY(), vector.getBlockZ() + 0.5D);
+    private static Object toVec3D(@NotNull Vector vector) throws ReflectiveOperationException {
+        return newVec3D(vector.getBlockX() + 0.5D, vector.getBlockY(), vector.getBlockZ() + 0.5D);
+    }
+
+    @NotNull
+    public static Object newVec3D(double x, double y, double z) throws ReflectiveOperationException {
+        return NMS.newInstance("Vec3D", x, y, z);
     }
 }

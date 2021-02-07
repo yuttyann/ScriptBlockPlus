@@ -102,7 +102,7 @@ public final class IntHashMap<V> extends IntObjectHashMap<V> implements IntMap<V
 
     /**
     * ScriptBlockPlus LegacyMap クラス
-    * Nettyのバージョンが古い場合はこれが呼ばれる。
+    * Nettyのバージョンが古い場合は、これが呼ばれる。
     * @param <V> 値の型
     * @author yuttyann44581
     */

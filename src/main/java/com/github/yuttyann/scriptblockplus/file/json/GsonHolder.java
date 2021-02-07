@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * ScriptBlockPlus GsonHolder クラス
  * <p>
- * {@link SerializedName#alternate()}が無い古いバージョンの場合は、
+ * {@link SerializedName#alternate()}が存在しない古いバージョンの場合は、
  * <p>
  * {@link Alternate#value()}を使用することで、同じ動作をさせることができます。
  * @apiNote

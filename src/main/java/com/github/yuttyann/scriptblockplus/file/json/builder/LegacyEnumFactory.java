@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * ScriptBlockPlus LegacyReflectiveFactory クラス
  * <p>
- * Gsonのバージョンが古い場合はこちらが呼び出される。
+ * Gsonのバージョンが古い場合は、これが呼ばれる。
  * @author gson(https://github.com/google/gson), yuttyann44581
  */
 public final class LegacyEnumFactory implements TypeAdapterFactory {
