@@ -214,7 +214,7 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
         private final ObjectConstructor<T> constructor;
         private final Map<String, BoundField> boundFields;
     
-        private Adapter(ObjectConstructor<T> constructor, Map<String, BoundField> boundFields) {
+        private Adapter(@NotNull ObjectConstructor<T> constructor, @NotNull Map<String, BoundField> boundFields) {
             this.constructor = constructor;
             this.boundFields = boundFields;
         }
