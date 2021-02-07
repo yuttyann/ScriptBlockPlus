@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
-import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
 import com.github.yuttyann.scriptblockplus.file.json.builder.BlockCoordsDeserializer;
 import com.github.yuttyann.scriptblockplus.file.json.builder.BlockCoordsSerializer;
 import com.github.yuttyann.scriptblockplus.file.json.builder.FieldExclusion;
@@ -102,11 +102,11 @@ public abstract class BaseJson<E extends BaseElement> {
     @Exclude
     private Status status;
 
-    @LegacyName(alternate = { "id" })
+    @Alternate("id")
     @SerializedName(value = "name", alternate = { "id" })
     protected String name;
 
-    @LegacyName(alternate = { "infos" })
+    @Alternate("infos")
     @SerializedName(value = "elements", alternate = { "infos" })
     protected List<E> list = Collections.emptyList();
 

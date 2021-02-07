@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -84,55 +84,51 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
     }
 
     @Override
-    public <T> TypeAdapter<T> create(@NotNull Gson gson, @NotNull TypeToken<T> type) {
-        var raw = type.getRawType();
-        if (!Object.class.isAssignableFrom(raw)) {
+    public <T> TypeAdapter<T> create(@NotNull Gson gson, @NotNull TypeToken<T> typeToken) {
+        var rawType = typeToken.getRawType();
+        if (!Object.class.isAssignableFrom(rawType)) {
             return null;
         }
-        var constructor = constructorConstructor.get(type);
-        return new Adapter<T>(constructor, getBoundFields(gson, type, raw));
+        var constructor = constructorConstructor.get(typeToken);
+        return new Adapter<T>(constructor, getBoundFields(gson, typeToken, rawType));
     }
   
     @NotNull
-    private List<String> getFieldNames(Field field) {
+    private List<String> getFieldNames(@NotNull Field field) {
         var serializedName = field.getAnnotation(SerializedName.class);
         if (serializedName == null) {
             return Collections.singletonList(fieldNamingPolicy.translateName(field));
         }
         var value = serializedName.value();
-        var legacyName = field.getAnnotation(LegacyName.class);
-        if (legacyName == null) {
+        var alternate = field.getAnnotation(Alternate.class);
+        if (alternate == null) {
             return Collections.singletonList(value);
         }
-        var alternates = legacyName.alternate();
+        var alternates = alternate.value();
         if (alternates.length == 0) {
             return Collections.singletonList(value);
         }
         var names = new ArrayList<String>(alternates.length + 1);
-        names.add(value);
-        for (var alternate : alternates) {
-            names.add(alternate);
-        }
+        names.add(value); Collections.addAll(names, alternates);
         return names;
     }
 
     @NotNull
-    private Map<String, BoundField> getBoundFields(@NotNull Gson context, @NotNull TypeToken<?> type, @NotNull Class<?> raw) {
+    private Map<String, BoundField> getBoundFields(@NotNull Gson gson, @NotNull TypeToken<?> typeToken, @NotNull Class<?> rawType) {
         var result = new LinkedHashMap<String, BoundField>();
-        if (raw.isInterface()) {
+        if (rawType.isInterface()) {
             return result;
         }
-        var declaredType = type.getType();
-        while (raw != Object.class) {
-            var fields = raw.getDeclaredFields();
-            for (var field : fields) {
+        var declaredType = typeToken.getType();
+        while (rawType != Object.class) {
+            for (var field : rawType.getDeclaredFields()) {
                 boolean serialize = excludeField(field, true);
                 boolean deserialize = excludeField(field, false);
                 if (!serialize && !deserialize) {
-                  continue;
+                    continue;
                 }
                 field.setAccessible(true);
-                var fieldType = $Gson$Types.resolve(type.getType(), raw, field.getGenericType());
+                var fieldType = $Gson$Types.resolve(typeToken.getType(), rawType, field.getGenericType());
                 var fieldNames = getFieldNames(field);
                 var previous = (BoundField) null;
                 for (int i = 0, l = fieldNames.size(); i < l; ++i) {
@@ -140,7 +136,7 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
                     if (i != 0) {
                         serialize = false;
                     }
-                    var replaced = result.put(name, createBoundField(context, field, name, TypeToken.get(fieldType), serialize, deserialize));
+                    var replaced = result.put(name, createBoundField(gson, field, name, TypeToken.get(fieldType), serialize, deserialize));
                     if (previous == null) {
                         previous = replaced;
                     }
@@ -149,16 +145,16 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
                     throw new IllegalArgumentException(declaredType + " declares multiple JSON fields named " + previous.name);
                 }
             }
-            type = TypeToken.get($Gson$Types.resolve(type.getType(), raw, raw.getGenericSuperclass()));
-            raw = type.getRawType();
+            typeToken = TypeToken.get($Gson$Types.resolve(typeToken.getType(), rawType, rawType.getGenericSuperclass()));
+            rawType = typeToken.getRawType();
         }
         return result;
     }
 
     @NotNull
-    private BoundField createBoundField(final Gson context, final Field field, final String name, final TypeToken<?> fieldType, boolean serialize, boolean deserialize) {
-        var isPrimitive = Primitives.isPrimitive(fieldType.getRawType());
-        var typeAdapter = context.getAdapter(fieldType);
+    private BoundField createBoundField(Gson gson, Field field, String name, TypeToken<?> typeToken, boolean serialize, boolean deserialize) {
+        var isPrimitive = Primitives.isPrimitive(typeToken.getRawType());
+        var typeAdapter = gson.getAdapter(typeToken);
         return new BoundField(name, serialize, deserialize) {     
 
             @Override
@@ -174,7 +170,7 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
             @SuppressWarnings({ "unchecked", "rawtypes" })
             protected void write(@NotNull JsonWriter writer, @NotNull Object value) throws IOException, IllegalAccessException {
                 try {
-                    ((TypeAdapter) RUNTIME_CONSTRUCTOR.newInstance(context, typeAdapter, fieldType.getType())).write(writer, field.get(value));
+                    ((TypeAdapter) RUNTIME_CONSTRUCTOR.newInstance(gson, typeAdapter, typeToken.getType())).write(writer, field.get(value));
                 } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
                 }
@@ -208,7 +204,7 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
 
         protected abstract void read(@NotNull JsonReader reader, @NotNull Object value) throws IOException, IllegalAccessException;
     }
-  
+
     public static final class Adapter<T> extends TypeAdapter<T> {
 
         private final ObjectConstructor<T> constructor;
@@ -220,21 +216,21 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
         }
   
         @Override
-        public T read(@NotNull JsonReader in) throws IOException {
-            if (in.peek() == JsonToken.NULL) {
-                in.nextNull();
+        public T read(@NotNull JsonReader reader) throws IOException {
+            if (reader.peek() == JsonToken.NULL) {
+                reader.nextNull();
                 return null;
             }
             T instance = constructor.construct();
             try {
-                in.beginObject();
-                while (in.hasNext()) {
-                    var name = in.nextName();
+                reader.beginObject();
+                while (reader.hasNext()) {
+                    var name = reader.nextName();
                     var field = boundFields.get(name);
                     if (field == null || !field.deserialized) {
-                        in.skipValue();
+                        reader.skipValue();
                     } else {
-                        field.read(in, instance);
+                        field.read(reader, instance);
                     }
                 }
             } catch (IllegalStateException e) {
@@ -242,28 +238,28 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
             } catch (IllegalAccessException e) {
                 throw new AssertionError(e);
             }
-            in.endObject();
+            reader.endObject();
             return instance;
         }
   
         @Override
-        public void write(@NotNull JsonWriter out, @Nullable T value) throws IOException {
+        public void write(@NotNull JsonWriter writer, @Nullable T value) throws IOException {
             if (value == null) {
-                out.nullValue();
+                writer.nullValue();
                 return;
             }
-            out.beginObject();
+            writer.beginObject();
             try {
                 for (var boundField : boundFields.values()) {
                     if (boundField.writeField(value)) {
-                        out.name(boundField.name);
-                        boundField.write(out, value);
+                        writer.name(boundField.name);
+                        boundField.write(writer, value);
                     }
                 }
             } catch (IllegalAccessException e) {
                 throw new AssertionError(e);
             }
-            out.endObject();
+            writer.endObject();
         }
     }
 }
