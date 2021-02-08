@@ -23,6 +23,9 @@ import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
 import com.github.yuttyann.scriptblockplus.file.json.builder.BlockCoordsDeserializer;
 import com.github.yuttyann.scriptblockplus.file.json.builder.BlockCoordsSerializer;
 import com.github.yuttyann.scriptblockplus.file.json.builder.FieldExclusion;
+import com.github.yuttyann.scriptblockplus.file.json.builder.ScriptKeyDeserializer;
+import com.github.yuttyann.scriptblockplus.file.json.builder.ScriptKeySerializer;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
 import com.github.yuttyann.scriptblockplus.utils.collection.IntHashMap;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
@@ -115,6 +118,8 @@ public abstract class BaseJson<E extends BaseElement> {
             b.serializeNulls();
             b.setPrettyPrinting();
             b.setExclusionStrategies(new FieldExclusion());
+            b.registerTypeAdapter(ScriptKey.class, new ScriptKeySerializer());
+            b.registerTypeAdapter(ScriptKey.class, new ScriptKeyDeserializer());
             b.registerTypeAdapter(BlockCoords.class, new BlockCoordsSerializer());
             b.registerTypeAdapter(BlockCoords.class, new BlockCoordsDeserializer());
             b.registerTypeAdapter(UnmodifiableBlockCoords.class, new BlockCoordsSerializer());
@@ -354,7 +359,7 @@ public abstract class BaseJson<E extends BaseElement> {
      * @return {@link boolean} - 削除を行う場合は{@code true}
      */
     protected boolean isTemporary() {
-        return true;
+        return false;
     }
 
     /**

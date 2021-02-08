@@ -15,9 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.script;
 
-import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,13 +40,9 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
     public static final ScriptKey WALK = new ScriptKey("walk");
     public static final ScriptKey HIT = new ScriptKey("hit");
 
-    @Exclude
     private final String lowerName;
-
-    @SerializedName("name")
     private final String upperName;
 
-    @SerializedName("ordinal")
     private final int ordinal;
  
     /**

@@ -17,12 +17,11 @@ package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
-import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
-import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ScriptBlockPlus BlockScript クラス
@@ -30,21 +29,8 @@ import java.util.HashMap;
  */
 public class BlockScript extends BaseElement {
 
-    @Alternate("scripttype")
-    @SerializedName(value = "scriptkey", alternate = { "scripttype" })
-    private final ScriptKey scriptKey;
-
     @SerializedName("scripts")
-    private final HashMap<BlockCoords, ScriptParam> scripts = new HashMap<>();
-
-    public BlockScript(@NotNull ScriptKey scriptKey) {
-        this.scriptKey = scriptKey;
-    }
-
-    @NotNull
-    public ScriptKey getScriptKey() {
-        return scriptKey;
-    }
+    private final Map<BlockCoords, ScriptParam> scripts = new HashMap<>();
 
     public boolean has(@NotNull BlockCoords blockCoords) {
         var scriptParam = scripts.get(blockCoords);

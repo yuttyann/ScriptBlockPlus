@@ -48,11 +48,6 @@ public class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount
     }
 
     @Override
-    protected boolean isTemporary() {
-        return false;
-    }
-
-    @Override
     @NotNull
     protected PlayerCount newInstance(@NotNull ScriptKey scriptKey, @NotNull BlockCoords location) {
         return new PlayerCount(scriptKey, location);
