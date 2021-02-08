@@ -126,7 +126,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
         }
         if (!sortScripts(blockScript.get(blockCoords).getScript())) {
             SBConfig.ERROR_SCRIPT_EXECUTE.replace(scriptKey).send(sbPlayer);
-            SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(blockCoords, scriptKey).console();
+            SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(scriptKey, blockCoords).console();
             return false;
         }
         Bukkit.getPluginManager().callEvent(new ScriptReadStartEvent(ramdomId, this));

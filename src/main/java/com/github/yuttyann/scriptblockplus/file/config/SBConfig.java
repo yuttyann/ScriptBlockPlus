@@ -198,22 +198,22 @@ public final class SBConfig {
     public static final ReplaceKey SCRIPT_REDSTONE_DISABLE = replaceKey("ScriptRedstoneDisableMessage", "", FUNCTION_SCRIPT_TYPE);
 
     /**
-     * Parameter: {@link String} world, {@link String} coords
+     * Parameter: {@link String} worldName, {@link String} coords
      */
     public static final ReplaceKey SELECTOR_POS1 = replaceKey("SelectorPos1Message", "", "%world%", "%coords%");
 
     /**
-     * Parameter: {@link String} world, {@link String} coords
+     * Parameter: {@link String} worldName, {@link String} coords
      */
     public static final ReplaceKey SELECTOR_POS2 = replaceKey("SelectorPos2Message", "", "%world%", "%coords%");
 
     /**
-     * Parameter: {@link String} scriptKey, {@link Integer} blockCount
+     * Parameter: {@link String} scriptKeyName, {@link Integer} blockCount
      */
     public static final ReplaceKey SELECTOR_PASTE = replaceKey("SelectorPasteMessage", "", "%scriptkey%", "%blockcount%");
 
     /**
-     * Parameter: {@link String} scriptKey, {@link Integer} blockCount
+     * Parameter: {@link String} scriptKeyName, {@link Integer} blockCount
      */
     public static final ReplaceKey SELECTOR_REMOVE = replaceKey("SelectorRemoveMessage", "", "%scriptkey%", "%blockcount%");
 
@@ -278,12 +278,12 @@ public final class SBConfig {
     public static final ReplaceKey CONSOLE_ERROR_SCRIPT_EXECUTE = replaceKey("ConsoleErrorScriptExecMessage", "", FUNCTION_CONSOLE_SCRIPT);
 
     /**
-     * Parameter: {@link ScriptKey} scriptKey, {@link CuboidRegionIterator} iterator
+     * Parameter: {@link String} scriptKeyName, {@link CuboidRegionIterator} iterator
      */
     public static final ReplaceKey CONSOLE_SELECTOR_PASTE = replaceKey("ConsoleSelectorPasteMessage", "", FUNCTION_CONSOLE_SELECTOR);
 
     /**
-     * Parameter: {@link ScriptKey} scriptKey, {@link CuboidRegionIterator} iterator
+     * Parameter: {@link String} scriptKeyNames, {@link CuboidRegionIterator} iterator
      */
     public static final ReplaceKey CONSOLE_SELECTOR_REMOVE = replaceKey("ConsoleSelectorRemoveMessage", "", FUNCTION_CONSOLE_SELECTOR);
 }

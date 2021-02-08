@@ -130,8 +130,8 @@ public class SBClipboard {
             scriptJson.saveFile();
             PlayerTempJson.removeAll(scriptKey, blockCoords);
             PlayerCountJson.removeAll(scriptKey, blockCoords);
-            SBConfig.SCRIPT_PASTE.replace(scriptKey, blockCoords).send(sbPlayer);
-            SBConfig.CONSOLE_SCRIPT_EDIT.replace(sbPlayer.getName(), blockCoords, scriptKey).console();
+            SBConfig.SCRIPT_PASTE.replace(scriptKey).send(sbPlayer);
+            SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
         } finally {
             sbPlayer.setScriptEdit(null);
             sbPlayer.setSBClipboard(null);
