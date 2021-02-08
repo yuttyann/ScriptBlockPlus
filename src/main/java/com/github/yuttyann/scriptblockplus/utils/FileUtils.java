@@ -35,6 +35,9 @@ public final class FileUtils {
         if (StringUtils.isEmpty(filePath)) {
             return null;
         }
+        if (File.separatorChar != '/') {
+            filePath = filePath.replace(File.separatorChar, '/');
+        }
         try {
             var url = plugin.getClass().getClassLoader().getResource(filePath);
             if (url == null) {
@@ -107,7 +110,7 @@ public final class FileUtils {
     }
 
     public static boolean isEmpty(@NotNull File file) {
-        var array = file.list();
-        return array == null || array.length == 0;
+        var files = file.list();
+        return files == null || files.length == 0;
     }
 }

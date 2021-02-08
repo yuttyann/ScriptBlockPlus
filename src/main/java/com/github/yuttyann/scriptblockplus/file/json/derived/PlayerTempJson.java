@@ -70,17 +70,21 @@ public class PlayerTempJson extends SingleJson<PlayerTemp> {
         var timerTemp = TimerTemp.empty();
         for (var json : getFiles(PlayerTempJson.class)) {
             var tempJson = new PlayerTempJson(json);
-            if (!tempJson.has()) {
+            if (tempJson.isEmpty()) {
+                continue;
+            }
+            var timer = tempJson.load().getTimerTemp();
+            if (timer.isEmpty()) {
                 continue;
             }
             var removed = false;
             reuseIterator.reset();
             while (reuseIterator.hasNext()) {
-                var timer = tempJson.load().getTimerTemp();
                 var blockCoords = reuseIterator.next();
-                if (timer.size() > 0) {
-                    timer.remove(timerTemp.setUniqueId(null).setScriptKey(scriptKey).setBlockCoords(blockCoords));
-                    timer.remove(timerTemp.setUniqueId(UUID.fromString(tempJson.getName())));
+                if (timer.remove(timerTemp.setUniqueId(null).setScriptKey(scriptKey).setBlockCoords(blockCoords))) {
+                    removed = true;
+                }
+                if (timer.remove(timerTemp.setUniqueId(UUID.fromString(tempJson.getName())))) {
                     removed = true;
                 }
             }

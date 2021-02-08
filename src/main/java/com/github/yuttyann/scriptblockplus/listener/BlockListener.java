@@ -44,8 +44,9 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPhysics(BlockPhysicsEvent event) {
-        var blockCoords = BlockCoords.of(event.getBlock());
-        if (!event.getBlock().isBlockIndirectlyPowered()) {
+        var block = event.getBlock();
+        var blockCoords = BlockCoords.of(block);
+        if (!block.isBlockIndirectlyPowered()) {
             REDSTONE_FLAG.remove(blockCoords);
             return;
         }
@@ -54,7 +55,7 @@ public class BlockListener implements Listener {
         }
         for (var scriptKey : ScriptKey.iterable()) {
             var scriptJson = BlockScriptJson.get(scriptKey);
-            if (!scriptJson.exists()) {
+            if (scriptJson.isEmpty()) {
                 continue;
             }
             var blockScript = scriptJson.load();

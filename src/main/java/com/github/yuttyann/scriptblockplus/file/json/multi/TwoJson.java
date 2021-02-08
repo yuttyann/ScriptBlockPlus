@@ -85,7 +85,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      */
     @NotNull
     public final E load(@NotNull A a, @NotNull B b) {
-        var element = fastLoad(a, b);
+        E element = fastLoad(a, b);
         if (element == null) {
             list.add(element = newInstance(a, b));
         }
@@ -103,9 +103,9 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
     @Nullable
     public final E fastLoad(@NotNull A a, @NotNull B b) {
         for (int i = 0, l = list.size(); i < l; i++) {
-            var element = list.get(i);
+            E element = list.get(i);
             if (element.isElement(a, b)) {
-                return (E) element;
+                return element;
             }
         }
         return null;
@@ -128,10 +128,10 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * @return {@link boolean} - 削除に成功した場合は{@code true}
      */
     public final boolean remove(@NotNull A a, @NotNull B b) {
-        var iterator = list.iterator();
-        while (iterator.hasNext()) {
-            if (iterator.next().isElement(a, b)) {
-                iterator.remove();
+        for (int i = 0, l = list.size(); i < l; i++) {
+            E element = list.get(i);
+            if (element.isElement(a, b)) {
+                list.remove(i);
                 return true;
             }
         }

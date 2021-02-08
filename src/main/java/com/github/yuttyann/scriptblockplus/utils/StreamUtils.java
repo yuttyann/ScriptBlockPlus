@@ -117,7 +117,7 @@ public final class StreamUtils {
 
     public static <T> boolean anyMatch(@NotNull T[] array, Predicate<T> filter) {
         if (array.length == 0) {
-            return false;
+            return true;
         }
         for (T t : array) {
             if (filter.test(t)) {
@@ -129,7 +129,7 @@ public final class StreamUtils {
 
     public static <T> boolean anyMatch(@NotNull Collection<T> collection, Predicate<T> filter) {
         if (collection.isEmpty()) {
-            return false;
+            return true;
         }
         for (T t : collection) {
             if (filter.test(t)) {
@@ -141,7 +141,7 @@ public final class StreamUtils {
 
     public static <T> boolean allMatch(@NotNull T[] array, Predicate<T> filter) {
         if (array.length == 0) {
-            return false;
+            return true;
         }
         for (T t : array) {
             if (!filter.test(t)) {
@@ -153,7 +153,7 @@ public final class StreamUtils {
 
     public static <T> boolean allMatch(@NotNull Collection<T> collection, Predicate<T> filter) {
         if (collection.isEmpty()) {
-            return false;
+            return true;
         }
         for (T t : collection) {
             if (!filter.test(t)) {

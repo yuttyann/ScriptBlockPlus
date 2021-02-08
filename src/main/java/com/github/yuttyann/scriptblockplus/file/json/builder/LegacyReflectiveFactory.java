@@ -162,8 +162,7 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
                 if (!serialized) {
                     return false;
                 }
-                var fieldValue = field.get(value);
-                return fieldValue != value;
+                return field.get(value) != value;
             }
 
             @Override

@@ -57,7 +57,7 @@ public class SBClipboard {
 
         var scriptParam = scriptJson.load().get(blockCoords);
         this.author = Sets.newLinkedHashSet(scriptParam.getAuthor());
-        this.script = Lists.newLinkedList(scriptParam.getScript());
+        this.script = Lists.newArrayList(scriptParam.getScript());
         this.selector = scriptParam.getSelector();
         this.amount = scriptParam.getAmount();
     }

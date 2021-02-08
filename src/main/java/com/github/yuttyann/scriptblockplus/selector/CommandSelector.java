@@ -78,7 +78,7 @@ public final class CommandSelector {
         int modCount = 0;
         var indexList = new ArrayList<Index>();
         var commandList = Lists.newArrayList(parse(command, sender, indexList));
-        for (int i = 0; i < indexList.size(); i++) {
+        for (int i = 0, l = indexList.size(); i < l; i++) {
             var selector = indexList.get(i).substring(command);
             var entities = getTargets(sender, start, selector);
             if (entities == null || entities.length == 0) {
@@ -91,7 +91,7 @@ public final class CommandSelector {
                 }
             }
             var works = true;
-            for (int j = 1; j < entities.length; j++) {
+            for (int j = 1, k = entities.length; j < k; j++) {
                 if (entities[j] == null) {
                     works = false;
                     break;

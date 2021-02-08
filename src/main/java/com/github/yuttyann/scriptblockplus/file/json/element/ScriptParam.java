@@ -31,7 +31,7 @@ public class ScriptParam {
     private Set<UUID> author = new LinkedHashSet<>();
 
     @SerializedName("script")
-    private List<String> script = new LinkedList<>();
+    private List<String> script = new ArrayList<>();
 
     @SerializedName("lastedit")
     private String lastedit;
@@ -52,7 +52,7 @@ public class ScriptParam {
     }
 
     public void setScript(@NotNull List<String> script) {
-        this.script = new LinkedList<>(script);
+        this.script = new ArrayList<>(script);
     }
 
     @NotNull

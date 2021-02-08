@@ -95,8 +95,10 @@ public final class RayTrace {
         var world = player.getWorld();
         var blocks = new LinkedHashSet<Block>();
         var rayTrace = new RayTrace(player);
+        var positions = rayTrace.traverse(distance, accuracy);
         var boundingBox = new SBBoundingBox();
-        for(var position : rayTrace.traverse(distance, accuracy)) {
+        for(int i = 0, l = positions.size(); i < l; i++) {
+            var position = positions.get(i);
             var location = position.toLocation(world);
             boundingBox.setBlock(location.getBlock(), square);
             if(rayTrace.intersects(boundingBox, distance, accuracy)){
@@ -132,29 +134,17 @@ public final class RayTrace {
 
     @Nullable
     public Vector positionOfIntersection(@NotNull Vector min, @NotNull Vector max, final double distance, final double accuracy) {
-        var positions = traverse(distance, accuracy);
-        for (var position : positions) {
-            if (intersects(position, new SBBoundingBox(min, max))) {
-                return position;
-            }
-        }
-        return null;
+        return positionOfIntersection(new SBBoundingBox(min, max), distance, accuracy);
     }
 
     public boolean intersects(@NotNull Vector min, @NotNull Vector max, final double distance, final double accuracy) {
-        var positions = traverse(distance, accuracy);
-        for (var position : positions) {
-            if (intersects(position, new SBBoundingBox(min, max))) {
-                return true;
-            }
-        }
-        return false;
+        return intersects(new SBBoundingBox(min, max), distance, accuracy);
     }
 
     @Nullable
     public Vector positionOfIntersection(@NotNull SBBoundingBox boundingBox, final double distance, final double accuracy) {
         var positions = traverse(distance, accuracy);
-        for (int i = 0; i < positions.size(); i++) {
+        for(int i = 0, l = positions.size(); i < l; i++) {
             var position = positions.get(i);
             if (intersects(position, boundingBox)) {
                 return position;
@@ -165,7 +155,7 @@ public final class RayTrace {
 
     public boolean intersects(@NotNull SBBoundingBox boundingBox, final double distance, final double accuracy) {
         var positions = traverse(distance, accuracy);
-        for (int i = 0; i < positions.size(); i++) {
+        for(int i = 0, l = positions.size(); i < l; i++) {
             if (intersects(positions.get(i), boundingBox)) {
                 return true;
             }

@@ -42,6 +42,13 @@ public class BlockCoords {
     private int y;
     private int z;
 
+    /**
+     * コンストラクタ
+     * @param world - ワールド
+     * @param x - X座標
+     * @param y - Y座標
+     * @param z - Z座標
+     */
     protected BlockCoords(@NotNull World world, final int x, final int y, final int z) {
         this.world = world;
         this.x = x;
@@ -51,7 +58,7 @@ public class BlockCoords {
 
     /**
      * ブロックを取得します。
-     * @return ブロック
+     * @return {@link Block} - ブロック
      */
     @NotNull
     public final Block getBlock() {
@@ -60,7 +67,7 @@ public class BlockCoords {
 
     /**
      * ワールドを取得します。
-     * @return ワールド
+     * @return {@link World} - ワールド
      */
     @NotNull
     public final World getWorld() {

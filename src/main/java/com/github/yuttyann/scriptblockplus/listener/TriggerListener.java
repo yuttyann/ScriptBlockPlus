@@ -211,7 +211,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         }
     }
 
-    protected class Trigger {
+    protected final class Trigger {
 
         private final E event;
         private final Player player;

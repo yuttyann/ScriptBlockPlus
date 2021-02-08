@@ -34,11 +34,11 @@ public final class StringUtils {
     @NotNull
     public static List<String> getScripts(@NotNull String script) throws IllegalArgumentException {
         int length = script.length();
-        var chars = script.toCharArray();
-        if (chars[0] != '[' || chars[length - 1] != ']') {
+        if (script.charAt(0) != '[' || script.charAt(length - 1) != ']') {
             return Collections.singletonList(script);
         }
         var result = new ArrayList<String>();
+        var chars = script.toCharArray();
         int start = 0, end = 0;
         for (int i = 0, j = 0, k = 0; i < length; i++) {
             if (chars[i] == '[') {

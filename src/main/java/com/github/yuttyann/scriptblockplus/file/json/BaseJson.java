@@ -366,6 +366,14 @@ public abstract class BaseJson<E extends BaseElement> {
     }
 
     /**
+     * リストに要素が存在しない場合に{@code true}を返します。
+     * @return {@link boolean} - 要素が存在しない場合は{@code true}
+     */
+    public final boolean isEmpty() {
+        return list.isEmpty();
+    }
+
+    /**
      * ファイルが存在するのか確認します。
      * @return {@link boolean} - ファイルが存在する場合は{@code true}
      */

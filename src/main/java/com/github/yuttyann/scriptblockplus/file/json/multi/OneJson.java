@@ -80,7 +80,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
      */
     @NotNull
     public final E load(@NotNull A a) {
-        var element = fastLoad(a);
+        E element = fastLoad(a);
         if (element == null) {
             list.add(element = newInstance(a));
         }
@@ -97,9 +97,9 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
     @Nullable
     public final E fastLoad(@NotNull A a) {
         for (int i = 0, l = list.size(); i < l; i++) {
-            var element = list.get(i);
+            E element = list.get(i);
             if (element.isElement(a)) {
-                return (E) element;
+                return element;
             }
         }
         return null;
@@ -114,16 +114,16 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
         return fastLoad(a) != null;
     }
 
-     /**
+    /**
      * 要素を削除します。
      * @param a - 引数
      * @return {@link boolean} - 削除に成功した場合は{@code true}
      */
     public final boolean remove(@NotNull A a) {
-        var iterator = list.iterator();
-        while (iterator.hasNext()) {
-            if (iterator.next().isElement(a)) {
-                iterator.remove();
+        for (int i = 0, l = list.size(); i < l; i++) {
+            E element = list.get(i);
+            if (element.isElement(a)) {
+                list.remove(i);
                 return true;
             }
         }

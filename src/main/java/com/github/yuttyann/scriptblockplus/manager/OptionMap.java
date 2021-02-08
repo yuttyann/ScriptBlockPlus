@@ -63,7 +63,7 @@ public final class OptionMap {
 
     @Nullable
     public SBInstance<Option> getInstance(@NotNull String syntax) {
-        for (int i = 0; i < SYNTAXES.size(); i++) {
+        for (int i = 0, l = SYNTAXES.size(); i < l; i++) {
             var value = SYNTAXES.get(i);
             if (syntax.indexOf(value) == 0) {
                 return SBINSTANCES.get(value);
@@ -122,9 +122,8 @@ public final class OptionMap {
 
     public synchronized void updateOrdinal() {
         try {
-            int index = 0;
-            for (String syntax : SYNTAXES) {
-                ORDINAL.setInt(SBINSTANCES.get(syntax).get(), index++);
+            for (int i = 0, l = SYNTAXES.size(); i < l; i++) {
+                ORDINAL.setInt(SBINSTANCES.get(SYNTAXES.get(i)).get(), i);
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();

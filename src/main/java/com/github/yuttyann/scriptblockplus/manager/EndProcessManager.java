@@ -57,7 +57,8 @@ public final class EndProcessManager {
 
     @NotNull
     public static EndProcess newInstance(@NotNull Class<? extends EndProcess> endProcess) {
-        for (var sbInstance : ENDPROCESS_LIST) {
+        for (int i = 0, l = ENDPROCESS_LIST.size(); i < l; i++) {
+            var sbInstance = ENDPROCESS_LIST.get(i);
             if (sbInstance.getDeclaringClass().equals(endProcess)) {
                 return sbInstance.newInstance();
             }
