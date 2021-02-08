@@ -1,4 +1,4 @@
-ScriptBlockPlus [Java11](https://jdk.java.net/) [MC1.9-1.16.x] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.16.x] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 
 概要
