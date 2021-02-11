@@ -421,7 +421,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
 
     /**
      * エレメントのコレクションをコピーします。
-     * @return {@link Set}&lt;{@link E}&gt; - エレメントのコレクション
+     * @return {@link Collection}&lt;{@link E}&gt; - エレメントのコレクション
      */
     private Collection<E> copyElements() {
         int size = elementMap.size() + subSize();
