@@ -42,7 +42,7 @@ public class OldCooldown extends TimerOption {
 
         var tempJson = PlayerTempJson.get(getFileUniqueId());
         tempJson.load().getTimerTemp().add(new TimerTemp(getScriptKey(), getBlockCoords()).setParams(params));
-        tempJson.saveFile();
+        tempJson.saveJson();
         return true;
     }
 

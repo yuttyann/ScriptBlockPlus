@@ -13,9 +13,10 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.file.json.multi;
+package com.github.yuttyann.scriptblockplus.file.json.basic;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
@@ -40,17 +41,43 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
     public static abstract class OneElement<A> extends BaseElement {
 
         /**
+         * 引数{@link A}を取得します。
+         * <p>
+         * コンストラクタ宣言時に渡す引数と同じでなければなりません。
+         * @return {@link A} - 引数
+         */
+        @NotNull
+        protected abstract A getA();
+
+        /**
          * 引数が一致するのか比較します。
          * @param a - 引数
          * @return {@link boolean} - 要素が存在する場合は{@code true}
          */
-        public abstract boolean isElement(@NotNull A a);
+        public boolean isElement(@NotNull A a) {
+            return compare(getA(), a);
+        }
+
+        /**
+         * ハッシュコードを生成します。
+         * @return {@link int} - ハッシュコード
+         */
+        @Override
+        public final int hashCode() {
+            return OneJson.hash(getA());
+        }
+
+        @Override
+        @NotNull
+        public final Class<? extends BaseElement> getElementType() {
+            return OneElement.class;
+        }
     }
 
     /**
      * コンストラクタ
      * <p>
-     * 必ずシリアライズ、デシリアライズ化が可能なファイルを指定してください。
+     * 必ずシリアライズとデシリアライズ化が可能なファイルを指定してください。
      * @param json - JSONのファイル
      */
     protected OneJson(@NotNull File json) {
@@ -80,9 +107,15 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
      */
     @NotNull
     public final E load(@NotNull A a) {
-        E element = fastLoad(a);
+        int hash = hash(a);
+        var element = elementMap.get(hash);
         if (element == null) {
-            list.add(element = newInstance(a));
+            elementMap.put(hash, element = newInstance(a));
+        } else if (!element.isElement(a)) {
+            var subHash = Integer.valueOf(hash);
+            if ((element = subGet(subHash, e -> e.isElement(a))) == null) {
+                subPut(subHash, element = newInstance(a));
+            }
         }
         return element;
     }
@@ -96,13 +129,14 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
      */
     @Nullable
     public final E fastLoad(@NotNull A a) {
-        for (int i = 0, l = list.size(); i < l; i++) {
-            E element = list.get(i);
-            if (element.isElement(a)) {
-                return element;
-            }
+        int hash = hash(a);
+        var element = elementMap.get(hash);
+        if (element == null) {
+            return null;
+        } else if (!element.isElement(a) && isSubNotEmpty()) {
+            element = subGet(hash, e -> e.isElement(a));
         }
-        return null;
+        return element;
     }
 
     /**
@@ -115,19 +149,23 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
     }
 
     /**
-     * 要素を削除します。
+     * 一致する要素を削除します。
      * @param a - 引数
      * @return {@link boolean} - 削除に成功した場合は{@code true}
      */
     public final boolean remove(@NotNull A a) {
-        for (int i = 0, l = list.size(); i < l; i++) {
-            E element = list.get(i);
-            if (element.isElement(a)) {
-                list.remove(i);
-                return true;
-            }
+        int hash = hash(a);
+        var element = elementMap.get(hash);
+        if (element == null) {
+            return false;
+        } else if (!element.isElement(a) && isSubNotEmpty()) {
+            return subRemove(hash, e -> e.isElement(a));
         }
-        return false;
+        elementMap.remove(hash);
+        if (isSubNotEmpty()) {
+            subMapFirstShift(hash, elementMap);
+        }
+        return true;
     }
 
     /**
@@ -137,6 +175,10 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
      */
     public final void action(@NotNull Consumer<E> action, @NotNull A a) {
         action.accept(load(a));
-        saveFile();
+        saveJson();
+    }
+
+    private static int hash(@NotNull Object a) {
+        return Objects.hashCode(a);
     }
 }

@@ -15,7 +15,7 @@
  * 
  * Gson license <https://github.com/google/gson/blob/master/LICENSE>
  */
-package com.github.yuttyann.scriptblockplus.file.json.builder;
+package com.github.yuttyann.scriptblockplus.file.json.legacy;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -27,13 +27,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.internal.ConstructorConstructor;
 import com.google.gson.internal.$Gson$Types;
 import com.google.gson.internal.Excluder;
@@ -95,21 +94,17 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
   
     @NotNull
     private List<String> getFieldNames(@NotNull Field field) {
-        var serializedName = field.getAnnotation(SerializedName.class);
-        if (serializedName == null) {
+        var legacyName = field.getAnnotation(LegacyName.class);
+        if (legacyName == null) {
             return Collections.singletonList(fieldNamingPolicy.translateName(field));
         }
-        var value = serializedName.value();
-        var alternate = field.getAnnotation(Alternate.class);
-        if (alternate == null) {
-            return Collections.singletonList(value);
+        var name = legacyName.value();
+        var alternate = legacyName.alternate();
+        if (alternate.length == 0) {
+            return Collections.singletonList(name);
         }
-        var alternates = alternate.value();
-        if (alternates.length == 0) {
-            return Collections.singletonList(value);
-        }
-        var names = new ArrayList<String>(alternates.length + 1);
-        names.add(value); Collections.addAll(names, alternates);
+        var names = new ArrayList<String>(alternate.length + 1);
+        names.add(name); Collections.addAll(names, alternate);
         return names;
     }
 
@@ -122,8 +117,8 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
         var declaredType = typeToken.getType();
         while (rawType != Object.class) {
             for (var field : rawType.getDeclaredFields()) {
-                boolean serialize = excludeField(field, true);
-                boolean deserialize = excludeField(field, false);
+                var serialize = excludeField(field, true);
+                var deserialize = excludeField(field, false);
                 if (!serialize && !deserialize) {
                     continue;
                 }
@@ -185,7 +180,7 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
         };
     }
   
-    private static abstract class BoundField {
+    private abstract class BoundField {
 
         final String name;
         final boolean serialized;
@@ -204,7 +199,7 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
         protected abstract void read(@NotNull JsonReader reader, @NotNull Object value) throws IOException, IllegalAccessException;
     }
 
-    public static final class Adapter<T> extends TypeAdapter<T> {
+    private final class Adapter<T> extends TypeAdapter<T> {
 
         private final ObjectConstructor<T> constructor;
         private final Map<String, BoundField> boundFields;

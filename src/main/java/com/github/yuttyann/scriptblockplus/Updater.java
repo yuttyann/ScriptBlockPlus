@@ -165,10 +165,7 @@ public final class Updater {
         if (!file.exists()) {
             return false;
         }
-        try (
-                var reader1 = new BufferedReader(new FileReader(file)); 
-                var reader2 = new BufferedReader(new InputStreamReader(new URL(url).openStream()))
-            ) {
+        try (var reader1 = FileUtils.newBufferedReader(file); var reader2 = FileUtils.newBufferedReader(new URL(url).openStream())) {
             while (reader1.ready() && reader2.ready()) {
                 if (!reader1.readLine().equals(reader2.readLine())) {
                     return false;

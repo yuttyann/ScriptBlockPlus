@@ -21,6 +21,8 @@ import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.legacy.ConvartList;
+import com.github.yuttyann.scriptblockplus.file.json.legacy.LegacyFormatJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
@@ -91,6 +93,9 @@ public class ScriptBlock extends JavaPlugin {
         // アップデート処理
         checkUpdate(Bukkit.getConsoleSender(), false);
 
+        // 古い形式のJSONファイルを最新の物へ移行する。
+        LegacyFormatJson.convart(ConvartList.create(this, "json"));
+
         // スクリプトの形式を".yml"から".json"へ移行
         StreamUtils.forEach(ScriptKey.values(), BlockScriptJson::convart);
 
@@ -129,7 +134,7 @@ public class ScriptBlock extends JavaPlugin {
     /**
      * 最新のバージョンが存在するか確認します。
      * @param sender - 送信先
-     * @param latestMessage - trueの場合は送信先にアップデートのメッセージを表示します。
+     * @param latestMessage - {@code true}の場合は送信先にアップデートのメッセージを表示します。
      */
     public void checkUpdate(@NotNull CommandSender sender, boolean latestMessage) {
         if (updater == null) {

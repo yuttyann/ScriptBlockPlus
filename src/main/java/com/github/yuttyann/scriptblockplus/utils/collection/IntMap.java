@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus IntMap インターフェース
@@ -45,13 +46,14 @@ public interface IntMap<V> extends Map<Integer, V> {
          * Gets the value for this entry.
          * @return the value corresponding to this entry.
          */
+        @Nullable
         V value();
 
         /**
          * Sets the value for this entry.
          * @param value new value to be stored in this entry.
          */
-        void setValue(V value);
+        void setValue(@Nullable V value);
     }
 
     /**
@@ -59,6 +61,7 @@ public interface IntMap<V> extends Map<Integer, V> {
      * @param key the key whose associated value is to be returned.
      * @return the value or {@code null} if the key was not found in the map.
      */
+    @Nullable
     V get(int key);
 
     /**
@@ -67,13 +70,15 @@ public interface IntMap<V> extends Map<Integer, V> {
      * @param value the value of the entry.
      * @return the previous value for this key or {@code null} if there was no previous mapping.
      */
-    V put(int key, V value);
+    @Nullable
+    V put(int key, @Nullable V value);
  
     /**
      * Removes the entry with the specified key.
      * @param key the key for the entry to be removed from this map.
      * @return the previous value for the key, or {@code null} if there was no mapping.
      */
+    @Nullable
     V remove(int key);
  
     /**
@@ -89,6 +94,7 @@ public interface IntMap<V> extends Map<Integer, V> {
      * progresses. The caller should not rely on {@link IntEntry} key/value stability.
      * @return iterable object of the mapping contained in this map.
      */
+    @NotNull
     Iterable<IntEntry<V>> iterable();
 
     /**

@@ -18,8 +18,8 @@ package com.github.yuttyann.scriptblockplus.file.json.derived;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
+import com.github.yuttyann.scriptblockplus.file.json.basic.TwoJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
-import com.github.yuttyann.scriptblockplus.file.json.multi.TwoJson;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
@@ -38,7 +38,7 @@ import java.util.UUID;
 public class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount> {
 
     private static final CacheJson<UUID> CACHE_JSON = new CacheJson<>(PlayerCountJson.class, PlayerCountJson::new);
-    
+
     private PlayerCountJson(@NotNull File json) {
         super(json);
     }
@@ -86,7 +86,7 @@ public class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount
                 }
             }
             if (removed) {
-                countJson.saveFile();
+                countJson.saveJson();
             }
         }
     }

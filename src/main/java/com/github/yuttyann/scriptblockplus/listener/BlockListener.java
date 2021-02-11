@@ -58,11 +58,11 @@ public class BlockListener implements Listener {
             if (scriptJson.isEmpty()) {
                 continue;
             }
-            var blockScript = scriptJson.load();
-            if (!blockScript.has(blockCoords)) {
+            var blockScript = scriptJson.fastLoad(blockCoords);
+            if (blockScript == null) {
                 continue;
             }
-            var selector = blockScript.get(blockCoords).getSelector();
+            var selector = blockScript.getSelector();
             if (StringUtils.isEmpty(selector) || !CommandSelector.has(selector)) {
                 continue;
             }

@@ -17,30 +17,31 @@ package com.github.yuttyann.scriptblockplus.file.json;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.SBFile;
-import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
-import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
 import com.github.yuttyann.scriptblockplus.file.json.builder.BlockCoordsDeserializer;
 import com.github.yuttyann.scriptblockplus.file.json.builder.BlockCoordsSerializer;
 import com.github.yuttyann.scriptblockplus.file.json.builder.FieldExclusion;
+import com.github.yuttyann.scriptblockplus.file.json.builder.NumberAdapter;
 import com.github.yuttyann.scriptblockplus.file.json.builder.ScriptKeyDeserializer;
 import com.github.yuttyann.scriptblockplus.file.json.builder.ScriptKeySerializer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
+import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.collection.IntHashMap;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
-import com.google.common.base.Charsets;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 /**
@@ -49,7 +50,7 @@ import java.util.*;
  * @author yuttyann44581
  */
 @SuppressWarnings("unchecked")
-public abstract class BaseJson<E extends BaseElement> {
+public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
 
     /**
      * ScriptBlockPlus Status 列挙型
@@ -81,43 +82,30 @@ public abstract class BaseJson<E extends BaseElement> {
         CLEAR_CACHE,
     }
 
-    @Exclude
+    public static final String INDENT = "  ";
+    public static final GsonHolder GSON_HOLDER = new GsonHolder(new GsonBuilder());
+
     private static final IntMap<BaseJson<?>> JSON_CACHE = IntHashMap.create();
 
-    @Exclude
-    private static final GsonHolder GSON_HOLDER = new GsonHolder(new GsonBuilder());
+    private final File file;
+    private final String name;
+    private final JsonTag jsonTag;
 
-    @Exclude
-    private static final String INDENT = "  ";
-
-    @Exclude
-    private final JsonTag JSON_TAG = getClass().getAnnotation(JsonTag.class);
-
-    @Exclude
-    private File file;
-
-    @Exclude
+    private int id;
     private File parent;
-
-    @Exclude
-    private int cacheId;
-
-    @Exclude
     private Status status;
+    private Class<E[]> arrayClass;
 
-    @Alternate("id")
-    @SerializedName(value = "name", alternate = { "id" })
-    protected String name;
+    protected IntMap<E> elementMap;
 
-    @Alternate("infos")
-    @SerializedName(value = "elements", alternate = { "infos" })
-    protected List<E> list = Collections.emptyList();
-
+    // GsonBuilderにアダプター等の追加を行う。
     static {
         GSON_HOLDER.builder(b -> {
             b.serializeNulls();
             b.setPrettyPrinting();
             b.setExclusionStrategies(new FieldExclusion());
+            b.registerTypeAdapter(Map.class, new NumberAdapter());
+            b.registerTypeAdapter(List.class, new NumberAdapter());
             b.registerTypeAdapter(ScriptKey.class, new ScriptKeySerializer());
             b.registerTypeAdapter(ScriptKey.class, new ScriptKeyDeserializer());
             b.registerTypeAdapter(BlockCoords.class, new BlockCoordsSerializer());
@@ -127,24 +115,28 @@ public abstract class BaseJson<E extends BaseElement> {
         });
     }
 
+    // JsonTagを取得する。
+    {
+        if ((this.jsonTag = getClass().getAnnotation(JsonTag.class)) == null) {
+            throw new NullPointerException("Annotation not found @JsonTag()");
+        }
+    }
+
     /**
      * コンストラクタ
      * <p>
-     * 必ずシリアライズ、デシリアライズ化が可能なファイルを指定してください。
+     * 必ずシリアライズとデシリアライズ化が可能なファイルを指定してください。
      * @param json - JSONのファイル
      */
     protected BaseJson(@NotNull File json) {
-        if (JSON_TAG == null) {
-            throw new NullPointerException("Annotation not found @JsonTag()");
-        }
         var path = json.getPath();
-        if (path.lastIndexOf(SBFile.setSeparator(JSON_TAG.path())) == -1) {
-            throw new IllegalArgumentException("File: " + json.getPath() + ", JsonTag: " + JSON_TAG.path());
+        if (path.lastIndexOf(SBFile.setSeparator(jsonTag.path())) == -1) {
+            throw new IllegalArgumentException("File: " + json.getPath() + ", JsonTag: " + jsonTag.path());
         }
-        this.name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.lastIndexOf('.'));
         this.file = json;
+        this.name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.lastIndexOf('.'));
         try {
-            setList(createList(), loadFile());
+            setMap(loadJson());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -156,13 +148,10 @@ public abstract class BaseJson<E extends BaseElement> {
      * @param name - ファイルの名前
      */
     protected BaseJson(@NotNull String name) {
-        if (JSON_TAG == null) {
-            throw new NullPointerException("Annotation not found @JsonTag()");
-        }
+        this.file = getJsonFile(name);
         this.name = name;
-        this.file = getJsonFile(JSON_TAG);
         try {
-            setList(createList(), loadFile());
+            setMap(loadJson());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -170,27 +159,41 @@ public abstract class BaseJson<E extends BaseElement> {
     }
 
     /**
-     * 新しいリストに要素を追加します。
+     * マップに要素を追加します。
+     * @param elements - エレメントの配列
      */
-    private void setList(@NotNull List<E> newList, @NotNull BaseJson<E> baseJson) {
-        if (baseJson != null) {
-            var jsonList = baseJson.list;
-            if (newList instanceof ArrayList) {
-                newList = jsonList;
+    private void setMap(@Nullable E[] elements) {
+        if (elements == null || elements.length == 0) {
+            this.elementMap = createMap(IntHashMap.DEFAULT_CAPACITY);
+        } else {
+            int size = elements.length;
+            var newMap = createMap(size);
+            if (size == 1) {
+                var element = elements[0];
+                newMap.put(element.hashCode(), element);
             } else {
-                newList.addAll(jsonList);
+                for (int i = 0; i < size; i++) {
+                    var element = elements[i];
+                    int hashCode = element.hashCode();
+                    if (newMap.containsKey(hashCode)) {
+                        subPut(hashCode, element);
+                    } else {
+                        newMap.put(hashCode, element);
+                    }
+                }
             }
+            this.elementMap = newMap;
         }
-        this.list = newList;
     }
 
     /**
-     * {@link ArrayList}&lt;{@link E}&gt;を生成します。
-     * @return {@link ArrayList}&lt;{@link E}&gt; - リスト
+     * {@link IntMap}&lt;{@link E}&gt;を生成します。
+     * @param size - マップサイズ
+     * @return {@link IntMap}&lt;{@link E}&gt; - マップ
      */
     @NotNull
-    protected List<E> createList() {
-        return new ArrayList<>();
+    protected IntMap<E> createMap(int size) {
+        return IntHashMap.create(size);
     }
 
     /**
@@ -199,7 +202,7 @@ public abstract class BaseJson<E extends BaseElement> {
     public final void reload() {
         Objects.requireNonNull(file, "Please load the file");
         try {
-            setList(createList(), loadFile());
+            setMap(loadJson());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -234,15 +237,6 @@ public abstract class BaseJson<E extends BaseElement> {
     }
 
     /**
-     * {@link GsonHolder}を取得します。
-     * @return {@link GsonHolder}
-     */
-    @NotNull
-    protected static GsonHolder getGsonHolder() {
-        return GSON_HOLDER;
-    }
-
-    /**
      * キャッシュされた全ての要素を削除します。
      */
     public static void clear() {
@@ -270,7 +264,7 @@ public abstract class BaseJson<E extends BaseElement> {
      */
     @NotNull
     public final String getName() {
-        return Objects.requireNonNull(name, "Please load the file");
+        return name;
     }
 
     /**
@@ -288,20 +282,16 @@ public abstract class BaseJson<E extends BaseElement> {
      */
     @NotNull
     public final File getParentFile() {
-        Validate.notNull(file, "Please load the file");
-        if (parent == null) {
-            this.parent = file.getParentFile();
-        }
-        return parent;
+        return parent == null ? parent = file.getParentFile() : parent;
     }
 
     /**
      * キャッシュIDを設定します。
-     * @param cacheId - キャッシュID
+     * @param id - キャッシュID
      */
-    private void setCacheId(final int cacheId) {
-        if (this.cacheId == 0) {
-            this.cacheId = cacheId;
+    private void setCacheId(final int id) {
+        if (this.id == 0) {
+            this.id = id;
         }
     }
 
@@ -310,7 +300,7 @@ public abstract class BaseJson<E extends BaseElement> {
      * @return {@link int} - キャッシュID
      */
     public int getCacheId() {
-        return cacheId;
+        return id;
     }
 
     /**
@@ -375,7 +365,7 @@ public abstract class BaseJson<E extends BaseElement> {
      * @return {@link boolean} - 要素が存在しない場合は{@code true}
      */
     public final boolean isEmpty() {
-        return list.isEmpty();
+        return elementMap.isEmpty();
     }
 
     /**
@@ -391,7 +381,7 @@ public abstract class BaseJson<E extends BaseElement> {
      * @return {@link boolean} - 削除に成功した場合は{@code true}
      */
     public final boolean deleteFile() {
-        if (!exists()) {
+        if (!file.exists()) {
             return false;
         }
         try {
@@ -408,15 +398,17 @@ public abstract class BaseJson<E extends BaseElement> {
     /**
      * JSONのシリアライズ化を行います。
      */
-    public final void saveFile() {
-        if (!getParentFile().exists()) {
-            getParentFile().mkdirs();
+    public final void saveJson() {
+        var parent = getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
         }
-        try {
-            try (var writer = new JsonWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8))) {
+        var elements = copyElements();
+        try (var writer = new JsonWriter(FileUtils.newBufferedWriter(file))) {
+            if (elementMap.size() < SBConfig.FORMAT_LIMIT.getValue()) {
                 writer.setIndent(INDENT);
-                GSON_HOLDER.getGson().toJson(this, getClass(), writer);
             }
+            GSON_HOLDER.getGson().toJson(elements, Collection.class, writer);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -428,20 +420,61 @@ public abstract class BaseJson<E extends BaseElement> {
     }
 
     /**
+     * エレメントのコレクションをコピーします。
+     * @return {@link Set}&lt;{@link E}&gt; - エレメントのコレクション
+     */
+    private Collection<E> copyElements() {
+        int size = elementMap.size() + subSize();
+        if (size == 0) {
+            return Collections.emptyList();
+        }
+        if (isSubEmpty()) {
+            return elementMap.values();
+        }
+        var newList = new ArrayList<E>(size + 1);
+        for (var element : elementMap.values()) {
+            newList.add(element);
+        }
+        for (var subElement : subValues()) {
+            newList.add(subElement);
+        }
+        return newList;
+    }
+
+    /**
      * JSONのデシリアライズ化を行います。
-     * @return {@link BaseJson} - JSON
+     * @return {@link Set}&lt;{@link E}&gt; - エレメントの配列
      */
     @Nullable
-    private BaseJson<E> loadFile() throws IOException {
-        if (!exists()) {
+    private E[] loadJson() throws IOException {
+        if (!file.exists()) {
             return null;
         }
-        if (!getParentFile().exists()) {
-            getParentFile().mkdirs();
+        var parent = getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
         }
-        try (var reader = new JsonReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8))) {
-            return (BaseJson<E>) GSON_HOLDER.getGson().fromJson(reader, getClass());
+        try (var reader = new JsonReader(FileUtils.newBufferedReader(file))) {
+            return (E[]) GSON_HOLDER.getGson().fromJson(reader, getArrayClass());
+        } catch (NegativeArraySizeException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
+        return null;
+    }
+
+    /**
+     * 配列のクラスを取得します。
+     * @throws ClassNotFoundException クラスが見つからなかった時にスローされます。
+     * @return {@link Class}&lt;{@link E}[]&gt; - 配列のクラス
+     */
+    private Class<E[]> getArrayClass() throws ClassNotFoundException {
+        if (arrayClass == null) {
+            var type = getClass().getGenericSuperclass();
+            var args = ((ParameterizedType) type).getActualTypeArguments();
+            var element = Class.forName(args[args.length - 1].getTypeName());
+            this.arrayClass = (Class<E[]>) Array.newInstance(element, 0).getClass();
+        }
+        return arrayClass;
     }
 
     /**
@@ -451,7 +484,7 @@ public abstract class BaseJson<E extends BaseElement> {
      * @return {@link File} - JSONのファイル
      */
     @NotNull
-    private File getJsonFile(@NotNull JsonTag jsonTag) {
+    private File getJsonFile(@Nullable String name) {
         if (file == null) {
             var path = StringUtils.replace(jsonTag.path() + "/" + jsonTag.file(), "{id}", name);
             var plugin = Bukkit.getPluginManager().getPlugin(jsonTag.plugin());

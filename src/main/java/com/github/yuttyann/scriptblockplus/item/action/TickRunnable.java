@@ -51,6 +51,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TickRunnable extends BukkitRunnable {
 
+    private static final int PLAYER_RANGE = 15;
+    private static final int PARTICLE_RANGE = 10;
+
     private static final String KEY = Utils.randomUUID();
     private static final String KEY_TEMP = Utils.randomUUID();
     private static final boolean HAS_PROTOCOLLIB = ProtocolLib.INSTANCE.has();
@@ -118,7 +121,7 @@ public class TickRunnable extends BukkitRunnable {
     }
 
     private void spawnGlowEntity(@NotNull SBPlayer sbPlayer) throws Exception {
-        var region = new PlayerRegion(sbPlayer.getPlayer(), 15);
+        var region = new PlayerRegion(sbPlayer.getPlayer(), PLAYER_RANGE);
         var lookBlocks = getBlockCoords(sbPlayer, KEY);
         forEach(region, b -> {
             if (lookBlocks.size() > 0 && StreamUtils.anyMatch(lookBlocks, l -> l.equals(b))) {
@@ -154,9 +157,10 @@ public class TickRunnable extends BukkitRunnable {
             }
         } else {
             var count = new int[] { 0 };
-            forEach(new PlayerRegion(sbPlayer.getPlayer(), 10), b -> {
+            var player = sbPlayer.getPlayer();
+            forEach(new PlayerRegion(player, PARTICLE_RANGE), b -> {
                 if (count[0]++ < 800) {
-                    spawnParticlesOnBlock(sbPlayer.getPlayer(), b.getBlock(), null);
+                    spawnParticlesOnBlock(player, b.getBlock(), null);
                 }
             });
         }
@@ -195,13 +199,12 @@ public class TickRunnable extends BukkitRunnable {
             var iterator = new CuboidRegionIterator(region);
             for (var scriptKey : ScriptKey.iterable()) {
                 var scriptJson = BlockScriptJson.get(scriptKey);
-                if (!scriptJson.has()) {
+                if (scriptJson.isEmpty()) {
                     continue;
                 }
-                var blockScript = scriptJson.load();
                 while (iterator.hasNext()) {
                     var blockCoords = iterator.next();
-                    if (blockScript.has(blockCoords)) {
+                    if (scriptJson.has(blockCoords)) {
                         action.accept(blockCoords);
                     }
                 }
@@ -213,7 +216,7 @@ public class TickRunnable extends BukkitRunnable {
     }
 
     private boolean destroyEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull Set<BlockCoords> blocks) throws Exception {
-        if (!BlockScriptJson.has(blockCoords)) {
+        if (!BlockScriptJson.contains(blockCoords)) {
             return false;
         }
         GLOW_ENTITY_PACKET.destroyGlowEntity(sbPlayer, blockCoords);

@@ -17,8 +17,8 @@ package com.github.yuttyann.scriptblockplus.file.json.derived;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
-import com.github.yuttyann.scriptblockplus.file.json.SingleJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
+import com.github.yuttyann.scriptblockplus.file.json.basic.SingleJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTemp;
 import com.github.yuttyann.scriptblockplus.file.json.element.TimerTemp;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
@@ -37,7 +37,7 @@ import java.util.UUID;
 public class PlayerTempJson extends SingleJson<PlayerTemp> {
 
     private static final CacheJson<UUID> CACHE_JSON = new CacheJson<>(PlayerTempJson.class, PlayerTempJson::new);
-    
+
     private PlayerTempJson(@NotNull File json) {
         super(json);
     }
@@ -84,7 +84,7 @@ public class PlayerTempJson extends SingleJson<PlayerTemp> {
                 }
             }
             if (removed) {
-                tempJson.saveFile();
+                tempJson.saveJson();
             }
         }
     }

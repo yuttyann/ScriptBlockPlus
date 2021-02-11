@@ -23,7 +23,9 @@ import java.util.Set;
 
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import io.netty.util.Version;
 import io.netty.util.collection.IntObjectHashMap;
@@ -37,8 +39,8 @@ import io.netty.util.collection.IntObjectHashMap;
  */
 public final class IntHashMap<V> extends IntObjectHashMap<V> implements IntMap<V> {
 
-    private static final int DEFAULT_CAPACITY = 8;
-    private static final float DEFAULT_LOAD_FACTOR = 0.5F;
+    public static final int DEFAULT_CAPACITY = 8;
+    public static final float DEFAULT_LOAD_FACTOR = 0.5F;
 
     private static final boolean LEGACY_NETTY;
     
@@ -126,33 +128,35 @@ public final class IntHashMap<V> extends IntObjectHashMap<V> implements IntMap<V
         }
 
         @Override
-        public boolean containsKey(Object key) {
+        public boolean containsKey(@NotNull Object key) {
             return legacyMap.containsKey(key);
         }
 
         @Override
-        public boolean containsValue(Object value) {
+        public boolean containsValue(@Nullable Object value) {
             return legacyMap.containsValue(value);
         }
 
         @Override
-        public V get(Object key) {
+        @Nullable
+        public V get(@NotNull Object key) {
             return legacyMap.get(key);
         }
 
         @Override
-        public V put(Integer key, V value) {
+        @Nullable
+        public V put(@NotNull Integer key, @Nullable V value) {
             return legacyMap.put(key, value);
         }
 
         @Override
-        public V remove(Object key) {
+        public V remove(@NotNull Object key) {
             return legacyMap.remove(key);
         }
 
         @Override
-        public void putAll(Map<? extends Integer, ? extends V> m) {
-            legacyMap.putAll(m);
+        public void putAll(@NotNull Map<? extends Integer, ? extends V> map) {
+            legacyMap.putAll(map);
         }
 
         @Override
@@ -161,21 +165,25 @@ public final class IntHashMap<V> extends IntObjectHashMap<V> implements IntMap<V
         }
 
         @Override
+        @NotNull
         public Set<Integer> keySet() {
             return legacyMap.keySet();
         }
 
         @Override
+        @NotNull
         public Collection<V> values() {
             return legacyMap.values();
         }
 
         @Override
+        @NotNull
         public Set<Entry<Integer, V>> entrySet() {
             return legacyMap.entrySet();
         }
 
         @Override
+        @NotNull
         public Iterable<IntEntry<V>> iterable() {
             return ENTRIES;
         }
@@ -186,16 +194,19 @@ public final class IntHashMap<V> extends IntObjectHashMap<V> implements IntMap<V
         }
 
         @Override
+        @Nullable
         public V get(int key) {
             return legacyMap.get(key);
         }
 
         @Override
-        public V put(int key, V value) {
+        @Nullable
+        public V put(int key, @Nullable V value) {
             return legacyMap.put(key, value);
         }
 
         @Override
+        @Nullable
         public V remove(int key) {
             return legacyMap.remove(key);
         }
@@ -216,12 +227,13 @@ public final class IntHashMap<V> extends IntObjectHashMap<V> implements IntMap<V
             }
 
             @Override
+            @Nullable
             public V value() {
                 return entry.value();
             }
 
             @Override
-            public void setValue(V value) {
+            public void setValue(@Nullable V value) {
                 entry.setValue(value);
             }
         };
@@ -230,7 +242,7 @@ public final class IntHashMap<V> extends IntObjectHashMap<V> implements IntMap<V
 
         private PrimitiveEntry<V> entry;
 
-        public IntIterator(Iterator<PrimitiveEntry<V>> iterator) {
+        public IntIterator(@NotNull Iterator<PrimitiveEntry<V>> iterator) {
             this.iterator = iterator;
         }
 
@@ -268,12 +280,13 @@ public final class IntHashMap<V> extends IntObjectHashMap<V> implements IntMap<V
             }
 
             @Override
+            @Nullable
             public V value() {
                 return entry.getValue();
             }
 
             @Override
-            public void setValue(V value) {
+            public void setValue(@Nullable V value) {
                 entry.setValue(value);
             }
         };
@@ -282,7 +295,7 @@ public final class IntHashMap<V> extends IntObjectHashMap<V> implements IntMap<V
 
         private Entry<Integer, V> entry;
 
-        public MapIterator(Iterator<Entry<Integer, V>> iterator) {
+        public MapIterator(@NotNull Iterator<Entry<Integer, V>> iterator) {
             this.iterator = iterator;
         }
 

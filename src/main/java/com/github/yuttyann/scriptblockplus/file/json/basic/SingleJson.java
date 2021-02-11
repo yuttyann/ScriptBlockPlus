@@ -13,27 +13,42 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.file.json;
+package com.github.yuttyann.scriptblockplus.file.json.basic;
 
 import java.io.File;
-import java.util.List;
 import java.util.function.Consumer;
 
-import com.github.yuttyann.scriptblockplus.utils.collection.SingleList;
+import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
+import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
+import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
+import com.github.yuttyann.scriptblockplus.utils.collection.IntSingleMap;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus SingleJson クラス
- * @param <E> エレメントの型
+ * @param <E> エレメントの型({@link SingleElement}を継承してください。)
  * @author yuttyann44581
  */
-public abstract class SingleJson<E extends BaseElement> extends BaseJson<E> {
+public abstract class SingleJson<E extends SingleJson.SingleElement> extends BaseJson<E> {
+
+    /**
+     * ScriptBlockPlus SingleElement クラス
+     * @author yuttyann44581
+     */
+    public static abstract class SingleElement extends BaseElement {
+
+        @Override
+        @NotNull
+        public final Class<? extends BaseElement> getElementType() {
+            return SingleElement.class;
+        }
+    }
 
     /**
      * コンストラクタ
      * <p>
-     * 必ずシリアライズ、デシリアライズ化が可能なファイルを指定してください。
+     * 必ずシリアライズとデシリアライズ化が可能なファイルを指定してください。
      * @param json - JSONのファイル
      */
     protected SingleJson(@NotNull File json) {
@@ -49,13 +64,14 @@ public abstract class SingleJson<E extends BaseElement> extends BaseJson<E> {
     }
 
     /**
-     * {@link SingleList}&lt;{@link E}&gt;を生成します。
-     * @return {@link SingleList}&lt;{@link E}&gt; - リスト
+     * {@link IntMap}&lt;{@link E}&gt;を生成します。
+     * @param size - マップサイズ
+     * @return {@link IntMap}&lt;{@link E}&gt; - マップ
      */
     @Override
     @NotNull
-    protected final List<E> createList() {
-        return new SingleList<>();
+    protected IntMap<E> createMap(int size) {
+        return new IntSingleMap<>();
     }
 
     /**
@@ -71,10 +87,10 @@ public abstract class SingleJson<E extends BaseElement> extends BaseJson<E> {
      */
     @NotNull
     public final E load() {
-        if (list.isEmpty()) {
-            list.add(newInstance());
+        if (elementMap.isEmpty()) {
+            elementMap.put(0, newInstance());
         }
-        return list.get(0);
+        return elementMap.get(0);
     }
 
     /**
@@ -82,14 +98,14 @@ public abstract class SingleJson<E extends BaseElement> extends BaseJson<E> {
      * @return {@link boolean} - 要素が存在する場合は{@code true}
      */
     public final boolean has() {
-        return !list.isEmpty();
+        return !elementMap.isEmpty();
     }
 
     /**
      * 要素を削除します。
      */
     public final void remove() {
-        list.clear();
+        elementMap.clear();
     }
 
     /**
@@ -98,6 +114,6 @@ public abstract class SingleJson<E extends BaseElement> extends BaseJson<E> {
      */
     public final void action(@NotNull Consumer<E> action) {
         action.accept(load());
-        saveFile();
+        saveJson();
     }
 }

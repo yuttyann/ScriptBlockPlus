@@ -15,41 +15,109 @@
  */
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
+import com.github.yuttyann.scriptblockplus.file.json.basic.OneJson.OneElement;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * ScriptBlockPlus BlockScript クラス
  * @author yuttyann44581
  */
-public class BlockScript extends BaseElement {
+public class BlockScript extends OneElement<BlockCoords> {
 
-    @SerializedName("scripts")
-    private final Map<BlockCoords, ScriptParam> scripts = new HashMap<>();
+    @SerializedName("blockcoords")
+    private final BlockCoords blockCoords;
 
-    public boolean has(@NotNull BlockCoords blockCoords) {
-        var scriptParam = scripts.get(blockCoords);
-        if (scriptParam == null) {
-            return false;
-        }
-        return scriptParam.getAuthor().size() > 0;
+    @SerializedName("author")
+    private Set<UUID> author = new LinkedHashSet<>();
+
+    @SerializedName("script")
+    private List<String> script = new ArrayList<>();
+
+    @SerializedName("lastedit")
+    private String lastedit;
+
+    @SerializedName("selector")
+    private String selector;
+
+    @SerializedName("amount")
+    private int amount = -1;
+
+    public BlockScript(@NotNull BlockCoords blockCoords) {
+        this.blockCoords = blockCoords;
+    }
+
+    @Override
+    @NotNull
+    protected BlockCoords getA() {
+        return blockCoords;
+    }
+
+    @Override
+    public boolean isElement(@NotNull BlockCoords blockCoords) {
+        return this.blockCoords.compare(blockCoords);
+    }
+
+    public void setAuthors(@NotNull Collection<UUID> authors) {
+        this.author = new LinkedHashSet<>(authors);
     }
 
     @NotNull
-    public ScriptParam get(@NotNull BlockCoords blockCoords) {
-        var scriptParam = scripts.get(blockCoords);
-        if (scriptParam == null) {
-            scripts.put(blockCoords, scriptParam = new ScriptParam());
-        }
-        return scriptParam;
+    public Set<UUID> getAuthors() {
+        return author;
     }
 
-    public void remove(@NotNull BlockCoords location) {
-        scripts.remove(location);
+    public void setScripts(@NotNull Collection<String> scripts) {
+        this.script = new ArrayList<>(scripts);
     }
+
+    @NotNull
+    public List<String> getScripts() {
+        return script;
+    }
+
+    public void setLastEdit(@NotNull String time) {
+        this.lastedit = time;
+    }
+
+    @Nullable
+    public String getLastEdit() {
+        return lastedit;
+    }
+
+    public void setSelector(@Nullable String selector) {
+        this.selector = selector;
+    }
+
+    @Nullable
+    public String getSelector() {
+        return selector;
+    }
+
+    public synchronized void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public synchronized void addAmount(int amount) {
+        this.amount += amount;
+    }
+
+    public synchronized void subtractAmount(int amount) {
+        this.amount = Math.max(this.amount - amount, 0);
+    }
+
+    public synchronized int getAmount() {
+        return amount;
+    }
+
 }

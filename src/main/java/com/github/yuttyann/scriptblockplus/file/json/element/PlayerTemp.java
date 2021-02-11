@@ -15,7 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
-import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
+import com.github.yuttyann.scriptblockplus.file.json.basic.SingleJson.SingleElement;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,13 +26,13 @@ import java.util.Set;
  * ScriptBlockPlus PlayerCooldown クラス
  * @author yuttyann44581
  */
-public class PlayerTemp extends BaseElement {
+public class PlayerTemp extends SingleElement {
 
     @SerializedName("timer")
-    private final Set<TimerTemp> timer = new HashSet<>();
+    private final Set<TimerTemp> TIMER = new HashSet<>();
 
     @NotNull
     public Set<TimerTemp> getTimerTemp() {
-        return timer;
+        return TIMER;
     }
 }

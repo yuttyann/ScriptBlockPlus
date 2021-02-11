@@ -192,7 +192,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
             return;
         }
         var blockCoords = trigger.getBlockCoords();
-        if (!BlockScriptJson.has(scriptKey, blockCoords)) {
+        if (!BlockScriptJson.contains(scriptKey, blockCoords)) {
             return;
         }
         var player = trigger.getPlayer();

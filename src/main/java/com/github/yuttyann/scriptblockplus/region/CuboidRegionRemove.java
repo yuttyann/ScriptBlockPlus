@@ -63,7 +63,7 @@ public class CuboidRegionRemove {
         var iterator = new CuboidRegionIterator(region);
         for (var scriptKey : ScriptKey.iterable()) {
             var scriptJson = BlockScriptJson.get(scriptKey);
-            if (!scriptJson.has()) {
+            if (scriptJson.isEmpty()) {
                 continue;
             }
             iterator.reset();
@@ -80,7 +80,7 @@ public class CuboidRegionRemove {
             }
             if (removed) {
                 scriptKeys.add(scriptKey);
-                scriptJson.saveFile();
+                scriptJson.saveJson();
             }
         }
         var reuseIterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
@@ -93,10 +93,6 @@ public class CuboidRegionRemove {
     }
     
     private boolean lightRemove(@NotNull BlockCoords blockCoords, @NotNull BlockScriptJson scriptJson) {
-        if (!scriptJson.has() || !scriptJson.load().has(blockCoords)) {
-            return false;
-        }
-        scriptJson.load().remove(blockCoords);
-        return true;
+        return scriptJson.has(blockCoords) ? scriptJson.remove(blockCoords) : false;
     }
 }

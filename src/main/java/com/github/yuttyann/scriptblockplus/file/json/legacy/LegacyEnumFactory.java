@@ -15,18 +15,16 @@
  * 
  * Gson license <https://github.com/google/gson/blob/master/LICENSE>
  */
-package com.github.yuttyann.scriptblockplus.file.json.builder;
+package com.github.yuttyann.scriptblockplus.file.json.legacy;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -49,7 +47,7 @@ public final class LegacyEnumFactory implements TypeAdapterFactory {
 
     @Override
     @Nullable
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public <T> TypeAdapter<T> create(@NotNull Gson gson, @NotNull TypeToken<T> typeToken) {
         var rawType = typeToken.getRawType();
         if (!Enum.class.isAssignableFrom(rawType) || rawType == Enum.class) {
@@ -61,7 +59,7 @@ public final class LegacyEnumFactory implements TypeAdapterFactory {
         return (TypeAdapter<T>) new EnumTypeAdapter(rawType);
     }
 
-    private static final class EnumTypeAdapter<T extends Enum<T>> extends TypeAdapter<T> {
+    private final class EnumTypeAdapter<T extends Enum<T>> extends TypeAdapter<T> {
 
         private final Map<String, T> nameToConstant = new HashMap<>();
         private final Map<T, String> constantToName = new HashMap<>();
@@ -71,13 +69,12 @@ public final class LegacyEnumFactory implements TypeAdapterFactory {
                 for (T constant : rawType.getEnumConstants()) {
                     var name = constant.name();
                     var field = rawType.getField(name);
-                    var serializedName = field.getAnnotation(SerializedName.class);
-                    if (serializedName != null) {
-                        name = serializedName.value();
-                    }
-                    var alternate = field.getAnnotation(Alternate.class);
-                    if (alternate != null) {
-                        StreamUtils.forEach(alternate.value(), s -> nameToConstant.put(s, constant));
+                    var legacyName = field.getAnnotation(LegacyName.class);
+                    if (legacyName != null) {
+                        name = legacyName.value();
+                        for (var alternate : legacyName.alternate()) {
+                            nameToConstant.put(alternate, constant);
+                        }
                     }
                     nameToConstant.put(name, constant);
                     constantToName.put(constant, name);

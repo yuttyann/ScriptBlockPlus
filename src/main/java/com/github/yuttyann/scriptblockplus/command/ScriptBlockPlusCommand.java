@@ -229,22 +229,21 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         }
         var scriptFile = YamlConfig.load(getPlugin(), file, false);
         var scriptJson = BlockScriptJson.get(scriptKey);
-        var blockScript = scriptJson.load();
         for (var name : scriptFile.getKeys()) {
             var world = Utils.getWorld(name);
             for (var coords : scriptFile.getKeys(name)) {
-                var script = scriptFile.getStringList(name + "." + coords);
-                script.replaceAll(s -> StringUtils.replace(s, "@cooldown:", "@oldcooldown:"));
-                if (script.size() > 0 && script.get(0).startsWith("Author:")) {
-                    script.remove(0);
+                var options = scriptFile.getStringList(name + "." + coords);
+                options.replaceAll(s -> StringUtils.replace(s, "@cooldown:", "@oldcooldown:"));
+                if (options.size() > 0 && options.get(0).startsWith("Author:")) {
+                    options.remove(0);
                 }
-                var scriptParam = blockScript.get(BlockCoords.fromString(world, coords));
-                scriptParam.getAuthor().add(uuid);
-                scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
-                scriptParam.setScript(script);
+                var blockScript = scriptJson.load(BlockCoords.fromString(world, coords));
+                blockScript.getAuthors().add(uuid);
+                blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+                blockScript.setScripts(options);
             }
         }
-        scriptJson.saveFile();
+        scriptJson.saveJson();
     }
 
     private boolean doRun(@NotNull CommandSender sender, @NotNull String[] args) {

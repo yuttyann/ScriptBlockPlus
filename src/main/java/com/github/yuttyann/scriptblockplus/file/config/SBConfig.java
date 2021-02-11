@@ -22,7 +22,7 @@ import com.github.yuttyann.scriptblockplus.script.option.Option;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -36,10 +36,12 @@ import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 public final class SBConfig {
 
     // List Keys
-    public static final ConfigKey<List<String>> BLOCK_SELECTOR = stringListKey("BlockSelector", new ArrayList<>());
-    public static final ConfigKey<List<String>> SCRIPT_EDITOR = stringListKey("ScriptEditor", new ArrayList<>());
-    public static final ConfigKey<List<String>> SCRIPT_VIEWER = stringListKey("ScriptViewer", new ArrayList<>());
+    public static final ConfigKey<List<String>> BLOCK_SELECTOR = stringListKey("BlockSelector", Collections.emptyList());
+    public static final ConfigKey<List<String>> SCRIPT_EDITOR = stringListKey("ScriptEditor", Collections.emptyList());
+    public static final ConfigKey<List<String>> SCRIPT_VIEWER = stringListKey("ScriptViewer", Collections.emptyList());
 
+    // Integer Keys
+    public static final ConfigKey<Integer> FORMAT_LIMIT = integerKey("FormatLimit", 100000);
 
     // Boolean Keys
     public static final ConfigKey<Boolean> UPDATE_CHECKER = booleanKey("UpdateChecker", true);
@@ -50,7 +52,6 @@ public final class SBConfig {
     public static final ConfigKey<Boolean> OPTION_PERMISSION = booleanKey("OptionPermission", false);
     public static final ConfigKey<Boolean> ACTIONS_INTERACT_LEFT = booleanKey("Actions.InteractLeft", true);
     public static final ConfigKey<Boolean> ACTIONS_INTERACT_RIGHT = booleanKey("Actions.InteractRight", true);
-
 
     // String Keys
     public static final ConfigKey<String> LANGUAGE = stringKey("Language", "en");

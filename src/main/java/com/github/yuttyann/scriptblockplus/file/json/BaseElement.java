@@ -34,4 +34,13 @@ public abstract class BaseElement {
     protected boolean compare(@NotNull Object argment1, @NotNull Object argment2) {
         return Objects.equals(argment1, argment2);
     }
+
+    /**
+     * エレメントのクラスを取得します。
+     * @return {@link Class}&lt;? extends {@link BaseElement}&gt; - エレメントのクラス
+     */
+    @NotNull
+    public Class<? extends BaseElement> getElementType() {
+        return BaseElement.class;
+    }
 }

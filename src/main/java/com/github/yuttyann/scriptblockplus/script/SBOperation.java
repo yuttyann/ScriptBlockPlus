@@ -20,7 +20,7 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
+import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -60,20 +60,20 @@ public final class SBOperation {
     }
 
     public void save() {
-        scriptJson.saveFile();
+        scriptJson.saveJson();
     }
 
     @NotNull
-    public String getAuthors(@NotNull ScriptParam scriptParam) {
-        return scriptParam.getAuthor().stream().map(Utils::getName).collect(Collectors.joining(", "));
+    public String getAuthors(@NotNull BlockScript blockScript) {
+        return blockScript.getAuthors().stream().map(Utils::getName).collect(Collectors.joining(", "));
     }
 
     public void create(@NotNull Player player, @NotNull BlockCoords blockCoords, @NotNull String script) {
-        var scriptParam = scriptJson.load().get(blockCoords);
-        scriptParam.getAuthor().add(player.getUniqueId());
-        scriptParam.setScript(Collections.singletonList(script));
-        scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
-        scriptJson.saveFile();
+        var blockScript = scriptJson.load(blockCoords);
+        blockScript.getAuthors().add(player.getUniqueId());
+        blockScript.setScripts(Collections.singletonList(script));
+        blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        scriptJson.saveJson();
         PlayerTempJson.removeAll(scriptKey, blockCoords);
         PlayerCountJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_CREATE.replace(scriptKey).send(player);
@@ -81,27 +81,27 @@ public final class SBOperation {
     }
 
     public void add(@NotNull Player player, @NotNull BlockCoords blockCoords, @NotNull String script) {
-        if (!BlockScriptJson.has(blockCoords, scriptJson)) {
+        if (!BlockScriptJson.contains(blockCoords, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        var scriptParam = scriptJson.load().get(blockCoords);
-        scriptParam.getAuthor().add(player.getUniqueId());
-        scriptParam.getScript().add(script);
-        scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
-        scriptJson.saveFile();
+        var blockScript = scriptJson.load(blockCoords);
+        blockScript.getAuthors().add(player.getUniqueId());
+        blockScript.getScripts().add(script);
+        blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        scriptJson.saveJson();
         PlayerTempJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_ADD.replace(scriptKey).send(player);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }
 
     public void remove(@NotNull Player player, @NotNull BlockCoords blockCoords) {
-        if (!BlockScriptJson.has(blockCoords, scriptJson)) {
+        if (!BlockScriptJson.contains(blockCoords, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        scriptJson.load().remove(blockCoords);
-        scriptJson.saveFile();
+        scriptJson.remove(blockCoords);
+        scriptJson.saveJson();
         PlayerTempJson.removeAll(scriptKey, blockCoords);
         PlayerCountJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_REMOVE.replace(scriptKey).send(player);
@@ -109,34 +109,34 @@ public final class SBOperation {
     }
 
     public void view(@NotNull Player player, @NotNull BlockCoords blockCoords) {
-        if (!BlockScriptJson.has(blockCoords, scriptJson)) {
+        if (!BlockScriptJson.contains(blockCoords, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        var scriptParam = scriptJson.load().get(blockCoords);
+        var blockScript = scriptJson.load(blockCoords);
         var playerCount = PlayerCountJson.get(player).load(scriptKey, blockCoords);
-        var selector = scriptParam.getSelector();
+        var selector = blockScript.getSelector();
         player.sendMessage("--------- [ Script Views ] ---------");
-        player.sendMessage("§eAuthor: §a" + getAuthors(scriptParam));
-        player.sendMessage("§eUpdate: §a" + scriptParam.getLastEdit());
+        player.sendMessage("§eAuthor: §a" + getAuthors(blockScript));
+        player.sendMessage("§eUpdate: §a" + blockScript.getLastEdit());
         player.sendMessage("§eMyCount: §a" + playerCount.getAmount());
         player.sendMessage("§eRedstone: §" + (selector == null ? "cfalse" : "atrue §d: §a" + selector));
         player.sendMessage("§eScripts:");
-        scriptParam.getScript().forEach(s -> player.sendMessage("§6- §b" + s));
+        blockScript.getScripts().forEach(s -> player.sendMessage("§6- §b" + s));
         player.sendMessage("----------------------------------");
         SBConfig.CONSOLE_SCRIPT_VIEW.replace(scriptKey, blockCoords).console();
     }
 
     public void redstone(@NotNull Player player, @NotNull BlockCoords blockCoords, @Nullable String selector) {
-        if (!BlockScriptJson.has(blockCoords, scriptJson)) {
+        if (!BlockScriptJson.contains(blockCoords, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        var scriptParam = scriptJson.load().get(blockCoords);
-        scriptParam.getAuthor().add(player.getUniqueId());
+        var scriptParam = scriptJson.load(blockCoords);
+        scriptParam.getAuthors().add(player.getUniqueId());
         scriptParam.setSelector(selector);
         scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
-        scriptJson.saveFile();
+        scriptJson.saveJson();
         if (StringUtils.isEmpty(selector)) {
             SBConfig.SCRIPT_REDSTONE_DISABLE.replace(scriptKey).send(player);
         } else {

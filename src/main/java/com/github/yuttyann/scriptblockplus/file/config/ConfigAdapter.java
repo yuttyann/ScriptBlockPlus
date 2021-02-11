@@ -22,11 +22,10 @@ import java.util.Map;
 
 /**
  * ScriptBlockPlus ConfigAdapter クラス
- * @param <T> 値の型
  * @author yuttyann44581
  */
 @SuppressWarnings("unchecked")
-public class ConfigAdapter<T> {
+public class ConfigAdapter {
 
     private final Map<String, Object> map;
 
@@ -35,12 +34,12 @@ public class ConfigAdapter<T> {
     }
 
     @Nullable
-    public T get(@NotNull String key) {
+    public <T> T get(@NotNull String key) {
         return (T) map.get(key);
     }
 
     @NotNull
-    public T get(@NotNull String key, @NotNull T def) {
+    public <T> T get(@NotNull String key, @NotNull T def) {
         T value = get(key);
         return value == null ? def : value;
     }

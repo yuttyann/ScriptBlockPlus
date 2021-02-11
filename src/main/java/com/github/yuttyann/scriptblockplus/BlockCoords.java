@@ -30,8 +30,6 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus BlockCoords クラス
- * <p>
- * 本プラグインでは、基本的に{@link Location}ではなく{@link BlockCoords}を使用している。
  * @author yuttyann44581
  */
 public class BlockCoords {
@@ -357,6 +355,18 @@ public class BlockCoords {
 
     /**
      * 座標を比較します。
+     * @param blockCoords - ブロックの座標
+     * @return {@link boolean} - 座標が一致する場合は{@code true}
+     */
+    public boolean compare(@Nullable BlockCoords blockCoords) {
+        if (blockCoords == null) {
+            return false;
+        }
+        return compare(blockCoords.x, blockCoords.y, blockCoords.z) && world.equals(blockCoords.world);
+    }
+
+    /**
+     * 座標を比較します。
      * @param x - X座標
      * @param y - Y座標
      * @param z - Z座標
@@ -371,11 +381,7 @@ public class BlockCoords {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof BlockCoords) {
-            var blockCoords = (BlockCoords) obj;
-            return compare(blockCoords.x, blockCoords.y, blockCoords.z) && world.equals(blockCoords.world);
-        }
-        return false;
+        return obj instanceof BlockCoords ? compare((BlockCoords) obj) : false;
     }
 
     @Override

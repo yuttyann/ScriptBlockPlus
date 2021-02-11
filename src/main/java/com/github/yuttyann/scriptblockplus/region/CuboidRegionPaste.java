@@ -68,7 +68,7 @@ public class CuboidRegionPaste {
                 continue;
             }
             var scriptJson = sbClipboard.getBlockScriptJson();
-            if (!overwrite && scriptJson.has() && scriptJson.load().has(blockCoords)) {
+            if (!overwrite && scriptJson.has(blockCoords)) {
                 continue;
             }
             blocks.add(blockCoords = BlockCoords.copy(blockCoords));
@@ -83,12 +83,12 @@ public class CuboidRegionPaste {
     }
 
     private void lightPaste(@NotNull BlockCoords blockCoords, @NotNull BlockScriptJson scriptJson) {
-        var scriptParam = scriptJson.load().get(blockCoords);
-        scriptParam.setAuthor(sbClipboard.getAuthor());
-        scriptParam.getAuthor().add(sbClipboard.getSBPlayer().getUniqueId());
-        scriptParam.setScript(sbClipboard.getScript());
-        scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
-        scriptParam.setSelector(sbClipboard.getSelector());
-        scriptParam.setAmount(sbClipboard.getAmount());
+        var blockScript = scriptJson.load(blockCoords);
+        blockScript.setAuthors(sbClipboard.getAuthor());
+        blockScript.getAuthors().add(sbClipboard.getSBPlayer().getUniqueId());
+        blockScript.setScripts(sbClipboard.getScript());
+        blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        blockScript.setSelector(sbClipboard.getSelector());
+        blockScript.setAmount(sbClipboard.getAmount());
     }
 }

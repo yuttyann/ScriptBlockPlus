@@ -20,7 +20,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.ScriptParam;
+import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
@@ -123,20 +123,20 @@ public final class APIManager implements ScriptBlockAPI {
     private static class SFile implements SBFile {
 
         private final ScriptKey scriptKey;
-        private final ScriptParam scriptParam;
         private final BlockCoords blockCoords;
+        private final BlockScript blockScript;
         private final BlockScriptJson scriptJson;
 
         public SFile(@NotNull ScriptKey scriptKey, @NotNull Location location) {
             this.scriptKey = scriptKey;
             this.scriptJson = BlockScriptJson.get(scriptKey);
             this.blockCoords = BlockCoords.of(location);
-            this.scriptParam = scriptJson.load().get(blockCoords);
+            this.blockScript = scriptJson.load(blockCoords);
         }
 
         @Override
         public void save() {
-            scriptJson.saveFile();
+            scriptJson.saveJson();
         }
 
         @Override
@@ -146,7 +146,7 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         public boolean has() {
-            return scriptJson.load().has(blockCoords);
+            return blockScript.getAuthors().size() > 0;
         }
 
         @Override
@@ -163,73 +163,73 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         public void setAuthor(@NotNull Set<UUID> author) {
-            scriptParam.setAuthor(author);
+            blockScript.setAuthors(author);
         }
 
         @Override
         @NotNull
         public Set<UUID> getAuthor() {
-            return scriptParam.getAuthor();
+            return blockScript.getAuthors();
         }
 
         @Override
         public void setScript(@NotNull List<String> script) {
-            scriptParam.setScript(script);
+            blockScript.setScripts(script);
         }
 
         @Override
         @NotNull
         public List<String> getScript() {
-            return scriptParam.getScript();
+            return blockScript.getScripts();
         }
 
         @Override
         public void setLastEdit() {
-            scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+            blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         }
 
         @Override
         @Nullable
         public String getLastEdit() {
-            return scriptParam.getLastEdit();
+            return blockScript.getLastEdit();
         }
 
         @Override
         public void setSelector(@Nullable String selector) {
-            scriptParam.setSelector(selector);
+            blockScript.setSelector(selector);
         }
 
         @Override  
         @Nullable
         public String getSelector() {
-            return scriptParam.getSelector();
+            return blockScript.getSelector();
         }
 
         @Override
         public void setAmount(int amount) {
-            scriptParam.setAmount(amount);
+            blockScript.setAmount(amount);
         }
 
         @Override
         public void addAmount(int amount) {
-            scriptParam.addAmount(amount);
+            blockScript.addAmount(amount);
         }
 
         @Override
         public void subtractAmount(int amount) {
-            scriptParam.subtractAmount(amount);
+            blockScript.subtractAmount(amount);
         }
 
         @Override
         public int getAmount() {
-            return scriptParam.getAmount();
+            return blockScript.getAmount();
         }
 
         @Override
         public void remove() {
             PlayerTempJson.removeAll(scriptKey, blockCoords);
             PlayerCountJson.removeAll(scriptKey, blockCoords);
-            scriptJson.load().remove(blockCoords);
+            scriptJson.remove(blockCoords);
         }
     }
 }

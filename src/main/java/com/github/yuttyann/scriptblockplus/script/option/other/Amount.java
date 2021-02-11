@@ -32,17 +32,17 @@ public class Amount extends BaseOption {
     protected boolean isValid() throws Exception {
         var scriptJson = BlockScriptJson.get(getScriptKey());
         var blockCoords = getBlockCoords();
-        var scriptParam = scriptJson.load().get(blockCoords);
-        if (scriptParam.getAmount() == -1) {
-            scriptParam.setAmount(Integer.parseInt(getOptionValue()));
+        var blockScript = scriptJson.load(blockCoords);
+        if (blockScript.getAmount() == -1) {
+            blockScript.setAmount(Integer.parseInt(getOptionValue()));
         }
-        scriptParam.subtractAmount(1);
-        if (scriptParam.getAmount() <= 0) {
+        blockScript.subtractAmount(1);
+        if (blockScript.getAmount() <= 0) {
             PlayerTempJson.removeAll(getScriptKey(), blockCoords);
             PlayerCountJson.removeAll(getScriptKey(), blockCoords);
-            scriptJson.load().remove(blockCoords);
+            scriptJson.remove(blockCoords);
         }
-        scriptJson.saveFile();
+        scriptJson.saveJson();
         return true;
     }
 }

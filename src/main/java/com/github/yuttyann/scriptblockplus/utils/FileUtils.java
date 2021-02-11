@@ -63,10 +63,7 @@ public final class FileUtils {
         if (resource == null) {
             return;
         }
-        try (
-            var reader = new BufferedReader(new InputStreamReader(resource, Charsets.UTF_8));
-            var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFile), Charsets.UTF_8))
-        ) {
+        try (var reader = newBufferedReader(resource); var writer = newBufferedWriter(targetFile)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 writer.write(line);
@@ -107,6 +104,52 @@ public final class FileUtils {
         }
         connection.disconnect();
         return null;
+    }
+
+    public static void saveFile(@NotNull File file, @NotNull Object value) {
+        var parent = file.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        try (var oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+            oos.writeObject(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static <T> T loadFile(@NotNull File file) {
+        if (!file.exists()) {
+            return null;
+        }
+        try (var ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+            return (T) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @NotNull
+    public static BufferedWriter newBufferedWriter(@NotNull File file) throws FileNotFoundException {
+        return newBufferedWriter(new FileOutputStream(file));
+    }
+
+    @NotNull
+    public static BufferedWriter newBufferedWriter(@NotNull OutputStream output) throws FileNotFoundException {
+        return new BufferedWriter(new OutputStreamWriter(output, Charsets.UTF_8));
+    }
+
+    @NotNull
+    public static BufferedReader newBufferedReader(@NotNull File file) throws FileNotFoundException {
+        return newBufferedReader(new FileInputStream(file));
+    }
+
+    @NotNull
+    public static BufferedReader newBufferedReader(@NotNull InputStream input) throws FileNotFoundException {
+        return new BufferedReader(new InputStreamReader(input, Charsets.UTF_8));
     }
 
     public static boolean isEmpty(@NotNull File file) {

@@ -433,8 +433,7 @@ public final class EntitySelector {
     @NotNull
     @SuppressWarnings("deprecation")
     public static EntityType getEntityType(@NotNull String name) {
-        name = StringUtils.removeStart(name, Utils.MINECRAFT);
-        name = name.replaceAll("\\s+", "_").replaceAll("\\W", "");
+        name = StringUtils.removeStart(name.replace(' ', '_'), Utils.MINECRAFT);
         for (var entityType : EntityType.values()) {
             if (name.equalsIgnoreCase(entityType.name()) || name.equalsIgnoreCase(entityType.getName())) {
                 return entityType;

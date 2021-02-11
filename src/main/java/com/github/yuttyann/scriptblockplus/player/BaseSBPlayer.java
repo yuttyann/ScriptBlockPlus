@@ -54,6 +54,9 @@ public final class BaseSBPlayer extends PlayerMap {
 
     public synchronized void setOnline(boolean isOnline) {
         this.player = (this.isOnline = isOnline) ? Bukkit.getPlayer(uuid) : null;
+        if (!isOnline) {
+            PLAYERS.remove(uuid);
+        }
     }
 
     @Override

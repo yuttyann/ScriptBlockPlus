@@ -39,7 +39,7 @@ public class Cooldown extends TimerOption {
 
         var tempJson = PlayerTempJson.get(getFileUniqueId());
         tempJson.load().getTimerTemp().add(new TimerTemp(getFileUniqueId(), getScriptKey(), getBlockCoords()).setParams(params));
-        tempJson.saveFile();
+        tempJson.saveJson();
         return true;
     }
 

@@ -43,10 +43,7 @@ public abstract class PlayerMap implements SBPlayer {
     private ObjectMap objectMap;
 
     public final void init() {
-        if (objectMap == null) {
-            objectMap.clear();
-            objectMap = null;
-        }
+        objectMap = null;
     }
 
     @Override

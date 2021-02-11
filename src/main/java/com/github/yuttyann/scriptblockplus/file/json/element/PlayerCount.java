@@ -16,8 +16,8 @@
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
-import com.github.yuttyann.scriptblockplus.file.json.multi.TwoJson.TwoElement;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
+import com.github.yuttyann.scriptblockplus.file.json.basic.TwoJson.TwoElement;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
 
@@ -29,11 +29,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
 
-    @Alternate("scripttype")
+    @LegacyName(value = "scriptkey", alternate = { "scripttype" })
     @SerializedName(value = "scriptkey", alternate = { "scripttype" })
     private final ScriptKey scriptKey;
 
-    @Alternate("fullcoords")
+    @LegacyName(value = "blockcoords", alternate = { "fullcoords" })
     @SerializedName(value = "blockcoords", alternate = { "fullcoords" })
     private final BlockCoords blockCoords;
 
@@ -45,14 +45,21 @@ public class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
         this.blockCoords = blockCoords;
     }
 
+    @Override
     @NotNull
-    public ScriptKey getScriptKey() {
+    protected ScriptKey getA() {
         return scriptKey;
     }
 
+    @Override
     @NotNull
-    public BlockCoords getBlockCoords() {
+    protected BlockCoords getB() {
         return blockCoords;
+    }
+
+    @Override
+    public boolean isElement(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+        return this.scriptKey.ordinal() == scriptKey.ordinal() && this.blockCoords.compare(blockCoords);
     }
 
     public synchronized void setAmount(int amount) {
@@ -69,10 +76,5 @@ public class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
 
     public synchronized int getAmount() {
         return amount;
-    }
-
-    @Override
-    public boolean isElement(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
-        return compare(this.scriptKey, scriptKey) && compare(this.blockCoords, blockCoords);
     }
 }

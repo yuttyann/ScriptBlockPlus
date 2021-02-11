@@ -55,11 +55,11 @@ public class SBClipboard {
         this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
         this.scriptJson = scriptJson;
 
-        var scriptParam = scriptJson.load().get(blockCoords);
-        this.author = Sets.newLinkedHashSet(scriptParam.getAuthor());
-        this.script = Lists.newArrayList(scriptParam.getScript());
-        this.selector = scriptParam.getSelector();
-        this.amount = scriptParam.getAmount();
+        var blockScript = scriptJson.load(blockCoords);
+        this.author = Sets.newLinkedHashSet(blockScript.getAuthors());
+        this.script = Lists.newArrayList(blockScript.getScripts());
+        this.selector = blockScript.getSelector();
+        this.amount = blockScript.getAmount();
     }
 
     @NotNull
@@ -97,11 +97,11 @@ public class SBClipboard {
     }
 
     public void save() {
-        scriptJson.saveFile();
+        scriptJson.saveJson();
     }
 
     public boolean copy() {
-        if (!BlockScriptJson.has(blockCoords, scriptJson)) {
+        if (!BlockScriptJson.contains(blockCoords, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
             return false;
         }
@@ -116,18 +116,18 @@ public class SBClipboard {
     }
 
     public boolean paste(@NotNull BlockCoords blockCoords, boolean overwrite) {
-        if (BlockScriptJson.has(blockCoords, scriptJson) && !overwrite) {
+        if (BlockScriptJson.contains(blockCoords, scriptJson) && !overwrite) {
             return false;
         }
         try {
-            var scriptParam = scriptJson.load().get(blockCoords);
-            scriptParam.setAuthor(author);
-            scriptParam.getAuthor().add(sbPlayer.getUniqueId());
-            scriptParam.setScript(script);
+            var scriptParam = scriptJson.load(blockCoords);
+            scriptParam.setAuthors(author);
+            scriptParam.getAuthors().add(sbPlayer.getUniqueId());
+            scriptParam.setScripts(script);
             scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
             scriptParam.setSelector(selector);
             scriptParam.setAmount(amount);
-            scriptJson.saveFile();
+            scriptJson.saveJson();
             PlayerTempJson.removeAll(scriptKey, blockCoords);
             PlayerCountJson.removeAll(scriptKey, blockCoords);
             SBConfig.SCRIPT_PASTE.replace(scriptKey).send(sbPlayer);

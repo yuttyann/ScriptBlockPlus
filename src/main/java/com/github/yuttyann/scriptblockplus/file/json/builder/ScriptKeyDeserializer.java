@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus ScriptKeyDeserializer クラス
  * @author yuttyann44581
  */
-public class ScriptKeyDeserializer  implements JsonDeserializer<ScriptKey> {
+public class ScriptKeyDeserializer implements JsonDeserializer<ScriptKey> {
 
     @Override
     @NotNull
