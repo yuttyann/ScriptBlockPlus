@@ -26,6 +26,7 @@ import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.config.YamlConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
+import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
@@ -151,6 +152,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         }
         SBFiles.reload();
         BaseJson.clear();
+        CacheJson.loading();
         PackageType.clear();
         setUsage(getUsages());
         SBConfig.ALL_FILE_RELOAD.send(sender);
@@ -211,14 +213,14 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         } else {
             SBConfig.DATAMIGR_START.send(sender);
             var uuid = ((Player) sender).getUniqueId();
-            new Thread(() -> {
+            ScriptBlock.getScheduler().asyncRun(() -> {
                 try {
                     convart(uuid, interactFile, ScriptKey.INTERACT);
                     convart(uuid, walkFile, ScriptKey.WALK);
                 } finally {
                     SBConfig.DATAMIGR_END.send(sender);
                 }
-            }).start();
+            });
         }
         return true;
     }

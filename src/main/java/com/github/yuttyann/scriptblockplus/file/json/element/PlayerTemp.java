@@ -26,13 +26,13 @@ import java.util.Set;
  * ScriptBlockPlus PlayerCooldown クラス
  * @author yuttyann44581
  */
-public class PlayerTemp extends SingleElement {
+public final class PlayerTemp extends SingleElement {
 
     @SerializedName("timer")
-    private final Set<TimerTemp> TIMER = new HashSet<>();
+    private HashSet<TimerTemp> timer;
 
     @NotNull
     public Set<TimerTemp> getTimerTemp() {
-        return TIMER;
+        return timer == null ? this.timer = new HashSet<>() : timer;
     }
 }

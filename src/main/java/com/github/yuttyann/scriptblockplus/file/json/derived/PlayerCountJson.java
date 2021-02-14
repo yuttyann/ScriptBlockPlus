@@ -27,7 +27,6 @@ import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.UUID;
 
 /**
@@ -35,16 +34,12 @@ import java.util.UUID;
  * @author yuttyann44581
  */
 @JsonTag(path = "json/playercount")
-public class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount> {
+public final class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount> {
 
-    private static final CacheJson<UUID> CACHE_JSON = new CacheJson<>(PlayerCountJson.class, PlayerCountJson::new);
+    public static final CacheJson CACHE_JSON = new CacheJson(PlayerCountJson.class, PlayerCountJson::new);
 
-    private PlayerCountJson(@NotNull File json) {
-        super(json);
-    }
-
-    protected PlayerCountJson(@NotNull UUID uuid) {
-        super(uuid.toString());
+    private PlayerCountJson(@NotNull String name) {
+        super(name.toString());
     }
 
     @Override
@@ -55,7 +50,7 @@ public class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount
 
     @NotNull
     public static PlayerCountJson get(@NotNull UUID uuid) {
-        return newJson(uuid, CACHE_JSON);
+        return newJson(uuid.toString(), CACHE_JSON);
     }
 
     @NotNull
@@ -72,9 +67,12 @@ public class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount
         removeAll(scriptKey, new ReuseIterator<>(new BlockCoords[] { blockCoords }));
     }
 
-    public static synchronized void removeAll(@NotNull ScriptKey scriptKey, @NotNull ReuseIterator<BlockCoords> reuseIterator) {
-        for (var json : getFiles(PlayerCountJson.class)) {
-            var countJson = new PlayerCountJson(json);
+    public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull ReuseIterator<BlockCoords> reuseIterator) {
+        var names = getNames(PlayerCountJson.class);
+        for (int i = 0, l = names.size(), e = ".json".length(); i < l; i++) {
+            var name = names.get(i);
+            var index = name.length() - e;
+            var countJson = (PlayerCountJson) getCache(name.substring(0, index), CACHE_JSON);
             if (countJson.isEmpty()) {
                 continue;
             }

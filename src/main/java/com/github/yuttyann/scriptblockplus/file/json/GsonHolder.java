@@ -18,7 +18,7 @@ package com.github.yuttyann.scriptblockplus.file.json;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.LegacyEnumFactory;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.LegacyReflectiveFactory;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -39,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * {@link SerializedName#alternate()}が存在しない古いバージョンの場合は、
  * <p>
- * {@link LegacyName}を併用することで、同じ動作をさせることができます。
+ * {@link Alternate#value()}を併用することで、同じ動作をさせることができます。
  * @author yuttyann44581
  */
 public final class GsonHolder {

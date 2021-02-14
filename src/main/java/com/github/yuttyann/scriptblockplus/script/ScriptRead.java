@@ -119,6 +119,9 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
     @Override
     public boolean read(final int index) {
+        if (!sbPlayer.isOnline()) {
+            return false;
+        }
         if (!scriptJson.has(blockCoords)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
             return false;
@@ -138,10 +141,6 @@ public class ScriptRead extends ScriptMap implements SBRead {
     }
 
     protected boolean perform(final int index) {
-        if (!sbPlayer.isOnline()) {
-            EndProcessManager.forEach(e -> e.failed(this));
-            return false;
-        }
         for (this.index = index; this.index < scripts.size(); this.index++) {
             var script = scripts.get(this.index);
             var option = OptionManager.newInstance(script);
@@ -155,7 +154,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
         SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(scriptKey, blockCoords).console();
         return true;
     }
-    
+
     protected boolean isFailedIgnore(@NotNull Option option) {
         StreamUtils.ifAction(!option.isFailedIgnore(), () -> EndProcessManager.forEach(e -> e.failed(this)));
         return true;

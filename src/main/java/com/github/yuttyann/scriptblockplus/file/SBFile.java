@@ -16,7 +16,11 @@
 package com.github.yuttyann.scriptblockplus.file;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -52,5 +56,21 @@ public class SBFile extends File {
             return path.replace('/', separatorChar);
         }
         return path;
+    }
+
+    @NotNull
+    public List<String> listNames(@NotNull FilenameFilter filter) {
+        var names = list();
+        if (names == null) {
+            return Collections.emptyList();
+        }
+        var list = new ArrayList<String>(names.length);
+        for (int i = 0, l = names.length; i < l; i++) {
+            var name = names[i];
+            if (filter.accept(this, name)) {
+                list.add(name);
+            }
+        }
+        return list;
     }
 }

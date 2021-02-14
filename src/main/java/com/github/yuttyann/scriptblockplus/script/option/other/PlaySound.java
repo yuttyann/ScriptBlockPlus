@@ -54,7 +54,7 @@ public class PlaySound extends BaseOption implements Runnable {
         if (delay < 1) {
             playSound();
         } else {
-            Bukkit.getScheduler().runTaskLater(ScriptBlock.getInstance(), this, delay);
+            ScriptBlock.getScheduler().run(this, delay);
         }
         return true;
     }

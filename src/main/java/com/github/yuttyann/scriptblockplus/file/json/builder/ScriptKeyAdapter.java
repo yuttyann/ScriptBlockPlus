@@ -22,14 +22,22 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ScriptBlockPlus ScriptKeyDeserializer クラス
+ * ScriptBlockPlus ScriptKeyAdapter クラス
  * @author yuttyann44581
  */
-public class ScriptKeyDeserializer implements JsonDeserializer<ScriptKey> {
+public class ScriptKeyAdapter implements JsonSerializer<ScriptKey>, JsonDeserializer<ScriptKey> {
+
+    @Override
+    @NotNull
+    public JsonElement serialize(@NotNull ScriptKey scriptKey, @NotNull Type typeOfSrc, @NotNull JsonSerializationContext context) {
+        return context.serialize(scriptKey.toString());
+    }
 
     @Override
     @NotNull
@@ -40,8 +48,7 @@ public class ScriptKeyDeserializer implements JsonDeserializer<ScriptKey> {
                 return ScriptKey.INTERACT;
             }
             return ScriptKey.valueOf(jsonObject.get("name").getAsString());
-        } else {
-            return ScriptKey.valueOf(json.getAsString());
         }
+        return ScriptKey.get(json.getAsString());
     }
 }

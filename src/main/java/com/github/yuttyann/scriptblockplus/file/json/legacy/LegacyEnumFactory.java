@@ -21,10 +21,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -69,10 +70,13 @@ public final class LegacyEnumFactory implements TypeAdapterFactory {
                 for (T constant : rawType.getEnumConstants()) {
                     var name = constant.name();
                     var field = rawType.getField(name);
-                    var legacyName = field.getAnnotation(LegacyName.class);
+                    var serializedName = field.getAnnotation(SerializedName.class);
+                    if (serializedName != null) {
+                        name = serializedName.value();
+                    }
+                    var legacyName = field.getAnnotation(Alternate.class);
                     if (legacyName != null) {
-                        name = legacyName.value();
-                        for (var alternate : legacyName.alternate()) {
+                        for (var alternate : legacyName.value()) {
                             nameToConstant.put(alternate, constant);
                         }
                     }

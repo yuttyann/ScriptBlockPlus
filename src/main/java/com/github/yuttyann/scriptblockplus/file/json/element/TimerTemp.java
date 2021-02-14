@@ -16,7 +16,7 @@
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.Exclude;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
@@ -42,11 +42,11 @@ public final class TimerTemp {
     @SerializedName("uuid")
     private UUID uuid;
 
-    @LegacyName(value = "scriptkey", alternate = { "scripttype", "scriptType" })
+    @Alternate({ "scripttype", "scriptType" })
     @SerializedName(value = "scriptkey", alternate = { "scripttype", "scriptType" })
     private ScriptKey scriptKey;
 
-    @LegacyName(value = "blockcoords", alternate = { "fullcoords", "fullCoords" })
+    @Alternate({ "fullcoords", "fullCoords" })
     @SerializedName(value = "blockcoords", alternate = { "fullcoords", "fullCoords" })
     private BlockCoords blockCoords;
 

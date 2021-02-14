@@ -22,14 +22,22 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ScriptBlockPlus BlockCoordsDeserializer クラス
+ * ScriptBlockPlus BlockCoordsAdapter クラス
  * @author yuttyann44581
  */
-public class BlockCoordsDeserializer implements JsonDeserializer<BlockCoords> {
+public class BlockCoordsAdapter implements JsonSerializer<BlockCoords>, JsonDeserializer<BlockCoords> {
+
+    @Override
+    @NotNull
+    public JsonElement serialize(@NotNull BlockCoords blockCoords, @NotNull Type typeOfSrc, @NotNull JsonSerializationContext context) {
+        return context.serialize(blockCoords.getFullCoords());
+    }
 
     @Override
     @NotNull

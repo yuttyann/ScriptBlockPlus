@@ -36,12 +36,12 @@ import java.util.Set;
  * ScriptBlockPlus ScriptViewer クラス
  * @author yuttyann44581
  */
-public class ScriptViewer extends ItemAction {
+public final class ScriptViewer extends ItemAction {
 
     public static final Set<SBPlayer> PLAYERS = new HashSet<>();
 
     static {
-        new TickRunnable().runTaskTimer(ScriptBlock.getInstance(), 0L, 1L);
+        ScriptBlock.getScheduler().run(new TickRunnable(), 0L, 1L);
     }
 
     public ScriptViewer() {

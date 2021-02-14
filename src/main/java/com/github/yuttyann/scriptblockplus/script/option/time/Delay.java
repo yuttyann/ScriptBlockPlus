@@ -59,7 +59,7 @@ public class Delay extends BaseOption implements Runnable {
                 DELAYS.add(new TimerTemp(getUniqueId(), getScriptKey(), getBlockCoords()));
             }
             ((ScriptRead) getTempMap()).setInitialize(false);
-            Bukkit.getScheduler().runTaskLater(ScriptBlock.getInstance(), this, Long.parseLong(array[0]));
+            ScriptBlock.getScheduler().run(this, Long.parseLong(array[0]));
         }
         return false;
     }

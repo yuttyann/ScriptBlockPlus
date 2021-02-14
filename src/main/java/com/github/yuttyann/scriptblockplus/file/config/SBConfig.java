@@ -47,6 +47,7 @@ public final class SBConfig {
     public static final ConfigKey<Boolean> UPDATE_CHECKER = booleanKey("UpdateChecker", true);
     public static final ConfigKey<Boolean> AUTO_DOWNLOAD = booleanKey("AutoDownload", true);
     public static final ConfigKey<Boolean> OPEN_CHANGE_LOG = booleanKey("OpenChangeLog", true);
+    public static final ConfigKey<Boolean> CACHE_ALL_JSON = booleanKey("CacheAllJson", false);
     public static final ConfigKey<Boolean> CONSOLE_LOG = booleanKey("ConsoleLog", false);
     public static final ConfigKey<Boolean> SORT_SCRIPTS = booleanKey("SortScripts", true);
     public static final ConfigKey<Boolean> OPTION_PERMISSION = booleanKey("OptionPermission", false);

@@ -49,7 +49,7 @@ public class ActionBar extends BaseOption implements Runnable {
         this.message = StringUtils.setColor(array[0]);
         if (array.length > 1) {
             this.stay = Integer.parseInt(array[1]);
-            this.task = Bukkit.getScheduler().runTaskTimer(ScriptBlock.getInstance(), this, 0, 20);
+            this.task = ScriptBlock.getScheduler().run(this, 0L, 20L);
         } else {
             send(getSBPlayer(), message);
         }

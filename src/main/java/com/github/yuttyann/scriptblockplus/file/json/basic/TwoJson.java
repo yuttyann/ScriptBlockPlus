@@ -15,7 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus.file.json.basic;
 
-import java.io.File;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -88,16 +87,6 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
 
     /**
      * コンストラクタ
-     * <p>
-     * 必ずシリアライズとデシリアライズ化が可能なファイルを指定してください。
-     * @param json - JSONのファイル
-     */
-    protected TwoJson(@NotNull File json) {
-        super(json);
-    }
-
-    /**
-     * コンストラクタ
      * @param name - ファイルの名前
      */
     protected TwoJson(@NotNull String name) {
@@ -122,9 +111,9 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
     @NotNull
     public final E load(@NotNull A a, @NotNull B b) {
         int hash = hash(a, b);
-        var element = elementMap.get(hash);
+        var element = getElementMap().get(hash);
         if (element == null) {
-            elementMap.put(hash, element = newInstance(a, b));
+            getElementMap().put(hash, element = newInstance(a, b));
         } else if (!element.isElement(a, b)) {
             var objectHash = Integer.valueOf(hash);
             if ((element = subGet(objectHash, e -> e.isElement(a, b))) == null) {
@@ -145,7 +134,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
     @Nullable
     public final E fastLoad(@NotNull A a, @NotNull B b) {
         int hash = hash(a, b);
-        var element = elementMap.get(hash);
+        var element = getElementMap().get(hash);
         if (element == null) {
             return null;
         } else if (!element.isElement(a, b) && isSubNotEmpty()) {
@@ -172,15 +161,17 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      */
     public final boolean remove(@NotNull A a, @NotNull B b) {
         int hash = hash(a, b);
-        var element = elementMap.get(hash);
+        var element = getElementMap().get(hash);
         if (element == null) {
             return false;
-        } else if (!element.isElement(a, b) && isSubNotEmpty()) {
-            return subRemove(hash, e -> e.isElement(a, b));
         }
-        elementMap.remove(hash);
-        if (isSubNotEmpty()) {
-            subMapFirstShift(hash, elementMap);
+        if (element.isElement(a, b)) {
+            getElementMap().remove(hash);
+            if (isSubNotEmpty()) {
+                subMapFirstShift(hash);
+            }
+        } else if (isSubNotEmpty()) {
+            return subRemove(hash, e -> e.isElement(a, b));
         }
         return true;
     }

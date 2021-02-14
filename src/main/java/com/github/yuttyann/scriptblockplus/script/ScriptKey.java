@@ -136,9 +136,20 @@ public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
      */
     @NotNull
     public static ScriptKey valueOf(@NotNull String name) {
-        var scriptKey = KEYS.get(name.toUpperCase(Locale.ROOT));
+        return get(name.toUpperCase(Locale.ROOT));
+    }
+
+    /**
+     * 指定したスクリプトキーを取得します。
+     * @throws NullPointerException スクリプトキーが見つからなかったときにスローされます。
+     * @param upperName - スクリプトキー(全て大文字)
+     * @return {@link ScriptKey} - スクリプトキー
+     */
+    @NotNull
+    public static ScriptKey get(@NotNull String upperName) {
+        var scriptKey = KEYS.get(upperName);
         if (scriptKey == null) {
-            throw new NullPointerException(name + " does not exist");
+            throw new NullPointerException(upperName + " does not exist");
         }
         return scriptKey;
     }

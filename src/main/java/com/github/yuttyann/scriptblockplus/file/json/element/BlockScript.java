@@ -33,16 +33,16 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus BlockScript クラス
  * @author yuttyann44581
  */
-public class BlockScript extends OneElement<BlockCoords> {
+public final class BlockScript extends OneElement<BlockCoords> {
 
     @SerializedName("blockcoords")
     private final BlockCoords blockCoords;
 
     @SerializedName("author")
-    private Set<UUID> author = new LinkedHashSet<>();
+    private Set<UUID> author;
 
     @SerializedName("script")
-    private List<String> script = new ArrayList<>();
+    private List<String> script;
 
     @SerializedName("lastedit")
     private String lastedit;
@@ -74,7 +74,7 @@ public class BlockScript extends OneElement<BlockCoords> {
 
     @NotNull
     public Set<UUID> getAuthors() {
-        return author;
+        return author == null ? this.author = new LinkedHashSet<>() : author;
     }
 
     public void setScripts(@NotNull Collection<String> scripts) {
@@ -83,7 +83,7 @@ public class BlockScript extends OneElement<BlockCoords> {
 
     @NotNull
     public List<String> getScripts() {
-        return script;
+        return script == null ? this.script = new ArrayList<>() : script;
     }
 
     public void setLastEdit(@NotNull String time) {
@@ -119,5 +119,4 @@ public class BlockScript extends OneElement<BlockCoords> {
     public synchronized int getAmount() {
         return amount;
     }
-
 }

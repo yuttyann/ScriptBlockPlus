@@ -41,18 +41,13 @@ public @interface JsonTag {
     String path();
 
     /**
-     * ファイルの名前
-     * @return ファイルの名前
-     */
-    @NotNull
-    String file() default "{id}";
-
-    /**
      * プラグインID
      * <p>
      * 指定したプラグインのフォルダ内にファイルを生成します。
+     * <p>
+     * 指定しない場合は"ScriptBlockPlus"が選択されます。
      * @return プラグインID
      */
     @NotNull
-    String plugin() default "ScriptBlockPlus";
+    String plugin() default "";
 }

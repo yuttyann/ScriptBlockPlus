@@ -13,26 +13,31 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.file.json.builder;
+package com.github.yuttyann.scriptblockplus.file.json.annotation;
 
-import java.lang.reflect.Type;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.annotations.SerializedName;
 
-import org.jetbrains.annotations.NotNull;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * ScriptBlockPlus BlockCoordsSerializer クラス
+ * ScriptBlockPlus Alternate 注釈
+ * <p>
+ * Gsonのバージョンが古い場合に呼び出される。
+ * <p>
+ * {@link SerializedName#alternate()}と同等の機能を持っています。
  * @author yuttyann44581
  */
-public class BlockCoordsSerializer implements JsonSerializer<BlockCoords> {
+@Target({ FIELD, METHOD })
+@Retention(RUNTIME)
+public @interface Alternate {
 
-    @Override
-    @NotNull
-    public JsonElement serialize(@NotNull BlockCoords blockCoords, @NotNull Type typeOfSrc, @NotNull JsonSerializationContext context) {
-        return context.serialize(blockCoords.getFullCoords());
-    }
+    /**
+     * @return {@link String} - デシリアライズされた時の代替名を返します。
+     */
+    String[] value() default {};
 }

@@ -80,6 +80,7 @@ public final class ConvartList {
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
+        convartList.saveFormatVersion();
         return convartList.getConvartPaths().isEmpty() ? null : convartList;
     }
 

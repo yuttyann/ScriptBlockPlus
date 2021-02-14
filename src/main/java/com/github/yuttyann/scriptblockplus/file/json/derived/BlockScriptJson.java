@@ -32,12 +32,12 @@ import java.util.LinkedHashSet;
  * @author yuttyann44581
  */
 @JsonTag(path = "json/blockscript")
-public class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
+public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
 
-    private static final CacheJson<ScriptKey> CACHE_JSON = new CacheJson<>(BlockScriptJson.class, BlockScriptJson::new);
-    
-    protected BlockScriptJson(@NotNull ScriptKey scriptKey) {
-        super(scriptKey.getName());
+    public static final CacheJson CACHE_JSON = new CacheJson(BlockScriptJson.class, BlockScriptJson::new);
+
+    private BlockScriptJson(@NotNull String name) {
+        super(name);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
 
     @NotNull
     public static BlockScriptJson get(@NotNull ScriptKey scriptKey) {
-        return newJson(scriptKey, CACHE_JSON);
+        return newJson(scriptKey.getName(), CACHE_JSON);
     }
 
     public static boolean contains(@NotNull BlockCoords blockCoords) {
@@ -86,6 +86,9 @@ public class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
         }
         // JSONを作成
         var scriptJson = get(scriptKey);
+        if (scriptJson.exists()) {
+            return;
+        }
         scriptLoader.forEach(s -> {
             // 移行の為、パラメータを設定する
             var author = s.getAuthors();

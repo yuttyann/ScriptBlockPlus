@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.selector;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
@@ -209,7 +210,7 @@ public final class CommandSelector {
         } else if (sender instanceof BlockCommandSender) {
             world = ((BlockCommandSender) sender).getBlock().getWorld();
         }
-        return world == null ? Bukkit.getWorlds().get(0) : world;
+        return world == null ? BlockCoords.DEFAULT_WORLD : world;
     }
 
     @NotNull

@@ -18,8 +18,10 @@ package com.github.yuttyann.scriptblockplus;
 import java.util.Objects;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -33,6 +35,9 @@ import org.jetbrains.annotations.Nullable;
  * @author yuttyann44581
  */
 public class BlockCoords {
+
+    public static final World DEFAULT_WORLD = Bukkit.getWorlds().get(0);
+    public static final BlockCoords ZERO = new UnmodifiableBlockCoords(new BlockCoords(DEFAULT_WORLD, 0, 0, 0));
 
     private final World world;
 
@@ -308,10 +313,11 @@ public class BlockCoords {
         if (comma3 < 0) {
             throw new IllegalArgumentException("Invalid FullCoords: " + fullCoords);
         }
+        var match = fullCoords.startsWith(DEFAULT_WORLD.getName());
         int x = Integer.parseInt(fullCoords, comma1 + 1, comma2, 10);
         int y = Integer.parseInt(fullCoords, comma2 + 1, comma3, 10);
         int z = Integer.parseInt(fullCoords, comma3 + 1, fullCoords.length(), 10);
-        return new BlockCoords(Utils.getWorld(fullCoords.substring(0, comma1)), x, y, z);
+        return new BlockCoords(match ? DEFAULT_WORLD : Utils.getWorld(fullCoords.substring(0, comma1)), x, y, z);
     }
 
     /**

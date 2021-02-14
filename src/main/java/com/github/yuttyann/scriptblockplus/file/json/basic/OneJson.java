@@ -15,7 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus.file.json.basic;
 
-import java.io.File;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -76,16 +75,6 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
 
     /**
      * コンストラクタ
-     * <p>
-     * 必ずシリアライズとデシリアライズ化が可能なファイルを指定してください。
-     * @param json - JSONのファイル
-     */
-    protected OneJson(@NotNull File json) {
-        super(json);
-    }
-
-    /**
-     * コンストラクタ
      * @param name - ファイルの名前
      */
     protected OneJson(@NotNull String name) {
@@ -108,9 +97,9 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
     @NotNull
     public final E load(@NotNull A a) {
         int hash = hash(a);
-        var element = elementMap.get(hash);
+        var element = getElementMap().get(hash);
         if (element == null) {
-            elementMap.put(hash, element = newInstance(a));
+            getElementMap().put(hash, element = newInstance(a));
         } else if (!element.isElement(a)) {
             var subHash = Integer.valueOf(hash);
             if ((element = subGet(subHash, e -> e.isElement(a))) == null) {
@@ -130,7 +119,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
     @Nullable
     public final E fastLoad(@NotNull A a) {
         int hash = hash(a);
-        var element = elementMap.get(hash);
+        var element = getElementMap().get(hash);
         if (element == null) {
             return null;
         } else if (!element.isElement(a) && isSubNotEmpty()) {
@@ -155,15 +144,17 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
      */
     public final boolean remove(@NotNull A a) {
         int hash = hash(a);
-        var element = elementMap.get(hash);
+        var element = getElementMap().get(hash);
         if (element == null) {
             return false;
-        } else if (!element.isElement(a) && isSubNotEmpty()) {
-            return subRemove(hash, e -> e.isElement(a));
         }
-        elementMap.remove(hash);
-        if (isSubNotEmpty()) {
-            subMapFirstShift(hash, elementMap);
+        if (element.isElement(a)) {
+            getElementMap().remove(hash);
+            if (isSubNotEmpty()) {
+                subMapFirstShift(hash);
+            }
+        } else if (isSubNotEmpty()) {
+            return subRemove(hash, e -> e.isElement(a));
         }
         return true;
     }

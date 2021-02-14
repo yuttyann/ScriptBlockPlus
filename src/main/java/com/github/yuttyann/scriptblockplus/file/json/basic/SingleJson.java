@@ -15,7 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus.file.json.basic;
 
-import java.io.File;
 import java.util.function.Consumer;
 
 import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
@@ -43,16 +42,11 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
         public final Class<? extends BaseElement> getElementType() {
             return SingleElement.class;
         }
-    }
 
-    /**
-     * コンストラクタ
-     * <p>
-     * 必ずシリアライズとデシリアライズ化が可能なファイルを指定してください。
-     * @param json - JSONのファイル
-     */
-    protected SingleJson(@NotNull File json) {
-        super(json);
+        @Override
+        public final int hashCode() {
+            return 0;
+        }
     }
 
     /**
@@ -65,12 +59,11 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
 
     /**
      * {@link IntMap}&lt;{@link E}&gt;を生成します。
-     * @param size - マップサイズ
      * @return {@link IntMap}&lt;{@link E}&gt; - マップ
      */
     @Override
     @NotNull
-    protected IntMap<E> createMap(int size) {
+    protected IntMap<E> createMap() {
         return new IntSingleMap<>();
     }
 
@@ -87,6 +80,7 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
      */
     @NotNull
     public final E load() {
+        var elementMap = getElementMap();
         if (elementMap.isEmpty()) {
             elementMap.put(0, newInstance());
         }
@@ -98,14 +92,14 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
      * @return {@link boolean} - 要素が存在する場合は{@code true}
      */
     public final boolean has() {
-        return !elementMap.isEmpty();
+        return !getElementMap().isEmpty();
     }
 
     /**
      * 要素を削除します。
      */
     public final void remove() {
-        elementMap.clear();
+        getElementMap().clear();
     }
 
     /**

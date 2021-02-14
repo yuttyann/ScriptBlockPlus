@@ -20,6 +20,7 @@ import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.ConvartList;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.LegacyFormatJson;
@@ -53,6 +54,9 @@ import org.jetbrains.annotations.NotNull;
  * @author yuttyann44581
  */
 public class ScriptBlock extends JavaPlugin {
+
+    private static Scheduler scheduler;
+    private static ScriptBlock scriptBlock;
 
     private Updater updater;
 
@@ -90,14 +94,14 @@ public class ScriptBlock extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(plugin);
         }
 
-        // アップデート処理
-        checkUpdate(Bukkit.getConsoleSender(), false);
-
         // 古い形式のJSONファイルを最新の物へ移行する。
         LegacyFormatJson.convart(ConvartList.create(this, "json"));
 
         // スクリプトの形式を".yml"から".json"へ移行
-        StreamUtils.forEach(ScriptKey.values(), BlockScriptJson::convart);
+        ScriptKey.iterable().forEach(BlockScriptJson::convart);
+
+        // キャッシュを生成(設定有効時のみ)
+        CacheJson.loading();
 
         // ログイン中のプレイヤーの設定をオンラインへ変更
         Bukkit.getOnlinePlayers().forEach(p -> ((BaseSBPlayer) SBPlayer.fromPlayer(p)).setOnline(true));
@@ -123,6 +127,9 @@ public class ScriptBlock extends JavaPlugin {
 
         // コマンドの登録
         BaseCommand.register("scriptblockplus", new ScriptBlockPlusCommand(this));
+
+        // アップデート処理
+        checkUpdate(Bukkit.getConsoleSender(), false);
     }
 
     @Override
@@ -140,7 +147,7 @@ public class ScriptBlock extends JavaPlugin {
         if (updater == null) {
             updater = new Updater(this);
         }
-        var thread = new Thread(() -> {
+        getScheduler().asyncRun(() -> {
             try {
                 updater.load();
                 if (!updater.run(sender) && latestMessage) {
@@ -151,14 +158,6 @@ public class ScriptBlock extends JavaPlugin {
                 SBConfig.ERROR_UPDATE.send(sender);
             }
         });
-        try {
-            thread.setName("Update Thread : " + Utils.getPluginName(this));
-            thread.setPriority(Thread.MIN_PRIORITY);
-            thread.start();
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -171,11 +170,20 @@ public class ScriptBlock extends JavaPlugin {
     }
 
     /**
+     * {@link Scheduler}のインスタンスを取得します。
+     * @return {@link Scheduler} - インスタンス
+     */
+    @NotNull
+    public static Scheduler getScheduler() {
+        return scheduler == null ? scheduler = new Scheduler(getInstance()) : scheduler;
+    }
+
+    /**
      * {@link ScriptBlock}のインスタンスを取得します。
      * @return {@link ScriptBlock} - インスタンス
      */
     @NotNull
     public static ScriptBlock getInstance() {
-        return getPlugin(ScriptBlock.class);
+        return scriptBlock == null ? scriptBlock = getPlugin(ScriptBlock.class) : scriptBlock;
     }
 }

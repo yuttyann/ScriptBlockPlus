@@ -18,6 +18,7 @@ package com.github.yuttyann.scriptblockplus.file.json.legacy;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -67,10 +68,6 @@ public final class LegacyFormatJson {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (result) {
-                convartList.saveFormatVersion();
-            }
         }
         return result;
     }
@@ -88,8 +85,12 @@ public final class LegacyFormatJson {
         if (elements == null) {
             elements = castList(map.get(LEGACY_KEYS[1]));
         }
-        if (elements == null || elements.isEmpty()) {
+        if (elements == null) {
             return false;
+        }
+        if (elements.isEmpty()) {
+            saveFile(json, Collections.emptyList());
+            return true;
         }
         var element = elements.get(0);
         if (element instanceof Map) {
@@ -168,8 +169,9 @@ public final class LegacyFormatJson {
      * @param object - オブジェクト
      * @return {@link List}&lt;{@link E}&gt; - リスト
      */
+    @Nullable
     @SuppressWarnings("unchecked")
-    private <E> List<E> castList(@NotNull Object object) {
+    private <E> List<E> castList(@Nullable Object object) {
         return (List<E>) object;
     }
 
@@ -178,8 +180,9 @@ public final class LegacyFormatJson {
      * @param object - オブジェクト
      * @return {@link Map}&lt;{@link String}, {@link Object}&gt; - マップ
      */
+    @Nullable
     @SuppressWarnings("unchecked")
-    private Map<String, Object> castMap(@NotNull Object object) {
+    private Map<String, Object> castMap(@Nullable Object object) {
         return (Map<String, Object>) object;
     }
 }

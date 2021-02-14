@@ -16,7 +16,7 @@
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.file.json.annotation.LegacyName;
+import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
 import com.github.yuttyann.scriptblockplus.file.json.basic.TwoJson.TwoElement;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
@@ -27,13 +27,13 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus PlayerCount クラス
  * @author yuttyann44581
  */
-public class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
+public final class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
 
-    @LegacyName(value = "scriptkey", alternate = { "scripttype" })
+    @Alternate("scripttype")
     @SerializedName(value = "scriptkey", alternate = { "scripttype" })
     private final ScriptKey scriptKey;
 
-    @LegacyName(value = "blockcoords", alternate = { "fullcoords" })
+    @Alternate("fullcoords")
     @SerializedName(value = "blockcoords", alternate = { "fullcoords" })
     private final BlockCoords blockCoords;
 

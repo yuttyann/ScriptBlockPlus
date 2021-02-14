@@ -18,6 +18,7 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
@@ -61,7 +62,7 @@ public class Execute extends BaseOption {
                 }
             }
             EndProcessManager.forEach(e -> e.success(this));
-            PlayerCountJson.get(sbPlayer).load(scriptKey, blockCoords).add();
+            PlayerCountJson.get(sbPlayer).action(PlayerCount::add, scriptKey, blockCoords);
             SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(scriptKey, blockCoords).console();
             return true;
         }

@@ -26,7 +26,6 @@ import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.UUID;
 
 /**
@@ -34,16 +33,12 @@ import java.util.UUID;
  * @author yuttyann44581
  */
 @JsonTag(path = "json/playertemp")
-public class PlayerTempJson extends SingleJson<PlayerTemp> {
+public final class PlayerTempJson extends SingleJson<PlayerTemp> {
 
-    private static final CacheJson<UUID> CACHE_JSON = new CacheJson<>(PlayerTempJson.class, PlayerTempJson::new);
+    public static final CacheJson CACHE_JSON = new CacheJson(PlayerTempJson.class, PlayerTempJson::new);
 
-    private PlayerTempJson(@NotNull File json) {
-        super(json);
-    }
-
-    protected PlayerTempJson(@NotNull UUID uuid) {
-        super(uuid.toString());
+    private PlayerTempJson(@NotNull String name) {
+        super(name);
     }
 
     @Override
@@ -54,17 +49,20 @@ public class PlayerTempJson extends SingleJson<PlayerTemp> {
 
     @NotNull
     public static PlayerTempJson get(@NotNull UUID uuid) {
-        return newJson(uuid, CACHE_JSON);
+        return newJson(uuid.toString(), CACHE_JSON);
     }
 
     public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
         removeAll(scriptKey, new ReuseIterator<>(new BlockCoords[] { blockCoords }));
     }
 
-    public static synchronized void removeAll(@NotNull ScriptKey scriptKey, @NotNull ReuseIterator<BlockCoords> reuseIterator) {
+    public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull ReuseIterator<BlockCoords> reuseIterator) {
+        var names = getNames(PlayerTempJson.class);
         var timerTemp = TimerTemp.empty();
-        for (var json : getFiles(PlayerTempJson.class)) {
-            var tempJson = new PlayerTempJson(json);
+        for (int i = 0, l = names.size(), e = ".json".length(); i < l; i++) {
+            var name = names.get(i);
+            var index = name.length() - e;
+            var tempJson = (PlayerTempJson) getCache(name.substring(0, index), CACHE_JSON);
             if (tempJson.isEmpty()) {
                 continue;
             }

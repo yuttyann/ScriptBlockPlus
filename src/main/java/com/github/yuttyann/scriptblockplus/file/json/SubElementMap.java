@@ -36,51 +36,103 @@ public abstract class SubElementMap<E extends BaseElement> {
     
     private ArrayListMultimap<Integer, E> subMap;
 
+    /**
+     * コンストラクタ
+     */
     protected SubElementMap() { }
 
+    /**
+     * {@link IntMap}&lt;{@link E}&gt;を取得します。
+     * @return {@link IntMap}&lt;{@link E}&gt; - エレメントのマップ
+     */
+    protected abstract IntMap<E> getElementMap();
+
+    /**
+     * {@link ArrayListMultimap}&lt;{@link Integer}, {@link E}&gt;を取得します。
+     * @return {@link ArrayListMultimap}&lt;{@link Integer}, {@link E}&gt; - サブエレメントのマップ
+     */
+    @NotNull
+    protected final ArrayListMultimap<Integer, E> getSubElementMap() {
+        return subMap == null ? this.subMap = ArrayListMultimap.create() : subMap;
+    }
+
+    /**
+     * 全てのサブ要素を削除します。
+     */
     protected final void subClear() {
         if (subMap != null) {
             subMap.clear();
         }
     }
 
+    /**
+     * サブマップの要素数を取得します。
+     * @return {@link int} - 要素数
+     */
     protected final int subSize() {
         return subMap == null ? 0 : subMap.size();
     }
 
+    /**
+     * サブマップに要素が存在しない場合に{@code true}を返します。
+     * @return {@link boolean} - 要素が存在しない場合は{@code true}
+     */
     protected final boolean isSubEmpty() {
         return subMap == null || subMap.isEmpty();
     }
 
+    /**
+     * サブマップに要素が存在する場合に{@code true}を返します。
+     * @return {@link boolean} - 要素が存在する場合は{@code true}
+     */
     protected final boolean isSubNotEmpty() {
         return !isSubEmpty();
     }
 
+    /**
+     * サブマップにキーが存在する場合に{@code true}を返します。
+     * @param hash - ハッシュコード
+     * @return {@link boolean} - キーが存在する場合は{@code true}
+     */
     protected final boolean subContainsKey(final Integer hash) {
         return isSubNotEmpty() && subMap.containsKey(hash);
     }
 
-    protected final boolean subPut(final Integer hash, E element) {
-        if (subMap == null) {
-            this.subMap = ArrayListMultimap.create();
-        }
-        return subMap.put(hash, element);
+    /**
+     * サブマップに要素を追加します。
+     * @param hash - ハッシュコード
+     * @param element - エレメント
+     */
+    protected final void subPut(final Integer hash, E element) {
+        getSubElementMap().put(hash, element);
     }
 
+    /**
+     * サブマップから要素を削除します。
+     * @param hash - ハッシュコード
+     * @param filter - フィルター
+     * @return {@link boolean} - 削除に成功した場合は{@code true}
+     */
     protected final boolean subRemove(final Integer hash, @NotNull Predicate<E> filter) {
         if (!subContainsKey(hash)) {
             return false;
         }
-        var list = subMap.get(hash);
+        var list = getSubElementMap().get(hash);
         return list.isEmpty() ? false : list.removeIf(filter);
     }
 
+    /**
+     * サブマップから要素を取得します。
+     * @param hash - ハッシュコード
+     * @param filter - フィルター
+     * @return {@link E} - エレメント
+     */
     @Nullable
     protected final E subGet(final Integer hash, @NotNull Predicate<E> filter) {
         if (!subContainsKey(hash)) {
             return null;
         }
-        var list = subMap.get(hash);
+        var list = getSubElementMap().get(hash);
         if (list.size() == 1) {
             E element = list.get(0);
             return filter.test(element) ? element : null;
@@ -94,19 +146,27 @@ public abstract class SubElementMap<E extends BaseElement> {
         return null;
     }
 
+    /**
+     * サブマップの要素の一覧を取得します。
+     * @return {@link Collection}&lt;{@link E}&gt; - 要素の一覧
+     */
     @NotNull
     protected final Collection<E> subValues() {
-        return isSubEmpty() ? Collections.emptySet() : subMap.values();
+        return isSubEmpty() ? Collections.emptySet() : getSubElementMap().values();
     }
 
-    protected final void subMapFirstShift(final Integer hash, @NotNull IntMap<E> elementMap) {
+    /**
+     * サブマップの一番最初の要素を、メインマップに移行します。
+     * @param hash - ハッシュコード
+     */
+    protected final void subMapFirstShift(final Integer hash) {
         if (!subContainsKey(hash)) {
             return;
         }
-        var list = subMap.get(hash);
+        var list = getSubElementMap().get(hash);
         if (!list.isEmpty()) {
             E element = list.get(0);
-            elementMap.put(hash, element);
+            getElementMap().put(hash, element);
             list.remove(0);
         }
     }

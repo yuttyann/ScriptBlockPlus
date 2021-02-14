@@ -41,7 +41,6 @@ import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +48,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus TickRunnable クラス
  * @author yuttyann44581
  */
-public class TickRunnable extends BukkitRunnable {
+public final class TickRunnable implements Runnable {
 
     private static final int PLAYER_RANGE = 15;
     private static final int PARTICLE_RANGE = 10;
@@ -60,6 +59,8 @@ public class TickRunnable extends BukkitRunnable {
     private static final GlowEntityPacket GLOW_ENTITY_PACKET = ProtocolLib.GLOW_ENTITY;
 
     private int tick = 0;
+
+    TickRunnable() { }
 
     @Override
     public final void run() {
