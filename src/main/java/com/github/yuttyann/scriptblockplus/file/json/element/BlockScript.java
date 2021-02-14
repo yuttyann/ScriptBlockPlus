@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -54,7 +55,7 @@ public final class BlockScript extends OneElement<BlockCoords> {
     private int amount = -1;
 
     public BlockScript(@NotNull BlockCoords blockCoords) {
-        this.blockCoords = blockCoords;
+        this.blockCoords = Objects.requireNonNull(blockCoords);
     }
 
     @Override

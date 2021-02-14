@@ -25,21 +25,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * ScriptBlockPlus TwoJson クラス
+ * ScriptBlockPlus ThreeJson クラス
  * @param <A> 引数1の型
  * @param <B> 引数2の型
- * @param <E> エレメントの型({@link TwoElement}を継承してください。)
+ * @param <C> 引数3の型
+ * @param <E> エレメントの型({@link ThreeElement}を継承してください。)
  * @author yuttyann44581
  */
-public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends BaseJson<E> {
+public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, C>> extends BaseJson<E> {
 
     /**
-     * ScriptBlockPlus TwoElement クラス
+     * ScriptBlockPlus ThreeElement クラス
      * @param <A> 引数1の型
      * @param <B> 引数2の型
+     * @param <C> 引数3の型
      * @author yuttyann44581
      */
-    public static abstract class TwoElement<A, B> extends BaseElement {
+    public static abstract class ThreeElement<A, B, C> extends BaseElement {
 
         /**
          * 引数{@link A}を取得します。
@@ -60,13 +62,23 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
         protected abstract B getB();
 
         /**
+         * 引数{@link C}を取得します。
+         * <p>
+         * コンストラクタ宣言時に渡す引数と同じでなければなりません。
+         * @return {@link C} - 引数3
+         */
+        @Nullable
+        protected abstract C getC();
+
+        /**
          * 引数が一致するのか比較します。
          * @param a - 引数1
          * @param b - 引数2
+         * @param c - 引数3
          * @return {@link boolean} - 要素が存在する場合は{@code true}
          */
-        public boolean isElement(@Nullable A a, @Nullable B b) {
-            return compare(getA(), a) && compare(getB(), b);
+        public boolean isElement(@Nullable A a, @Nullable B b, @Nullable C c) {
+            return compare(getA(), a) && compare(getB(), b) && compare(getC(), c);
         }
 
         /**
@@ -75,13 +87,13 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
          */
         @Override
         public final int hashCode() {
-            return TwoJson.hash(getA(), getB());
+            return ThreeJson.hash(getA(), getB(), getC());
         }
 
         @Override
         @NotNull
         public final Class<? extends BaseElement> getElementType() {
-            return TwoElement.class;
+            return ThreeElement.class;
         }
     }
 
@@ -89,7 +101,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * コンストラクタ
      * @param name - ファイルの名前
      */
-    protected TwoJson(@NotNull String name) {
+    protected ThreeJson(@NotNull String name) {
         super(name);
     }
 
@@ -97,27 +109,29 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * インスタンスを生成します。
      * @param a - 引数1
      * @param b - 引数2
+     * @param c - 引数3
      * @return {@link E} - インスタンス
      */
     @NotNull
-    protected abstract E newInstance(@Nullable A a, @Nullable B b);
+    protected abstract E newInstance(@Nullable A a, @Nullable B b, @Nullable C c);
 
     /**
      * 要素を取得します。
      * @param a - 引数1
      * @param b - 引数2
+     * @param c - 引数3
      * @return {@link E} - 要素
      */
     @NotNull
-    public final E load(@Nullable A a, @Nullable B b) {
-        int hash = hash(a, b);
+    public final E load(@Nullable A a, @Nullable B b, @Nullable C c) {
+        int hash = hash(a, b, c);
         var element = getElementMap().get(hash);
         if (element == null) {
-            getElementMap().put(hash, element = newInstance(a, b));
-        } else if (!element.isElement(a, b)) {
+            getElementMap().put(hash, element = newInstance(a, b, c));
+        } else if (!element.isElement(a, b, c)) {
             var objectHash = Integer.valueOf(hash);
-            if ((element = subGet(objectHash, e -> e.isElement(a, b))) == null) {
-                subPut(objectHash, element = newInstance(a, b));
+            if ((element = subGet(objectHash, e -> e.isElement(a, b, c))) == null) {
+                subPut(objectHash, element = newInstance(a, b, c));
             }
         }
         return element;
@@ -129,16 +143,17 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * 要素が存在しなかった場合は、{@code null}を返します。
      * @param a - 引数1
      * @param b - 引数2
+     * @param c - 引数3
      * @return {@link E} - 要素
      */
     @Nullable
-    public final E fastLoad(@Nullable A a, @Nullable B b) {
-        int hash = hash(a, b);
+    public final E fastLoad(@Nullable A a, @Nullable B b, @Nullable C c) {
+        int hash = hash(a, b, c);
         var element = getElementMap().get(hash);
         if (element == null) {
             return null;
-        } else if (!element.isElement(a, b) && isSubNotEmpty()) {
-            element = subGet(hash, e -> e.isElement(a, b));
+        } else if (!element.isElement(a, b, c) && isSubNotEmpty()) {
+            element = subGet(hash, e -> e.isElement(a, b, c));
         }
         return element;
     }
@@ -147,31 +162,33 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * 要素が存在するのか確認します。
      * @param a - 引数1
      * @param b - 引数2
+     * @param c - 引数3
      * @return {@link boolean} - 要素が存在する場合は{@code true}
      */
-    public final boolean has(@Nullable A a, @Nullable B b) {
-        return fastLoad(a, b) != null;
+    public final boolean has(@Nullable A a, @Nullable B b, @Nullable C c) {
+        return fastLoad(a, b, c) != null;
     }
 
     /**
      * 一致する要素を削除します。
      * @param a - 引数1
      * @param b - 引数2
+     * @param c - 引数3
      * @return {@link boolean} - 削除に成功した場合は{@code true}
      */
-    public final boolean remove(@Nullable A a, @Nullable B b) {
-        int hash = hash(a, b);
+    public final boolean remove(@Nullable A a, @Nullable B b, @Nullable C c) {
+        int hash = hash(a, b, c);
         var element = getElementMap().get(hash);
         if (element == null) {
             return false;
         }
-        if (element.isElement(a, b)) {
+        if (element.isElement(a, b, c)) {
             getElementMap().remove(hash);
             if (isSubNotEmpty()) {
                 subMapFirstShift(hash);
             }
         } else if (isSubNotEmpty()) {
-            return subRemove(hash, e -> e.isElement(a, b));
+            return subRemove(hash, e -> e.isElement(a, b, c));
         }
         return true;
     }
@@ -181,17 +198,19 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * @param action - 処理
      * @param a - 引数1
      * @param b - 引数2
+     * @param c - 引数3
      */
-    public final void action(@NotNull Consumer<E> action, @Nullable A a, @Nullable B b) {
-        action.accept(load(a, b));
+    public final void action(@NotNull Consumer<E> action, @Nullable A a, @Nullable B b, @Nullable C c) {
+        action.accept(load(a, b, c));
         saveJson();
     }
 
-    private static int hash(@Nullable Object a, @Nullable Object b) {
+    private static int hash(@Nullable Object a, @Nullable Object b, @Nullable Object c) {
         int hash = 1;
         int prime = 31;
         hash = prime * hash + Objects.hashCode(a);
         hash = prime * hash + Objects.hashCode(b);
+        hash = prime * hash + Objects.hashCode(c);
         return hash;
     }
 }

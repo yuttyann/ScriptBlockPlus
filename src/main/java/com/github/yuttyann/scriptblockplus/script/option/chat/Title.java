@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * @author yuttyann44581
  */
 @OptionTag(name = "title", syntax = "@title:")
-public class Title extends BaseOption {
+public final class Title extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {

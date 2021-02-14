@@ -20,7 +20,7 @@ import java.util.HashSet;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -75,7 +75,7 @@ public class CuboidRegionPaste {
             lightPaste(blockCoords, scriptJson);
         }
         var reuseIterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
-        PlayerTempJson.removeAll(scriptKey, reuseIterator);
+        PlayerTimerJson.removeAll(scriptKey, reuseIterator);
         PlayerCountJson.removeAll(scriptKey, reuseIterator);
         StreamUtils.ifAction(blocks.size() > 0, sbClipboard::save);
         this.iterator = iterator;

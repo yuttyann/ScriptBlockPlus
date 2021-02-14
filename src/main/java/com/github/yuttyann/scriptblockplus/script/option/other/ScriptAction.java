@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  * @author yuttyann44581
  */
 @OptionTag(name = "scriptaction", syntax = "@scriptaction:")
-public class ScriptAction extends BaseOption {
+public final class ScriptAction extends BaseOption {
 
     public static final String KEY = Utils.randomUUID();
 

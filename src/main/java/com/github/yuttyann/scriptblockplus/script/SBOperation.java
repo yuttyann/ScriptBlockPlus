@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -74,7 +74,7 @@ public final class SBOperation {
         blockScript.setScripts(Collections.singletonList(script));
         blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptJson.saveJson();
-        PlayerTempJson.removeAll(scriptKey, blockCoords);
+        PlayerTimerJson.removeAll(scriptKey, blockCoords);
         PlayerCountJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_CREATE.replace(scriptKey).send(player);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
@@ -90,7 +90,7 @@ public final class SBOperation {
         blockScript.getScripts().add(script);
         blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptJson.saveJson();
-        PlayerTempJson.removeAll(scriptKey, blockCoords);
+        PlayerTimerJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_ADD.replace(scriptKey).send(player);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }
@@ -102,7 +102,7 @@ public final class SBOperation {
         }
         scriptJson.remove(blockCoords);
         scriptJson.saveJson();
-        PlayerTempJson.removeAll(scriptKey, blockCoords);
+        PlayerTimerJson.removeAll(scriptKey, blockCoords);
         PlayerCountJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_REMOVE.replace(scriptKey).send(player);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();

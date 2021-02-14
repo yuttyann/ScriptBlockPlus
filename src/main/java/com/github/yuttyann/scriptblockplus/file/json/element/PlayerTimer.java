@@ -16,67 +16,76 @@
 package com.github.yuttyann.scriptblockplus.file.json.element;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
-import com.github.yuttyann.scriptblockplus.file.json.basic.TwoJson.TwoElement;
+import com.github.yuttyann.scriptblockplus.file.json.basic.ThreeJson.ThreeElement;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * ScriptBlockPlus PlayerCount クラス
+ * ScriptBlockPlus PlayerCooldown クラス
  * @author yuttyann44581
  */
-public final class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
+public class PlayerTimer extends ThreeElement<UUID, ScriptKey, BlockCoords> {
 
-    @Alternate("scripttype")
-    @SerializedName(value = "scriptkey", alternate = { "scripttype" })
+    @SerializedName("time")
+    private long[] time;
+
+    @SerializedName("uuid")
+    private final UUID uuid;
+
+    @SerializedName("scriptkey")
     private final ScriptKey scriptKey;
 
-    @Alternate("fullcoords")
-    @SerializedName(value = "blockcoords", alternate = { "fullcoords" })
+    @SerializedName("blockcoords")
     private final BlockCoords blockCoords;
 
-    @SerializedName("amount")
-    private int amount;
-
-    public PlayerCount(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+    public PlayerTimer(@Nullable UUID uuid, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+        this.uuid = uuid;
         this.scriptKey = Objects.requireNonNull(scriptKey);
         this.blockCoords = Objects.requireNonNull(blockCoords);
     }
 
     @Override
     @NotNull
-    protected ScriptKey getA() {
+    protected UUID getA() {
+        return uuid;
+    }
+
+    @Override
+    @NotNull
+    protected ScriptKey getB() {
         return scriptKey;
     }
 
     @Override
     @NotNull
-    protected BlockCoords getB() {
+    protected BlockCoords getC() {
         return blockCoords;
     }
 
     @Override
-    public boolean isElement(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+    public boolean isElement(@Nullable UUID uuid, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+        if (this.uuid != null && !this.uuid.equals(uuid)) {
+            return false;
+        }
         return this.scriptKey.ordinal() == scriptKey.ordinal() && this.blockCoords.compare(blockCoords);
     }
 
-    public synchronized void setAmount(int amount) {
-        this.amount = Math.min(amount, 0);
+    @NotNull
+    public void setTime(@NotNull long... params) {
+        this.time = params;
     }
 
-    public synchronized int add() {
-        return ++amount;
-    }
-
-    public synchronized int subtract() {
-        return amount > 0 ? --amount : 0;
-    }
-
-    public synchronized int getAmount() {
-        return amount;
+    public int getSecond() {
+        if (time == null) {
+            return 0;
+        }
+        var milli = System.currentTimeMillis();
+        return time[2] > milli ? Math.toIntExact((time[2] - milli) / 1000L) : 0;
     }
 }

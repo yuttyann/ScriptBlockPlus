@@ -21,11 +21,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.Map.Entry;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -41,7 +45,7 @@ import static com.github.yuttyann.scriptblockplus.file.json.BaseJson.GSON_HOLDER
  */
 public final class LegacyFormatJson {
 
-    public static final String[] LEGACY_KEYS = { "elements", "infos", "scripts" };
+    public static final String[] LEGACY_KEYS = { "elements", "infos", "scripts", "timer" };
 
     private LegacyFormatJson() { }
 
@@ -74,6 +78,7 @@ public final class LegacyFormatJson {
 
     /**
      * JSONの要素から{@code elements}または{@code infos}を取り除きます。
+     * @throws IOException I/O系の例外が発生した場合にスローされます。
      * @param json - JSONのファイル
      */
     private boolean removeElements(@NotNull File json) throws IOException {
@@ -103,6 +108,15 @@ public final class LegacyFormatJson {
                 saveFile(json, list);
                 return true;
             }
+            var timer = castMap(element).get(LEGACY_KEYS[3]);
+            if (timer instanceof List) {
+                var list = new ArrayList<PlayerTimer>(elements.size() + 1);
+                for (var temp : castList(timer)) {
+                    list.add(createPlayerTimer(castMap(temp).entrySet()));
+                }
+                saveFile(json, list);
+                return true;
+            }
         }
         saveFile(json, elements);
         return true;
@@ -118,6 +132,9 @@ public final class LegacyFormatJson {
         var blockScript = new BlockScript(BlockCoords.fromString(entry.getKey()));
         for (var scriptEntry : castMap(entry.getValue()).entrySet()) {
             var value = scriptEntry.getValue();
+            if (value == null) {
+                continue;
+            }
             switch (scriptEntry.getKey()) {
                 case "author":
                     blockScript.setAuthors(castList(value));
@@ -140,7 +157,49 @@ public final class LegacyFormatJson {
     }
 
     /**
+     * {@link PlayerTimer}を生成します。
+     * @param set - エントリ
+     * @return {@link PlayerTimer} - ブロックスクリプト
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    private PlayerTimer createPlayerTimer(@NotNull Set<Entry<String, Object>> entries) {
+        var time = (long[]) null;
+        var uuid = (UUID) null;
+        var scriptKey = (ScriptKey) null;
+        var blockCoords = (BlockCoords) null;
+        for (var entry : entries) {
+            var value = entry.getValue();
+            if (value == null) {
+                continue;
+            }
+            switch (entry.getKey()) {
+                case "params":
+                    time = toLongArray((List<Long>) value);
+                    break;
+                case "uuid":
+                    uuid = UUID.fromString((String) value);
+                    break;
+                case "scripttype":
+                case "scriptType":
+                case "scriptkey":
+                    scriptKey = toScriptKey(value);
+                    break;
+                case "fullcoords":
+                case "fullCoords":
+                case "blockcoords":
+                    blockCoords = BlockCoords.fromString((String) value);
+                    break;
+            }
+        }
+        var playerTimer = new PlayerTimer(uuid, scriptKey, blockCoords);
+        playerTimer.setTime(time);
+        return playerTimer;
+    }
+
+    /**
      * JSONのシリアライズ化を行います。
+     * @throws IOException I/O系の例外が発生した場合にスローされます。
      * @param json - JSONのファイル
      * @param list - リスト
      */
@@ -153,6 +212,7 @@ public final class LegacyFormatJson {
 
     /**
      * JSONのデシリアライズ化を行います。
+     * @throws IOException I/O系の例外が発生した場合にスローされます。
      * @param json - JSONのファイル
      * @return {@link Map}&lt;{@link String}, {@link Object}&gt; - マップ
      */
@@ -161,6 +221,33 @@ public final class LegacyFormatJson {
         try (var reader = new JsonReader(FileUtils.newBufferedReader(json))) {
             return castMap(GSON_HOLDER.getGson().fromJson(reader, Map.class));
         }
+    }
+
+    /**
+     * {@link long}の配列を生成します。
+     * @param list - {@link Long}のリスト
+     * @return {@link long}[] - {@link long}の配列
+     */
+    @Nullable
+    private long[] toLongArray(@Nullable List<Long> list) {
+        var newArray = new long[3];
+        for (int i = 0; i < 3; i++) {
+            newArray[i] = list.get(i);
+        }
+        return newArray;
+    }
+
+    /**
+     * {@link ScriptKey}を生成します。
+     * @param value - 値
+     * @return {@link ScriptKey} - スクリプトキー
+     */
+    @Nullable
+    private ScriptKey toScriptKey(@Nullable Object value) {
+        if (value instanceof Map) {
+            return ScriptKey.valueOf((String) castMap(value).get("name"));
+        }
+        return ScriptKey.valueOf((String) value);
     }
 
     /**

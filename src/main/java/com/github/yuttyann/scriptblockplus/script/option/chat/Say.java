@@ -27,7 +27,7 @@ import org.bukkit.Bukkit;
  * @author yuttyann44581
  */
 @OptionTag(name = "say", syntax = "@say ")
-public class Say extends BaseOption {
+public final class Say extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {

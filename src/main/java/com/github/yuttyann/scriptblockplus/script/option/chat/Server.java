@@ -25,7 +25,7 @@ import org.bukkit.Bukkit;
  * @author yuttyann44581
  */
 @OptionTag(name = "server", syntax = "@server ")
-public class Server extends BaseOption {
+public final class Server extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {

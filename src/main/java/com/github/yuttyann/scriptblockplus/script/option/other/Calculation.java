@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  * @author yuttyann44581
  */
 @OptionTag(name = "calculation", syntax = "@calc:")
-public class Calculation extends BaseOption {
+public final class Calculation extends BaseOption {
 
     public static final Pattern REALNUMBER_PATTERN = Pattern.compile("^-?(0|[1-9]\\d*)(\\.\\d+|)$");
 

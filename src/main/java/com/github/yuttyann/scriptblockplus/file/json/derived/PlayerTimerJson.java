@@ -18,37 +18,38 @@ package com.github.yuttyann.scriptblockplus.file.json.derived;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
-import com.github.yuttyann.scriptblockplus.file.json.basic.SingleJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTemp;
-import com.github.yuttyann.scriptblockplus.file.json.element.TimerTemp;
+import com.github.yuttyann.scriptblockplus.file.json.basic.ThreeJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.github.yuttyann.scriptblockplus.script.option.time.OldCooldown;
 import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 /**
- * ScriptBlockPlus PlayerTempJson クラス
+ * ScriptBlockPlus PlayerTimerJson クラス
  * @author yuttyann44581
  */
-@JsonTag(path = "json/playertemp")
-public final class PlayerTempJson extends SingleJson<PlayerTemp> {
+@JsonTag(path = "json/playertimer")
+public final class PlayerTimerJson extends ThreeJson<UUID, ScriptKey, BlockCoords, PlayerTimer> {
 
-    public static final CacheJson CACHE_JSON = new CacheJson(PlayerTempJson.class, PlayerTempJson::new);
+    public static final CacheJson CACHE_JSON = new CacheJson(PlayerTimerJson.class, PlayerTimerJson::new);
 
-    private PlayerTempJson(@NotNull String name) {
+    private PlayerTimerJson(@NotNull String name) {
         super(name);
     }
 
     @Override
     @NotNull
-    protected PlayerTemp newInstance() {
-        return new PlayerTemp();
+    protected PlayerTimer newInstance(@Nullable UUID uuid, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+        return new PlayerTimer(uuid, scriptKey, blockCoords);
     }
 
     @NotNull
-    public static PlayerTempJson get(@NotNull UUID uuid) {
+    public static PlayerTimerJson get(@NotNull UUID uuid) {
         return newJson(uuid.toString(), CACHE_JSON);
     }
 
@@ -57,32 +58,30 @@ public final class PlayerTempJson extends SingleJson<PlayerTemp> {
     }
 
     public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull ReuseIterator<BlockCoords> reuseIterator) {
-        var names = getNames(PlayerTempJson.class);
-        var timerTemp = TimerTemp.empty();
+        var names = getNames(PlayerTimerJson.class);
+        var oldUUID = OldCooldown.UUID_OLDCOOLDOWN.toString();
         for (int i = 0, l = names.size(), e = ".json".length(); i < l; i++) {
             var name = names.get(i);
             var index = name.length() - e;
-            var tempJson = (PlayerTempJson) getCache(name.substring(0, index), CACHE_JSON);
-            if (tempJson.isEmpty()) {
+            var timerJson = (PlayerTimerJson) getCache(name.substring(0, index), CACHE_JSON);
+            if (timerJson.isEmpty()) {
                 continue;
             }
-            var timer = tempJson.load().getTimerTemp();
-            if (timer.isEmpty()) {
-                continue;
+            var uuid = (UUID) null;
+            if (!oldUUID.equals(timerJson.getName())) {
+                uuid = UUID.fromString(timerJson.getName());
             }
+            System.out.println("UUID: " + (uuid == null ? "null" : uuid));
             var removed = false;
             reuseIterator.reset();
             while (reuseIterator.hasNext()) {
                 var blockCoords = reuseIterator.next();
-                if (timer.remove(timerTemp.setUniqueId(null).setScriptKey(scriptKey).setBlockCoords(blockCoords))) {
-                    removed = true;
-                }
-                if (timer.remove(timerTemp.setUniqueId(UUID.fromString(tempJson.getName())))) {
+                if (timerJson.remove(uuid, scriptKey, blockCoords)) {
                     removed = true;
                 }
             }
             if (removed) {
-                tempJson.saveJson();
+                timerJson.saveJson();
             }
         }
     }

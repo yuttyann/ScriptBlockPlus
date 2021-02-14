@@ -37,7 +37,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author yuttyann44581
  */
 @OptionTag(name = "actionbar", syntax = "@actionbar:")
-public class ActionBar extends BaseOption implements Runnable {
+public final class ActionBar extends BaseOption implements Runnable {
 
     private int tick, stay;
     private String message;

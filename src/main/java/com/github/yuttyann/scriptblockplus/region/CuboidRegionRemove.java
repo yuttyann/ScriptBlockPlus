@@ -18,7 +18,7 @@ package com.github.yuttyann.scriptblockplus.region;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
@@ -85,7 +85,7 @@ public class CuboidRegionRemove {
         }
         var reuseIterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
         for (var scriptKey : scriptKeys) {
-            PlayerTempJson.removeAll(scriptKey, reuseIterator);
+            PlayerTimerJson.removeAll(scriptKey, reuseIterator);
             PlayerCountJson.removeAll(scriptKey, reuseIterator);
         }
         this.iterator = iterator;

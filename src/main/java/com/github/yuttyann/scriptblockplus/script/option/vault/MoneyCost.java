@@ -26,7 +26,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  * @author yuttyann44581
  */
 @OptionTag(name = "moneycost", syntax = "$cost:")
-public class MoneyCost extends BaseOption {
+public final class MoneyCost extends BaseOption {
 
     public static final String KEY = Utils.randomUUID();
 

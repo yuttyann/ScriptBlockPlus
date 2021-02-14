@@ -27,7 +27,7 @@ import org.bukkit.Bukkit;
  * @author yuttyann44581
  */
 @OptionTag(name = "console", syntax = "@console ")
-public class Console extends BaseOption {
+public final class Console extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {

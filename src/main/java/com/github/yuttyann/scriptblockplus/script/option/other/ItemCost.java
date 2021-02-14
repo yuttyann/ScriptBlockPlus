@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
  * @author yuttyann44581
  */
 @OptionTag(name = "itemcost", syntax = "$item:")
-public class ItemCost extends BaseOption {
+public final class ItemCost extends BaseOption {
 
     public static final String KEY_OPTION = Utils.randomUUID();
     public static final String KEY_PLAYER = Utils.randomUUID();

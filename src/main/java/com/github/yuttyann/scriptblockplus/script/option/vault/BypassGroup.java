@@ -27,7 +27,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  * @author yuttyann44581
  */
 @OptionTag(name = "bypass_group", syntax = "@bypassGROUP:")
-public class BypassGroup extends BaseOption {
+public final class BypassGroup extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {

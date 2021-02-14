@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -227,7 +227,7 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         public void remove() {
-            PlayerTempJson.removeAll(scriptKey, blockCoords);
+            PlayerTimerJson.removeAll(scriptKey, blockCoords);
             PlayerCountJson.removeAll(scriptKey, blockCoords);
             scriptJson.remove(blockCoords);
         }

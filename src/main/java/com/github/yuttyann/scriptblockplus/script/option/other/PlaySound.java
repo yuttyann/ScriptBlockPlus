@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
  * @author yuttyann44581
  */
 @OptionTag(name = "sound", syntax = "@sound:")
-public class PlaySound extends BaseOption implements Runnable {
+public final class PlaySound extends BaseOption implements Runnable {
 
     private String name;
     private int volume, pitch;

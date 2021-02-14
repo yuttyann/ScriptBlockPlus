@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
  * @author yuttyann44581
  */
 @OptionTag(name = "group_add", syntax = "@groupADD:")
-public class GroupAdd extends BaseOption {
+public final class GroupAdd extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {

@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus OptionIndex クラス
  * @author yuttyann44581
  */
-public class OptionIndex {
+public final class OptionIndex {
 
     private final IndexType indexType;
     private final OptionTag optionTag;

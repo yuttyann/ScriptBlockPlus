@@ -15,37 +15,35 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.TimerTemp;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus Cooldown オプションクラス
  * @author yuttyann44581
  */
 @OptionTag(name = "cooldown", syntax = "@cooldown:")
-public class Cooldown extends TimerOption {
+public final class Cooldown extends TimerOption {
 
     @Override
     protected boolean isValid() throws Exception {
         if (inCooldown()) {
             return false;
         }
-        var params = new long[] { System.currentTimeMillis(), Integer.parseInt(getOptionValue()) * 1000L, 0L };
-        params[2] = params[0] + params[1];
+        var time = new long[] { System.currentTimeMillis(), Integer.parseInt(getOptionValue()) * 1000L, 0L };
+        time[2] = time[0] + time[1];
 
-        var tempJson = PlayerTempJson.get(getFileUniqueId());
-        tempJson.load().getTimerTemp().add(new TimerTemp(getFileUniqueId(), getScriptKey(), getBlockCoords()).setParams(params));
-        tempJson.saveJson();
+        var timerJson = PlayerTimerJson.get(getFileUniqueId());
+        timerJson.load(getFileUniqueId(), getScriptKey(), getBlockCoords()).setTime(time);
+        timerJson.saveJson();
         return true;
     }
 
     @Override
-    @NotNull
-    protected Optional<TimerTemp> getTimerTemp() {
-        return getTimerTemp(new TimerTemp(getFileUniqueId(), getScriptKey(), getBlockCoords()));
+    @Nullable
+    protected PlayerTimer getPlayerTimer() {
+        return PlayerTimerJson.get(getFileUniqueId()).load(getFileUniqueId(), getScriptKey(), getBlockCoords());
     }
 }

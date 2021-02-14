@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
  * @author yuttyann44581
  */
 @OptionTag(name = "perm_add", syntax = "@permADD:")
-public class PermAdd extends BaseOption {
+public final class PermAdd extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {

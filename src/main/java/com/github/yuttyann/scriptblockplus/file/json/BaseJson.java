@@ -27,8 +27,7 @@ import com.github.yuttyann.scriptblockplus.file.json.builder.NumberAdapter;
 import com.github.yuttyann.scriptblockplus.file.json.builder.ScriptKeyAdapter;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
-import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTemp;
-import com.github.yuttyann.scriptblockplus.file.json.element.TimerTemp;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
@@ -111,10 +110,9 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
             b.registerTypeAdapter(ScriptKey.class, new ScriptKeyAdapter());
             b.registerTypeHierarchyAdapter(BlockCoords.class, new BlockCoordsAdapter());
             b.registerTypeAdapter(HashSet.class, newInstace(HashSet::new));
-            b.registerTypeAdapter(TimerTemp.class, newInstace(() -> new TimerTemp(ScriptKey.INTERACT, BlockCoords.ZERO)));
-            b.registerTypeAdapter(PlayerTemp.class, newInstace(PlayerTemp::new));
-            b.registerTypeAdapter(PlayerCount.class, newInstace(() -> new PlayerCount(ScriptKey.INTERACT, BlockCoords.ZERO)));
             b.registerTypeAdapter(BlockScript.class, newInstace(() -> new BlockScript(BlockCoords.ZERO)));
+            b.registerTypeAdapter(PlayerCount.class, newInstace(() -> new PlayerCount(ScriptKey.INTERACT, BlockCoords.ZERO)));
+            b.registerTypeAdapter(PlayerTimer.class, newInstace(() -> new PlayerTimer(null, ScriptKey.INTERACT, BlockCoords.ZERO))); 
         });
     }
 
@@ -130,7 +128,6 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * @param name - ファイルの名前
      */
     protected BaseJson(@NotNull String name) {
-        System.out.println("Name: " + name);
         this.file = getJsonFile(name);
         this.name = name;
         try {

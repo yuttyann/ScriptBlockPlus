@@ -17,7 +17,7 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 
@@ -26,7 +26,7 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
  * @author yuttyann44581
  */
 @OptionTag(name = "amount", syntax = "@amount:")
-public class Amount extends BaseOption {
+public final class Amount extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
@@ -38,7 +38,7 @@ public class Amount extends BaseOption {
         }
         blockScript.subtractAmount(1);
         if (blockScript.getAmount() <= 0) {
-            PlayerTempJson.removeAll(getScriptKey(), blockCoords);
+            PlayerTimerJson.removeAll(getScriptKey(), blockCoords);
             PlayerCountJson.removeAll(getScriptKey(), blockCoords);
             scriptJson.remove(blockCoords);
         }

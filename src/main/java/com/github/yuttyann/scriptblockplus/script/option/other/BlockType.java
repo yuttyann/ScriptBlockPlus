@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
  * @author yuttyann44581
  */
 @OptionTag(name = "blocktype", syntax = "@blocktype:")
-public class BlockType extends BaseOption {
+public final class BlockType extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {

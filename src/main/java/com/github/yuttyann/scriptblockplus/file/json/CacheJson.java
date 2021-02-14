@@ -22,7 +22,7 @@ import java.util.function.Function;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,7 +48,7 @@ public final class CacheJson {
     }
 
     /**
-     * 自動的なキャッシュの生成を許可します。
+     * キャッシュの自動生成を許可します。
      * <p>
      * プラグインの起動時とリロード時に、自動でキャッシュを生成することができる。
      * <p>
@@ -82,9 +82,9 @@ public final class CacheJson {
      */
     public static void loading() {
         if (CACHE_MAP.isEmpty()) {
-            PlayerTempJson.CACHE_JSON.setLoader();
-            PlayerCountJson.CACHE_JSON.setLoader();
             BlockScriptJson.CACHE_JSON.setLoader();
+            PlayerCountJson.CACHE_JSON.setLoader();
+            PlayerTimerJson.CACHE_JSON.setLoader();
         }
         CACHE_MAP.values().forEach(c -> loading(c.getJsonClass()));
     }
@@ -92,7 +92,7 @@ public final class CacheJson {
     /**
      * 指定したJSONのキャッシュを生成する。
      * <p>
-     * 自動的なキャッシュの生成を許可していない場合は、生成できません。
+     * キャッシュの自動生成を許可していない場合は、生成できません。
      * <p>
      * また、{@link SBConfig#CACHE_ALL_JSON}が無効な場合も生成できません。
      * @param jsonClass - JSONのクラス

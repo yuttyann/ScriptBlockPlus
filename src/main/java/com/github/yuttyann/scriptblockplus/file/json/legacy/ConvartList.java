@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 
@@ -40,6 +41,11 @@ import org.json.simple.parser.ParseException;
 public final class ConvartList {
 
     private static final String FORMAT_FILE = "format.sbp";
+
+    static {
+        var folder = ScriptBlock.getInstance().getDataFolder();
+        FileUtils.move(new SBFile(folder, "json/playertemp"), new SBFile(folder, "json/playertimer"));
+    }
 
     private final File folder;
     private final File format;

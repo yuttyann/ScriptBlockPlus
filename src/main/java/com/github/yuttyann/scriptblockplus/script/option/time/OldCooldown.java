@@ -15,12 +15,12 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.TimerTemp;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -28,21 +28,21 @@ import java.util.UUID;
  * @author yuttyann44581
  */
 @OptionTag(name = "oldcooldown", syntax = "@oldcooldown:")
-public class OldCooldown extends TimerOption {
+public final class OldCooldown extends TimerOption {
 
-    private static final UUID UUID_OLDCOOLDOWN = UUID.nameUUIDFromBytes(OldCooldown.class.getName().getBytes());
+    public static final UUID UUID_OLDCOOLDOWN = UUID.nameUUIDFromBytes(OldCooldown.class.getName().getBytes());
 
     @Override
     protected boolean isValid() throws Exception {
         if (inCooldown()) {
             return false;
         }
-        var params = new long[] { System.currentTimeMillis(), Integer.parseInt(getOptionValue()) * 1000L, 0L };
-        params[2] = params[0] + params[1];
+        var time = new long[] { System.currentTimeMillis(), Integer.parseInt(getOptionValue()) * 1000L, 0L };
+        time[2] = time[0] + time[1];
 
-        var tempJson = PlayerTempJson.get(getFileUniqueId());
-        tempJson.load().getTimerTemp().add(new TimerTemp(getScriptKey(), getBlockCoords()).setParams(params));
-        tempJson.saveJson();
+        var timerJson = PlayerTimerJson.get(getFileUniqueId());
+        timerJson.load(null, getScriptKey(), getBlockCoords()).setTime(time);
+        timerJson.saveJson();
         return true;
     }
 
@@ -53,8 +53,8 @@ public class OldCooldown extends TimerOption {
     }
 
     @Override
-    @NotNull
-    protected Optional<TimerTemp> getTimerTemp() {
-        return getTimerTemp(new TimerTemp(getScriptKey(), getBlockCoords()));
+    @Nullable
+    protected PlayerTimer getPlayerTimer() {
+        return PlayerTimerJson.get(getFileUniqueId()).load(null, getScriptKey(), getBlockCoords());
     }
 }

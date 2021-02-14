@@ -16,6 +16,7 @@
 package com.github.yuttyann.scriptblockplus.utils;
 
 import com.google.common.base.Charsets;
+
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * ScriptBlockPlus FileUtils クラス
@@ -89,6 +92,19 @@ public final class FileUtils {
                 fos.write(bytes, 0, length);
             }
         }
+    }
+
+    @Nullable
+    public static Path move(@NotNull File from, @NotNull File to) {
+        if (!from.exists() || to.exists()) {
+            return null;
+        }
+        try {
+           return Files.move(from.toPath(), to.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Nullable

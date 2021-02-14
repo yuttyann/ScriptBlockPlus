@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  * @author yuttyann44581
  */
 @OptionTag(name = "itemhand", syntax = "@hand:")
-public class ItemHand extends BaseOption {
+public final class ItemHand extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {

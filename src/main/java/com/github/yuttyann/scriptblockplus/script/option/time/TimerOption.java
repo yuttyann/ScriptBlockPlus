@@ -16,14 +16,12 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTempJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.TimerTemp;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -32,14 +30,8 @@ import java.util.UUID;
  */
 public abstract class TimerOption extends BaseOption {
 
-    @NotNull
-    protected abstract Optional<TimerTemp> getTimerTemp();
-
-    @NotNull
-    protected final Optional<TimerTemp> getTimerTemp(@NotNull TimerTemp timerTemp) {
-        var timers = PlayerTempJson.get(getFileUniqueId()).load().getTimerTemp();
-        return StreamUtils.filterFirst(timers, t -> t.equals(timerTemp));
-    }
+    @Nullable
+    protected abstract PlayerTimer getPlayerTimer();
 
     @NotNull
     protected UUID getFileUniqueId() {
@@ -47,17 +39,15 @@ public abstract class TimerOption extends BaseOption {
     }
 
     protected boolean inCooldown() {
-        var timer = getTimerTemp();
-        if (timer.isPresent()) {
-            int time = timer.get().getSecond();
+        var playerTimer = getPlayerTimer();
+        if (playerTimer != null) {
+            int time = playerTimer.getSecond();
             if (time > 0) {
                 short hour = (short) (time / 3600);
                 byte minute = (byte) (time % 3600 / 60);
                 byte second = (byte) (time % 3600 % 60);
                 SBConfig.ACTIVE_COOLDOWN.replace(hour, minute, second).send(getSBPlayer());
                 return true;
-            } else {
-                PlayerTempJson.get(getFileUniqueId()).load().getTimerTemp().remove(timer.get());
             }
         }
         return false;

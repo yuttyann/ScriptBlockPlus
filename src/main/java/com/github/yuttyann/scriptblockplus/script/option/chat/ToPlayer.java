@@ -24,7 +24,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  * @author yuttyann44581
  */
 @OptionTag(name = "toplayer", syntax = "@player ")
-public class ToPlayer extends BaseOption {
+public final class ToPlayer extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {

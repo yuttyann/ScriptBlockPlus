@@ -19,7 +19,6 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.DelayEndEvent;
 import com.github.yuttyann.scriptblockplus.event.DelayRunEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.file.json.element.TimerTemp;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
@@ -36,9 +35,9 @@ import java.util.Set;
  * @author yuttyann44581
  */
 @OptionTag(name = "delay", syntax = "@delay:")
-public class Delay extends BaseOption implements Runnable {
+public final class Delay extends BaseOption implements Runnable {
 
-    private static final Set<TimerTemp> DELAYS = new HashSet<>();
+    private static final Set<Integer> DELAYS = new HashSet<>();
 
     private boolean saveDelay;
 
@@ -52,11 +51,11 @@ public class Delay extends BaseOption implements Runnable {
         var array = StringUtils.split(getOptionValue(), '/');
         this.saveDelay = array.length <= 1 || Boolean.parseBoolean(array[1]);
 
-        if (saveDelay && DELAYS.contains(new TimerTemp(getUniqueId(), getScriptKey(), getBlockCoords()))) {
+        if (saveDelay && DELAYS.contains(delayHash())) {
             SBConfig.ACTIVE_DELAY.send(getSBPlayer());
         } else {
             if (saveDelay) {
-                DELAYS.add(new TimerTemp(getUniqueId(), getScriptKey(), getBlockCoords()));
+                DELAYS.add(delayHash());
             }
             ((ScriptRead) getTempMap()).setInitialize(false);
             ScriptBlock.getScheduler().run(this, Long.parseLong(array[0]));
@@ -67,7 +66,7 @@ public class Delay extends BaseOption implements Runnable {
     @Override
     public void run() {
         if (saveDelay) {
-            DELAYS.remove(new TimerTemp(getUniqueId(), getScriptKey(), getBlockCoords()));
+            DELAYS.remove(delayHash());
         }
         var sbRead = (ScriptRead) getTempMap();
         if (getSBPlayer().isOnline()) {
@@ -81,5 +80,14 @@ public class Delay extends BaseOption implements Runnable {
         } else {
             EndProcessManager.forEachFinally(e -> e.failed(sbRead), () -> sbRead.clear());
         }
+    }
+
+    private int delayHash() {
+        int hash = 1;
+        int prime = 31;
+        hash = prime * hash + getUniqueId().hashCode();
+        hash = prime * hash + getScriptKey().hashCode();
+        hash = prime * hash + getBlockCoords().hashCode();
+        return hash;
     }
 }
