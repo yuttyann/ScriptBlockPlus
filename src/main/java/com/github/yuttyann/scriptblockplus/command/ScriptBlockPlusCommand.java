@@ -408,10 +408,10 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
 
     private boolean isScripts(@NotNull String scriptLine) {
         try {
-            var success = new int[] { 0 };
-            var scripts = StringUtils.getScripts(scriptLine);
-            StreamUtils.fForEach(scripts, OptionManager::has, o -> success[0]++);
-            if (success[0] == 0 || success[0] != scripts.size()) {
+            var count = new int[] { 0 };
+            var parse = StringUtils.parseScript(scriptLine);
+            StreamUtils.fForEach(parse, OptionManager::has, o -> count[0]++);
+            if (count[0] == 0 || count[0] != parse.size()) {
                 return false;
             }
         } catch (Exception e) {

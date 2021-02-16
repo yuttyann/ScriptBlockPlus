@@ -57,7 +57,7 @@ public abstract class CommandUsage {
             name = command.getAliases().get(0).toLowerCase(Locale.ROOT);
         }
         var prefix = "§b/" + name + " ";
-        sender.sendMessage("§d========== " + command.getName() + " Commands ==========");
+        sender.sendMessage("§d========== " + command.getName().toUpperCase(Locale.ROOT) + " Commands ==========");
         StreamUtils.fForEach(list, CommandData::hasMessage, c -> sender.sendMessage(text(c, prefix)));
     }
 

@@ -116,18 +116,14 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         });
     }
 
-    // JsonTagを取得する。
-    {
-        if ((this.jsonTag = getClass().getAnnotation(JsonTag.class)) == null) {
-            throw new NullPointerException("Annotation not found @JsonTag()");
-        }
-    }
-
     /**
      * コンストラクタ
      * @param name - ファイルの名前
      */
     protected BaseJson(@NotNull String name) {
+        if ((this.jsonTag = getClass().getAnnotation(JsonTag.class)) == null) {
+            throw new NullPointerException("Annotation not found @JsonTag()");
+        }
         this.file = getJsonFile(name);
         this.name = name;
         try {
@@ -213,6 +209,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * {@link IntMap}&lt;{@link E}&gt;を取得します。
      * @return {@link IntMap}&lt;{@link E}&gt; - エレメントのマップ
      */
+    @Override
     @NotNull
     protected final IntMap<E> getElementMap() {
         return elementMap;
@@ -413,7 +410,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         if (isSubEmpty()) {
             return elementMap.values();
         }
-        var newList = new ArrayList<E>(size + 1);
+        var newList = new ArrayList<E>(size);
         for (var element : elementMap.values()) {
             newList.add(element);
         }

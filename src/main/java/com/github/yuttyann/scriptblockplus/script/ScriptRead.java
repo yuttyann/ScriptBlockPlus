@@ -164,7 +164,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
         try {
             var parse = new ArrayList<String>();
             for (int i = 0, l = scripts.size(); i < l; i++) {
-                parse.addAll(StringUtils.getScripts(scripts.get(i)));
+                parse.addAll(StringUtils.parseScript(scripts.get(i)));
             }
             SBConfig.SORT_SCRIPTS.ifPresentAndTrue(s -> OptionManager.sort(parse));
             this.scripts = Collections.unmodifiableList(parse);

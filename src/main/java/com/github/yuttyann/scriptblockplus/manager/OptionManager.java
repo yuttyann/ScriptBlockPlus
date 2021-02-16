@@ -88,6 +88,9 @@ public final class OptionManager {
     }
 
     public static void sort(@NotNull List<String> scripts) {
+        if (scripts.isEmpty()) {
+            return;
+        }
         scripts.sort((c1, c2) -> OPTION_MAP.getOption(c1).compareTo(OPTION_MAP.getOption(c2)));
     }
 

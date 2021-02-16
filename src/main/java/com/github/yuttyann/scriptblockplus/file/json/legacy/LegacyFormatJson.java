@@ -101,7 +101,7 @@ public final class LegacyFormatJson {
         if (element instanceof Map) {
             var scripts = castMap(element).get(LEGACY_KEYS[2]);
             if (scripts instanceof Map) {
-                var list = new ArrayList<BlockScript>(elements.size() + 1);
+                var list = new ArrayList<BlockScript>(elements.size());
                 for (var entry : castMap(scripts).entrySet()) {
                     list.add(createBlockScript(entry));
                 }
@@ -110,7 +110,7 @@ public final class LegacyFormatJson {
             }
             var timer = castMap(element).get(LEGACY_KEYS[3]);
             if (timer instanceof List) {
-                var list = new ArrayList<PlayerTimer>(elements.size() + 1);
+                var list = new ArrayList<PlayerTimer>(elements.size());
                 for (var temp : castList(timer)) {
                     list.add(createPlayerTimer(castMap(temp).entrySet()));
                 }

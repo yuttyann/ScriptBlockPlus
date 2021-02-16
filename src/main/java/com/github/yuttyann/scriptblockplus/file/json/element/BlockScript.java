@@ -29,7 +29,6 @@ import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * ScriptBlockPlus BlockScript クラス
  * @author yuttyann44581
