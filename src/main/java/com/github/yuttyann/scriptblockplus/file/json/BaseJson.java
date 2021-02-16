@@ -62,7 +62,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * @author yuttyann44581
      */
     public enum Status {
-        
+
         /**
          * キャッシュが生成されていない状態
          * <p>
@@ -535,6 +535,12 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         return plugin;
     }
 
+    /**
+     * {@link InstanceCreator}を生成します。
+     * @param <T> インスタンスの型
+     * @param newInstance - インスタンスの生成処理
+     * @return {@link InstanceCreator}&lt;{@link T}&gt; - インスタンスクリエイター
+     */
     @NotNull
     private static <T> InstanceCreator<T> newInstace(@NotNull Supplier<T> newInstance) {
         return t -> newInstance.get();
