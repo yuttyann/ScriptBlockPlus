@@ -15,7 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus.utils;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.CommandLog;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
@@ -165,9 +164,6 @@ public final class Utils {
             if (file.exists()) {
                 world = Bukkit.createWorld(WorldCreator.name(name));
             } else {
-                if (name.equals("SC")) {
-                    return BlockCoords.DEFAULT_WORLD;
-                }
                 throw new NullPointerException(name + " does not exist");
             }
         }
