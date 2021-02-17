@@ -51,7 +51,7 @@ public final class ItemHand extends BaseOption {
         var player = getPlayer();
         var handItems = getHandItems(player);
         if (handItems.noneMatch(i -> i.getAmount() >= amount && ItemUtils.getDamage(i) == damage && ItemUtils.compare(i, material, name))) {
-            SBConfig.ERROR_HAND.replace(material, amount, damage, name).send(player);
+            SBConfig.ERROR_HAND.replace(material, amount, damage, StringUtils.setColor(create)).send(player);
             return false;
         }
         return true;

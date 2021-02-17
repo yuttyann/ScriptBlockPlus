@@ -93,21 +93,21 @@ public final class SBConfig {
 
     // Functions (Private)
     private static Function<ReplaceKey, String> FUNCTION_UPDATE_CHECK = r -> {
-        var s = r.getValue();
-        s = replace(s, "%name%", r.getArgment(0, String.class));
-        s = replace(s, "%version%", r.getArgment(1, String.class));
-        if (s.contains("%details%")) {
+        var value = r.getValue();
+        value = replace(value, "%name%", r.getArgment(0, String.class));
+        value = replace(value, "%version%", r.getArgment(1, String.class));
+        if (value.contains("%details%")) {
             @SuppressWarnings("unchecked")
-            var l = (List<String>) r.getArgment(2, List.class);
-            var b = new StringBuilder(l.size());
-            for (int i = 0; i < l.size(); i++) {
-                var info = removeStart(l.get(i), "$");
-                var tree = l.get(i).startsWith("$");
-                b.append(tree ? "  - " : "・").append(info).append(i == (l.size() - 1) ? "" : "|~");
+            var list = (List<String>) r.getArgment(2, List.class);
+            var builder = new StringBuilder(list.size());
+            for (int i = 0; i < list.size(); i++) {
+                var info = removeStart(list.get(i), "$");
+                var tree = list.get(i).startsWith("$");
+                builder.append(tree ? "  - " : "・").append(info).append(i == (list.size() - 1) ? "" : "|~");
             }
-            s = replace(s, "%details%", b.toString());
+            value = replace(value, "%details%", builder.toString());
         }
-        return s;
+        return value;
     };
 
     private static Function<ReplaceKey, String> FUNCTION_SCRIPT_TYPE = r -> {
@@ -115,41 +115,41 @@ public final class SBConfig {
     };
 
     private static Function<ReplaceKey, String> FUNCTION_OPTION_FAILED = r -> {
-        var t = r.getArgment(1, Throwable.class);
-        var s = r.getValue();
-        s = replace(s, "%option%", r.getArgment(0, Option.class).getName());
-        s = replace(s, "%cause%", t.getClass().getSimpleName() + (t.getMessage() == null ? "" : " \"" + t.getMessage() + "\""));
-        return s;
+        var throwable = r.getArgment(1, Throwable.class);
+        var value = r.getValue();
+        value = replace(value, "%option%", r.getArgment(0, Option.class).getName());
+        value = replace(value, "%cause%", throwable.getClass().getSimpleName() + (throwable.getMessage() == null ? "" : " \"" + throwable.getMessage() + "\""));
+        return value;
     };
 
     private static Function<ReplaceKey, String> FUNCTION_ITEM = r -> {
-        var m = r.getArgment(0, Material.class);
-        var n = r.getArgment(3, String.class);
-        var s = r.getValue();
-        s = replace(s, "%material%", String.valueOf(m));
-        s = replace(s, "%amount%", r.getArgment(1, Integer.class));
-        s = replace(s, "%damage%", r.getArgment(2, Integer.class));
-        s = replace(s, "%name%", isEmpty(n) ? String.valueOf(m) : n);
-        return s;
+        var material = r.getArgment(0, Material.class);
+        var name = r.getArgment(3, String.class);
+        var value = r.getValue();
+        value = replace(value, "%material%", String.valueOf(material));
+        value = replace(value, "%amount%", r.getArgment(1, Integer.class));
+        value = replace(value, "%damage%", r.getArgment(2, Integer.class));
+        value = replace(value, "%name%", name);
+        return value;
     };
 
     private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SCRIPT = r -> {
-        var s = r.getValue();
-        s = replace(s, "%scriptkey%", r.getArgment(0, ScriptKey.class).getName());
-        s = replace(s, "%world%", r.getArgment(1, BlockCoords.class).getWorld().getName());
-        s = replace(s, "%coords%", r.getArgment(1, BlockCoords.class).getCoords());
-        return s;
+        var value = r.getValue();
+        value = replace(value, "%scriptkey%", r.getArgment(0, ScriptKey.class).getName());
+        value = replace(value, "%world%", r.getArgment(1, BlockCoords.class).getWorld().getName());
+        value = replace(value, "%coords%", r.getArgment(1, BlockCoords.class).getCoords());
+        return value;
     };
 
     private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SELECTOR = r -> {
-        var c = r.getArgment(1, CuboidRegionIterator.class);
-        var s = r.getValue();
-        s = replace(s, "%scriptkey%", r.getArgment(0, String.class));
-        s = replace(s, "%blockcount%", c.getVolume());
-        s = replace(s, "%world%", c.getWorld().getName());
-        s = replace(s, "%mincoords%", c.getMinimumPoint().getCoords());
-        s = replace(s, "%maxcoords%", c.getMinimumPoint().getCoords());
-        return s;
+        var iterator = r.getArgment(1, CuboidRegionIterator.class);
+        var value = r.getValue();
+        value = replace(value, "%scriptkey%", r.getArgment(0, String.class));
+        value = replace(value, "%blockcount%", iterator.getVolume());
+        value = replace(value, "%world%", iterator.getWorld().getName());
+        value = replace(value, "%mincoords%", iterator.getMinimumPoint().getCoords());
+        value = replace(value, "%maxcoords%", iterator.getMinimumPoint().getCoords());
+        return value;
     };
 
 

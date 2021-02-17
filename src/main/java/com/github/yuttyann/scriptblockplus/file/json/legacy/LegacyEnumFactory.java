@@ -74,9 +74,9 @@ public final class LegacyEnumFactory implements TypeAdapterFactory {
                     if (serializedName != null) {
                         name = serializedName.value();
                     }
-                    var legacyName = field.getAnnotation(Alternate.class);
-                    if (legacyName != null) {
-                        for (var alternate : legacyName.value()) {
+                    var legacyAlternate = field.getAnnotation(Alternate.class);
+                    if (legacyAlternate != null) {
+                        for (var alternate : legacyAlternate.value()) {
                             nameToConstant.put(alternate, constant);
                         }
                     }

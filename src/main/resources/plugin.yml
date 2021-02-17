@@ -5,6 +5,7 @@ description: ${project.description}
 author: yuttyann44581
 website: ${project.url}
 api-version: 1.13
+loadbefore: [ScriptEntityPlus]
 softdepend: [Vault, ScriptBlock, ProtocolLib, PlaceholderAPI]
 
 commands:

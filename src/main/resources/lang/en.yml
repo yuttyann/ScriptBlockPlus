@@ -132,8 +132,8 @@ ErrorGroupMessage: '&cOnly members of the group "%group%" can run the script.'
 # %amount%   : Amount of item
 # %damage%   : Damage value of item
 # %name%     : Item name
-ErrorHandMessage: '&cThe items you hold in hand is not vaild,|~you must hold at least "%name%(%material%:%damage%)" with amount "%amount%x"'
-ErrorItemMessage: '&cThe items in your inventory is not vaild,|~you must keep in your inventory at least "%name%(%material%:%damage%)" with amount "%amount%x"'
+ErrorHandMessage: '&cThe items you hold in hand is not vaild,|~you must hold at least "&r%name%&r[%material%:%damage%]&c" with amount "&r%amount%x&c"'
+ErrorItemMessage: '&cThe items in your inventory is not vaild,|~you must keep in your inventory at least "&r%name%&r[%material%:%damage%]&c" with amount "&r%amount%x&c"'
 
 # %cost%   : Required amount
 # %result% : Missing amount

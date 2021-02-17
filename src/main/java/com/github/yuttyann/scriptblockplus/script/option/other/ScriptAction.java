@@ -39,9 +39,8 @@ public final class ScriptAction extends BaseOption {
         if (!getTempMap().has(KEY)) {
             return false;
         }
-        var array = StringUtils.split(getOptionValue(), ',');
         var action = (Action) getTempMap().get(KEY);
-        return StreamUtils.allMatch(array, s -> equals(action, s));
+        return StreamUtils.allMatch(StringUtils.split(getOptionValue(), ','), s -> equals(action, s));
     }
 
     private boolean equals(@Nullable Action action, @NotNull String type) {

@@ -100,11 +100,11 @@ public final class LegacyReflectiveFactory implements TypeAdapterFactory {
             return Collections.singletonList(fieldNamingPolicy.translateName(field));
         }
         var value = serializedName.value();
-        var alternate = field.getAnnotation(Alternate.class);
-        if (alternate == null) {
+        var legacyAlternate = field.getAnnotation(Alternate.class);
+        if (legacyAlternate == null) {
             return Collections.singletonList(value);
         }
-        var alternates = alternate.value();
+        var alternates = legacyAlternate.value();
         if (alternates.length == 0) {
             return Collections.singletonList(value);
         }

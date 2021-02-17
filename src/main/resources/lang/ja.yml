@@ -131,9 +131,9 @@ ErrorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプ�
 # %material% : アイテムのID
 # %amount%   : アイテムの個数
 # %damage%   : アイテムのダメージ値
-# %name%     : アイテムの名前(アイテム名が無い場合は"アイテムID"と同じになります。)
-ErrorHandMessage: '&cアイテム"&r%name%(%material%:%damage%)&r &e%amount%個&c"を持っていません。'
-ErrorItemMessage: '&cアイテム"&r%name%(%material%:%damage%)&r &e%amount%個&c"を所持していません。'
+# %name%     : アイテムの名前
+ErrorHandMessage: '&cアイテム"&r%name%&r[%material%:%damage%] &e%amount%個&c"を持っていません。'
+ErrorItemMessage: '&cアイテム"&r%name%&r[%material%:%damage%] &e%amount%個&c"を所持していません。'
 
 # %cost%   : 必要な金額
 # %result% : 足りない金額

@@ -71,7 +71,6 @@ public final class PlayerTimerJson extends ThreeJson<UUID, ScriptKey, BlockCoord
             if (!oldUUID.equals(timerJson.getName())) {
                 uuid = UUID.fromString(timerJson.getName());
             }
-            System.out.println("UUID: " + (uuid == null ? "null" : uuid));
             var removed = false;
             reuseIterator.reset();
             while (reuseIterator.hasNext()) {
