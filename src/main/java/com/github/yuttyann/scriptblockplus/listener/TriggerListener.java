@@ -196,7 +196,6 @@ public abstract class TriggerListener<E extends Event> implements Listener {
             return;
         }
         var player = trigger.getPlayer();
-        trigger.block = blockCoords.getBlock();
         if (!trigger.call(Progress.PERM) || !Permission.has(player, scriptKey, false)) {
             SBConfig.NOT_PERMISSION.send(player);
             return;
@@ -258,7 +257,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
          */
         @NotNull
         public Block getBlock() {
-            return block;
+            return block == null ? this.block = blockCoords.getBlock() : block;
         }
 
         /**
