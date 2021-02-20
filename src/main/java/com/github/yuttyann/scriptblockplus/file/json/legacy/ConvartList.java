@@ -66,7 +66,7 @@ public final class ConvartList {
     }
 
     /**
-     * フォーマットバージョンを保存します。
+     * {@link ConvartList}を作成します。
      * @param plugin - プラグイン
      * @param folder - フォルダの名前(例: json)
      * @return {@link ConvartList} - コンバートリスト
