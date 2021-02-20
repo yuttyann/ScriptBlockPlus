@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus BlockCoordsAdapter クラス
  * @author yuttyann44581
  */
-public class BlockCoordsAdapter implements JsonSerializer<BlockCoords>, JsonDeserializer<BlockCoords> {
+public final class BlockCoordsAdapter implements JsonSerializer<BlockCoords>, JsonDeserializer<BlockCoords> {
 
     @Override
     @NotNull

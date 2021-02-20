@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus Scheduler クラス
  * @author yuttyann44581
  */
-public class Scheduler {
+public final class Scheduler {
 
     private Plugin plugin;
 

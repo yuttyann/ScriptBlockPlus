@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus PlayerCooldown クラス
  * @author yuttyann44581
  */
-public class PlayerTimer extends ThreeElement<UUID, ScriptKey, BlockCoords> {
+public final class PlayerTimer extends ThreeElement<UUID, ScriptKey, BlockCoords> {
 
     @SerializedName("time")
     private long[] time;
@@ -77,8 +77,8 @@ public class PlayerTimer extends ThreeElement<UUID, ScriptKey, BlockCoords> {
     }
 
     @NotNull
-    public void setTime(@NotNull long... params) {
-        this.time = params;
+    public void setTime(@NotNull long... time) {
+        this.time = time;
     }
 
     public int getSecond() {

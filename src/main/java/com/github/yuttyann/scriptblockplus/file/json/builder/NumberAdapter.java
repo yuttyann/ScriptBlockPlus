@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus NumberAdapter クラス
  * @author yuttyann44581
  */
-public class NumberAdapter extends TypeAdapter<Object> {
+public final class NumberAdapter extends TypeAdapter<Object> {
 
     private final TypeAdapter<Object> DELEGATE = BaseJson.GSON_HOLDER.getGson().getAdapter(Object.class);
 

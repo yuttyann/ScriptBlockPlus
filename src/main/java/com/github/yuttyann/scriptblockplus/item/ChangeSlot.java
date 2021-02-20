@@ -27,7 +27,7 @@ import java.util.Optional;
  * ScriptBlockPlus ChangeSlot クラス
  * @author yuttyann44581
  */
-public class ChangeSlot {
+public final class ChangeSlot {
 
     private final Player player;
     private final int newSlot;

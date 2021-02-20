@@ -27,7 +27,7 @@ import java.util.function.Function;
  * ScriptBlockPlus ConfigKeys クラス
  * @author yuttyann44581
  */
-public class ConfigKeys {
+public final class ConfigKeys {
 
     private static final Map<String, Object> NODE = new HashMap<>();
     private static final ConfigAdapter ADAPTER = new ConfigAdapter(NODE);

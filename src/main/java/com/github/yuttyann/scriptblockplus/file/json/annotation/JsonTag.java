@@ -24,7 +24,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * ScriptBlockPlus JsonOptions 注釈
+ * ScriptBlockPlus JsonTag 注釈
  * @author yuttyann44581
  */
 @Target(TYPE)

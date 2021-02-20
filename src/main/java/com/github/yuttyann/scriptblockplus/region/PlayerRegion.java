@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus PlayerRegion クラス
  * @author yuttyann44581
  */
-public class PlayerRegion implements Region {
+public final class PlayerRegion implements Region {
 
     private final World world;
     private final int x;

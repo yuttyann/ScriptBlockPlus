@@ -23,6 +23,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * ScriptBlockPlus Exclude 注釈
+ * <p>
+ * この注釈を付与することで、デシリアライズをスルーすることが出来ます。
  * @author yuttyann44581
  */
 @Target(FIELD)

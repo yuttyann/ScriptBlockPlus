@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus EndInventory エンドプロセスクラス
  * @author yuttyann44581
  */
-public class EndInventory implements EndProcess {
+public final class EndInventory implements EndProcess {
 
     private static final ItemStack[] EMPTY_ARRAY = new ItemStack[0];
 

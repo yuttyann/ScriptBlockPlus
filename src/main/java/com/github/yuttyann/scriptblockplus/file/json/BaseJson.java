@@ -109,7 +109,6 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
             b.registerTypeAdapter(List.class, new NumberAdapter());
             b.registerTypeAdapter(ScriptKey.class, new ScriptKeyAdapter());
             b.registerTypeHierarchyAdapter(BlockCoords.class, new BlockCoordsAdapter());
-            b.registerTypeAdapter(HashSet.class, newInstace(HashSet::new));
             b.registerTypeAdapter(BlockScript.class, newInstace(() -> new BlockScript(BlockCoords.ZERO)));
             b.registerTypeAdapter(PlayerCount.class, newInstace(() -> new PlayerCount(ScriptKey.INTERACT, BlockCoords.ZERO)));
             b.registerTypeAdapter(PlayerTimer.class, newInstace(() -> new PlayerTimer(null, ScriptKey.INTERACT, BlockCoords.ZERO))); 

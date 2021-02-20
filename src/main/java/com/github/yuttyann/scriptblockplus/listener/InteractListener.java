@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * ScriptBlockPlus InteractListener クラス
  * @author yuttyann44581
  */
-public class InteractListener implements Listener {
+public final class InteractListener implements Listener {
 
     private static final String KEY_ENTITY = Utils.randomUUID();
     private static final String KEY_ANIMATION = Utils.randomUUID();

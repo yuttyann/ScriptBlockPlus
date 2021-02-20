@@ -34,10 +34,10 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * ScriptBlockPlus ScriptClipboard クラス
+ * ScriptBlockPlus SBClipboard クラス
  * @author yuttyann44581
  */
-public class SBClipboard {
+public final class SBClipboard {
 
     private final SBPlayer sbPlayer;
     private final ScriptKey scriptKey;

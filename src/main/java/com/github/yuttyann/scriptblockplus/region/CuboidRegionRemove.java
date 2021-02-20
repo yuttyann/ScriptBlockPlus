@@ -34,7 +34,7 @@ import java.util.Set;
  * ScriptBlockPlus CuboidRegionRemove クラス
  * @author yuttyann44581
  */
-public class CuboidRegionRemove {
+public final class CuboidRegionRemove {
 
     private final Region region;
     private final Set<ScriptKey> scriptKeys;

@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus InteractTrigger クラス
  * @author yuttyann44581
  */
-public class InteractTrigger extends TriggerListener<BlockClickEvent> {
+public final class InteractTrigger extends TriggerListener<BlockClickEvent> {
 
     public InteractTrigger(@NotNull ScriptBlock plugin) {
         super(plugin, ScriptKey.INTERACT, EventPriority.HIGH);

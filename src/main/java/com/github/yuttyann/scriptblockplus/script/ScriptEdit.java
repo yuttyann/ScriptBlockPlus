@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus ScriptEdit クラス
  * @author yuttyann44581
  */
-public class ScriptEdit {
+public final class ScriptEdit {
 
     private final ScriptKey scriptKey;
     private final ActionKey actionKey;

@@ -38,7 +38,7 @@ import org.bukkit.event.block.BlockPhysicsEvent;
  * ScriptBlockPlus BlockListener クラス
  * @author yuttyann44581
  */
-public class BlockListener implements Listener {
+public final class BlockListener implements Listener {
 
     private static final Set<BlockCoords> REDSTONE_FLAG = new HashSet<>();
 

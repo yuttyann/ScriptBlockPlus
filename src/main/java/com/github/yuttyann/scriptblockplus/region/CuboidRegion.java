@@ -30,7 +30,7 @@ import static java.lang.Math.max;
  * ScriptBlockPlus CuboidRegion クラス
  * @author yuttyann44581
  */
-public class CuboidRegion implements Region {
+public final class CuboidRegion implements Region {
 
     private BlockCoords pos1;
     private BlockCoords pos2;

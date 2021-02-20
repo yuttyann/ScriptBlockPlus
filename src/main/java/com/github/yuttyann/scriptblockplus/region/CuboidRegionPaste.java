@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus CuboidRegionPaste クラス
  * @author yuttyann44581
  */
-public class CuboidRegionPaste {
+public final class CuboidRegionPaste {
 
     private final Region region;
     private final ScriptKey scriptKey;

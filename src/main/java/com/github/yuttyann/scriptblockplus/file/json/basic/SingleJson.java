@@ -63,7 +63,7 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
      */
     @Override
     @NotNull
-    protected IntMap<E> createMap() {
+    protected final IntMap<E> createMap() {
         return new IntSingleMap<>();
     }
 

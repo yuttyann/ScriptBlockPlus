@@ -25,7 +25,7 @@ import java.util.Map;
  * @author yuttyann44581
  */
 @SuppressWarnings("unchecked")
-public class ConfigAdapter {
+public final class ConfigAdapter {
 
     private final Map<String, Object> map;
 

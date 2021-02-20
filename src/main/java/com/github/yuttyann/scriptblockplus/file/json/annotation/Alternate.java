@@ -27,7 +27,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * ScriptBlockPlus Alternate 注釈
  * <p>
- * Gsonのバージョンが古い場合に呼び出される。
+ * Gsonのバージョンが古い場合に呼び出されます。
  * <p>
  * {@link SerializedName#alternate()}と同等の機能を持っています。
  * @author yuttyann44581

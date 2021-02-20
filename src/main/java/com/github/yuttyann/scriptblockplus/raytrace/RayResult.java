@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus RayResult クラス
  * @author yuttyann44581
  */
-public class RayResult {
+public final class RayResult {
 
     private Block block;
     private BlockFace blockFace;

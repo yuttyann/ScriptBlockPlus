@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus FieldExclusion クラス
  * @author yuttyann44581
  */
-public class FieldExclusion implements ExclusionStrategy {
+public final class FieldExclusion implements ExclusionStrategy {
 
     @Override
     public boolean shouldSkipField(@NotNull FieldAttributes field) {

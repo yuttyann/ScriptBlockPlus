@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus WalkTrigger クラス
  * @author yuttyann44581
  */
-public class WalkTrigger extends TriggerListener<PlayerMoveEvent> {
+public final class WalkTrigger extends TriggerListener<PlayerMoveEvent> {
 
     public WalkTrigger(@NotNull ScriptBlock plugin) {
         super(plugin, ScriptKey.WALK, EventPriority.HIGH);

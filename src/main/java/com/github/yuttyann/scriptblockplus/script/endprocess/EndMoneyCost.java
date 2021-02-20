@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus EndMoneyCost エンドプロセスクラス
  * @author yuttyann44581
  */
-public class EndMoneyCost implements EndProcess {
+public final class EndMoneyCost implements EndProcess {
 
     @Override
     public void success(@NotNull SBRead sbRead) { }

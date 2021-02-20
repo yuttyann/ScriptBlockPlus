@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus ScriptKeyAdapter クラス
  * @author yuttyann44581
  */
-public class ScriptKeyAdapter implements JsonSerializer<ScriptKey>, JsonDeserializer<ScriptKey> {
+public final class ScriptKeyAdapter implements JsonSerializer<ScriptKey>, JsonDeserializer<ScriptKey> {
 
     @Override
     @NotNull

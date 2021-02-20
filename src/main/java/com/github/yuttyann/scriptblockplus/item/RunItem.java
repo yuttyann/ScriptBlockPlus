@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus RunItem クラス
  * @author yuttyann44581
  */
-public class RunItem {
+public final class RunItem {
 
     private final ItemStack item;
     private final Player player;
