@@ -109,9 +109,9 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
             b.registerTypeAdapter(List.class, new NumberAdapter());
             b.registerTypeAdapter(ScriptKey.class, new ScriptKeyAdapter());
             b.registerTypeHierarchyAdapter(BlockCoords.class, new BlockCoordsAdapter());
-            b.registerTypeAdapter(BlockScript.class, newInstace(() -> new BlockScript(BlockCoords.ZERO)));
-            b.registerTypeAdapter(PlayerCount.class, newInstace(() -> new PlayerCount(ScriptKey.INTERACT, BlockCoords.ZERO)));
-            b.registerTypeAdapter(PlayerTimer.class, newInstace(() -> new PlayerTimer(null, ScriptKey.INTERACT, BlockCoords.ZERO))); 
+            b.registerTypeAdapter(BlockScript.class, newInstance(() -> new BlockScript(BlockCoords.ZERO)));
+            b.registerTypeAdapter(PlayerCount.class, newInstance(() -> new PlayerCount(ScriptKey.INTERACT, BlockCoords.ZERO)));
+            b.registerTypeAdapter(PlayerTimer.class, newInstance(() -> new PlayerTimer(null, ScriptKey.INTERACT, BlockCoords.ZERO))); 
         });
     }
 
@@ -541,7 +541,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * @return {@link InstanceCreator}&lt;{@link T}&gt; - インスタンスクリエイター
      */
     @NotNull
-    private static <T> InstanceCreator<T> newInstace(@NotNull Supplier<T> newInstance) {
+    private static <T> InstanceCreator<T> newInstance(@NotNull Supplier<T> newInstance) {
         return t -> newInstance.get();
     }
 
