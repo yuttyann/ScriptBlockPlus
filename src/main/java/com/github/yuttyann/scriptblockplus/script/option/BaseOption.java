@@ -127,7 +127,7 @@ public abstract class BaseOption extends Option {
 
     /**
      * スクリプトを何番目まで実行したのか取得します。
-     * @return {@link Integer} - 進行度
+     * @return {@link int} - 進行度
      */
     protected final int getScriptIndex() {
         return sbRead.getScriptIndex();

@@ -99,8 +99,8 @@ public abstract class Option implements Comparable<Option> {
     }
 
     /**
-     * 失敗時に終了処理を無視します（デフォルトはfalseです）
-     * @return {@link boolean} - trueの場合は終了処理を無視し、falseの場合は実行します。
+     * 失敗時に終了処理を無視するのかどうか。
+     * @return {@link boolean} - 終了処理を無視する場合は{@code true}
      */
     public boolean isFailedIgnore() {
         return false;
