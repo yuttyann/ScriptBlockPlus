@@ -136,14 +136,14 @@ public abstract class BaseOption extends Option {
     /**
      * オプションの処理を実行します。
      * @throws Exception オプションの処理内で例外が発生した時にスローされます。
-     * @return {@link Boolean} - 有効な場合は{@code true}
+     * @return {@link boolean} - 有効な場合は{@code true}
      */
     protected abstract boolean isValid() throws Exception;
 
     /**
      * オプションの処理を実行します。
      * @param sbRead - {@link SBRead}
-     * @return {@link Boolean} - 有効な場合は{@code true}
+     * @return {@link boolean} - 有効な場合は{@code true}
      */
     @Override
     @Deprecated
