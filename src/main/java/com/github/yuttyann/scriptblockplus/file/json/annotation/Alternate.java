@@ -37,7 +37,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Alternate {
 
     /**
-     * @return {@link String} - デシリアライズされた時の代替名を返します。
+     * デシリアライズした時の代替名を取得します。
+     * @return {@link String} - 代替名
      */
     String[] value() default {};
 }

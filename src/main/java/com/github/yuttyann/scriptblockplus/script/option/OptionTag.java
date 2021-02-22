@@ -23,13 +23,25 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * ScriptBlockPlus OptionTag 注釈
+ * @author yuttyann44581
+ */
 @Target(TYPE)
 @Retention(RUNTIME)
 public @interface OptionTag {
 
+    /**
+     * オプションの名前を取得します。
+     * @return {@link String} - オプションの名前
+     */
     @NotNull
     String name();
 
+    /**
+     * オプションの構文を取得します。
+     * @return {@link String} - オプションの構文
+     */
     @NotNull
     String syntax();
 }
