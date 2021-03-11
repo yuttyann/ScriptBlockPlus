@@ -52,7 +52,7 @@ public final class CuboidRegionIterator implements Iterator<BlockCoords> {
     }
 
     public void reset() {
-        nextX = nextZ = nextY = volume = 0;
+        this.nextX = nextZ = nextY = volume = 0;
         hasNext();
     }
 

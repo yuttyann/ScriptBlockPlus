@@ -131,6 +131,15 @@ public class ItemUtils {
         return item.getDurability();
     }
 
+    public static boolean isAIR(@NotNull Material material) {
+        if (Utils.isCBXXXorLater("1.14.4")) {
+            return material.isAir();
+        } else if (!Utils.isCBXXXorLater("1.13")) {
+            return material == Material.AIR;
+        }
+        return material.name().endsWith("AIR");
+    }
+
     public static boolean compare(@Nullable ItemStack item, @Nullable Material material, @NotNull String name) {
         return compare(item, material, name::equals);
     }

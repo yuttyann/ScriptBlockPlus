@@ -25,7 +25,6 @@ import com.google.common.base.Splitter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
@@ -179,17 +178,5 @@ public final class Utils {
     public static String getName(@NotNull UUID uuid) {
         var player = Bukkit.getOfflinePlayer(uuid);
         return !player.hasPlayedBefore() ? "null" : player.getName();
-    }
-
-    public static boolean isAIR(@NotNull Material material) {
-        if (!material.isBlock()) {
-            return false;
-        }
-        if (isCBXXXorLater("1.14.4")) {
-            return material.isAir();
-        } else if (!isCBXXXorLater("1.13")) {
-            return material == Material.AIR;
-        }
-        return material.name().endsWith("AIR");
     }
 }
