@@ -45,5 +45,5 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 **[[Dropbox, JP]](https://www.dropbox.com/sh/gj8vunx95785y2d/AABdP-kJhEilLHWMWZtaWgQma)**  
 **[[MCPoteton, JP]](https://mcpoteton.com/mcplugin-scriptblockplus)**  
 **[[SpigotMC, EN]](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/)**  
-**[[CurseForge, EN]](https://www.curseforge.com/minecraft/bukkit-plugins/scriptblockplus)** 
+**[[CurseForge, EN]](https://www.curseforge.com/minecraft/bukkit-plugins/scriptblockplus)**  
 **[[MCBBS, ZH]](https://www.mcbbs.net/thread-691900-1-1.html)**
