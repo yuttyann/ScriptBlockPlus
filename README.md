@@ -19,7 +19,7 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 ### 連携プラグイン
 | Plugin | Description | Version |
 |:---|:---|:---:|
-| [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)  | パケットの補助 | **ALL** |
+| [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)  | 検索機能とパケットの拡張 | **ALL** |
 | [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの拡張 | **ALL** |
 | [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定 | **ALL** |
 
@@ -41,9 +41,9 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 
 リンク
 -----------
-**[[Github, JP-プラグインの詳細]](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91)**  
-**[[Dropbox, JP-ファイルの一覧]](https://www.dropbox.com/sh/gj8vunx95785y2d/AABdP-kJhEilLHWMWZtaWgQma)**  
-**[[MCPoteton, JP-使い方と機能の紹介]](https://mcpoteton.com/mcplugin-scriptblockplus)**  
-**[[SpigotMC, EN-Explanation of the plugin]](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/)**  
-**[[MCBBS, ZH-插件说明]](https://www.mcbbs.net/thread-691900-1-1.html)**  
-**[[Readme.md, History]](https://github.com/yuttyann/ScriptBlockPlus/commits/master/README.md)**
+**[[Github, JP]](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91)**  
+**[[Dropbox, JP]](https://www.dropbox.com/sh/gj8vunx95785y2d/AABdP-kJhEilLHWMWZtaWgQma)**  
+**[[MCPoteton, JP]](https://mcpoteton.com/mcplugin-scriptblockplus)**  
+**[[SpigotMC, EN]](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/)**  
+**[[CurseForge, EN]](https://www.curseforge.com/minecraft/bukkit-plugins/scriptblockplus)** 
+**[[MCBBS, ZH]](https://www.mcbbs.net/thread-691900-1-1.html)**
