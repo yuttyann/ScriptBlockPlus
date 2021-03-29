@@ -38,8 +38,8 @@ public class Split {
      * @param start - 括弧の始め(上記の例で表すと、{@code [}に相当する文字列です。)
      * @param end - 括弧の終わり(上記の例で表すと、{@code ]}に相当する文字列です。)
      */
-    public Split(@NotNull String source, @NotNull String tag, @NotNull String start, @NotNull String end) {
-        this(source, tag, start, end, 0);
+    public Split(@NotNull String source, @NotNull String name, @NotNull String start, @NotNull String end) {
+        this(source, name, start, end, 0);
     }
 
     /**

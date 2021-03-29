@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.selector;
 
+import com.github.yuttyann.scriptblockplus.enums.splittype.Argment;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -69,8 +70,8 @@ public class SplitValue {
     }
 
     /**
-     * 否定演算子が存在するのかどうか。
-     * @return {@link boolean} - 存在する場合は{@code true}
+     * 否定形なのかどうか。
+     * @return {@link boolean} - 否定形な場合は{@code true}
      */
     public boolean isInverted() {
         if (cacheInverted == null && StringUtils.isNotEmpty(value)) {
