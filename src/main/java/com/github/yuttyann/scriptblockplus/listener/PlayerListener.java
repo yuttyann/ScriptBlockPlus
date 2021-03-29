@@ -22,9 +22,9 @@ import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.bridge.nms.GlowEntity;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
+import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntity;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;

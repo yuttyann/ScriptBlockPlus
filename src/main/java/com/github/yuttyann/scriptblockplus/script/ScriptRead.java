@@ -16,13 +16,13 @@
 package com.github.yuttyann.scriptblockplus.script;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.bridge.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
+import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;

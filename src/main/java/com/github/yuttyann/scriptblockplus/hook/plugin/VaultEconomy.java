@@ -13,11 +13,11 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.bridge.plugin;
+package com.github.yuttyann.scriptblockplus.hook.plugin;
 
 import net.milkbowl.vault.economy.Economy;
 
-import com.github.yuttyann.scriptblockplus.bridge.HookPlugin;
+import com.github.yuttyann.scriptblockplus.hook.HookPlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

@@ -16,8 +16,8 @@
 package com.github.yuttyann.scriptblockplus.selector;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.bridge.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;

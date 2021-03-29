@@ -15,8 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
-import com.github.yuttyann.scriptblockplus.bridge.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.Utils;

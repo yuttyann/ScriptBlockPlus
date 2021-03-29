@@ -15,8 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
-import com.github.yuttyann.scriptblockplus.bridge.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.enums.CommandLog;
+import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;

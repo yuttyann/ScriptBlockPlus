@@ -15,7 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.script.endprocess;
 
-import com.github.yuttyann.scriptblockplus.bridge.plugin.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
 import org.jetbrains.annotations.NotNull;

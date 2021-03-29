@@ -15,9 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus;
 
-import com.github.yuttyann.scriptblockplus.bridge.nms.GlowEntity;
-import com.github.yuttyann.scriptblockplus.bridge.plugin.VaultEconomy;
-import com.github.yuttyann.scriptblockplus.bridge.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.command.BaseCommand;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
@@ -27,6 +24,9 @@ import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.ConvartList;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.LegacyFormatJson;
+import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntity;
+import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.listener.*;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.action.BlockSelector;
