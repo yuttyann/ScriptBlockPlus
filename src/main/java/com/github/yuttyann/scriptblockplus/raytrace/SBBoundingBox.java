@@ -74,9 +74,9 @@ public final class SBBoundingBox {
             setSquare(block);
         } else {
             if (Utils.isCBXXXorLater("1.13.2")) {
-                var box = block.getBoundingBox();
-                double minX = box.getMinX(), minY = box.getMinY(), minZ = box.getMinZ();
-                double maxX = box.getMaxX(), maxY = box.getMaxY(), maxZ = box.getMaxZ();
+                var boundingBox = block.getBoundingBox();
+                double minX = boundingBox.getMinX(), minY = boundingBox.getMinY(), minZ = boundingBox.getMinZ();
+                double maxX = boundingBox.getMaxX(), maxY = boundingBox.getMaxY(), maxZ = boundingBox.getMaxZ();
                 setXYZ(minX, minY, minZ, maxX, maxY, maxZ);
             } else {
                 try {

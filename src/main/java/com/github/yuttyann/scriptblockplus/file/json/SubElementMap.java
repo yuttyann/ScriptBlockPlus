@@ -17,9 +17,9 @@ package com.github.yuttyann.scriptblockplus.file.json;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Predicate;
 
 import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
 
 import org.jetbrains.annotations.NotNull;

@@ -24,14 +24,14 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus IntMap インターフェース
- * @param <V> 値の型
+ * @param <V> the type of mapped values
  * @author yuttyann44581
  */
 public interface IntMap<V> extends Map<Integer, V> {
 
     /**
      * ScriptBlockPlus IntEntry インターフェース
-     * @param <V> 値の型
+     * @param <V> the type of mapped values
      * @author yuttyann44581
      */
     public interface IntEntry<V> {
@@ -89,8 +89,8 @@ public interface IntMap<V> extends Map<Integer, V> {
     boolean containsKey(int key);
 
     /**
-     * Gets an iterable to traverse over the int entries contained in this map. As an optimization,
-     * the {@link IntEntry}s returned by the {@link Iterator} may change as the {@link Iterator}
+     * Gets an iterable to traverse over the int entries contained in this map.
+     * As an optimization, the {@link IntEntry}s returned by the {@link Iterator} may change as the {@link Iterator}
      * progresses. The caller should not rely on {@link IntEntry} key/value stability.
      * @return iterable object of the mapping contained in this map.
      */

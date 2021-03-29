@@ -16,13 +16,13 @@
 package com.github.yuttyann.scriptblockplus.script;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.bridge.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
-import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
@@ -31,6 +31,7 @@ import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
+import com.google.common.collect.Iterators;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -164,7 +165,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
         try {
             var parse = new ArrayList<String>();
             for (int i = 0, l = scripts.size(); i < l; i++) {
-                parse.addAll(StringUtils.parseScript(scripts.get(i)));
+                Iterators.addAll(parse, StringUtils.parseScript(scripts.get(i)).iterator());
             }
             SBConfig.SORT_SCRIPTS.ifPresentAndTrue(s -> OptionManager.sort(parse));
             this.scripts = Collections.unmodifiableList(parse);

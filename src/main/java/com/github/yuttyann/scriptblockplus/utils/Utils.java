@@ -64,7 +64,7 @@ public final class Utils {
     @NotNull
     public static String getServerVersion() {
         if (SERVER_VERSION == null) {
-            String version = Bukkit.getBukkitVersion();
+            var version = Bukkit.getBukkitVersion();
             return version.substring(0, version.indexOf("-"));
         }
         return SERVER_VERSION;
@@ -77,7 +77,7 @@ public final class Utils {
     }
 
     public static boolean isCBXXXorLater(@NotNull String version) {
-        Boolean result = VERSION_CACHE.get(version);
+        var result = VERSION_CACHE.get(version);
         if (result == null) {
             VERSION_CACHE.put(version, result = isUpperVersion(getServerVersion(), version));
         }
@@ -147,10 +147,7 @@ public final class Utils {
         var commandSender = sender instanceof SBPlayer ? ((SBPlayer) sender).getPlayer() : sender;
         if (CommandSelector.has(command)) {
             var commands = CommandSelector.build(commandSender, location, command);
-            if (commands.isEmpty()) {
-                return false;
-            }
-            return StreamUtils.allMatch(commands, s -> Bukkit.dispatchCommand(commandSender, s));
+            return !commands.isEmpty() && StreamUtils.allMatch(commands, s -> Bukkit.dispatchCommand(commandSender, s));
         }
         return Bukkit.dispatchCommand(commandSender, command);
     }

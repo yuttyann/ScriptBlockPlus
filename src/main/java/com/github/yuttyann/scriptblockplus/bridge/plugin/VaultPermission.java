@@ -13,10 +13,12 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.hook.plugin;
+package com.github.yuttyann.scriptblockplus.bridge.plugin;
 
-import com.github.yuttyann.scriptblockplus.hook.HookPlugin;
 import net.milkbowl.vault.permission.Permission;
+
+import com.github.yuttyann.scriptblockplus.bridge.HookPlugin;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;

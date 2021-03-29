@@ -19,11 +19,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.bridge.nms.GlowEntity;
+import com.github.yuttyann.scriptblockplus.bridge.nms.GlowEntityPacket;
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
-import com.github.yuttyann.scriptblockplus.hook.protocol.GlowEntity;
-import com.github.yuttyann.scriptblockplus.hook.protocol.GlowEntityPacket;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionIterator;
@@ -52,12 +51,10 @@ import org.jetbrains.annotations.Nullable;
 public final class TickRunnable implements Runnable {
 
     private static final int PLAYER_RANGE = 15;
-    private static final int PARTICLE_RANGE = 10;
 
     private static final String KEY = Utils.randomUUID();
     private static final String KEY_TEMP = Utils.randomUUID();
-    private static final boolean HAS_PROTOCOLLIB = ProtocolLib.INSTANCE.has();
-    private static final GlowEntityPacket GLOW_ENTITY_PACKET = ProtocolLib.GLOW_ENTITY;
+    private static final GlowEntityPacket GLOW_ENTITY_PACKET = GlowEntity.DEFAULT;
 
     private int tick = 0;
 
@@ -81,18 +78,12 @@ public final class TickRunnable implements Runnable {
     }
 
     private void tick(@NotNull SBPlayer sbPlayer, int tick) throws Exception {
-        if (HAS_PROTOCOLLIB) {
-            lookBlocks(sbPlayer);
-            if (tick % 5 == 0) {
-                sendParticles(sbPlayer, true);
-            }
-            if (tick % 10 == 0) {
-                spawnGlowEntity(sbPlayer);
-            }
-        } else {
-            if (tick % 10 == 0) {
-                sendParticles(sbPlayer, false);
-            }
+        lookBlocks(sbPlayer);
+        if (tick % 5 == 0) {
+            sendParticles(sbPlayer, true);
+        }
+        if (tick % 10 == 0) {
+            spawnGlowEntity(sbPlayer);
         }
     }
 
@@ -152,19 +143,9 @@ public final class TickRunnable implements Runnable {
     }
 
     private void sendParticles(@NotNull SBPlayer sbPlayer, final boolean hasProtocolLib) throws Exception {
-        if (hasProtocolLib) {
-            for (var blockCoords : getBlockCoords(sbPlayer, KEY_TEMP)) {
-                var block = blockCoords.getBlock();
-                spawnParticlesOnBlock(sbPlayer.getPlayer(), block, ItemUtils.isAIR(block.getType()) ? Color.BLUE : Color.GREEN);
-            }
-        } else {
-            var count = new int[] { 0 };
-            var player = sbPlayer.getPlayer();
-            forEach(new PlayerRegion(player, PARTICLE_RANGE), b -> {
-                if (count[0]++ < 800) {
-                    spawnParticlesOnBlock(player, b.getBlock(), null);
-                }
-            });
+        for (var blockCoords : getBlockCoords(sbPlayer, KEY_TEMP)) {
+            var block = blockCoords.getBlock();
+            spawnParticlesOnBlock(sbPlayer.getPlayer(), block, ItemUtils.isAIR(block.getType()) ? Color.BLUE : Color.GREEN);
         }
     }
 

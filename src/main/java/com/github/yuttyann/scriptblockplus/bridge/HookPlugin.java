@@ -13,39 +13,29 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.enums;
+package com.github.yuttyann.scriptblockplus.bridge;
 
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ScriptBlockPlus Filter 列挙型
+ * ScriptBlockPlus HookPlugin クラス
  * @author yuttyann44581
  */
-public enum Filter {
-    OP("op="),
-    PERM("perm="),
-    LIMIT("limit=");
+public abstract class HookPlugin {
 
-    private final String syntax;
-
-    Filter(@NotNull String syntax) {
-        this.syntax = syntax;
-    }
-
+    /**
+     * プラグイン名を取得します。
+     * @return プラグイン名
+     */
     @NotNull
-    public String getValue(@NotNull String source) {
-        return StringUtils.removeStart(source, syntax);
-    }
+    public abstract String getPluginName();
 
-    @NotNull
-    public String getSyntax() {
-        return syntax;
-    }
-
-    @NotNull
-    public static String getPrefix() {
-        return "filter{";
+    /**
+     * プラグインが有効なのか確認します。
+     * @return プラグインが有効な場合は{@code true}
+     */
+    public final boolean has() {
+        return Bukkit.getPluginManager().isPluginEnabled(getPluginName());
     }
 }

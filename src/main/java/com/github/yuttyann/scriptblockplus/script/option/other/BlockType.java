@@ -42,16 +42,16 @@ public final class BlockType extends BaseOption {
         if (StringUtils.isEmpty(type)) {
             return false;
         }
-        var array = StringUtils.split(StringUtils.removeStart(type, Utils.MINECRAFT), ':');
-        if (Calculation.REALNUMBER_PATTERN.matcher(array[0]).matches()) {
+        var blockId = StringUtils.split(StringUtils.removeStart(type, Utils.MINECRAFT), ':');
+        if (Calculation.REALNUMBER_PATTERN.matcher(blockId.get(0)).matches()) {
             Utils.sendColorMessage(getSBPlayer(), "§cNumerical values can not be used");
             return false;
         }
-        var material = ItemUtils.getMaterial(array[0]);
+        var material = ItemUtils.getMaterial(blockId.get(0));
         if (material == null || !material.isBlock()) {
             return false;
         }
-        byte data = array.length == 2 ? Byte.parseByte(array[1]) : -1;
+        byte data = blockId.size() == 2 ? Byte.parseByte(blockId.get(1)) : -1;
         return material == block.getType() && (data == -1 || data == getData(block));
     }
 

@@ -13,27 +13,46 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.script.endprocess;
+package com.github.yuttyann.scriptblockplus.enums.splittype;
 
-import com.github.yuttyann.scriptblockplus.bridge.plugin.VaultEconomy;
-import com.github.yuttyann.scriptblockplus.script.SBRead;
-import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
+import com.github.yuttyann.scriptblockplus.selector.SplitType;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ScriptBlockPlus EndMoneyCost エンドプロセスクラス
+ * ScriptBlockPlus Filter 列挙型
  * @author yuttyann44581
  */
-public final class EndMoneyCost implements EndProcess {
+public enum Filter implements SplitType {
+    OP("op="),
+    PERM("perm="),
+    LIMIT("limit=");
+
+    private final String syntax;
+
+    Filter(@NotNull String syntax) {
+        this.syntax = syntax;
+    }
+
+    @NotNull
+    public String getSyntax() {
+        return syntax;
+    }
+
+    @NotNull
+    public static String getPrefix() {
+        return "filter{";
+    }
 
     @Override
-    public void success(@NotNull SBRead sbRead) { }
+    @NotNull
+    public String getValue(@NotNull String argment) {
+        return StringUtils.removeStart(argment, syntax);
+    }
 
     @Override
-    public void failed(@NotNull SBRead sbRead) {
-        var economy = VaultEconomy.INSTANCE;
-        if (economy.isEnabled() && sbRead.has(MoneyCost.KEY)) {
-            economy.depositPlayer(sbRead.getSBPlayer().getOfflinePlayer(), sbRead.getDouble(MoneyCost.KEY));
-        }
+    public boolean match(@NotNull String argment) {
+        return argment.startsWith(syntax);
     }
 }

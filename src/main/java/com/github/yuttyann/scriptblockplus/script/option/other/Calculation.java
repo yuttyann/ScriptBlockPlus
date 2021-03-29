@@ -16,9 +16,9 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.bridge.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -42,17 +42,17 @@ public final class Calculation extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), ' ');
+        var space = StringUtils.split(getOptionValue(), ' ');
         var player = getPlayer();
-        var value1 = parse(player, array[0]);
-        var value2 = parse(player, array[2]);
-        var operator = array[1];
+        var value1 = parse(player, space.get(0));
+        var value2 = parse(player, space.get(2));
+        var operator = space.get(1);
 
         if (result(operator, value1, value2)) {
             return true;
         }
-        if (array.length > 3) {
-            var message = StringUtils.setColor(StringUtils.createString(array, 3));
+        if (space.size() > 3) {
+            var message = StringUtils.setColor(StringUtils.createString(space, 3));
             message = StringUtils.replace(message, "%value1%", value1);
             message = StringUtils.replace(message, "%value2%", value2);
             message = StringUtils.replace(message, "%operator%", operator);
@@ -68,12 +68,12 @@ public final class Calculation extends BaseOption {
         }
         if (source.startsWith("%player_count_") && source.endsWith("%")) {
             source = source.substring("%player_count_".length(), source.length() - 1);
-            var array = StringUtils.split(source, '/');
-            if (array.length < 1 || array.length > 2) {
+            var slash = StringUtils.split(source, '/');
+            if (slash.size() < 1 || slash.size() > 2) {
                 return 0;
             }
-            var scriptKey = array.length == 1 ? getScriptKey() : ScriptKey.valueOf(array[0]);
-            var blockCoords = BlockCoords.fromString(array.length == 1 ? array[0] : array[1]);
+            var scriptKey = slash.size() == 1 ? getScriptKey() : ScriptKey.valueOf(slash.get(0));
+            var blockCoords = BlockCoords.fromString(slash.size() == 1 ? slash.get(0) : slash.get(1));
             return PlayerCountJson.get(getUniqueId()).load(scriptKey, blockCoords).getAmount();
         }
         if (source.startsWith("%player_others_in_range_") && source.endsWith("%")) {

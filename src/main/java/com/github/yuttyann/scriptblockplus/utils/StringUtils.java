@@ -15,12 +15,12 @@
  */
 package com.github.yuttyann.scriptblockplus.utils;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 
 /**
@@ -30,6 +30,7 @@ import java.util.stream.IntStream;
 public final class StringUtils {
 
     private static final Random RANDOM = new Random();
+    private static final UnaryOperator<String> SET_COLOR = StringUtils::setColor;
 
     @NotNull
     public static List<String> parseScript(@NotNull String source) throws IllegalArgumentException {
@@ -60,15 +61,15 @@ public final class StringUtils {
     }
 
     @NotNull
-    public static String[] split(@Nullable String source, @NotNull char delimiter) {
+    public static List<String> split(@Nullable String source, @NotNull char delimiter) {
         if (isEmpty(source)) {
-            return ArrayUtils.EMPTY_STRING_ARRAY;   
+            return Collections.emptyList();   
         }
         var list = new ArrayList<String>();
         var chars = source.toCharArray();
         var match = false;
         int start = 0;
-        for (int i = 0; i < chars.length; i++) {
+        for (int i = 0, l = chars.length; i < l; i++) {
             if (chars[i] == delimiter) {
                 if (!match) {
                     list.add(source.substring(start, i));
@@ -81,11 +82,11 @@ public final class StringUtils {
         }
         if (!match) {
             if (list.size() == 0) {
-                return new String[] { source };
+                return Collections.singletonList(source);
             }
             list.add(source.substring(start, chars.length));
         }
-        return list.toArray(String[]::new);
+        return list;
     }
 
     @NotNull
@@ -102,7 +103,7 @@ public final class StringUtils {
     @NotNull
     public static List<String> setListColor(@NotNull List<String> list) {
         list = new ArrayList<>(list);
-        list.replaceAll(StringUtils::setColor);
+        list.replaceAll(SET_COLOR);
         return list;
     }
 
@@ -122,9 +123,16 @@ public final class StringUtils {
     }
 
     @NotNull
-    public static String createString(@NotNull String[] args, int start) {
+    public static String createString(@NotNull String[] args, final int start) {
         var joiner = new StringJoiner(" ");
         IntStream.range(start, args.length).forEach(i -> joiner.add(args[i]));
+        return joiner.toString();
+    }
+
+    @NotNull
+    public static String createString(@NotNull List<String> list, final int start) {
+        var joiner = new StringJoiner(" ");
+        IntStream.range(start, list.size()).forEach(i -> joiner.add(list.get(i)));
         return joiner.toString();
     }
 

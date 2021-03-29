@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,10 +28,10 @@ import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.CommandMinecart;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,62 +47,45 @@ import static com.github.yuttyann.scriptblockplus.enums.reflection.PackageType.*
  */
 public final class NMSHelper {
 
-    public static int getMagmaCubeId() {
-        if (!Utils.isCBXXXorLater("1.13")) {
-            return 62;
+    private static final double R = 0.017453292D;
+    private static final Object[] ARGMENT_ENTITY = { false, false };
+    private static final Class<?>[] ARGMENT_ENTITY_CLASS = { boolean.class, boolean.class };
+    private static final Class<?>[] COMMAND_LISTENER_CLASS = { CommandSender.class };
+
+    public static void sendPacket(@NotNull Object packet) throws ReflectiveOperationException {
+        for (var player : Bukkit.getOnlinePlayers()) {
+            sendPacket(player, packet);
         }
-        int entityId = 0;
-        try {
-            var entityTypes = NMS.getClass("EntityTypes");
-            for (var field : entityTypes.getFields()) {
-                if (!field.getType().equals(entityTypes)) {
-                    continue;   
-                }
-                if (field.getName().equals("MAGMA_CUBE")) {
-                    break;
-                }
-                entityId++;
-            }
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-        return entityId;
     }
 
-    public static int getSlimeSizeId() {
-        if (!Utils.isCBXXXorLater("1.10")) {
-            return 11;
+    public static void sendPacket(@NotNull Player player, @NotNull Object packet) throws ReflectiveOperationException {
+        var handle = CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
+        var connection = NMS.getFieldValue("EntityPlayer", "playerConnection", handle);
+        NMS.getMethod("PlayerConnection", "sendPacket", NMS.getClass("Packet")).invoke(connection, packet);
+    }
+
+    public static void sendPackets(@NotNull Player player, @NotNull Object... packets) throws ReflectiveOperationException {
+        var handle = CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
+        var connection = NMS.getFieldValue("EntityPlayer", "playerConnection", handle);
+        var sendPacket = NMS.getMethod("PlayerConnection", "sendPacket", NMS.getClass("Packet"));
+        var tempArgs = new Object[] { null };
+        for (var packet : packets) {
+            tempArgs[0] = packet;
+            sendPacket.invoke(connection, tempArgs);
         }
-        try {
-            var entitySlime = NMS.getClass("EntitySlime");
-            var dataWatcherObject = NMS.getClass("DataWatcherObject");
-            for (var field : entitySlime.getDeclaredFields()) {
-                if (!field.getType().equals(dataWatcherObject)) {
-                    continue;
-                }
-                field.setAccessible(true);
-                return (int) NMS.invokeMethod(field.get(null), "DataWatcherObject", "a");
-            }
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-        return -1;
     }
 
     public static void sendActionBar(@NotNull Player player, @NotNull String text) throws ReflectiveOperationException {
         var component = NMS.invokeMethod(null, "IChatBaseComponent$ChatSerializer", "a", "{\"text\": \"" + text + "\"}");
         var classes = new Class<?>[] { NMS.getClass("IChatBaseComponent"), byte.class };
-        Object value = (byte) 2;
+        var value = (Object) null;
         if (Utils.isCBXXXorLater("1.12")) {
             classes[1] = (value = NMS.getEnumValueOf("ChatMessageType", "GAME_INFO")).getClass();
+        } else {
+            value = (byte) 2;
         }
-        var handle = CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
-        var connection = NMS.getFieldValue("EntityPlayer", "playerConnection", handle);
-        var packetChat = NMS.getConstructor("PacketPlayOutChat", classes).newInstance(component, value);
-        NMS.getMethod("PlayerConnection", "sendPacket", NMS.getClass("Packet")).invoke(connection, packetChat);
+        sendPacket(player, NMS.getConstructor("PacketPlayOutChat", classes).newInstance(component, value));
     }
-
-    private static final double R = 0.017453292D;
 
     @Nullable
     public static RayResult rayTraceBlocks(@NotNull Player player, final double distance) throws ReflectiveOperationException {
@@ -140,35 +124,25 @@ public final class NMSHelper {
         return null;
     }
 
-    // 定数にすることでインスタンスの生成を高速化
-    private static final Object[] ARGMENT_ENTITY = { false, false };
-    private static final Class<?>[] ARGMENT_ENTITY_CLASS = { boolean.class, boolean.class };
-
     @NotNull
-    public static Entity[] selectEntities(@NotNull CommandSender sender, @NotNull Location location, @NotNull String selector) throws ReflectiveOperationException {
-        var vector = toVec3D(location.toVector());
+    public static List<Entity> selectEntities(@NotNull CommandSender sender, @NotNull Location location, @NotNull String selector) throws ReflectiveOperationException {
+        var vector = newVec3D(location.getBlockX() + 0.5D, location.getBlockY(), location.getBlockZ() + 0.5D);
         var reader = MJN.newInstance("StringReader", selector);
         var entity = NMS.newInstance(true, "ArgumentEntity", ARGMENT_ENTITY_CLASS, ARGMENT_ENTITY);
         var wrapper = NMS.invokeMethod(getICommandListener(sender), "CommandListenerWrapper", "a", vector);
         var parse = NMS.invokeMethod(entity, "ArgumentEntity", "parse", Utils.isCBXXXorLater("1.13.2") ? new Object[] { reader, true } : new Object[] { reader });
         var nmsList = (List<?>) NMS.invokeMethod(parse, "EntitySelector", Utils.isCBXXXorLater("1.14") ? "getEntities" : "b", wrapper);
-        return StreamUtils.toArray(nmsList, e -> getBukkitEntity(e), Entity[]::new);
-    }
-
-    @Nullable
-    private static Entity getBukkitEntity(@NotNull Object nmsEntity) {
-        try {
-            return (Entity) NMS.invokeMethod(nmsEntity, "Entity", "getBukkitEntity");
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
+        var resultList = new ArrayList<Entity>(nmsList.size());
+        for (var nmsEntity : nmsList) {
+            resultList.add((Entity) NMS.invokeMethod(nmsEntity, "Entity", "getBukkitEntity"));
         }
-        return null;
+        return resultList;
     }
 
     @NotNull
     public static Object getICommandListener(@NotNull CommandSender sender) throws ReflectiveOperationException {
         if (Utils.isCBXXXorLater("1.13.2")) {
-            return CB_COMMAND.getMethod("VanillaCommandWrapper", "getListener", CommandSender.class).invoke(null, sender);
+            return CB_COMMAND.invokeMethod(false, (Object) null, "VanillaCommandWrapper", "getListener", COMMAND_LISTENER_CLASS, sender);
         }
         if (sender instanceof SBPlayer) {
             sender = ((SBPlayer) sender).getPlayer();
@@ -227,11 +201,6 @@ public final class NMSHelper {
     private static String getKey(@NotNull Object minecraftKey) throws ReflectiveOperationException {
         var name = Utils.isCBXXXorLater("1.12") ? "getKey" : "a";
         return (String) NMS.invokeMethod(minecraftKey, "MinecraftKey", name);
-    }
-
-    @NotNull
-    private static Object toVec3D(@NotNull Vector vector) throws ReflectiveOperationException {
-        return newVec3D(vector.getBlockX() + 0.5D, vector.getBlockY(), vector.getBlockZ() + 0.5D);
     }
 
     @NotNull

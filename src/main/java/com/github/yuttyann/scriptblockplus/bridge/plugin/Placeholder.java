@@ -13,9 +13,9 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.hook.plugin;
+package com.github.yuttyann.scriptblockplus.bridge.plugin;
 
-import com.github.yuttyann.scriptblockplus.hook.HookPlugin;
+import com.github.yuttyann.scriptblockplus.bridge.HookPlugin;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import me.clip.placeholderapi.PlaceholderAPI;

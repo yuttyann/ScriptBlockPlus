@@ -48,8 +48,8 @@ public final class Delay extends BaseOption implements Runnable {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), '/');
-        this.saveDelay = array.length <= 1 || Boolean.parseBoolean(array[1]);
+        var slash = StringUtils.split(getOptionValue(), '/');
+        this.saveDelay = slash.size() < 2 || Boolean.parseBoolean(slash.get(1));
 
         if (saveDelay && DELAYS.contains(delayHash())) {
             SBConfig.ACTIVE_DELAY.send(getSBPlayer());
@@ -58,7 +58,7 @@ public final class Delay extends BaseOption implements Runnable {
                 DELAYS.add(delayHash());
             }
             ((ScriptRead) getTempMap()).setInitialize(false);
-            ScriptBlock.getScheduler().run(this, Long.parseLong(array[0]));
+            ScriptBlock.getScheduler().run(this, Long.parseLong(slash.get(0)));
         }
         return false;
     }

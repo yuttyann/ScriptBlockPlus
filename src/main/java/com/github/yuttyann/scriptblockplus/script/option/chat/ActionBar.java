@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
-import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -29,8 +28,6 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * ScriptBlockPlus ActionBar オプションクラス
@@ -45,10 +42,10 @@ public final class ActionBar extends BaseOption implements Runnable {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), '/');
-        this.message = StringUtils.setColor(array[0]);
-        if (array.length > 1) {
-            this.stay = Integer.parseInt(array[1]);
+        var slash = StringUtils.split(getOptionValue(), '/');
+        this.message = StringUtils.setColor(slash.get(0));
+        if (slash.size() > 1) {
+            this.stay = Integer.parseInt(slash.get(1));
             this.task = ScriptBlock.getScheduler().run(this, 0L, 20L);
         } else {
             send(getSBPlayer(), message);
@@ -73,12 +70,6 @@ public final class ActionBar extends BaseOption implements Runnable {
         if (Utils.isCBXXXorLater("1.12.2")) {
             var command = "minecraft:title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
             Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Bukkit.dispatchCommand(player, command));
-        } else if (ProtocolLib.INSTANCE.has()) {
-            try {
-                ProtocolLib.INSTANCE.sendActionBar(player, message);
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
         } else if (PackageType.HAS_NMS) {
             try {
                 NMSHelper.sendActionBar(player, message);

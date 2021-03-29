@@ -22,15 +22,14 @@ import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.bridge.nms.GlowEntity;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
-import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.event.EventHandler;
@@ -68,7 +67,7 @@ public final class PlayerListener implements Listener {
         var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
         try {
             ScriptViewer.PLAYERS.remove(sbPlayer);
-            StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> ProtocolLib.GLOW_ENTITY.destroyAll(sbPlayer));
+            GlowEntity.DEFAULT.destroyAll(sbPlayer);
         } finally {
             ((BaseSBPlayer) sbPlayer).init();
             ((BaseSBPlayer) sbPlayer).setOnline(false);

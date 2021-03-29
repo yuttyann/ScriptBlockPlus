@@ -15,6 +15,9 @@
  */
 package com.github.yuttyann.scriptblockplus;
 
+import com.github.yuttyann.scriptblockplus.bridge.nms.GlowEntity;
+import com.github.yuttyann.scriptblockplus.bridge.plugin.VaultEconomy;
+import com.github.yuttyann.scriptblockplus.bridge.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.command.BaseCommand;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
@@ -24,9 +27,6 @@ import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.ConvartList;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.LegacyFormatJson;
-import com.github.yuttyann.scriptblockplus.hook.plugin.ProtocolLib;
-import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
-import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.listener.*;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.action.BlockSelector;
@@ -41,7 +41,6 @@ import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
@@ -135,7 +134,7 @@ public class ScriptBlock extends JavaPlugin {
     @Override
     public void onDisable() {
         ScriptViewer.PLAYERS.clear();
-        StreamUtils.ifAction(ProtocolLib.INSTANCE.has(), () -> ProtocolLib.GLOW_ENTITY.removeAll());
+        GlowEntity.DEFAULT.removeAll();
     }
 
     /**

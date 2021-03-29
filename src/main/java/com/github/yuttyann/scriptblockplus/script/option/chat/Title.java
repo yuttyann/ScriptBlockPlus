@@ -35,16 +35,16 @@ public final class Title extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), '/');
-        var title = StringUtils.setColor(array[0] + "");
-        var subtitle = StringUtils.setColor(array.length > 1 ? array[1] : "");
+        var slash = StringUtils.split(getOptionValue(), '/');
+        var title = StringUtils.setColor(slash.get(0) + "");
+        var subtitle = StringUtils.setColor(slash.size() > 1 ? slash.get(1) : "");
         int fadeIn = 10, stay = 40, fadeOut = 10;
-        if (array.length == 3) {
-            var times = StringUtils.split(array[2], '-');
-            if (times.length == 3) {
-                fadeIn = Integer.parseInt(times[0]);
-                stay = Integer.parseInt(times[1]);
-                fadeOut = Integer.parseInt(times[2]);
+        if (slash.size() == 3) {
+            var times = StringUtils.split(slash.get(2), '-');
+            if (times.size() == 3) {
+                fadeIn = Integer.parseInt(times.get(0));
+                stay = Integer.parseInt(times.get(1));
+                fadeOut = Integer.parseInt(times.get(2));
             }
         }
         send(getSBPlayer(), title, subtitle, fadeIn, stay, fadeOut);

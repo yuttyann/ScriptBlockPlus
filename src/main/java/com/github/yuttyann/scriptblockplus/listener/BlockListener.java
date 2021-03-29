@@ -17,15 +17,18 @@ package com.github.yuttyann.scriptblockplus.listener;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.enums.splittype.Filter;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
-import com.github.yuttyann.scriptblockplus.selector.filter.FilterSplit;
+import com.github.yuttyann.scriptblockplus.selector.Split;
+import com.github.yuttyann.scriptblockplus.selector.SplitValue;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -33,6 +36,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus BlockListener クラス
@@ -66,21 +70,39 @@ public final class BlockListener implements Listener {
             if (StringUtils.isEmpty(selector) || !CommandSelector.has(selector)) {
                 continue;
             }
-            var index = new int[] { 0 };
-            var filterSplit = new FilterSplit(selector);
-            var filterValues = filterSplit.getFilterValues();
-            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), blockCoords.toLocation(), filterSplit.getSelector())) {
+            var index = new AtomicInteger();
+            var filterSplit = new Split(selector, "filter", "{", "}");
+            var argmentSplit = new Split(selector, "@", "[", "]", filterSplit.toString().length());
+            var filterValues = filterSplit.getValues(Filter.values());
+            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), blockCoords.toLocation(), argmentSplit.toString())) {
                 if (!(target instanceof Player)) {
                     continue;
                 }
                 var player = (Player) target;
-                if (!StreamUtils.allMatch(filterValues, t -> t.has(player, index[0]))) {
+                if (!StreamUtils.allMatch(filterValues, s -> has(s, player, index.get()))) {
                     continue;
                 }
-                index[0]++;
+                index.incrementAndGet();
                 REDSTONE_FLAG.add(blockCoords);
                 new ScriptRead(player, blockCoords, scriptKey).read(0);
             }
+        }
+    }
+
+    private boolean has(@NotNull SplitValue splitValue, @NotNull Player player, int index) {
+        var value = splitValue.getValue();
+        if (StringUtils.isEmpty(value)) {
+            return false;
+        }
+        switch ((Filter) splitValue.getType()) {
+            case OP:
+                return Boolean.parseBoolean(value) ? player.isOp() : !player.isOp();
+            case PERM:
+                return player.hasPermission(value);
+            case LIMIT:
+                return index < Integer.parseInt(value);
+            default:
+                return false;
         }
     }
 }

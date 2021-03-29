@@ -43,13 +43,13 @@ public final class PlaySound extends BaseOption implements Runnable {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), '/');
-        var param = StringUtils.split(array[0], '-');
-        var delay = param.length > 3 ? Long.parseLong(param[3]) : 0L;
-        this.name = StringUtils.removeStart(param[0], Utils.MINECRAFT).toLowerCase(Locale.ROOT);
-        this.volume = Integer.parseInt(param[1]);
-        this.pitch = Integer.parseInt(param[2]);
-        this.sendAllPlayer = array.length > 1 && Boolean.parseBoolean(array[1]);
+        var slash = StringUtils.split(getOptionValue(), '/');
+        var hyphen = StringUtils.split(slash.get(0), '-');
+        var delay = hyphen.size() > 3 ? Long.parseLong(hyphen.get(3)) : 0L;
+        this.name = StringUtils.removeStart(hyphen.get(0), Utils.MINECRAFT).toLowerCase(Locale.ROOT);
+        this.volume = Integer.parseInt(hyphen.get(1));
+        this.pitch = Integer.parseInt(hyphen.get(2));
+        this.sendAllPlayer = slash.size() > 1 && Boolean.parseBoolean(slash.get(1));
 
         if (delay < 1) {
             playSound();

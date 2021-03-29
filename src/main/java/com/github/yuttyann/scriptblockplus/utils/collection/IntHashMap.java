@@ -43,7 +43,7 @@ public final class IntHashMap<V> extends IntObjectHashMap<V> implements IntMap<V
     public static final float DEFAULT_LOAD_FACTOR = 0.5F;
 
     private static final boolean LEGACY_NETTY;
-    
+
     static {
         var version = Version.identify().get("netty-common").artifactVersion();
         LEGACY_NETTY = !Utils.isUpperVersion(StringUtils.removeEnd(version, ".Final"), "4.1.0");

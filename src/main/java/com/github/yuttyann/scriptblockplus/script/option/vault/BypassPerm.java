@@ -15,8 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.vault;
 
+import com.github.yuttyann.scriptblockplus.bridge.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.enums.CommandLog;
-import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -35,15 +35,15 @@ public final class BypassPerm extends BaseOption {
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
             throw new UnsupportedOperationException();
         }
-        var array = StringUtils.split(getOptionValue(), '/');
-        if (array.length < 2) {
+        var slash = StringUtils.split(getOptionValue(), '/');
+        if (slash.size() < 2) {
             throw new IllegalArgumentException("Insufficient parameters");
         }
         var player = getPlayer();
-        var command = StringUtils.setColor(array[0]);
+        var command = StringUtils.setColor(slash.get(0));
         return CommandLog.supplier(player.getWorld(), () -> {
-            var world = array.length > 2 ? array[1] : null;
-            var permission = array.length > 2 ? array[2] : array[1];
+            var world = slash.size() > 2 ? slash.get(1) : null;
+            var permission = slash.size() > 2 ? slash.get(2) : slash.get(1);
             if (vaultPermission.playerHas(world, player, permission)) {
                 return Utils.dispatchCommand(player, getLocation(), command);
             } else {

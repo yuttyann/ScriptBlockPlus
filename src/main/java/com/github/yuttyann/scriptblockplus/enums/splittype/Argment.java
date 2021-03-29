@@ -13,8 +13,9 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.enums;
+package com.github.yuttyann.scriptblockplus.enums.splittype;
 
+import com.github.yuttyann.scriptblockplus.selector.SplitType;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * Minecraft "1.12.2" までのセレクターの引数です。
  * @author yuttyann44581
  */
-public enum Argment {
+public enum Argment implements SplitType {
     X("x="),
     Y("y="),
     Z("z="),
@@ -62,26 +63,28 @@ public enum Argment {
         this.suffix = suffix;
     }
 
+    @Override
     @NotNull
-    public String getValue(@NotNull String source) {
+    public String getValue(@NotNull String argment) {
         switch (this) {
             case SCORE:
             case SCORE_MIN:
-                var objective = source.substring(prefix.length(), source.lastIndexOf(suffix));
-                return StringUtils.removeStart(source, prefix + objective + suffix) + "*" + objective;
+                var objective = argment.substring(prefix.length(), argment.lastIndexOf(suffix));
+                return StringUtils.removeStart(argment, prefix + objective + suffix) + "*" + objective;
             default:
-                return StringUtils.removeStart(source, syntax);
+                return StringUtils.removeStart(argment, syntax);
         }
     }
 
-    public boolean has(@NotNull String source) {
+    @Override
+    public boolean match(@NotNull String argment) {
         switch (this) {
             case SCORE:
-                return source.startsWith(prefix) && source.lastIndexOf(SCORE_MIN.suffix) == -1;
+                return argment.startsWith(prefix) && argment.lastIndexOf(SCORE_MIN.suffix) == -1;
             case SCORE_MIN:
-                return source.startsWith(prefix) && source.lastIndexOf(suffix) > 0;
+                return argment.startsWith(prefix) && argment.lastIndexOf(suffix) > 0;
             default:
-                return source.startsWith(syntax);
+                return argment.startsWith(syntax);
         }
-    }  
+    }
 }

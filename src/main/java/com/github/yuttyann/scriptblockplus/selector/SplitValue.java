@@ -13,41 +13,53 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.selector.entity;
+package com.github.yuttyann.scriptblockplus.selector;
 
-import com.github.yuttyann.scriptblockplus.enums.Argment;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ScriptBlockPlus ArgmentValue クラス
+ * ScriptBlockPlus SplitValue クラス
  * @author yuttyann44581
  */
-public final class ArgmentValue {
+public class SplitValue {
 
-    private final Argment argment;
+    private final SplitType type;
     private final String value;
 
     private String cacheValue;
     private Boolean cacheInverted;
 
-    public ArgmentValue(@NotNull String source) {
-        for (var argment : Argment.values()) {
-            if (argment.has(source)) {
-                this.argment = argment;
-                this.value = argment.getValue(source);
+    /**
+     * コンストラクタ
+     * @param argment - 引数
+     * @param types - 検索を行いたい要素の配列(例: {@link Argment}等)
+     */
+    public SplitValue(@NotNull String argment, @NotNull SplitType[] types) {
+        for (var splitType : types) {
+            if (splitType.match(argment)) {
+                this.type = splitType;
+                this.value = splitType.getValue(argment);
                 return;
             }
         }
-        throw new NullPointerException("Argment[" + source + "] not found");
+        throw new NullPointerException("SplitType[" + argment + "] not found");
     }
 
+    /**
+     * {@link SplitType}を取得します。
+     * @return {@link SplitType} - 引数の種類
+     */
     @NotNull
-    public Argment getArgment() {
-        return argment;
+    public SplitType getType() {
+        return type;
     }
 
+    /**
+     * 値を取得します。
+     * @return {@link String} - 値
+     */
     @NotNull
     public String getValue() {
         if (cacheValue == null && StringUtils.isNotEmpty(value)) {
@@ -56,6 +68,10 @@ public final class ArgmentValue {
         return cacheValue;
     }
 
+    /**
+     * 否定演算子が存在するのかどうか。
+     * @return {@link boolean} - 存在する場合は{@code true}
+     */
     public boolean isInverted() {
         if (cacheInverted == null && StringUtils.isNotEmpty(value)) {
             cacheInverted = value.indexOf("!") == 0;

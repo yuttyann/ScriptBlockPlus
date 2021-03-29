@@ -37,19 +37,19 @@ public final class ItemHand extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), ' ');
-        var param = StringUtils.split(StringUtils.removeStart(array[0], Utils.MINECRAFT), ':');
-        if (Calculation.REALNUMBER_PATTERN.matcher(param[0]).matches()) {
+        var space = StringUtils.split(getOptionValue(), ' ');
+        var itemId = StringUtils.split(StringUtils.removeStart(space.get(0), Utils.MINECRAFT), ':');
+        if (Calculation.REALNUMBER_PATTERN.matcher(itemId.get(0)).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }
-        var material = ItemUtils.getMaterial(param[0]);
-        int damage = param.length > 1 ? Integer.parseInt(param[1]) : 0;
-        int amount = Integer.parseInt(array[1]);
-        var create = array.length > 2 ? StringUtils.createString(array, 2) : null;
+        var material = ItemUtils.getMaterial(itemId.get(0));
+        int damage = itemId.size() > 1 ? Integer.parseInt(itemId.get(1)) : 0;
+        int amount = Integer.parseInt(space.get(1));
+        var create = space.size() > 2 ? StringUtils.createString(space, 2) : null;
         var name = StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create);
 
         var player = getPlayer();
-        var handItems = getHandItems(player);
+        var handItems = getHandStream(player);
         if (handItems.noneMatch(i -> i.getAmount() >= amount && ItemUtils.getDamage(i) == damage && ItemUtils.compare(i, material, name))) {
             SBConfig.ERROR_HAND.replace(material, amount, damage, StringUtils.setColor(create)).send(player);
             return false;
@@ -58,7 +58,7 @@ public final class ItemHand extends BaseOption {
     }
 
     @NotNull
-    private Stream<ItemStack> getHandItems(@NotNull Player player) {
+    private Stream<ItemStack> getHandStream(@NotNull Player player) {
         var inventory = player.getInventory();
         return Stream.of(new ItemStack[] { inventory.getItemInMainHand(), inventory.getItemInOffHand() });
     }

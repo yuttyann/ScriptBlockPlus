@@ -19,7 +19,6 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.YamlConfig;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -77,7 +76,7 @@ public final class SBLoader {
             return new ArrayList<>();
         }
         var uuids = new ArrayList<UUID>();
-        StreamUtils.forEach(StringUtils.split(author, ','), s -> uuids.add(UUID.fromString(s.trim())));
+        StringUtils.split(author, ',').forEach(s -> uuids.add(UUID.fromString(s.trim())));
         return uuids;
     }
 

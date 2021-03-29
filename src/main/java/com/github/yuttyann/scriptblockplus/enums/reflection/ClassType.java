@@ -22,8 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-
 /**
  * ScriptBlockPlus ClassType 列挙型
  * @author yuttyann44581
@@ -38,15 +36,15 @@ public enum ClassType {
     DOUBLE(double.class, Double.class),
     BOOLEAN(boolean.class, Boolean.class);
 
-    private static final Map<Class<?>, ClassType> CLASS = new HashMap<>();
+    private static final Map<Class<?>, ClassType> CLASSES = new HashMap<>();
 
     private final Class<?> primitive;
     private final Class<?> reference;
 
     static {
         for (var type : values()) {
-            CLASS.put(type.primitive, type);
-            CLASS.put(type.reference, type);
+            CLASSES.put(type.primitive, type);
+            CLASSES.put(type.reference, type);
         }
     }
 
@@ -67,7 +65,7 @@ public enum ClassType {
 
     @Nullable
     public static ClassType fromClass(@NotNull Class<?> clazz) {
-        return CLASS.get(clazz);
+        return CLASSES.get(clazz);
     }
 
     @NotNull
@@ -87,7 +85,11 @@ public enum ClassType {
         if (classes == null || classes.length == 0) {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        return StreamUtils.toArray(classes, c -> getPrimitive(c), Class<?>[]::new);
+        var newArray = new Class<?>[classes.length];
+        for (int i = 0; i < classes.length; i++) {
+            newArray[i] = getPrimitive(classes[i]);
+        }
+        return newArray;
     }
 
     @NotNull
@@ -95,7 +97,11 @@ public enum ClassType {
         if (classes == null || classes.length == 0) {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        return StreamUtils.toArray(classes, c -> getReference(c), Class<?>[]::new);
+        var newArray = new Class<?>[classes.length];
+        for (int i = 0; i < classes.length; i++) {
+            newArray[i] = getReference(classes[i]);
+        }
+        return newArray;
     }
 
     @NotNull
@@ -103,7 +109,11 @@ public enum ClassType {
         if (objects == null || objects.length == 0) {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        return StreamUtils.toArray(objects, o -> getPrimitive(o.getClass()), Class<?>[]::new);
+        var newArray = new Class<?>[objects.length];
+        for (int i = 0; i < objects.length; i++) {
+            newArray[i] = getPrimitive(objects[i].getClass());
+        }
+        return newArray;
     }
 
     @NotNull
@@ -111,6 +121,10 @@ public enum ClassType {
         if (objects == null || objects.length == 0) {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        return StreamUtils.toArray(objects, o -> getReference(o.getClass()), Class<?>[]::new);
+        var newArray = new Class<?>[objects.length];
+        for (int i = 0; i < objects.length; i++) {
+            newArray[i] = getReference(objects[i].getClass());
+        }
+        return newArray;
     }
 }

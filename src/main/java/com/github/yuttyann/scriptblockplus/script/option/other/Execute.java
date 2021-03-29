@@ -31,8 +31,8 @@ public final class Execute extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var array = StringUtils.split(getOptionValue(), '/');
-        var scriptKey = ScriptKey.valueOf(array[0]);
-        return new ScriptRead(getPlayer(), BlockCoords.fromString(array[1]), scriptKey).read(0);
+        var split = StringUtils.split(getOptionValue(), '/');
+        var scriptKey = ScriptKey.valueOf(split.get(0));
+        return new ScriptRead(getPlayer(), BlockCoords.fromString(split.get(1)), scriptKey).read(0);
     }
 }
