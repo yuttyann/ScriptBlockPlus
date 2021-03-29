@@ -56,18 +56,18 @@ public final class EntitySelector {
     public static List<Entity> getEntities(@NotNull CommandSender sender, @Nullable Location start, @NotNull String selector) {
         var result = new ArrayList<Entity>();
         var location = setCenter(copy(sender, start));
-        var argmentSplit = new Split(selector, "@", "[", "]");
-        var argmentValues = argmentSplit.getValues(Argment.values());
-        switch (argmentSplit.getName()) {
+        var split = new Split(selector, "@", "[", "]");
+        var splitValues = split.getValues(Argment.values());
+        switch (split.getName()) {
             case "@p": {
                 var players = location.getWorld().getPlayers();
                 if (players.size() == 0) {
                     return Collections.emptyList();
                 }
                 int count = 0;
-                int limit = sort(getLimit(argmentValues, 1), location, players);
+                int limit = sort(getLimit(splitValues, 1), location, players);
                 for (var player : players) {
-                    if (!StreamUtils.allMatch(argmentValues, t -> canBeAccepted(player, location, t))) {
+                    if (!StreamUtils.allMatch(splitValues, t -> canBeAccepted(player, location, t))) {
                         continue;
                     }
                     if (limit <= count) {
@@ -84,9 +84,9 @@ public final class EntitySelector {
                     return Collections.emptyList();
                 }
                 int count = 0;
-                int limit = sort(getLimit(argmentValues, players.size()), location, players);
+                int limit = sort(getLimit(splitValues, players.size()), location, players);
                 for (var player : players) {
-                    if (!StreamUtils.allMatch(argmentValues, t -> canBeAccepted(player, location, t))) {
+                    if (!StreamUtils.allMatch(splitValues, t -> canBeAccepted(player, location, t))) {
                         continue;
                     }
                     if (limit <= count) {
@@ -103,12 +103,12 @@ public final class EntitySelector {
                     return Collections.emptyList();
                 }
                 int count = 0;
-                int limit = getLimit(argmentValues, 1);
+                int limit = getLimit(splitValues, 1);
                 var randomInts = IntStream.range(0, players.size()).boxed().collect(Collectors.toList());
                 Collections.shuffle(randomInts, new Random());
                 for (int value : randomInts) {
                     var player = players.get(value);
-                    if (!StreamUtils.allMatch(argmentValues, t -> canBeAccepted(player, location, t))) {
+                    if (!StreamUtils.allMatch(splitValues, t -> canBeAccepted(player, location, t))) {
                         continue;
                     }
                     if (limit <= count) {
@@ -125,9 +125,9 @@ public final class EntitySelector {
                     return Collections.emptyList();
                 }
                 int count = 0;
-                int limit = sort(getLimit(argmentValues, entities.size()), location, entities);
+                int limit = sort(getLimit(splitValues, entities.size()), location, entities);
                 for (var entity : entities) {
-                    if (!StreamUtils.allMatch(argmentValues, t -> canBeAccepted(entity, location, t))) {
+                    if (!StreamUtils.allMatch(splitValues, t -> canBeAccepted(entity, location, t))) {
                         continue;
                     }
                     if (limit <= count) {
@@ -139,7 +139,7 @@ public final class EntitySelector {
                 break;
             }
             case "@s": {
-                if (sender instanceof Entity && StreamUtils.allMatch(argmentValues, t -> canBeAccepted((Entity) sender, location, t))) {
+                if (sender instanceof Entity && StreamUtils.allMatch(splitValues, t -> canBeAccepted((Entity) sender, location, t))) {
                     result.add((Entity) sender);
                 }
                 break;
@@ -183,70 +183,70 @@ public final class EntitySelector {
         return limit;
     }
 
-    private static int getLimit(@NotNull SplitValue[] argmentValues, int other) {
-        for (var argmentValue : argmentValues) {
-            if (argmentValue.getType() == Argment.C) {
-                return Integer.parseInt(argmentValue.getValue());
+    private static int getLimit(@NotNull SplitValue[] splitValues, int other) {
+        for (var splitValue : splitValues) {
+            if (splitValue.getType() == Argment.C) {
+                return Integer.parseInt(splitValue.getValue());
             }
         }
         return other;
     }
 
-    private static boolean canBeAccepted(@NotNull Entity entity, @NotNull Location location, @NotNull SplitValue argmentValue) {
-        if (argmentValue.getValue()== null) {
+    private static boolean canBeAccepted(@NotNull Entity entity, @NotNull Location location, @NotNull SplitValue splitValue) {
+        if (splitValue.getValue()== null) {
             return false;
         }
-        switch ((Argment) argmentValue.getType()) {
+        switch ((Argment) splitValue.getType()) {
             case C:
                 return true;
             case X:
             case Y:
             case Z:
-                return setXYZ(location, argmentValue);
+                return setXYZ(location, splitValue);
             case DX:
             case DY:
             case DZ:
-                return isDRange(entity, location, argmentValue);
+                return isDRange(entity, location, splitValue);
             case R:
             case RM:
-                return isR(entity, location, argmentValue);
+                return isR(entity, location, splitValue);
             case RX:
             case RXM:
-                return isRX(entity, argmentValue);
+                return isRX(entity, splitValue);
             case RY:
             case RYM:
-                return isRY(entity, argmentValue);
+                return isRY(entity, splitValue);
             case L:
             case LM:
-                return isL(entity, argmentValue);
+                return isL(entity, splitValue);
             case M:
-                return isM(entity, argmentValue);
+                return isM(entity, splitValue);
             case TAG:
-                return isTag(entity, argmentValue);
+                return isTag(entity, splitValue);
             case TEAM:
-                return isTeam(entity, argmentValue);
+                return isTeam(entity, splitValue);
             case TYPE:
-                return isType(entity, argmentValue);
+                return isType(entity, splitValue);
             case NAME:
-                return isName(entity, argmentValue);
+                return isName(entity, splitValue);
             case SCORE:
             case SCORE_MIN:
-                return isScore(entity, argmentValue);
+                return isScore(entity, splitValue);
             default:
                 return false;
         }
     }
 
-    private static boolean setXYZ(@NotNull Location location, @NotNull SplitValue argmentValue) {
-        switch ((Argment) argmentValue.getType()) {
+    private static boolean setXYZ(@NotNull Location location, @NotNull SplitValue splitValue) {
+        switch ((Argment) splitValue.getType()) {
             case X:
-                setLocation(location, "x", argmentValue.getValue());
+                setLocation(location, "x", splitValue.getValue());
                 break;
             case Y:
-                setLocation(location, "y", argmentValue.getValue());
+                setLocation(location, "y", splitValue.getValue());
                 break;
             case Z:
-                setLocation(location, "z", argmentValue.getValue());
+                setLocation(location, "z", splitValue.getValue());
                 break;
             default:
                 return false;
@@ -315,12 +315,12 @@ public final class EntitySelector {
         return yaw;
     }
     
-    private static boolean isDRange(@NotNull Entity entity, @NotNull Location location, @NotNull SplitValue argmentValue) {
+    private static boolean isDRange(@NotNull Entity entity, @NotNull Location location, @NotNull SplitValue splitValue) {
         if (!entity.getWorld().equals(location.getWorld())) {
             return false;
         }
         double base = 0.0D, value = 0.0D;
-        switch ((Argment) argmentValue.getType()) {
+        switch ((Argment) splitValue.getType()) {
             case DX:
                 base = location.getX();
                 value = entity.getLocation().getX();
@@ -336,56 +336,56 @@ public final class EntitySelector {
             default:
                 return false;
         }
-        return value > (base - 0.35D) && value < (base + Double.parseDouble(argmentValue.getValue()) + 1.35D);
+        return value > (base - 0.35D) && value < (base + Double.parseDouble(splitValue.getValue()) + 1.35D);
     }
 
-    private static boolean isR(@NotNull Entity entity, @NotNull Location location, @NotNull SplitValue argmentValue) {
+    private static boolean isR(@NotNull Entity entity, @NotNull Location location, @NotNull SplitValue splitValue) {
         if (!entity.getWorld().equals(location.getWorld())) {
             return false;
         }
-        if (argmentValue.getType() == Argment.R) {
-            return isLessThan(argmentValue, location.distance(entity.getLocation()));
+        if (splitValue.getType() == Argment.R) {
+            return isLessThan(splitValue, location.distance(entity.getLocation()));
         }
-        return isGreaterThan(argmentValue, location.distance(entity.getLocation()));
+        return isGreaterThan(splitValue, location.distance(entity.getLocation()));
     }
 
-    private static boolean isRX(@NotNull Entity entity, @NotNull SplitValue argmentValue) {
-        if (argmentValue.getType() == Argment.RX) {
-            return isGreaterThan(argmentValue, entity.getLocation().getYaw());
+    private static boolean isRX(@NotNull Entity entity, @NotNull SplitValue splitValue) {
+        if (splitValue.getType() == Argment.RX) {
+            return isGreaterThan(splitValue, entity.getLocation().getYaw());
         }
-        return isLessThan(argmentValue, entity.getLocation().getYaw());
+        return isLessThan(splitValue, entity.getLocation().getYaw());
     }
 
-    private static boolean isRY(@NotNull Entity entity, @NotNull SplitValue argmentValue) {
-        if (argmentValue.getType() == Argment.RY) {
-            return isGreaterThan(argmentValue, entity.getLocation().getPitch());
+    private static boolean isRY(@NotNull Entity entity, @NotNull SplitValue splitValue) {
+        if (splitValue.getType() == Argment.RY) {
+            return isGreaterThan(splitValue, entity.getLocation().getPitch());
         }
-        return isLessThan(argmentValue, entity.getLocation().getPitch());
+        return isLessThan(splitValue, entity.getLocation().getPitch());
     }
 
-    private static boolean isL(@NotNull Entity entity, @NotNull SplitValue argmentValue) {
+    private static boolean isL(@NotNull Entity entity, @NotNull SplitValue splitValue) {
         if (entity instanceof Player) {
-            if (argmentValue.getType() == Argment.L) {
-                return isLessThan(argmentValue, ((Player) entity).getTotalExperience());
+            if (splitValue.getType() == Argment.L) {
+                return isLessThan(splitValue, ((Player) entity).getTotalExperience());
             }
-            return isGreaterThan(argmentValue, ((Player) entity).getTotalExperience());
+            return isGreaterThan(splitValue, ((Player) entity).getTotalExperience());
         }
         return false;
     }
 
-    private static boolean isLessThan(@NotNull SplitValue argmentValue, double value) {
-        return argmentValue.isInverted() != value < Double.parseDouble(argmentValue.getValue());
+    private static boolean isLessThan(@NotNull SplitValue splitValue, double value) {
+        return splitValue.isInverted() != value < Double.parseDouble(splitValue.getValue());
     }
 
-    private static boolean isGreaterThan(@NotNull SplitValue argmentValue, double value) {
-        return argmentValue.isInverted() != value > Double.parseDouble(argmentValue.getValue());
+    private static boolean isGreaterThan(@NotNull SplitValue splitValue, double value) {
+        return splitValue.isInverted() != value > Double.parseDouble(splitValue.getValue());
     }
 
-    private static boolean isM(@NotNull Entity entity, @NotNull SplitValue argmentValue) {
+    private static boolean isM(@NotNull Entity entity, @NotNull SplitValue splitValue) {
         if (entity instanceof HumanEntity) {
-            var value = argmentValue.getValue();
+            var value = splitValue.getValue();
             var human = (HumanEntity) entity;
-            return argmentValue.isInverted() != (getMode(value) == human.getGameMode());
+            return splitValue.isInverted() != (getMode(value) == human.getGameMode());
         }
         return false;
     }
@@ -407,25 +407,25 @@ public final class EntitySelector {
         return null;
     }
 
-    private static boolean isTag(@NotNull Entity entity, @NotNull SplitValue argmentValue) {
-        return argmentValue.isInverted() != entity.getScoreboardTags().contains(argmentValue.getValue());
+    private static boolean isTag(@NotNull Entity entity, @NotNull SplitValue splitValue) {
+        return splitValue.isInverted() != entity.getScoreboardTags().contains(splitValue.getValue());
     }
 
-    private static boolean isTeam(@NotNull Entity entity, @NotNull SplitValue argmentValue) {
+    private static boolean isTeam(@NotNull Entity entity, @NotNull SplitValue splitValue) {
         for (var team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
-            if (!team.getName().equals(argmentValue.getValue())) {
+            if (!team.getName().equals(splitValue.getValue())) {
                 continue;
             }
             var entry = entity instanceof Player ? entity.getName() : entity.getUniqueId().toString();
-            if (argmentValue.isInverted() != team.getEntries().contains(entry)) {
+            if (splitValue.isInverted() != team.getEntries().contains(entry)) {
                 return true;
             }
         }
         return false;
     }
 
-    private static boolean isType(@NotNull Entity entity, @NotNull SplitValue argmentValue) {
-        return argmentValue.isInverted() != (entity.getType() == getEntityType(argmentValue.getValue()));
+    private static boolean isType(@NotNull Entity entity, @NotNull SplitValue splitValue) {
+        return splitValue.isInverted() != (entity.getType() == getEntityType(splitValue.getValue()));
     }
 
     @NotNull
@@ -440,23 +440,23 @@ public final class EntitySelector {
         return null;
     }
 
-    private static boolean isName(@NotNull Entity entity, @NotNull SplitValue argmentValue) {
+    private static boolean isName(@NotNull Entity entity, @NotNull SplitValue splitValue) {
         if (entity instanceof Player) {
-            return argmentValue.isInverted() != argmentValue.getValue().equals(entity.getName());
+            return splitValue.isInverted() != splitValue.getValue().equals(entity.getName());
         } else {
-            return argmentValue.isInverted() != argmentValue.getValue().equals(entity.getCustomName());
+            return splitValue.isInverted() != splitValue.getValue().equals(entity.getCustomName());
         }
     }
 
-    private static boolean isScore(@NotNull Entity entity, @NotNull SplitValue argmentValue) {
-        var split = StringUtils.split(argmentValue.getValue(), '*');
-        var scoreArgment = argmentValue.getType() == Argment.SCORE;
+    private static boolean isScore(@NotNull Entity entity, @NotNull SplitValue splitValue) {
+        var split = StringUtils.split(splitValue.getValue(), '*');
+        var scoreArgment = splitValue.getType() == Argment.SCORE;
         for (var objective : Bukkit.getScoreboardManager().getMainScoreboard().getObjectives()) {
             if (!objective.getName().equals(split.get(0))) {
                 continue;
             }
             int score = objective.getScore(entity instanceof Player ? entity.getName() : entity.getUniqueId().toString()).getScore();
-            if (argmentValue.isInverted() != (scoreArgment ? score <= Integer.parseInt(split.get(0)) : score >= Integer.parseInt(split.get(0)))) {
+            if (splitValue.isInverted() != (scoreArgment ? score <= Integer.parseInt(split.get(0)) : score >= Integer.parseInt(split.get(0)))) {
                 return true;
             }
         }

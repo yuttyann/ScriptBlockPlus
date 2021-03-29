@@ -72,9 +72,9 @@ public final class BlockListener implements Listener {
             }
             var index = new AtomicInteger();
             var filterSplit = new Split(selector, "filter", "{", "}");
-            var argmentSplit = new Split(selector, "@", "[", "]", filterSplit.toString().length());
             var filterValues = filterSplit.getValues(Filter.values());
-            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), blockCoords.toLocation(), argmentSplit.toString())) {
+            var selectorSplit = new Split(selector, "@", "[", "]", filterSplit.toString().length());
+            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), blockCoords.toLocation(), selectorSplit.toString())) {
                 if (!(target instanceof Player)) {
                     continue;
                 }

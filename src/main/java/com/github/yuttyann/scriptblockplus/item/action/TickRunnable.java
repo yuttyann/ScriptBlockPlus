@@ -80,10 +80,38 @@ public final class TickRunnable implements Runnable {
     private void tick(@NotNull SBPlayer sbPlayer, int tick) throws Exception {
         lookBlocks(sbPlayer);
         if (tick % 5 == 0) {
-            sendParticles(sbPlayer, true);
+            for (var blockCoords : getBlockCoords(sbPlayer, KEY_TEMP)) {
+                var block = blockCoords.getBlock();
+                spawnParticlesOnBlock(sbPlayer.getPlayer(), block, ItemUtils.isAIR(block.getType()) ? Color.BLUE : Color.GREEN);
+            }
         }
         if (tick % 10 == 0) {
-            spawnGlowEntity(sbPlayer);
+            var region = new PlayerRegion(sbPlayer.getPlayer(), PLAYER_RANGE);
+            var lookBlocks = getBlockCoords(sbPlayer, KEY);
+            forEach(region, b -> {
+                if (lookBlocks.size() > 0 && StreamUtils.anyMatch(lookBlocks, l -> l.equals(b))) {
+                    return;
+                }
+                GLOW_ENTITY_PACKET.spawnGlowEntity(sbPlayer, b, getTeamColor(b.getBlock()));
+            });
+            var entities = GLOW_ENTITY_PACKET.getEntities();
+            if (entities.isEmpty()) {
+                return;
+            }
+            var glowEntities = entities.get(sbPlayer.getUniqueId());
+            if (glowEntities.isEmpty()) {
+                return;
+            }
+            var min = region.getMinimumPoint();
+            var max = region.getMaximumPoint();
+            var iterator = glowEntities.iterator();
+            while (iterator.hasNext()) {
+                var glowEntity = iterator.next();
+                if (!inRange(glowEntity, min, max)) {
+                    iterator.remove();
+                    GLOW_ENTITY_PACKET.destroyGlowEntity(glowEntity);
+                }
+            }
         }
     }
 
@@ -110,42 +138,6 @@ public final class TickRunnable implements Runnable {
                     destroyEntity(sbPlayer, blockCoords, blocks);
                 }
             }
-        }
-    }
-
-    private void spawnGlowEntity(@NotNull SBPlayer sbPlayer) throws Exception {
-        var region = new PlayerRegion(sbPlayer.getPlayer(), PLAYER_RANGE);
-        var lookBlocks = getBlockCoords(sbPlayer, KEY);
-        forEach(region, b -> {
-            if (lookBlocks.size() > 0 && StreamUtils.anyMatch(lookBlocks, l -> l.equals(b))) {
-                return;
-            }
-            GLOW_ENTITY_PACKET.spawnGlowEntity(sbPlayer, b, getTeamColor(b.getBlock()));
-        });
-        var entities = GLOW_ENTITY_PACKET.getEntities();
-        if (entities.isEmpty()) {
-            return;
-        }
-        var glowEntities = entities.get(sbPlayer.getUniqueId());
-        if (glowEntities.isEmpty()) {
-            return;
-        }
-        var min = region.getMinimumPoint();
-        var max = region.getMaximumPoint();
-        var iterator = glowEntities.iterator();
-        while (iterator.hasNext()) {
-            var glowEntity = iterator.next();
-            if (!inRange(glowEntity, min, max)) {
-                iterator.remove();
-                GLOW_ENTITY_PACKET.destroyGlowEntity(glowEntity);
-            }
-        }
-    }
-
-    private void sendParticles(@NotNull SBPlayer sbPlayer, final boolean hasProtocolLib) throws Exception {
-        for (var blockCoords : getBlockCoords(sbPlayer, KEY_TEMP)) {
-            var block = blockCoords.getBlock();
-            spawnParticlesOnBlock(sbPlayer.getPlayer(), block, ItemUtils.isAIR(block.getType()) ? Color.BLUE : Color.GREEN);
         }
     }
 

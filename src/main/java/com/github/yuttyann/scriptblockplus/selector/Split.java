@@ -20,6 +20,7 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus Split クラス
@@ -54,12 +55,14 @@ public class Split {
      */
     public Split(@NotNull String source, @NotNull String name, @NotNull String start, @NotNull String end, int fromIndex) {
         int nameIndex = source.indexOf(name, fromIndex), startIndex = source.indexOf(start, nameIndex + 1), endIndex = source.indexOf(end, startIndex + 1);
-        if (nameIndex != 1 && startIndex != -1 && endIndex != -1) {
+        if (nameIndex != -1 && startIndex != -1 && endIndex != -1) {
             this.name = source.substring(nameIndex, startIndex).trim();
             this.argments = source.substring(startIndex + 1, endIndex).trim();
-        } else {
+        } else if (nameIndex != -1) {
             this.name = source;
             this.argments = null;
+        } else {
+            this.name = argments = null;
         }
         this.start = start;
         this.end = end;
@@ -69,7 +72,7 @@ public class Split {
      * 名前を取得します。
      * @return {@link String} - 名前
      */
-    @NotNull
+    @Nullable
     public String getName() {
         return name;
     }
@@ -78,7 +81,7 @@ public class Split {
      * 引数を取得します。
      * @return {@link String} - 引数
      */
-    @NotNull
+    @Nullable
     public String getArgments() {
         return argments;
     }
@@ -100,6 +103,6 @@ public class Split {
     @Override
     @NotNull
     public String toString() {
-        return StringUtils.isEmpty(argments) ? name : name + start + argments + end;
+        return StringUtils.isEmpty(argments) ? name == null ? "" : name : name + start + argments + end;
     }
 }
