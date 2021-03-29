@@ -214,7 +214,11 @@ public final class GlowEntityPacket {
     private Object createMagmaCube(@NotNull BlockCoords blockCoords) throws ReflectiveOperationException {
         double x = blockCoords.getX() + 0.5D, y = blockCoords.getY(), z = blockCoords.getZ() + 0.5D;
         var magmaCube = newEntityMagmaCube(blockCoords.getWorld());
-        NMS.invokeMethod(true, magmaCube, "EntityMagmaCube", "setSize", 2, true);
+        if (Utils.isCBXXXorLater("1.11")) {
+            NMS.invokeMethod(true, magmaCube, "EntityMagmaCube", "setSize", 2, true);
+        } else {
+            NMS.invokeMethod(true, magmaCube, "EntityMagmaCube", "setSize", 2);
+        }
         NMS.invokeMethod(magmaCube, "EntityMagmaCube", "setFlag", 6, true);
         NMS.invokeMethod(magmaCube, "EntityMagmaCube", "setInvisible", true);
         NMS.invokeMethod(magmaCube, "EntityMagmaCube", "setLocation", x, y, z, 0.0F, 0.0F);
