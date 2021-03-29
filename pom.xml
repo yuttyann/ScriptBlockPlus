@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.yuttyann</groupId>
   <artifactId>ScriptBlockPlus</artifactId>
-  <version>2.1.0</version>
+  <version>2.1.1</version>
 
   <name>ScriptBlockPlus</name>
   <url>https://github.com/yuttyann/ScriptBlockPlus</url>
@@ -86,10 +86,6 @@
       <url>https://jitpack.io</url>
     </repository>
     <repository>
-      <id>dmulloy2-repo</id>
-      <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
-    </repository>
-    <repository>
       <id>spigot-repo</id>
       <name>Spigot Repository</name>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
@@ -113,11 +109,6 @@
       <artifactId>VaultAPI</artifactId>
       <version>1.7</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.comphenix.protocol</groupId>
-      <artifactId>ProtocolLib</artifactId>
-      <version>4.5.0</version>
     </dependency>
     <dependency>
       <groupId>me.clip</groupId>
