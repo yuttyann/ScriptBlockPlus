@@ -129,9 +129,9 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
         if (element == null) {
             getElementMap().put(hash, element = newInstance(a, b, c));
         } else if (!element.isElement(a, b, c)) {
-            var objectHash = Integer.valueOf(hash);
-            if ((element = subGet(objectHash, e -> e.isElement(a, b, c))) == null) {
-                subPut(objectHash, element = newInstance(a, b, c));
+            var subHash = Integer.valueOf(hash);
+            if ((element = subGet(subHash, e -> e.isElement(a, b, c))) == null) {
+                subPut(subHash, element = newInstance(a, b, c));
             }
         }
         return element;

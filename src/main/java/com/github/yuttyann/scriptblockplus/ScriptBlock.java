@@ -133,8 +133,12 @@ public class ScriptBlock extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        ScriptViewer.PLAYERS.clear();
-        GlowEntity.DEFAULT.removeAll();
+        try {
+            ScriptViewer.PLAYERS.clear();
+            GlowEntity.DEFAULT.removeAll();
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

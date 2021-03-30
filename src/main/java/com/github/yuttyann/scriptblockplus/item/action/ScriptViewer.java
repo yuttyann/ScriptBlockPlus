@@ -58,9 +58,14 @@ public final class ScriptViewer extends ItemAction {
                 break;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
-                PLAYERS.remove(sbPlayer);
-                GlowEntity.DEFAULT.destroyAll(sbPlayer);
-                SBConfig.SCRIPT_VIEWER_STOP.send(sbPlayer);
+                try {
+                    PLAYERS.remove(sbPlayer);
+                    GlowEntity.DEFAULT.destroyAll(sbPlayer);
+                } catch (ReflectiveOperationException e) {
+                    e.printStackTrace();
+                } finally {
+                    SBConfig.SCRIPT_VIEWER_STOP.send(sbPlayer);
+                }
                 break;
             default:
         }

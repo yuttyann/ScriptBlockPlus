@@ -115,9 +115,9 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
         if (element == null) {
             getElementMap().put(hash, element = newInstance(a, b));
         } else if (!element.isElement(a, b)) {
-            var objectHash = Integer.valueOf(hash);
-            if ((element = subGet(objectHash, e -> e.isElement(a, b))) == null) {
-                subPut(objectHash, element = newInstance(a, b));
+            var subHash = Integer.valueOf(hash);
+            if ((element = subGet(subHash, e -> e.isElement(a, b))) == null) {
+                subPut(subHash, element = newInstance(a, b));
             }
         }
         return element;

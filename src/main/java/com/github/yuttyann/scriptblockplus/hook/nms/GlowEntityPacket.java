@@ -147,38 +147,32 @@ public final class GlowEntityPacket {
         return true;
     }
 
-    public boolean broadcastDestroyGlowEntity(@NotNull BlockCoords blockCoords) {
+    public boolean broadcastDestroyGlowEntity(@NotNull BlockCoords blockCoords) throws ReflectiveOperationException {
         if (GLOW_ENTITIES.isEmpty()) {
             return false;
         }
         var removed = false;
-        try {
-            var id = new int[1];
-            var iterator = GLOW_ENTITIES.values().iterator();
-            while (iterator.hasNext()) {
-                var glowEntity = iterator.next();
-                if (glowEntity.compare(blockCoords)) {
-                    id[0] = glowEntity.getId();
-                    NMSHelper.sendPacket(createDestroy(id));
-                    glowEntity.setDead(true);
-                    glowEntity.removeEntry();
-                    iterator.remove();
-                    removed = true;
-                }
+        var id = new int[1];
+        var iterator = GLOW_ENTITIES.values().iterator();
+        while (iterator.hasNext()) {
+            var glowEntity = iterator.next();
+            if (glowEntity.compare(blockCoords)) {
+                id[0] = glowEntity.getId();
+                NMSHelper.sendPacket(createDestroy(id));
+                glowEntity.setDead(true);
+                glowEntity.removeEntry();
+                iterator.remove();
+                removed = true;
             }
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
         }
         return removed;
     }
 
-    public void destroyAll(@NotNull SBPlayer sbPlayer) {
+    public void destroyAll(@NotNull SBPlayer sbPlayer) throws ReflectiveOperationException {
         var glowEntities = GLOW_ENTITIES.get(sbPlayer.getUniqueId());
         if (!glowEntities.isEmpty()) {
             try {
                 NMSHelper.sendPacket(sbPlayer.getPlayer(), createDestroy(createIds(glowEntities)));
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
             } finally {
                 glowEntities.forEach(g -> { g.setDead(true); g.removeEntry(); });
                 GLOW_ENTITIES.removeAll(sbPlayer.getUniqueId());
@@ -186,13 +180,11 @@ public final class GlowEntityPacket {
         }
     }
 
-    public void removeAll() {
+    public void removeAll() throws ReflectiveOperationException {
         var glowEntities = GLOW_ENTITIES.values();
         if (!glowEntities.isEmpty()) {
             try {
                 NMSHelper.sendPacket(createDestroy(createIds(glowEntities)));
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
             } finally {
                 glowEntities.forEach(g -> { g.setDead(true); g.removeEntry(); });
                 GLOW_ENTITIES.clear();

@@ -61,34 +61,39 @@ public final class CuboidRegionRemove {
         scriptKeys.clear();
         var blocks = new HashSet<BlockCoords>();
         var iterator = new CuboidRegionIterator(region);
-        for (var scriptKey : ScriptKey.iterable()) {
-            var scriptJson = BlockScriptJson.get(scriptKey);
-            if (scriptJson.isEmpty()) {
-                continue;
-            }
-            iterator.reset();
-            var removed = false;
-            while (iterator.hasNext()) {
-                var blockCoords = iterator.next();
-                if (lightRemove(blockCoords, scriptJson)) {
-                    removed = true;
-                    if (!blocks.contains(blockCoords)) {
-                        blocks.add(BlockCoords.copy(blockCoords));
-                        GlowEntity.DEFAULT.broadcastDestroyGlowEntity(blockCoords);
+        try {
+            for (var scriptKey : ScriptKey.iterable()) {
+                var scriptJson = BlockScriptJson.get(scriptKey);
+                if (scriptJson.isEmpty()) {
+                    continue;
+                }
+                iterator.reset();
+                var removed = false;
+                while (iterator.hasNext()) {
+                    var blockCoords = iterator.next();
+                    if (lightRemove(blockCoords, scriptJson)) {
+                        removed = true;
+                        if (!blocks.contains(blockCoords)) {
+                            blocks.add(BlockCoords.copy(blockCoords));
+                            GlowEntity.DEFAULT.broadcastDestroyGlowEntity(blockCoords);
+                        }
                     }
                 }
+                if (removed) {
+                    scriptKeys.add(scriptKey);
+                    scriptJson.saveJson();
+                }
             }
-            if (removed) {
-                scriptKeys.add(scriptKey);
-                scriptJson.saveJson();
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        } finally {
+            var reuseIterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
+            for (var scriptKey : scriptKeys) {
+                PlayerTimerJson.removeAll(scriptKey, reuseIterator);
+                PlayerCountJson.removeAll(scriptKey, reuseIterator);
             }
+            this.iterator = iterator;
         }
-        var reuseIterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
-        for (var scriptKey : scriptKeys) {
-            PlayerTimerJson.removeAll(scriptKey, reuseIterator);
-            PlayerCountJson.removeAll(scriptKey, reuseIterator);
-        }
-        this.iterator = iterator;
         return this;
     }
     

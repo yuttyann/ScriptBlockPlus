@@ -68,6 +68,8 @@ public final class PlayerListener implements Listener {
         try {
             ScriptViewer.PLAYERS.remove(sbPlayer);
             GlowEntity.DEFAULT.destroyAll(sbPlayer);
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
         } finally {
             ((BaseSBPlayer) sbPlayer).init();
             ((BaseSBPlayer) sbPlayer).setOnline(false);
