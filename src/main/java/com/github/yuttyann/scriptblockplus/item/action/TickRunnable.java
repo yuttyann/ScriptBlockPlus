@@ -83,6 +83,16 @@ public class TickRunnable extends BukkitRunnable {
         if (PackageType.HAS_NMS) {
             lookBlocks(sbPlayer);
             if (tick % 5 == 0) {
+                for (var blockCoords : getBlockCoords(sbPlayer, KEY_TEMP)) {
+                    var block = blockCoords.getBlock();
+                    spawnParticlesOnBlock(sbPlayer.getPlayer(), block, ItemUtils.isAIR(block.getType()) ? Color.BLUE : Color.GREEN);
+                }
+            }
+            if (tick % 10 == 0) {
+                spawnGlowEntity(sbPlayer);
+            }
+        } else {
+            if (tick % 10 == 0) {
                 var count = new int[] { 0 };
                 var player = sbPlayer.getPlayer();
                 forEach(new PlayerRegion(player, PARTICLE_RANGE), b -> {
@@ -90,16 +100,6 @@ public class TickRunnable extends BukkitRunnable {
                         spawnParticlesOnBlock(player, b.getBlock(), null);
                     }
                 });
-            }
-            if (tick % 10 == 0) {
-                spawnGlowEntity(sbPlayer);
-            }
-        } else {
-            if (tick % 10 == 0) {
-                for (var blockCoords : getBlockCoords(sbPlayer, KEY_TEMP)) {
-                    var block = blockCoords.getBlock();
-                    spawnParticlesOnBlock(sbPlayer.getPlayer(), block, ItemUtils.isAIR(block.getType()) ? Color.BLUE : Color.GREEN);
-                }
             }
         }
     }
