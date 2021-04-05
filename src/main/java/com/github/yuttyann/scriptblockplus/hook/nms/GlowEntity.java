@@ -33,6 +33,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class GlowEntity {
 
+    /**
+     * このフィールドは、主にスクリプトの検索に利用されます。
+     */
     public static final GlowEntityPacket DEFAULT = new GlowEntityPacket();
 
     private final int id;
@@ -45,6 +48,15 @@ public final class GlowEntity {
     private boolean dead;
     private boolean[] flag = ArrayUtils.EMPTY_BOOLEAN_ARRAY;
 
+    /**
+     * コンストラクタ
+     * @param id - エンティティのID
+     * @param uuid - エンティティの{@link UUID}
+     * @param sbPlayer - 送信者
+     * @param teamColor - 発光色
+     * @param blockCoords - 座標
+     * @param flagSize - フラグの初期容量
+     */
     private GlowEntity(final int id, @NotNull UUID uuid, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) {
         this.id = id;
         this.x = blockCoords.getX();
@@ -58,6 +70,16 @@ public final class GlowEntity {
         }
     }
 
+    /**
+     * {@link GlowEntity}を作成します。
+     * @param nmsEntity - {@code net.minecraft.server.vX_X_RX.Entity}
+     * @param sbPlayer - 送信者
+     * @param teamColor - 発光色
+     * @param blockCoords - 座標
+     * @param flagSize - フラグの初期容量
+     * @return {@link GlowEntity} - インスタンス
+     * @throws ReflectiveOperationException - リフレクション関係で例外が発生した場合にスローされます。
+     */
     @NotNull
     static GlowEntity create(@NotNull Object nmsEntity, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) throws ReflectiveOperationException {
         int id = (int) PackageType.NMS.invokeMethod(nmsEntity, "EntityMagmaCube", "getId");
@@ -67,57 +89,110 @@ public final class GlowEntity {
         return glowEntity;
     }
 
+    /**
+     * エンティティIDを取得します。
+     * @return {@link int} - エンティティID
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * エンティティのX座標を取得します。
+     * @return {@link int} - X座標
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * エンティティのY座標を取得します。
+     * @return {@link int} - Y座標
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * エンティティのZ座標を取得します。
+     * @return {@link int} - Z座標
+     */
     public int getZ() {
         return z;
     }
 
+    /**
+     * エンティティのUUIDを取得します。
+     * @return {@link UUID} - エンティティのUUID
+     */
     @NotNull
     public UUID getUniqueId() {
         return uuid;
     }
-    
+
+    /**
+     * 送信者を取得します。
+     * @return {@link SBPlayer} - 送信者
+     */
     @NotNull
     public SBPlayer getSBPlayer() {
         return sbPlayer;
     }
 
+    /**
+     * 発光色(チームの色)を取得します。
+     * @return {@link TeamColor} - 発光色
+     */
     @NotNull
     public TeamColor getTeamColor() {
         return teamColor;
     }
 
-    public boolean removeEntry() {
-        return teamColor.getTeam().removeEntry(uuid.toString());
-    }
-
+    /**
+     * フラグを取得します。
+     * <p>
+     * 条件等を設定したい場合に利用してください。
+     * @return {@link boolean} - フラグ
+     */
     public boolean[] getFlag() {
         return flag;
     }
 
+    /**
+     * エンティティが消滅しているのかどうかを設定します。
+     * @param dead - 消滅しているのかどうか。
+     */
     void setDead(boolean dead) {
         this.dead = dead;
+        if (dead) {
+            teamColor.getTeam().removeEntry(uuid.toString());
+        } else {
+            teamColor.getTeam().addEntry(uuid.toString());
+        }
     }
 
+    /**
+     * エンティティが消滅しているのかどうか。
+     * @return {@link boolean} - 消滅している場合は{@code true}
+     */
     public boolean isDead() {
         return dead;
     }
 
+    /**
+     * エンティティの座標を比較します。
+     * @param block - ブロック
+     * @return {@link boolean} - 一致する場合は{@code true}
+     */
     public boolean compare(@NotNull Block block) {
         return getX() == block.getX() && getY() == block.getY() && getZ() == block.getZ();
     }
 
+    /**
+     * エンティティの座標を比較します。
+     * @param blockCoords - ブロックの座標
+     * @return {@link boolean} - 一致する場合は{@code true}
+     */
     public boolean compare(@NotNull BlockCoords blockCoords) {
         return blockCoords.compare(getX(), getY(), getZ());
     }

@@ -44,6 +44,10 @@ public final class VaultPermission extends HookPlugin {
         return "Vault";
     }
 
+    /**
+     * 権限プラグインを読み込みます。
+     * @return {@link VaultPermission} - インスタンス
+     */
     @NotNull
     public VaultPermission setupPermission() {
         var provider = Bukkit.getServicesManager().getRegistration(Permission.class);
@@ -62,53 +66,132 @@ public final class VaultPermission extends HookPlugin {
         return this;
     }
 
+    /**
+     * {@code SuperPerms}が有効になっているのかどうか。
+     * @return {@link boolean} - 有効な場合は{@code true}
+     */
+    public boolean isSuperPerms() {
+        return "SuperPerms".equals(name);
+    }
+
+    /**
+     * 権限プラグインが有効なのかどうか。
+     * @return {@link boolean} - 有効な場合は{@code true}
+     */
     public boolean isEnabled() {
         return permission != null && permission.isEnabled();
     }
 
+    /**
+     * 権限プラグインの名前を取得します。
+     * @return {@link String} - 権限プラグインの名前
+     */
     @NotNull
     public String getName() {
         return name;
     }
 
+    /**
+     * グループの名前を取得します。
+     * @param player - プレイヤー
+     * @return {@link String} - グループの名前
+     */
     @Nullable
     public String getPrimaryGroup(@NotNull OfflinePlayer player) {
         return permission.getPrimaryGroup(null, player);
     }
 
+    /**
+     * グループの名前を取得します。
+     * @param world - ワールド
+     * @param player - プレイヤー
+     * @return {@link String} - グループの名前
+     */
     @Nullable
     public String getPrimaryGroup(@Nullable String world, @NotNull OfflinePlayer player) {
         return permission.getPrimaryGroup(world, player);
     }
 
+    /**
+     * プレイヤーが指定されたグループに所属しているのかどうか。
+     * @param player - プレイヤー
+     * @param group - グループ
+     * @return {@link boolean} - 所属している場合は{@code true}
+     */
     public boolean playerInGroup(@Nullable OfflinePlayer player, @NotNull String group) {
         return permission.playerInGroup(null, player, group);
     }
 
+    /**
+     * プレイヤーが指定されたグループに所属しているのかどうか。
+     * @param world - ワールド
+     * @param player - プレイヤー
+     * @param group - グループ
+     * @return {@link boolean} - 所属している場合は{@code true}
+     */
     public boolean playerInGroup(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String group) {
         return permission.playerInGroup(world, player, group);
     }
 
+    /**
+     * プレイヤーを指定されたグループに所属させます。
+     * @param player - プレイヤー
+     * @param group - グループ
+     * @return {@link boolean} - 成功した場合は{@code true}
+     */
     public boolean playerAddGroup(@NotNull OfflinePlayer player, @NotNull String group) {
         return permission.playerAddGroup(null, player, group);
     }
 
+    /**
+     * プレイヤーを指定されたグループに所属させます。
+     * @param world - ワールド
+     * @param player - プレイヤー
+     * @param group - グループ
+     * @return {@link boolean} - 成功した場合は{@code true}
+     */
     public boolean playerAddGroup(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String group) {
         return permission.playerAddGroup(world, player, group);
     }
 
+    /**
+     * プレイヤーを指定されたグループから脱退させます。
+     * @param player - プレイヤー
+     * @param group - グループ
+     * @return {@link boolean} - 成功した場合は{@code true}
+     */
     public boolean playerRemoveGroup(@NotNull OfflinePlayer player, @NotNull String group) {
         return permission.playerRemoveGroup(null, player, group);
     }
 
+    /**
+     * プレイヤーを指定されたグループから脱退させます。
+     * @param world - ワールド
+     * @param player - プレイヤー
+     * @param group - グループ
+     * @return {@link boolean} - 成功した場合は{@code true}
+     */
     public boolean playerRemoveGroup(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String group) {
         return permission.playerRemoveGroup(world, player, group);
     }
 
+    /**
+     * プレイヤーに指定された権限を追加します。
+     * @param player - プレイヤー
+     * @param permission - パーミッション
+     * @return {@link boolean} - 成功した場合は{@code true}
+     */
     public boolean playerAdd(@NotNull OfflinePlayer player, @NotNull String permission) {
         return this.permission.playerAdd(null, player, permission);
     }
 
+    /**
+     * プレイヤーに指定された権限を追加します。
+     * @param world - ワールド
+     * @param player - プレイヤー
+     * @param permission - パーミッション
+     * @return {@link boolean} - 成功した場合は{@code true}
+     */
     public boolean playerAdd(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
         if (isSuperPerms()) {
             return playerHas(player, permission);
@@ -116,10 +199,23 @@ public final class VaultPermission extends HookPlugin {
         return this.permission.playerAdd(world, player, permission);
     }
 
+    /**
+     * プレイヤーから指定された権限を削除します。
+     * @param player - プレイヤー
+     * @param permission - パーミッション
+     * @return {@link boolean} - 成功した場合は{@code true}
+     */
     public boolean playerRemove(@NotNull OfflinePlayer player, @NotNull String permission) {
         return this.permission.playerRemove(null, player, permission);
     }
 
+    /**
+     * プレイヤーから指定された権限を削除します。
+     * @param world - ワールド
+     * @param player - プレイヤー
+     * @param permission - パーミッション
+     * @return {@link boolean} - 成功した場合は{@code true}
+     */
     public boolean playerRemove(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
         if (isSuperPerms()) {
             return playerRemove(player, permission);
@@ -127,10 +223,23 @@ public final class VaultPermission extends HookPlugin {
         return this.permission.playerRemove(world, player, permission);
     }
 
+    /**
+     * プレイヤーが指定された権限を所持しているのかどうか。
+     * @param player - プレイヤー
+     * @param permission - パーミッション
+     * @return {@link boolean} - 所持している場合は{@code true}
+     */
     public boolean playerHas(@NotNull OfflinePlayer player, @NotNull String permission) {
         return this.permission.playerHas(null, player, permission);
     }
 
+    /**
+     * プレイヤーが指定された権限を所持しているのかどうか。
+     * @param world - ワールド
+     * @param player - プレイヤー
+     * @param permission - パーミッション
+     * @return {@link boolean} - 所持している場合は{@code true}
+     */
     public boolean playerHas(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
         if (isSuperPerms()) {
             return playerHas(player, permission);
@@ -138,11 +247,13 @@ public final class VaultPermission extends HookPlugin {
         return this.permission.playerHas(world, player, permission);
     }
 
+    /**
+     * 指定された権限を所持しているのかどうか。
+     * @param sender - 送信者
+     * @param permission - パーミッション
+     * @return {@link boolean} - 所持している場合は{@code true}
+     */
     public boolean has(@NotNull CommandSender sender, @NotNull String permission) {
         return this.permission.has(sender, permission);
-    }
-
-    public boolean isSuperPerms() {
-        return "SuperPerms".equals(name);
     }
 }

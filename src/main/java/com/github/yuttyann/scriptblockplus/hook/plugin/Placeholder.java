@@ -43,6 +43,12 @@ public final class Placeholder extends HookPlugin {
         return "PlaceholderAPI";
     }
 
+    /**
+     * 指定された文字列を置換します。
+     * @param player - プレイヤー
+     * @param source - 文字列
+     * @return {@link String} - 置換後の文字列
+     */
     @NotNull
     @SuppressWarnings("deprecation")
     public String setPlaceholder(@NotNull OfflinePlayer player, @NotNull String source) {
@@ -55,6 +61,12 @@ public final class Placeholder extends HookPlugin {
         return source;
     }
 
+    /**
+     * 指定された文字列を置換します。
+     * @param player - プレイヤー
+     * @param source - 文字列
+     * @return {@link String} - 置換後の文字列
+     */
     @NotNull
     public String replace(@NotNull Player player, @NotNull String source) {
         source = StringUtils.replace(source, "<world>", player.getWorld().getName());
@@ -62,6 +74,12 @@ public final class Placeholder extends HookPlugin {
         return has() ? setPlaceholder(player, source) : source;
     }
 
+    /**
+     * 指定された文字列を置換します。
+     * @param world - ワールド
+     * @param source - 文字列
+     * @return {@link String} - 置換後の文字列
+     */
     @NotNull
     public String replace(@NotNull World world, @NotNull String source) {
         source = StringUtils.replace(source, "<world>", world.getName());

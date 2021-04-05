@@ -43,6 +43,10 @@ public final class VaultEconomy extends HookPlugin {
         return "Vault";
     }
 
+    /**
+     * 経済プラグインを読み込みます。
+     * @return {@link VaultEconomy} - インスタンス
+     */
     @NotNull
     public VaultEconomy setupEconomy() {
         var provider = Bukkit.getServicesManager().getRegistration(Economy.class);
@@ -61,41 +65,67 @@ public final class VaultEconomy extends HookPlugin {
         return this;
     }
 
+    /**
+     * 経済プラグインが有効なのかどうか。
+     * @return {@link boolean} - 有効な場合は{@code true}
+     */
     public boolean isEnabled() {
         return economy != null && economy.isEnabled();
     }
 
+    /**
+     * 経済プラグインの名前を取得します。
+     * @return {@link String} - 経済プラグインの名前
+     */
     @NotNull
     public String getName() {
         return name;
     }
 
-    public double getBalance(@NotNull OfflinePlayer player) {
-        return economy.getBalance(player);
-    }
-
+    /**
+     * プレイヤーが、指定された金額を所持しているのかどうか。
+     * @param player - プレイヤー
+     * @param amount - 金額
+     * @return {@link boolean} - 所持している場合は{@code true}
+     */
     public boolean has(@NotNull OfflinePlayer player, double amount) {
         return economy.has(player, amount);
     }
 
+    /**
+     * プレイヤーの所持金から、指定された金額を引き落とします。
+     * @param player - プレイヤー
+     * @param amount - 金額
+     * @return {@link boolean} - 成功した場合は{@code true}
+     */
     public boolean withdrawPlayer(@NotNull OfflinePlayer player, double amount) {
         return economy.withdrawPlayer(player, amount).transactionSuccess();
     }
 
+    /**
+     * プレイヤーの所持金に、指定された金額を入金します。
+     * @param player - プレイヤー
+     * @param amount - 金額
+     * @return {@link boolean} - 成功した場合は{@code true}
+     */
     public boolean depositPlayer(@NotNull OfflinePlayer player, double amount) {
         return economy.depositPlayer(player, amount).transactionSuccess();
     }
 
-    public boolean setPlayer(@NotNull OfflinePlayer player, double amount) {
-        double balance = economy.getBalance(player);
-        if (balance > amount) {
-            return withdrawPlayer(player, balance - amount);
-        } else if (balance < amount) {
-            return depositPlayer(player, amount - balance);
-        }
-        return true;
+    /**
+     * プレイヤーの所持金を取得します。
+     * @param player - プレイヤー
+     * @return {@link double} - 所持金
+     */
+    public double getBalance(@NotNull OfflinePlayer player) {
+        return economy.getBalance(player);
     }
 
+    /**
+     * 指定した金額を、経済プラグインの形式に変換します。
+     * @param amount - 金額
+     * @return {@link String} - 変換された文字列
+     */
     @NotNull
     public String format(double amount) {
         return economy.format(amount);
