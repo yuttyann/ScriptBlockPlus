@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class Scheduler {
 
-    private Plugin plugin;
+    private final Plugin plugin;
 
     public Scheduler(@NotNull Plugin plugin) {
         this.plugin = plugin;
