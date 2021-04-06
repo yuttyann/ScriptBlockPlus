@@ -8,9 +8,15 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 
 導入
 -----------
-[Releases](https://github.com/yuttyann/ScriptBlockPlus/releases)または[Yuttyann Files](https://file.yuttyann44581.net/)から`ScriptBlockPlus`のダウンロードを行ってください。  
+配布サイトから`ScriptBlockPlus`のダウンロードを行ってください。  
 その後前提プラグインである[`Vault`](https://dev.bukkit.org/projects/vault)をダウンロードを行い`plugins`フォルダへ保存すれば完了です。  
 
+**★各バージョンの動作範囲★**
+| ScriptBlockPlus | Bukkit | Java |
+|:---:|:---:|:---:|
+|`1.0.0-1.5.0`|`1.7.x-1.13.2`|**Java7-8**|
+|`1.6.0-1.8.4`|`1.8.x-1.15.2`|**Java8**|
+|`1.8.5-2.1.0`|`1.9.x-1.16.x`|**Java8-11**|
 ### JAVA8版
 別の[レポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。  
 古いプラットフォームのサーバーで**Java11**が動作しない場合はご利用ください。  
@@ -19,7 +25,6 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 ### 連携プラグイン
 | Plugin | Description | Version |
 |:---|:---|:---:|
-| [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)  | 検索機能とパケットの拡張 | **ALL** |
 | [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの拡張 | **ALL** |
 | [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定 | **ALL** |
 
@@ -31,7 +36,7 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 ・**[Spigot](https://www.spigotmc.org/)**  
 ・**[Tuinity](https://github.com/Spottedleaf/Tuinity)**  
 ・**[PaperMC](https://papermc.io/)**  
-・**[AkarinPRJ](https://akarin.app/)**  
+・**[AkarinPRJ](https://github.com/Akarin-project/Akarin)**  
 ・**[CatServer](https://github.com/Luohuayu/CatServer)**`(Java11では動作しません)`  
 
 **★バージョン"1.13-1.13.1"の動作について★**  
