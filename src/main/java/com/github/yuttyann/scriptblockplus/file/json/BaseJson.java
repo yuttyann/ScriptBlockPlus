@@ -575,4 +575,15 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         var baseJson = (BaseJson<?>) obj;
         return Objects.equals(name, baseJson.name) && Objects.equals(file, baseJson.file);
     }
+
+    @Override
+    @NotNull
+    public String toString() {
+        try {
+            return GSON_HOLDER.getGson().toJson(copyElements(), getCollectionType());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "[]";
+    }
 }
