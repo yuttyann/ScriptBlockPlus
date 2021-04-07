@@ -14,9 +14,12 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 **★各バージョンの動作範囲★**
 | Plugin | Server | Java |
 |:---:|:---:|:---:|
-|`1.0.0-1.5.0`|`1.7.x-1.13.2`|**[Java7](https://jdk.java.net/java-se-ri/7)-[8](https://adoptopenjdk.net/?variant=openjdk8)**|
+|**`x.x.x-JV8`**|**`1.9.x-1.16.x`**|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
+|**`2.0.4-2.1.1`**|**`1.9.x-1.16.x`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11)**|
+|`1.8.5-2.0.3`|`1.9.x-1.16.x`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
 |`1.6.0-1.8.4`|`1.8.x-1.15.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|`1.8.5-2.1.1`|`1.9.x-1.16.x`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)-[11](https://adoptopenjdk.net/?variant=openjdk11)**|
+|`1.4.0-1.5.0`|`1.7.x-1.13.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
+|`1.0.0-1.3.3`|`1.7.x-1.13.2`|**[Java7](https://jdk.java.net/java-se-ri/7)**|
 ### JAVA8版
 別の[レポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。  
 古いプラットフォームのサーバーで[**Java11**](https://adoptopenjdk.net/?variant=openjdk11)が動作しない場合はご利用ください。  
