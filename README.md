@@ -11,6 +11,17 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 配布サイトから`ScriptBlockPlus`のダウンロードを行ってください。  
 その後前提プラグインである[`Vault`](https://dev.bukkit.org/projects/vault)をダウンロードを行い`plugins`フォルダへ保存すれば完了です。  
 
+### Java8版
+別の[レポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。  
+古いプラットフォームのサーバーで[**Java11**](https://adoptopenjdk.net/?variant=openjdk11)が動作しない場合はご利用ください。  
+但し、基本的にはサポートを行っていない事と、近いうちに更新停止することをご了承ください。  
+
+### 連携プラグイン
+| Plugin | Description | Version |
+|:---|:---|:---:|
+| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの拡張 | **ALL** |
+| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定 | **ALL** |  
+
 **★各バージョンの動作範囲★**
 | Plugin | Server | Java |
 |:---:|:---:|:---:|
@@ -20,16 +31,6 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 |`1.6.0-1.8.4`|`1.8.x-1.15.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
 |`1.4.0-1.5.0`|`1.7.x-1.13.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
 |`1.0.0-1.3.3`|`1.7.x-1.13.2`|**[Java7](https://jdk.java.net/java-se-ri/7)**|
-### JAVA8版
-別の[レポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。  
-古いプラットフォームのサーバーで[**Java11**](https://adoptopenjdk.net/?variant=openjdk11)が動作しない場合はご利用ください。  
-但し、基本的にはサポートを行っていない事と、近いうちに更新停止することをご了承ください。  
-
-### 連携プラグイン
-| Plugin | Description | Version |
-|:---|:---|:---:|
-| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの拡張 | **ALL** |
-| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定 | **ALL** |
 
 対応プラットフォーム
 -----------
