@@ -12,7 +12,7 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 その後前提プラグインである[`Vault`](https://dev.bukkit.org/projects/vault)をダウンロードを行い`plugins`フォルダへ保存すれば完了です。  
 
 ### Java8版
-別の[レポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。  
+別の[リポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。  
 古いプラットフォームのサーバーで[**Java11**](https://adoptopenjdk.net/?variant=openjdk11)が動作しない場合はご利用ください。  
 但し、基本的にはサポートを行っていない事と、近いうちに更新停止することをご了承ください。  
 
