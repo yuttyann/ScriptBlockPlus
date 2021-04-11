@@ -8,7 +8,7 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 
 導入
 -----------
-配布サイトから`ScriptBlockPlus`のダウンロードを行ってください。  
+[配](https://file.yuttyann44581.net/)[布](https://github.com/yuttyann/ScriptBlockPlus/releases)[サ](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/)[イ](https://www.curseforge.com/minecraft/bukkit-plugins/scriptblockplus)[ト](https://www.mcbbs.net/thread-691900-1-1.html)から`ScriptBlockPlus`のダウンロードを行ってください。  
 その後前提プラグインである[`Vault`](https://dev.bukkit.org/projects/vault)をダウンロードを行い`plugins`フォルダへ保存すれば完了です。  
 
 ### Java8版
@@ -50,6 +50,7 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 
 リンク
 -----------
+**[[Files, JP]](https://file.yuttyann44581.net/)**  
 **[[Github, JP]](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91)**  
 **[[Dropbox, JP]](https://www.dropbox.com/sh/gj8vunx95785y2d/AABdP-kJhEilLHWMWZtaWgQma)**  
 **[[MCPoteton, JP]](https://mcpoteton.com/mcplugin-scriptblockplus)**  
