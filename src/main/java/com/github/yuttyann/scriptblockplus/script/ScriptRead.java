@@ -132,11 +132,11 @@ public class ScriptRead extends ScriptMap implements SBRead {
             SBConfig.CONSOLE_ERROR_SCRIPT_EXECUTE.replace(scriptKey, blockCoords).console();
             return false;
         }
-        Bukkit.getPluginManager().callEvent(new ScriptReadStartEvent(ramdomId, this));
+        Bukkit.getPluginManager().callEvent(new ScriptReadStartEvent(randomId, this));
         try {
             return perform(index);
         } finally {
-            Bukkit.getPluginManager().callEvent(new ScriptReadEndEvent(ramdomId, this));
+            Bukkit.getPluginManager().callEvent(new ScriptReadEndEvent(randomId, this));
             StreamUtils.filter(this, ScriptRead::isInitialize, ObjectMap::clear);
         }
     }

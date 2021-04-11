@@ -52,7 +52,7 @@ ScriptViewer:
 # There are no placeholders
 NotVaultMessage: '&cVault not found!'
 SenderNoPlayerMessage: '&cYou cannot do this as console.'
-NotPermissionMessage: '&cYou dont have permission to do this.'
+NotPermissionMessage: '&cYou don''t have permission to do this.'
 GiveToolMessage: '&aAuxiliary tools were distributed.'
 AllFileReloadMessage: '&aReloaded successfully.'
 PluginBackupMessage: '&aBackup of plugin data is complete.'
@@ -74,7 +74,7 @@ UpdateDownloadEndMessage: '&6Download completed!|~File name: %name%|~File size: 
 UpdateCheckMessage: '&bNew version available!|~v%version% the latest ver.|~Name: %name%|~>>>Change log<<<|~%details%'
 
 # There are no placeholders
-ErrorUpdateMessage: '&cError occured while checking new version.'
+ErrorUpdateMessage: '&cError occurred while checking new version.'
 
 # %scriptkey% : Script key
 ScriptCopyMessage: '&aCopy the script for the "%scriptkey%" scriptkey.'
@@ -104,7 +104,7 @@ SelectorRemoveMessage: '&cScript "%scriptkey%" has been removed from selected ar
 
 # %option% : Name of the option where the error occurred
 # %cause%  : Cause of error
-OptionFailedToExecuteMessage: '&cError occured while executing script "%option%"|~&cPossible reason: %cause%'
+OptionFailedToExecuteMessage: '&cError occurred while executing script "%option%"|~&cPossible reason: %cause%'
 
 # There are no placeholders
 ActiveDelayMessage: '&cThis script is in delay, you cant use it now.'
@@ -118,8 +118,8 @@ ActiveCooldownMessage: '&cThis script is in cooldown [%hour%h %minute%m %second%
 SuccActionDataMessage: '&aAction "%action%" selected.'
 
 # There are no placeholders
-ErrorActionDataMessage: '&cInvaild setting.'
-ErrorScriptCheckMessage: '&cInvaild script.'
+ErrorActionDataMessage: '&cInvalid setting.'
+ErrorScriptCheckMessage: '&cInvalid script.'
 ErrorScriptFileCheckMessage: '&cNo script file.'
 
 # %scriptkey% : Script key
@@ -132,8 +132,8 @@ ErrorGroupMessage: '&cOnly members of the group "%group%" can run the script.'
 # %amount%   : Amount of item
 # %damage%   : Damage value of item
 # %name%     : Item name
-ErrorHandMessage: '&cThe items you hold in hand is not vaild,|~you must hold at least "&r%name%&r[%material%:%damage%]&c" with amount "&r%amount%x&c"'
-ErrorItemMessage: '&cThe items in your inventory is not vaild,|~you must keep in your inventory at least "&r%name%&r[%material%:%damage%]&c" with amount "&r%amount%x&c"'
+ErrorHandMessage: '&cThe items you hold in hand is not valid,|~you must hold at least "&r%name%&r[%material%:%damage%]&c" with amount "&r%amount%x&c"'
+ErrorItemMessage: '&cThe items in your inventory is not valid,|~you must keep in your inventory at least "&r%name%&r[%material%:%damage%]&c" with amount "&r%amount%x&c"'
 
 # %cost%   : Required amount
 # %result% : Missing amount
