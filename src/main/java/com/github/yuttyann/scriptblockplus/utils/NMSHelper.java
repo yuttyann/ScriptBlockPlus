@@ -188,10 +188,10 @@ public final class NMSHelper {
     @NotNull
     public static Map<String, Material> getItemRegistry() throws ReflectiveOperationException {
         var materials = new HashMap<String, Material>();
-        var registory = NMS.getFieldValue("Item", "REGISTRY", null);
-        var registoryMap = (Map<?, ?>) NMS.getFieldValue(true, "RegistrySimple", "c", registory);
+        var registry = NMS.getFieldValue("Item", "REGISTRY", null);
+        var registryMap = (Map<?, ?>) NMS.getFieldValue(true, "RegistrySimple", "c", registry);
         var bukkitMaterial = CB_UTIL.getMethod("CraftMagicNumbers", "getMaterial", NMS.getClass("Item"));
-        for (var entry : registoryMap.entrySet()) {
+        for (var entry : registryMap.entrySet()) {
             materials.put(getKey(entry.getKey()), (Material) bukkitMaterial.invoke(null, entry.getValue()));
         }
         return materials;
