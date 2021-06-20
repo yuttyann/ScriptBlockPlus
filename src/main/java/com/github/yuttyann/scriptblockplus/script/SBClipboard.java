@@ -20,18 +20,13 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * ScriptBlockPlus SBClipboard クラス
@@ -42,34 +37,22 @@ public final class SBClipboard {
     private final SBPlayer sbPlayer;
     private final ScriptKey scriptKey;
     private final BlockCoords blockCoords;
+    private final BlockScript blockScript;
     private final BlockScriptJson scriptJson;
 
-    private final Set<UUID> author;
-    private final List<String> script;
-    private final String selector;
-    private final int amount;
-
-    public SBClipboard(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull BlockScriptJson scriptJson) {
+    public SBClipboard(@NotNull SBPlayer sbPlayer, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
         this.sbPlayer = sbPlayer;
-        this.scriptKey = scriptJson.getScriptKey();
+        this.scriptKey = scriptKey;
+        this.scriptJson = BlockScriptJson.get(scriptKey); 
         this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
-        this.scriptJson = scriptJson;
 
-        var blockScript = scriptJson.load(blockCoords);
-        this.author = Sets.newLinkedHashSet(blockScript.getAuthors());
-        this.script = Lists.newArrayList(blockScript.getScripts());
-        this.selector = blockScript.getSelector();
-        this.amount = blockScript.getAmount();
-    }
-
-    @NotNull
-    public BlockScriptJson getBlockScriptJson() {
-        return scriptJson;
-    }
-
-    @NotNull
-    public BlockCoords getBlockCoords() {
-        return blockCoords;
+        var copyScript = scriptJson.fastLoad(this.blockCoords);
+        try {
+            copyScript = copyScript == null ? null : (BlockScript) copyScript.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        this.blockScript = copyScript;
     }
 
     @NotNull
@@ -78,30 +61,27 @@ public final class SBClipboard {
     }
 
     @NotNull
-    public Set<UUID> getAuthor() {
-        return author;
+    public ScriptKey getScriptKey() {
+        return scriptKey;
     }
 
     @NotNull
-    public List<String> getScript() {
-        return script;
+    public BlockCoords getBlockCoords() {
+        return blockCoords;
     }
 
     @Nullable
-    public String getSelector() {
-        return selector;
+    public BlockScript getBlockScript() {
+        return blockScript;
     }
 
-    public int getAmount() {
-        return amount;
-    }
-
-    public void save() {
-        scriptJson.saveJson();
+    @NotNull
+    public BlockScriptJson getBlockScriptJson() {
+        return scriptJson;
     }
 
     public boolean copy() {
-        if (!BlockScriptJson.contains(blockCoords, scriptJson)) {
+        if (blockScript == null || !BlockScriptJson.contains(blockCoords, scriptJson)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
             return false;
         }
@@ -116,17 +96,17 @@ public final class SBClipboard {
     }
 
     public boolean paste(@NotNull BlockCoords blockCoords, boolean overwrite) {
-        if (BlockScriptJson.contains(blockCoords, scriptJson) && !overwrite) {
+        if (blockScript == null || (BlockScriptJson.contains(blockCoords, scriptJson) && !overwrite)) {
             return false;
         }
         try {
             var scriptParam = scriptJson.load(blockCoords);
-            scriptParam.setAuthors(author);
+            scriptParam.setAuthors(blockScript.getAuthors());
             scriptParam.getAuthors().add(sbPlayer.getUniqueId());
-            scriptParam.setScripts(script);
+            scriptParam.setScripts(blockScript.getScripts());
             scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
-            scriptParam.setSelector(selector);
-            scriptParam.setAmount(amount);
+            scriptParam.setSelector(blockScript.getSelector());
+            scriptParam.setAmount(blockScript.getAmount());
             scriptJson.saveJson();
             PlayerTimerJson.removeAll(scriptKey, blockCoords);
             PlayerCountJson.removeAll(scriptKey, blockCoords);
