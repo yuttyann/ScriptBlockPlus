@@ -67,7 +67,7 @@ public abstract class SubElementMap<E extends BaseElement> {
 
     /**
      * サブマップの要素数を取得します。
-     * @return {@link int} - 要素数
+     * @return {@code int} - 要素数
      */
     protected final int subSize() {
         return subMap == null ? 0 : subMap.size();
@@ -75,7 +75,7 @@ public abstract class SubElementMap<E extends BaseElement> {
 
     /**
      * サブマップに要素が存在しない場合に{@code true}を返します。
-     * @return {@link boolean} - 要素が存在しない場合は{@code true}
+     * @return {@code boolean} - 要素が存在しない場合は{@code true}
      */
     protected final boolean isSubEmpty() {
         return subMap == null || subMap.isEmpty();
@@ -83,7 +83,7 @@ public abstract class SubElementMap<E extends BaseElement> {
 
     /**
      * サブマップに要素が存在する場合に{@code true}を返します。
-     * @return {@link boolean} - 要素が存在する場合は{@code true}
+     * @return {@code boolean} - 要素が存在する場合は{@code true}
      */
     protected final boolean isSubNotEmpty() {
         return !isSubEmpty();
@@ -92,7 +92,7 @@ public abstract class SubElementMap<E extends BaseElement> {
     /**
      * サブマップにキーが存在する場合に{@code true}を返します。
      * @param hash - ハッシュコード
-     * @return {@link boolean} - キーが存在する場合は{@code true}
+     * @return {@code boolean} - キーが存在する場合は{@code true}
      */
     protected final boolean subContainsKey(final Integer hash) {
         return isSubNotEmpty() && subMap.containsKey(hash);
@@ -111,7 +111,7 @@ public abstract class SubElementMap<E extends BaseElement> {
      * サブマップから要素を削除します。
      * @param hash - ハッシュコード
      * @param filter - フィルター
-     * @return {@link boolean} - 削除に成功した場合は{@code true}
+     * @return {@code boolean} - 削除に成功した場合は{@code true}
      */
     protected final boolean subRemove(final Integer hash, @NotNull Predicate<E> filter) {
         if (!subContainsKey(hash)) {

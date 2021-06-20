@@ -26,7 +26,7 @@ import org.bukkit.Bukkit;
  * ScriptBlockPlus Console オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "console", syntax = "@console ")
+@OptionTag(name = "console", syntax = "@console ", description = "<command>")
 public final class Console extends BaseOption {
 
     @Override

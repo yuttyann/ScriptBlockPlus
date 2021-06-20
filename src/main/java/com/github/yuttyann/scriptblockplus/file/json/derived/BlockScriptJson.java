@@ -78,7 +78,7 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
         return scriptJson.has(blockCoords);
     }
 
-    public static void convart(@NotNull ScriptKey scriptKey) {
+    public static void convert(@NotNull ScriptKey scriptKey) {
         // YAML形式のファイルからデータを読み込むクラス
         var scriptLoader = new SBLoader(scriptKey);
         if (!scriptLoader.getFile().exists()) {

@@ -29,7 +29,6 @@ import java.util.Map;
  * ScriptBlockPlus ScriptKey クラス
  * @author yuttyann44581
  */
-@SuppressWarnings("serial")
 public final class ScriptKey implements Comparable<ScriptKey>, Serializable {
 
     private static final Map<String, ScriptKey> KEYS = new LinkedHashMap<>();

@@ -21,6 +21,7 @@ import com.github.yuttyann.scriptblockplus.item.ChangeSlot;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
@@ -49,8 +50,7 @@ public final class ScriptEditor extends ItemAction {
         var scriptKey = sbPlayer.getObjectMap().get(KEY, ScriptKey.INTERACT);
         var blockCoords = Optional.ofNullable(runItem.getBlockCoords());
         switch (runItem.getAction()) {
-            case LEFT_CLICK_AIR:
-            case LEFT_CLICK_BLOCK:
+            case LEFT_CLICK_AIR, LEFT_CLICK_BLOCK:
                 if (runItem.isSneaking() && !runItem.isAIR() && blockCoords.isPresent()) {
                     new SBOperation(scriptKey).remove(sbPlayer.getPlayer(), blockCoords.get());
                 } else if (!runItem.isSneaking()) {
@@ -58,15 +58,14 @@ public final class ScriptEditor extends ItemAction {
                     ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptKey);
                 }
                 break;
-            case RIGHT_CLICK_AIR:
-            case RIGHT_CLICK_BLOCK:
+            case RIGHT_CLICK_AIR, RIGHT_CLICK_BLOCK:
                 if (runItem.isSneaking() && !runItem.isAIR()) {
                     var sbClipboard = sbPlayer.getSBClipboard();
                     if (!blockCoords.isPresent() || !sbClipboard.isPresent() || !sbClipboard.get().paste(blockCoords.get(), true)) {
                         SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
                     }
                 } else if (!runItem.isSneaking() && !runItem.isAIR() && blockCoords.isPresent()) {
-                    new SBOperation(scriptKey).clipboard(sbPlayer, blockCoords.get()).copy();
+                    new SBClipboard(sbPlayer, scriptKey, blockCoords.get()).copy();
                 }
                 break;
             default:

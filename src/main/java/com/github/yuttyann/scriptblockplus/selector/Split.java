@@ -15,7 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.selector;
 
-import com.github.yuttyann.scriptblockplus.enums.splittype.Argment;
+import com.github.yuttyann.scriptblockplus.enums.splittype.Argument;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Split {
 
-    private final String start, end, name, argments;
+    private final String start, end, name, arguments;
 
     /**
      * コンストラクタ
@@ -57,12 +57,12 @@ public class Split {
         int nameIndex = source.indexOf(name, fromIndex), startIndex = source.indexOf(start, nameIndex + 1), endIndex = source.indexOf(end, startIndex + 1);
         if (nameIndex != -1 && startIndex != -1 && endIndex != -1) {
             this.name = source.substring(nameIndex, startIndex).trim();
-            this.argments = source.substring(startIndex + 1, endIndex).trim();
+            this.arguments = source.substring(startIndex + 1, endIndex).trim();
         } else if (nameIndex != -1) {
             this.name = source;
-            this.argments = null;
+            this.arguments = null;
         } else {
-            this.name = argments = null;
+            this.name = arguments = null;
         }
         this.start = start;
         this.end = end;
@@ -82,27 +82,27 @@ public class Split {
      * @return {@link String} - 引数
      */
     @Nullable
-    public String getArgments() {
-        return argments;
+    public String getArguments() {
+        return arguments;
     }
 
     /**
      * ({@link SplitValue})の配列を生成します。
-     * @param types - 検索を行いたい要素の配列(例: {@link Argment}等)
+     * @param types - 検索を行いたい要素の配列(例: {@link Argument}等)
      * @return {@link SplitValue} - 引数の一覧
      */
     @NotNull
     public SplitValue[] getValues(@NotNull SplitType[] types) {
-        if (StringUtils.isEmpty(argments)) {
+        if (StringUtils.isEmpty(arguments)) {
             return new SplitValue[0];
         }
-        var split = StringUtils.split(argments, ',');
+        var split = StringUtils.split(arguments, ',');
         return StreamUtils.toArray(split, s -> new SplitValue(s, types), SplitValue[]::new);
     }
 
     @Override
     @NotNull
     public String toString() {
-        return StringUtils.isEmpty(argments) ? name == null ? "" : name : name + start + argments + end;
+        return StringUtils.isEmpty(arguments) ? name == null ? "" : name : name + start + arguments + end;
     }
 }

@@ -26,7 +26,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  * ScriptBlockPlus BypassPerm オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "bypass_perm", syntax = "@bypassPERM:")
+@OptionTag(name = "bypass_perm", syntax = "@bypassPERM:", description = "<command>[/world]</node>")
 public final class BypassPerm extends BaseOption {
 
     @Override

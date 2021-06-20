@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
  * ScriptBlockPlus Group オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "group", syntax = "@group:")
+@OptionTag(name = "group", syntax = "@group:", description = "[world/]<group>")
 public final class Group extends BaseOption {
 
     @Override

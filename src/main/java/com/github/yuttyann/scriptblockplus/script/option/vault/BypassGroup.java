@@ -26,7 +26,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  * ScriptBlockPlus BypassGroup オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "bypass_group", syntax = "@bypassGROUP:")
+@OptionTag(name = "bypass_group", syntax = "@bypassGROUP:", description = "<command>[/world]</group>")
 public final class BypassGroup extends BaseOption {
 
     @Override

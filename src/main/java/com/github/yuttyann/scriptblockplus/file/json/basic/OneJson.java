@@ -51,7 +51,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
         /**
          * 引数が一致するのか比較します。
          * @param a - 引数
-         * @return {@link boolean} - 要素が存在する場合は{@code true}
+         * @return {@code boolean} - 要素が存在する場合は{@code true}
          */
         public boolean isElement(@Nullable A a) {
             return compare(getA(), a);
@@ -59,7 +59,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
 
         /**
          * ハッシュコードを生成します。
-         * @return {@link int} - ハッシュコード
+         * @return {@code int} - ハッシュコード
          */
         @Override
         public final int hashCode() {
@@ -131,7 +131,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
     /**
      * 要素が存在するのか確認します。
      * @param a - 引数
-     * @return {@link boolean} - 要素が存在する場合は{@code true}
+     * @return {@code boolean} - 要素が存在する場合は{@code true}
      */
     public final boolean has(@Nullable A a) {
         return fastLoad(a) != null;
@@ -140,7 +140,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
     /**
      * 一致する要素を削除します。
      * @param a - 引数
-     * @return {@link boolean} - 削除に成功した場合は{@code true}
+     * @return {@code boolean} - 削除に成功した場合は{@code true}
      */
     public final boolean remove(@Nullable A a) {
         int hash = hash(a);

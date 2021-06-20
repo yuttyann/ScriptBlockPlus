@@ -20,8 +20,6 @@ import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
@@ -151,7 +149,6 @@ public class ScriptRead extends ScriptMap implements SBRead {
             }
         }
         EndProcessManager.forEach(e -> e.success(this));
-        PlayerCountJson.get(sbPlayer).action(PlayerCount::add, scriptKey, blockCoords);
         SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(scriptKey, blockCoords).console();
         return true;
     }
@@ -172,7 +169,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
             return true;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 }

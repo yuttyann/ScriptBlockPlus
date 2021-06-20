@@ -15,7 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.raytrace;
 
-import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -89,7 +89,7 @@ public final class SBBoundingBox {
     }
 
     private void setAxisAlignedBB(@NotNull Block block) throws ReflectiveOperationException {
-        if (PackageType.HAS_NMS) {
+        if (NetMinecraft.hasNMS()) {
             setSquare(block);
             return;
         }

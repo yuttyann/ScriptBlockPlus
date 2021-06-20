@@ -30,13 +30,13 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus Title オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "title", syntax = "@title:")
+@OptionTag(name = "title", syntax = "@title:", description = "<main>[/sub][/fadeIn-stay-fadeout]")
 public final class Title extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
         var slash = StringUtils.split(getOptionValue(), '/');
-        var title = StringUtils.setColor(slash.get(0) + "");
+        var title = StringUtils.setColor(slash.get(0));
         var subtitle = StringUtils.setColor(slash.size() > 1 ? slash.get(1) : "");
         int fadeIn = 10, stay = 40, fadeOut = 10;
         if (slash.size() == 3) {

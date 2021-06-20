@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
-import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntity;
+import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
 
@@ -54,7 +54,7 @@ public final class CuboidRegionRemove {
     @Nullable
     public CuboidRegionIterator result() {
         return iterator;
-    }
+    } 
 
     @NotNull
     public CuboidRegionRemove remove() {
@@ -75,7 +75,7 @@ public final class CuboidRegionRemove {
                         removed = true;
                         if (!blocks.contains(blockCoords)) {
                             blocks.add(BlockCoords.copy(blockCoords));
-                            GlowEntity.DEFAULT.broadcastDestroyGlowEntity(blockCoords);
+                            TickRunnable.GLOW_ENTITY.broadcastDestroy(blockCoords);
                         }
                     }
                 }

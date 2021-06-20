@@ -17,7 +17,7 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -29,14 +29,29 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+
 /**
  * ScriptBlockPlus ActionBar オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "actionbar", syntax = "@actionbar:")
+@OptionTag(name = "actionbar", syntax = "@actionbar:", description = "<message>[/second]")
 public final class ActionBar extends BaseOption implements Runnable {
 
-    private int tick, stay;
+    private static final boolean HAS_SPIGOT;
+
+    static {
+        var has = true;
+        try {
+            Class.forName("org.bukkit.entity.Player$Spigot");
+        } catch (ClassNotFoundException e) {
+            has = false;
+        }
+        HAS_SPIGOT = has;
+    }
+
+    private int second, stay;
     private String message;
     private BukkitTask task;
 
@@ -56,7 +71,7 @@ public final class ActionBar extends BaseOption implements Runnable {
     @Override
     public void run() {
         try {
-            if (!getSBPlayer().isOnline() || tick++ >= stay) {
+            if (!getSBPlayer().isOnline() || second++ >= stay) {
                 task.cancel();
             }
             send(getSBPlayer(), task.isCancelled() ? "" : message);
@@ -67,10 +82,12 @@ public final class ActionBar extends BaseOption implements Runnable {
 
     public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
         var player = sbPlayer.getPlayer();
-        if (Utils.isCBXXXorLater("1.12.2")) {
+        if (HAS_SPIGOT) {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+        } else if (Utils.isCBXXXorLater("1.12.2")) {
             var command = "minecraft:title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
             Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Bukkit.dispatchCommand(player, command));
-        } else if (PackageType.HAS_NMS) {
+        } else if (NetMinecraft.hasNMS()) {
             try {
                 NMSHelper.sendActionBar(player, message);
             } catch (ReflectiveOperationException e) {

@@ -49,7 +49,7 @@ public final class FormatVersion implements Serializable {
 
     /**
      * バージョンを取得します。
-     * @return {@link double} - バージョン
+     * @return {@code double} - バージョン
      */
     public double getVersion() {
         return version;

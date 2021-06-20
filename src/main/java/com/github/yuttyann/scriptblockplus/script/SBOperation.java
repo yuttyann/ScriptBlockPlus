@@ -21,7 +21,6 @@ import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.entity.Player;
@@ -123,7 +122,7 @@ public final class SBOperation {
         player.sendMessage("§eRedstone: §" + (selector == null ? "cfalse" : "atrue §d: §a" + selector));
         player.sendMessage("§eScripts:");
         blockScript.getScripts().forEach(s -> player.sendMessage("§6- §b" + s));
-        player.sendMessage("----------------------------------");
+        player.sendMessage("--------------------------------");
         SBConfig.CONSOLE_SCRIPT_VIEW.replace(scriptKey, blockCoords).console();
     }
 
@@ -143,10 +142,5 @@ public final class SBOperation {
             SBConfig.SCRIPT_REDSTONE_ENABLE.replace(scriptKey).send(player);
         }
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
-    }
-
-    @NotNull
-    public SBClipboard clipboard(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords) {
-        return new SBClipboard(sbPlayer, blockCoords, scriptJson);
     }
 }

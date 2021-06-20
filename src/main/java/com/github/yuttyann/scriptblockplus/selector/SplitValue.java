@@ -15,7 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.selector;
 
-import com.github.yuttyann.scriptblockplus.enums.splittype.Argment;
+import com.github.yuttyann.scriptblockplus.enums.splittype.Argument;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,18 +34,18 @@ public class SplitValue {
 
     /**
      * コンストラクタ
-     * @param argment - 引数
-     * @param types - 検索を行いたい要素の配列(例: {@link Argment}等)
+     * @param argument - 引数
+     * @param types - 検索を行いたい要素の配列(例: {@link Argument}等)
      */
-    public SplitValue(@NotNull String argment, @NotNull SplitType[] types) {
+    public SplitValue(@NotNull String argument, @NotNull SplitType[] types) {
         for (var splitType : types) {
-            if (splitType.match(argment)) {
+            if (splitType.match(argument)) {
                 this.type = splitType;
-                this.value = splitType.getValue(argment);
+                this.value = splitType.getValue(argument);
                 return;
             }
         }
-        throw new NullPointerException("SplitType[" + argment + "] not found");
+        throw new NullPointerException("SplitType[" + argument + "] not found");
     }
 
     /**
@@ -71,7 +71,7 @@ public class SplitValue {
 
     /**
      * 否定形なのかどうか。
-     * @return {@link boolean} - 否定形な場合は{@code true}
+     * @return {@code boolean} - 否定形な場合は{@code true}
      */
     public boolean isInverted() {
         if (cacheInverted == null && StringUtils.isNotEmpty(value)) {

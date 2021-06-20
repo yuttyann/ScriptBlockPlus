@@ -28,7 +28,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -164,11 +163,6 @@ public final class Utils {
             }
         }
         return world;
-    }
-
-    @SuppressWarnings("deprecation")
-    public static void updateInventory(@NotNull Player player) {
-        player.updateInventory();
     }
 
     @Nullable

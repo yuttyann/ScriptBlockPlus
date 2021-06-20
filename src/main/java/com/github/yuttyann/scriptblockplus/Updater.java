@@ -54,30 +54,46 @@ public final class Updater {
     private boolean update;
     private List<String> details;
 
+    /**
+     * コンストラクタ
+     * @param plugin - プラグイン(同作者の物のみ)
+     */
     public Updater(@NotNull Plugin plugin) {
         this.plugin = plugin;
         this.pluginName = plugin.getName();
         this.pluginVersion = plugin.getDescription().getVersion();
     }
 
+    /**
+     * プラグインを取得します。
+     * @return {@link Plugin} - プラグイン
+     */
     @NotNull
     public Plugin getPlugin() {
         return plugin;
     }
 
+    /**
+     * ファイルの名前を取得します。
+     * @return {@link String} - ファイルの名前
+     */
     @NotNull
     public String getJarName() {
         return pluginName + " v" + latest + ".jar";
     }
 
+    /**
+     * アップデート情報を読み込みます。
+     * @throws Exception - ファイルの取得関係の処理で例外が発生した際にスローされます。
+     */
     public void load() throws Exception {
         if(!SBConfig.UPDATE_CHECKER.getValue()){
-            update = false;
+            this.update = false;
             return;
         }
-        update = false;
-        details = null;
-        latest = downloadURL = changeLogURL = null;
+        this.update = false;
+        this.details = null;
+        this.latest = this.downloadURL = this.changeLogURL = null;
         var rootChildren = getDocument(pluginName).getDocumentElement().getChildNodes();
         for (int i = 0; i < rootChildren.getLength(); i++) {
             var updateNode = rootChildren.item(i);
@@ -104,7 +120,7 @@ public final class Updater {
                     var detailsChildren = node.getChildNodes();
                     this.details = new ArrayList<>(detailsChildren.getLength());
                     for (int k = 0; k < detailsChildren.getLength(); k++) {
-                        Node detailsNode = detailsChildren.item(k);
+                        var detailsNode = detailsChildren.item(k);
                         if (detailsNode.getNodeType() == Node.ELEMENT_NODE) {
                             details.add(((Element) detailsNode).getAttribute("info"));
                         }
@@ -115,6 +131,11 @@ public final class Updater {
         this.update = Utils.getVersionInt(latest) > Utils.getVersionInt(pluginVersion);
     }
 
+    /**
+     * アップデートを実行します。
+     * @param sender - 送信者(メッセージ等)
+     * @return {@code boolean} - アップデートに成功した場合は{@code true}
+     */
     public boolean run(@NotNull CommandSender sender) {
         if (!SBConfig.UPDATE_CHECKER.getValue() || !update) {
             return false;
@@ -151,7 +172,7 @@ public final class Updater {
         return true;
     }
 
-    private String getSize(long length) {
+    private String getSize(final long length) {
         double b = 1024D;
         if (b > length) {
             return length + " Byte";

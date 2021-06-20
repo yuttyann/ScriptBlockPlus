@@ -64,7 +64,7 @@ public abstract class Option implements Comparable<Option> {
 
     /**
      * 構文の文字列の長さを取得します。
-     * @return {@link int} - 文字列の長さ
+     * @return {@code int} - 文字列の長さ
      */
     public final int length() {
         return length;
@@ -92,7 +92,7 @@ public abstract class Option implements Comparable<Option> {
     /**
      * 指定されたスクリプト内のオプションが正常なのか確認します。
      * @param script - スクリプト
-     * @return {@link boolean} - 正常だった場合は{@code true}
+     * @return {@code boolean} - 正常だった場合は{@code true}
      */
     public final boolean isOption(@NotNull String script) {
         return script.length() >= length && script.indexOf(syntax) == 0;
@@ -100,7 +100,7 @@ public abstract class Option implements Comparable<Option> {
 
     /**
      * 失敗時に終了処理を無視するのかどうか。
-     * @return {@link boolean} - 終了処理を無視する場合は{@code true}
+     * @return {@code boolean} - 終了処理を無視する場合は{@code true}
      */
     public boolean isFailedIgnore() {
         return false;
@@ -109,7 +109,7 @@ public abstract class Option implements Comparable<Option> {
     /**
      * オプションを呼び出します。
      * @param sbRead - {@link SBRead}
-     * @return {@link boolean} - 有効な場合は{@code true}
+     * @return {@code boolean} - 有効な場合は{@code true}
      */
     public abstract boolean callOption(@NotNull SBRead sbRead);
 

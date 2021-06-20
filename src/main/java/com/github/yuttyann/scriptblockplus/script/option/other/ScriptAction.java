@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus ScriptAction オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "scriptaction", syntax = "@scriptaction:")
+@OptionTag(name = "scriptaction", syntax = "@scriptaction:", description = "<action>")
 public final class ScriptAction extends BaseOption {
 
     public static final String KEY = Utils.randomUUID();
@@ -40,23 +40,15 @@ public final class ScriptAction extends BaseOption {
             return false;
         }
         var action = (Action) getTempMap().get(KEY);
-        return StreamUtils.allMatch(StringUtils.split(getOptionValue(), ','), s -> equals(action, s));
+        return StreamUtils.allMatch(StringUtils.split(getOptionValue(), ','), s -> compare(action, s));
     }
 
-    private boolean equals(@Nullable Action action, @NotNull String type) {
-        if (type.equalsIgnoreCase("shift")) {
-            return getPlayer().isSneaking();
-        }
-        return ScriptKey.INTERACT.equals(getScriptKey()) && action == getAction(type);
+    private boolean compare(@Nullable Action action, @NotNull String type) {
+        return type.equalsIgnoreCase("shift") ? getPlayer().isSneaking() : ScriptKey.INTERACT.equals(getScriptKey()) && action == getAction(type);
     }
 
     @Nullable
     private Action getAction(@NotNull String action) {
-        if (action.equalsIgnoreCase("left")) {
-            return Action.LEFT_CLICK_BLOCK;
-        } else if (action.equalsIgnoreCase("right")) {
-            return Action.RIGHT_CLICK_BLOCK;
-        }
-        return null;
+        return action.equalsIgnoreCase("left") ? Action.LEFT_CLICK_BLOCK : action.equalsIgnoreCase("right") ? Action.RIGHT_CLICK_BLOCK : null;
     }
 }

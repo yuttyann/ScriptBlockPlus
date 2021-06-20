@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
  * ScriptBlockPlus Perm オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "permission", syntax = "@perm:")
+@OptionTag(name = "permission", syntax = "@perm:", description = "[world/]<node>")
 public final class Perm extends BaseOption {
 
     @Override

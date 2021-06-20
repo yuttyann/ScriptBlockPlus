@@ -24,7 +24,7 @@ import org.bukkit.Bukkit;
  * ScriptBlockPlus Server オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "server", syntax = "@server ")
+@OptionTag(name = "server", syntax = "@server ", description = "<message>")
 public final class Server extends BaseOption {
 
     @Override

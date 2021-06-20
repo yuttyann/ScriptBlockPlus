@@ -146,6 +146,16 @@ public final class BaseSBPlayer extends PlayerMap {
     }
 
     @Override
+    public void sendMessage(@NotNull UUID uuid, @NotNull String message) {
+        player.sendMessage(uuid, message);
+    }
+
+    @Override
+    public void sendMessage(@NotNull UUID uuid, @NotNull String[] messages) {
+        player.sendMessage(uuid, messages);   
+    }
+
+    @Override
     @NotNull
     public PermissionAttachment addAttachment(@NotNull Plugin plugin) {
         return player.addAttachment(plugin);
@@ -211,12 +221,19 @@ public final class BaseSBPlayer extends PlayerMap {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         return this == obj || obj instanceof BaseSBPlayer && uuid.equals(((BaseSBPlayer) obj).uuid);
     }
 
     @Override
+    @NotNull
     public String toString() {
         return "BaseSBPlayer{uuid=" + uuid + ", player=" + player + ", isOnline=" + isOnline + '}';
+    }
+
+    @Override
+    @NotNull
+    public Spigot spigot() {
+        return player.spigot();
     }
 }

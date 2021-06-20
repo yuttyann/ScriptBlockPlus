@@ -17,14 +17,13 @@ package com.github.yuttyann.scriptblockplus;
 
 import com.github.yuttyann.scriptblockplus.command.BaseCommand;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
-import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.legacy.ConvartList;
+import com.github.yuttyann.scriptblockplus.file.json.legacy.ConvertList;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.LegacyFormatJson;
-import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntity;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.listener.*;
@@ -32,6 +31,7 @@ import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.action.BlockSelector;
 import com.github.yuttyann.scriptblockplus.item.action.ScriptEditor;
 import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
+import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
 import com.github.yuttyann.scriptblockplus.listener.trigger.BreakTrigger;
 import com.github.yuttyann.scriptblockplus.listener.trigger.HitTrigger;
 import com.github.yuttyann.scriptblockplus.listener.trigger.InteractTrigger;
@@ -69,9 +69,8 @@ public class ScriptBlock extends JavaPlugin {
         }
 
         // NMSが見つからなかった場合警告
-        if (!PackageType.HAS_NMS) {
-            getLogger().warning("NMS(" + PackageType.NMS + ") not found.");
-            getLogger().warning("Disables some functions.");
+        if (!NetMinecraft.hasNMS()) {
+            getLogger().warning("NetMinecraft(" + (NetMinecraft.isLegacy() ? NetMinecraft.LEGACY : NetMinecraft.SERVER) + ") not found.");
         }
 
         // 全ファイルの読み込み
@@ -94,10 +93,10 @@ public class ScriptBlock extends JavaPlugin {
         }
 
         // 古い形式のJSONファイルを最新の物へ移行する。
-        LegacyFormatJson.convart(ConvartList.create(this, "json"));
+        LegacyFormatJson.convert(ConvertList.create(this, "json"));
 
         // スクリプトの形式を".yml"から".json"へ移行
-        ScriptKey.iterable().forEach(BlockScriptJson::convart);
+        ScriptKey.iterable().forEach(BlockScriptJson::convert);
 
         // キャッシュを生成(設定有効時のみ)
         CacheJson.loading();
@@ -135,21 +134,28 @@ public class ScriptBlock extends JavaPlugin {
     public void onDisable() {
         try {
             ScriptViewer.PLAYERS.clear();
-            GlowEntity.DEFAULT.removeAll();
+            TickRunnable.GLOW_ENTITY.removeAll();
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * 最新のバージョンが存在するか確認します。
+     * {@code SBP}に最新のバージョンが存在するか確認します。
      * @param sender - 送信先
      * @param latestMessage - {@code true}の場合は送信先にアップデートのメッセージを表示します。
      */
     public void checkUpdate(@NotNull CommandSender sender, boolean latestMessage) {
-        if (updater == null) {
-            updater = new Updater(this);
-        }
+        checkUpdate(sender, updater == null ? updater = new Updater(this) : updater, latestMessage);
+    }
+
+    /**
+     * 最新のバージョンが存在するか確認します。
+     * @param sender - 送信先
+     * @param updater - 更新先
+     * @param latestMessage - {@code true}の場合は送信先にアップデートのメッセージを表示します。
+     */
+    public void checkUpdate(@NotNull CommandSender sender, @NotNull Updater updater, boolean latestMessage) {
         getScheduler().asyncRun(() -> {
             try {
                 updater.load();

@@ -36,7 +36,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BlockCoords {
 
+    /**
+     * 初期値のワールドです。
+     */
     public static final World DEFAULT_WORLD = Bukkit.getWorlds().get(0);
+
+    /**
+     * 初期値の{@link BlockCoords}です。
+     */
     public static final BlockCoords ZERO = new UnmodifiableBlockCoords(new BlockCoords(DEFAULT_WORLD, 0, 0, 0));
 
     private final World world;
@@ -87,7 +94,7 @@ public class BlockCoords {
 
     /**
      * Xの座標を取得します。
-     * @return {@link int} - X座標
+     * @return {@code int} - X座標
      */
     public final int getX() {
         return x;
@@ -103,7 +110,7 @@ public class BlockCoords {
 
     /**
      * Yの座標を取得します。
-     * @return {@link int} - Y座標
+     * @return {@code int} - Y座標
      */
     public final int getY() {
         return y;
@@ -119,7 +126,7 @@ public class BlockCoords {
 
     /**
      * Zの座標を取得します。
-     * @return {@link int} - Z座標
+     * @return {@code int} - Z座標
      */
     public final int getZ() {
         return z;
@@ -324,7 +331,7 @@ public class BlockCoords {
      * 座標を比較します。
      * @param location1 - 座標1
      * @param location2 - 座標2
-     * @return {@link boolean} - 座標が一致する場合は{@code true}
+     * @return {@code boolean} - 座標が一致する場合は{@code true}
      */
     public static boolean compare(@NotNull Location location1, @NotNull Location location2) {
         if (!Objects.equals(location1.getWorld(), location2.getWorld())) {
@@ -338,7 +345,7 @@ public class BlockCoords {
     /**
      * 座標を比較します。
      * @param block - ブロック
-     * @return {@link boolean} - 座標が一致する場合は{@code true}
+     * @return {@code boolean} - 座標が一致する場合は{@code true}
      */
     public boolean compare(@Nullable Block block) {
         if (block == null) {
@@ -350,7 +357,7 @@ public class BlockCoords {
     /**
      * 座標を比較します。
      * @param location - 座標
-     * @return {@link boolean} - 座標が一致する場合は{@code true}
+     * @return {@code boolean} - 座標が一致する場合は{@code true}
      */
     public boolean compare(@Nullable Location location) {
         if (location == null) {
@@ -362,7 +369,7 @@ public class BlockCoords {
     /**
      * 座標を比較します。
      * @param blockCoords - ブロックの座標
-     * @return {@link boolean} - 座標が一致する場合は{@code true}
+     * @return {@code boolean} - 座標が一致する場合は{@code true}
      */
     public boolean compare(@Nullable BlockCoords blockCoords) {
         if (blockCoords == null) {
@@ -376,7 +383,7 @@ public class BlockCoords {
      * @param x - X座標
      * @param y - Y座標
      * @param z - Z座標
-     * @return {@link boolean} - 座標が一致する場合は{@code true}
+     * @return {@code boolean} - 座標が一致する場合は{@code true}
      */
     public boolean compare(int x, int y, int z) {
         return this.x == x && this.y == y && this.z == z;
@@ -384,10 +391,7 @@ public class BlockCoords {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        return obj instanceof BlockCoords ? compare((BlockCoords) obj) : false;
+        return this == obj ? true : obj instanceof BlockCoords b ? compare(b) : false;
     }
 
     @Override

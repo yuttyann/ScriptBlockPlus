@@ -24,7 +24,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
  * ScriptBlockPlus PermRemove オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "perm_remove", syntax = "@permREMOVE:")
+@OptionTag(name = "perm_remove", syntax = "@permREMOVE:", description = "[world/]<node>")
 public final class PermRemove extends BaseOption {
 
     @Override

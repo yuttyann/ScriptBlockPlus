@@ -127,7 +127,7 @@ public abstract class BaseOption extends Option {
 
     /**
      * スクリプトを何番目まで実行したのか取得します。
-     * @return {@link int} - 進行度
+     * @return {@code int} - 進行度
      */
     protected final int getScriptIndex() {
         return sbRead.getScriptIndex();
@@ -136,14 +136,14 @@ public abstract class BaseOption extends Option {
     /**
      * オプションの処理を実行します。
      * @throws Exception オプションの処理内で例外が発生した時にスローされます。
-     * @return {@link boolean} - 有効な場合は{@code true}
+     * @return {@code boolean} - 有効な場合は{@code true}
      */
     protected abstract boolean isValid() throws Exception;
 
     /**
      * オプションの処理を実行します。
      * @param sbRead - {@link SBRead}
-     * @return {@link boolean} - 有効な場合は{@code true}
+     * @return {@code boolean} - 有効な場合は{@code true}
      */
     @Override
     @Deprecated

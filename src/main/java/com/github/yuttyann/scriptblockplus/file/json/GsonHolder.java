@@ -123,11 +123,11 @@ public final class GsonHolder {
             fieldNaming.setAccessible(true);
             var excluder = GsonBuilder.class.getDeclaredField("excluder");
             excluder.setAccessible(true);
-            var argment1 = (ConstructorConstructor) constructor.get(gson);
-            var argment2 = (FieldNamingStrategy) fieldNaming.get(gsonBuilder);
-            var argment3 = (Excluder) excluder.get(gsonBuilder);
+            var argument1 = (ConstructorConstructor) constructor.get(gson);
+            var argument2 = (FieldNamingStrategy) fieldNaming.get(gsonBuilder);
+            var argument3 = (Excluder) excluder.get(gsonBuilder);
             typeFactoryList.add(LegacyEnumFactory.INSTANCE);
-            typeFactoryList.add(new LegacyReflectiveFactory(argment1, argment2, argment3));
+            typeFactoryList.add(new LegacyReflectiveFactory(argument1, argument2, argument3));
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }

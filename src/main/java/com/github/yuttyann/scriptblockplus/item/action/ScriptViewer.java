@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.item.action;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntity;
 import com.github.yuttyann.scriptblockplus.item.ChangeSlot;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.RunItem;
@@ -51,16 +50,14 @@ public final class ScriptViewer extends ItemAction {
     public void run(@NotNull RunItem runItem) {
         var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
         switch (runItem.getAction()) {
-            case LEFT_CLICK_AIR:
-            case LEFT_CLICK_BLOCK:
+            case LEFT_CLICK_AIR, LEFT_CLICK_BLOCK:
                 PLAYERS.add(sbPlayer);
                 SBConfig.SCRIPT_VIEWER_START.send(sbPlayer);
                 break;
-            case RIGHT_CLICK_AIR:
-            case RIGHT_CLICK_BLOCK:
+            case RIGHT_CLICK_AIR, RIGHT_CLICK_BLOCK:
                 try {
                     PLAYERS.remove(sbPlayer);
-                    GlowEntity.DEFAULT.destroyAll(sbPlayer);
+                    TickRunnable.GLOW_ENTITY.destroyAll(sbPlayer);
                 } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
                 } finally {

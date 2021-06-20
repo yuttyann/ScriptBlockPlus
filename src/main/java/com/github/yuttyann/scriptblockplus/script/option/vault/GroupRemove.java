@@ -24,7 +24,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
  * ScriptBlockPlus GroupRemove オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "group_remove", syntax = "@groupREMOVE:")
+@OptionTag(name = "group_remove", syntax = "@groupREMOVE:", description = "[world/]<group>")
 public final class GroupRemove extends BaseOption {
 
     @Override

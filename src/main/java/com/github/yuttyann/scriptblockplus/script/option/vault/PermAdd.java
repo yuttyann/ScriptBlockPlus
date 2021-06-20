@@ -24,7 +24,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
  * ScriptBlockPlus PermAdd オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "perm_add", syntax = "@permADD:")
+@OptionTag(name = "perm_add", syntax = "@permADD:", description = "[world/]<node>")
 public final class PermAdd extends BaseOption {
 
     @Override

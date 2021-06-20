@@ -26,7 +26,7 @@ import org.bukkit.Bukkit;
  * ScriptBlockPlus Say オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "say", syntax = "@say ")
+@OptionTag(name = "say", syntax = "@say ", description = "<message>")
 public final class Say extends BaseOption {
 
     @Override

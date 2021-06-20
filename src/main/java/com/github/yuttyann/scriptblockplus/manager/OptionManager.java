@@ -111,4 +111,9 @@ public final class OptionManager {
     public static String[] getSyntaxs() {
         return StreamUtils.toArray(OPTION_MAP.list(), s -> s.get().getSyntax(), String[]::new);
     }
+
+    @NotNull
+    public static OptionTag[] getTags() {
+        return StreamUtils.toArray(OPTION_MAP.list(), s -> s.getDeclaringClass().getAnnotation(OptionTag.class), OptionTag[]::new);
+    }
 }

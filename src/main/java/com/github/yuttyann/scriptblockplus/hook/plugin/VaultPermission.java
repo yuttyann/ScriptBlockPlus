@@ -68,7 +68,7 @@ public final class VaultPermission extends HookPlugin {
 
     /**
      * {@code SuperPerms}が有効になっているのかどうか。
-     * @return {@link boolean} - 有効な場合は{@code true}
+     * @return {@code boolean} - 有効な場合は{@code true}
      */
     public boolean isSuperPerms() {
         return "SuperPerms".equals(name);
@@ -76,7 +76,7 @@ public final class VaultPermission extends HookPlugin {
 
     /**
      * 権限プラグインが有効なのかどうか。
-     * @return {@link boolean} - 有効な場合は{@code true}
+     * @return {@code boolean} - 有効な場合は{@code true}
      */
     public boolean isEnabled() {
         return permission != null && permission.isEnabled();
@@ -116,7 +116,7 @@ public final class VaultPermission extends HookPlugin {
      * プレイヤーが指定されたグループに所属しているのかどうか。
      * @param player - プレイヤー
      * @param group - グループ
-     * @return {@link boolean} - 所属している場合は{@code true}
+     * @return {@code boolean} - 所属している場合は{@code true}
      */
     public boolean playerInGroup(@Nullable OfflinePlayer player, @NotNull String group) {
         return permission.playerInGroup(null, player, group);
@@ -127,7 +127,7 @@ public final class VaultPermission extends HookPlugin {
      * @param world - ワールド
      * @param player - プレイヤー
      * @param group - グループ
-     * @return {@link boolean} - 所属している場合は{@code true}
+     * @return {@code boolean} - 所属している場合は{@code true}
      */
     public boolean playerInGroup(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String group) {
         return permission.playerInGroup(world, player, group);
@@ -137,7 +137,7 @@ public final class VaultPermission extends HookPlugin {
      * プレイヤーを指定されたグループに所属させます。
      * @param player - プレイヤー
      * @param group - グループ
-     * @return {@link boolean} - 成功した場合は{@code true}
+     * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean playerAddGroup(@NotNull OfflinePlayer player, @NotNull String group) {
         return permission.playerAddGroup(null, player, group);
@@ -148,7 +148,7 @@ public final class VaultPermission extends HookPlugin {
      * @param world - ワールド
      * @param player - プレイヤー
      * @param group - グループ
-     * @return {@link boolean} - 成功した場合は{@code true}
+     * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean playerAddGroup(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String group) {
         return permission.playerAddGroup(world, player, group);
@@ -158,7 +158,7 @@ public final class VaultPermission extends HookPlugin {
      * プレイヤーを指定されたグループから脱退させます。
      * @param player - プレイヤー
      * @param group - グループ
-     * @return {@link boolean} - 成功した場合は{@code true}
+     * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean playerRemoveGroup(@NotNull OfflinePlayer player, @NotNull String group) {
         return permission.playerRemoveGroup(null, player, group);
@@ -169,7 +169,7 @@ public final class VaultPermission extends HookPlugin {
      * @param world - ワールド
      * @param player - プレイヤー
      * @param group - グループ
-     * @return {@link boolean} - 成功した場合は{@code true}
+     * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean playerRemoveGroup(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String group) {
         return permission.playerRemoveGroup(world, player, group);
@@ -179,7 +179,7 @@ public final class VaultPermission extends HookPlugin {
      * プレイヤーに指定された権限を追加します。
      * @param player - プレイヤー
      * @param permission - パーミッション
-     * @return {@link boolean} - 成功した場合は{@code true}
+     * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean playerAdd(@NotNull OfflinePlayer player, @NotNull String permission) {
         return this.permission.playerAdd(null, player, permission);
@@ -190,7 +190,7 @@ public final class VaultPermission extends HookPlugin {
      * @param world - ワールド
      * @param player - プレイヤー
      * @param permission - パーミッション
-     * @return {@link boolean} - 成功した場合は{@code true}
+     * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean playerAdd(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
         if (isSuperPerms()) {
@@ -203,7 +203,7 @@ public final class VaultPermission extends HookPlugin {
      * プレイヤーから指定された権限を削除します。
      * @param player - プレイヤー
      * @param permission - パーミッション
-     * @return {@link boolean} - 成功した場合は{@code true}
+     * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean playerRemove(@NotNull OfflinePlayer player, @NotNull String permission) {
         return this.permission.playerRemove(null, player, permission);
@@ -214,7 +214,7 @@ public final class VaultPermission extends HookPlugin {
      * @param world - ワールド
      * @param player - プレイヤー
      * @param permission - パーミッション
-     * @return {@link boolean} - 成功した場合は{@code true}
+     * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean playerRemove(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
         if (isSuperPerms()) {
@@ -227,7 +227,7 @@ public final class VaultPermission extends HookPlugin {
      * プレイヤーが指定された権限を所持しているのかどうか。
      * @param player - プレイヤー
      * @param permission - パーミッション
-     * @return {@link boolean} - 所持している場合は{@code true}
+     * @return {@code boolean} - 所持している場合は{@code true}
      */
     public boolean playerHas(@NotNull OfflinePlayer player, @NotNull String permission) {
         return this.permission.playerHas(null, player, permission);
@@ -238,7 +238,7 @@ public final class VaultPermission extends HookPlugin {
      * @param world - ワールド
      * @param player - プレイヤー
      * @param permission - パーミッション
-     * @return {@link boolean} - 所持している場合は{@code true}
+     * @return {@code boolean} - 所持している場合は{@code true}
      */
     public boolean playerHas(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
         if (isSuperPerms()) {
@@ -251,7 +251,7 @@ public final class VaultPermission extends HookPlugin {
      * 指定された権限を所持しているのかどうか。
      * @param sender - 送信者
      * @param permission - パーミッション
-     * @return {@link boolean} - 所持している場合は{@code true}
+     * @return {@code boolean} - 所持している場合は{@code true}
      */
     public boolean has(@NotNull CommandSender sender, @NotNull String permission) {
         return this.permission.has(sender, permission);

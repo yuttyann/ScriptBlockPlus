@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
  * ScriptBlockPlus Amount オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "amount", syntax = "@amount:")
+@OptionTag(name = "amount", syntax = "@amount:", description = "<amount>")
 public final class Amount extends BaseOption {
 
     @Override

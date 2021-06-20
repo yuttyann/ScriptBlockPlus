@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  * ScriptBlockPlus MoneyCost オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "moneycost", syntax = "$cost:")
+@OptionTag(name = "moneycost", syntax = "$cost:", description = "<price>")
 public final class MoneyCost extends BaseOption {
 
     public static final String KEY = Utils.randomUUID();

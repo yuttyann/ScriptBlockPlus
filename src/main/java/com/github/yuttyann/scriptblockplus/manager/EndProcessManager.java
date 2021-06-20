@@ -17,6 +17,7 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndInventory;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndMoneyCost;
+import com.github.yuttyann.scriptblockplus.script.endprocess.EndPlayerCount;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +36,7 @@ public final class EndProcessManager {
     private static final List<SBInstance<EndProcess>> ENDPROCESS_LIST = new ArrayList<>();
 
     static {
+        register(EndPlayerCount::new);
         register(EndInventory::new);
         register(EndMoneyCost::new);
     }

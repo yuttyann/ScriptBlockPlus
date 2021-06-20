@@ -24,7 +24,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.github.yuttyann.scriptblockplus.enums.splittype.Argment;
+import com.github.yuttyann.scriptblockplus.enums.splittype.Argument;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -57,7 +57,7 @@ public final class EntitySelector {
         var result = new ArrayList<Entity>();
         var location = setCenter(copy(sender, start));
         var split = new Split(selector, "@", "[", "]");
-        var splitValues = split.getValues(Argment.values());
+        var splitValues = split.getValues(Argument.values());
         switch (split.getName()) {
             case "@p": {
                 var players = location.getWorld().getPlayers();
@@ -185,7 +185,7 @@ public final class EntitySelector {
 
     private static int getLimit(@NotNull SplitValue[] splitValues, int other) {
         for (var splitValue : splitValues) {
-            if (splitValue.getType() == Argment.C) {
+            if (splitValue.getType() == Argument.C) {
                 return Integer.parseInt(splitValue.getValue());
             }
         }
@@ -196,28 +196,20 @@ public final class EntitySelector {
         if (splitValue.getValue()== null) {
             return false;
         }
-        switch ((Argment) splitValue.getType()) {
+        switch ((Argument) splitValue.getType()) {
             case C:
                 return true;
-            case X:
-            case Y:
-            case Z:
+            case X, Y, Z:
                 return setXYZ(location, splitValue);
-            case DX:
-            case DY:
-            case DZ:
+            case DX, DY, DZ:
                 return isDRange(entity, location, splitValue);
-            case R:
-            case RM:
+            case R, RM:
                 return isR(entity, location, splitValue);
-            case RX:
-            case RXM:
+            case RX, RXM:
                 return isRX(entity, splitValue);
-            case RY:
-            case RYM:
+            case RY, RYM:
                 return isRY(entity, splitValue);
-            case L:
-            case LM:
+            case L, LM:
                 return isL(entity, splitValue);
             case M:
                 return isM(entity, splitValue);
@@ -229,8 +221,7 @@ public final class EntitySelector {
                 return isType(entity, splitValue);
             case NAME:
                 return isName(entity, splitValue);
-            case SCORE:
-            case SCORE_MIN:
+            case SCORE, SCORE_MIN:
                 return isScore(entity, splitValue);
             default:
                 return false;
@@ -238,7 +229,7 @@ public final class EntitySelector {
     }
 
     private static boolean setXYZ(@NotNull Location location, @NotNull SplitValue splitValue) {
-        switch ((Argment) splitValue.getType()) {
+        switch ((Argument) splitValue.getType()) {
             case X:
                 setLocation(location, "x", splitValue.getValue());
                 break;
@@ -320,7 +311,7 @@ public final class EntitySelector {
             return false;
         }
         double base = 0.0D, value = 0.0D;
-        switch ((Argment) splitValue.getType()) {
+        switch ((Argument) splitValue.getType()) {
             case DX:
                 base = location.getX();
                 value = entity.getLocation().getX();
@@ -343,21 +334,21 @@ public final class EntitySelector {
         if (!entity.getWorld().equals(location.getWorld())) {
             return false;
         }
-        if (splitValue.getType() == Argment.R) {
+        if (splitValue.getType() == Argument.R) {
             return isLessThan(splitValue, location.distance(entity.getLocation()));
         }
         return isGreaterThan(splitValue, location.distance(entity.getLocation()));
     }
 
     private static boolean isRX(@NotNull Entity entity, @NotNull SplitValue splitValue) {
-        if (splitValue.getType() == Argment.RX) {
+        if (splitValue.getType() == Argument.RX) {
             return isGreaterThan(splitValue, entity.getLocation().getYaw());
         }
         return isLessThan(splitValue, entity.getLocation().getYaw());
     }
 
     private static boolean isRY(@NotNull Entity entity, @NotNull SplitValue splitValue) {
-        if (splitValue.getType() == Argment.RY) {
+        if (splitValue.getType() == Argument.RY) {
             return isGreaterThan(splitValue, entity.getLocation().getPitch());
         }
         return isLessThan(splitValue, entity.getLocation().getPitch());
@@ -365,7 +356,7 @@ public final class EntitySelector {
 
     private static boolean isL(@NotNull Entity entity, @NotNull SplitValue splitValue) {
         if (entity instanceof Player) {
-            if (splitValue.getType() == Argment.L) {
+            if (splitValue.getType() == Argument.L) {
                 return isLessThan(splitValue, ((Player) entity).getTotalExperience());
             }
             return isGreaterThan(splitValue, ((Player) entity).getTotalExperience());
@@ -450,13 +441,13 @@ public final class EntitySelector {
 
     private static boolean isScore(@NotNull Entity entity, @NotNull SplitValue splitValue) {
         var split = StringUtils.split(splitValue.getValue(), '*');
-        var scoreArgment = splitValue.getType() == Argment.SCORE;
+        var scoreArgument = splitValue.getType() == Argument.SCORE;
         for (var objective : Bukkit.getScoreboardManager().getMainScoreboard().getObjectives()) {
             if (!objective.getName().equals(split.get(0))) {
                 continue;
             }
             int score = objective.getScore(entity instanceof Player ? entity.getName() : entity.getUniqueId().toString()).getScore();
-            if (splitValue.isInverted() != (scoreArgment ? score <= Integer.parseInt(split.get(0)) : score >= Integer.parseInt(split.get(0)))) {
+            if (splitValue.isInverted() != (scoreArgument ? score <= Integer.parseInt(split.get(0)) : score >= Integer.parseInt(split.get(0)))) {
                 return true;
             }
         }

@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus Cooldown オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "cooldown", syntax = "@cooldown:")
+@OptionTag(name = "cooldown", syntax = "@cooldown:", description = "<second>")
 public final class Cooldown extends TimerOption {
 
     @Override

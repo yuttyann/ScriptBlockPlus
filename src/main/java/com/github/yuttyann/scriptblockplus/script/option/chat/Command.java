@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  * ScriptBlockPlus Command オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "command", syntax = "@command ")
+@OptionTag(name = "command", syntax = "@command ", description = "<command>")
 public final class Command extends BaseOption {
 
     @Override

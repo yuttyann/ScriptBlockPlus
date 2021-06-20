@@ -75,7 +75,7 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
          * @param a - 引数1
          * @param b - 引数2
          * @param c - 引数3
-         * @return {@link boolean} - 要素が存在する場合は{@code true}
+         * @return {@code boolean} - 要素が存在する場合は{@code true}
          */
         public boolean isElement(@Nullable A a, @Nullable B b, @Nullable C c) {
             return compare(getA(), a) && compare(getB(), b) && compare(getC(), c);
@@ -83,7 +83,7 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
 
         /**
          * ハッシュコードを生成します。
-         * @return {@link int} - ハッシュコード
+         * @return {@code int} - ハッシュコード
          */
         @Override
         public final int hashCode() {
@@ -163,7 +163,7 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
      * @param a - 引数1
      * @param b - 引数2
      * @param c - 引数3
-     * @return {@link boolean} - 要素が存在する場合は{@code true}
+     * @return {@code boolean} - 要素が存在する場合は{@code true}
      */
     public final boolean has(@Nullable A a, @Nullable B b, @Nullable C c) {
         return fastLoad(a, b, c) != null;
@@ -174,7 +174,7 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
      * @param a - 引数1
      * @param b - 引数2
      * @param c - 引数3
-     * @return {@link boolean} - 削除に成功した場合は{@code true}
+     * @return {@code boolean} - 削除に成功した場合は{@code true}
      */
     public final boolean remove(@Nullable A a, @Nullable B b, @Nullable C c) {
         int hash = hash(a, b, c);

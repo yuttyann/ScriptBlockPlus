@@ -89,7 +89,7 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
 
     /**
      * 要素が存在するのか確認します。
-     * @return {@link boolean} - 要素が存在する場合は{@code true}
+     * @return {@code boolean} - 要素が存在する場合は{@code true}
      */
     public final boolean has() {
         return !getElementMap().isEmpty();

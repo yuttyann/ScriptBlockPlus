@@ -274,7 +274,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
 
     /**
      * キャッシュIDを取得します。
-     * @return {@link int} - キャッシュID
+     * @return {@code int} - キャッシュID
      */
     public int getCacheId() {
         return id;
@@ -323,7 +323,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
 
     /**
      * ファイルを保存した時にキャッシュを削除するのかどうか。
-     * @return {@link boolean} - 削除を行う場合は{@code true}
+     * @return {@code boolean} - 削除を行う場合は{@code true}
      */
     protected boolean isTemporary() {
         return false;
@@ -331,7 +331,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
 
     /**
      * ファイルが存在する時のみキャッシュを保存するのかどうか。
-     * @return {@link boolean} - ファイルが存在する時のみキャッシュを保存する場合は{@code true}
+     * @return {@code boolean} - ファイルが存在する時のみキャッシュを保存する場合は{@code true}
      */
     protected boolean isCacheFileExists() {
         return true;
@@ -339,7 +339,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
 
     /**
      * マップに要素が存在しない場合に{@code true}を返します。
-     * @return {@link boolean} - 要素が存在しない場合は{@code true}
+     * @return {@code boolean} - 要素が存在しない場合は{@code true}
      */
     public final boolean isEmpty() {
         return elementMap.isEmpty();
@@ -347,7 +347,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
 
     /**
      * ファイルが存在するのか確認します。
-     * @return {@link boolean} - ファイルが存在する場合は{@code true}
+     * @return {@code boolean} - ファイルが存在する場合は{@code true}
      */
     public final boolean exists() {
         return file.exists();
@@ -355,7 +355,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
 
     /**
      * キャッシュされた要素を含め、ファイルを削除します。
-     * @return {@link boolean} - 削除に成功した場合は{@code true}
+     * @return {@code boolean} - 削除に成功した場合は{@code true}
      */
     public final boolean deleteFile() {
         if (!file.exists()) {
@@ -549,7 +549,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * ハッシュコードを生成します。
      * @param name - ファイルの名前
      * @param jsonClass - JSONのクラス
-     * @return {@link int} - ハッシュコード
+     * @return {@code int} - ハッシュコード
      */
     private static int hash(@NotNull String name, @NotNull Class<?> jsonClass) {
         int hash = 1;

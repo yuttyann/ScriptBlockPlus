@@ -26,7 +26,7 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
  * ScriptBlockPlus Execute オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "execute", syntax = "@execute:")
+@OptionTag(name = "execute", syntax = "@execute:", description = "<scriptkey>/<world,x,y,z>")
 public final class Execute extends BaseOption {
 
     @Override

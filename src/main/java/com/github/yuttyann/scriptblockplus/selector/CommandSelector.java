@@ -16,7 +16,7 @@
 package com.github.yuttyann.scriptblockplus.selector;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
@@ -49,7 +49,7 @@ public final class CommandSelector {
     private final static String NUMBERS = "+-.0123456789";
     private final static String SELECTOR_SUFFIX = "aeprs";
     private final static String[] SELECTOR_NAMES = { "@a", "@e", "@p", "@r", "@s" };
-    private final static String[] SELECTOR_ARGMENT_NAMES = { "@a[", "@e[", "@p[", "@r[", "@s[" };
+    private final static String[] SELECTOR_ARGUMENT_NAMES = { "@a[", "@e[", "@p[", "@r[", "@s[" };
 
     private final static String[] SEARCH_XYZ = { "{x}", "{y}", "{z}" };
     private final static String[] SEARCH_INDEX = { "{0}", "{1}", "{2}", "{3}", "{4}", "{5}", "{6}", "{7}", "{8}", "{9}", "{10}" };
@@ -83,7 +83,7 @@ public final class CommandSelector {
             var selector = indexList.get(i).substring(command);
             var entities = getTargets(sender, start, selector);
             if (entities == null || entities.size() == 0) {
-                if (StreamUtils.anyMatch(SELECTOR_ARGMENT_NAMES, selector::startsWith)) {
+                if (StreamUtils.anyMatch(SELECTOR_ARGUMENT_NAMES, selector::startsWith)) {
                     continue;
                 } else if (selector.startsWith(SELECTOR_NAMES[2]) && sender instanceof Player) {
                     entities = Collections.singletonList((Entity) sender);
@@ -183,7 +183,7 @@ public final class CommandSelector {
     @NotNull
     public static List<Entity> getTargets(@NotNull CommandSender sender, @Nullable Location start, @NotNull String selector) {
         selector = Placeholder.INSTANCE.replace(getWorld(sender, start), selector);
-        if (PackageType.HAS_NMS && Utils.isCBXXXorLater("1.13")) {
+        if (NetMinecraft.hasNMS() && Utils.isCBXXXorLater("1.13")) {
             try {
                 return NMSHelper.selectEntities(sender, start, selector);
             } catch (ReflectiveOperationException e) {

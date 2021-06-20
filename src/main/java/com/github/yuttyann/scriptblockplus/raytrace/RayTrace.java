@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -60,7 +60,7 @@ public final class RayTrace {
             }
             return new RayResult(rayTraceResult.getHitBlock(), rayTraceResult.getHitBlockFace());
         } else {
-            if (PackageType.HAS_NMS) {
+            if (NetMinecraft.hasNMS()) {
                 try {
                     return NMSHelper.rayTraceBlocks(player, distance);
                 } catch (ReflectiveOperationException e) {

@@ -27,7 +27,7 @@ import java.util.UUID;
  * ScriptBlockPlus OldCooldown オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "oldcooldown", syntax = "@oldcooldown:")
+@OptionTag(name = "oldcooldown", syntax = "@oldcooldown:", description = "<second>")
 public final class OldCooldown extends TimerOption {
 
     public static final UUID UUID_OLDCOOLDOWN = UUID.nameUUIDFromBytes(OldCooldown.class.getName().getBytes());

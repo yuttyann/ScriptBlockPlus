@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus PlaySound オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "sound", syntax = "@sound:")
+@OptionTag(name = "sound", syntax = "@sound:", description = "<sound>-<volume>-<pitch>[-delay][/sendtoallplayers]")
 public final class PlaySound extends BaseOption implements Runnable {
 
     private String name;
@@ -79,9 +79,6 @@ public final class PlaySound extends BaseOption implements Runnable {
     @Nullable
     private Sound getSound(@NotNull String name) {
         var upper = name.toUpperCase(Locale.ROOT);
-        if (StreamUtils.anyMatch(Sound.values(), s -> s.name().equals(upper))) {
-            return Sound.valueOf(upper);
-        }
-        return null;
+        return StreamUtils.anyMatch(Sound.values(), s -> s.name().equals(upper)) ? Sound.valueOf(upper) : null;
     }
 }

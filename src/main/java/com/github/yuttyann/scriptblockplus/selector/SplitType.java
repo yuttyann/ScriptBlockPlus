@@ -25,16 +25,16 @@ public interface SplitType {
 
     /**
      * 値を取得します。
-     * @param argment - 引数
+     * @param argument - 引数
      * @return {@link String} - 値
      */
     @NotNull
-    public String getValue(@NotNull String argment);
+    public String getValue(@NotNull String argument);
 
     /**
      * 引数が一致するのかどうか。
-     * @param argment - 引数
-     * @return {@link boolean} - 一致する場合は{@code true}
+     * @param argument - 引数
+     * @return {@code boolean} - 一致する場合は{@code true}
      */
-    public boolean match(@NotNull String argment);
+    public boolean match(@NotNull String argument);
 }

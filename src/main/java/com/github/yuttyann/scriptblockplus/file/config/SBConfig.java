@@ -40,8 +40,10 @@ public final class SBConfig {
     public static final ConfigKey<List<String>> SCRIPT_EDITOR = stringListKey("ScriptEditor", Collections.emptyList());
     public static final ConfigKey<List<String>> SCRIPT_VIEWER = stringListKey("ScriptViewer", Collections.emptyList());
 
+
     // Integer Keys
     public static final ConfigKey<Integer> FORMAT_LIMIT = integerKey("FormatLimit", 100000);
+
 
     // Boolean Keys
     public static final ConfigKey<Boolean> UPDATE_CHECKER = booleanKey("UpdateChecker", true);
@@ -50,9 +52,11 @@ public final class SBConfig {
     public static final ConfigKey<Boolean> CACHE_ALL_JSON = booleanKey("CacheAllJson", false);
     public static final ConfigKey<Boolean> CONSOLE_LOG = booleanKey("ConsoleLog", false);
     public static final ConfigKey<Boolean> SORT_SCRIPTS = booleanKey("SortScripts", true);
+    public static final ConfigKey<Boolean> OPTION_HELP = booleanKey("OptionHelp", true);
     public static final ConfigKey<Boolean> OPTION_PERMISSION = booleanKey("OptionPermission", false);
     public static final ConfigKey<Boolean> ACTIONS_INTERACT_LEFT = booleanKey("Actions.InteractLeft", true);
     public static final ConfigKey<Boolean> ACTIONS_INTERACT_RIGHT = booleanKey("Actions.InteractRight", true);
+
 
     // String Keys
     public static final ConfigKey<String> LANGUAGE = stringKey("Language", "en");
@@ -94,11 +98,11 @@ public final class SBConfig {
     // Functions (Private)
     private static Function<ReplaceKey, String> FUNCTION_UPDATE_CHECK = r -> {
         var value = r.getValue();
-        value = replace(value, "%name%", r.getArgment(0, String.class));
-        value = replace(value, "%version%", r.getArgment(1, String.class));
+        value = replace(value, "%name%", r.getArgument(0, String.class));
+        value = replace(value, "%version%", r.getArgument(1, String.class));
         if (value.contains("%details%")) {
             @SuppressWarnings("unchecked")
-            var list = (List<String>) r.getArgment(2, List.class);
+            var list = (List<String>) r.getArgument(2, List.class);
             var builder = new StringBuilder(list.size());
             for (int i = 0; i < list.size(); i++) {
                 var info = removeStart(list.get(i), "$");
@@ -111,40 +115,41 @@ public final class SBConfig {
     };
 
     private static Function<ReplaceKey, String> FUNCTION_SCRIPT_TYPE = r -> {
-        return replace(r.getValue(), "%scriptkey%", r.getArgment(0, ScriptKey.class).getName());
+        return replace(r.getValue(), "%scriptkey%", r.getArgument(0, ScriptKey.class).getName());
     };
 
     private static Function<ReplaceKey, String> FUNCTION_OPTION_FAILED = r -> {
-        var throwable = r.getArgment(1, Throwable.class);
+        var throwable = r.getArgument(1, Throwable.class);
         var value = r.getValue();
-        value = replace(value, "%option%", r.getArgment(0, Option.class).getName());
+        value = replace(value, "%option%", r.getArgument(0, Option.class).getName());
         value = replace(value, "%cause%", throwable.getClass().getSimpleName() + (throwable.getMessage() == null ? "" : " \"" + throwable.getMessage() + "\""));
         return value;
     };
 
     private static Function<ReplaceKey, String> FUNCTION_ITEM = r -> {
-        var material = r.getArgment(0, Material.class);
-        var name = r.getArgment(3, String.class);
+        var material = r.getArgument(0, Material.class);
+        var name = r.getArgument(3, String.class);
         var value = r.getValue();
+        var damage = r.getArgument(2, Integer.class);
         value = replace(value, "%material%", String.valueOf(material));
-        value = replace(value, "%amount%", r.getArgment(1, Integer.class));
-        value = replace(value, "%damage%", r.getArgment(2, Integer.class));
+        value = replace(value, "%amount%", r.getArgument(1, Integer.class));
+        value = replace(value, "%damage%", damage == -1 ? "ALL" : damage);
         value = replace(value, "%name%", name);
         return value;
     };
 
     private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SCRIPT = r -> {
         var value = r.getValue();
-        value = replace(value, "%scriptkey%", r.getArgment(0, ScriptKey.class).getName());
-        value = replace(value, "%world%", r.getArgment(1, BlockCoords.class).getWorld().getName());
-        value = replace(value, "%coords%", r.getArgment(1, BlockCoords.class).getCoords());
+        value = replace(value, "%scriptkey%", r.getArgument(0, ScriptKey.class).getName());
+        value = replace(value, "%world%", r.getArgument(1, BlockCoords.class).getWorld().getName());
+        value = replace(value, "%coords%", r.getArgument(1, BlockCoords.class).getCoords());
         return value;
     };
 
     private static Function<ReplaceKey, String> FUNCTION_CONSOLE_SELECTOR = r -> {
-        var iterator = r.getArgment(1, CuboidRegionIterator.class);
+        var iterator = r.getArgument(1, CuboidRegionIterator.class);
         var value = r.getValue();
-        value = replace(value, "%scriptkey%", r.getArgment(0, String.class));
+        value = replace(value, "%scriptkey%", r.getArgument(0, String.class));
         value = replace(value, "%blockcount%", iterator.getVolume());
         value = replace(value, "%world%", iterator.getWorld().getName());
         value = replace(value, "%mincoords%", iterator.getMinimumPoint().getCoords());

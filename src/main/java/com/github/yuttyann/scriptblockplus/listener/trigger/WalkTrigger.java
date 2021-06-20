@@ -45,10 +45,7 @@ public final class WalkTrigger extends TriggerListener<PlayerMoveEvent> {
     public Trigger create(@NotNull PlayerMoveEvent event) {
         var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
         var blockCoords = ((BaseSBPlayer) sbPlayer).getDirectOldBlockCoords();
-        if (compare(sbPlayer, sbPlayer.getLocation(), blockCoords)) {
-            return null;
-        }
-        return new Trigger(event, sbPlayer.getPlayer(), blockCoords);
+        return compare(sbPlayer, sbPlayer.getLocation(), blockCoords) ? null : new Trigger(event, sbPlayer.getPlayer(), blockCoords);
     }
 
     private boolean compare(@NotNull SBPlayer sbPlayer, @NotNull Location location, @Nullable BlockCoords blockCoords) {

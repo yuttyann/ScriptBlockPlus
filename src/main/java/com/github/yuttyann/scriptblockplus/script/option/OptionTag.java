@@ -44,4 +44,11 @@ public @interface OptionTag {
      */
     @NotNull
     String syntax();
+
+    /**
+     * オプションの説明を取得します。
+     * @return {@link String} - オプションの説明
+     */
+    @NotNull
+    String description() default "";
 }

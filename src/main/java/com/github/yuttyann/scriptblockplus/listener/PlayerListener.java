@@ -24,9 +24,9 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
-import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntity;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
+import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
@@ -67,7 +67,7 @@ public final class PlayerListener implements Listener {
         var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
         try {
             ScriptViewer.PLAYERS.remove(sbPlayer);
-            GlowEntity.DEFAULT.destroyAll(sbPlayer);
+            TickRunnable.GLOW_ENTITY.destroyAll(sbPlayer);
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         } finally {

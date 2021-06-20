@@ -63,7 +63,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
          * 引数が一致するのか比較します。
          * @param a - 引数1
          * @param b - 引数2
-         * @return {@link boolean} - 要素が存在する場合は{@code true}
+         * @return {@code boolean} - 要素が存在する場合は{@code true}
          */
         public boolean isElement(@Nullable A a, @Nullable B b) {
             return compare(getA(), a) && compare(getB(), b);
@@ -71,7 +71,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
 
         /**
          * ハッシュコードを生成します。
-         * @return {@link int} - ハッシュコード
+         * @return {@code int} - ハッシュコード
          */
         @Override
         public final int hashCode() {
@@ -147,7 +147,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * 要素が存在するのか確認します。
      * @param a - 引数1
      * @param b - 引数2
-     * @return {@link boolean} - 要素が存在する場合は{@code true}
+     * @return {@code boolean} - 要素が存在する場合は{@code true}
      */
     public final boolean has(@Nullable A a, @Nullable B b) {
         return fastLoad(a, b) != null;
@@ -157,7 +157,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * 一致する要素を削除します。
      * @param a - 引数1
      * @param b - 引数2
-     * @return {@link boolean} - 削除に成功した場合は{@code true}
+     * @return {@code boolean} - 削除に成功した場合は{@code true}
      */
     public final boolean remove(@Nullable A a, @Nullable B b) {
         int hash = hash(a, b);

@@ -16,12 +16,13 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
+import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
@@ -35,7 +36,7 @@ import java.util.regex.Pattern;
  * ScriptBlockPlus Calculation オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "calculation", syntax = "@calc:")
+@OptionTag(name = "calculation", syntax = "@calc:", description = "<value1> <operator> <value2> [failure]")
 public final class Calculation extends BaseOption {
 
     public static final Pattern REALNUMBER_PATTERN = Pattern.compile("^-?(0|[1-9]\\d*)(\\.\\d+|)$");
@@ -88,16 +89,12 @@ public final class Calculation extends BaseOption {
             return count;
         }
         if (source.startsWith("%player_ping_") && source.endsWith("%")) {
-            if (!PackageType.HAS_NMS) {
+            if (!NetMinecraft.hasNMS()) {
                 return 0;
             }
             source = source.substring("%player_ping_".length(), source.length() - 1);
             var target = Bukkit.getPlayer(source);
-            if (target == null) {
-                return 0;
-            }
-            var handle = PackageType.CB_ENTITY.invokeMethod(target, "CraftPlayer", "getHandle");
-            return PackageType.NMS.getField("EntityPlayer", "ping").getInt(handle);
+            return target == null ? 0 : NetMinecraft.hasNMS() ? NMSHelper.getPing(target) : 0;
         }
         if (source.startsWith("%server_online_") && source.endsWith("%")) {
             source = source.substring("%server_online_".length(), source.length() - 1);
@@ -116,11 +113,7 @@ public final class Calculation extends BaseOption {
             case "%player_count%":
                 return PlayerCountJson.get(getUniqueId()).load(getScriptKey(), getBlockCoords()).getAmount();
             case "%player_ping%":
-                if (!PackageType.HAS_NMS) {
-                    return 0;
-                }
-                var handle = PackageType.CB_ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
-                return PackageType.NMS.getField("EntityPlayer", "ping").getInt(handle);
+                return NetMinecraft.hasNMS() ? NMSHelper.getPing(player) : 0;
             case "%player_x%":
                 return player.getLocation().getBlockX();
             case "%player_y%":

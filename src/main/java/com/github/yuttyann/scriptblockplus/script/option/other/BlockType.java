@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus BlockType オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "blocktype", syntax = "@blocktype:")
+@OptionTag(name = "blocktype", syntax = "@blocktype:", description = "<id>")
 public final class BlockType extends BaseOption {
 
     @Override

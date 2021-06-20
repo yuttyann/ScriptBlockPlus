@@ -25,7 +25,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  * ScriptBlockPlus BypassOP オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "bypass_op", syntax = "@bypass ")
+@OptionTag(name = "bypass_op", syntax = "@bypass ", description = "<command>")
 public final class BypassOP extends BaseOption {
 
     @Override

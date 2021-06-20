@@ -13,22 +13,25 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.script.option.chat;
+package com.github.yuttyann.scriptblockplus.script.endprocess;
 
-import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
+import com.github.yuttyann.scriptblockplus.script.SBRead;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
- * ScriptBlockPlus ToPlayer オプションクラス
+ * ScriptBlockPlus EndPlayerCount エンドプロセスクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "toplayer", syntax = "@player ", description = "<message>")
-public final class ToPlayer extends BaseOption {
+public class EndPlayerCount implements EndProcess {
 
     @Override
-    protected boolean isValid() throws Exception {
-        Utils.sendColorMessage(getSBPlayer(), getOptionValue());
-        return true;
+    public void success(@NotNull SBRead sbRead) {
+        PlayerCountJson.get(sbRead.getSBPlayer()).action(PlayerCount::add, sbRead.getScriptKey(), sbRead.getBlockCoords());
     }
+
+    @Override
+    public void failed(@NotNull SBRead sbRead) { }
 }

@@ -52,14 +52,14 @@ public final class LegacyFormatJson {
 
     /**
      * JSONの要素から{@code elements}または{@code infos}を取り除きます。
-     * @param convartList - コンバートリスト
-     * @return {@link boolean} - コンバートに成功した場合は{@code true}
+     * @param convertList - コンバートリスト
+     * @return {@code boolean} - コンバートに成功した場合は{@code true}
      */
-    public static boolean convart(@Nullable ConvartList convartList) {
-        if (convartList == null) {
+    public static boolean convert(@Nullable ConvertList convertList) {
+        if (convertList == null) {
             return false;
         }
-        var paths = convartList.getConvartPaths();
+        var paths = convertList.getConvertPaths();
         if (paths.isEmpty()) {
             return false;
         }
@@ -181,14 +181,10 @@ public final class LegacyFormatJson {
                 case "uuid":
                     uuid = UUID.fromString((String) value);
                     break;
-                case "scripttype":
-                case "scriptType":
-                case "scriptkey":
+                case "scripttype", "scriptType", "scriptkey":
                     scriptKey = toScriptKey(value);
                     break;
-                case "fullcoords":
-                case "fullCoords":
-                case "blockcoords":
+                case "fullcoords", "fullCoords", "blockcoords":
                     blockCoords = BlockCoords.fromString((String) value);
                     break;
             }

@@ -43,8 +43,7 @@ public final class BlockSelector extends ItemAction {
         var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
         var region = ((CuboidRegion) sbPlayer.getRegion());
         switch (runItem.getAction()) {
-            case LEFT_CLICK_AIR:
-            case LEFT_CLICK_BLOCK:
+            case LEFT_CLICK_AIR, LEFT_CLICK_BLOCK:
                 if (runItem.isSneaking()) {
                     region.setPos1(blockCoords = BlockCoords.of(sbPlayer.getLocation()));
                 } else if (!runItem.isAIR() && blockCoords != null) {
@@ -54,8 +53,7 @@ public final class BlockSelector extends ItemAction {
                     SBConfig.SELECTOR_POS1.replace(region.getName(), blockCoords.getCoords()).send(sbPlayer);
                 }
                 break;
-            case RIGHT_CLICK_AIR:
-            case RIGHT_CLICK_BLOCK:
+            case RIGHT_CLICK_AIR, RIGHT_CLICK_BLOCK:
                 if (runItem.isSneaking()) {
                     region.setPos2(blockCoords = BlockCoords.of(sbPlayer.getLocation()));
                 } else if (!runItem.isAIR() && blockCoords != null) {

@@ -34,7 +34,7 @@ import java.util.Set;
  * ScriptBlockPlus Delay オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "delay", syntax = "@delay:")
+@OptionTag(name = "delay", syntax = "@delay:", description = "<tick>[/stay]")
 public final class Delay extends BaseOption implements Runnable {
 
     private static final Set<Integer> DELAYS = new HashSet<>();

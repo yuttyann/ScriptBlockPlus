@@ -67,7 +67,7 @@ public final class VaultEconomy extends HookPlugin {
 
     /**
      * 経済プラグインが有効なのかどうか。
-     * @return {@link boolean} - 有効な場合は{@code true}
+     * @return {@code boolean} - 有効な場合は{@code true}
      */
     public boolean isEnabled() {
         return economy != null && economy.isEnabled();
@@ -86,7 +86,7 @@ public final class VaultEconomy extends HookPlugin {
      * プレイヤーが、指定された金額を所持しているのかどうか。
      * @param player - プレイヤー
      * @param amount - 金額
-     * @return {@link boolean} - 所持している場合は{@code true}
+     * @return {@code boolean} - 所持している場合は{@code true}
      */
     public boolean has(@NotNull OfflinePlayer player, double amount) {
         return economy.has(player, amount);
@@ -96,7 +96,7 @@ public final class VaultEconomy extends HookPlugin {
      * プレイヤーの所持金から、指定された金額を引き落とします。
      * @param player - プレイヤー
      * @param amount - 金額
-     * @return {@link boolean} - 成功した場合は{@code true}
+     * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean withdrawPlayer(@NotNull OfflinePlayer player, double amount) {
         return economy.withdrawPlayer(player, amount).transactionSuccess();
@@ -106,7 +106,7 @@ public final class VaultEconomy extends HookPlugin {
      * プレイヤーの所持金に、指定された金額を入金します。
      * @param player - プレイヤー
      * @param amount - 金額
-     * @return {@link boolean} - 成功した場合は{@code true}
+     * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean depositPlayer(@NotNull OfflinePlayer player, double amount) {
         return economy.depositPlayer(player, amount).transactionSuccess();
@@ -115,7 +115,7 @@ public final class VaultEconomy extends HookPlugin {
     /**
      * プレイヤーの所持金を取得します。
      * @param player - プレイヤー
-     * @return {@link double} - 所持金
+     * @return {@code double} - 所持金
      */
     public double getBalance(@NotNull OfflinePlayer player) {
         return economy.getBalance(player);
