@@ -1,4 +1,4 @@
-ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.16.x] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+ScriptBlockPlus [Java16](https://adoptopenjdk.net/?variant=openjdk16) [MC1.9-1.16.x] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 
 概要
@@ -15,22 +15,24 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 別の[リポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。  
 古いプラットフォームのサーバーで[**Java11**](https://adoptopenjdk.net/?variant=openjdk11)が動作しない場合はご利用ください。  
 但し、基本的にはサポートを行っていない事と、近いうちに更新停止することをご了承ください。  
+**プラグインバージョンv2.1.2より、更新を停止いたしました。**
 
 ### 連携プラグイン
 | Plugin | Description | Version |
 |:---|:---|:---:|
-| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの拡張 | **ALL** |
-| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定 | **ALL** |  
+| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの拡張 | **2.10.9** |
+| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定 | **1.1.4** |  
 
 **★各バージョンの動作範囲★**
 | Plugin | Server | Java |
 |:---:|:---:|:---:|
-|**`x.x.x-JV8`**|**`1.9.x-1.16.x`**|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|**`2.0.4-2.1.1`**|**`1.9.x-1.16.x`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11)**|
-|`1.8.5-2.0.3`|`1.9.x-1.16.x`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|`1.6.0-1.8.4`|`1.8.x-1.15.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|`1.4.0-1.5.0`|`1.7.x-1.13.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|`1.0.0-1.3.3`|`1.7.x-1.13.2`|**[Java7](https://jdk.java.net/java-se-ri/7)**|
+|**`x.x.x-JV8`**|**`1.9-1.16.5`**|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
+|**`2.1.2`**|**`1.9-1.17`**|**[Java16](https://adoptopenjdk.net/?variant=openjdk16)**|
+|`2.0.4-2.1.1`|`1.9-1.16.5`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11)**|
+|`1.8.5-2.0.3`|`1.9-1.16.5`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
+|`1.6.0-1.8.4`|`1.8-1.15.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
+|`1.4.0-1.5.0`|`1.7.2-1.13.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
+|`1.0.0-1.3.3`|`1.7.2-1.13.2`|**[Java7](https://jdk.java.net/java-se-ri/7)**|
 
 対応プラットフォーム
 -----------
@@ -45,7 +47,7 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 
 **★バージョン"1.13-1.13.1"の動作について★**  
 サーバーが[**Java9**](https://jdk.java.net/java-se-ri/9)以降に対応していないことが原因で、**エラーが発生する不具合が存在します。**  
-プラグイン自体は正常に動作するのですが、問題が発生する可能性があるのでなるべく"[**1.13.2**](https://papermc.io/legacy)"を利用してください。  
+サーバー、プラグイン自体は正常に動作するのですが、問題が発生する可能性があるのでなるべく"[**1.13.2**](https://papermc.io/legacy)"を利用してください。  
 **強引な解決方法**、`<Server>.jar`内の`org/objectweb/asm/ClassVisitor.class`を[改変](https://pastebin.com/UFBdKXJD)することで動作します。  
 
 リンク
