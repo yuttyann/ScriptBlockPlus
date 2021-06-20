@@ -22,12 +22,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * ScriptBlockPlus Argment 列挙型
+ * ScriptBlockPlus Argument 列挙型
  * <p>
  * Minecraft "1.12.2" までのセレクターの引数です。
  * @author yuttyann44581
  */
-public enum Argment implements SplitType {
+public enum Argument implements SplitType {
     X("x="),
     Y("y="),
     Z("z="),
@@ -53,11 +53,11 @@ public enum Argment implements SplitType {
 
     private final String syntax, prefix, suffix;
 
-    Argment(@NotNull String syntax) {
+    Argument(@NotNull String syntax) {
         this(syntax, null, null);
     }
 
-    Argment(@NotNull String syntax, @Nullable String prefix, @Nullable String suffix) {
+    Argument(@NotNull String syntax, @Nullable String prefix, @Nullable String suffix) {
         this.syntax = syntax;
         this.prefix = prefix;
         this.suffix = suffix;
@@ -65,26 +65,25 @@ public enum Argment implements SplitType {
 
     @Override
     @NotNull
-    public String getValue(@NotNull String argment) {
+    public String getValue(@NotNull String argument) {
         switch (this) {
-            case SCORE:
-            case SCORE_MIN:
-                var objective = argment.substring(prefix.length(), argment.lastIndexOf(suffix));
-                return StringUtils.removeStart(argment, prefix + objective + suffix) + "*" + objective;
+            case SCORE, SCORE_MIN:
+                var objective = argument.substring(prefix.length(), argument.lastIndexOf(suffix));
+                return StringUtils.removeStart(argument, prefix + objective + suffix) + "*" + objective;
             default:
-                return StringUtils.removeStart(argment, syntax);
+                return StringUtils.removeStart(argument, syntax);
         }
     }
 
     @Override
-    public boolean match(@NotNull String argment) {
+    public boolean match(@NotNull String argument) {
         switch (this) {
             case SCORE:
-                return argment.startsWith(prefix) && argment.lastIndexOf(SCORE_MIN.suffix) == -1;
+                return argument.startsWith(prefix) && argument.lastIndexOf(SCORE_MIN.suffix) == -1;
             case SCORE_MIN:
-                return argment.startsWith(prefix) && argment.lastIndexOf(suffix) > 0;
+                return argument.startsWith(prefix) && argument.lastIndexOf(suffix) > 0;
             default:
-                return argment.startsWith(syntax);
+                return argument.startsWith(syntax);
         }
     }
 }

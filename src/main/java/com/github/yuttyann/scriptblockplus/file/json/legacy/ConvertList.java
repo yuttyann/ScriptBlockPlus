@@ -35,10 +35,10 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 /**
- * ScriptBlockPlus ConvartList クラス
+ * ScriptBlockPlus ConvertList クラス
  * @author yuttyann44581
  */
-public final class ConvartList {
+public final class ConvertList {
 
     private static final String FORMAT_FILE = "format.sbp";
 
@@ -51,7 +51,7 @@ public final class ConvartList {
     private final File format;
     private final JSONParser parser;
 
-    private List<String> convartPaths;
+    private List<String> convertPaths;
     private FormatVersion formatVersion;
 
     /**
@@ -59,35 +59,35 @@ public final class ConvartList {
      * @param plugin - プラグイン
      * @param folder - フォルダの名前(例: json)
      */
-    private ConvartList(@NotNull Plugin plugin, @NotNull String folder) {
+    private ConvertList(@NotNull Plugin plugin, @NotNull String folder) {
         this.folder = new SBFile(plugin.getDataFolder(), folder);
         this.format = new SBFile(this.folder, FORMAT_FILE);
         this.parser = new JSONParser();
     }
 
     /**
-     * {@link ConvartList}を作成します。
+     * {@link ConvertList}を作成します。
      * @param plugin - プラグイン
      * @param folder - フォルダの名前(例: json)
-     * @return {@link ConvartList} - コンバートリスト
+     * @return {@link ConvertList} - コンバートリスト
      */
     @Nullable
-    public static ConvartList create(@NotNull Plugin plugin, @NotNull String folder) {
-        var convartList = new ConvartList(plugin, folder);
-        if (!convartList.getFolder().exists()) {
-            convartList.saveFormatVersion();
+    public static ConvertList create(@NotNull Plugin plugin, @NotNull String folder) {
+        var convertList = new ConvertList(plugin, folder);
+        if (!convertList.getFolder().exists()) {
+            convertList.saveFormatVersion();
             return null;
         }
-        if (convartList.getFormatVersion().getVersion() >= FormatVersion.CURRENT.getVersion()) {
+        if (convertList.getFormatVersion().getVersion() >= FormatVersion.CURRENT.getVersion()) {
             return null;
         }
         try {
-            convartList.searchFiles();
+            convertList.searchFiles();
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-        convartList.saveFormatVersion();
-        return convartList.getConvartPaths().isEmpty() ? null : convartList;
+        convertList.saveFormatVersion();
+        return convertList.getConvertPaths().isEmpty() ? null : convertList;
     }
 
     /**
@@ -139,8 +139,8 @@ public final class ConvartList {
      * @return {@link List}&lt;{@link String}&gt; - ファイルパスのリスト
      */
     @NotNull
-    public List<String> getConvartPaths() {
-        return convartPaths == null ? Collections.emptyList() : convartPaths;
+    public List<String> getConvertPaths() {
+        return convertPaths == null ? Collections.emptyList() : convertPaths;
     }
 
     /**
@@ -150,10 +150,10 @@ public final class ConvartList {
      */
     public void searchFiles() throws IOException, ParseException {
         if (folder.exists()) {
-            this.convartPaths = new ArrayList<>(32);
+            this.convertPaths = new ArrayList<>(32);
             searchFiles(folder);
         } else {
-            this.convartPaths = null;
+            this.convertPaths = null;
         }
     }
 
@@ -175,7 +175,7 @@ public final class ConvartList {
             }
             var path = file.getPath();
             if (path.endsWith(".json") && isLegacy(file)) {
-                convartPaths.add(path);
+                convertPaths.add(path);
             }
         }
     }
@@ -185,7 +185,7 @@ public final class ConvartList {
      * @throws IOException I/O系の例外が発生した場合にスローされます。
      * @throws ParseException JSONの読み込みに失敗した場合にスローされます。
      * @param json - JSONのファイル
-     * @return {@link boolean} - 古い形式の場合は{@code true}
+     * @return {@code boolean} - 古い形式の場合は{@code true}
      */
     private boolean isLegacy(@NotNull File json) throws IOException, ParseException {
         /**
