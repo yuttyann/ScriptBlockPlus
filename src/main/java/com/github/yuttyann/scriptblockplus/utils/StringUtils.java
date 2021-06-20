@@ -65,7 +65,7 @@ public final class StringUtils {
         if (isEmpty(source)) {
             return Collections.emptyList();   
         }
-        var list = new ArrayList<String>();
+        var list = new ArrayList<String>(1);
         var chars = source.toCharArray();
         var match = false;
         int start = 0;
@@ -81,10 +81,7 @@ public final class StringUtils {
             }
         }
         if (!match) {
-            if (list.size() == 0) {
-                return Collections.singletonList(source);
-            }
-            list.add(source.substring(start, chars.length));
+            list.add(list.size() == 0 ? source : source.substring(start, chars.length));
         }
         return list;
     }
@@ -112,7 +109,7 @@ public final class StringUtils {
         var chars = source.toCharArray();
         var builder = new StringBuilder(chars.length);
         for (int i = 0; i < chars.length; i++) {
-            if (chars[i] != '§' || (i + 1) >= chars.length) {
+            if (chars[i] != ChatColor.COLOR_CHAR || (i + 1) >= chars.length) {
                 continue;
             }
             if (ChatColor.getByChar(Character.toLowerCase(chars[i + 1])) != null) {
@@ -124,6 +121,9 @@ public final class StringUtils {
 
     @NotNull
     public static String createString(@NotNull String[] args, final int start) {
+        if (start < 0 || start >= args.length) {
+            return "";
+        }
         var joiner = new StringJoiner(" ");
         IntStream.range(start, args.length).forEach(i -> joiner.add(args[i]));
         return joiner.toString();
@@ -144,6 +144,7 @@ public final class StringUtils {
         return source;
     }
 
+    @NotNull
     public static String removeEnd(@NotNull String source, @NotNull String suffix) {
         if (isNotEmpty(source) && isNotEmpty(suffix) && source.endsWith(suffix)) {
             return source.substring(0, source.length() - suffix.length());

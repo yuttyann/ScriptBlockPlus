@@ -15,53 +15,74 @@
  */
 package com.github.yuttyann.scriptblockplus.command;
 
-import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import org.bukkit.command.Command;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Optional;
 
 /**
  * ScriptBlockPlus CommandUsage クラス
  * @author yuttyann44581
  */
-public abstract class CommandUsage {
+public class CommandUsage {
 
-    private final List<CommandData> usages = new ArrayList<CommandData>();
+    private final List<String> NODES = new ArrayList<>();
 
-    public final void setUsage(@NotNull CommandData... args) {
-        usages.clear();
-        StreamUtils.forEach(args, usages::add);
+    private String text;
+
+    public CommandUsage(@Nullable String text) {
+        this(text, (String) null);
     }
 
-    public final void addUsage(@NotNull CommandData... args) {
-        StreamUtils.forEach(args, usages::add);
+    public CommandUsage(@Nullable String text, @Nullable String... nodes) {
+        setText(text);
+        addNode(nodes);
     }
 
-    protected final void sendUsage(@NotNull CommandSender sender, @NotNull Command command, @NotNull BaseCommand baseCommand) {
-        if (usages.isEmpty()) {
-            return;
-        }
-        var list = new ArrayList<CommandData>(usages.size());
-        StreamUtils.fForEach(usages, c -> c.hasPermission(sender), list::add);
-        if (list.isEmpty()) {
-            SBConfig.NOT_PERMISSION.send(sender);
-            return;
-        }
-        var name = command.getName();
-        if (baseCommand.isAliases() && command.getAliases().size() > 0) {
-            name = command.getAliases().get(0).toLowerCase(Locale.ROOT);
-        }
-        var prefix = "§b/" + name + " ";
-        sender.sendMessage("§d========== " + command.getName().toUpperCase(Locale.ROOT) + " Commands ==========");
-        StreamUtils.fForEach(list, CommandData::hasMessage, c -> sender.sendMessage(text(c, prefix)));
+    public CommandUsage(@Nullable String text, @Nullable Permission... permissions) {
+        setText(text);
+        StreamUtils.forEach(permissions, p -> addNode(p.getNode()));
     }
 
-    private String text(@NotNull CommandData commandData, @NotNull String prefix) {
-        return commandData.isPrefix() ? prefix + commandData.getMessage() : commandData.getMessage();
+    @NotNull
+    public String getText() {
+        return text;
+    }
+
+    @NotNull
+    public List<String> getNodes() {
+        return NODES;
+    }
+
+    public final boolean hasText() {
+        return StringUtils.isNotEmpty(text);
+    }
+
+    public boolean hasPermission(@NotNull CommandSender sender) {
+        if (NODES == null || NODES.size() == 0) {
+            return true;
+        }
+        return NODES.stream().anyMatch(s -> Permission.has(sender, s));
+    }
+
+    @NotNull
+    public CommandUsage setText(@Nullable String text) {
+        this.text = text;
+        return this;
+    }
+
+    @NotNull
+    public CommandUsage addNode(@Nullable String... nodes) {
+        var value = Optional.ofNullable(nodes);
+        if (value.isPresent() && value.get().length > 0) {
+            StreamUtils.forEach(value.get(), NODES::add);
+        }
+        return this;
     }
 }

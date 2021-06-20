@@ -17,6 +17,7 @@ package com.github.yuttyann.scriptblockplus.command;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -25,7 +26,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -33,14 +36,20 @@ import java.util.stream.Stream;
  * ScriptBlockPlus BaseCommand コマンドクラス
  * @author yuttyann44581
  */
-public abstract class BaseCommand extends CommandUsage implements CommandExecutor, TabCompleter {
+public abstract class BaseCommand implements CommandExecutor, TabCompleter {
+
+    private final List<SubCommand> COMMANDS = new ArrayList<SubCommand>();
 
     private Plugin plugin;
     private boolean isIgnoreUsage;
 
     public BaseCommand(@NotNull Plugin plugin) {
         this.plugin = plugin;
-        setUsage(getUsages());
+    }
+
+    public BaseCommand(@NotNull Plugin plugin, @NotNull SubCommand... commands) {
+        this.plugin = plugin;
+        
     }
 
     public static <T extends BaseCommand> void register(@NotNull String command, @NotNull T baseCommand) {
@@ -52,13 +61,14 @@ public abstract class BaseCommand extends CommandUsage implements CommandExecuto
         }
     }
 
+    public final void register(@NotNull SubCommand... commands) {
+        Collections.addAll(COMMANDS, commands);
+    }
+
     @NotNull
     public final Plugin getPlugin() {
         return plugin;
     }
-
-    @NotNull
-    public abstract CommandData[] getUsages();
 
     public abstract boolean isAliases();
 
@@ -75,13 +85,24 @@ public abstract class BaseCommand extends CommandUsage implements CommandExecuto
             }
         }
         try {
-            if (!runCommand(sender, command, label, args) && !isIgnoreUsage) {
+            if (!execute(sender, label, args) && !isIgnoreUsage) {
                 sendUsage(sender, command, this);
             }
         } finally {
             isIgnoreUsage = false;
         }
         return true;
+    }
+
+    private boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+        if (args.length > 0) {
+            for (var subCommand : COMMANDS) {
+                if (StreamUtils.anyMatch(subCommand.getNames(), s -> compare(s, args[0]))) {
+                    return subCommand.runCommand(sender, label, args);
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -92,9 +113,7 @@ public abstract class BaseCommand extends CommandUsage implements CommandExecuto
         return completeList;
     }
 
-    protected abstract boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args);
-
-    protected abstract void tabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args, @NotNull List<String> empty);
+    protected abstract void tabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args, @NotNull List<String> list);
 
     protected final boolean hasPermission(@NotNull CommandSender sender, @NotNull Permission permission) {
         return hasPermission(sender, permission, true);
@@ -121,11 +140,51 @@ public abstract class BaseCommand extends CommandUsage implements CommandExecuto
         return false;
     }
 
-    protected final boolean equals(@NotNull String source, @NotNull String another) {
-        return another.equalsIgnoreCase(source);
+    protected final boolean compare(@NotNull String source, @NotNull String text) {
+        return text.equalsIgnoreCase(source);
     }
 
-    protected final boolean equals(@NotNull String source, @NotNull String... anothers) {
-        return Stream.of(anothers).anyMatch(s -> equals(source, s));
+    protected final boolean compare(@NotNull String source, @NotNull String... texts) {
+        return Stream.of(texts).anyMatch(s -> compare(source, s));
+    }
+
+    protected final boolean compare(@NotNull String[] args, final int index, @NotNull String text) {
+        return index < 0 || index >= args.length ? false : compare(args[index], text);
+    }
+
+    protected final boolean compare(@NotNull String[] args, final int index, @NotNull String... texts) {
+        return index < 0 || index >= args.length ? false : compare(args[index], texts);
+    }
+
+    protected final boolean range(@NotNull String[] args, final int end) {
+        return range(args, end, end);
+    }
+
+    protected final boolean range(@NotNull String[] args, final int start, final int end) {
+        return start <= args.length && end >= args.length;
+    }
+
+    @NotNull
+    protected final String get(@NotNull String[] args, final int index) {
+        return index < 0 || index >= args.length ? "" : args[index];
+    }
+
+    protected final void sendUsage(@NotNull CommandSender sender, @NotNull Command command, @NotNull BaseCommand baseCommand) {
+        if (COMMANDS.isEmpty()) {
+            return;
+        }
+        var list = new ArrayList<CommandUsage>(COMMANDS.size());
+        COMMANDS.forEach(s -> StreamUtils.fForEach(s.getUsages(), c -> c.hasPermission(sender), list::add));
+        if (list.isEmpty()) {
+            SBConfig.NOT_PERMISSION.send(sender);
+            return;
+        }
+        var name = command.getName();
+        if (baseCommand.isAliases() && command.getAliases().size() > 0) {
+            name = command.getAliases().get(0).toLowerCase(Locale.ROOT);
+        }
+        var prefix = "§b/" + name + " ";
+        sender.sendMessage("§d========== " + command.getName().toUpperCase(Locale.ROOT) + " Commands ==========");
+        StreamUtils.fForEach(list, CommandUsage::hasText, c -> sender.sendMessage(prefix + c.getText()));
     }
 }
