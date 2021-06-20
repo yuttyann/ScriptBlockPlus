@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.yuttyann</groupId>
   <artifactId>ScriptBlockPlus</artifactId>
-  <version>2.1.1</version>
+  <version>2.1.2</version>
 
   <name>ScriptBlockPlus</name>
   <url>https://github.com/yuttyann/ScriptBlockPlus</url>
@@ -17,7 +17,7 @@
   </licenses>
 
   <properties>
-    <java.version>11</java.version>
+    <java.version>16</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -48,7 +48,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.0</version>
         <configuration>
           <author>true</author>
           <source>${java.version}</source>
@@ -59,6 +59,7 @@
           <docencoding>${project.build.sourceEncoding}</docencoding>
           <destDir>javadoc-latest</destDir>
           <bottom><![CDATA[<b>Yuttyann, 2021</b>]]></bottom>
+          <additionalJOption>-Xdoclint:none</additionalJOption>
           <tags>
             <tag>
               <name>apiNote</name>
@@ -99,9 +100,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.15.2-R0.1-SNAPSHOT</version>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.17-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
