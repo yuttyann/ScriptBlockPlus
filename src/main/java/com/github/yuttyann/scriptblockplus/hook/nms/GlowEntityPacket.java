@@ -16,21 +16,21 @@
 package com.github.yuttyann.scriptblockplus.hook.nms;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
-import com.google.common.collect.ArrayListMultimap;
+import com.github.yuttyann.scriptblockplus.utils.collection.IntHashMap;
+import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
 
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import static com.github.yuttyann.scriptblockplus.enums.reflection.PackageType.*;
 
 /**
  * ScriptBlockPlus GlowEntityPacket クラス
@@ -38,14 +38,16 @@ import static com.github.yuttyann.scriptblockplus.enums.reflection.PackageType.*
  */
 public final class GlowEntityPacket {
 
-    private final ArrayListMultimap<UUID, GlowEntity> GLOW_ENTITIES = ArrayListMultimap.create();
+    private static final Function<UUID, IntMap<GlowEntity>> CREATE_MAP = m -> IntHashMap.create();
+
+    private final Map<UUID, IntMap<GlowEntity>> GLOW_ENTITIES = new HashMap<>();
 
     /**
      * 発光エンティティのマップを取得します。
-     * @return {@link ArrayListMultimap}&lt;{@link UUID}, {@link GlowEntity}&gt; - 発光エンティティのマップ
+     * @return {@link Map}&lt;{@link UUID}, {@link IntMap}&lt;{@link GlowEntity}&gt;&gt; - 発光エンティティのマップ
      */
     @NotNull
-    public ArrayListMultimap<UUID, GlowEntity> getEntities() {
+    public Map<UUID, IntMap<GlowEntity>> getEntities() {
         return GLOW_ENTITIES;
     }
 
@@ -53,7 +55,7 @@ public final class GlowEntityPacket {
      * 発光エンティティが存在するのかどうか。
      * @param sbPlayer - 送信者
      * @param block - ブロック
-     * @return {@link boolean} - 存在する場合は{@code true}
+     * @return {@code boolean} - 存在する場合は{@code true}
      */
     public boolean has(@NotNull SBPlayer sbPlayer, @NotNull Block block) {
         return getGlowEntity(sbPlayer, block) != null;
@@ -63,7 +65,7 @@ public final class GlowEntityPacket {
      * 発光エンティティが存在するのかどうか。
      * @param sbPlayer - 送信者
      * @param blockCoords - ブロックの座標
-     * @return {@link boolean} - 存在する場合は{@code true}
+     * @return {@code boolean} - 存在する場合は{@code true}
      */
     public boolean has(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords) {
         return getGlowEntity(sbPlayer, blockCoords) != null;
@@ -77,20 +79,7 @@ public final class GlowEntityPacket {
      */
     @Nullable
     public GlowEntity getGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block) {
-        if (GLOW_ENTITIES.isEmpty() || !GLOW_ENTITIES.containsKey(sbPlayer.getUniqueId())) {
-            return null;
-        }
-        var glowEntities = GLOW_ENTITIES.get(sbPlayer.getUniqueId());
-        if (glowEntities.isEmpty()) {
-            return null;
-        }
-        for (int i = 0, l = glowEntities.size(); i < l; i++) {
-            var glowEntity = glowEntities.get(i);
-            if (glowEntity.compare(block)) {
-                return glowEntity;
-            }
-        }
-        return null;
+        return getGlowEntity(sbPlayer, BlockCoords.of(block));
     }
 
     /**
@@ -101,20 +90,8 @@ public final class GlowEntityPacket {
      */
     @Nullable
     public GlowEntity getGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords) {
-        if (GLOW_ENTITIES.isEmpty() || !GLOW_ENTITIES.containsKey(sbPlayer.getUniqueId())) {
-            return null;
-        }
         var glowEntities = GLOW_ENTITIES.get(sbPlayer.getUniqueId());
-        if (glowEntities.isEmpty()) {
-            return null;
-        }
-        for (int i = 0, l = glowEntities.size(); i < l; i++) {
-            var glowEntity = glowEntities.get(i);
-            if (glowEntity.compare(blockCoords)) {
-                return glowEntity;
-            }
-        }
-        return null;
+        return glowEntities == null ? null : glowEntities.get(blockCoords.hashCode());
     }
 
     /**
@@ -126,8 +103,8 @@ public final class GlowEntityPacket {
      * @throws ReflectiveOperationException - リフレクション関係で例外が発生した場合にスローされます。
      */
     @Nullable
-    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block, @NotNull TeamColor teamColor) throws ReflectiveOperationException {
-        return spawnGlowEntity(sbPlayer, BlockCoords.of(block), teamColor, 0);
+    public GlowEntity spawn(@NotNull SBPlayer sbPlayer, @NotNull Block block, @NotNull TeamColor teamColor) throws ReflectiveOperationException {
+        return spawn(sbPlayer, BlockCoords.of(block), teamColor, 0);
     }
 
     /**
@@ -140,8 +117,8 @@ public final class GlowEntityPacket {
      * @throws ReflectiveOperationException - リフレクション関係で例外が発生した場合にスローされます。
      */
     @Nullable
-    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block, @NotNull TeamColor teamColor, final int flagSize) throws ReflectiveOperationException {
-        return spawnGlowEntity(sbPlayer, BlockCoords.of(block), teamColor, flagSize);
+    public GlowEntity spawn(@NotNull SBPlayer sbPlayer, @NotNull Block block, @NotNull TeamColor teamColor, final int flagSize) throws ReflectiveOperationException {
+        return spawn(sbPlayer, BlockCoords.of(block), teamColor, flagSize);
     }
 
     /**
@@ -153,8 +130,8 @@ public final class GlowEntityPacket {
      * @throws ReflectiveOperationException - リフレクション関係で例外が発生した場合にスローされます。
      */
     @Nullable
-    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull TeamColor teamColor) throws ReflectiveOperationException {
-        return spawnGlowEntity(sbPlayer, blockCoords, teamColor, 0);
+    public GlowEntity spawn(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull TeamColor teamColor) throws ReflectiveOperationException {
+        return spawn(sbPlayer, blockCoords, teamColor, 0);
     }
 
     /**
@@ -167,17 +144,14 @@ public final class GlowEntityPacket {
      * @throws ReflectiveOperationException - リフレクション関係で例外が発生した場合にスローされます。
      */
     @Nullable
-    public GlowEntity spawnGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull TeamColor teamColor, final int flagSize) throws ReflectiveOperationException {
+    public GlowEntity spawn(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull TeamColor teamColor, final int flagSize) throws ReflectiveOperationException {
         if (has(sbPlayer, blockCoords)) {
             return null;
         }
-        var nmsEntity = createMagmaCube(blockCoords);
+        var nmsEntity = NMSHelper.createMagmaCube(blockCoords);
         var glowEntity = GlowEntity.create(nmsEntity, sbPlayer, teamColor, blockCoords, flagSize);
-        var spawnEntity = createSpawnEntity(nmsEntity);
-        var entityRotation = createRotation(nmsEntity);
-        var entityMetadata = createMetadata(glowEntity.getId(), nmsEntity);
-        NMSHelper.sendPackets(sbPlayer.getPlayer(), spawnEntity, entityRotation, entityMetadata);
-        GLOW_ENTITIES.put(sbPlayer.getUniqueId(), glowEntity);
+        GLOW_ENTITIES.computeIfAbsent(sbPlayer.getUniqueId(), CREATE_MAP).put(blockCoords.hashCode(), glowEntity);
+        NMSHelper.sendPackets(sbPlayer.getPlayer(), NMSHelper.createSpawnEntity(nmsEntity), NMSHelper.createMetadata(glowEntity.getId(), nmsEntity));
         return glowEntity;
     }
 
@@ -185,69 +159,61 @@ public final class GlowEntityPacket {
      * 発光エンティティをデスポーンさせます。
      * @param sbPlayer - 送信者
      * @param block - ブロック
-     * @return {@link boolean} - デスポーンに成功した場合は{@code true}
+     * @return {@code boolean} - デスポーンに成功した場合は{@code true}
      * @throws ReflectiveOperationException - リフレクション関係で例外が発生した場合にスローされます。
      */
-    public boolean destroyGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull Block block) throws ReflectiveOperationException {
-        var glowEntity = getGlowEntity(sbPlayer, block);
-        if (glowEntity != null) {
-            return destroyGlowEntity(glowEntity);
-        }
-        return false;
+    public boolean destroy(@NotNull SBPlayer sbPlayer, @NotNull Block block) throws ReflectiveOperationException {
+        return destroy(sbPlayer, BlockCoords.of(block));
     }
 
     /**
      * 発光エンティティをデスポーンさせます。
      * @param sbPlayer - 送信者
      * @param blockCoords - ブロックの座標
-     * @return {@link boolean} - デスポーンに成功した場合は{@code true}
+     * @return {@code boolean} - デスポーンに成功した場合は{@code true}
      * @throws ReflectiveOperationException - リフレクション関係で例外が発生した場合にスローされます。
      */
-    public boolean destroyGlowEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords) throws ReflectiveOperationException {
+    public boolean destroy(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords) throws ReflectiveOperationException {
         var glowEntity = getGlowEntity(sbPlayer, blockCoords);
-        if (glowEntity != null) {
-            return destroyGlowEntity(glowEntity);
-        }
-        return false;
+        return glowEntity == null ? false : destroy(glowEntity);
     }
 
     /**
      * 発光エンティティをデスポーンさせます。
      * @param glowEntity - 発光エンティティ
-     * @return {@link boolean} - デスポーンに成功した場合は{@code true}
+     * @return {@code boolean} - デスポーンに成功した場合は{@code true}
      * @throws ReflectiveOperationException - リフレクション関係で例外が発生した場合にスローされます。
      */
-    public boolean destroyGlowEntity(@NotNull GlowEntity glowEntity) throws ReflectiveOperationException {
+    public boolean destroy(@NotNull GlowEntity glowEntity) throws ReflectiveOperationException {
         if (glowEntity.isDead()) {
             return false;
         }
         var sbPlayer = glowEntity.getSBPlayer();
-        NMSHelper.sendPacket(sbPlayer.getPlayer(), createDestroy(new int[] { glowEntity.getId() }));
+        NMSHelper.sendPackets(sbPlayer.getPlayer(), NMSHelper.createDestroy(new int[] { glowEntity.getId() }));
+        removeMap(sbPlayer.getUniqueId(), glowEntity.getBlockCoords());
         glowEntity.setDead(true);
-        GLOW_ENTITIES.remove(sbPlayer.getUniqueId(), glowEntity);
         return true;
     }
 
     /**
      * 発光エンティティをデスポーンさせます。
      * @param blockCoords - ブロックの座標
-     * @return {@link boolean} - デスポーンに成功した場合は{@code true}
+     * @return {@code boolean} - デスポーンに成功した場合は{@code true}
      * @throws ReflectiveOperationException - リフレクション関係で例外が発生した場合にスローされます。
      */
-    public boolean broadcastDestroyGlowEntity(@NotNull BlockCoords blockCoords) throws ReflectiveOperationException {
+    public boolean broadcastDestroy(@NotNull BlockCoords blockCoords) throws ReflectiveOperationException {
         if (GLOW_ENTITIES.isEmpty()) {
             return false;
         }
-        var removed = false;
         var id = new int[1];
-        var iterator = GLOW_ENTITIES.values().iterator();
-        while (iterator.hasNext()) {
-            var glowEntity = iterator.next();
-            if (glowEntity.compare(blockCoords)) {
+        var hash = blockCoords.hashCode();
+        var removed = false;
+        for (var intMap : GLOW_ENTITIES.values()) {
+            var glowEntity = intMap.remove(hash);
+            if (glowEntity != null) {
                 id[0] = glowEntity.getId();
-                NMSHelper.sendPacket(createDestroy(id));
+                NMSHelper.sendPackets(NMSHelper.createDestroy(id));
                 glowEntity.setDead(true);
-                iterator.remove();
                 removed = true;
             }
         }
@@ -261,12 +227,13 @@ public final class GlowEntityPacket {
      */
     public void destroyAll(@NotNull SBPlayer sbPlayer) throws ReflectiveOperationException {
         var glowEntities = GLOW_ENTITIES.get(sbPlayer.getUniqueId());
-        if (!glowEntities.isEmpty()) {
+        if (glowEntities != null) {
             try {
-                NMSHelper.sendPacket(sbPlayer.getPlayer(), createDestroy(createIds(glowEntities)));
+                var entities = glowEntities.values();
+                entities.forEach(g -> g.setDead(true));
+                NMSHelper.sendPackets(sbPlayer.getPlayer(), NMSHelper.createDestroy(createIds(entities)));
             } finally {
-                glowEntities.forEach(g -> g.setDead(true));
-                GLOW_ENTITIES.removeAll(sbPlayer.getUniqueId());
+                GLOW_ENTITIES.remove(sbPlayer.getUniqueId());
             }
         }
     }
@@ -276,65 +243,27 @@ public final class GlowEntityPacket {
      * @throws ReflectiveOperationException - リフレクション関係で例外が発生した場合にスローされます。
      */
     public void removeAll() throws ReflectiveOperationException {
-        var glowEntities = GLOW_ENTITIES.values();
-        if (!glowEntities.isEmpty()) {
+        if (!GLOW_ENTITIES.isEmpty()) {
             try {
-                NMSHelper.sendPacket(createDestroy(createIds(glowEntities)));
+                for (var entry : GLOW_ENTITIES.entrySet()) {
+                    var sbPlayer = SBPlayer.fromUUID(entry.getKey());
+                    var entities = entry.getValue().values();
+                    entities.forEach(g -> g.setDead(true));
+                    if (sbPlayer.isOnline()) {
+                        NMSHelper.sendPackets(sbPlayer.getPlayer(), NMSHelper.createDestroy(createIds(entities)));
+                    }
+                }
             } finally {
-                glowEntities.forEach(g -> g.setDead(true));
                 GLOW_ENTITIES.clear();
             }
         }
     }
 
-    @NotNull
-    private Object createMagmaCube(@NotNull BlockCoords blockCoords) throws ReflectiveOperationException {
-        double x = blockCoords.getX() + 0.5D, y = blockCoords.getY(), z = blockCoords.getZ() + 0.5D;
-        var magmaCube = newEntityMagmaCube(blockCoords.getWorld());
-        if (Utils.isCBXXXorLater("1.11")) {
-            NMS.invokeMethod(true, magmaCube, "EntityMagmaCube", "setSize", 2, true);
-        } else {
-            NMS.invokeMethod(true, magmaCube, "EntityMagmaCube", "setSize", 2);
+    private void removeMap(@NotNull UUID uuid, @NotNull BlockCoords blockCoords) {
+        var glowEntities = GLOW_ENTITIES.get(uuid);
+        if (glowEntities != null) {
+            glowEntities.remove(blockCoords.hashCode());
         }
-        NMS.invokeMethod(magmaCube, "EntityMagmaCube", "setFlag", 6, true);
-        NMS.invokeMethod(magmaCube, "EntityMagmaCube", "setInvisible", true);
-        NMS.invokeMethod(magmaCube, "EntityMagmaCube", "setLocation", x, y, z, 0.0F, 0.0F);
-        return magmaCube;
-    }
-
-    @NotNull
-    private Object newEntityMagmaCube(@NotNull World world) throws ReflectiveOperationException {
-        var handle = CB.invokeMethod(world, "CraftWorld", "getHandle");
-        var nmsWorld = NMS.getClass("World");
-        var entityTypes = NMS.getClass("EntityTypes");
-        if (!Utils.isCBXXXorLater("1.13.2")) {
-            return NMS.newInstance(false, "EntityMagmaCube", new Class<?>[] { nmsWorld }, handle);
-        }
-        var entityType = NMS.getFieldValue("EntityTypes", "MAGMA_CUBE", null);
-        return NMS.newInstance(false, "EntityMagmaCube", new Class<?>[] { entityTypes, nmsWorld }, entityType, handle);
-    }
-
-    @NotNull
-    private Object createSpawnEntity(@NotNull Object nmsEntity) throws ReflectiveOperationException {
-        var parameterTypes = new Class<?>[] { NMS.getClass("EntityLiving") };
-        return NMS.newInstance(false, "PacketPlayOutSpawnEntityLiving", parameterTypes, nmsEntity);
-    }
-
-    @NotNull
-    private Object createMetadata(final int id, @NotNull Object nmsEntity) throws ReflectiveOperationException {
-        var watcher = NMS.invokeMethod(nmsEntity, "EntityMagmaCube", "getDataWatcher");
-        return NMS.newInstance("PacketPlayOutEntityMetadata", id, watcher, true);
-    }
-
-    @NotNull
-    private Object createRotation(@NotNull Object nmsEntity) throws ReflectiveOperationException {
-        var parameterTypes = new Class<?>[] { NMS.getClass("Entity"), byte.class };
-        return NMS.newInstance(false, "PacketPlayOutEntityHeadRotation", parameterTypes, nmsEntity, (byte) 0);
-    }
-
-    @NotNull
-    private Object createDestroy(final int[] ids) throws ReflectiveOperationException {
-        return NMS.newInstance("PacketPlayOutEntityDestroy", ids);
     }
 
     @NotNull

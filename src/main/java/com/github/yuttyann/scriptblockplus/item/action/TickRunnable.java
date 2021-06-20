@@ -17,10 +17,11 @@ package com.github.yuttyann.scriptblockplus.item.action;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
-import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntity;
 import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntityPacket;
@@ -31,9 +32,9 @@ import com.github.yuttyann.scriptblockplus.region.PlayerRegion;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils.ThrowableConsumer;
+import com.google.common.base.Predicates;
 
 import org.bukkit.Color;
 import org.bukkit.GameMode;
@@ -54,10 +55,12 @@ public class TickRunnable extends BukkitRunnable {
 
     private static final int PLAYER_RANGE = 15;
     private static final int PARTICLE_RANGE = 10;
+    private static final int PARTICLE_LIMIT = 800;
 
     private static final String KEY = Utils.randomUUID();
     private static final String KEY_TEMP = Utils.randomUUID();
-    private static final GlowEntityPacket GLOW_ENTITY_PACKET = GlowEntity.DEFAULT;
+
+    public static final GlowEntityPacket GLOW_ENTITY = new GlowEntityPacket();
 
     private int tick = 0;
 
@@ -65,10 +68,9 @@ public class TickRunnable extends BukkitRunnable {
     public final void run() {
         try {
             for (var sbPlayer : ScriptViewer.PLAYERS) {
-                if (!sbPlayer.isOnline()) {
-                    continue;
+                if (sbPlayer.isOnline()) {
+                    tick(sbPlayer);
                 }
-                tick(sbPlayer);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,7 +82,7 @@ public class TickRunnable extends BukkitRunnable {
     }
 
     private void tick(@NotNull SBPlayer sbPlayer) throws Exception {
-        if (PackageType.HAS_NMS) {
+        if (NetMinecraft.hasNMS()) {
             lookBlocks(sbPlayer);
             if (tick % 5 == 0) {
                 for (var blockCoords : getBlockCoords(sbPlayer, KEY_TEMP)) {
@@ -95,8 +97,8 @@ public class TickRunnable extends BukkitRunnable {
             if (tick % 10 == 0) {
                 var count = new int[] { 0 };
                 var player = sbPlayer.getPlayer();
-                forEach(new PlayerRegion(player, PARTICLE_RANGE), b -> {
-                    if (count[0]++ < 800) {
+                forEach(new PlayerRegion(player, PARTICLE_RANGE), Predicates.alwaysTrue(), b -> {
+                    if (count[0]++ < PARTICLE_LIMIT) {
                         spawnParticlesOnBlock(player, b.getBlock(), null);
                     }
                 });
@@ -107,8 +109,8 @@ public class TickRunnable extends BukkitRunnable {
     private void lookBlocks(@NotNull SBPlayer sbPlayer) throws Exception {
         var player = sbPlayer.getPlayer();
         var rayResult = RayTrace.rayTraceBlocks(player, getDistance(player));
-        StreamUtils.filterNot(getBlockCoords(sbPlayer, KEY), Set::isEmpty, Set::clear);
-        StreamUtils.filterNot(getBlockCoords(sbPlayer, KEY_TEMP), Set::isEmpty, Set::clear);
+        clearSet(getBlockCoords(sbPlayer, KEY));
+        clearSet(getBlockCoords(sbPlayer, KEY_TEMP));
         if (rayResult == null) {
             return;
         }
@@ -133,13 +135,10 @@ public class TickRunnable extends BukkitRunnable {
     private void spawnGlowEntity(@NotNull SBPlayer sbPlayer) throws Exception {
         var region = new PlayerRegion(sbPlayer.getPlayer(), PLAYER_RANGE);
         var lookBlocks = getBlockCoords(sbPlayer, KEY);
-        forEach(region, b -> {
-            if (lookBlocks.size() > 0 && StreamUtils.anyMatch(lookBlocks, l -> l.equals(b))) {
-                return;
-            }
-            GLOW_ENTITY_PACKET.spawnGlowEntity(sbPlayer, b, getTeamColor(b.getBlock()));
+        forEach(region, b -> !lookBlocks.contains(b), b -> {
+            GLOW_ENTITY.spawn(sbPlayer, b, getTeamColor(b.getBlock()));
         });
-        var entities = GLOW_ENTITY_PACKET.getEntities();
+        var entities = GLOW_ENTITY.getEntities();
         if (entities.isEmpty()) {
             return;
         }
@@ -149,12 +148,12 @@ public class TickRunnable extends BukkitRunnable {
         }
         var min = region.getMinimumPoint();
         var max = region.getMaximumPoint();
-        var iterator = glowEntities.iterator();
+        var iterator = glowEntities.iterable().iterator();
         while (iterator.hasNext()) {
-            var glowEntity = iterator.next();
+            var glowEntity = iterator.next().value();
             if (!inRange(glowEntity, min, max)) {
                 iterator.remove();
-                GLOW_ENTITY_PACKET.destroyGlowEntity(glowEntity);
+                GLOW_ENTITY.destroy(glowEntity);
             }
         }
     }
@@ -173,21 +172,32 @@ public class TickRunnable extends BukkitRunnable {
         return ItemUtils.isAIR(block.getType()) ? TeamColor.BLUE : TeamColor.GREEN;
     }
 
+    private double getDistance(@NotNull Player player) {
+        return player.getGameMode() == GameMode.CREATIVE ? 5.0D : 4.5D;
+    }
+
     private boolean inRange(@NotNull GlowEntity glowEntity, @NotNull BlockCoords min, @NotNull BlockCoords max) {
-        if (glowEntity.getX() < min.getX() || glowEntity.getX() > max.getX()) {
+        var blockCoords = glowEntity.getBlockCoords();
+        if (blockCoords.getX() < min.getX() || blockCoords.getX() > max.getX()) {
             return false;
         }
-        if (glowEntity.getY() < min.getY() || glowEntity.getY() > max.getY()) {
+        if (blockCoords.getY() < min.getY() || blockCoords.getY() > max.getY()) {
             return false;
         }
-        if (glowEntity.getZ() < min.getZ() || glowEntity.getZ() > max.getZ()) {
+        if (blockCoords.getZ() < min.getZ() || blockCoords.getZ() > max.getZ()) {
             return false;
         }
         return true;
     }
 
+    private void clearSet(@NotNull Set<BlockCoords> set) {
+        if (set.size() > 0) {
+            set.clear();
+        }
+    }
+
     @NotNull
-    private void forEach(@NotNull Region region, @NotNull ThrowableConsumer<BlockCoords> action) throws Exception {
+    private void forEach(@NotNull Region region, @NotNull Predicate<BlockCoords> filter, @NotNull ThrowableConsumer<BlockCoords> action) throws Exception {
         var iterator = new CuboidRegionIterator(region);
         for (var scriptKey : ScriptKey.iterable()) {
             var scriptJson = BlockScriptJson.get(scriptKey);
@@ -196,7 +206,7 @@ public class TickRunnable extends BukkitRunnable {
             }
             while (iterator.hasNext()) {
                 var blockCoords = iterator.next();
-                if (scriptJson.has(blockCoords)) {
+                if (filter.test(blockCoords) && scriptJson.has(blockCoords)) {
                     action.accept(blockCoords);
                 }
             }
@@ -204,17 +214,11 @@ public class TickRunnable extends BukkitRunnable {
         }
     }
 
-    private boolean destroyEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull Set<BlockCoords> blocks) throws Exception {
-        if (!BlockScriptJson.contains(blockCoords)) {
-            return false;
+    private void destroyEntity(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull Set<BlockCoords> blocks) throws Exception {
+        if (BlockScriptJson.contains(blockCoords)) {
+            GLOW_ENTITY.destroy(sbPlayer, blockCoords);
+            blocks.add(blockCoords);
         }
-        GLOW_ENTITY_PACKET.destroyGlowEntity(sbPlayer, blockCoords);
-        blocks.add(blockCoords);
-        return true;
-    }
-
-    private double getDistance(@NotNull Player player) {
-        return player.getGameMode() == GameMode.CREATIVE ? 5.0D : 4.5D;
     }
 
     private void spawnParticlesOnBlock(@NotNull Player player, @NotNull Block block, @Nullable Color color) {

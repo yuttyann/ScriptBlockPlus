@@ -19,8 +19,9 @@ import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
-import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
+import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.block.Block;
@@ -33,17 +34,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class GlowEntity {
 
-    /**
-     * このフィールドは、主にスクリプトの検索に利用されます。
-     */
-    public static final GlowEntityPacket DEFAULT = new GlowEntityPacket();
-
     private final int id;
-    private final int x, y, z;
     
     private final UUID uuid;
     private final SBPlayer sbPlayer;
     private final TeamColor teamColor;
+    private final BlockCoords blockCoords;
 
     private boolean dead;
     private boolean[] flag = ArrayUtils.EMPTY_BOOLEAN_ARRAY;
@@ -59,12 +55,10 @@ public final class GlowEntity {
      */
     private GlowEntity(final int id, @NotNull UUID uuid, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) {
         this.id = id;
-        this.x = blockCoords.getX();
-        this.y = blockCoords.getY();
-        this.z = blockCoords.getZ();
         this.uuid = uuid;
         this.sbPlayer = sbPlayer;
         this.teamColor = teamColor;
+        this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
         if (flagSize > 0) {
             this.flag = new boolean[flagSize];
         }
@@ -82,43 +76,17 @@ public final class GlowEntity {
      */
     @NotNull
     static GlowEntity create(@NotNull Object nmsEntity, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) throws ReflectiveOperationException {
-        int id = (int) PackageType.NMS.invokeMethod(nmsEntity, "EntityMagmaCube", "getId");
-        var uuid = (UUID) PackageType.NMS.getFieldValue(true, "Entity", "uniqueID", nmsEntity);
-        var glowEntity = new GlowEntity(id, uuid, sbPlayer, teamColor, blockCoords, flagSize);
+        var glowEntity = new GlowEntity(NMSHelper.getEntityId(nmsEntity), NMSHelper.getUniqueId(nmsEntity), sbPlayer, teamColor, blockCoords, flagSize);
         teamColor.getTeam().addEntry(glowEntity.uuid.toString());
         return glowEntity;
     }
 
     /**
      * エンティティIDを取得します。
-     * @return {@link int} - エンティティID
+     * @return {@code int} - エンティティID
      */
     public int getId() {
         return id;
-    }
-
-    /**
-     * エンティティのX座標を取得します。
-     * @return {@link int} - X座標
-     */
-    public int getX() {
-        return x;
-    }
-
-    /**
-     * エンティティのY座標を取得します。
-     * @return {@link int} - Y座標
-     */
-    public int getY() {
-        return y;
-    }
-
-    /**
-     * エンティティのZ座標を取得します。
-     * @return {@link int} - Z座標
-     */
-    public int getZ() {
-        return z;
     }
 
     /**
@@ -149,10 +117,18 @@ public final class GlowEntity {
     }
 
     /**
+     * エンティティの座標を取得します。
+     * @return {@code int} - X座標
+     */
+    public BlockCoords getBlockCoords() {
+        return blockCoords;
+    }
+
+    /**
      * フラグを取得します。
      * <p>
      * 条件等を設定したい場合に利用してください。
-     * @return {@link boolean} - フラグ
+     * @return {@code boolean} - フラグ
      */
     public boolean[] getFlag() {
         return flag;
@@ -173,7 +149,7 @@ public final class GlowEntity {
 
     /**
      * エンティティが消滅しているのかどうか。
-     * @return {@link boolean} - 消滅している場合は{@code true}
+     * @return {@code boolean} - 消滅している場合は{@code true}
      */
     public boolean isDead() {
         return dead;
@@ -182,19 +158,19 @@ public final class GlowEntity {
     /**
      * エンティティの座標を比較します。
      * @param block - ブロック
-     * @return {@link boolean} - 一致する場合は{@code true}
+     * @return {@code boolean} - 一致する場合は{@code true}
      */
     public boolean compare(@NotNull Block block) {
-        return getX() == block.getX() && getY() == block.getY() && getZ() == block.getZ();
+        return blockCoords.getX() == block.getX() && blockCoords.getY() == block.getY() && blockCoords.getZ() == block.getZ();
     }
 
     /**
      * エンティティの座標を比較します。
      * @param blockCoords - ブロックの座標
-     * @return {@link boolean} - 一致する場合は{@code true}
+     * @return {@code boolean} - 一致する場合は{@code true}
      */
     public boolean compare(@NotNull BlockCoords blockCoords) {
-        return blockCoords.compare(getX(), getY(), getZ());
+        return blockCoords.compare(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
     }
 
     @Override
