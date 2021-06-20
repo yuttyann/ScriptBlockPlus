@@ -25,8 +25,20 @@ import org.jetbrains.annotations.NotNull;
  * @author yuttyann44581
  */
 public enum Filter implements SplitType {
+
+    /**
+     * OPの所持、不所持を判定します。
+     */
     OP("op="),
+
+    /**
+     * 権限の所持、不所持を判定します。
+     */
     PERM("perm="),
+
+    /**
+     * 実行回数を判定します。
+     */
     LIMIT("limit=");
 
     private final String syntax;
@@ -47,12 +59,12 @@ public enum Filter implements SplitType {
 
     @Override
     @NotNull
-    public String getValue(@NotNull String argment) {
-        return StringUtils.removeStart(argment, syntax);
+    public String getValue(@NotNull String argument) {
+        return StringUtils.removeStart(argument, syntax);
     }
 
     @Override
-    public boolean match(@NotNull String argment) {
-        return argment.startsWith(syntax);
+    public boolean match(@NotNull String argument) {
+        return argument.startsWith(syntax);
     }
 }
