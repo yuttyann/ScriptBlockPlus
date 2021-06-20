@@ -17,9 +17,7 @@ package com.github.yuttyann.scriptblockplus.hook.plugin;
 
 import com.github.yuttyann.scriptblockplus.hook.HookPlugin;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -50,15 +48,8 @@ public final class Placeholder extends HookPlugin {
      * @return {@link String} - 置換後の文字列
      */
     @NotNull
-    @SuppressWarnings("deprecation")
     public String setPlaceholder(@NotNull OfflinePlayer player, @NotNull String source) {
-        var version = PlaceholderAPIPlugin.getInstance().getDescription().getVersion();
-        if (Utils.isUpperVersion("2.8.8", version)) {
-            source = PlaceholderAPI.setPlaceholders((OfflinePlayer) player, source);
-        } else if (player.isOnline() && player instanceof Player) {
-            source = PlaceholderAPI.setPlaceholders((Player) player, source);
-        }
-        return source;
+        return PlaceholderAPI.setPlaceholders(player, source);
     }
 
     /**

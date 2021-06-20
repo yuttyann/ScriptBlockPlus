@@ -23,16 +23,16 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus BaseElement クラス
  * @author yuttyann44581
  */
-public abstract class BaseElement {
+public abstract class BaseElement implements Cloneable {
 
     /**
      * 引数同士を比較します。
-     * @param argment1 - 引数1
-     * @param argment2 - 引数2
-     * @return {@link boolean} - 引数が一致するのかどうか
+     * @param argument1 - 引数1
+     * @param argument2 - 引数2
+     * @return {@code boolean} - 引数が一致するのかどうか
      */
-    protected boolean compare(@NotNull Object argment1, @NotNull Object argment2) {
-        return Objects.equals(argment1, argment2);
+    protected boolean compare(@NotNull Object argument1, @NotNull Object argument2) {
+        return Objects.equals(argument1, argument2);
     }
 
     /**
@@ -42,5 +42,10 @@ public abstract class BaseElement {
     @NotNull
     public Class<? extends BaseElement> getElementType() {
         return BaseElement.class;
+    }
+
+    @Override
+    public BaseElement clone() throws CloneNotSupportedException {
+        return (BaseElement) super.clone();
     }
 }
