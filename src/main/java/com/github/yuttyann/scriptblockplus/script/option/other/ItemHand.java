@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
+import com.github.yuttyann.scriptblockplus.enums.MatchType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
@@ -22,17 +23,13 @@ import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.stream.Stream;
 
 /**
  * ScriptBlockPlus ItemHand オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "itemhand", syntax = "@hand:")
+@OptionTag(name = "itemhand", syntax = "@hand:", description = "<id>[:damage] <amount> [name][:lore]")
 public final class ItemHand extends BaseOption {
 
     @Override
@@ -43,23 +40,24 @@ public final class ItemHand extends BaseOption {
             throw new IllegalAccessException("Numerical values can not be used");
         }
         var material = ItemUtils.getMaterial(itemId.get(0));
-        int damage = itemId.size() > 1 ? Integer.parseInt(itemId.get(1)) : 0;
+        int damage = itemId.size() > 1 ? Integer.parseInt(itemId.get(1)) : -1;
         int amount = Integer.parseInt(space.get(1));
         var create = space.size() > 2 ? StringUtils.createString(space, 2) : null;
-        var name = StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create);
+            create = StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create);
 
-        var player = getPlayer();
-        var handItems = getHandStream(player);
-        if (handItems.noneMatch(i -> i.getAmount() >= amount && ItemUtils.getDamage(i) == damage && ItemUtils.compare(i, material, name))) {
-            SBConfig.ERROR_HAND.replace(material, amount, damage, StringUtils.setColor(create)).send(player);
-            return false;
+        var names = StringUtils.split(create, ':');
+        var inventory = getPlayer().getInventory();
+        for (var hand : new ItemStack[] { inventory.getItemInMainHand(), inventory.getItemInOffHand() }) {
+            if (!ItemUtils.compare(MatchType.TYPE, hand, material)
+                || !ItemUtils.compare(MatchType.NAME, hand, names.get(0))
+                || !ItemUtils.compare(MatchType.AMOUNT, hand, amount)
+                || damage != -1 && !ItemUtils.compare(MatchType.META, hand, damage)
+                || names.size() > 1 && !ItemUtils.compare(MatchType.LORE, hand, names.get(1))) {
+                continue;
+            }
+            return true;
         }
-        return true;
-    }
-
-    @NotNull
-    private Stream<ItemStack> getHandStream(@NotNull Player player) {
-        var inventory = player.getInventory();
-        return Stream.of(new ItemStack[] { inventory.getItemInMainHand(), inventory.getItemInOffHand() });
+        SBConfig.ERROR_HAND.replace(material, amount, damage, StringUtils.setColor(names.get(0))).send(getPlayer());
+        return false;
     }
 }

@@ -15,7 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus.utils;
 
-import com.github.yuttyann.scriptblockplus.enums.reflection.PackageType;
+import com.github.yuttyann.scriptblockplus.enums.MatchType;
+import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 
 import org.bukkit.Material;
@@ -25,11 +26,14 @@ import org.bukkit.inventory.meta.Damageable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * ScriptBlockPlus ItemUtils クラス
@@ -40,7 +44,7 @@ public class ItemUtils {
     private static final Map<String, Material> KEY_MATERIALS;
 
     static {
-        if (!Utils.isCBXXXorLater("1.13") && PackageType.HAS_NMS) {
+        if (!Utils.isCBXXXorLater("1.13") && NetMinecraft.hasNMS()) {
             KEY_MATERIALS = new HashMap<>();
             try {
                 KEY_MATERIALS.putAll(NMSHelper.getItemRegistry());
@@ -122,6 +126,15 @@ public class ItemUtils {
         return meta == null ? def : meta.hasDisplayName() ? meta.getDisplayName() : def;
     }
 
+    @NotNull
+    public static List<String> getLore(@NotNull ItemStack item) {
+        if (!item.hasItemMeta()) {
+            return Collections.emptyList();
+        }
+        var meta = item.getItemMeta();
+        return meta.hasLore() ? meta.getLore() : Collections.emptyList();
+    }
+
     @SuppressWarnings("deprecation")
     public static int getDamage(@NotNull ItemStack item) {
         if (Utils.isCBXXXorLater("1.13")) {
@@ -140,11 +153,26 @@ public class ItemUtils {
         return material.name().endsWith("AIR");
     }
 
-    public static boolean compare(@Nullable ItemStack item, @Nullable Material material, @NotNull String name) {
-        return compare(item, material, name::equals);
-    }
-
-    public static boolean compare(@Nullable ItemStack item, @Nullable Material material, @NotNull Predicate<String> filter) {
-        return (item == null || material == null) ? false : item.getType() == material && filter.test(getName(item));
+    public static boolean compare(@NotNull MatchType matchType, @Nullable ItemStack item, @Nullable Object value) {
+        if (item == null || value == null) {
+            return false;
+        }
+        switch (matchType) {
+            case TYPE:
+                return value instanceof Material ? item.getType().equals((Material) value) : false;
+            case META:
+                return value instanceof Integer ? ((Integer) value).equals(getDamage(item)) : false;
+            case NAME:
+                return value instanceof String ? getName(item).equals((String) value) : false;
+            case LORE:
+                if (value instanceof String) {
+                    var match = StringUtils.setColor((String) value);
+                    return getLore(item).stream().collect(Collectors.joining("\n")).contains(match);
+                }
+                break;
+            case AMOUNT:
+                return value instanceof Integer ? item.getAmount() >= (Integer) value : false;
+        }
+        return false;
     }
 }

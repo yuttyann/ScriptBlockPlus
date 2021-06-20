@@ -15,13 +15,14 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
+import com.github.yuttyann.scriptblockplus.enums.MatchType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import org.bukkit.Material;
+
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus ItemCost オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "itemcost", syntax = "$item:")
+@OptionTag(name = "itemcost", syntax = "$item:", description = "<id>[:damage] <amount> [name][:lore]")
 public final class ItemCost extends BaseOption {
 
     public static final String KEY_OPTION = Utils.randomUUID();
@@ -43,32 +44,38 @@ public final class ItemCost extends BaseOption {
             throw new IllegalAccessException("Numerical values can not be used");
         }
         var material = ItemUtils.getMaterial(itemId.get(0));
-        int damage = itemId.size() > 1 ? Integer.parseInt(itemId.get(1)) : 0;
+        int damage = itemId.size() > 1 ? Integer.parseInt(itemId.get(1)) : -1;
         int amount = Integer.parseInt(space.get(1));
         var create = space.size() > 2 ? StringUtils.createString(space, 2) : null;
-        var name = StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create);
+            create = StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create);
 
         var player = getPlayer();
-        var inventory = player.getInventory();
-        var inventoryItems = inventory.getContents();
+        var contents = player.getInventory().getContents();
         if (!getTempMap().has(KEY_OPTION)) {
-            getTempMap().put(KEY_OPTION, copyItems(inventoryItems));
+            getTempMap().put(KEY_OPTION, copyItems(contents));
         }
+        var names = StringUtils.split(create, ':');
         int result = amount;
-        for (var item : inventoryItems) {
-            if (item != null && ItemUtils.getDamage(item) == damage && ItemUtils.compare(item, material, name)) {
-                result -= result > 0 ? setAmount(item, item.getAmount() - result) : 0;
+        for (var item : contents) {
+            if (!ItemUtils.compare(MatchType.TYPE, item, material)
+                || !ItemUtils.compare(MatchType.NAME, item, names.get(0))
+                || damage != -1 && !ItemUtils.compare(MatchType.META, item, damage)
+                || names.size() > 1 && !ItemUtils.compare(MatchType.LORE, item, names.get(1))) {
+                continue;
+            }
+            if ((result -= result > 0 ? setAmount(item, item.getAmount() - result) : 0) == 0) {
+                break;
             }
         }
         if (result > 0) {
-            SBConfig.ERROR_ITEM.replace(material, amount, damage, StringUtils.setColor(create)).send(player);
+            SBConfig.ERROR_ITEM.replace(material, amount, damage, StringUtils.setColor(names.get(0))).send(player);
             return false;
         }
-        inventory.setContents(inventoryItems);
+        player.getInventory().setContents(contents);
         return true;
     }
 
-    private int setAmount(@NotNull ItemStack item, int amount) {
+    private int setAmount(@NotNull ItemStack item, final int amount) {
         int oldAmount = item.getAmount();
         item.setAmount(amount);
         return oldAmount;
@@ -78,7 +85,7 @@ public final class ItemCost extends BaseOption {
     private ItemStack[] copyItems(@NotNull ItemStack[] items) {
         var copy = new ItemStack[items.length];
         for (int i = 0; i < copy.length; i++) {
-            copy[i] = items[i] == null ? new ItemStack(Material.AIR) : items[i].clone();
+            copy[i] = items[i] == null ? null : items[i].clone();
         }
         return copy;
     }
