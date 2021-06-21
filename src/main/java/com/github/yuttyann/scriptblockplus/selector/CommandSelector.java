@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.selector;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -206,8 +205,6 @@ public final class CommandSelector {
         }
         if (sender instanceof Entity) {
             world = ((Entity) sender).getWorld();
-        } else if (sender instanceof SBPlayer) {
-            world = ((SBPlayer) sender).getWorld();
         } else if (sender instanceof BlockCommandSender) {
             world = ((BlockCommandSender) sender).getBlock().getWorld();
         }

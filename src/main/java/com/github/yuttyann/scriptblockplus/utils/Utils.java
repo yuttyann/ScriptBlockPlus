@@ -143,12 +143,11 @@ public final class Utils {
 
     public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
         command = command.startsWith("/") ? command.substring(1) : command;
-        var commandSender = sender instanceof SBPlayer ? ((SBPlayer) sender).getPlayer() : sender;
         if (CommandSelector.has(command)) {
-            var commands = CommandSelector.build(commandSender, location, command);
-            return !commands.isEmpty() && StreamUtils.allMatch(commands, s -> Bukkit.dispatchCommand(commandSender, s));
+            var commands = CommandSelector.build(sender, location, command);
+            return !commands.isEmpty() && StreamUtils.allMatch(commands, s -> Bukkit.dispatchCommand(sender, s));
         }
-        return Bukkit.dispatchCommand(commandSender, command);
+        return Bukkit.dispatchCommand(sender, command);
     }
 
     @NotNull

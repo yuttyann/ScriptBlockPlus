@@ -42,7 +42,6 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.server.CraftBukkit;
 import com.github.yuttyann.scriptblockplus.enums.server.Mojang;
 import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.raytrace.RayResult;
 
 /**
@@ -170,9 +169,6 @@ public final class NMSHelper {
 
     @NotNull
     public static Object getICommandListener(@NotNull CommandSender sender) throws ReflectiveOperationException {
-        if (sender instanceof SBPlayer) {
-            sender = ((SBPlayer) sender).getPlayer();
-        }
         if (Utils.isCBXXXorLater("1.13.2")) {
             return CraftBukkit.COMMAND.invokeMethod(false, (Object) null, "VanillaCommandWrapper", "getListener", COMMAND_LISTENER_CLASS, sender);
         }
