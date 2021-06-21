@@ -15,7 +15,7 @@ RemoveCommandMessage: '<scriptkey> remove - ブロックのスクリプトを削
 ViewCommandMessage: '<scriptkey> view - ブロックのスクリプトを表示します。'
 RunCommandMessage: '<scriptkey> run <world> <x> <y> <z> - 指定したスクリプトを実行します。'
 RedstoneCommandMessage: '<scriptkey> redstone <needs> [filter] [selector] - スクリプトが動力で動作するか設定します。'
-SelectorPasteCommandMessage: 'selector paste <pasteonair> [overwrite] - 選択範囲にスクリプトをペーストします。'
+SelectorPasteCommandMessage: 'selector paste [pasteonair] [overwrite] - 選択範囲にスクリプトをペーストします。'
 SelectorRemoveCommandMessage: 'selector remove - 選択範囲のスクリプトを削除します。'
 
 # &(code) : カラーコード(以降の項目全て対象)
