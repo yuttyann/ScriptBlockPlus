@@ -32,11 +32,14 @@ import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
-import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import static com.github.yuttyann.scriptblockplus.file.json.BaseJson.GSON_HOLDER;
 
@@ -51,7 +54,7 @@ public final class LegacyFormatJson {
     private LegacyFormatJson() { }
 
     /**
-     * JSONの要素から{@code elements}または{@code infos}を取り除きます。
+     * Jsonの要素から{@code elements}または{@code infos}を取り除きます。
      * @param convertList - コンバートリスト
      * @return {@code boolean} - コンバートに成功した場合は{@code true}
      */
@@ -71,38 +74,39 @@ public final class LegacyFormatJson {
                     result = true;
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
         return result;
     }
 
     /**
-     * JSONの要素から{@code elements}または{@code infos}を取り除きます。
+     * Jsonの要素から{@code elements}または{@code infos}を取り除きます。
      * @throws IOException I/O系の例外が発生した場合にスローされます。
-     * @param json - JSONのファイル
+     * @throws ParseException Jsonのパース時に例外が発生した場合にスローされます。
+     * @param json - Jsonのファイル
      */
-    private boolean removeElements(@NotNull File json) throws IOException {
+    private boolean removeElements(@NotNull File json) throws IOException, ParseException {
         if (!json.exists()) {
             return false;
         }
-        var map = loadFile(json);
-        var elements = castList(map.get(LEGACY_KEYS[0]));
-        if (elements == null) {
-            elements = castList(map.get(LEGACY_KEYS[1]));
-        }
-        if (elements == null) {
+        var elements = getElements(json);
+        if (!(elements instanceof JSONArray)) {
             return false;
         }
-        if (elements.isEmpty()) {
+        var array = loadFile(((JSONArray) elements).toJSONString());
+        if (array == null) {
+            return false;
+        }
+        if (array.isEmpty()) {
             saveFile(json, Collections.emptyList());
             return true;
         }
-        var element = elements.get(0);
+        var element = array.get(0);
         if (element instanceof Map) {
             var scripts = castMap(element).get(LEGACY_KEYS[2]);
             if (scripts instanceof Map) {
-                var list = new ArrayList<BlockScript>(elements.size());
+                var list = new ArrayList<BlockScript>(array.size());
                 for (var entry : castMap(scripts).entrySet()) {
                     list.add(createBlockScript(entry));
                 }
@@ -111,7 +115,7 @@ public final class LegacyFormatJson {
             }
             var timer = castMap(element).get(LEGACY_KEYS[3]);
             if (timer instanceof List) {
-                var list = new ArrayList<PlayerTimer>(elements.size());
+                var list = new ArrayList<PlayerTimer>(array.size());
                 for (var temp : castList(timer)) {
                     list.add(createPlayerTimer(castMap(temp).entrySet()));
                 }
@@ -119,7 +123,7 @@ public final class LegacyFormatJson {
                 return true;
             }
         }
-        saveFile(json, elements);
+        saveFile(json, array);
         return true;
     }
 
@@ -199,9 +203,9 @@ public final class LegacyFormatJson {
     }
 
     /**
-     * JSONのシリアライズ化を行います。
+     * Jsonのシリアライズ化を行います。
      * @throws IOException I/O系の例外が発生した場合にスローされます。
-     * @param json - JSONのファイル
+     * @param json - Jsonのファイル
      * @param list - リスト
      */
     private void saveFile(@NotNull File json, @NotNull List<?> list) throws IOException {
@@ -214,15 +218,36 @@ public final class LegacyFormatJson {
     }
 
     /**
-     * JSONのデシリアライズ化を行います。
+     * Jsonのデシリアライズ化を行います。
      * @throws IOException I/O系の例外が発生した場合にスローされます。
-     * @param json - JSONのファイル
+     * @param json - Json
      * @return {@link Map}&lt;{@link String}, {@link Object}&gt; - マップ
      */
     @Nullable
-    private Map<String, Object> loadFile(@NotNull File json) throws IOException {
-        try (var reader = new JsonReader(FileUtils.newBufferedReader(json))) {
-            return castMap(GSON_HOLDER.getGson().fromJson(reader, Map.class));
+    private List<Object> loadFile(@NotNull String json) throws IOException {
+        return castList(GSON_HOLDER.getGson().fromJson(json, List.class));
+    }
+
+    /**
+     * Jsonの要素を取得します。
+     * @throws IOException I/O系の例外が発生した場合にスローされます。
+     * @param json - Jsonのファイル
+     * @throws ParseException Jsonのパース時に例外が発生した場合にスローされます。
+     * @return {@link Object} - オブジェクト
+     */
+    @Nullable
+    private Object getElements(@NotNull File json) throws IOException, ParseException {
+        try (var reader = FileUtils.newBufferedReader(json)) {
+            var parse = new JSONParser().parse(reader);
+            if (!(parse instanceof JSONObject)) {
+                return null;
+            }
+            var jsonObject = (JSONObject) parse;
+            var elements = jsonObject.get(LEGACY_KEYS[0]);
+            if (elements == null) {
+                elements = jsonObject.get(LEGACY_KEYS[1]);
+            }
+            return elements;
         }
     }
 

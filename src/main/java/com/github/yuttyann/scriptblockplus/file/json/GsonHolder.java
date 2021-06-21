@@ -15,6 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus.file.json;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -109,11 +111,8 @@ public final class GsonHolder {
         try {
             var factories = Gson.class.getDeclaredField("factories");
             factories.setAccessible(true);
-            var unmodifiable = factories.get(gson);
-            var innerList = unmodifiable.getClass().getSuperclass().getDeclaredField("list");
-            innerList.setAccessible(true);
-            var typeFactoryList = (List<TypeAdapterFactory>) innerList.get(unmodifiable);
-            typeFactoryList.removeIf(t -> {
+            var newFactories = new ArrayList<>((List<TypeAdapterFactory>) factories.get(gson));
+            newFactories.removeIf(t -> {
                 var factory = t.getClass();
                 return factory.equals(ReflectiveTypeAdapterFactory.class) || factory.equals(TypeAdapters.ENUM_FACTORY.getClass());
             });
@@ -126,8 +125,9 @@ public final class GsonHolder {
             var argument1 = (ConstructorConstructor) constructor.get(gson);
             var argument2 = (FieldNamingStrategy) fieldNaming.get(gsonBuilder);
             var argument3 = (Excluder) excluder.get(gsonBuilder);
-            typeFactoryList.add(LegacyEnumFactory.INSTANCE);
-            typeFactoryList.add(new LegacyReflectiveFactory(argument1, argument2, argument3));
+            newFactories.add(LegacyEnumFactory.INSTANCE);
+            newFactories.add(new LegacyReflectiveFactory(argument1, argument2, argument3));
+            factories.set(gson, Collections.unmodifiableList(newFactories));
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }
