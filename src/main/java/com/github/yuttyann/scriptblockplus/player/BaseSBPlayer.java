@@ -230,10 +230,4 @@ public final class BaseSBPlayer extends PlayerMap {
     public String toString() {
         return "BaseSBPlayer{uuid=" + uuid + ", player=" + player + ", isOnline=" + isOnline + '}';
     }
-
-    @Override
-    @NotNull
-    public Spigot spigot() {
-        return player.spigot();
-    }
 }

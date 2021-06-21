@@ -44,7 +44,7 @@ public final class BlockType extends BaseOption {
         }
         var blockId = StringUtils.split(StringUtils.removeStart(type, Utils.MINECRAFT), ':');
         if (Calculation.REALNUMBER_PATTERN.matcher(blockId.get(0)).matches()) {
-            Utils.sendColorMessage(getSBPlayer(), "§cNumerical values can not be used");
+            Utils.sendColorMessage(getPlayer(), "§cNumerical values can not be used");
             return false;
         }
         var material = ItemUtils.getMaterial(blockId.get(0));

@@ -57,7 +57,7 @@ public final class PlayerListener implements Listener {
         } finally {
             sbPlayer.setOldBlockCoords(BlockCoords.of(sbPlayer.getLocation()).subtract(0, 1, 0));
             if (sbPlayer.isOp()) {
-                ScriptBlock.getInstance().checkUpdate(sbPlayer, false);
+                ScriptBlock.getInstance().checkUpdate(sbPlayer.getPlayer(), false);
             }
         }
     }

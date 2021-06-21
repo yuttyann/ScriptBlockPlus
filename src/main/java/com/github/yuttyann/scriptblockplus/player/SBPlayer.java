@@ -24,11 +24,12 @@ import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +40,7 @@ import java.util.UUID;
  * ScriptBlockPlus SBPlayer インターフェース
  * @author yuttyann44581
  */
-public interface SBPlayer extends CommandSender {
+public interface SBPlayer extends Permissible {
 
     /**
      * {@link ScriptBlock}の{@link SBPlayer}を取得します。
@@ -72,6 +73,13 @@ public interface SBPlayer extends CommandSender {
     boolean isOnline();
 
     /**
+     * プレイヤーのサーバーを取得します。
+     * @return {@link Server} - サーバー
+     */
+    @NotNull
+    public Server getServer();
+
+    /**
      * {@link Bukkit}の{@link Player}を取得します。
      * @return {@link Player} - プレイヤー
      */
@@ -91,6 +99,14 @@ public interface SBPlayer extends CommandSender {
      */
     @NotNull
     PlayerInventory getInventory();
+
+
+    /**
+     * プレイヤーの名前を取得します。
+     * @return {@link String} - プレイヤーの名前
+     */
+    @NotNull
+    public String getName();
 
     /**
      * プレイヤーの{@link UUID}を取得します。
@@ -126,6 +142,32 @@ public interface SBPlayer extends CommandSender {
      */
     @Nullable
     ItemStack getItemInOffHand();
+
+    /**
+     * プレイヤーにメッセージを送信します。
+     * @param message - メッセージ
+     */
+    public void sendMessage(@NotNull String message);
+
+    /**
+     * プレイヤーにメッセージを送信します。
+     * @param messages - メッセージ
+     */
+    public void sendMessage(@NotNull String[] messages);
+
+    /**
+     * プレイヤーにメッセージを送信します。
+     * @param uuid - 送信者
+     * @param message - メッセージ
+     */
+    public void sendMessage(@NotNull UUID uuid, @NotNull String message);
+
+    /**
+     * プレイヤーにメッセージを送信します。
+     * @param uuid - 送信者
+     * @param messages - メッセージ
+     */
+    public void sendMessage(@NotNull UUID uuid, @NotNull String[] messages);
 
     /**
      * ワールドの選択範囲を取得します。

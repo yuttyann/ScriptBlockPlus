@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.file.config;
 
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -50,6 +51,10 @@ public interface ConfigKey<T> {
 
     default void send() {
         send(Bukkit.getConsoleSender());
+    }
+    
+    default void send(@NotNull SBPlayer sbPlayer) {
+        send(sbPlayer.getPlayer());
     }
 
     default void send(@NotNull CommandSender sender) {
