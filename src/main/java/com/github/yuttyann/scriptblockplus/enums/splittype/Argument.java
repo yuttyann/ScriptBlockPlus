@@ -67,7 +67,8 @@ public enum Argument implements SplitType {
     @NotNull
     public String getValue(@NotNull String argument) {
         switch (this) {
-            case SCORE, SCORE_MIN:
+            case SCORE:
+            case SCORE_MIN:
                 var objective = argument.substring(prefix.length(), argument.lastIndexOf(suffix));
                 return StringUtils.removeStart(argument, prefix + objective + suffix) + "*" + objective;
             default:

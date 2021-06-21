@@ -199,17 +199,25 @@ public final class EntitySelector {
         switch ((Argument) splitValue.getType()) {
             case C:
                 return true;
-            case X, Y, Z:
+            case X:
+            case Y:
+            case Z:
                 return setXYZ(location, splitValue);
-            case DX, DY, DZ:
+            case DX:
+            case DY:
+            case DZ:
                 return isDRange(entity, location, splitValue);
-            case R, RM:
+            case R:
+            case RM:
                 return isR(entity, location, splitValue);
-            case RX, RXM:
+            case RX:
+            case RXM:
                 return isRX(entity, splitValue);
-            case RY, RYM:
+            case RY:
+            case RYM:
                 return isRY(entity, splitValue);
-            case L, LM:
+            case L:
+            case LM:
                 return isL(entity, splitValue);
             case M:
                 return isM(entity, splitValue);
@@ -221,7 +229,8 @@ public final class EntitySelector {
                 return isType(entity, splitValue);
             case NAME:
                 return isName(entity, splitValue);
-            case SCORE, SCORE_MIN:
+            case SCORE:
+            case SCORE_MIN:
                 return isScore(entity, splitValue);
             default:
                 return false;

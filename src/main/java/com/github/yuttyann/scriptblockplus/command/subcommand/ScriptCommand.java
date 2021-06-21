@@ -89,7 +89,11 @@ public class ScriptCommand extends SubCommand {
             var actionKey = ActionKey.valueOf(get(args, 1).toUpperCase(Locale.ROOT));
             var scriptEdit = new ScriptEdit(scriptKey, actionKey);
             switch (actionKey) {
-                case CREATE, ADD:
+                case CREATE:
+                case ADD:
+                    if (range(args, 2)) {
+                        return false;
+                    }
                     var script = StringUtils.createString(args, 2).trim();
                     if (!isScripts(script)) {
                         SBConfig.ERROR_SCRIPT_CHECK.send(sbPlayer);
@@ -98,12 +102,12 @@ public class ScriptCommand extends SubCommand {
                     scriptEdit.setValue(script);
                     break;
                 case REDSTONE:
+                    if (range(args, 2)) {
+                        return false;
+                    }
                     if (compare(args, 2, "true")) {
                         var selector = StringUtils.createString(args, 3).trim();
-                        if (selector.startsWith("@s") || !CommandSelector.has(selector)) {
-                            selector = "@p";
-                        }
-                        scriptEdit.setValue(selector);
+                        scriptEdit.setValue(selector.startsWith("@s") || !CommandSelector.has(selector) ? "@p" : selector);
                     }
                     break;
                 default:

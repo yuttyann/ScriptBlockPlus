@@ -1,4 +1,4 @@
-ScriptBlockPlus [Java16](https://adoptopenjdk.net/?variant=openjdk16) [MC1.9-1.16.x] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.17] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 
 概要
@@ -27,7 +27,7 @@ ScriptBlockPlus [Java16](https://adoptopenjdk.net/?variant=openjdk16) [MC1.9-1.1
 | Plugin | Server | Java |
 |:---:|:---:|:---:|
 |**`x.x.x-JV8`**|**`1.9-1.16.5`**|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|**`2.1.2`**|**`1.9-1.17`**|**[Java16](https://adoptopenjdk.net/?variant=openjdk16)**|
+|**`2.1.2`**|**`1.9-1.17`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11)**|
 |`2.0.4-2.1.1`|`1.9-1.16.5`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11)**|
 |`1.8.5-2.0.3`|`1.9-1.16.5`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
 |`1.6.0-1.8.4`|`1.8-1.15.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|

@@ -181,10 +181,14 @@ public final class LegacyFormatJson {
                 case "uuid":
                     uuid = UUID.fromString((String) value);
                     break;
-                case "scripttype", "scriptType", "scriptkey":
+                case "scripttype":
+                case "scriptType":
+                case "scriptkey":
                     scriptKey = toScriptKey(value);
                     break;
-                case "fullcoords", "fullCoords", "blockcoords":
+                case "fullcoords":
+                case "fullCoords":
+                case "blockcoords":
                     blockCoords = BlockCoords.fromString((String) value);
                     break;
             }

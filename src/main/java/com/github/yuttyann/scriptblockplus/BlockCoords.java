@@ -391,7 +391,7 @@ public class BlockCoords {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        return this == obj ? true : obj instanceof BlockCoords b ? compare(b) : false;
+        return this == obj ? true : obj instanceof BlockCoords ? compare((BlockCoords) obj) : false;
     }
 
     @Override
