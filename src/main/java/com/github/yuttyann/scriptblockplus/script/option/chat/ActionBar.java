@@ -83,7 +83,7 @@ public final class ActionBar extends BaseOption implements Runnable {
     public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
         var player = sbPlayer.getPlayer();
         if (HAS_SPIGOT) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
         } else if (Utils.isCBXXXorLater("1.12.2")) {
             var command = "minecraft:title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
             Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Bukkit.dispatchCommand(player, command));
