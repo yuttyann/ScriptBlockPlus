@@ -43,9 +43,8 @@ public final class ItemHand extends BaseOption {
         int damage = itemId.size() > 1 ? Integer.parseInt(itemId.get(1)) : -1;
         int amount = Integer.parseInt(space.get(1));
         var create = space.size() > 2 ? StringUtils.createString(space, 2) : null;
-            create = StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create);
+        var names = StringUtils.split(StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create), ':');
 
-        var names = StringUtils.split(create, ':');
         var inventory = getPlayer().getInventory();
         for (var hand : new ItemStack[] { inventory.getItemInMainHand(), inventory.getItemInOffHand() }) {
             if (!ItemUtils.compare(MatchType.TYPE, hand, material)
@@ -57,7 +56,8 @@ public final class ItemHand extends BaseOption {
             }
             return true;
         }
-        SBConfig.ERROR_HAND.replace(material, amount, damage, StringUtils.setColor(names.get(0))).send(getPlayer());
+        var name = StringUtils.setColor(StringUtils.isEmpty(create) ? null : names.get(0));
+        SBConfig.ERROR_HAND.replace(material, amount, damage, name).send(getPlayer());
         return false;
     }
 }

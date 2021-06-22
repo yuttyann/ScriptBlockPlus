@@ -47,14 +47,13 @@ public final class ItemCost extends BaseOption {
         int damage = itemId.size() > 1 ? Integer.parseInt(itemId.get(1)) : -1;
         int amount = Integer.parseInt(space.get(1));
         var create = space.size() > 2 ? StringUtils.createString(space, 2) : null;
-            create = StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create);
+        var names = StringUtils.split(StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create), ':');
 
         var player = getPlayer();
         var contents = player.getInventory().getContents();
         if (!getTempMap().has(KEY_OPTION)) {
             getTempMap().put(KEY_OPTION, copyItems(contents));
         }
-        var names = StringUtils.split(create, ':');
         int result = amount;
         for (var item : contents) {
             if (!ItemUtils.compare(MatchType.TYPE, item, material)
@@ -68,7 +67,8 @@ public final class ItemCost extends BaseOption {
             }
         }
         if (result > 0) {
-            SBConfig.ERROR_ITEM.replace(material, amount, damage, StringUtils.setColor(names.get(0))).send(player);
+            var name = StringUtils.setColor(StringUtils.isEmpty(create) ? null : names.get(0));
+            SBConfig.ERROR_ITEM.replace(material, amount, damage, name).send(player);
             return false;
         }
         player.getInventory().setContents(contents);
