@@ -222,11 +222,11 @@ public final class NMSHelper {
         if (NetMinecraft.isLegacy()) {
             var nmsWorld = NetMinecraft.LEGACY.getClass("World");
             var entityTypes = NetMinecraft.LEGACY.getClass("EntityTypes");
-            if (!Utils.isCBXXXorLater("1.13.2")) {
-                return NetMinecraft.LEGACY.newInstance(false, "EntityMagmaCube", new Class<?>[] { nmsWorld }, handle);
+            if (Utils.isCBXXXorLater("1.14")) {
+                var entityType = NetMinecraft.LEGACY.getFieldValue("EntityTypes", "MAGMA_CUBE", null);
+                return NetMinecraft.LEGACY.newInstance(false, "EntityMagmaCube", new Class<?>[] { entityTypes, nmsWorld }, entityType, handle);
             }
-            var entityType = NetMinecraft.LEGACY.getFieldValue("EntityTypes", "MAGMA_CUBE", null);
-            return NetMinecraft.LEGACY.newInstance(false, "EntityMagmaCube", new Class<?>[] { entityTypes, nmsWorld }, entityType, handle);
+            return NetMinecraft.LEGACY.newInstance(false, "EntityMagmaCube", new Class<?>[] { nmsWorld }, handle);
         } else {
             var nmsWorld = NetMinecraft.WR_LEVEL.getClass("World");
             var entityTypes = NetMinecraft.WR_ENTITY.getClass("EntityTypes");
