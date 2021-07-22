@@ -37,14 +37,9 @@ import org.jetbrains.annotations.Nullable;
 public class BlockCoords {
 
     /**
-     * 初期値のワールドです。
-     */
-    public static final World DEFAULT_WORLD = Bukkit.getWorlds().get(0);
-
-    /**
      * 初期値の{@link BlockCoords}です。
      */
-    public static final BlockCoords ZERO = new UnmodifiableBlockCoords(new BlockCoords(DEFAULT_WORLD, 0, 0, 0));
+    public static final BlockCoords ZERO = new UnmodifiableBlockCoords(new BlockCoords(Bukkit.getWorlds().get(0), 0, 0, 0));
 
     private final World world;
 
@@ -320,11 +315,10 @@ public class BlockCoords {
         if (comma3 < 0) {
             throw new IllegalArgumentException("Invalid FullCoords: " + fullCoords);
         }
-        var match = fullCoords.startsWith(DEFAULT_WORLD.getName());
         int x = Integer.parseInt(fullCoords, comma1 + 1, comma2, 10);
         int y = Integer.parseInt(fullCoords, comma2 + 1, comma3, 10);
         int z = Integer.parseInt(fullCoords, comma3 + 1, fullCoords.length(), 10);
-        return new BlockCoords(match ? DEFAULT_WORLD : Utils.getWorld(fullCoords.substring(0, comma1)), x, y, z);
+        return new BlockCoords(Utils.getWorld(fullCoords.substring(0, comma1)), x, y, z);
     }
 
     /**
