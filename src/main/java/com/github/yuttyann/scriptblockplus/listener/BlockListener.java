@@ -58,7 +58,7 @@ public final class BlockListener implements Listener {
             return;
         }
         for (var scriptKey : ScriptKey.iterable()) {
-            var scriptJson = BlockScriptJson.get(scriptKey);
+            var scriptJson = BlockScriptJson.newJson(scriptKey);
             if (scriptJson.isEmpty()) {
                 continue;
             }

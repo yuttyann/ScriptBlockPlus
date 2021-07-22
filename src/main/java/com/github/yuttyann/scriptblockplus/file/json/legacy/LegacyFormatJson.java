@@ -27,7 +27,6 @@ import java.util.Map.Entry;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
@@ -211,7 +210,7 @@ public final class LegacyFormatJson {
     private void saveFile(@NotNull File json, @NotNull List<?> list) throws IOException {
         try (var writer = new JsonWriter(FileUtils.newBufferedWriter(json))) {
             if (list.size() < SBConfig.FORMAT_LIMIT.getValue()) {
-                writer.setIndent(BaseJson.INDENT);
+                writer.setIndent("  ");
             }
             GSON_HOLDER.getGson().toJson(list, list.getClass(), writer);
         }

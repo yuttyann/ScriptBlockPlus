@@ -35,7 +35,7 @@ public final class Cooldown extends TimerOption {
         var time = new long[] { System.currentTimeMillis(), Integer.parseInt(getOptionValue()) * 1000L, 0L };
         time[2] = time[0] + time[1];
 
-        var timerJson = PlayerTimerJson.get(getFileUniqueId());
+        var timerJson = PlayerTimerJson.newJson(getFileUniqueId());
         timerJson.load(getFileUniqueId(), getScriptKey(), getBlockCoords()).setTime(time);
         timerJson.saveJson();
         return true;
@@ -44,6 +44,6 @@ public final class Cooldown extends TimerOption {
     @Override
     @Nullable
     protected PlayerTimer getPlayerTimer() {
-        return PlayerTimerJson.get(getFileUniqueId()).load(getFileUniqueId(), getScriptKey(), getBlockCoords());
+        return PlayerTimerJson.newJson(getFileUniqueId()).load(getFileUniqueId(), getScriptKey(), getBlockCoords());
     }
 }

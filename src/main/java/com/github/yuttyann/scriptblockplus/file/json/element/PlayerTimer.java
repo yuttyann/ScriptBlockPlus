@@ -21,6 +21,7 @@ import java.util.UUID;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.basic.ThreeJson.ThreeElement;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.google.gson.InstanceCreator;
 import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,8 @@ import org.jetbrains.annotations.Nullable;
  * @author yuttyann44581
  */
 public final class PlayerTimer extends ThreeElement<UUID, ScriptKey, BlockCoords> {
+
+    public static final InstanceCreator<PlayerTimer> INSTANCE = t -> new PlayerTimer(null, ScriptKey.INTERACT, BlockCoords.ZERO);
 
     @SerializedName("time")
     private long[] time;

@@ -16,15 +16,12 @@
 package com.github.yuttyann.scriptblockplus.file.json.derived;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.basic.TwoJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
 
-import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -36,10 +33,8 @@ import java.util.UUID;
 @JsonTag(path = "json/playercount")
 public final class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount> {
 
-    public static final CacheJson CACHE_JSON = new CacheJson(PlayerCountJson.class, PlayerCountJson::new);
-
     private PlayerCountJson(@NotNull String name) {
-        super(name.toString());
+        super(name);
     }
 
     @Override
@@ -49,18 +44,8 @@ public final class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, Playe
     }
 
     @NotNull
-    public static PlayerCountJson get(@NotNull UUID uuid) {
-        return newJson(uuid.toString(), CACHE_JSON);
-    }
-
-    @NotNull
-    public static PlayerCountJson get(@NotNull SBPlayer sbPlayer) {
-        return get(sbPlayer.getUniqueId());
-    }
-
-    @NotNull
-    public static PlayerCountJson get(@NotNull OfflinePlayer player) {
-        return get(player.getUniqueId());
+    public static PlayerCountJson newJson(@NotNull UUID uuid) {
+        return newJson(PlayerCountJson.class, uuid.toString());
     }
 
     public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
@@ -72,7 +57,7 @@ public final class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, Playe
         for (int i = 0, l = names.size(), e = ".json".length(); i < l; i++) {
             var name = names.get(i);
             var index = name.length() - e;
-            var countJson = (PlayerCountJson) getCache(name.substring(0, index), CACHE_JSON);
+            var countJson = getCache(PlayerCountJson.class, name.substring(0, index));
             if (countJson.isEmpty()) {
                 continue;
             }

@@ -30,7 +30,7 @@ public final class Amount extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var scriptJson = BlockScriptJson.get(getScriptKey());
+        var scriptJson = BlockScriptJson.newJson(getScriptKey());
         var blockCoords = getBlockCoords();
         var blockScript = scriptJson.load(blockCoords);
         if (blockScript.getAmount() == -1) {

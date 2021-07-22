@@ -17,7 +17,6 @@ package com.github.yuttyann.scriptblockplus.file.json.derived;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.SBLoader;
-import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.basic.OneJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
@@ -31,18 +30,11 @@ import java.util.LinkedHashSet;
  * ScriptBlockPlus BlockScriptJson クラス
  * @author yuttyann44581
  */
-@JsonTag(path = "json/blockscript")
+@JsonTag(path = "json/blockscript", cachefileexists = false)
 public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
-
-    public static final CacheJson CACHE_JSON = new CacheJson(BlockScriptJson.class, BlockScriptJson::new);
 
     private BlockScriptJson(@NotNull String name) {
         super(name);
-    }
-
-    @Override
-    protected boolean isCacheFileExists() {
-        return false;
     }
 
     @NotNull
@@ -57,25 +49,17 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
     }
 
     @NotNull
-    public static BlockScriptJson get(@NotNull ScriptKey scriptKey) {
-        return newJson(scriptKey.getName(), CACHE_JSON);
+    public static BlockScriptJson newJson(@NotNull ScriptKey scriptKey) {
+        return newJson(BlockScriptJson.class, scriptKey.getName());
     }
 
     public static boolean contains(@NotNull BlockCoords blockCoords) {
         for (var scriptKey : ScriptKey.iterable()) {
-            if (contains(blockCoords, get(scriptKey))) {
+            if (newJson(scriptKey).has(blockCoords)) {
                 return true;
             }
         }
         return false;
-    }
-
-    public static boolean contains(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
-        return contains(blockCoords, get(scriptKey));
-    }
-
-    public static boolean contains(@NotNull BlockCoords blockCoords, @NotNull BlockScriptJson scriptJson) {
-        return scriptJson.has(blockCoords);
     }
 
     public static void convert(@NotNull ScriptKey scriptKey) {
@@ -85,7 +69,7 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
             return;
         }
         // JSONを作成
-        var scriptJson = get(scriptKey);
+        var scriptJson = newJson(scriptKey);
         if (scriptJson.exists()) {
             return;
         }

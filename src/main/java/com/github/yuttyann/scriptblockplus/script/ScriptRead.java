@@ -64,7 +64,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
         this.sbPlayer = SBPlayer.fromPlayer(player);
         this.scriptKey = scriptKey;
         this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
-        this.scriptJson = BlockScriptJson.get(scriptKey);
+        this.scriptJson = BlockScriptJson.newJson(scriptKey);
     }
     
     public final void setInitialize(boolean initialize) {

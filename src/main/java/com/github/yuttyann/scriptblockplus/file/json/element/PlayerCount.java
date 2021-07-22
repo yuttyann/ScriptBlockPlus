@@ -21,6 +21,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.Alternate;
 import com.github.yuttyann.scriptblockplus.file.json.basic.TwoJson.TwoElement;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.google.gson.InstanceCreator;
 import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,8 @@ import org.jetbrains.annotations.NotNull;
  * @author yuttyann44581
  */
 public final class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
+
+    public static final InstanceCreator<PlayerCount> INSTANCE = t -> new PlayerCount(ScriptKey.INTERACT, BlockCoords.ZERO);
 
     @Alternate("scripttype")
     @SerializedName(value = "scriptkey", alternate = { "scripttype" })

@@ -63,7 +63,7 @@ public final class CuboidRegionRemove {
         var iterator = new CuboidRegionIterator(region);
         try {
             for (var scriptKey : ScriptKey.iterable()) {
-                var scriptJson = BlockScriptJson.get(scriptKey);
+                var scriptJson = BlockScriptJson.newJson(scriptKey);
                 if (scriptJson.isEmpty()) {
                     continue;
                 }

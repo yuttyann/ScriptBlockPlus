@@ -41,7 +41,7 @@ public final class SBOperation {
 
     public SBOperation(@NotNull ScriptKey scriptKey) {
         this.scriptKey = scriptKey;
-        this.scriptJson = BlockScriptJson.get(scriptKey);
+        this.scriptJson = BlockScriptJson.newJson(scriptKey);
     }
 
     @NotNull
@@ -80,7 +80,7 @@ public final class SBOperation {
     }
 
     public void add(@NotNull Player player, @NotNull BlockCoords blockCoords, @NotNull String script) {
-        if (!BlockScriptJson.contains(blockCoords, scriptJson)) {
+        if (!scriptJson.has(blockCoords)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
@@ -95,7 +95,7 @@ public final class SBOperation {
     }
 
     public void remove(@NotNull Player player, @NotNull BlockCoords blockCoords) {
-        if (!BlockScriptJson.contains(blockCoords, scriptJson)) {
+        if (!scriptJson.has(blockCoords)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
@@ -108,12 +108,12 @@ public final class SBOperation {
     }
 
     public void view(@NotNull Player player, @NotNull BlockCoords blockCoords) {
-        if (!BlockScriptJson.contains(blockCoords, scriptJson)) {
+        if (!scriptJson.has(blockCoords)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
         var blockScript = scriptJson.load(blockCoords);
-        var playerCount = PlayerCountJson.get(player).load(scriptKey, blockCoords);
+        var playerCount = PlayerCountJson.newJson(player.getUniqueId()).load(scriptKey, blockCoords);
         var selector = blockScript.getSelector();
         player.sendMessage("--------- [ Script Views ] ---------");
         player.sendMessage("§eAuthor: §a" + getAuthors(blockScript));
@@ -127,7 +127,7 @@ public final class SBOperation {
     }
 
     public void redstone(@NotNull Player player, @NotNull BlockCoords blockCoords, @Nullable String selector) {
-        if (!BlockScriptJson.contains(blockCoords, scriptJson)) {
+        if (!scriptJson.has(blockCoords)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }

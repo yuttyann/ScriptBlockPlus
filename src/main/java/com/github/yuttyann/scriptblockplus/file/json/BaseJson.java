@@ -34,7 +34,6 @@ import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.collection.IntHashMap;
 import com.google.gson.GsonBuilder;
-import com.google.gson.InstanceCreator;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
@@ -45,7 +44,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * ScriptBlockPlus BaseJson クラス
@@ -73,7 +71,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         /**
          * キャッシュを保持している状態
          * <p>
-         * 生成方法は{@link BaseJson#newJson(String, CacheJson)}を参照してください。
+         * 生成方法は{@link BaseJson#newJson(Class, String)}を参照してください。
         */
         KEEP_CACHE,
 
@@ -85,10 +83,9 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         CLEAR_CACHE,
     }
 
-    public static final String INDENT = "  ";
     public static final GsonHolder GSON_HOLDER = new GsonHolder(new GsonBuilder());
 
-    private static final IntMap<BaseJson<?>> JSON_CACHE = IntHashMap.create();
+    private static final Map<Class<? extends BaseJson<?>>, IntMap<BaseJson<?>>> JSON_CACHE = new HashMap<>();
 
     private final File file;
     private final String name;
@@ -109,9 +106,9 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
             b.registerTypeAdapter(List.class, new NumberAdapter());
             b.registerTypeAdapter(ScriptKey.class, new ScriptKeyAdapter());
             b.registerTypeHierarchyAdapter(BlockCoords.class, new BlockCoordsAdapter());
-            b.registerTypeAdapter(BlockScript.class, newInstance(() -> new BlockScript(BlockCoords.ZERO)));
-            b.registerTypeAdapter(PlayerCount.class, newInstance(() -> new PlayerCount(ScriptKey.INTERACT, BlockCoords.ZERO)));
-            b.registerTypeAdapter(PlayerTimer.class, newInstance(() -> new PlayerTimer(null, ScriptKey.INTERACT, BlockCoords.ZERO))); 
+            b.registerTypeAdapter(BlockScript.class, BlockScript.INSTANCE);
+            b.registerTypeAdapter(PlayerCount.class, PlayerCount.INSTANCE);
+            b.registerTypeAdapter(PlayerTimer.class, PlayerTimer.INSTANCE); 
         });
     }
 
@@ -134,7 +131,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
     }
 
     /**
-     * JSONを取得します。
+     * JSONを生成、取得します。
      * <p>
      * このメソッドは、キャッシュの保存を行います。
      * <p>
@@ -142,22 +139,27 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * <p>
      * また、キャッシュを利用する場合は基本的に"private"なコンストラクタの実装を推奨します。
      * @param <T> - JSONの型
+     * @param json - Jsonのクラス
      * @param name - ファイルの名前
-     * @param cacheJson - キャッシュ
      * @return {@link BaseJson} - インスタンス
      */
     @NotNull
-    public static <T extends BaseJson<?>> T newJson(@NotNull String name, @NotNull CacheJson cacheJson) {
-        var hash = hash(name, cacheJson.getJsonClass());
-        var baseJson = JSON_CACHE.get(hash);
+    public static <T extends BaseJson<?>> T newJson(@NotNull Class<T> json, @NotNull String name) {
+        int hash = name.hashCode();
+        var cacheMap = JSON_CACHE.get(json);
+        var baseJson = cacheMap == null ? null : cacheMap.get(hash);
         if (baseJson == null) {
+            var cacheJson = CacheJson.CACHE_MAP.get(json);
+            if (cacheJson == null) {
+                throw new NullPointerException("The class is not registered");
+            }
             baseJson = cacheJson.newInstance(name);
-            if (baseJson.isCacheFileExists() && !baseJson.exists()) {
+            if (baseJson.jsonTag.cachefileexists() && !baseJson.exists()) {
                 return (T) baseJson;
             }
             baseJson.keepCache();
             baseJson.setCacheId(hash);
-            JSON_CACHE.put(hash, baseJson);
+            JSON_CACHE.computeIfAbsent(json, v -> IntHashMap.create()).put(hash, baseJson);
         }
         return (T) baseJson;
     }
@@ -169,14 +171,19 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * <p>
      * また、キャッシュを利用する場合は基本的に"private"なコンストラクタの実装を推奨します。
      * @param <T> JSONの型
+     * @param json - Jsonのクラス
      * @param name - ファイルの名前
-     * @param cacheJson - キャッシュ
      * @return {@link BaseJson} - インスタンス
      */
     @NotNull
-    public static <T extends BaseJson<?>> T getCache(@NotNull String name, @NotNull CacheJson cacheJson) {
-        var baseJson = JSON_CACHE.get(hash(name, cacheJson.getJsonClass()));
+    public static <T extends BaseJson<?>> T getCache(@NotNull Class<T> json, @NotNull String name) {
+        var cacheMap = JSON_CACHE.get(json);
+        var baseJson = cacheMap == null ? null : cacheMap.get(name.hashCode());
         if (baseJson == null) {
+            var cacheJson = CacheJson.CACHE_MAP.get(json);
+            if (cacheJson == null) {
+                throw new NullPointerException("The class is not registered");
+            }
             baseJson = cacheJson.newInstance(name);
         }
         return (T) baseJson;
@@ -186,22 +193,19 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * キャッシュされた全ての要素を削除します。
      */
     public static void clear() {
-        JSON_CACHE.iterable().forEach(e -> e.value().clearCache());
-        JSON_CACHE.clear();
+        JSON_CACHE.keySet().forEach(BaseJson::clear);
     }
 
     /**
      * キャッシュされた全ての要素を削除します。
-     * @param jsonClass - JSONのクラス 
+     * @param json - JSONのクラス 
      */
-    public static final void clear(@NotNull Class<? extends BaseJson<?>> jsonClass) {
-        JSON_CACHE.removeIf(e -> {
-            if (e.value().getClass().equals(jsonClass)) {
-                e.value().clearCache();
-                return true;
-            }
-            return false;
-        });
+    public static final void clear(@NotNull Class<? extends BaseJson<?>> json) {
+        var cacheMap = JSON_CACHE.get(json);
+        if (cacheMap != null) {
+            cacheMap.iterable().forEach(i -> i.value().clearCache());
+            cacheMap.clear();
+        }
     }
 
     /**
@@ -227,7 +231,6 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * 要素の再読み込みを行います。
      */
     public final void reload() {
-        Objects.requireNonNull(file, "Please load the file");
         try {
             setMap(loadJson());
         } catch (IOException | ClassNotFoundException e) {
@@ -267,9 +270,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * @param id - キャッシュID
      */
     private void setCacheId(final int id) {
-        if (this.id == 0) {
-            this.id = id;
-        }
+        this.id = id;
     }
 
     /**
@@ -322,22 +323,6 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
     }
 
     /**
-     * ファイルを保存した時にキャッシュを削除するのかどうか。
-     * @return {@code boolean} - 削除を行う場合は{@code true}
-     */
-    protected boolean isTemporary() {
-        return false;
-    }
-
-    /**
-     * ファイルが存在する時のみキャッシュを保存するのかどうか。
-     * @return {@code boolean} - ファイルが存在する時のみキャッシュを保存する場合は{@code true}
-     */
-    protected boolean isCacheFileExists() {
-        return true;
-    }
-
-    /**
      * マップに要素が存在しない場合に{@code true}を返します。
      * @return {@code boolean} - 要素が存在しない場合は{@code true}
      */
@@ -363,8 +348,8 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         }
         try {
             if (getStatus() == Status.KEEP_CACHE) {
+                Optional.ofNullable(JSON_CACHE.get(getClass())).ifPresent(i -> i.remove(getCacheId()));
                 clearCache();
-                JSON_CACHE.remove(getCacheId());
             }
         } finally {
             file.delete();
@@ -383,15 +368,15 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         var elements = copyElements();
         try (var writer = new JsonWriter(FileUtils.newBufferedWriter(file))) {
             if (elementMap.size() < SBConfig.FORMAT_LIMIT.getValue()) {
-                writer.setIndent(INDENT);
+                writer.setIndent(jsonTag.indent());
             }
             GSON_HOLDER.getGson().toJson(elements, getCollectionType(), writer);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            if (isTemporary() && getStatus() == Status.KEEP_CACHE) {
+            if (jsonTag.temporary() && getStatus() == Status.KEEP_CACHE) {
+                Optional.ofNullable(JSON_CACHE.get(getClass())).ifPresent(i -> i.remove(getCacheId()));
                 clearCache();
-                JSON_CACHE.remove(getCacheId());
             }
         }
     }
@@ -444,10 +429,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      */
     @NotNull
     private CollectionType getCollectionType() throws ClassNotFoundException {
-        if (collectionType == null) {
-            this.collectionType = new CollectionType(Collection.class, this);
-        }
-        return collectionType;
+        return collectionType == null ? this.collectionType = new CollectionType(Collection.class, this) : collectionType;
     }
 
     /**
@@ -491,12 +473,12 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * <p>
      * また、ファイルの名前の取得に成功した場合は関連する全てのキャッシュを削除します。
      * @throws NullPointerException {@link JsonTag}が見つからなかった時にスローされます。
-     * @param jsonClass - {@link BaseJson}を継承したクラス
+     * @param json - {@link BaseJson}を継承したクラス
      * @return {@link File}[] - 全てのファイル
      */
     @NotNull
-    public static File[] getFiles(@NotNull Class<? extends BaseJson<?>> jsonClass) {
-        var jsonTag = jsonClass.getAnnotation(JsonTag.class);
+    public static File[] getFiles(@NotNull Class<? extends BaseJson<?>> json) {
+        var jsonTag = json.getAnnotation(JsonTag.class);
         if (jsonTag == null) {
             throw new NullPointerException("Annotation not found @JsonTag()");
         }
@@ -507,12 +489,12 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
     /**
      * フォルダ内の全てのファイルの名前を取得します。
      * @throws NullPointerException {@link JsonTag}が見つからなかった時にスローされます。
-     * @param jsonClass - {@link BaseJson}を継承したクラス
+     * @param json - {@link BaseJson}を継承したクラス
      * @return {@link List}&lt;{@link String}&gt; - 全てのファイルの名前
      */
     @NotNull
-    public static List<String> getNames(@NotNull Class<? extends BaseJson<?>> jsonClass) {
-        var jsonTag = jsonClass.getAnnotation(JsonTag.class);
+    public static List<String> getNames(@NotNull Class<? extends BaseJson<?>> json) {
+        var jsonTag = json.getAnnotation(JsonTag.class);
         if (jsonTag == null) {
             throw new NullPointerException("Annotation not found @JsonTag()");
         }
@@ -534,34 +516,13 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         return plugin;
     }
 
-    /**
-     * {@link InstanceCreator}を生成します。
-     * @param <T> インスタンスの型
-     * @param newInstance - インスタンスの生成処理
-     * @return {@link InstanceCreator}&lt;{@link T}&gt; - インスタンスクリエイター
-     */
-    @NotNull
-    private static <T> InstanceCreator<T> newInstance(@NotNull Supplier<T> newInstance) {
-        return t -> newInstance.get();
-    }
-
-    /**
-     * ハッシュコードを生成します。
-     * @param name - ファイルの名前
-     * @param jsonClass - JSONのクラス
-     * @return {@code int} - ハッシュコード
-     */
-    private static int hash(@NotNull String name, @NotNull Class<?> jsonClass) {
+    @Override
+    public int hashCode() {
         int hash = 1;
         int prime = 31;
         hash = prime * hash + name.hashCode();
-        hash = prime * hash + jsonClass.hashCode();
+        hash = prime * hash + getClass().hashCode();
         return hash;
-    }
-
-    @Override
-    public int hashCode() {
-        return hash(name, getClass());
     }
 
     @Override

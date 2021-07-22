@@ -208,7 +208,7 @@ public final class CommandSelector {
         } else if (sender instanceof BlockCommandSender) {
             world = ((BlockCommandSender) sender).getBlock().getWorld();
         }
-        return world == null ? BlockCoords.DEFAULT_WORLD : world;
+        return world == null ? BlockCoords.ZERO.getWorld() : world;
     }
 
     @NotNull

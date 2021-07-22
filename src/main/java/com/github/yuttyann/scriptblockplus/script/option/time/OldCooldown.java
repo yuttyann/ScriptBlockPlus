@@ -40,7 +40,7 @@ public final class OldCooldown extends TimerOption {
         var time = new long[] { System.currentTimeMillis(), Integer.parseInt(getOptionValue()) * 1000L, 0L };
         time[2] = time[0] + time[1];
 
-        var timerJson = PlayerTimerJson.get(getFileUniqueId());
+        var timerJson = PlayerTimerJson.newJson(getFileUniqueId());
         timerJson.load(null, getScriptKey(), getBlockCoords()).setTime(time);
         timerJson.saveJson();
         return true;
@@ -55,6 +55,6 @@ public final class OldCooldown extends TimerOption {
     @Override
     @Nullable
     protected PlayerTimer getPlayerTimer() {
-        return PlayerTimerJson.get(getFileUniqueId()).load(null, getScriptKey(), getBlockCoords());
+        return PlayerTimerJson.newJson(getFileUniqueId()).load(null, getScriptKey(), getBlockCoords());
     }
 }

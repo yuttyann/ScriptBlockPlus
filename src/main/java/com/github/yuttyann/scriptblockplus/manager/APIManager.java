@@ -129,7 +129,7 @@ public final class APIManager implements ScriptBlockAPI {
 
         public SFile(@NotNull ScriptKey scriptKey, @NotNull Location location) {
             this.scriptKey = scriptKey;
-            this.scriptJson = BlockScriptJson.get(scriptKey);
+            this.scriptJson = BlockScriptJson.newJson(scriptKey);
             this.blockCoords = BlockCoords.of(location);
             this.blockScript = scriptJson.load(blockCoords);
         }

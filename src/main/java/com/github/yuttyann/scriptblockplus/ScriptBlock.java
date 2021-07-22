@@ -22,6 +22,8 @@ import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.ConvertList;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.LegacyFormatJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
@@ -98,6 +100,11 @@ public class ScriptBlock extends JavaPlugin {
         // スクリプトの形式を".yml"から".json"へ移行
         ScriptKey.iterable().forEach(BlockScriptJson::convert);
 
+        // キャッシュの登録
+        CacheJson.register(BlockScriptJson.class);
+        CacheJson.register(PlayerCountJson.class);
+        CacheJson.register(PlayerTimerJson.class);
+
         // キャッシュを生成(設定有効時のみ)
         CacheJson.loading();
 
@@ -109,7 +116,7 @@ public class ScriptBlock extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new InteractListener(), this);
 
-        // トリガーを登録
+        // トリガーの登録
         TriggerListener.register(new HitTrigger(this));
         TriggerListener.register(new WalkTrigger(this));
         TriggerListener.register(new BreakTrigger(this));

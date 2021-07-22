@@ -50,4 +50,25 @@ public @interface JsonTag {
      */
     @NotNull
     String plugin() default "";
+
+    /**
+     * インデントを取得します。
+     * <p>
+     * 整形を行う際に利用されます。
+     * @return {@link String} - インデント
+     */
+    @NotNull
+    String indent() default "  ";
+
+    /**
+     * ファイルを保存した時にキャッシュを削除するのかどうか。
+     * @return {@link boolean} - 削除を行う場合は{@code true}
+     */
+    boolean temporary() default false;
+
+    /**
+     * ファイルが存在する時のみキャッシュを保存するのかどうか。
+     * @return {@link boolean} - ファイルが存在する時のみキャッシュを保存する場合は{@code true}
+     */
+    boolean cachefileexists() default true;
 }

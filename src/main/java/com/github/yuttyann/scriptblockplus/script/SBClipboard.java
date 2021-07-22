@@ -43,7 +43,7 @@ public final class SBClipboard {
     public SBClipboard(@NotNull SBPlayer sbPlayer, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
         this.sbPlayer = sbPlayer;
         this.scriptKey = scriptKey;
-        this.scriptJson = BlockScriptJson.get(scriptKey); 
+        this.scriptJson = BlockScriptJson.newJson(scriptKey); 
         this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
 
         var copyScript = scriptJson.fastLoad(this.blockCoords);
@@ -81,7 +81,7 @@ public final class SBClipboard {
     }
 
     public boolean copy() {
-        if (blockScript == null || !BlockScriptJson.contains(blockCoords, scriptJson)) {
+        if (blockScript == null || !scriptJson.has(blockCoords)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
             return false;
         }
@@ -96,7 +96,7 @@ public final class SBClipboard {
     }
 
     public boolean paste(@NotNull BlockCoords blockCoords, boolean overwrite) {
-        if (blockScript == null || (BlockScriptJson.contains(blockCoords, scriptJson) && !overwrite)) {
+        if (blockScript == null || (scriptJson.has(blockCoords) && !overwrite)) {
             return false;
         }
         try {

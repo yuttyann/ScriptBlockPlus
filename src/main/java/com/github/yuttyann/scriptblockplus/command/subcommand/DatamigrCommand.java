@@ -92,7 +92,7 @@ public class DatamigrCommand extends SubCommand {
             return;
         }
         var scriptFile = YamlConfig.load(ScriptBlock.getInstance(), file, false);
-        var scriptJson = BlockScriptJson.get(scriptKey);
+        var scriptJson = BlockScriptJson.newJson(scriptKey);
         for (var name : scriptFile.getKeys()) {
             var world = Utils.getWorld(name);
             for (var coords : scriptFile.getKeys(name)) {

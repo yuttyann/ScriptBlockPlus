@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.basic.OneJson.OneElement;
+import com.google.gson.InstanceCreator;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +35,8 @@ import org.jetbrains.annotations.Nullable;
  * @author yuttyann44581
  */
 public final class BlockScript extends OneElement<BlockCoords> {
+
+    public static final InstanceCreator<BlockScript> INSTANCE = t -> new BlockScript(BlockCoords.ZERO);
 
     @SerializedName("blockcoords")
     private final BlockCoords blockCoords;

@@ -34,7 +34,7 @@ public final class CollectionType implements ParameterizedType {
     private final Type[] types;
     private final Class<? extends Collection> rawType;
 
-    public CollectionType(Class<? extends Collection> rawType, @NotNull BaseJson<?> json) throws ClassNotFoundException {
+    public CollectionType(@NotNull Class<? extends Collection> rawType, @NotNull BaseJson<?> json) throws ClassNotFoundException {
         var type = json.getClass().getGenericSuperclass();
         var args = ((ParameterizedType) type).getActualTypeArguments();
         this.types = new Type[] { Class.forName(args[args.length - 1].getTypeName()) };

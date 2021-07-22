@@ -35,7 +35,7 @@ public abstract class ScriptMap implements ObjectMap {
 
     @Override
     public void put(@NotNull String key, @Nullable Object value) {
-        TEMP_MAP.computeIfAbsent(randomId, k -> new HashMap<>()).put(key, value);
+        TEMP_MAP.computeIfAbsent(randomId, v -> new HashMap<>()).put(key, value);
     }
 
     @Override

@@ -115,7 +115,7 @@ public final class StreamUtils {
         }
     }
 
-    public static <T> boolean anyMatch(@NotNull T[] array, Predicate<T> filter) {
+    public static <T> boolean anyMatch(@NotNull T[] array, @NotNull Predicate<T> filter) {
         if (array.length == 0) {
             return true;
         }
@@ -127,7 +127,7 @@ public final class StreamUtils {
         return false;
     }
 
-    public static <T> boolean anyMatch(@NotNull Collection<T> collection, Predicate<T> filter) {
+    public static <T> boolean anyMatch(@NotNull Collection<T> collection, @NotNull Predicate<T> filter) {
         if (collection.isEmpty()) {
             return true;
         }
@@ -139,7 +139,7 @@ public final class StreamUtils {
         return false;
     }
 
-    public static <T> boolean allMatch(@NotNull T[] array, Predicate<T> filter) {
+    public static <T> boolean allMatch(@NotNull T[] array, @NotNull Predicate<T> filter) {
         if (array.length == 0) {
             return true;
         }
@@ -151,7 +151,7 @@ public final class StreamUtils {
         return true;
     }
 
-    public static <T> boolean allMatch(@NotNull Collection<T> collection, Predicate<T> filter) {
+    public static <T> boolean allMatch(@NotNull Collection<T> collection, @NotNull Predicate<T> filter) {
         if (collection.isEmpty()) {
             return true;
         }

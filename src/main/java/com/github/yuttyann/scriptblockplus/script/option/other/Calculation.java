@@ -75,7 +75,7 @@ public final class Calculation extends BaseOption {
             }
             var scriptKey = slash.size() == 1 ? getScriptKey() : ScriptKey.valueOf(slash.get(0));
             var blockCoords = BlockCoords.fromString(slash.size() == 1 ? slash.get(0) : slash.get(1));
-            return PlayerCountJson.get(getUniqueId()).load(scriptKey, blockCoords).getAmount();
+            return PlayerCountJson.newJson(getUniqueId()).load(scriptKey, blockCoords).getAmount();
         }
         if (source.startsWith("%player_others_in_range_") && source.endsWith("%")) {
             source = source.substring("%player_others_in_range_".length(), source.length() - 1);
@@ -111,7 +111,7 @@ public final class Calculation extends BaseOption {
             case "%server_offline%":
                 return Bukkit.getOfflinePlayers().length;
             case "%player_count%":
-                return PlayerCountJson.get(getUniqueId()).load(getScriptKey(), getBlockCoords()).getAmount();
+                return PlayerCountJson.newJson(getUniqueId()).load(getScriptKey(), getBlockCoords()).getAmount();
             case "%player_ping%":
                 return NetMinecraft.hasNMS() ? NMSHelper.getPing(player) : 0;
             case "%player_x%":

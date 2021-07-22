@@ -16,7 +16,6 @@
 package com.github.yuttyann.scriptblockplus.file.json.derived;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.basic.ThreeJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
@@ -36,8 +35,6 @@ import java.util.UUID;
 @JsonTag(path = "json/playertimer")
 public final class PlayerTimerJson extends ThreeJson<UUID, ScriptKey, BlockCoords, PlayerTimer> {
 
-    public static final CacheJson CACHE_JSON = new CacheJson(PlayerTimerJson.class, PlayerTimerJson::new);
-
     private PlayerTimerJson(@NotNull String name) {
         super(name);
     }
@@ -49,8 +46,8 @@ public final class PlayerTimerJson extends ThreeJson<UUID, ScriptKey, BlockCoord
     }
 
     @NotNull
-    public static PlayerTimerJson get(@NotNull UUID uuid) {
-        return newJson(uuid.toString(), CACHE_JSON);
+    public static PlayerTimerJson newJson(@NotNull UUID uuid) {
+        return newJson(PlayerTimerJson.class, uuid.toString());
     }
 
     public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
@@ -63,7 +60,7 @@ public final class PlayerTimerJson extends ThreeJson<UUID, ScriptKey, BlockCoord
         for (int i = 0, l = names.size(), e = ".json".length(); i < l; i++) {
             var name = names.get(i);
             var index = name.length() - e;
-            var timerJson = (PlayerTimerJson) getCache(name.substring(0, index), CACHE_JSON);
+            var timerJson = getCache(PlayerTimerJson.class, name.substring(0, index));
             if (timerJson.isEmpty()) {
                 continue;
             }
