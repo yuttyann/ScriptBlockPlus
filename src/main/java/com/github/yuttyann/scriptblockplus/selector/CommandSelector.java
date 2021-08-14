@@ -45,13 +45,11 @@ import java.util.List;
  */
 public final class CommandSelector {
 
-    private final static String NUMBERS = "+-.0123456789";
     private final static String SELECTOR_SUFFIX = "aeprs";
+
+    private final static String[] SEARCH_INDEXES = { "{0}", "{1}", "{2}", "{3}", "{4}", "{5}" };
     private final static String[] SELECTOR_NAMES = { "@a", "@e", "@p", "@r", "@s" };
     private final static String[] SELECTOR_ARGUMENT_NAMES = { "@a[", "@e[", "@p[", "@r[", "@s[" };
-
-    private final static String[] SEARCH_XYZ = { "{x}", "{y}", "{z}" };
-    private final static String[] SEARCH_INDEX = { "{0}", "{1}", "{2}", "{3}", "{4}", "{5}", "{6}", "{7}", "{8}", "{9}", "{10}" };
 
     private static class Index {
 
@@ -119,9 +117,7 @@ public final class CommandSelector {
     private static String parse(@NotNull String source, @NotNull CommandSender sender, @NotNull List<Index> indexList) {
         var chars = source.toCharArray();
         var builder = new StringBuilder(chars.length + 16);
-        var tempBuilder = (StringBuilder) null;
-        var tempLocation = (Location) null;
-        for (int i = 0, j = 0, k = 0; i < chars.length; i++) {
+        for (int i = 0, j = 0; i < chars.length; i++) {
             int one = i + 1, two = one + 1;
             if (chars[i] == '@' && one < chars.length && SELECTOR_SUFFIX.indexOf(chars[one]) > -1) {
                 var index = new Index(i, one);
@@ -140,43 +136,11 @@ public final class CommandSelector {
                 }
                 indexList.add(index);
                 builder.append('{').append(j++).append('}');
-            } else if ((chars[i] == '~' || chars[i] == '^') && (sender instanceof Entity || sender instanceof BlockCommandSender)) {
-                if (k > 2) {
-                    builder.append(sender.getName());
-                } else {
-                    if (tempBuilder == null) {
-                        tempBuilder = new StringBuilder();
-                    } else {
-                        tempBuilder.setLength(0);
-                    }
-                    tempBuilder.append(chars[i]);
-                    var axes = k == 0 ? "x" : k == 1 ? "y" : k == 2 ? "z" : "x";
-                    for (int l = one; l < chars.length; l++) {
-                        if (NUMBERS.indexOf(chars[l]) > -1) {
-                            tempBuilder.append(chars[l]);
-                            i++;
-                        } else {
-                            break;
-                        }
-                    }
-                    if (tempLocation == null) {
-                        tempLocation = EntitySelector.copy(sender, null);
-                    }
-                    EntitySelector.setLocation(tempLocation, axes, tempBuilder.toString());
-                    builder.append('{').append(axes).append('}');
-                    k++;
-                }
             } else {
                 builder.append(chars[i]);
             }
         }
-        var result = builder.toString();
-        if (tempLocation != null) {
-            double x = tempLocation.getX(), y = tempLocation.getY(), z = tempLocation.getZ();
-            var replace = new String[] { Double.toString(x), Double.toString(y), Double.toString(z) };
-            result = StringUtils.replaceEach(result, SEARCH_XYZ, replace);
-        }
-        return result;
+        return builder.toString();
     }
 
     @NotNull
@@ -218,7 +182,7 @@ public final class CommandSelector {
 
     @NotNull
     private static String getReplaceIndex(int index) {
-        return index >= SEARCH_INDEX.length ? "{" + index + "}" : SEARCH_INDEX[index];
+        return index >= SEARCH_INDEXES.length ? "{" + index + "}" : SEARCH_INDEXES[index];
     }
 
     private static void replaceAll(@NotNull List<String> commandList, int index, @NotNull String name) {
