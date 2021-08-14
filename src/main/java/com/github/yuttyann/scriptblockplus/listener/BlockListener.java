@@ -50,7 +50,7 @@ public final class BlockListener implements Listener {
     public void onBlockPhysics(BlockPhysicsEvent event) {
         var block = event.getBlock();
         var blockCoords = BlockCoords.of(block);
-        if (!block.isBlockIndirectlyPowered()) {
+        if (!block.isBlockIndirectlyPowered() && !block.isBlockPowered()) {
             REDSTONE_FLAG.remove(blockCoords);
             return;
         }
