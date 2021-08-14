@@ -6,7 +6,7 @@ author: yuttyann44581
 website: ${project.url}
 api-version: 1.13
 loadbefore: [ScriptEntityPlus]
-softdepend: [Vault, ScriptBlock, PlaceholderAPI]
+softdepend: [Vault, ScriptBlock, DiscordSRV, PlaceholderAPI]
 
 commands:
   scriptblockplus:
