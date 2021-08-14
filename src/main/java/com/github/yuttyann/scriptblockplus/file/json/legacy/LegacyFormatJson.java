@@ -26,6 +26,7 @@ import java.util.UUID;
 import java.util.Map.Entry;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
@@ -69,7 +70,7 @@ public final class LegacyFormatJson {
         var legacyJson = new LegacyFormatJson();
         try {
             for (var path : paths) {
-                if (legacyJson.removeElements(new File(path))) {
+                if (legacyJson.removeElements(new SBFile(path))) {
                     result = true;
                 }
             }
