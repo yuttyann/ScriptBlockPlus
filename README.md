@@ -1,4 +1,4 @@
-ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.17] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+[[Java11](https://adoptopenjdk.net/?variant=openjdk11)] ScriptBlockPlus [v2.1.4](https://github.com/yuttyann/ScriptBlockPlus/releases/tag/v2.1.4) [MC1.9-1.17] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 
 概要
@@ -20,6 +20,7 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 ### 連携プラグイン
 | Plugin | Description | Version |
 |:---|:---|:---:|
+| [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/) | ディスコ―ドとの連携 | **1.22.0** |
 | [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの拡張 | **2.10.9** |
 | [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定 | **1.1.5** |  
 
@@ -27,7 +28,7 @@ ScriptBlockPlus [Java11](https://adoptopenjdk.net/?variant=openjdk11) [MC1.9-1.1
 | Plugin | Server | Java |
 |:---:|:---:|:---:|
 |**`x.x.x-JV8`**|**`1.9-1.16.5`**|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|**`2.1.2-2.1.3`**|**`1.9-1.17`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11)**|
+|**`2.1.2-2.1.4`**|**`1.9-1.17`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11)**|
 |`2.0.4-2.1.1`|`1.9-1.16.5`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11)**|
 |`1.8.5-2.0.3`|`1.9-1.16.5`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
 |`1.6.0-1.8.4`|`1.8-1.15.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
