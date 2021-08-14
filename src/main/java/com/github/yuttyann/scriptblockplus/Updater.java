@@ -46,6 +46,7 @@ public final class Updater {
     private final Plugin plugin;
     private final String pluginName;
     private final String pluginVersion;
+    private final String pluginUploaderURL;
 
     private String latest;
     private String downloadURL;
@@ -56,12 +57,30 @@ public final class Updater {
 
     /**
      * コンストラクタ
-     * @param plugin - プラグイン(同作者の物のみ)
+     * <p>
+     * 次のリンクが設定される({@code https://xml.yuttyann44581.net/uploads/})
+     * @param plugin - プラグイン
      */
     public Updater(@NotNull Plugin plugin) {
+        this(plugin, "https://xml.yuttyann44581.net/uploads/");
+    }
+
+    /**
+     * コンストラクタ
+     * <p>
+     * 指定内容の<a href="https://xml.yuttyann44581.net/uploads/Example.xml">XML</a>とファイル名を指定可能なアップロードサイトが必要です。
+     * <p>
+     * 設定するリンクの後ろに{@code <PluginName>.xml}が付くようにしてください。
+     * <p>
+     * {@code (例: https://xml.yuttyann44581.net/uploads/<PluginName>.xml)}
+     * @param plugin - プラグイン
+     * @param uploaderURL - アップロードサイトのリンク
+     */
+    public Updater(@NotNull Plugin plugin, @NotNull String uploaderURL) {
         this.plugin = plugin;
         this.pluginName = plugin.getName();
         this.pluginVersion = plugin.getDescription().getVersion();
+        this.pluginUploaderURL = uploaderURL;
     }
 
     /**
@@ -80,6 +99,15 @@ public final class Updater {
     @NotNull
     public String getJarName() {
         return pluginName + " v" + latest + ".jar";
+    }
+
+    /**
+     * アップロードサイトのリンクを取得します。
+     * @return {@link String} - アップロードサイトのリンク
+     */
+    @NotNull
+    public String getUploaderURL() {
+        return pluginUploaderURL;
     }
 
     /**
@@ -142,14 +170,18 @@ public final class Updater {
         }
         var data = plugin.getDataFolder();
         var logFile = new SBFile(data, "update/ChangeLog.txt");
-        boolean sameLogs = !logFile.exists() || !logEquals(changeLogURL, logFile), failure = false;
+        boolean sameLogs = !logFile.exists() || !logEquals(logFile), failure = false;
         SBConfig.UPDATE_CHECK.replace(pluginName, latest, details).send(sender);
         if (SBConfig.AUTO_DOWNLOAD.getValue()) {
             var jarFile = new SBFile(data, "update/jar/" + getJarName());
             try {
                 SBConfig.UPDATE_DOWNLOAD_START.send(sender);
-                FileUtils.downloadFile(changeLogURL, logFile);
-                FileUtils.downloadFile(downloadURL, jarFile);
+                if (changeLogURL != null) {
+                    FileUtils.downloadFile(changeLogURL, logFile);
+                }
+                if (downloadURL != null) {
+                    FileUtils.downloadFile(downloadURL, jarFile);
+                }
             } catch (IOException e) {
                 failure = true;
                 SBConfig.ERROR_UPDATE.send(sender);
@@ -182,11 +214,11 @@ public final class Updater {
         return new BigDecimal(size).setScale(1, RoundingMode.HALF_UP).doubleValue() + unit;
     }
 
-    private boolean logEquals(@NotNull String url, @NotNull File file) {
-        if (!file.exists()) {
+    private boolean logEquals(@NotNull File file) {
+        if (!file.exists() || changeLogURL == null) {
             return false;
         }
-        try (var reader1 = FileUtils.newBufferedReader(file); var reader2 = FileUtils.newBufferedReader(new URL(url).openStream())) {
+        try (var reader1 = FileUtils.newBufferedReader(file); var reader2 = FileUtils.newBufferedReader(new URL(changeLogURL).openStream())) {
             while (reader1.ready() && reader2.ready()) {
                 if (!reader1.readLine().equals(reader2.readLine())) {
                     return false;
@@ -201,6 +233,6 @@ public final class Updater {
     @NotNull
     private Document getDocument(@NotNull String name) throws ParserConfigurationException, SAXException, IOException {
         var builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        return builder.parse(FileUtils.getWebFile("https://xml.yuttyann44581.net/uploads/" + name + ".xml"));
+        return builder.parse(FileUtils.getWebFile(pluginUploaderURL + name + ".xml"));
     }
 }
