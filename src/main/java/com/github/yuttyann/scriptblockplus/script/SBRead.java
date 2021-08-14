@@ -91,6 +91,12 @@ public interface SBRead extends ObjectMap {
     int getScriptIndex();
 
     /**
+     * オプションの結果を反転するのかどうか。
+     * @return {@code boolean} - 反転する場合は{@code true}
+     */
+    boolean isInverted();
+
+    /**
      * スクリプトを実行します。
      * @param index - 開始位置
      * @return {@link Boolean} - 実行に成功した場合は{@code true}

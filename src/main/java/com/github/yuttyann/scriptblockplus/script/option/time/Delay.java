@@ -48,6 +48,9 @@ public final class Delay extends BaseOption implements Runnable {
 
     @Override
     protected boolean isValid() throws Exception {
+        if (isInverted()) {
+            throw new IllegalArgumentException("This option cannot be inverted");
+        }
         var slash = StringUtils.split(getOptionValue(), '/');
         this.saveDelay = slash.size() < 2 || Boolean.parseBoolean(slash.get(1));
 

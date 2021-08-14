@@ -57,7 +57,7 @@ public final class ItemHand extends BaseOption {
             return true;
         }
         var name = StringUtils.setColor(StringUtils.isEmpty(create) ? null : names.get(0));
-        SBConfig.ERROR_HAND.replace(material, amount, damage, name).send(getPlayer());
+        sendMessage(SBConfig.ERROR_HAND.replace(material, amount, damage, name));
         return false;
     }
 }

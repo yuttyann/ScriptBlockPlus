@@ -18,11 +18,13 @@ package com.github.yuttyann.scriptblockplus.script.option;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.file.config.ConfigKey;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -131,6 +133,38 @@ public abstract class BaseOption extends Option {
      */
     protected final int getScriptIndex() {
         return sbRead.getScriptIndex();
+    }
+
+    /**
+     * オプションの結果を反転するのかどうか。
+     * @return {@code boolean} - 反転する場合は{@code true}
+     */
+    protected final boolean isInverted() {
+        return sbRead.isInverted();
+    }
+
+    /**
+     * オプションの結果が反転しない場合のみ、メッセージを送信します。
+     * <p>
+     * 結果を反転した場合に、メッセージを表示しないようにする際にご利用ください。
+     * @param configKey - コンフィグキー
+     */
+    protected final void sendMessage(@NotNull ConfigKey<String> configKey) {
+        if (!isInverted()) {
+            Utils.sendColorMessage(getPlayer(), configKey.toString());
+        }
+    }
+
+    /**
+     * オプションの結果が反転しない場合のみ、コンソールにメッセージを送信します。
+     * <p>
+     * 結果を反転した場合に、メッセージを表示しないようにする際にご利用ください。
+     * @param configKey - コンフィグキー
+     */
+    protected final void sendConsoleMessage(@NotNull ConfigKey<String> configKey) {
+        if (!isInverted()) {
+            Utils.sendColorMessage(Bukkit.getConsoleSender(), configKey.toString());
+        }
     }
 
     /**

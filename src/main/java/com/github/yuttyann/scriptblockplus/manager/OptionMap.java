@@ -24,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
 
+import static com.github.yuttyann.scriptblockplus.utils.StringUtils.removeInvert;
+
 /**
  * ScriptBlockPlus OptionMap クラス
  * @author yuttyann44581
@@ -63,6 +65,7 @@ public final class OptionMap {
 
     @Nullable
     public SBInstance<Option> getInstance(@NotNull String syntax) {
+        syntax = removeInvert(syntax);
         for (int i = 0, l = SYNTAXES.size(); i < l; i++) {
             var value = SYNTAXES.get(i);
             if (syntax.indexOf(value) == 0) {
@@ -103,9 +106,10 @@ public final class OptionMap {
     }
 
     @Nullable
-    public SBInstance<Option> remove(@NotNull Object key) {
-        SYNTAXES.remove(key);
-        return SBINSTANCES.remove(key);
+    public SBInstance<Option> remove(@NotNull String syntax) {
+        syntax = removeInvert(syntax);
+        SYNTAXES.remove(syntax);
+        return SBINSTANCES.remove(syntax);
     }
 
     @NotNull

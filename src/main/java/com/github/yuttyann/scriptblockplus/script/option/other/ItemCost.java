@@ -68,7 +68,7 @@ public final class ItemCost extends BaseOption {
         }
         if (result > 0) {
             var name = StringUtils.setColor(StringUtils.isEmpty(create) ? null : names.get(0));
-            SBConfig.ERROR_ITEM.replace(material, amount, damage, name).send(player);
+            sendMessage(SBConfig.ERROR_ITEM.replace(material, amount, damage, name));
             return false;
         }
         player.getInventory().setContents(contents);

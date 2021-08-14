@@ -32,7 +32,7 @@ public final class Group extends BaseOption {
     protected boolean isValid() throws Exception {
         var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Invalid function");
         }
         var slash = StringUtils.split(getOptionValue(), '/');
         var world = slash.size() > 1 ? slash.get(0) : null;
@@ -40,7 +40,7 @@ public final class Group extends BaseOption {
 
         var player = getPlayer();
         if (!vaultPermission.playerInGroup(world, player, group)) {
-            SBConfig.ERROR_GROUP.replace(getOptionValue()).send(player);
+            sendMessage(SBConfig.ERROR_GROUP.replace(getOptionValue()));
             return false;
         }
         return true;

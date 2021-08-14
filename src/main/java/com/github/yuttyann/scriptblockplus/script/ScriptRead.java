@@ -56,6 +56,8 @@ public class ScriptRead extends ScriptMap implements SBRead {
 
     // ScriptRead#read(int) から
     protected int index;
+    protected boolean invert;
+    protected Option option;
     protected String value;
     protected List<String> scripts;
 
@@ -117,6 +119,11 @@ public class ScriptRead extends ScriptMap implements SBRead {
     }
 
     @Override
+    public boolean isInverted() {
+        return invert;
+    }
+
+    @Override
     public boolean read(final int index) {
         if (!sbPlayer.isOnline()) {
             return false;
@@ -142,19 +149,20 @@ public class ScriptRead extends ScriptMap implements SBRead {
     protected boolean perform(final int index) {
         for (this.index = index; this.index < scripts.size(); this.index++) {
             var script = scripts.get(this.index);
-            var option = OptionManager.newInstance(script);
+            if (invert = script.startsWith("!")) {
+                script = script.substring(1);
+            }
+            this.option = OptionManager.newInstance(script);
             this.value = Placeholder.INSTANCE.replace(getPlayer(), option.getValue(script));
-            if (!option.callOption(this) && isFailedIgnore(option)) {
+            if (option.callOption(this) == invert) {
+                if (!option.isFailedIgnore()) {
+                    EndProcessManager.forEach(e -> e.failed(this));
+                }
                 return false;
             }
         }
         EndProcessManager.forEach(e -> e.success(this));
         SBConfig.CONSOLE_SUCCESS_SCRIPT_EXECUTE.replace(scriptKey, blockCoords).console();
-        return true;
-    }
-
-    protected boolean isFailedIgnore(@NotNull Option option) {
-        StreamUtils.ifAction(!option.isFailedIgnore(), () -> EndProcessManager.forEach(e -> e.failed(this)));
         return true;
     }
 

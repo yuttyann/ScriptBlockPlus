@@ -32,7 +32,7 @@ public final class Perm extends BaseOption {
     protected boolean isValid() throws Exception {
         var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled()) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Invalid function");
         }
         var slash = StringUtils.split(getOptionValue(), '/');
         var world = slash.size() > 1 ? slash.get(0) : null;
@@ -40,7 +40,7 @@ public final class Perm extends BaseOption {
 
         var player = getPlayer();
         if (!vaultPermission.playerHas(world, player, permission)) {
-            SBConfig.NOT_PERMISSION.send(player);
+            sendMessage(SBConfig.NOT_PERMISSION);
             return false;
         }
         return true;

@@ -20,6 +20,10 @@ import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.script.option.chat.*;
+import com.github.yuttyann.scriptblockplus.script.option.discord.DiscordChannel;
+import com.github.yuttyann.scriptblockplus.script.option.discord.DiscordRole;
+import com.github.yuttyann.scriptblockplus.script.option.discord.DiscordRoleAdd;
+import com.github.yuttyann.scriptblockplus.script.option.discord.DiscordRoleRemove;
 import com.github.yuttyann.scriptblockplus.script.option.other.*;
 import com.github.yuttyann.scriptblockplus.script.option.time.Cooldown;
 import com.github.yuttyann.scriptblockplus.script.option.time.Delay;
@@ -29,6 +33,7 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -39,12 +44,15 @@ import java.util.function.Supplier;
 public final class OptionManager {
 
     private static final OptionMap OPTION_MAP = new OptionMap();
+    private static final Comparator<? super String> SORT = (c1, c2) -> OPTION_MAP.getOption(c1).compareTo(OPTION_MAP.getOption(c2));
 
     static {
         register(ScriptAction::new);
         register(BlockType::new);
         register(Group::new);
         register(Perm::new);
+        register(DiscordRole::new);
+        register(DiscordChannel::new);
         register(Calculation::new);
         register(OldCooldown::new);
         register(Cooldown::new);
@@ -56,6 +64,8 @@ public final class OptionManager {
         register(GroupRemove::new);
         register(PermAdd::new);
         register(PermRemove::new);
+        register(DiscordRoleAdd::new);
+        register(DiscordRoleRemove::new);
         register(Say::new);
         register(Server::new);
         register(ToPlayer::new);
@@ -88,10 +98,7 @@ public final class OptionManager {
     }
 
     public static void sort(@NotNull List<String> scripts) {
-        if (scripts.isEmpty()) {
-            return;
-        }
-        scripts.sort((c1, c2) -> OPTION_MAP.getOption(c1).compareTo(OPTION_MAP.getOption(c2)));
+        if (!scripts.isEmpty()) { scripts.sort(SORT); }
     }
 
     public static boolean has(@NotNull String syntax) {

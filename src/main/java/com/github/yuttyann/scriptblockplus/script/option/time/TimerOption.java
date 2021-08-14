@@ -46,7 +46,7 @@ public abstract class TimerOption extends BaseOption {
                 short hour = (short) (time / 3600);
                 byte minute = (byte) (time % 3600 / 60);
                 byte second = (byte) (time % 3600 % 60);
-                SBConfig.ACTIVE_COOLDOWN.replace(hour, minute, second).send(getSBPlayer());
+                sendMessage(SBConfig.ACTIVE_COOLDOWN.replace(hour, minute, second));
                 return true;
             }
         }

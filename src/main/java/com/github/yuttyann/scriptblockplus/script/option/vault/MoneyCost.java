@@ -34,7 +34,7 @@ public final class MoneyCost extends BaseOption {
     protected boolean isValid() throws Exception {
         var vaultEconomy = VaultEconomy.INSTANCE;
         if (!vaultEconomy.isEnabled()) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Invalid function");
         }
         var player = getPlayer();
         double cost = Double.parseDouble(getOptionValue());
@@ -44,7 +44,7 @@ public final class MoneyCost extends BaseOption {
             return true;
         }
         double result = cost - vaultEconomy.getBalance(player);
-        SBConfig.ERROR_COST.replace(cost, result).send(player);
+        sendMessage(SBConfig.ERROR_COST.replace(cost, result));
         return false;
     }
 }
