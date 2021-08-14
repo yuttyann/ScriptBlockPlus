@@ -31,14 +31,26 @@ import java.util.function.Consumer;
  */
 public interface ConfigKey<T> {
 
+    /**
+     * 値を取得します。
+     * @return {@link Optional}&lt;{@link T}&gt; - 値
+     */
     @NotNull
     Optional<T> get();
 
+    /**
+     * 値を取得します。
+     * @return {@link T} - 値
+     */
     @NotNull
     default T getValue() {
         return get().orElseThrow(NullPointerException::new);
     }
 
+    /**
+     * 値が{@code null}ではない、又は{@code boolean}の値が{@code true}の場合に処理を実行します。
+     * @param action - 処理
+     */
     default void ifPresentAndTrue(@NotNull Consumer<T> action) {
         T value = get().orElse(null);
         if (value instanceof Boolean && !((Boolean) value)) {
@@ -49,18 +61,32 @@ public interface ConfigKey<T> {
         }
     }
 
+    /**
+     * コンソールにメッセージを送信します。
+     */
     default void send() {
         send(Bukkit.getConsoleSender());
     }
-    
+
+    /**
+     * プレイヤーにメッセージを送信します。
+     * @param sbPlayer - プレイヤー
+     */
     default void send(@NotNull SBPlayer sbPlayer) {
         send(sbPlayer.getPlayer());
     }
 
+    /**
+     * 送信者にメッセージを送信します。
+     * @param sbPlayer - プレイヤー
+     */
     default void send(@NotNull CommandSender sender) {
         Utils.sendColorMessage(sender, toString());
     }
 
+    /**
+     * コンソールログが有効な場合に、コンソールにメッセージを送信します。
+     */
     default void console() {
         SBConfig.CONSOLE_LOG.ifPresentAndTrue(s -> send());
     }
