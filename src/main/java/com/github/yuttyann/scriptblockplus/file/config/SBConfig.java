@@ -73,7 +73,6 @@ public final class SBConfig {
     public static final ConfigKey<String> REDSTONE_COMMAND = stringKey("RedstoneCommandMessage", "");
     public static final ConfigKey<String> SELECTOR_PASTE_COMMAND = stringKey("SelectorPasteCommandMessage", "");
     public static final ConfigKey<String> SELECTOR_REMOVE_COMMAND = stringKey("SelectorRemoveCommandMessage", "");
-    public static final ConfigKey<String> NOT_VAULT = stringKey("NotVaultMessage", "");
     public static final ConfigKey<String> SENDER_NO_PLAYER = stringKey("SenderNoPlayerMessage", "");
     public static final ConfigKey<String> NOT_PERMISSION = stringKey("NotPermissionMessage", "");
     public static final ConfigKey<String> GIVE_TOOL = stringKey("GiveToolMessage", "");
