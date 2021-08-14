@@ -26,10 +26,12 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player.Spigot;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 /**
@@ -44,8 +46,8 @@ public final class ActionBar extends BaseOption implements Runnable {
     static {
         var has = true;
         try {
-            Class.forName("org.bukkit.entity.Player$Spigot");
-        } catch (ClassNotFoundException e) {
+            Spigot.class.getMethod("sendMessage", ChatMessageType.class, BaseComponent.class);
+        } catch (NoSuchMethodException | SecurityException e) {
             has = false;
         }
         HAS_SPIGOT = has;
