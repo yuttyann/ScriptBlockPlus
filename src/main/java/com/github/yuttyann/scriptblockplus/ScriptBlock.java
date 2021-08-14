@@ -82,10 +82,6 @@ public class ScriptBlock extends JavaPlugin {
         if (VaultEconomy.INSTANCE.has()) {
             VaultEconomy.INSTANCE.setupEconomy();
             VaultPermission.INSTANCE.setupPermission();
-        } else {
-            SBConfig.NOT_VAULT.send();
-            getServer().getPluginManager().disablePlugin(this);
-            return;
         }
 
         // 旧ScriptBlockが導入されていた場合は無効化
