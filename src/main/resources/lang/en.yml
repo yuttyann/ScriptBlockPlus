@@ -50,7 +50,6 @@ ScriptViewer:
 
 ## ===== Messages ===== ##
 # There are no placeholders
-NotVaultMessage: '&cVault not found!'
 SenderNoPlayerMessage: '&cYou cannot do this as console.'
 NotPermissionMessage: '&cYou don''t have permission to do this.'
 GiveToolMessage: '&aAuxiliary tools were distributed.'

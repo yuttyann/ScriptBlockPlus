@@ -49,7 +49,6 @@ ScriptViewer:
 
 ## ===== Messages ===== ##
 # プレースホルダはありません
-NotVaultMessage: '&cVaultが導入されていないため、プラグインを無効化します。'
 SenderNoPlayerMessage: '&cコマンドはゲーム内から実行してください。'
 NotPermissionMessage: '&cパーミッションが無いため、実行できません。'
 GiveToolMessage: '&a補助ツールが配布されました。'
