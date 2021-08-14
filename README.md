@@ -8,8 +8,8 @@
 
 導入
 -----------
-[配](https://file.yuttyann44581.net/)[布](https://github.com/yuttyann/ScriptBlockPlus/releases)[サ](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/)[イ](https://www.curseforge.com/minecraft/bukkit-plugins/scriptblockplus)[ト](https://www.mcbbs.net/thread-691900-1-1.html)から`ScriptBlockPlus`のダウンロードを行ってください。  
-その後前提プラグインである[`Vault`](https://dev.bukkit.org/projects/vault)をダウンロードを行い`plugins`フォルダへ保存すれば完了です。  
+[**配布サイト**](https://github.com/yuttyann/ScriptBlockPlus#リンク)から`ScriptBlockPlus`のダウンロードを行ってください。  
+その後、`plugins`フォルダへ保存すれば完了です。  
 
 ### Java8版
 別の[リポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。  
@@ -20,9 +20,10 @@
 ### 連携プラグイン
 | Plugin | Description | Version |
 |:---|:---|:---:|
-| [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/) | ディスコ―ドとの連携 | **1.22.0** |
-| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの拡張 | **2.10.9** |
-| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定 | **1.1.5** |  
+| [Vault](https://www.spigotmc.org/resources/vault.34315/) | 権限や経済系プラグインの機能を利用する事ができます。 | **1.7.3** |
+| [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/) | ディスコ―ドの機能を利用する事ができます。 | **1.22.0** |
+| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの機能を拡張する事ができます。 | **2.10.9** |
+| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定する事ができます。 | **1.1.6** |  
 
 **★各バージョンの動作範囲★**
 | Plugin | Server | Java |
