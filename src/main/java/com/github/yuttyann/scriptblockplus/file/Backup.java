@@ -54,7 +54,7 @@ public class Backup extends SimpleFileVisitor<Path> {
      * @param filter - ファイルフィルター
      */
     public Backup(@NotNull File backup, @NotNull Predicate<String> filter) {
-        this.target = new File(backup, Utils.getFormatTime("yyyy-MM-dd HH-mm-ss")).toPath();
+        this.target = new SBFile(backup, Utils.getFormatTime("yyyy-MM-dd HH-mm-ss")).toPath();
         this.source = backup.getParentFile().toPath();
         this.filter = filter;
     }

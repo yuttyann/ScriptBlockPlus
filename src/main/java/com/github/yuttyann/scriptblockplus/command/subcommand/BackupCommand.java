@@ -15,7 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus.command.subcommand;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
@@ -71,7 +70,7 @@ public class BackupCommand extends SubCommand {
         }
         try {
             var filter = (Predicate<String>) s -> s.contains(SBFile.setSeparator("/backup/"));
-            var backup = new Backup(new File(dataFolder, "backup"), filter);
+            var backup = new Backup(new SBFile(dataFolder, "backup"), filter);
             Files.walkFileTree(backup.getSource(), backup);
         } catch (IOException e) {
             e.printStackTrace();
