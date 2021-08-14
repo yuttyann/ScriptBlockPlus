@@ -26,14 +26,14 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  * ScriptBlockPlus BypassPerm オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "bypass_perm", syntax = "@bypassPERM:", description = "<command>[/world]</node>")
+@OptionTag(name = "bypassperm", syntax = "@bypassPERM:", description = "<command>[/world]</node>")
 public final class BypassPerm extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
         var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Invalid function");
         }
         var slash = StringUtils.split(getOptionValue(), '/');
         if (slash.size() < 2) {

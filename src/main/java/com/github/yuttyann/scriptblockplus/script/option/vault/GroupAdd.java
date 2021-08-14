@@ -24,14 +24,14 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
  * ScriptBlockPlus GroupAdd オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "group_add", syntax = "@groupADD:", description = "[world/]<group>")
+@OptionTag(name = "groupadd", syntax = "@groupADD:", description = "[world/]<group>")
 public final class GroupAdd extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
         var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Invalid function");
         }
         var slash = StringUtils.split(getOptionValue(), '/');
         var world = slash.size() > 1 ? slash.get(0) : null;

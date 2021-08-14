@@ -24,14 +24,14 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
  * ScriptBlockPlus PermAdd オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "perm_add", syntax = "@permADD:", description = "[world/]<node>")
+@OptionTag(name = "permadd", syntax = "@permADD:", description = "[world/]<node>")
 public final class PermAdd extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
         var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Invalid function");
         }
         var slash = StringUtils.split(getOptionValue(), '/');
         var world = slash.size() > 1 ? slash.get(0) : null;

@@ -26,14 +26,14 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
  * ScriptBlockPlus BypassGroup オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "bypass_group", syntax = "@bypassGROUP:", description = "<command>[/world]</group>")
+@OptionTag(name = "bypassgroup", syntax = "@bypassGROUP:", description = "<command>[/world]</group>")
 public final class BypassGroup extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
         var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Invalid function");
         }
         var slash = StringUtils.split(getOptionValue(), '/');
         if (slash.size() < 2) {
