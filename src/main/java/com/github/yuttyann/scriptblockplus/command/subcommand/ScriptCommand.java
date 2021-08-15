@@ -18,6 +18,7 @@ package com.github.yuttyann.scriptblockplus.command.subcommand;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.command.BaseCommand;
@@ -36,9 +37,13 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * ScriptBlockPlus ScriptCommand コマンドクラス
@@ -71,30 +76,35 @@ public class ScriptCommand extends SubCommand {
     }
 
     @Override
-    protected boolean runCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        var scriptKey = ScriptKey.valueOf(args[0]);
-        if (!isPlayer(sender) || !Permission.has(sender, scriptKey, true)) {
+    protected boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label) {
+        var scriptKey = ScriptKey.valueOf(args(0));
+        if (!Permission.has(sender, scriptKey, true)) {
             return false;
         }
-        if (range(args, 6) && compare(args, 1, "run")) {
-            int x = Integer.parseInt(args[3]), y = Integer.parseInt(args[4]), z = Integer.parseInt(args[5]);
-            new ScriptRead((Player) sender, BlockCoords.of(Utils.getWorld(args[2]), x, y, z), scriptKey).read(0);
+        if (range(6, 7) && compare(1, "run")) {
+            int i = length() == 6 ? 0 : 1;
+            if (i == 0 && !isPlayer(sender)) {
+                return false;
+            }
+            var target = Optional.ofNullable(i == 1 ? Bukkit.getPlayerExact(args(2)) : (Player) sender);
+            var blockCoords = BlockCoords.of(Utils.getWorld(args(2 + i)), parseInt(args(3 + i)), parseInt(args(4 + i)), parseInt(args(5 + i)));
+            target.ifPresent(p -> new ScriptRead(p, blockCoords, scriptKey).read(0));
             return true;
-        } else if (compare(args, 1, "create", "add", "remove", "view", "redstone")) {
+        } else if (compare(1, "create", "add", "remove", "view", "redstone") && isPlayer(sender)) {
             var sbPlayer = SBPlayer.fromPlayer((Player) sender);
             if (sbPlayer.getScriptEdit().isPresent()) {
                 SBConfig.ERROR_ACTION_DATA.send(sbPlayer);
                 return true;
             }
-            var actionKey = ActionKey.valueOf(get(args, 1).toUpperCase(Locale.ROOT));
+            var actionKey = ActionKey.valueOf(args(1).toUpperCase(Locale.ROOT));
             var scriptEdit = new ScriptEdit(scriptKey, actionKey);
             switch (actionKey) {
                 case CREATE:
                 case ADD:
-                    if (range(args, 2)) {
+                    if (range(2)) {
                         return false;
                     }
-                    var script = StringUtils.createString(args, 2).trim();
+                    var script = StringUtils.createString(args(), 2).trim();
                     if (!isScripts(script)) {
                         SBConfig.ERROR_SCRIPT_CHECK.send(sbPlayer);
                         return true;
@@ -102,11 +112,11 @@ public class ScriptCommand extends SubCommand {
                     scriptEdit.setValue(script);
                     break;
                 case REDSTONE:
-                    if (range(args, 2)) {
+                    if (range(2)) {
                         return false;
                     }
-                    if (compare(args, 2, "true")) {
-                        var selector = StringUtils.createString(args, 3).trim();
+                    if (compare(2, "true")) {
+                        var selector = StringUtils.createString(args(), 3).trim();
                         scriptEdit.setValue(selector.startsWith("@s") || !CommandSelector.has(selector) ? "@p" : selector);
                     }
                     break;

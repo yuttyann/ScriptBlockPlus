@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.command;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.command.subcommand.BackupCommand;
 import com.github.yuttyann.scriptblockplus.command.subcommand.CheckverCommand;
@@ -26,16 +27,19 @@ import com.github.yuttyann.scriptblockplus.command.subcommand.ToolCommand;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.splittype.Filter;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
+import com.github.yuttyann.scriptblockplus.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.*;
 import com.google.common.collect.Lists;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -82,11 +86,32 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                 StreamUtils.fForEach(new String[] { "paste", "remove" }, s -> s.startsWith(prefix), list::add);
             }
         } else if (compare(args, 0, ScriptKey.types()) && Permission.has(sender, ScriptKey.valueOf(args[0]), true)) {
-            if (compare(args, 1, "run") && range(args, 3)) {
-                var worlds = Bukkit.getWorlds();
-                var prefix = get(args, 2).toLowerCase(Locale.ROOT);
-                var answers = StreamUtils.toArray(worlds, World::getName, String[]::new);
-                StreamUtils.fForEach(answers, s -> s.startsWith(prefix), list::add);
+            if (compare(args, 1, "run")) {
+                if (range(args, 3)) {
+                    var prefix = get(args, 2).toLowerCase(Locale.ROOT);
+                    var answers = new ArrayList<String>(4);
+                    Bukkit.getWorlds().forEach(w -> answers.add(w.getName()));
+                    Bukkit.getOnlinePlayers().forEach(p -> answers.add(p.getName()));
+                    StreamUtils.fForEach(answers, s -> s.startsWith(prefix), list::add);
+                } else if (range(args, 4, 5)) {
+                    int i = args.length == 4 ? 0 : 1;
+                    var prefix = get(args, 3 + i).toLowerCase(Locale.ROOT);
+                    var answers = new ArrayList<String>(4);
+                    if (sender instanceof Player) {
+                        var player = (Player) sender;
+                        var rayTrace = RayTrace.rayTraceBlocks(player, player.getGameMode() == GameMode.CREATIVE ? 5.0D : 4.5D);
+                        if (rayTrace != null) {
+                            var hitBlock = rayTrace.getHitBlock();
+                            if (BlockScriptJson.newJson(ScriptKey.valueOf(get(args, 0))).has(BlockCoords.of(hitBlock))) {
+                                answers.add(hitBlock.getX() + " " + hitBlock.getY() + " " + hitBlock.getZ());
+                            }
+                        }
+                    }
+                    if (i == 0) {
+                        Bukkit.getWorlds().forEach(w -> answers.add(w.getName()));
+                    }
+                    StreamUtils.fForEach(answers, s -> s.startsWith(prefix), list::add);
+                }
             } else if (compare(args, 1, "create", "add")) {
                 var prefix = get(args, args.length - 1).toLowerCase(Locale.ROOT);
                 var answers = OptionManager.getTags();
