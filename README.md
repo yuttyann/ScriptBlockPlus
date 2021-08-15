@@ -56,8 +56,6 @@
 -----------
 **[[Files, JP]](https://file.yuttyann44581.net/)**  
 **[[Github, JP]](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91)**  
-**[[Dropbox, JP]](https://www.dropbox.com/sh/gj8vunx95785y2d/AABdP-kJhEilLHWMWZtaWgQma)**  
 **[[MCPoteton, JP]](https://mcpoteton.com/mcplugin-scriptblockplus)**  
 **[[SpigotMC, EN]](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/)**  
-**[[CurseForge, EN]](https://www.curseforge.com/minecraft/bukkit-plugins/scriptblockplus)**  
 **[[MCBBS, ZH]](https://www.mcbbs.net/thread-691900-1-1.html)**
