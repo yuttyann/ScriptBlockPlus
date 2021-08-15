@@ -85,7 +85,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
             }
         }
         try {
-            if (!execute(sender, label, args) && !isIgnoreUsage) {
+            if (!execute(sender, command, label, args) && !isIgnoreUsage) {
                 sendUsage(sender, command, this);
             }
         } finally {
@@ -94,11 +94,12 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+    private boolean execute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length > 0) {
             for (var subCommand : COMMANDS) {
                 if (StreamUtils.anyMatch(subCommand.getNames(), s -> compare(s, args[0]))) {
-                    return subCommand.runCommand(sender, label, args);
+                    subCommand.args = args;
+                    return subCommand.runCommand(sender, command, label);
                 }
             }
         }

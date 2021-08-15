@@ -31,6 +31,7 @@ import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,7 +60,7 @@ public class BackupCommand extends SubCommand {
     }
 
     @Override
-    protected boolean runCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+    protected boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label) {
         if (!hasPermission(sender, PERMISSION, false)) {
             return false;
         }

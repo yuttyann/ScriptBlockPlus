@@ -34,6 +34,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +64,7 @@ public class DatamigrCommand extends SubCommand {
     }
 
     @Override
-    protected boolean runCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+    protected boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label) {
         if (!hasPermission(sender, PERMISSION)) {
             return false;
         }

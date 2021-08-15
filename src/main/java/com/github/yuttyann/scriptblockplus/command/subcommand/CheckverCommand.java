@@ -25,6 +25,7 @@ import com.github.yuttyann.scriptblockplus.command.SubCommand;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,7 +54,7 @@ public class CheckverCommand extends SubCommand {
     }
 
     @Override
-    protected boolean runCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+    protected boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label) {
         if (!hasPermission(sender, PERMISSION, false)) {
             return false;
         }

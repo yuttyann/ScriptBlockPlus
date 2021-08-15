@@ -19,6 +19,8 @@ import java.util.List;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,10 +30,28 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class SubCommand {
 
+    String[] args;
+
     private final BaseCommand baseCommand;
 
     public SubCommand(@NotNull BaseCommand baseCommand) {
+        this.args = ArrayUtils.EMPTY_STRING_ARRAY;
         this.baseCommand = baseCommand;
+    }
+
+    @NotNull
+    protected final int length() {
+        return args.length;
+    }
+
+    @NotNull
+    protected final String[] args() {
+        return args;
+    }
+
+    @NotNull
+    protected final String args(final int index) {
+        return baseCommand.get(args, index);
     }
 
     @NotNull
@@ -40,7 +60,7 @@ public abstract class SubCommand {
     @NotNull
     protected abstract List<CommandUsage> getUsages();
 
-    protected abstract boolean runCommand(@NotNull CommandSender sender, @NotNull String label, String[] args);
+    protected abstract boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label);
 
     protected final boolean hasPermission(@NotNull CommandSender sender, @NotNull Permission permission) {
         return baseCommand.hasPermission(sender, permission);
@@ -62,24 +82,19 @@ public abstract class SubCommand {
         return baseCommand.compare(source, texts);
     }
 
-    protected final boolean compare(@NotNull String[] args, final int index, @NotNull String text) {
+    protected final boolean compare(final int index, @NotNull String text) {
         return baseCommand.compare(args, index, text);
     }
 
-    protected final boolean compare(@NotNull String[] args, final int index, @NotNull String... texts) {
+    protected final boolean compare(final int index, @NotNull String... texts) {
         return baseCommand.compare(args, index, texts);
     }
 
-    protected final boolean range(@NotNull String[] args, final int end) {
+    protected final boolean range(final int end) {
         return baseCommand.range(args, end);
     }
 
-    protected final boolean range(@NotNull String[] args, final int start, final int end) {
+    protected final boolean range(final int start, final int end) {
         return baseCommand.range(args, start, end);
-    }
-
-    @NotNull
-    protected final String get(@NotNull String[] args, final int index) {
-        return baseCommand.get(args, index);
     }
 }

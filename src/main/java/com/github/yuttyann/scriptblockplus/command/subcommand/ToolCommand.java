@@ -25,6 +25,7 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +55,7 @@ public class ToolCommand extends SubCommand {
     }
 
     @Override
-    protected boolean runCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+    protected boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label) {
         if (!hasPermission(sender, PERMISSION)) {
             return false;
         }

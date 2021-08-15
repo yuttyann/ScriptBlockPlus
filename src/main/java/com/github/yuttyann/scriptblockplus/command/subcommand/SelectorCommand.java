@@ -29,6 +29,7 @@ import com.github.yuttyann.scriptblockplus.region.CuboidRegionPaste;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionRemove;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -60,7 +61,7 @@ public class SelectorCommand extends SubCommand {
     }
 
     @Override
-    protected boolean runCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+    protected boolean runCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label) {
         if (!hasPermission(sender, PERMISSION)) {
             return false;
         }
@@ -70,13 +71,13 @@ public class SelectorCommand extends SubCommand {
             SBConfig.NOT_SELECTION.send(sender);
             return true;
         }
-        if (compare(args, 1, "paste")) {
+        if (compare(1, "paste")) {
             var sbPlayer = SBPlayer.fromPlayer(player);
             if (!sbPlayer.getSBClipboard().isPresent()) {
                 SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
                 return true;
             }
-            boolean pasteonair = Boolean.valueOf(get(args, 2)), overwrite = Boolean.valueOf(get(args, 3));
+            boolean pasteonair = Boolean.valueOf(args(2)), overwrite = Boolean.valueOf(args(3));
             try {
                 var sbClipboard = sbPlayer.getSBClipboard().get();
                 var regionPaste = new CuboidRegionPaste(region, sbClipboard).paste(pasteonair, overwrite);
@@ -87,7 +88,7 @@ public class SelectorCommand extends SubCommand {
                 sbPlayer.setSBClipboard(null);
             }
             return true;
-        } else if (compare(args, 1, "remove")) {
+        } else if (compare(1, "remove")) {
             var regionRemove = new CuboidRegionRemove(region).remove();
             var scriptKeys = regionRemove.getScriptKeys();
             if (scriptKeys.size() == 0) {
