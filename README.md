@@ -8,7 +8,7 @@
 
 導入
 -----------
-[**配布サイト**](https://github.com/yuttyann/ScriptBlockPlus#リンク)から`ScriptBlockPlus`のダウンロードを行ってください。  
+[**配布サイト**](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/)から`ScriptBlockPlus`のダウンロードを行ってください。  
 その後、`plugins`フォルダへ保存すれば完了です。  
 
 ### Java8版
@@ -54,8 +54,8 @@
 
 リンク
 -----------
+**[[Wiki, JP]](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91)**  
 **[[Files, JP]](https://file.yuttyann44581.net/)**  
-**[[Github, JP]](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91)**  
 **[[Poteton, JP]](https://mcpoteton.com/mcplugin-scriptblockplus)**  
 **[[SpigotMC, EN]](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/)**  
 **[[MCBBS, ZH]](https://www.mcbbs.net/thread-691900-1-1.html)**
