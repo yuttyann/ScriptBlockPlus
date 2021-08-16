@@ -34,26 +34,28 @@
 |`1.8.5-2.0.3`|`1.9-1.16.5`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
 |`1.6.0-1.8.4`|`1.8-1.15.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
 |`1.4.0-1.5.0`|`1.7.2-1.13.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|`1.0.0-1.3.3`|`1.7.2-1.13.2`|**[Java7](https://jdk.java.net/java-se-ri/7)**|
+|`1.0.0-1.3.3`|`1.7.2-1.13.2`|**[Java7](https://jdk.java.net/java-se-ri/7)**|  
+
+**★バージョン"1.13-1.13.1"の動作について★**  
+サーバーが[**Java9**](https://jdk.java.net/java-se-ri/9)以降に対応していないことが原因で、**エラーが発生する不具合が存在します。**  
+プラグイン自体は正常に動作するのですが、問題が発生する可能性があるのでなるべく"[**1.13.2**](https://papermc.io/legacy)"を利用してください。  
+**解決方法(非推奨)**、`<Server>.jar`内の`org/objectweb/asm/ClassVisitor.class`を[改変](https://pastebin.com/UFBdKXJD)することで動作します。  
 
 対応プラットフォーム
 -----------
 **[`BukkitAPI`](https://hub.spigotmc.org/javadocs/bukkit/overview-summary.html)を実装しているのであれば**基本的に動作します。  
 [**`net.minecraft.server`**](https://sodocumentation.net/ja/bukkit/topic/9576/nms)が見つからなかった場合は、**NMS依存の機能が強制的に無効**になります。  
-**★以下、動作確認済みのプラットフォーム★**  
-・**[Paper](https://papermc.io/)**  
-・**[Spigot](https://www.spigotmc.org/)**  
-・**[Tuinity](https://ci.codemc.io/job/Spottedleaf/job/Tuinity/)**  
-・**[Yatopia](https://yatopiamc.org/)**  
-・**[Purpur](https://purpur.pl3x.net/)**  
-・**[Akarin](https://github.com/Akarin-project/Akarin)**  
-・**[Mohist](https://mohistmc.com/)**  
-・**[Magma](https://magmafoundation.org/)**  
-
-**★バージョン"1.13-1.13.1"の動作について★**  
-サーバーが[**Java9**](https://jdk.java.net/java-se-ri/9)以降に対応していないことが原因で、**エラーが発生する不具合が存在します。**  
-サーバー、プラグイン自体は正常に動作するのですが、問題が発生する可能性があるのでなるべく"[**1.13.2**](https://papermc.io/legacy)"を利用してください。  
-**解決方法(非推奨)**、`<Server>.jar`内の`org/objectweb/asm/ClassVisitor.class`を[改変](https://pastebin.com/UFBdKXJD)することで動作します。  
+下記は、動作確認を行ったサーバーの一覧です。
+| Server | Description |
+|:---:|:---|
+|**[Spigot](https://www.spigotmc.org/)**|可もなく不可もない、一般的に採用されているサーバーです。|
+|**[Paper](https://papermc.io/)**|Spigotの派生サーバーで、最適化の他、詳細な設定の追加等も行われています。|
+|**[Tuinity](https://ci.codemc.io/job/Spottedleaf/job/Tuinity/)**|Paparを最適化したサーバーで、大規模なサーバーにオススメです。|
+|**[Yatopia](https://yatopiamc.org/)**|Tuinityの派生サーバーで、様々なサーバーの最適化パッチを適用しています。|
+|**[Purpur](https://purpur.pl3x.net/)**|Tuinityの派生サーバーで、様々なユニークな機能が追加されています。|
+|**[Akarin](https://github.com/Akarin-project/Akarin)**|Paperの派生サーバーで、パフォーマンスの向上を目的として作成されています。|
+|**[Mohist](https://mohistmc.com/)**|ForgeとSpigot(Paper)の両方の機能を備えています。|
+|**[Magma](https://magmafoundation.org/)**|ForgeとSpigot(Paper)の両方の機能を備えています。|
 
 リンク
 -----------
