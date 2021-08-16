@@ -50,8 +50,8 @@
 |:---:|:---|
 |**[Spigot](https://www.spigotmc.org/)**|可もなく不可もない、一般的に採用されているサーバーです。|
 |**[Paper](https://papermc.io/)**|Spigotの派生サーバーで、最適化の他、詳細な設定の追加等も行われています。|
-|**[Tuinity](https://ci.codemc.io/job/Spottedleaf/job/Tuinity/)**|Paparを最適化したサーバーで、大規模なサーバーにオススメです。|
-|**[Yatopia](https://yatopiamc.org/)**|Tuinityの派生サーバーで、様々なサーバーの最適化パッチを適用しています。|
+|**[Tuinity](https://ci.codemc.io/job/Spottedleaf/job/Tuinity/)**|Paperの派生サーバーで、大規模なサーバー向けに最適化されています。|
+|**[Yatopia](https://yatopiamc.org/)**|Tuinityの派生サーバーで、様々なサーバープラットフォームの最適化パッチを適用しています。|
 |**[Purpur](https://purpur.pl3x.net/)**|Tuinityの派生サーバーで、様々なユニークな機能が追加されています。|
 |**[Akarin](https://github.com/Akarin-project/Akarin)**|Paperの派生サーバーで、パフォーマンスの向上を目的として作成されています。|
 |**[Mohist](https://mohistmc.com/)**|ForgeとSpigot(Paper)の両方の機能を備えています。|
