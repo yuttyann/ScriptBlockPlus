@@ -47,8 +47,8 @@
 ・**[Yatopia](https://yatopiamc.org/)**  
 ・**[Purpur](https://purpur.pl3x.net/)**  
 ・**[Akarin](https://github.com/Akarin-project/Akarin)**  
-・**[Mohist](https://purpur.pl3x.net/)**  
-・**[Magma](https://purpur.pl3x.net/)**  
+・**[Mohist](https://mohistmc.com/)**  
+・**[Magma](https://magmafoundation.org/)**  
 
 **★バージョン"1.13-1.13.1"の動作について★**  
 サーバーが[**Java9**](https://jdk.java.net/java-se-ri/9)以降に対応していないことが原因で、**エラーが発生する不具合が存在します。**  
