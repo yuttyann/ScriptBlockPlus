@@ -72,7 +72,7 @@ public final class CommandSelector {
     }
 
     @NotNull
-    public static List<String> build(@NotNull CommandSender sender, @Nullable Location start, @NotNull String command) {
+    public static List<String> build(@NotNull CommandSender sender, @NotNull Location start, @NotNull String command) {
         int modCount = 0;
         var indexList = new ArrayList<Index>();
         var commandList = Lists.newArrayList(parse(command, sender, indexList));
@@ -144,7 +144,7 @@ public final class CommandSelector {
     }
 
     @NotNull
-    public static List<Entity> getTargets(@NotNull CommandSender sender, @Nullable Location start, @NotNull String selector) {
+    public static List<Entity> getTargets(@NotNull CommandSender sender, @NotNull Location start, @NotNull String selector) {
         selector = Placeholder.INSTANCE.replace(getWorld(sender, start), selector);
         if (NetMinecraft.hasNMS() && Utils.isCBXXXorLater("1.13")) {
             try {

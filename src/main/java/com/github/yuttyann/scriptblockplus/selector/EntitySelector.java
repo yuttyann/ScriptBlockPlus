@@ -53,7 +53,7 @@ import org.jetbrains.annotations.Nullable;
 public final class EntitySelector {
 
     @NotNull
-    public static List<Entity> getEntities(@NotNull CommandSender sender, @Nullable Location start, @NotNull String selector) {
+    public static List<Entity> getEntities(@NotNull CommandSender sender, @NotNull Location start, @NotNull String selector) {
         var result = new ArrayList<Entity>();
         var location = setCenter(copy(sender, start));
         var split = new Split(selector, "@", "[", "]");

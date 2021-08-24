@@ -50,6 +50,8 @@ public final class Utils {
     private static final String SERVER_VERSION = getServerVersion();
     private static final Map<String, Boolean> VERSION_CACHE = new HashMap<>();
 
+    private static final Splitter SPLITTER = Splitter.on("|~").omitEmptyStrings();
+
     @NotNull
     public static String randomUUID() {
         return UUID.randomUUID().toString();
@@ -112,8 +114,7 @@ public final class Utils {
 
     public static void sendColorMessage(@NotNull CommandSender sender, @Nullable String message) {
         var color = "";
-        var text = replace(setColor(isEmpty(message) ? "" : message), "\\n", "|~");
-        for (var line : Splitter.on("|~").omitEmptyStrings().split(text)) {
+        for (var line : SPLITTER.split(replace(setColor(message), "\\n", "|~"))) {
             sender.sendMessage(line = (color + line));
             if (line.indexOf('§') > -1) {
                 color = getColors(line);
@@ -137,11 +138,7 @@ public final class Utils {
         });
     }
 
-    public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull String command) {
-        return dispatchCommand(sender, null, command);
-    }
-
-    public static boolean dispatchCommand(@NotNull CommandSender sender, @Nullable Location location, @NotNull String command) {
+    public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull Location location, @NotNull String command) {
         command = command.startsWith("/") ? command.substring(1) : command;
         if (CommandSelector.has(command)) {
             var commands = CommandSelector.build(sender, location, command);
