@@ -78,7 +78,7 @@ public interface ConfigKey<T> {
 
     /**
      * 送信者にメッセージを送信します。
-     * @param sbPlayer - プレイヤー
+     * @param sender - 送信者
      */
     default void send(@NotNull CommandSender sender) {
         Utils.sendColorMessage(sender, toString());
