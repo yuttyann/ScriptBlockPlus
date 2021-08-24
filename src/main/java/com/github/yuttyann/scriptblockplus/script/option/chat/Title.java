@@ -19,7 +19,6 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
@@ -35,12 +34,12 @@ public final class Title extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var slash = StringUtils.split(getOptionValue(), '/');
-        var title = StringUtils.setColor(slash.get(0));
-        var subtitle = StringUtils.setColor(slash.size() > 1 ? slash.get(1) : "");
+        var slash = split(getOptionValue(), '/', false);
+        var title = setColor(slash.get(0), true);
+        var subtitle = setColor(slash.size() > 1 ? slash.get(1) : "", true);
         int fadeIn = 10, stay = 40, fadeOut = 10;
         if (slash.size() == 3) {
-            var times = StringUtils.split(slash.get(2), '-');
+            var times = split(slash.get(2), '-', false);
             if (times.size() == 3) {
                 fadeIn = Integer.parseInt(times.get(0));
                 stay = Integer.parseInt(times.get(1));

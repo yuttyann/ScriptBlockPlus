@@ -19,14 +19,13 @@ import com.github.yuttyann.scriptblockplus.enums.CommandLog;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 /**
  * ScriptBlockPlus BypassGroup オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "bypassgroup", syntax = "@bypassGROUP:", description = "<command>[/world]</group>")
+@OptionTag(name = "bypassgroup", syntax = "@bypassGROUP:", description = "[world]</group> <command>")
 public final class BypassGroup extends BaseOption {
 
     @Override
@@ -35,15 +34,14 @@ public final class BypassGroup extends BaseOption {
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
             throw new UnsupportedOperationException("Invalid function");
         }
-        var slash = StringUtils.split(getOptionValue(), '/');
-        if (slash.size() < 2) {
-            throw new IllegalArgumentException("Insufficient parameters");
-        }
+        var value = getOptionValue();
+        int index = value.indexOf(" ");
+        var slash = split(value.substring(0, index), '/', true);
+        var world = slash.size() > 1 ? slash.get(0) : null;
+        var group = slash.size() > 1 ? slash.get(1) : slash.get(0);
+        var command = escape(value.substring(index + 1, value.length()));
         var player = getPlayer();
-        var command = StringUtils.setColor(slash.get(0));
-        return CommandLog.supplier(player.getWorld(), () -> {
-            var world = slash.size() > 2 ? slash.get(1) : null;
-            var group = slash.size() > 2 ? slash.get(2) : slash.get(1);
+        return CommandLog.supplier(player.getWorld(), () -> {    
             if (vaultPermission.playerInGroup(world, player, group)) {
                 return Utils.dispatchCommand(player, getLocation(), command);
             } else {

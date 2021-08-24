@@ -15,49 +15,49 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import com.github.yuttyann.scriptblockplus.enums.MatchType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.inventory.ItemStack;
+
+import static com.github.yuttyann.scriptblockplus.enums.MatchType.*;
+import static com.github.yuttyann.scriptblockplus.utils.ItemUtils.*;
+import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 
 /**
  * ScriptBlockPlus ItemHand オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "itemhand", syntax = "@hand:", description = "<id>[:damage] <amount> [name][:lore]")
+@OptionTag(name = "itemhand", syntax = "@hand:", description = "<id>[:damage] <amount> [name] [lore]")
 public final class ItemHand extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var space = StringUtils.split(getOptionValue(), ' ');
-        var itemId = StringUtils.split(StringUtils.removeStart(space.get(0), Utils.MINECRAFT), ':');
+        var space = split(getOptionValue(), ' ', false);
+        var itemId = split(removeStart(space.get(0), Utils.MINECRAFT), ':', false);
         if (Calculation.REALNUMBER_PATTERN.matcher(itemId.get(0)).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }
-        var material = ItemUtils.getMaterial(itemId.get(0));
+        var material = getMaterial(itemId.get(0));
         int damage = itemId.size() > 1 ? Integer.parseInt(itemId.get(1)) : -1;
         int amount = Integer.parseInt(space.get(1));
-        var create = space.size() > 2 ? StringUtils.createString(space, 2) : null;
-        var names = StringUtils.split(StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create), ':');
+        var name = space.size() > 2 ? escape(space.get(2)) : null;
+        var lore = space.size() > 3 ? escape(space.get(3)) : null;
 
         var inventory = getPlayer().getInventory();
         for (var hand : new ItemStack[] { inventory.getItemInMainHand(), inventory.getItemInOffHand() }) {
-            if (!ItemUtils.compare(MatchType.TYPE, hand, material)
-                || !ItemUtils.compare(MatchType.NAME, hand, names.get(0))
-                || !ItemUtils.compare(MatchType.AMOUNT, hand, amount)
-                || damage != -1 && !ItemUtils.compare(MatchType.META, hand, damage)
-                || names.size() > 1 && !ItemUtils.compare(MatchType.LORE, hand, names.get(1))) {
+            if (!compare(AMOUNT, hand, amount)
+                || !compare(TYPE, hand, material)
+                || damage != -1 && !compare(META, hand, damage)
+                || name != null && !compare(NAME, hand, name)
+                || lore != null && !compare(LORE, hand, lore)) {
                 continue;
             }
             return true;
         }
-        var name = StringUtils.setColor(StringUtils.isEmpty(create) ? null : names.get(0));
-        sendMessage(SBConfig.ERROR_HAND.replace(material, amount, damage, name));
+        sendMessage(SBConfig.ERROR_HAND.replace(material, amount, damage, name, lore));
         return false;
     }
 }

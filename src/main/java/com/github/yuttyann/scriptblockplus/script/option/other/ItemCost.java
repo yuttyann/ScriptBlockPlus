@@ -15,22 +15,24 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import com.github.yuttyann.scriptblockplus.enums.MatchType;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import static com.github.yuttyann.scriptblockplus.enums.MatchType.*;
+import static com.github.yuttyann.scriptblockplus.utils.ItemUtils.*;
+import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
+
 /**
  * ScriptBlockPlus ItemCost オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "itemcost", syntax = "$item:", description = "<id>[:damage] <amount> [name][:lore]")
+@OptionTag(name = "itemcost", syntax = "$item:", description = "<id>[:damage] <amount> [name] [lore]")
 public final class ItemCost extends BaseOption {
 
     public static final String KEY_OPTION = Utils.randomUUID();
@@ -38,16 +40,16 @@ public final class ItemCost extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var space = StringUtils.split(getOptionValue(), ' ');
-        var itemId = StringUtils.split(StringUtils.removeStart(space.get(0), Utils.MINECRAFT), ':');
+        var space = split(getOptionValue(), ' ', false);
+        var itemId = split(removeStart(space.get(0), Utils.MINECRAFT), ':', false);
         if (Calculation.REALNUMBER_PATTERN.matcher(itemId.get(0)).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }
-        var material = ItemUtils.getMaterial(itemId.get(0));
+        var material = getMaterial(itemId.get(0));
         int damage = itemId.size() > 1 ? Integer.parseInt(itemId.get(1)) : -1;
         int amount = Integer.parseInt(space.get(1));
-        var create = space.size() > 2 ? StringUtils.createString(space, 2) : null;
-        var names = StringUtils.split(StringUtils.isEmpty(create) ? material.name() : StringUtils.setColor(create), ':');
+        var name = space.size() > 2 ? escape(space.get(2)) : null;
+        var lore = space.size() > 3 ? escape(space.get(3)) : null;
 
         var player = getPlayer();
         var contents = player.getInventory().getContents();
@@ -56,10 +58,10 @@ public final class ItemCost extends BaseOption {
         }
         int result = amount;
         for (var item : contents) {
-            if (!ItemUtils.compare(MatchType.TYPE, item, material)
-                || !ItemUtils.compare(MatchType.NAME, item, names.get(0))
-                || damage != -1 && !ItemUtils.compare(MatchType.META, item, damage)
-                || names.size() > 1 && !ItemUtils.compare(MatchType.LORE, item, names.get(1))) {
+            if (!compare(TYPE, item, material)
+                || damage != -1 && !compare(META, item, damage)
+                || name != null && !compare(NAME, item, name)
+                || lore != null && !compare(LORE, item, lore)) {
                 continue;
             }
             if ((result -= result > 0 ? setAmount(item, item.getAmount() - result) : 0) == 0) {
@@ -67,8 +69,7 @@ public final class ItemCost extends BaseOption {
             }
         }
         if (result > 0) {
-            var name = StringUtils.setColor(StringUtils.isEmpty(create) ? null : names.get(0));
-            sendMessage(SBConfig.ERROR_ITEM.replace(material, amount, damage, name));
+            sendMessage(SBConfig.ERROR_ITEM.replace(material, amount, damage, name, lore));
             return false;
         }
         player.getInventory().setContents(contents);

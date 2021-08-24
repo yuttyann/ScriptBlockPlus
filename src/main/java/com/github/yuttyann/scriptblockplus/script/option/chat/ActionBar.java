@@ -22,7 +22,6 @@ import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
@@ -59,8 +58,8 @@ public final class ActionBar extends BaseOption implements Runnable {
 
     @Override
     protected boolean isValid() throws Exception {
-        var slash = StringUtils.split(getOptionValue(), '/');
-        this.message = StringUtils.setColor(slash.get(0));
+        var slash = split(getOptionValue(), '/', false);
+        this.message = setColor(slash.get(0), true);
         if (slash.size() > 1) {
             this.stay = Integer.parseInt(slash.get(1));
             this.task = ScriptBlock.getScheduler().run(this, 0L, 20L);

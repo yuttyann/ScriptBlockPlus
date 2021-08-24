@@ -19,7 +19,6 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 /**
  * ScriptBlockPlus Perm オプションクラス
@@ -34,7 +33,7 @@ public final class Perm extends BaseOption {
         if (!vaultPermission.isEnabled()) {
             throw new UnsupportedOperationException("Invalid function");
         }
-        var slash = StringUtils.split(getOptionValue(), '/');
+        var slash = split(getOptionValue(), '/', true);
         var world = slash.size() > 1 ? slash.get(0) : null;
         var permission = slash.size() > 1 ? slash.get(1) : slash.get(0);
 

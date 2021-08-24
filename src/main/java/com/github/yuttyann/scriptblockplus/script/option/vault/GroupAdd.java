@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.script.option.vault;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 /**
  * ScriptBlockPlus GroupAdd オプションクラス
@@ -33,7 +32,7 @@ public final class GroupAdd extends BaseOption {
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
             throw new UnsupportedOperationException("Invalid function");
         }
-        var slash = StringUtils.split(getOptionValue(), '/');
+        var slash = split(getOptionValue(), '/', true);
         var world = slash.size() > 1 ? slash.get(0) : null;
         var group = slash.size() > 1 ? slash.get(1) : slash.get(0);
 

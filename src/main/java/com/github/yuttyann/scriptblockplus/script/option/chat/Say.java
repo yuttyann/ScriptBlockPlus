@@ -31,7 +31,7 @@ public final class Say extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var command = "minecraft:say " + getOptionValue();
+        var command = "minecraft:say " + setColor(getOptionValue(), true);
         return Utils.tempPerm(getSBPlayer(), Permission.MINECRAFT_COMMAND_SAY, () -> Bukkit.dispatchCommand(getPlayer(), command));
     }
 }

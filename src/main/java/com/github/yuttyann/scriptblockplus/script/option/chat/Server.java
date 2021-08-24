@@ -17,7 +17,6 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.bukkit.Bukkit;
 
 /**
@@ -29,7 +28,7 @@ public final class Server extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        Bukkit.broadcastMessage(StringUtils.setColor(getOptionValue()));
+        Bukkit.broadcastMessage(setColor(getOptionValue(), true));
         return true;
     }
 }

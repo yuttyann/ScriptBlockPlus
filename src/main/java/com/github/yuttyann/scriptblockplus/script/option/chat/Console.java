@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 import com.github.yuttyann.scriptblockplus.enums.CommandLog;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 
@@ -31,7 +30,7 @@ public final class Console extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var command = StringUtils.setColor(getOptionValue());
+        var command = setColor(getOptionValue(), true);
         return CommandLog.supplier(getSBPlayer().getWorld(), () -> Utils.dispatchCommand(Bukkit.getConsoleSender(), getLocation(), command));
     }
 }

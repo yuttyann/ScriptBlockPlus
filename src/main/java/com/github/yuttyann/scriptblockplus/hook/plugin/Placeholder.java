@@ -33,6 +33,9 @@ public final class Placeholder extends HookPlugin {
 
     public static final Placeholder INSTANCE = new Placeholder();
 
+    private static final String[] ESCAPE_SEARCH = { "\\a", "\\b", "\\c", "\\h", "\\o", "\\p", "\\s", "\\l", "\\g", "\\i", "\\j" };
+    private static final String[] ESCAPE_RESULT = { "&", " ", ",", "-", ":", "%", "/", "<", ">", "[", "]" };
+
     private Placeholder() { }
 
     @Override
@@ -77,5 +80,29 @@ public final class Placeholder extends HookPlugin {
         source = StringUtils.replace(source, "<online>", Bukkit.getOnlinePlayers().size());
         source = StringUtils.replace(source, "<players>", world.getPlayers().size());
         return source;
+    }
+
+    /**
+     * エスケープ文字を置換します。
+     * <pre>
+     * 下記は、エスケープと置換後の文字列の一覧です。
+     * "\a" -> "&"
+     * "\b" -> " "
+     * "\c" -> ","
+     * "\h" -> "-"
+     * "\o" -> ":"
+     * "\p" -> "%"
+     * "\s" -> "/"
+     * "\l" -> "<"
+     * "\g" -> ">"
+     * "\i" -> "["
+     * "\j" -> "]"
+     * </pre>
+     * @param source - 文字列
+     * @return {@link String} - 置換後の文字列
+     */
+    @NotNull
+    public String escape(@NotNull String source) {
+        return org.apache.commons.lang.StringUtils.replaceEach(source, ESCAPE_SEARCH, ESCAPE_RESULT);
     }
 }

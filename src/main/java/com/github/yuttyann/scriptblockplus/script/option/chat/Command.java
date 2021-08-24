@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.script.option.chat;
 import com.github.yuttyann.scriptblockplus.enums.CommandLog;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 /**
@@ -31,7 +30,7 @@ public final class Command extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         var player = getPlayer();
-        var command = StringUtils.setColor(getOptionValue());
+        var command = setColor(getOptionValue(), true);
         return CommandLog.supplier(player.getWorld(), () -> Utils.dispatchCommand(player, getLocation(), command));
     }
 }

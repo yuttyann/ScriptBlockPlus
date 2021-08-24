@@ -20,25 +20,31 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.ConfigKey;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 
 /**
  * ScriptBlockPlus BaseOption オプションクラス
  * @author yuttyann44581
  */
 public abstract class BaseOption extends Option {
+
+    private static final UnaryOperator<String> ESCAPE = Placeholder.INSTANCE::escape;
 
     private SBRead sbRead;
 
@@ -165,6 +171,56 @@ public abstract class BaseOption extends Option {
         if (!isInverted()) {
             Utils.sendColorMessage(Bukkit.getConsoleSender(), configKey.toString());
         }
+    }
+
+    /**
+     * エスケープ文字を置換します。
+     * @param source - 文字列
+     * @return {@link String} - 置換後の文字列
+     * @apiNote {@link Placeholder#escape(String)}
+     */
+    @NotNull
+    protected final String escape(@NotNull String source) {
+        return ESCAPE.apply(source);
+    }
+
+    /**
+     * エスケープ文字を置換します。
+     * @param list - リスト
+     * @return {@link String} - 置換後のリスト
+     * @apiNote {@link Placeholder#escape(String)}
+     */
+    @NotNull
+    protected final List<String> escapes(@NotNull List<String> list) {
+        if (!list.isEmpty()) {
+            list.replaceAll(ESCAPE);
+        }
+        return list;
+    }
+
+    /**
+     * カラーコードを置換します。
+     * @param source - 文字列
+     * @param escape - エスケープ文字を置換するのかどうか
+     * @return {@link String} - 置換後の文字列
+     * @apiNote {@link Placeholder#escape(String)}
+     */
+    @NotNull
+    protected final String setColor(@Nullable String source, final boolean escape) {
+        return ESCAPE.apply(StringUtils.setColor(source));
+    }
+
+    /**
+     * 文字列を分割します。
+     * @param source - 文字列
+     * @param delimiter - 区切り
+     * @param escape - エスケープ文字を置換するのかどうか
+     * @return {@link String} - 分割された文字列
+     * @apiNote {@link Placeholder#escape(String)}
+     */
+    @NotNull
+    protected final List<String> split(@Nullable String source, @NotNull char delimiter, final boolean escape) {
+        return escape ? escapes(StringUtils.split(source, delimiter)) : StringUtils.split(source, delimiter);
     }
 
     /**

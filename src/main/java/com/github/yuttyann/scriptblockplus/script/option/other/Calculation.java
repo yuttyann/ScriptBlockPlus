@@ -43,7 +43,7 @@ public final class Calculation extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var space = StringUtils.split(getOptionValue(), ' ');
+        var space = split(getOptionValue(), ' ', true);
         var player = getPlayer();
         var value1 = parse(player, space.get(0));
         var value2 = parse(player, space.get(2));
@@ -53,11 +53,7 @@ public final class Calculation extends BaseOption {
             return true;
         }
         if (space.size() > 3) {
-            var message = StringUtils.setColor(StringUtils.createString(space, 3));
-            message = StringUtils.replace(message, "%value1%", value1);
-            message = StringUtils.replace(message, "%value2%", value2);
-            message = StringUtils.replace(message, "%operator%", operator);
-            Utils.sendColorMessage(player, message);
+            Utils.sendColorMessage(player, StringUtils.createString(space, 3));
         }
         return false;
     }
@@ -69,7 +65,7 @@ public final class Calculation extends BaseOption {
         }
         if (source.startsWith("%player_count_") && source.endsWith("%")) {
             source = source.substring("%player_count_".length(), source.length() - 1);
-            var slash = StringUtils.split(source, '/');
+            var slash = split(source, '/', false);
             if (slash.size() < 1 || slash.size() > 2) {
                 return 0;
             }
