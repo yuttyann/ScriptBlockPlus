@@ -75,6 +75,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
 
     /**
      * コンストラクタ
+     * @param name - ファイルの名前
      * @apiNote
      * <pre>
      * 実装例です。
@@ -85,7 +86,6 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
      *     super(name);
      * }
      * </pre>
-     * @param name - ファイルの名前
      */
     protected OneJson(@NotNull String name) {
         super(name);

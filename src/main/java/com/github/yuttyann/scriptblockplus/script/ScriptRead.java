@@ -59,7 +59,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
     protected boolean invert;
     protected Option option;
     protected String value;
-    protected List<String> scripts;
+    protected List<String> list;
 
     public ScriptRead(@NotNull Player player, @NotNull BlockCoords blockCoords, @NotNull ScriptKey scriptKey) {
         this.initialize = true;
@@ -104,7 +104,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
     @Override
     @NotNull
     public List<String> getScripts() {
-        return scripts;
+        return list;
     }
 
     @Override
@@ -147,12 +147,10 @@ public class ScriptRead extends ScriptMap implements SBRead {
     }
 
     protected boolean perform(final int index) {
-        for (this.index = index; this.index < scripts.size(); this.index++) {
-            var script = scripts.get(this.index);
-            if (invert = script.startsWith("!")) {
-                script = script.substring(1);
-            }
-            this.option = OptionManager.newInstance(script);
+        for (this.index = index; this.index < list.size(); this.index++) {
+            var script = list.get(this.index);
+            this.invert = script.startsWith("!");
+            this.option = OptionManager.newInstance(invert ? script = script.substring(1) : script);
             this.value = Placeholder.INSTANCE.replace(getPlayer(), option.getValue(script));
             if (option.callOption(this) == invert) {
                 if (!option.isFailedIgnore()) {
@@ -173,7 +171,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
                 Iterators.addAll(parse, StringUtils.parseScript(scripts.get(i)).iterator());
             }
             SBConfig.SORT_SCRIPTS.ifPresentAndTrue(s -> OptionManager.sort(parse));
-            this.scripts = Collections.unmodifiableList(parse);
+            this.list = Collections.unmodifiableList(parse);
             return true;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

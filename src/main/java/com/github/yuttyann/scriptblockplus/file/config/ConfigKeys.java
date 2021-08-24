@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -29,15 +28,14 @@ import java.util.function.Function;
  */
 public final class ConfigKeys {
 
-    private static final Map<String, Object> NODE = new HashMap<>();
-    private static final ConfigAdapter ADAPTER = new ConfigAdapter(NODE);
+    private static final ConfigAdapter ADAPTER = new ConfigAdapter(new HashMap<>());
 
     public static void clear() {
-        NODE.clear();
+        ADAPTER.clear();
     }
 
     public static void load(@NotNull YamlConfig yaml) {
-        yaml.getKeys(true).forEach(s -> NODE.put(s, yaml.get(s)));
+        ADAPTER.load(yaml);
     }
 
     @NotNull

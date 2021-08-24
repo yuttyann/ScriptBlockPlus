@@ -87,6 +87,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
 
     /**
      * コンストラクタ
+     * @param name - ファイルの名前
      * @apiNote
      * <pre>
      * 実装例です。
@@ -97,7 +98,6 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      *     super(name);
      * }
      * </pre>
-     * @param name - ファイルの名前
      */
     protected TwoJson(@NotNull String name) {
         super(name);

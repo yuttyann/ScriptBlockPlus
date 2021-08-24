@@ -163,13 +163,9 @@ public class ItemUtils {
             case META:
                 return value instanceof Integer ? ((Integer) value).equals(getDamage(item)) : false;
             case NAME:
-                return value instanceof String ? getName(item).equals((String) value) : false;
+                return value instanceof String ? getName(item).equals(StringUtils.setColor((String) value)) : false;
             case LORE:
-                if (value instanceof String) {
-                    var match = StringUtils.setColor((String) value);
-                    return getLore(item).stream().collect(Collectors.joining("\n")).contains(match);
-                }
-                break;
+                return value instanceof String ? getLore(item).stream().collect(Collectors.joining("\\n")).contains(StringUtils.setColor((String) value)) : false;
             case AMOUNT:
                 return value instanceof Integer ? item.getAmount() >= (Integer) value : false;
         }

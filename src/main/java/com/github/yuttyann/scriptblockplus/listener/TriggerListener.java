@@ -148,6 +148,8 @@ public abstract class TriggerListener<E extends Event> implements Listener {
 
     /**
      * 各プロセスから呼び出されます。
+     * @param trigger - トリガー
+     * @return {@link Result} - {@link Result#FAILURE} の場合は処理を中断します。
      * @apiNote
      * <pre>
      * 実装例です。
@@ -171,8 +173,6 @@ public abstract class TriggerListener<E extends Event> implements Listener {
      *     }
      * }
      * </pre>
-     * @param trigger - トリガー
-     * @return {@link Result} - {@link Result#FAILURE}の場合は処理を中断します。
      */
     @NotNull
     protected Result handle(@NotNull Trigger trigger) {

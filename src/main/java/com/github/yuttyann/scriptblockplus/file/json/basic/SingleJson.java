@@ -51,6 +51,7 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
 
     /**
      * コンストラクタ
+     * @param name - ファイルの名前
      * @apiNote
      * <pre>
      * 実装例です。
@@ -61,7 +62,6 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
      *     super(name);
      * }
      * </pre>
-     * @param name - ファイルの名前
      */
     protected SingleJson(@NotNull String name) {
         super(name);

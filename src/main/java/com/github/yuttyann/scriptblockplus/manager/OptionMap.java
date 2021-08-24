@@ -17,14 +17,13 @@ package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.*;
-
-import static com.github.yuttyann.scriptblockplus.utils.StringUtils.removeInvert;
 
 /**
  * ScriptBlockPlus OptionMap クラス
@@ -107,8 +106,7 @@ public final class OptionMap {
 
     @Nullable
     public SBInstance<Option> remove(@NotNull String syntax) {
-        syntax = removeInvert(syntax);
-        SYNTAXES.remove(syntax);
+        SYNTAXES.remove(syntax = removeInvert(syntax));
         return SBINSTANCES.remove(syntax);
     }
 
@@ -132,5 +130,10 @@ public final class OptionMap {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    @NotNull
+    private String removeInvert(@NotNull String source) {
+        return StringUtils.isEmpty(source) ? source : source.startsWith("!") ? source.substring(1) : source;
     }
 }

@@ -152,11 +152,6 @@ public final class StringUtils {
         return source;
     }
 
-    @NotNull
-    public static String removeInvert(@NotNull String source) {
-        return isEmpty(source) ? source : source.startsWith("!") ? source.substring(1) : source;
-    }
-
     public static boolean isNotEmpty(@Nullable String source) {
         return !isEmpty(source);
     }

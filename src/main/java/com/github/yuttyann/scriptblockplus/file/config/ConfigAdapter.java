@@ -33,6 +33,14 @@ public final class ConfigAdapter {
         this.map = map;
     }
 
+    public void clear() {
+        map.clear();
+    }
+
+    public void load(@NotNull YamlConfig yaml) {
+        yaml.getKeys(true).forEach(s -> map.put(s, yaml.get(s)));
+    }
+
     @Nullable
     public <T> T get(@NotNull String key) {
         return (T) map.get(key);

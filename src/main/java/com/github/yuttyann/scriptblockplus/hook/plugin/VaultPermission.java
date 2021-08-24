@@ -193,10 +193,7 @@ public final class VaultPermission extends HookPlugin {
      * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean playerAdd(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
-        if (isSuperPerms()) {
-            return playerHas(player, permission);
-        }
-        return this.permission.playerAdd(world, player, permission);
+        return isSuperPerms() ? playerHas(player, permission) : this.permission.playerAdd(world, player, permission);
     }
 
     /**
@@ -217,10 +214,7 @@ public final class VaultPermission extends HookPlugin {
      * @return {@code boolean} - 成功した場合は{@code true}
      */
     public boolean playerRemove(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
-        if (isSuperPerms()) {
-            return playerRemove(player, permission);
-        }
-        return this.permission.playerRemove(world, player, permission);
+        return isSuperPerms() ? playerRemove(player, permission) : this.permission.playerRemove(world, player, permission);
     }
 
     /**
@@ -241,10 +235,7 @@ public final class VaultPermission extends HookPlugin {
      * @return {@code boolean} - 所持している場合は{@code true}
      */
     public boolean playerHas(@Nullable String world, @NotNull OfflinePlayer player, @NotNull String permission) {
-        if (isSuperPerms()) {
-            return playerHas(player, permission);
-        }
-        return this.permission.playerHas(world, player, permission);
+        return isSuperPerms() ? playerHas(player, permission) : this.permission.playerHas(world, player, permission);
     }
 
     /**
