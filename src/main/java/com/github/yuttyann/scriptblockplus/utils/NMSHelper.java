@@ -267,6 +267,8 @@ public final class NMSHelper {
     public static Object[] createDestroy(final int[] ids) throws ReflectiveOperationException {
         if (NetMinecraft.isLegacy()) {
             return new Object[] { NetMinecraft.LEGACY.newInstance("PacketPlayOutEntityDestroy", ids) };
+        } else if (Utils.isCBXXXorLater("1.17.1"))  {
+            return new Object[] { NetMinecraft.NW_PR_GAME.newInstance("PacketPlayOutEntityDestroy", ids) };
         } else {
             var packets = new Object[ids.length];
             for (int i = 0, l = ids.length; i < l; i++) {
