@@ -1,0 +1,55 @@
+# ScriptBlockPlus v${project.version} Lang #
+
+
+## ===== Auto Update ===== ##
+# [true -> Enable | false -> Disable]
+# Check if the latest version of the plugin exists.
+UpdateChecker: false
+
+# Prerequisites "UpdateChecker: true"
+# The latest plugin will be downloaded automatically.
+AutoDownload: true
+
+# Prerequisites "UpdateChecker: true"
+# The updated contents will be automatically opened in Notepad.
+OpenChangeLog: true
+
+## ===== Json ===== ##
+# [true -> Enable | false -> Disable]
+# Cache all files on server startup or reload.
+# It can run smoothly, but may consume a lot of memory.
+CacheAllJson: false
+
+# Sets the upper limit of the number of elements allowed to format JSON.
+# By setting an upper limit, you can expect to reduce the capacity and speed up the process.
+FormatLimit: 10000
+
+## ===== Sort Scripts ===== ##
+# [true -> Enable | false -> Disable]
+# Sort the options in the best order.
+SortScripts: true
+
+## ===== Console Log ===== ##
+# [true -> Enable | false -> Disable]
+# The initial "console" of the language file is the target.
+# You can display detailed messages on the console.
+ConsoleLog: false
+
+## ===== Option Help ===== ##
+# [true -> Enable | false -> Disable]
+# Displays option help when tab completion is performed.
+OptionHelp: true
+
+## ===== Option Permission ===== ##
+# [true -> Enable | false -> Disable]
+# Requests permission when executing the option.
+OptionPermission: false
+
+## ===== Arm Actions ===== ##
+# [true -> Enable | false -> Disable]
+# Enables / disables the left and right clicks.
+Actions:
+  # LeftClick
+  InteractLeft: true
+  # RightClick
+  InteractRight: true

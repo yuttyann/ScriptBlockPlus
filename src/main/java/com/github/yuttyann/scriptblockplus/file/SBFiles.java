@@ -18,18 +18,11 @@ package com.github.yuttyann.scriptblockplus.file;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.FileReloadEvent;
 import com.github.yuttyann.scriptblockplus.file.config.ConfigKeys;
-import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.config.YamlConfig;
-import com.github.yuttyann.scriptblockplus.utils.FileUtils;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.google.common.base.Charsets;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -40,8 +33,8 @@ public final class SBFiles {
 
     private static final Map<String, YamlConfig> FILES = new HashMap<>();
 
-    public static final String PATH_CONFIG = "config.yml";
-    public static final String PATH_LANGS = "langs/{code}.yml";
+    public static final String PATH_CONFIG = "config_{code}.yml";
+    public static final String PATH_MESSAGE = "message_{code}.yml";
 
     public static void reload() {
         // ScriptBlockのインスタンス
@@ -49,40 +42,11 @@ public final class SBFiles {
 
         // ファイルの内容を読み込む
         ConfigKeys.clear();
-        ConfigKeys.load(loadFile(plugin, PATH_CONFIG, true));
-        ConfigKeys.load(loadLang(plugin, PATH_LANGS));
-
-        // ファイルの内容が欠けていないか確認
-        searchKeys(plugin, PATH_CONFIG, PATH_LANGS);
+        ConfigKeys.load(loadLang(plugin, PATH_CONFIG, "config"));
+        ConfigKeys.load(loadLang(plugin, PATH_MESSAGE, "message"));
 
         // リロードを行ったことを知らせるイベントを呼ぶ
         Bukkit.getPluginManager().callEvent(new FileReloadEvent());
-    }
-
-    public static void searchKeys(@NotNull Plugin plugin, @NotNull String... paths) {
-        for (var path : paths) {
-            var yaml = getFile(plugin, path);
-            if (yaml.isPresent() && yaml.get().exists()) {
-                var filePath = Optional.ofNullable(yaml.get().getInnerPath());
-                sendNotKeyMessages(plugin, yaml.get(), filePath.orElse(yaml.get().getFileName()));
-            }
-        }
-    }
-
-    public static void sendNotKeyMessages(@NotNull Plugin plugin, @NotNull YamlConfig yaml, @NotNull String path) {
-        var resource = FileUtils.getResource(plugin, path);
-        if (resource == null) {
-            return;
-        }
-        var keys = yaml.getKeys(true);
-        var config = YamlConfiguration.loadConfiguration(new InputStreamReader(resource, Charsets.UTF_8));
-        var filePath = plugin.getName() + "/" + yaml.getFolderPath();
-        for (String key : config.getKeys(true)) {
-            if (!keys.contains(key)) {
-                var value = config.get(key) instanceof MemorySection ? "" : config.get(key);
-                Bukkit.getConsoleSender().sendMessage("§c[" + filePath + "] Key not found: §r" + key + ": " + value);
-            }
-        }
     }
 
     @NotNull
@@ -100,12 +64,8 @@ public final class SBFiles {
     }
 
     @NotNull
-    public static YamlConfig loadLang(@NotNull Plugin plugin, @NotNull String filePath) {
-        var language = SBConfig.LANGUAGE.getValue();
-        if (StringUtils.isEmpty(language) || "default".equalsIgnoreCase(language)) {
-            language = Locale.getDefault().getLanguage();
-        }
-        return putFile(plugin, filePath, new Lang(plugin, language, filePath, "lang").load());
+    public static YamlConfig loadLang(@NotNull Plugin plugin, @NotNull String filePath, @NotNull String directoryPath) {
+        return putFile(plugin, filePath, new Lang(plugin, Locale.getDefault().getLanguage(), filePath, directoryPath).load());
     }
 
     @NotNull

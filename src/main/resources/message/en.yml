@@ -1,4 +1,4 @@
-# ScriptBlockPlus v${project.version} Lang #
+# ScriptBlockPlus v${project.version} Message #
 # Created by yuttyann44581  Translated by AndyYu
 # There may be some mistakes in grammar
 
@@ -131,6 +131,7 @@ ErrorGroupMessage: '&cOnly members of the group "%group%" can run the script.'
 # %amount%   : Amount of item
 # %damage%   : Damage value of item
 # %name%     : Item name
+# %lore%     : Item lore
 ErrorHandMessage: '&cThe items you hold in hand is not valid,|~you must hold at least "&r%name%&r[%material%:%damage%]&c" with amount "&r%amount%x&c"'
 ErrorItemMessage: '&cThe items in your inventory is not valid,|~you must keep in your inventory at least "&r%name%&r[%material%:%damage%]&c" with amount "&r%amount%x&c"'
 

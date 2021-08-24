@@ -1,4 +1,4 @@
-# ScriptBlockPlus v${project.version} Lang #
+# ScriptBlockPlus v${project.version} Message #
 # 作成者: yuttyann44581
 
 
@@ -130,6 +130,7 @@ ErrorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプ�
 # %amount%   : アイテムの個数
 # %damage%   : アイテムのダメージ値
 # %name%     : アイテムの名前
+# %lore%     : アイテムの概要
 ErrorHandMessage: '&cアイテム"&r%name%&r[%material%:%damage%] &e%amount%個&c"を持っていません。'
 ErrorItemMessage: '&cアイテム"&r%name%&r[%material%:%damage%] &e%amount%個&c"を所持していません。'
 

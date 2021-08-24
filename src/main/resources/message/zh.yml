@@ -1,4 +1,4 @@
-# ScriptBlockPlus v${project.version} Lang #
+# ScriptBlockPlus v${project.version} Message #
 # MCBBS PCD小组 秋风残叶 搬运并汉化 请支持原作者 yuttyann44581
 # 本配置源语言为日本语，可能存在翻译不准确的地方
 
@@ -131,6 +131,7 @@ ErrorGroupMessage: '&c只有属于权限组"%group%"的玩家才可以运行该�
 # %amount%   : 物品的数量
 # %damage%   : 物品的子ID
 # %name%     : 物品的名称
+# %lore%     : 物品的概览
 ErrorHandMessage: '&c您的手持物品不满足条件、所需物品必须满足"&r%name%&r[%material%:%damage%]&c"以及数量"&r%amount%个&c"'
 ErrorItemMessage: '&c您的背包内物品不满足条件、所需物品必须满足"&r%name%&r[%material%:%damage%]&c"以及数量"%amount%个&c"'
 
