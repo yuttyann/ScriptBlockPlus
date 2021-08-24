@@ -59,7 +59,6 @@ public final class SBConfig {
 
 
     // String Keys
-    public static final ConfigKey<String> LANGUAGE = stringKey("Language", "en");
     public static final ConfigKey<String> TOOL_COMMAND = stringKey("ToolCommandMessage", "");
     public static final ConfigKey<String> RELOAD_COMMAND = stringKey("ReloadCommandMessage", "");
     public static final ConfigKey<String> BACKUP_COMMAND = stringKey("BackupCommandMessage", "");
@@ -127,13 +126,16 @@ public final class SBConfig {
 
     private static Function<ReplaceKey, String> FUNCTION_ITEM = r -> {
         var material = r.getArgument(0, Material.class);
-        var name = r.getArgument(3, String.class);
-        var value = r.getValue();
         var damage = r.getArgument(2, Integer.class);
-        value = replace(value, "%material%", String.valueOf(material));
-        value = replace(value, "%amount%", r.getArgument(1, Integer.class));
+        var amount = r.getArgument(1, Integer.class);
+        var name = r.getArgument(3, String.class);
+        var lore = r.getArgument(4, String.class);
+        var value = r.getValue();
+        value = replace(value, "%material%", material);
+        value = replace(value, "%amount%", amount);
         value = replace(value, "%damage%", damage == -1 ? "ALL" : damage);
         value = replace(value, "%name%", name);
+        value = replace(value, "%lore%", lore);
         return value;
     };
 
