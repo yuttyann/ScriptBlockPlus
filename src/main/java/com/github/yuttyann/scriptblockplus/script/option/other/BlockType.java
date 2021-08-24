@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.script.option.other;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -35,17 +34,21 @@ public final class BlockType extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         var block = getBlockCoords().getBlock();
-        return StreamUtils.anyMatch(StringUtils.split(getOptionValue(), ','), s -> equals(block, s));
+        for (var value : split(getOptionValue(), ',', false)) {
+            if (equals(block, value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    private boolean equals(@NotNull Block block, @NotNull String type) {
+    private boolean equals(@NotNull Block block, @NotNull String type) throws IllegalAccessException {
         if (StringUtils.isEmpty(type)) {
             return false;
         }
-        var blockId = StringUtils.split(StringUtils.removeStart(type, Utils.MINECRAFT), ':');
+        var blockId = split(StringUtils.removeStart(type, Utils.MINECRAFT), ':', false);
         if (Calculation.REALNUMBER_PATTERN.matcher(blockId.get(0)).matches()) {
-            Utils.sendColorMessage(getPlayer(), "§cNumerical values can not be used");
-            return false;
+            throw new IllegalAccessException("Numerical values can not be used");
         }
         var material = ItemUtils.getMaterial(blockId.get(0));
         if (material == null || !material.isBlock()) {

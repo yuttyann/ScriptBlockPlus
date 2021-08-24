@@ -43,8 +43,7 @@ public final class MoneyCost extends BaseOption {
             getTempMap().put(KEY, cost + (getTempMap().has(KEY) ? getTempMap().getDouble(KEY) : 0.0D));
             return true;
         }
-        double result = cost - vaultEconomy.getBalance(player);
-        sendMessage(SBConfig.ERROR_COST.replace(cost, result));
+        sendMessage(SBConfig.ERROR_COST.replace(cost, cost - vaultEconomy.getBalance(player)));
         return false;
     }
 }

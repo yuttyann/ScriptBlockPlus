@@ -19,7 +19,6 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.event.block.Action;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +39,7 @@ public final class ScriptAction extends BaseOption {
             return false;
         }
         var action = (Action) getTempMap().get(KEY);
-        return StreamUtils.allMatch(StringUtils.split(getOptionValue(), ','), s -> compare(action, s));
+        return StreamUtils.allMatch(split(getOptionValue(), ',', false), s -> compare(action, s));
     }
 
     private boolean compare(@Nullable Action action, @NotNull String type) {

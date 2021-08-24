@@ -20,7 +20,6 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 /**
  * ScriptBlockPlus Execute オプションクラス
@@ -31,8 +30,8 @@ public final class Execute extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var split = StringUtils.split(getOptionValue(), '/');
-        var scriptKey = ScriptKey.valueOf(split.get(0));
-        return new ScriptRead(getPlayer(), BlockCoords.fromString(split.get(1)), scriptKey).read(0);
+        var slash = split(getOptionValue(), '/', false);
+        var scriptKey = ScriptKey.valueOf(slash.get(0));
+        return new ScriptRead(getPlayer(), BlockCoords.fromString(slash.get(1)), scriptKey).read(0);
     }
 }

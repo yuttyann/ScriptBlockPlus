@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.script.option.discord;
 import com.github.yuttyann.scriptblockplus.hook.plugin.DiscordSRV;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 /**
  * ScriptBlockPlus DiscordRoleAdd オプションクラス
@@ -32,7 +31,7 @@ public class DiscordRoleAdd extends BaseOption {
         if (!DiscordSRV.INSTANCE.isEnabled()) {
             throw new UnsupportedOperationException("Invalid function");
         }
-        var comma = StringUtils.split(getOptionValue(), ',');
+        var comma = split(getOptionValue(), ',', false);
         DiscordSRV.INSTANCE.addRoleToMember(getUniqueId(), comma.toArray(String[]::new));
         return true;
     }

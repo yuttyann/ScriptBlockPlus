@@ -23,7 +23,6 @@ import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.bukkit.Bukkit;
 
@@ -51,7 +50,7 @@ public final class Delay extends BaseOption implements Runnable {
         if (isInverted()) {
             throw new IllegalArgumentException("This option cannot be inverted");
         }
-        var slash = StringUtils.split(getOptionValue(), '/');
+        var slash = split(getOptionValue(), '/', false);
         this.saveDelay = slash.size() < 2 || Boolean.parseBoolean(slash.get(1));
 
         if (saveDelay && DELAYS.contains(delayHash())) {
