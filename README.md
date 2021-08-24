@@ -1,4 +1,4 @@
-[[Java11](https://adoptopenjdk.net/?variant=openjdk11)] ScriptBlockPlus [v2.1.4](https://github.com/yuttyann/ScriptBlockPlus/releases/tag/v2.1.4) [MC1.9-1.17] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+[[Java11](https://adoptopenjdk.net/?variant=openjdk11)] ScriptBlockPlus [v2.1.5](https://github.com/yuttyann/ScriptBlockPlus/releases/tag/v2.1.5) [MC1.9-1.17.1] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 
 概要
@@ -8,8 +8,7 @@
 
 導入
 -----------
-[**配布サイト**](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/)から`ScriptBlockPlus`のダウンロードを行ってください。  
-その後、`plugins`フォルダへ保存すれば完了です。  
+[ダウンロード](https://www.spigotmc.org/resources/scriptblockplus.78413/)した`ScriptBlockPlus`を、`plugins`フォルダへ保存すれば完了です。  
 
 ### Java8版
 別の[リポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。  
@@ -23,13 +22,13 @@
 | [Vault](https://www.spigotmc.org/resources/vault.34315/) | 権限、経済系プラグインの機能を利用する事ができます。 | **1.7.3** |
 | [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/) | ディスコ―ドの機能を利用する事ができます。 | **1.22.0** |
 | [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの機能を拡張する事ができます。 | **2.10.9** |
-| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定する事ができます。 | **1.1.6** |  
+| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定する事ができます。 | **1.1.7** |  
 
 **★各バージョンの動作範囲★**
 | Plugin | Server | Java |
 |:---:|:---:|:---:|
 |**`x.x.x-JV8`**|**`1.9-1.16.5`**|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|**`2.1.2-2.1.4`**|**`1.9-1.17`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11)**|
+|**`2.1.2-2.1.5`**|**`1.9-1.17.1`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11)**|
 |`2.0.4-2.1.1`|`1.9-1.16.5`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11)**|
 |`1.8.5-2.0.3`|`1.9-1.16.5`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
 |`1.6.0-1.8.4`|`1.8-1.15.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
@@ -60,7 +59,7 @@
 リンク
 -----------
 **[[Files, JP]](https://file.yuttyann44581.net/)**  
-**[[Wiki, JP]](https://github.com/yuttyann/ScriptBlockPlus/wiki#%E4%B8%80%E8%88%AC%E3%81%AE%E6%96%B9%E5%90%91%E3%81%91)**  
+**[[Wiki, JP]](https://github.com/yuttyann/ScriptBlockPlus/wiki)**  
 **[[Poteton, JP]](https://mcpoteton.com/mcplugin-scriptblockplus)**  
-**[[SpigotMC, EN]](https://www.spigotmc.org/resources/1-9-1-15-2-scriptblockplus.78413/)**  
+**[[SpigotMC, EN]](https://www.spigotmc.org/resources/scriptblockplus.78413/)**  
 **[[MCBBS, ZH]](https://www.mcbbs.net/thread-691900-1-1.html)**
