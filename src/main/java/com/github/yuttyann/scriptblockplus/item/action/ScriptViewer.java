@@ -50,13 +50,11 @@ public final class ScriptViewer extends ItemAction {
     public void run(@NotNull RunItem runItem) {
         var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
         switch (runItem.getAction()) {
-            case LEFT_CLICK_AIR:
-            case LEFT_CLICK_BLOCK:
+            case LEFT_CLICK_AIR: case LEFT_CLICK_BLOCK:
                 PLAYERS.add(sbPlayer);
                 SBConfig.SCRIPT_VIEWER_START.send(sbPlayer);
                 break;
-            case RIGHT_CLICK_AIR:
-            case RIGHT_CLICK_BLOCK:
+            case RIGHT_CLICK_AIR: case RIGHT_CLICK_BLOCK:
                 try {
                     PLAYERS.remove(sbPlayer);
                     TickRunnable.GLOW_ENTITY.destroyAll(sbPlayer);

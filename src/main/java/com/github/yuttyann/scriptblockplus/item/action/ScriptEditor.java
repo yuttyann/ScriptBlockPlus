@@ -50,8 +50,7 @@ public final class ScriptEditor extends ItemAction {
         var scriptKey = sbPlayer.getObjectMap().get(KEY, ScriptKey.INTERACT);
         var blockCoords = Optional.ofNullable(runItem.getBlockCoords());
         switch (runItem.getAction()) {
-            case LEFT_CLICK_AIR:
-            case LEFT_CLICK_BLOCK:
+            case LEFT_CLICK_AIR: case LEFT_CLICK_BLOCK:
                 if (runItem.isSneaking() && !runItem.isAIR() && blockCoords.isPresent()) {
                     new SBOperation(scriptKey).remove(sbPlayer.getPlayer(), blockCoords.get());
                 } else if (!runItem.isSneaking()) {
@@ -59,8 +58,7 @@ public final class ScriptEditor extends ItemAction {
                     ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptKey);
                 }
                 break;
-            case RIGHT_CLICK_AIR:
-            case RIGHT_CLICK_BLOCK:
+            case RIGHT_CLICK_AIR: case RIGHT_CLICK_BLOCK:
                 if (runItem.isSneaking() && !runItem.isAIR()) {
                     var sbClipboard = sbPlayer.getSBClipboard();
                     if (!blockCoords.isPresent() || !sbClipboard.isPresent() || !sbClipboard.get().paste(blockCoords.get(), true)) {

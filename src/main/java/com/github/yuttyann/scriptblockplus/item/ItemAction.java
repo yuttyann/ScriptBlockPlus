@@ -60,7 +60,7 @@ public abstract class ItemAction implements Cloneable {
      * アイテムのスロットを切り替えた際に呼び出されます。
      * @param changeSlot - 切り替えたスロット番号やプレイヤーの情報
      */
-    protected abstract void slot(@NotNull ChangeSlot changeSlot);
+    protected void slot(@NotNull ChangeSlot changeSlot) { }
 
     /**
      * パーミッションを所持しているのか判定します。

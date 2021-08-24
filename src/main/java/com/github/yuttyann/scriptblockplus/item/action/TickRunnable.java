@@ -68,9 +68,7 @@ public class TickRunnable extends BukkitRunnable {
     public final void run() {
         try {
             for (var sbPlayer : ScriptViewer.PLAYERS) {
-                if (sbPlayer.isOnline()) {
-                    tick(sbPlayer);
-                }
+                tick(sbPlayer);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,6 +80,9 @@ public class TickRunnable extends BukkitRunnable {
     }
 
     private void tick(@NotNull SBPlayer sbPlayer) throws Exception {
+        if (!sbPlayer.isOnline()) {
+            return;
+        }
         if (NetMinecraft.hasNMS()) {
             lookBlocks(sbPlayer);
             if (tick % 5 == 0) {
