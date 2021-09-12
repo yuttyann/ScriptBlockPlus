@@ -22,8 +22,6 @@ import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.ConvertList;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.LegacyFormatJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
@@ -90,16 +88,11 @@ public class ScriptBlock extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(plugin);
         }
 
-        // 古い形式のJSONファイルを最新の物へ移行する。
-        LegacyFormatJson.convert(ConvertList.create(this, "json"));
-
         // スクリプトの形式を".yml"から".json"へ移行
         ScriptKey.iterable().forEach(BlockScriptJson::convert);
 
-        // キャッシュの登録
-        CacheJson.register(BlockScriptJson.class);
-        CacheJson.register(PlayerCountJson.class);
-        CacheJson.register(PlayerTimerJson.class);
+        // 古い形式のJSONファイルを最新の物へ移行する。
+        LegacyFormatJson.convert(ConvertList.create(this, "json"));
 
         // キャッシュを生成(設定有効時のみ)
         CacheJson.loading();

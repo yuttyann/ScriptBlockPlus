@@ -97,7 +97,7 @@ public final class SBLoader {
     @NotNull
     private SBLoader createPath(@NotNull BlockCoords blockCoords) {
         this.blockCoords = blockCoords;
-        this.path = blockCoords.getWorld().getName() + "." + blockCoords.getCoords();
+        this.path = blockCoords.getWorld().getName() + "." + blockCoords.getX() + ", " + blockCoords.getY() + ", " + blockCoords.getZ();
         return this;
     }
 }
