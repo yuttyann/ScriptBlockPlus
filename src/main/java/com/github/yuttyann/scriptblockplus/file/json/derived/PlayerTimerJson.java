@@ -50,13 +50,10 @@ public final class PlayerTimerJson extends ThreeJson<UUID, ScriptKey, BlockCoord
         return newJson(PlayerTimerJson.class, uuid.toString());
     }
 
-    public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
-        removeAll(scriptKey, new ReuseIterator<>(new BlockCoords[] { blockCoords }));
-    }
-
-    public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull ReuseIterator<BlockCoords> reuseIterator) {
+    public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords... blockCoords) {
         var names = getNames(PlayerTimerJson.class);
         var oldUUID = OldCooldown.UUID_OLDCOOLDOWN.toString();
+        var reuseIterator = new ReuseIterator<>(blockCoords);
         for (int i = 0, l = names.size(), e = ".json".length(); i < l; i++) {
             var name = names.get(i);
             var index = name.length() - e;
@@ -71,8 +68,8 @@ public final class PlayerTimerJson extends ThreeJson<UUID, ScriptKey, BlockCoord
             var removed = false;
             reuseIterator.reset();
             while (reuseIterator.hasNext()) {
-                var blockCoords = reuseIterator.next();
-                if (timerJson.remove(uuid, scriptKey, blockCoords)) {
+                var next = reuseIterator.next();
+                if (timerJson.remove(uuid, scriptKey, next)) {
                     removed = true;
                 }
             }

@@ -48,12 +48,9 @@ public final class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, Playe
         return newJson(PlayerCountJson.class, uuid.toString());
     }
 
-    public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
-        removeAll(scriptKey, new ReuseIterator<>(new BlockCoords[] { blockCoords }));
-    }
-
-    public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull ReuseIterator<BlockCoords> reuseIterator) {
+    public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords... blockCoords) {
         var names = getNames(PlayerCountJson.class);
+        var iterator = new ReuseIterator<>(blockCoords);
         for (int i = 0, l = names.size(), e = ".json".length(); i < l; i++) {
             var name = names.get(i);
             var index = name.length() - e;
@@ -62,9 +59,9 @@ public final class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, Playe
                 continue;
             }
             var removed = false;
-            reuseIterator.reset();
-            while (reuseIterator.hasNext()) {
-                if (countJson.remove(scriptKey, reuseIterator.next())) {
+            iterator.reset();
+            while (iterator.hasNext()) {
+                if (countJson.remove(scriptKey, iterator.next())) {
                     removed = true;
                 }
             }
