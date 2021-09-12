@@ -99,8 +99,7 @@ public class ScriptCommand extends SubCommand {
             var actionKey = ActionKey.valueOf(args(1).toUpperCase(Locale.ROOT));
             var scriptEdit = new ScriptEdit(scriptKey, actionKey);
             switch (actionKey) {
-                case CREATE:
-                case ADD:
+                case CREATE: case ADD:
                     if (range(2)) {
                         return false;
                     }
@@ -117,7 +116,10 @@ public class ScriptCommand extends SubCommand {
                     }
                     if (compare(2, "true")) {
                         var selector = StringUtils.createString(args(), 3).trim();
-                        scriptEdit.setValue(selector.startsWith("@s") || !CommandSelector.has(selector) ? "@p" : selector);
+                        if (!CommandSelector.has(selector)) {
+                            selector = selector.isEmpty() ? "@p" : selector + " @p";
+                        }
+                        scriptEdit.setValue(selector.startsWith("@s") ? "@p" : selector);
                     }
                     break;
                 default:

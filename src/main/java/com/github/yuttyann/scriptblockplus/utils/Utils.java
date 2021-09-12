@@ -139,8 +139,7 @@ public final class Utils {
     }
 
     public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull Location location, @NotNull String command) {
-        command = command.startsWith("/") ? command.substring(1) : command;
-        if (CommandSelector.has(command)) {
+        if (CommandSelector.has(command = command.startsWith("/") ? command.substring(1) : command)) {
             var commands = CommandSelector.build(sender, location, command);
             return !commands.isEmpty() && StreamUtils.allMatch(commands, s -> Bukkit.dispatchCommand(sender, s));
         }
@@ -161,7 +160,7 @@ public final class Utils {
         return world;
     }
 
-    @Nullable
+    @NotNull
     public static String getName(@NotNull UUID uuid) {
         var player = Bukkit.getOfflinePlayer(uuid);
         return !player.hasPlayedBefore() ? "null" : player.getName();

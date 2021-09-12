@@ -39,6 +39,7 @@ import java.util.Optional;
 public final class ScriptEditor extends ItemAction {
 
     private static final String KEY = Utils.randomUUID();
+    private static final String PREFIX = "§6§lToolMode: §d§l";
 
     public ScriptEditor() {
         super(ItemUtils.getScriptEditor());
@@ -55,7 +56,7 @@ public final class ScriptEditor extends ItemAction {
                     new SBOperation(scriptKey).remove(sbPlayer.getPlayer(), blockCoords.get());
                 } else if (!runItem.isSneaking()) {
                     sbPlayer.getObjectMap().put(KEY, scriptKey = getNextType(scriptKey));
-                    ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptKey);
+                    ActionBar.send(sbPlayer, PREFIX + scriptKey);
                 }
                 break;
             case RIGHT_CLICK_AIR: case RIGHT_CLICK_BLOCK:
@@ -76,7 +77,7 @@ public final class ScriptEditor extends ItemAction {
     public void slot(@NotNull ChangeSlot changeSlot) {
         var sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
         var scriptKey = sbPlayer.getObjectMap().get(KEY, ScriptKey.INTERACT);
-        ActionBar.send(sbPlayer, "§6§lToolMode: §d§l" + scriptKey);
+        ActionBar.send(sbPlayer, PREFIX + scriptKey);
     }
 
     @Override
