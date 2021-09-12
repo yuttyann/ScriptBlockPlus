@@ -47,9 +47,11 @@ public final class BlockSelector extends ItemAction {
         }
         switch (runItem.getAction()) {
             case LEFT_CLICK_AIR: case LEFT_CLICK_BLOCK:
+                region.setPos1(blockCoords);
                 SBConfig.SELECTOR_POS1.replace(region.getName(), blockCoords.getCoords()).send(player);
                 break;
             case RIGHT_CLICK_AIR: case RIGHT_CLICK_BLOCK:
+                region.setPos2(blockCoords);
                 SBConfig.SELECTOR_POS2.replace(region.getName(), blockCoords.getCoords()).send(player);
                 break;
             default:
