@@ -82,8 +82,8 @@ public class SelectorCommand extends SubCommand {
                 var sbClipboard = sbPlayer.getSBClipboard().get();
                 var regionPaste = new CuboidRegionPaste(region, sbClipboard).paste(pasteonair, overwrite);
                 var scriptKeyName = regionPaste.getScriptKey().getName();
-                SBConfig.SELECTOR_PASTE.replace(scriptKeyName, regionPaste.result().getVolume()).send(sbPlayer);
-                SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptKeyName, regionPaste.result()).console();
+                SBConfig.SELECTOR_PASTE.replace(scriptKeyName, regionPaste.getVolume()).send(sbPlayer);
+                SBConfig.CONSOLE_SELECTOR_PASTE.replace(scriptKeyName, regionPaste.iterator()).console();
             } finally {
                 sbPlayer.setSBClipboard(null);
             }
@@ -95,8 +95,8 @@ public class SelectorCommand extends SubCommand {
                 SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
             } else {
                 var types = scriptKeys.stream().map(ScriptKey::getName).collect(Collectors.joining(", "));
-                SBConfig.SELECTOR_REMOVE.replace(types, regionRemove.result().getVolume()).send(player);
-                SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, regionRemove.result()).console();
+                SBConfig.SELECTOR_REMOVE.replace(types, regionRemove.getVolume()).send(player);
+                SBConfig.CONSOLE_SELECTOR_REMOVE.replace(types, regionRemove.iterator()).console();
             }
             return true;
         }
