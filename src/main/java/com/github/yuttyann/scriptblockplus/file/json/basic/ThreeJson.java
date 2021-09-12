@@ -133,7 +133,7 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
      * @return {@link E} - 要素
      */
     @NotNull
-    public final E load(@Nullable A a, @Nullable B b, @Nullable C c) {
+    public E load(@Nullable A a, @Nullable B b, @Nullable C c) {
         int hash = hash(a, b, c);
         var element = getElementMap().get(hash);
         if (element == null) {
@@ -157,7 +157,7 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
      * @return {@link E} - 要素
      */
     @Nullable
-    public final E fastLoad(@Nullable A a, @Nullable B b, @Nullable C c) {
+    public E fastLoad(@Nullable A a, @Nullable B b, @Nullable C c) {
         int hash = hash(a, b, c);
         var element = getElementMap().get(hash);
         if (element == null) {
@@ -175,7 +175,7 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
      * @param c - 引数3
      * @return {@code boolean} - 要素が存在する場合は{@code true}
      */
-    public final boolean has(@Nullable A a, @Nullable B b, @Nullable C c) {
+    public boolean has(@Nullable A a, @Nullable B b, @Nullable C c) {
         return fastLoad(a, b, c) != null;
     }
 
@@ -186,7 +186,7 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
      * @param c - 引数3
      * @return {@code boolean} - 削除に成功した場合は{@code true}
      */
-    public final boolean remove(@Nullable A a, @Nullable B b, @Nullable C c) {
+    public boolean remove(@Nullable A a, @Nullable B b, @Nullable C c) {
         int hash = hash(a, b, c);
         var element = getElementMap().get(hash);
         if (element == null) {
@@ -210,7 +210,7 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
      * @param b - 引数2
      * @param c - 引数3
      */
-    public final void action(@NotNull Consumer<E> action, @Nullable A a, @Nullable B b, @Nullable C c) {
+    public void action(@NotNull Consumer<E> action, @Nullable A a, @Nullable B b, @Nullable C c) {
         action.accept(load(a, b, c));
         saveJson();
     }

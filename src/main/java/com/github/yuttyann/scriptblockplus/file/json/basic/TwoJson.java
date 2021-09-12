@@ -119,7 +119,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * @return {@link E} - 要素
      */
     @NotNull
-    public final E load(@Nullable A a, @Nullable B b) {
+    public E load(@Nullable A a, @Nullable B b) {
         int hash = hash(a, b);
         var element = getElementMap().get(hash);
         if (element == null) {
@@ -142,7 +142,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * @return {@link E} - 要素
      */
     @Nullable
-    public final E fastLoad(@Nullable A a, @Nullable B b) {
+    public E fastLoad(@Nullable A a, @Nullable B b) {
         int hash = hash(a, b);
         var element = getElementMap().get(hash);
         if (element == null) {
@@ -159,7 +159,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * @param b - 引数2
      * @return {@code boolean} - 要素が存在する場合は{@code true}
      */
-    public final boolean has(@Nullable A a, @Nullable B b) {
+    public boolean has(@Nullable A a, @Nullable B b) {
         return fastLoad(a, b) != null;
     }
 
@@ -169,7 +169,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * @param b - 引数2
      * @return {@code boolean} - 削除に成功した場合は{@code true}
      */
-    public final boolean remove(@Nullable A a, @Nullable B b) {
+    public boolean remove(@Nullable A a, @Nullable B b) {
         int hash = hash(a, b);
         var element = getElementMap().get(hash);
         if (element == null) {
@@ -192,7 +192,7 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
      * @param a - 引数1
      * @param b - 引数2
      */
-    public final void action(@NotNull Consumer<E> action, @Nullable A a, @Nullable B b) {
+    public void action(@NotNull Consumer<E> action, @Nullable A a, @Nullable B b) {
         action.accept(load(a, b));
         saveJson();
     }

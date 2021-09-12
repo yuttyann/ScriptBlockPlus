@@ -89,7 +89,7 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
      * @return {@link E} - 要素
      */
     @NotNull
-    public final E load() {
+    public E load() {
         var elementMap = getElementMap();
         if (elementMap.isEmpty()) {
             elementMap.put(0, newInstance());
@@ -101,14 +101,14 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
      * 要素が存在するのか確認します。
      * @return {@code boolean} - 要素が存在する場合は{@code true}
      */
-    public final boolean has() {
+    public boolean has() {
         return !getElementMap().isEmpty();
     }
 
     /**
      * 要素を削除します。
      */
-    public final void remove() {
+    public void remove() {
         getElementMap().clear();
     }
 
@@ -116,7 +116,7 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
      * 処理を行った後に要素を保存します。
      * @param action - 処理
      */
-    public final void action(@NotNull Consumer<E> action) {
+    public void action(@NotNull Consumer<E> action) {
         action.accept(load());
         saveJson();
     }

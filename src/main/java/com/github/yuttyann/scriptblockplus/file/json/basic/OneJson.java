@@ -105,7 +105,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
      * @return {@link E} - 要素
      */
     @NotNull
-    public final E load(@Nullable A a) {
+    public E load(@Nullable A a) {
         int hash = hash(a);
         var element = getElementMap().get(hash);
         if (element == null) {
@@ -127,7 +127,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
      * @return {@link E} - 要素
      */
     @Nullable
-    public final E fastLoad(@Nullable A a) {
+    public E fastLoad(@Nullable A a) {
         int hash = hash(a);
         var element = getElementMap().get(hash);
         if (element == null) {
@@ -143,7 +143,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
      * @param a - 引数
      * @return {@code boolean} - 要素が存在する場合は{@code true}
      */
-    public final boolean has(@Nullable A a) {
+    public boolean has(@Nullable A a) {
         return fastLoad(a) != null;
     }
 
@@ -152,7 +152,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
      * @param a - 引数
      * @return {@code boolean} - 削除に成功した場合は{@code true}
      */
-    public final boolean remove(@Nullable A a) {
+    public boolean remove(@Nullable A a) {
         int hash = hash(a);
         var element = getElementMap().get(hash);
         if (element == null) {
@@ -174,7 +174,7 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
      * @param action - 処理
      * @param a - 引数
      */
-    public final void action(@NotNull Consumer<E> action, @Nullable A a) {
+    public void action(@NotNull Consumer<E> action, @Nullable A a) {
         action.accept(load(a));
         saveJson();
     }
