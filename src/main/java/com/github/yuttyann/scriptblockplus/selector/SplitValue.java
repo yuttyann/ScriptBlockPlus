@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus SplitValue クラス
  * @author yuttyann44581
  */
-public class SplitValue {
+public final class SplitValue {
 
     private final SplitType type;
     private final String value;
@@ -35,7 +35,21 @@ public class SplitValue {
     /**
      * コンストラクタ
      * @param argument - 引数
-     * @param types - 検索を行いたい要素の配列(例: {@link Argument}等)
+     * @param types - 要素(例: {@link Argument}等)
+     */
+    public SplitValue(@NotNull String argument, @NotNull SplitType type) {
+        if (type.match(argument)) {
+            this.type = type;
+            this.value = type.getValue(argument);
+        } else {
+            throw new NullPointerException("SplitType[" + argument + "] not found");
+        }
+    }
+
+    /**
+     * コンストラクタ
+     * @param argument - 引数
+     * @param types - 要素の配列(例: {@link Argument}等)
      */
     public SplitValue(@NotNull String argument, @NotNull SplitType[] types) {
         for (var splitType : types) {

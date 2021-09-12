@@ -56,7 +56,7 @@ public final class EntitySelector {
     public static List<Entity> getEntities(@NotNull CommandSender sender, @NotNull Location start, @NotNull String selector) {
         var result = new ArrayList<Entity>();
         var location = setCenter(copy(sender, start));
-        var split = new Split(selector, "@", "[", "]");
+        var split = new Split(selector, "@", 1, "[", "]");
         var splitValues = split.getValues(Argument.values());
         switch (split.getName()) {
             case "@p": {
@@ -193,31 +193,23 @@ public final class EntitySelector {
     }
 
     private static boolean canBeAccepted(@NotNull Entity entity, @NotNull Location location, @NotNull SplitValue splitValue) {
-        if (splitValue.getValue()== null) {
+        if (splitValue.getValue() == null) {
             return false;
         }
         switch ((Argument) splitValue.getType()) {
             case C:
                 return true;
-            case X:
-            case Y:
-            case Z:
+            case X: case Y: case Z:
                 return setXYZ(location, splitValue);
-            case DX:
-            case DY:
-            case DZ:
+            case DX: case DY: case DZ:
                 return isDRange(entity, location, splitValue);
-            case R:
-            case RM:
+            case R: case RM:
                 return isR(entity, location, splitValue);
-            case RX:
-            case RXM:
+            case RX: case RXM:
                 return isRX(entity, splitValue);
-            case RY:
-            case RYM:
+            case RY: case RYM:
                 return isRY(entity, splitValue);
-            case L:
-            case LM:
+            case L: case LM:
                 return isL(entity, splitValue);
             case M:
                 return isM(entity, splitValue);
@@ -229,8 +221,7 @@ public final class EntitySelector {
                 return isType(entity, splitValue);
             case NAME:
                 return isName(entity, splitValue);
-            case SCORE:
-            case SCORE_MIN:
+            case SCORE: case SCORE_MIN:
                 return isScore(entity, splitValue);
             default:
                 return false;
