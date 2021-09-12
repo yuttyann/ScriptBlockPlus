@@ -19,6 +19,7 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -40,6 +41,8 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
 
     private final List<SubCommand> COMMANDS = new ArrayList<SubCommand>();
 
+    private String[] args = ArrayUtils.EMPTY_STRING_ARRAY;
+
     private Plugin plugin;
     private boolean isIgnoreUsage;
 
@@ -49,7 +52,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
 
     public BaseCommand(@NotNull Plugin plugin, @NotNull SubCommand... commands) {
         this.plugin = plugin;
-        
+        register(commands);
     }
 
     public static <T extends BaseCommand> void register(@NotNull String command, @NotNull T baseCommand) {
@@ -98,7 +101,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
         if (args.length > 0) {
             for (var subCommand : COMMANDS) {
                 if (StreamUtils.anyMatch(subCommand.getNames(), s -> compare(s, args[0]))) {
-                    subCommand.args = args;
+                    this.args = args;
                     return subCommand.runCommand(sender, command, label);
                 }
             }
@@ -109,12 +112,13 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     @Override
     @NotNull
     public final List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        this.args = args;
         var completeList = new ArrayList<String>();
-        tabComplete(sender, command, label, args, completeList);
+        tabComplete(sender, command, label, completeList);
         return completeList;
     }
 
-    protected abstract void tabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args, @NotNull List<String> list);
+    protected abstract void tabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull List<String> list);
 
     protected final boolean hasPermission(@NotNull CommandSender sender, @NotNull Permission permission) {
         return hasPermission(sender, permission, true);
@@ -141,6 +145,21 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
         return false;
     }
 
+    @NotNull
+    protected final int length() {
+        return args.length;
+    }
+
+    @NotNull
+    protected final String[] args() {
+        return args;
+    }
+
+    @NotNull
+    protected final String args(final int index) {
+        return index < 0 || index >= args.length ? "" : args[index];
+    }
+
     protected final boolean compare(@NotNull String source, @NotNull String text) {
         return text.equalsIgnoreCase(source);
     }
@@ -149,25 +168,20 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
         return Stream.of(texts).anyMatch(s -> compare(source, s));
     }
 
-    protected final boolean compare(@NotNull String[] args, final int index, @NotNull String text) {
+    protected final boolean compare(final int index, @NotNull String text) {
         return index < 0 || index >= args.length ? false : compare(args[index], text);
     }
 
-    protected final boolean compare(@NotNull String[] args, final int index, @NotNull String... texts) {
+    protected final boolean compare(final int index, @NotNull String... texts) {
         return index < 0 || index >= args.length ? false : compare(args[index], texts);
     }
 
-    protected final boolean range(@NotNull String[] args, final int end) {
-        return range(args, end, end);
+    protected final boolean range(final int end) {
+        return range(end, end);
     }
 
-    protected final boolean range(@NotNull String[] args, final int start, final int end) {
+    protected final boolean range(final int start, final int end) {
         return start <= args.length && end >= args.length;
-    }
-
-    @NotNull
-    protected final String get(@NotNull String[] args, final int index) {
-        return index < 0 || index >= args.length ? "" : args[index];
     }
 
     protected final void sendUsage(@NotNull CommandSender sender, @NotNull Command command, @NotNull BaseCommand baseCommand) {

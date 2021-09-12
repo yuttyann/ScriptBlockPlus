@@ -19,7 +19,6 @@ import java.util.List;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -30,28 +29,25 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class SubCommand {
 
-    String[] args;
-
     private final BaseCommand baseCommand;
 
     public SubCommand(@NotNull BaseCommand baseCommand) {
-        this.args = ArrayUtils.EMPTY_STRING_ARRAY;
         this.baseCommand = baseCommand;
     }
 
     @NotNull
     protected final int length() {
-        return args.length;
+        return baseCommand.length();
     }
 
     @NotNull
     protected final String[] args() {
-        return args;
+        return baseCommand.args();
     }
 
     @NotNull
     protected final String args(final int index) {
-        return baseCommand.get(args, index);
+        return baseCommand.args(index);
     }
 
     @NotNull
@@ -83,18 +79,18 @@ public abstract class SubCommand {
     }
 
     protected final boolean compare(final int index, @NotNull String text) {
-        return baseCommand.compare(args, index, text);
+        return baseCommand.compare(index, text);
     }
 
     protected final boolean compare(final int index, @NotNull String... texts) {
-        return baseCommand.compare(args, index, texts);
+        return baseCommand.compare(index, texts);
     }
 
     protected final boolean range(final int end) {
-        return baseCommand.range(args, end);
+        return baseCommand.range(end);
     }
 
     protected final boolean range(final int start, final int end) {
-        return baseCommand.range(args, start, end);
+        return baseCommand.range(start, end);
     }
 }

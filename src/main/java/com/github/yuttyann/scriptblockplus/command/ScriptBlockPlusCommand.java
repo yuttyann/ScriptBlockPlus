@@ -26,6 +26,7 @@ import com.github.yuttyann.scriptblockplus.command.subcommand.SelectorCommand;
 import com.github.yuttyann.scriptblockplus.command.subcommand.ToolCommand;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.splittype.Filter;
+import com.github.yuttyann.scriptblockplus.enums.splittype.Repeat;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
@@ -72,37 +73,37 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
     }
 
     @Override
-    public void tabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args, @NotNull List<String> list) {
-        if (range(args, 1)) {
-            var prefix = get(args, 0).toLowerCase(Locale.ROOT);
+    public void tabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull List<String> list) {
+        if (range(1)) {
+            var prefix = args(0).toLowerCase(Locale.ROOT);
             var commands = setCommandPermissions(sender, new ArrayList<>());
             StreamUtils.fForEach(commands, s -> StringUtils.isNotEmpty(s) && s.startsWith(prefix), list::add);
-        } else if (compare(args, 0, "selector") && Permission.COMMAND_SELECTOR.has(sender)) {
-            if (compare(args, 1, "paste") && range(args, 3, 4)) {
-                var prefix = get(args, args.length == 4 ? 3 : 2).toLowerCase(Locale.ROOT);
+        } else if (compare(0, "selector") && Permission.COMMAND_SELECTOR.has(sender)) {
+            if (compare(1, "paste") && range(3, 4)) {
+                var prefix = args(range(3) ? 2 : 3).toLowerCase(Locale.ROOT);
                 StreamUtils.fForEach(new String[] { "true", "false" }, s -> s.startsWith(prefix), list::add);
-            } else if (range(args, 2)) {
-                var prefix = get(args, 1).toLowerCase(Locale.ROOT);
+            } else if (range(2)) {
+                var prefix = args(1).toLowerCase(Locale.ROOT);
                 StreamUtils.fForEach(new String[] { "paste", "remove" }, s -> s.startsWith(prefix), list::add);
             }
-        } else if (compare(args, 0, ScriptKey.types()) && Permission.has(sender, ScriptKey.valueOf(args[0]), true)) {
-            if (compare(args, 1, "run")) {
-                if (range(args, 3)) {
-                    var prefix = get(args, 2).toLowerCase(Locale.ROOT);
+        } else if (compare(0, ScriptKey.types()) && Permission.has(sender, ScriptKey.valueOf(args(0)), true)) {
+            if (compare(1, "run")) {
+                if (range(3)) {
+                    var prefix = args(2).toLowerCase(Locale.ROOT);
                     var answers = new ArrayList<String>(4);
                     Bukkit.getWorlds().forEach(w -> answers.add(w.getName()));
                     Bukkit.getOnlinePlayers().forEach(p -> answers.add(p.getName()));
                     StreamUtils.fForEach(answers, s -> s.startsWith(prefix), list::add);
-                } else if (range(args, 4, 5)) {
-                    int i = args.length == 4 ? 0 : 1;
-                    var prefix = get(args, 3 + i).toLowerCase(Locale.ROOT);
+                } else if (range(4, 5)) {
+                    int i = range(4) ? 0 : 1;
+                    var prefix = args(3 + i).toLowerCase(Locale.ROOT);
                     var answers = new ArrayList<String>(4);
                     if (sender instanceof Player) {
                         var player = (Player) sender;
                         var rayTrace = RayTrace.rayTraceBlocks(player, player.getGameMode() == GameMode.CREATIVE ? 5.0D : 4.5D);
                         if (rayTrace != null) {
                             var hitBlock = rayTrace.getHitBlock();
-                            if (BlockScriptJson.newJson(ScriptKey.valueOf(get(args, 0))).has(BlockCoords.of(hitBlock))) {
+                            if (BlockScriptJson.newJson(ScriptKey.valueOf(args(0))).has(BlockCoords.of(hitBlock))) {
                                 answers.add(hitBlock.getX() + " " + hitBlock.getY() + " " + hitBlock.getZ());
                             }
                         }
@@ -112,24 +113,25 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                     }
                     StreamUtils.fForEach(answers, s -> s.startsWith(prefix), list::add);
                 }
-            } else if (compare(args, 1, "create", "add")) {
-                var prefix = get(args, args.length - 1).toLowerCase(Locale.ROOT);
+            } else if (compare(1, "create", "add")) {
+                var prefix = args(length() - 1).toLowerCase(Locale.ROOT);
                 var answers = OptionManager.getTags();
                 var optionHelp = SBConfig.OPTION_HELP.getValue();
                 var description = (Function<OptionTag, String>) o -> optionHelp ? o.description() : "";
                 StreamUtils.fForEach(answers, s -> s.syntax().startsWith(prefix), o -> list.add(o.syntax() + description.apply(o)));
-            } else if (compare(args, 1, "redstone")) {
-                if (compare(args, 2, "true") && range(args, 4, 5)) {
-                    var prefix = get(args, 3).toLowerCase(Locale.ROOT);
+            } else if (compare(1, "redstone")) {
+                if (compare(2, "true") && range(4, 6)) {
+                    var prefix = args(3).toLowerCase(Locale.ROOT);
                     var answers = Lists.newArrayList("@a", "@e", "@p", "@r");
+                    StreamUtils.forEach(Repeat.values(), f -> answers.add(Repeat.getPrefix() + f.getSyntax() + "}"));
                     StreamUtils.forEach(Filter.values(), f -> answers.add(Filter.getPrefix() + f.getSyntax() + "}"));
                     StreamUtils.fForEach(answers, s -> s.startsWith(prefix), list::add);
-                } else if (range(args, 3)) {
-                    var prefix = get(args, 2).toLowerCase(Locale.ROOT);
+                } else if (range(3)) {
+                    var prefix = args(2).toLowerCase(Locale.ROOT);
                     StreamUtils.fForEach(new String[] { "true", "false" }, s -> s.startsWith(prefix), list::add);
                 }
-            } else if (range(args, 2)) {
-                var prefix = get(args, 1).toLowerCase(Locale.ROOT);
+            } else if (range(2)) {
+                var prefix = args(1).toLowerCase(Locale.ROOT);
                 StreamUtils.fForEach(new String[] { "create", "add", "remove", "view", "run", "redstone" }, s -> s.startsWith(prefix), list::add);
             }
         }

@@ -15,16 +15,22 @@
  */
 package com.github.yuttyann.scriptblockplus.listener;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.splittype.Filter;
+import com.github.yuttyann.scriptblockplus.enums.splittype.Repeat;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
 import com.github.yuttyann.scriptblockplus.selector.Split;
@@ -36,7 +42,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
+
+import static com.github.yuttyann.scriptblockplus.utils.StreamUtils.*;
 
 /**
  * ScriptBlockPlus BlockListener クラス
@@ -44,13 +53,53 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class BlockListener implements Listener {
 
+    private static final Consumer<BukkitTask> CANCEL = b -> { if (b != null) b.cancel(); };
+    private static final Function<SplitValue, String> SPLIT_VALUE = SplitValue::getValue;
+    private static final Function<BlockCoords, Set<BukkitTask>> CREATE_SET = b -> new HashSet<>();
+
     private static final Set<BlockCoords> REDSTONE_FLAG = new HashSet<>();
+    private static final Map<BlockCoords, Set<BukkitTask>> LOOP_TASK_MAP = new HashMap<>();
+
+    /**
+     * ScriptBlockPlus RepeatTask クラス
+     * @author yuttyann44581
+     */
+    private class RepeatTask implements Runnable {
+    
+        private int count;
+        private BukkitTask bukkitTask;
+
+        private final int limit;
+        private final Split repeat;
+        private final String selector;
+        private final ScriptKey scriptKey;
+        private final BlockCoords blockCoords;
+    
+        private RepeatTask(final int limit, @NotNull Split repeat, @NotNull String selector, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+            this.limit = limit;
+            this.repeat = repeat;
+            this.selector = selector;
+            this.scriptKey = scriptKey;
+            this.blockCoords = blockCoords;
+        }
+
+        @Override
+        public void run() {
+            if (limit > -1 && limit <= count++) {
+                CANCEL.accept(bukkitTask);
+            } else {
+                perform(repeat, selector, scriptKey, blockCoords);
+            }
+        }
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPhysics(BlockPhysicsEvent event) {
         var block = event.getBlock();
         var blockCoords = BlockCoords.of(block);
         if (!block.isBlockIndirectlyPowered() && !block.isBlockPowered()) {
+            LOOP_TASK_MAP.getOrDefault(blockCoords, Collections.emptySet()).forEach(CANCEL);
+            LOOP_TASK_MAP.remove(blockCoords);
             REDSTONE_FLAG.remove(blockCoords);
             return;
         }
@@ -70,22 +119,36 @@ public final class BlockListener implements Listener {
             if (StringUtils.isEmpty(selector) || !CommandSelector.has(selector)) {
                 continue;
             }
-            var index = new AtomicInteger();
-            var filterSplit = new Split(selector, "filter", "{", "}");
-            var filterValues = filterSplit.getValues(Filter.values());
-            var selectorSplit = new Split(selector, "@", "[", "]", filterSplit.toString().length());
-            for (var target : CommandSelector.getTargets(Bukkit.getConsoleSender(), blockCoords.toLocation(), selectorSplit.toString())) {
-                if (!(target instanceof Player)) {
-                    continue;
-                }
-                var player = (Player) target;
-                if (!StreamUtils.allMatch(filterValues, s -> has(s, player, index.get()))) {
-                    continue;
-                }
-                index.incrementAndGet();
-                REDSTONE_FLAG.add(blockCoords);
-                new ScriptRead(player, blockCoords, scriptKey).read(0);
+            var repeat = new Split(selector, "repeat", "{", "}");
+            if (repeat.length() > 0) {
+                var values = repeat.getValues(Repeat.values());
+                var rtick = Long.parseLong(filterFirst(values, f -> Repeat.TICK == f.getType()).map(SPLIT_VALUE).orElse("1"));
+                var delay = Long.parseLong(filterFirst(values, f -> Repeat.DELAY == f.getType()).map(SPLIT_VALUE).orElse("0"));
+                var limit = Integer.parseInt(filterFirst(values, f -> Repeat.LIMIT == f.getType()).map(SPLIT_VALUE).orElse("-1"));
+                var rtask = new RepeatTask(limit, repeat, selector, scriptKey, blockCoords);
+                LOOP_TASK_MAP.computeIfAbsent(blockCoords, CREATE_SET).add(rtask.bukkitTask = ScriptBlock.getScheduler().run(rtask, delay, rtick));
+            } else {
+                perform(repeat, selector, scriptKey, blockCoords);
             }
+            REDSTONE_FLAG.add(blockCoords);
+        }
+    }
+
+    private void perform(@NotNull Split repeat, @NotNull String selector, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+        var filter = new Split(selector, "filter", "{", "}", repeat.length());
+        var target = new Split(selector, "@", 1, "[", "]", repeat.length() + filter.length());
+        var values = filter.getValues(Filter.values());
+        var index = new AtomicInteger();
+        for (var entity : CommandSelector.getTargets(Bukkit.getConsoleSender(), blockCoords.toLocation(), target.toString())) {
+            if (!(entity instanceof Player)) {
+                continue;
+            }
+            var player = (Player) entity;
+            if (!allMatch(values, s -> has(s, player, index.get()))) {
+                continue;
+            }
+            index.incrementAndGet();
+            new ScriptRead(player, blockCoords, scriptKey).read(0);
         }
     }
 
