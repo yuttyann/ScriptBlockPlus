@@ -86,7 +86,7 @@ public interface SBRead extends ObjectMap {
 
     /**
      * スクリプトを何番目まで実行したのか取得します。
-     * @return {@link Integer} - 進行度
+     * @return {@code int} - 進行度
      */
     int getScriptIndex();
 
@@ -99,7 +99,7 @@ public interface SBRead extends ObjectMap {
     /**
      * スクリプトを実行します。
      * @param index - 開始位置
-     * @return {@link Boolean} - 実行に成功した場合は{@code true}
+     * @return {@code boolean} - 実行に成功した場合は{@code true}
      */
     boolean read(final int index);
 }
