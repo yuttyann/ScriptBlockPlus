@@ -17,6 +17,7 @@ package com.github.yuttyann.scriptblockplus.file.json.derived;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.SBLoader;
+import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.basic.OneJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
@@ -24,7 +25,10 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * ScriptBlockPlus BlockScriptJson クラス
@@ -33,8 +37,25 @@ import java.util.LinkedHashSet;
 @JsonTag(path = "json/blockscript", cachefileexists = false)
 public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
 
+    public static final List<BiConsumer<ScriptKey, BlockCoords[]>> INIT_PROCESS = new ArrayList<>();
+
+    static {
+        CacheJson.register(BlockScriptJson.class);
+        CacheJson.register(PlayerCountJson.class);
+        CacheJson.register(PlayerTimerJson.class);
+        INIT_PROCESS.add((s, b) -> PlayerCountJson.removeAll(s, b));
+        INIT_PROCESS.add((s, b) -> PlayerTimerJson.removeAll(s, b));
+    }
+
     private BlockScriptJson(@NotNull String name) {
         super(name);
+    }
+
+    public void init(@NotNull BlockCoords... blockCoords) {
+        if (blockCoords.length > 0) {
+            var scriptKey = getScriptKey();
+            INIT_PROCESS.forEach(a -> a.accept(scriptKey, blockCoords));
+        }
     }
 
     @NotNull
@@ -44,7 +65,7 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
 
     @Override
     @NotNull
-    protected BlockScript newInstance(BlockCoords blockCoords) {
+    protected BlockScript newInstance(@NotNull BlockCoords blockCoords) {
         return new BlockScript(blockCoords);
     }
 

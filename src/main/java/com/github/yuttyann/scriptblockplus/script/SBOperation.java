@@ -19,7 +19,6 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -72,9 +71,8 @@ public final class SBOperation {
         blockScript.getAuthors().add(player.getUniqueId());
         blockScript.setScripts(Collections.singletonList(script));
         blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        scriptJson.init(blockCoords);
         scriptJson.saveJson();
-        PlayerTimerJson.removeAll(scriptKey, blockCoords);
-        PlayerCountJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_CREATE.replace(scriptKey).send(player);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }
@@ -89,7 +87,6 @@ public final class SBOperation {
         blockScript.getScripts().add(script);
         blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptJson.saveJson();
-        PlayerTimerJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_ADD.replace(scriptKey).send(player);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }
@@ -99,10 +96,9 @@ public final class SBOperation {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
+        scriptJson.init(blockCoords);
         scriptJson.remove(blockCoords);
         scriptJson.saveJson();
-        PlayerTimerJson.removeAll(scriptKey, blockCoords);
-        PlayerCountJson.removeAll(scriptKey, blockCoords);
         SBConfig.SCRIPT_REMOVE.replace(scriptKey).send(player);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }
@@ -131,10 +127,10 @@ public final class SBOperation {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
             return;
         }
-        var scriptParam = scriptJson.load(blockCoords);
-        scriptParam.getAuthors().add(player.getUniqueId());
-        scriptParam.setSelector(selector);
-        scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        var blockScript = scriptJson.load(blockCoords);
+        blockScript.getAuthors().add(player.getUniqueId());
+        blockScript.setSelector(selector);
+        blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptJson.saveJson();
         if (StringUtils.isEmpty(selector)) {
             SBConfig.SCRIPT_REDSTONE_DISABLE.replace(scriptKey).send(player);

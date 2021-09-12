@@ -20,15 +20,12 @@ import java.util.Objects;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +41,7 @@ public final class CuboidRegionPaste {
     private final SBClipboard sbClipboard;
     private final BlockScript cloneScript;
 
+    private int volume;
     private CuboidRegionIterator iterator;
 
     public CuboidRegionPaste(@NotNull Region region, @NotNull SBClipboard sbClipboard) {
@@ -53,13 +51,17 @@ public final class CuboidRegionPaste {
         this.cloneScript = Objects.requireNonNull(sbClipboard.getBlockScript());
     }
 
+    public int getVolume() {
+        return volume;
+    }
+
     @NotNull
     public ScriptKey getScriptKey() {
         return scriptKey;
     }
 
     @Nullable
-    public CuboidRegionIterator result() {
+    public CuboidRegionIterator iterator() {
         return iterator;
     }
 
@@ -80,11 +82,10 @@ public final class CuboidRegionPaste {
             blocks.add(blockCoords = BlockCoords.copy(blockCoords));
             lightPaste(time, blockCoords, scriptJson);
         }
-        var reuseIterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
-        PlayerTimerJson.removeAll(scriptKey, reuseIterator);
-        PlayerCountJson.removeAll(scriptKey, reuseIterator);
+        sbClipboard.getBlockScriptJson().init(blocks.toArray(BlockCoords[]::new));
         StreamUtils.ifAction(blocks.size() > 0, () -> sbClipboard.getBlockScriptJson().saveJson());
         this.iterator = iterator;
+        this.volume = blocks.size();
         return this;
     }
 

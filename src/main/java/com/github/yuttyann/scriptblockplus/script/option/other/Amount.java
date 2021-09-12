@@ -16,8 +16,6 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 
@@ -38,9 +36,9 @@ public final class Amount extends BaseOption {
         }
         blockScript.subtractAmount(1);
         if (blockScript.getAmount() <= 0) {
-            PlayerTimerJson.removeAll(getScriptKey(), blockCoords);
-            PlayerCountJson.removeAll(getScriptKey(), blockCoords);
-            scriptJson.remove(blockCoords);
+            if (scriptJson.remove(blockCoords)) {
+                scriptJson.init(blockCoords);
+            }
         }
         scriptJson.saveJson();
         return true;

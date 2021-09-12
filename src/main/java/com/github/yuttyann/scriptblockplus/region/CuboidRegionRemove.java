@@ -17,11 +17,8 @@ package com.github.yuttyann.scriptblockplus.region;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,11 +36,16 @@ public final class CuboidRegionRemove {
     private final Region region;
     private final Set<ScriptKey> scriptKeys;
 
+    private int volume;
     private CuboidRegionIterator iterator;
 
     public CuboidRegionRemove(@NotNull Region region) {
         this.region = region;
         this.scriptKeys = new LinkedHashSet<>();
+    }
+
+    public int getVolume() {
+        return volume;
     }
 
     @NotNull
@@ -52,9 +54,9 @@ public final class CuboidRegionRemove {
     }
 
     @Nullable
-    public CuboidRegionIterator result() {
+    public CuboidRegionIterator iterator() {
         return iterator;
-    } 
+    }
 
     @NotNull
     public CuboidRegionRemove remove() {
@@ -87,13 +89,11 @@ public final class CuboidRegionRemove {
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         } finally {
-            var reuseIterator = new ReuseIterator<>(blocks, BlockCoords[]::new);
-            for (var scriptKey : scriptKeys) {
-                PlayerTimerJson.removeAll(scriptKey, reuseIterator);
-                PlayerCountJson.removeAll(scriptKey, reuseIterator);
-            }
-            this.iterator = iterator;
+            var blockCoords = blocks.toArray(BlockCoords[]::new);
+            scriptKeys.forEach(s -> BlockScriptJson.newJson(s).init(blockCoords));
         }
+        this.iterator = iterator;
+        this.volume = blocks.size();
         return this;
     }
     
