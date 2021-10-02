@@ -29,6 +29,8 @@ import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.CommandMinecart;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,12 +68,10 @@ public final class NMSHelper {
             return;
         }
         if (NetMinecraft.isLegacy()) {
-            var handle = CraftBukkit.ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
-            var connection = NetMinecraft.LEGACY.getFieldValue("EntityPlayer", "playerConnection", handle);
+            var connection = NetMinecraft.LEGACY.getFieldValue("EntityPlayer", "playerConnection", getNMSPlayer(player));
             NetMinecraft.LEGACY.getMethod("PlayerConnection", "sendPacket", NetMinecraft.LEGACY.getClass("Packet")).invoke(connection, packet);
         } else {
-            var handle = CraftBukkit.ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
-            var connection = NetMinecraft.SR_LEVEL.getFieldValue("EntityPlayer", "b", handle);
+            var connection = NetMinecraft.SR_LEVEL.getFieldValue("EntityPlayer", "b", getNMSPlayer(player));
             NetMinecraft.SR_NETWORK.getMethod("PlayerConnection", "sendPacket", NetMinecraft.NW_PROTOCOL.getClass("Packet")).invoke(connection, packet);
         }
     }
@@ -88,6 +88,25 @@ public final class NMSHelper {
         }
         for (var packet : packets) {
             sendPacket(player, packet);
+        }
+    }
+
+    @NotNull
+    public static Object getNMSWorld(@NotNull World world) throws ReflectiveOperationException {
+        return CraftBukkit.CB.invokeMethod(world, "CraftWorld", "getHandle");
+    }
+
+    @NotNull
+    public static Object getNMSPlayer(@NotNull Player player) throws ReflectiveOperationException {
+        return CraftBukkit.ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
+    }
+
+    public static int getPing(@NotNull Player player) throws ReflectiveOperationException {
+        var handle = getNMSPlayer(player);
+        if (NetMinecraft.isLegacy()) {
+            return NetMinecraft.LEGACY.getField("EntityPlayer", "ping").getInt(handle);
+        } else {
+            return NetMinecraft.SR_LEVEL.getField("EntityPlayer", "e").getInt(handle);
         }
     }
 
@@ -127,7 +146,7 @@ public final class NMSHelper {
             arguments = new Object[] { vec3d1, vec3d2, false };
         }
         var world = player.getWorld();
-        var nmsWorld = CraftBukkit.CB.invokeMethod(world, "CraftWorld", "getHandle");
+        var nmsWorld = getNMSWorld(world);
         var rayTrace = NetMinecraft.LEGACY.invokeMethod(nmsWorld, "World", "rayTrace", arguments);
         if (rayTrace != null) {
             var direction = NetMinecraft.LEGACY.getFieldValue("MovingObjectPosition", "direction", rayTrace);
@@ -218,19 +237,19 @@ public final class NMSHelper {
 
     @NotNull
     public static Object newEntityMagmaCube(@NotNull World world) throws ReflectiveOperationException {
-        var handle = CraftBukkit.CB.invokeMethod(world, "CraftWorld", "getHandle");
+        var handle = getNMSWorld(world);
         if (NetMinecraft.isLegacy()) {
             var nmsWorld = NetMinecraft.LEGACY.getClass("World");
-            var entityTypes = NetMinecraft.LEGACY.getClass("EntityTypes");
             if (Utils.isCBXXXorLater("1.14")) {
                 var entityType = NetMinecraft.LEGACY.getFieldValue("EntityTypes", "MAGMA_CUBE", null);
+                var entityTypes = NetMinecraft.LEGACY.getClass("EntityTypes");
                 return NetMinecraft.LEGACY.newInstance(false, "EntityMagmaCube", new Class<?>[] { entityTypes, nmsWorld }, entityType, handle);
             }
             return NetMinecraft.LEGACY.newInstance(false, "EntityMagmaCube", new Class<?>[] { nmsWorld }, handle);
         } else {
             var nmsWorld = NetMinecraft.WR_LEVEL.getClass("World");
-            var entityTypes = NetMinecraft.WR_ENTITY.getClass("EntityTypes");
             var entityType = NetMinecraft.WR_ENTITY.getFieldValue("EntityTypes", "X", null);
+            var entityTypes = NetMinecraft.WR_ENTITY.getClass("EntityTypes");
             return NetMinecraft.WR_EN_MONSTER.newInstance(false, "EntityMagmaCube", new Class<?>[] { entityTypes, nmsWorld }, entityType, handle);
         }
     }
@@ -275,15 +294,6 @@ public final class NMSHelper {
                 packets[i] = NetMinecraft.NW_PR_GAME.newInstance("PacketPlayOutEntityDestroy", ids[i]);
             }
             return packets;
-        }
-    }
-
-    public static int getPing(@NotNull Player player) throws ReflectiveOperationException {
-        var handle = CraftBukkit.ENTITY.invokeMethod(player, "CraftPlayer", "getHandle");
-        if (NetMinecraft.isLegacy()) {
-            return NetMinecraft.LEGACY.getField("EntityPlayer", "ping").getInt(handle);
-        } else {
-            return NetMinecraft.SR_LEVEL.getField("EntityPlayer", "e").getInt(handle);
         }
     }
 
@@ -333,5 +343,145 @@ public final class NMSHelper {
     @NotNull
     public static Object newVec3D(double x, double y, double z) throws ReflectiveOperationException {
         return NetMinecraft.isLegacy() ? NetMinecraft.LEGACY.newInstance("Vec3D", x, y, z) : NetMinecraft.WR_PHYS.newInstance("Vec3D", x, y, z);
+    }
+
+    public static int getContainerId(@NotNull Player player, @NotNull Object container) throws ReflectiveOperationException {
+        if (Utils.isCBXXXorLater("1.17")) {
+            return (int) NetMinecraft.WR_INVENTORY.getFieldValue("Container", "j", container);
+        } else if (Utils.isCBXXXorLater("1.14")) {
+            return (int) NetMinecraft.LEGACY.getFieldValue("Container", "windowId", container);
+        } else {
+            return getNextContainerId(player);
+        }
+    }
+
+    public static int getNextContainerId(@NotNull Player player) throws ReflectiveOperationException {
+        var nmsPlayer = getNMSPlayer(player);
+    	if (Utils.isCBXXXorLater("1.17")) {
+            return (int) NetMinecraft.SR_LEVEL.invokeMethod(nmsPlayer, "EntityPlayer", "nextContainerCounter");
+        } else {
+            return (int) NetMinecraft.LEGACY.invokeMethod(nmsPlayer, "EntityPlayer", "nextContainerCounter");
+        }
+    }
+
+    public static void sendPacketOpenWindow(@NotNull Player player, @NotNull String title, int containerId) throws ReflectiveOperationException {
+        var packet = (Object) null;
+        if (Utils.isCBXXXorLater("1.17")) {
+            var anvil = NetMinecraft.WR_INVENTORY.getFieldValue("Containers", "h", null);
+            var message = NetMinecraft.NW_CHAT.newInstance("ChatComponentText", title);
+            var classes = new Class<?>[] { int.class, NetMinecraft.WR_INVENTORY.getClass("Containers"), NetMinecraft.NW_CHAT.getClass("IChatBaseComponent") };
+            packet = NetMinecraft.NW_PR_GAME.newInstance(false, "PacketPlayOutOpenWindow", classes, containerId, anvil, message);
+        } else if (Utils.isCBXXXorLater("1.14")) {
+            var anvil = NetMinecraft.LEGACY.getFieldValue("Containers", "ANVIL", null);
+            var message = NetMinecraft.LEGACY.newInstance("ChatComponentText", title);
+            var classes = new Class<?>[] { int.class, NetMinecraft.LEGACY.getClass("Containers"), NetMinecraft.LEGACY.getClass("IChatBaseComponent") };
+            packet = NetMinecraft.LEGACY.newInstance(false, "PacketPlayOutOpenWindow", classes, containerId, anvil, message);
+        } else {
+            var anvil = NetMinecraft.LEGACY.invokeMethod(NetMinecraft.LEGACY.getFieldValue("Blocks", "ANVIL", null), "Block", "a");
+            var message = NetMinecraft.LEGACY.newInstance("ChatComponentText", anvil + ".name");
+            var classes = new Class<?>[] { int.class, String.class, NetMinecraft.LEGACY.getClass("IChatBaseComponent") };
+            packet = NetMinecraft.LEGACY.newInstance(false, "PacketPlayOutOpenWindow", classes, containerId, "minecraft:anvil", message);
+        }
+        sendPacket(player, packet);
+    }
+
+    public static void sendPacketCloseWindow(@NotNull Player player, int containerId) throws ReflectiveOperationException {
+        if (Utils.isCBXXXorLater("1.17")) {
+            sendPacket(player, NetMinecraft.NW_PR_GAME.newInstance("PacketPlayOutCloseWindow", containerId));
+        } else {
+            sendPacket(player, NetMinecraft.LEGACY.newInstance("PacketPlayOutCloseWindow", containerId));
+        }
+    }
+
+    public static void setActiveContainerDefault(@NotNull Player player) throws ReflectiveOperationException {
+        var nmsPlayer = getNMSPlayer(player);
+        if (Utils.isCBXXXorLater("1.17")) {
+            NetMinecraft.SR_LEVEL.setFieldValue("EntityPlayer", "bV", nmsPlayer, NetMinecraft.SR_LEVEL.getFieldValue("EntityPlayer", "bU", nmsPlayer));
+        } else {
+            NetMinecraft.LEGACY.setFieldValue("EntityPlayer", "activeContainer", nmsPlayer, NetMinecraft.LEGACY.getFieldValue("EntityPlayer", "defaultContainer", nmsPlayer));
+        }
+    }
+
+    public static void setActiveContainer(@NotNull Player player, @NotNull Object container) throws ReflectiveOperationException {
+        var nmsPlayer = getNMSPlayer(player);
+        if (Utils.isCBXXXorLater("1.17")) {
+            NetMinecraft.SR_LEVEL.setFieldValue("EntityPlayer", "bV", nmsPlayer, container);
+        } else {
+            NetMinecraft.LEGACY.setFieldValue("EntityPlayer", "activeContainer", nmsPlayer, container);
+        }
+    }
+
+    public static void setActiveContainerId(@NotNull Object container, int containerId) throws ReflectiveOperationException {
+        if (Utils.isCBXXXorLater("1.14")) {
+            return;
+        }
+        NetMinecraft.LEGACY.setFieldValue("Container", "windowId", container, containerId);
+    }
+
+    public static void addActiveContainerSlotListener(@NotNull Object container, @NotNull Player player) throws ReflectiveOperationException {
+        if (Utils.isCBXXXorLater("1.17")) {
+            NetMinecraft.SR_LEVEL.invokeMethod(false, getNMSPlayer(player), "EntityPlayer", "initMenu",
+            new Class<?>[] { NetMinecraft.WR_INVENTORY.getClass("Container") }, container);
+        } else {
+            NetMinecraft.LEGACY.invokeMethod(false, container, "Container", "addSlotListener",
+            new Class[] { NetMinecraft.LEGACY.getClass("ICrafting") }, getNMSPlayer(player));
+        }
+    }
+
+    @NotNull
+    public static Inventory toBukkitInventory(@NotNull Object container) throws ReflectiveOperationException {
+        var inventoryView = (InventoryView) null;
+        if (Utils.isCBXXXorLater("1.17")) {
+            inventoryView = (InventoryView) NetMinecraft.WR_INVENTORY.invokeMethod(container, "Container", "getBukkitView");
+        } else {
+            inventoryView = (InventoryView) NetMinecraft.LEGACY.invokeMethod(container, "Container", "getBukkitView");
+        }
+        return inventoryView.getTopInventory();
+    }
+
+    @NotNull
+    public static Object newContainerAnvil(@NotNull Player player, @NotNull String title) throws ReflectiveOperationException {
+        var nmsWorld = getNMSWorld(player.getWorld());
+        var nmsPlayer = getNMSPlayer(player);
+        if (Utils.isCBXXXorLater("1.17")) {
+            var message = NetMinecraft.NW_CHAT.newInstance("ChatComponentText", title);
+            var position = NetMinecraft.CORE.newInstance("BlockPosition", 0, 0, 0);
+            var inventory = NetMinecraft.SR_LEVEL.invokeMethod(nmsPlayer, "EntityPlayer", "getInventory");
+            var container = NetMinecraft.WR_INVENTORY.invokeMethod(false, (Object) null, "ContainerAccess", "at",
+            new Class<?>[] { nmsWorld.getClass().getSuperclass(), position.getClass() }, nmsWorld, position);
+            var containerAnvil = NetMinecraft.WR_INVENTORY.newInstance(false, "ContainerAnvil",
+            new Class<?>[] { int.class, NetMinecraft.WR_EN_PLAYER.getClass("PlayerInventory"),
+            NetMinecraft.WR_INVENTORY.getClass("ContainerAccess") }, getNextContainerId(player), inventory, container);
+            NetMinecraft.WR_INVENTORY.invokeMethod(false, containerAnvil, "Container", "setTitle",
+            new Class<?>[] { NetMinecraft.NW_CHAT.getClass("IChatBaseComponent") }, message);
+            NetMinecraft.WR_INVENTORY.setFieldValue("Container", "checkReachable", containerAnvil, false);
+            return containerAnvil;
+        } else if (Utils.isCBXXXorLater("1.14")) {
+            var message = NetMinecraft.LEGACY.newInstance("ChatComponentText", title);
+            var position = NetMinecraft.LEGACY.newInstance("BlockPosition", 0, 0, 0);
+            var inventory = NetMinecraft.LEGACY.getFieldValue("EntityPlayer", "inventory", nmsPlayer);
+            var container = NetMinecraft.LEGACY.invokeMethod(false, (Object) null, "ContainerAccess", "at",
+            new Class<?>[] { nmsWorld.getClass().getSuperclass(), position.getClass() }, nmsWorld, position);
+            var containerAnvil = NetMinecraft.LEGACY.newInstance(false, "ContainerAnvil",
+            new Class<?>[] { int.class, NetMinecraft.LEGACY.getClass("PlayerInventory"),
+            NetMinecraft.LEGACY.getClass("ContainerAccess") }, getNextContainerId(player), inventory, container);
+            NetMinecraft.LEGACY.invokeMethod(false, containerAnvil, "Container", "setTitle",
+            new Class<?>[] { NetMinecraft.LEGACY.getClass("IChatBaseComponent") }, message);
+            NetMinecraft.LEGACY.setFieldValue("Container", "checkReachable", containerAnvil, false);
+            return containerAnvil;
+        } else {
+            var position = NetMinecraft.LEGACY.newInstance("BlockPosition", 0, 0, 0);
+            var inventory = NetMinecraft.LEGACY.getFieldValue("EntityHuman", "inventory", nmsPlayer);
+            var containerAnvil = NetMinecraft.LEGACY.newInstance(false, "ContainerAnvil",
+            new Class<?>[] { NetMinecraft.LEGACY.getClass("PlayerInventory"), NetMinecraft.LEGACY.getClass("World"),
+            NetMinecraft.LEGACY.getClass("BlockPosition"), NetMinecraft.LEGACY.getClass("EntityHuman") }, inventory, nmsWorld, position, nmsPlayer);
+            NetMinecraft.LEGACY.setFieldValue("Container", "checkReachable", containerAnvil, false);
+            return containerAnvil;
+        }
+    }
+
+    public static void handleInventoryCloseEvent(@NotNull Player player) throws ReflectiveOperationException {
+        var classes = new Class<?>[] { Utils.isCBXXXorLater("1.17") ? NetMinecraft.WR_EN_PLAYER.getClass("EntityHuman") : NetMinecraft.LEGACY.getClass("EntityHuman") };
+        CraftBukkit.EVENT.invokeMethod(false, (Object) null, "CraftEventFactory", "handleInventoryCloseEvent", classes, getNMSPlayer(player));
     }
 }
