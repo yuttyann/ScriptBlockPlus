@@ -27,7 +27,7 @@
 **== 各バージョンの動作範囲 ==**
 | Plugin | Server | Java |
 |:---:|:---:|:---:|
-|**`2.1.5-2.1.6`**|**`1.9-1.17.1`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
+|**`2.1.5-2.1.7`**|**`1.9-1.17.1`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |`2.1.2-2.1.4`|`1.9-1.17`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |`2.0.4-2.1.1`|`1.9-1.16.5`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |[`2.x.x-JV8`](https://github.com/yuttyann/ScriptBlockPlus-Java8)|`1.9-1.16.5`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
