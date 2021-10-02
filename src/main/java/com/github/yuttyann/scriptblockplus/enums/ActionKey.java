@@ -39,9 +39,14 @@ public enum ActionKey {
     REMOVE("remove"),
 
     /**
-     * スクリプトの詳細
+     * スクリプトの表示
      */
     VIEW("view"),
+    
+    /**
+     * スクリプトのネームタグ
+     */
+    NAMETAG("nametag"),
 
     /**
      * セレクターの設定

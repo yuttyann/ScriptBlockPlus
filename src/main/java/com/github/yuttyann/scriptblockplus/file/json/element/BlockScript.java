@@ -27,6 +27,8 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.basic.OneJson.OneElement;
 import com.google.gson.InstanceCreator;
 import com.google.gson.annotations.SerializedName;
+
+import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,6 +55,9 @@ public final class BlockScript extends OneElement<BlockCoords> {
     @SerializedName("selector")
     private String selector;
 
+    @SerializedName("nametag")
+    private String nameTag;
+
     @SerializedName("amount")
     private int amount = -1;
 
@@ -69,6 +74,16 @@ public final class BlockScript extends OneElement<BlockCoords> {
     @Override
     public boolean isElement(@NotNull BlockCoords blockCoords) {
         return this.blockCoords.compare(blockCoords);
+    }
+
+    @NotNull
+    public World getWorld() {
+        return blockCoords.getWorld();
+    }
+
+    @NotNull
+    public BlockCoords getBlockCoords() {
+        return BlockCoords.copy(blockCoords);
     }
 
     public void setAuthors(@NotNull Collection<UUID> authors) {
@@ -105,6 +120,15 @@ public final class BlockScript extends OneElement<BlockCoords> {
     @Nullable
     public String getSelector() {
         return selector;
+    }
+
+    public void setNameTag(@Nullable String nameTag) {
+        this.nameTag = nameTag;
+    }
+
+    @Nullable
+    public String getNameTag() {
+        return nameTag;
     }
 
     public synchronized void setAmount(int amount) {

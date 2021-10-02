@@ -20,7 +20,6 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -109,17 +108,30 @@ public final class SBOperation {
             return;
         }
         var blockScript = scriptJson.load(blockCoords);
-        var playerCount = PlayerCountJson.newJson(player.getUniqueId()).load(scriptKey, blockCoords);
-        var selector = blockScript.getSelector();
         player.sendMessage("--------- [ Script Views ] ---------");
         player.sendMessage("§eAuthor: §a" + getAuthors(blockScript));
         player.sendMessage("§eUpdate: §a" + blockScript.getLastEdit());
-        player.sendMessage("§eMyCount: §a" + playerCount.getAmount());
-        player.sendMessage("§eRedstone: §" + (selector == null ? "cfalse" : "atrue §d: §a" + selector));
+        player.sendMessage("§eMyCount: §a" + PlayerCountJson.newJson(player.getUniqueId()).load(scriptKey, blockCoords).getAmount());
+        player.sendMessage("§eTagName: §" + (blockScript.getNameTag() == null ? "cNone" : "a" + blockScript.getNameTag()));
+        player.sendMessage("§eRedstone: §" + (blockScript.getSelector() == null ? "cfalse" : "atrue §d: §a" + blockScript.getSelector()));
         player.sendMessage("§eScripts:");
         blockScript.getScripts().forEach(s -> player.sendMessage("§6- §b" + s));
         player.sendMessage("--------------------------------");
         SBConfig.CONSOLE_SCRIPT_VIEW.replace(scriptKey, blockCoords).console();
+    }
+
+    public void nameTag(@NotNull Player player, @NotNull BlockCoords blockCoords, @Nullable String nametag) {
+        if (!scriptJson.has(blockCoords)) {
+            SBConfig.ERROR_SCRIPT_FILE_CHECK.send(player);
+            return;
+        }
+        var blockScript = scriptJson.load(blockCoords);
+        blockScript.getAuthors().add(player.getUniqueId());
+        blockScript.setNameTag(nametag);
+        blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        scriptJson.saveJson();
+        SBConfig.SCRIPT_NAMETAG.replace(scriptKey).send(player);
+        SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }
 
     public void redstone(@NotNull Player player, @NotNull BlockCoords blockCoords, @Nullable String selector) {
@@ -132,11 +144,13 @@ public final class SBOperation {
         blockScript.setSelector(selector);
         blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptJson.saveJson();
+        /*
         if (StringUtils.isEmpty(selector)) {
             SBConfig.SCRIPT_REDSTONE_DISABLE.replace(scriptKey).send(player);
         } else {
             SBConfig.SCRIPT_REDSTONE_ENABLE.replace(scriptKey).send(player);
-        }
+        }*/
+        SBConfig.SCRIPT_REDSTONE.replace(scriptKey).send(player);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }
 }

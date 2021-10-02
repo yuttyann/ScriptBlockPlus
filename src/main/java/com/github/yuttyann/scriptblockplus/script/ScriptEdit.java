@@ -71,6 +71,9 @@ public final class ScriptEdit {
                 case VIEW:
                     sbOperation.view(player, blockCoords);
                     break;
+                case NAMETAG:
+                    sbOperation.nameTag(player, blockCoords, value);
+                    break;
                 case REDSTONE:
                     sbOperation.redstone(player, blockCoords, value);
                     break;

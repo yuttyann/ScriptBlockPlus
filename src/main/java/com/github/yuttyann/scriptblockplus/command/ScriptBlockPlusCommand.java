@@ -120,19 +120,16 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                 var description = (Function<OptionTag, String>) o -> optionHelp ? o.description() : "";
                 StreamUtils.fForEach(answers, s -> s.syntax().startsWith(prefix), o -> list.add(o.syntax() + description.apply(o)));
             } else if (compare(1, "redstone")) {
-                if (compare(2, "true") && range(4, 6)) {
-                    var prefix = args(3).toLowerCase(Locale.ROOT);
+                if (range(3, 5)) {
+                    var prefix = args(length() - 1).toLowerCase(Locale.ROOT);
                     var answers = Lists.newArrayList("@a", "@e", "@p", "@r");
                     StreamUtils.forEach(Repeat.values(), f -> answers.add(Repeat.getPrefix() + f.getSyntax() + "}"));
                     StreamUtils.forEach(Filter.values(), f -> answers.add(Filter.getPrefix() + f.getSyntax() + "}"));
                     StreamUtils.fForEach(answers, s -> s.startsWith(prefix), list::add);
-                } else if (range(3)) {
-                    var prefix = args(2).toLowerCase(Locale.ROOT);
-                    StreamUtils.fForEach(new String[] { "true", "false" }, s -> s.startsWith(prefix), list::add);
                 }
             } else if (range(2)) {
                 var prefix = args(1).toLowerCase(Locale.ROOT);
-                StreamUtils.fForEach(new String[] { "create", "add", "remove", "view", "run", "redstone" }, s -> s.startsWith(prefix), list::add);
+                StreamUtils.fForEach(new String[] { "create", "add", "remove", "redstone", "nametag", "view", "run" }, s -> s.startsWith(prefix), list::add);
             }
         }
     }
