@@ -23,7 +23,9 @@ import com.github.yuttyann.scriptblockplus.command.CommandUsage;
 import com.github.yuttyann.scriptblockplus.command.SubCommand;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.item.ItemAction;
+import com.github.yuttyann.scriptblockplus.item.gui.CustomGUI;
+import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
+import com.github.yuttyann.scriptblockplus.item.gui.custom.ToolBoxGUI;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -59,11 +61,7 @@ public class ToolCommand extends SubCommand {
         if (!hasPermission(sender, PERMISSION)) {
             return false;
         }
-        var player = (Player) sender;
-        var inventory = player.getInventory();
-        ItemAction.getItems().forEach(i -> inventory.addItem(i.getItem()));
-        player.updateInventory();
-        SBConfig.GIVE_TOOL.send(player);
+        CustomGUI.getWindow(ToolBoxGUI.class, (Player) sender).ifPresent(UserWindow::openGUI);
         return true;
     }
 }
