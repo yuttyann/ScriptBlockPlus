@@ -34,8 +34,8 @@ public interface IReflection {
     @NotNull
     public String getPath();
 
-    public default void setFieldValue(@NotNull String classPath, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {
-        getField(false, classPath, fieldName).set(instance, value);
+    public default void setFieldValue(@NotNull String className, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {
+        getField(false, className, fieldName).set(instance, value);
     }
 
     public default void setFieldValue(boolean declared, @NotNull String className, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {

@@ -33,7 +33,6 @@ import com.google.common.collect.Iterators;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -61,9 +60,9 @@ public class ScriptRead extends ScriptMap implements SBRead {
     protected String value;
     protected List<String> list;
 
-    public ScriptRead(@NotNull Player player, @NotNull BlockCoords blockCoords, @NotNull ScriptKey scriptKey) {
+    public ScriptRead(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull ScriptKey scriptKey) {
         this.initialize = true;
-        this.sbPlayer = SBPlayer.fromPlayer(player);
+        this.sbPlayer = sbPlayer;
         this.scriptKey = scriptKey;
         this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
         this.scriptJson = BlockScriptJson.newJson(scriptKey);

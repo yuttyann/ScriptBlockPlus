@@ -35,7 +35,7 @@ public final class SplitValue {
     /**
      * コンストラクタ
      * @param argument - 引数
-     * @param types - 要素(例: {@link Argument}等)
+     * @param type - 要素(例: {@link Argument}等)
      */
     public SplitValue(@NotNull String argument, @NotNull SplitType type) {
         if (type.match(argument)) {

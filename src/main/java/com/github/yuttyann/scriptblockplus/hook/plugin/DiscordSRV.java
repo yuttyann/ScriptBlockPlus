@@ -46,10 +46,19 @@ public class DiscordSRV extends HookPlugin {
         return "DiscordSRV";
     }
 
+    /**
+     * プラグインが有効な場合にtrueを返します。
+     * @return {@code boolean} プラグインが有効な場合は{@code true}
+     */
     public boolean isEnabled() {
         return has() && github.scarsz.discordsrv.DiscordSRV.getPlugin().isEnabled();
     }
 
+    /**
+     * メンバーを取得します。
+     * @param uuid - プレイヤーの{@link UUID}
+     * @return {@link Member} - メンバー
+     */
     @Nullable
     public Member getMemberById(@NotNull UUID uuid) {
         var discord = github.scarsz.discordsrv.DiscordSRV.getPlugin();
@@ -61,6 +70,11 @@ public class DiscordSRV extends HookPlugin {
         return discordId == null ? null : DiscordUtil.getMemberById(discordId);
     }
 
+    /**
+     * 接続中のボイスチャンネルIDを取得します。
+     * @param uuid - プレイヤーの{@link UUID}
+     * @return {@link String} - ボイスチャンネルID
+     */
     @Nullable
     public String getVoiceChannelId(@NotNull UUID uuid) {
         var member = getMemberById(uuid);
@@ -71,6 +85,11 @@ public class DiscordSRV extends HookPlugin {
         return channel == null ? null : channel.getId();
     }
 
+    /**
+     * ユーザーが所持するロールを取得します。
+     * @param uuid - プレイヤーの{@link UUID}
+     * @return {@link String}[] - ロールIDの配列
+     */
     @NotNull
     public String[] getRoles(@NotNull UUID uuid) {
         var member = getMemberById(uuid);
@@ -80,17 +99,22 @@ public class DiscordSRV extends HookPlugin {
         return StreamUtils.toArray(member.getRoles(), r -> r.getId(), String[]::new);
     }
 
+    /**
+     * ユーザーが所持する権限を取得します。
+     * @param uuid - プレイヤーの{@link UUID}
+     * @return {@link Permission}[] - 権限の配列
+     */
     @NotNull
     public Permission[] getPermissions(@NotNull UUID uuid) {
         var member = getMemberById(uuid);
         return member == null ? new Permission[0] : member.getPermissions().toArray(Permission[]::new);
     }
 
-    @NotNull
-    public Permission getPermissionByOffset(@NotNull int offset) {
-        return Permission.getFromOffset(offset);
-    }
-
+    /**
+     * ユーザーにロールを追加します。
+     * @param uuid - プレイヤーの{@link UUID}
+     * @param roleIds - ロールID
+     */
     @Nullable
     public void addRoleToMember(@NotNull UUID uuid, @NotNull String... roleIds) {
         var member = getMemberById(uuid);
@@ -111,6 +135,11 @@ public class DiscordSRV extends HookPlugin {
         }
     }
 
+    /**
+     * ユーザーのロールを削除します。
+     * @param uuid - プレイヤーの{@link UUID}
+     * @param roleIds - ロールID
+     */
     @Nullable
     public void removeRoleToMember(@NotNull UUID uuid, @NotNull String... roleIds) {
         var member = getMemberById(uuid);

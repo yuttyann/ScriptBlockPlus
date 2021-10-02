@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus NetMinecraft 列挙型
+ * <p>
+ * {@code 1.17}時点のパッケージを参照しています。
  * @author yuttyann44581
  */
 public enum NetMinecraft implements IReflection {
@@ -205,7 +207,7 @@ public enum NetMinecraft implements IReflection {
     /** {@code 1.17}未満の{@code NetMinecraft} */
     LEGACY(SERVER, Utils.getPackageVersion());
 
-    private final String path;
+    public static final String WARNING_TEXT = "NetMinecraft(" + (isLegacy() ? LEGACY : SERVER) + ") not found.";
 
     private static final boolean HAS_NMS, IS_LEGACY;
 
@@ -225,6 +227,8 @@ public enum NetMinecraft implements IReflection {
         HAS_NMS = hasNMS;
         IS_LEGACY = isLegacy;
     }
+
+    private final String path;
 
     NetMinecraft(@NotNull String path) {
         this.path = path;

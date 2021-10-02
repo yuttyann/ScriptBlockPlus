@@ -17,7 +17,6 @@ package com.github.yuttyann.scriptblockplus.region;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 
 import org.jetbrains.annotations.NotNull;
@@ -63,35 +62,29 @@ public final class CuboidRegionRemove {
         scriptKeys.clear();
         var blocks = new HashSet<BlockCoords>();
         var iterator = new CuboidRegionIterator(region);
-        try {
-            for (var scriptKey : ScriptKey.iterable()) {
-                var scriptJson = BlockScriptJson.newJson(scriptKey);
-                if (scriptJson.isEmpty()) {
-                    continue;
-                }
-                iterator.reset();
-                var removed = false;
-                while (iterator.hasNext()) {
-                    var blockCoords = iterator.next();
-                    if (lightRemove(blockCoords, scriptJson)) {
-                        removed = true;
-                        if (!blocks.contains(blockCoords)) {
-                            blocks.add(BlockCoords.copy(blockCoords));
-                            TickRunnable.GLOW_ENTITY.broadcastDestroy(blockCoords);
-                        }
+        for (var scriptKey : ScriptKey.iterable()) {
+            var scriptJson = BlockScriptJson.newJson(scriptKey);
+            if (scriptJson.isEmpty()) {
+                continue;
+            }
+            iterator.reset();
+            var removed = false;
+            while (iterator.hasNext()) {
+                var blockCoords = iterator.next();
+                if (lightRemove(blockCoords, scriptJson)) {
+                    removed = true;
+                    if (!blocks.contains(blockCoords)) {
+                        blocks.add(BlockCoords.copy(blockCoords));
                     }
                 }
-                if (removed) {
-                    scriptKeys.add(scriptKey);
-                    scriptJson.saveJson();
-                }
             }
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        } finally {
-            var blockCoords = blocks.toArray(BlockCoords[]::new);
-            scriptKeys.forEach(s -> BlockScriptJson.newJson(s).init(blockCoords));
+            if (removed) {
+                scriptKeys.add(scriptKey);
+                scriptJson.saveJson();
+            }
         }
+        var blockCoords = blocks.toArray(BlockCoords[]::new);
+        scriptKeys.forEach(s -> BlockScriptJson.newJson(s).init(blockCoords));
         this.iterator = iterator;
         this.volume = blocks.size();
         return this;

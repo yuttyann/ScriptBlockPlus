@@ -51,16 +51,34 @@ public abstract class ItemAction implements Cloneable {
     }
 
     /**
+     * 元のアイテムを取得します。
+     * @return {@link ItemStack} - アイテム
+     */
+    @NotNull
+    protected final ItemStack getOriginal() {
+        return item;
+    }
+
+    /**
+     * アイテムを取得します。
+     * @return {@link ItemStack} - アイテム
+     */
+    @NotNull
+    public final ItemStack getItem() {
+        return item.clone();
+    }
+
+    /**
      * アイテムの処理が実行された際に呼び出されます。
      * @param runItem - 実行したアイテムやプレイヤーの情報
      */
-    protected abstract void run(@NotNull RunItem runItem);
+    public abstract void run(@NotNull RunItem runItem);
 
     /**
      * アイテムのスロットを切り替えた際に呼び出されます。
      * @param changeSlot - 切り替えたスロット番号やプレイヤーの情報
      */
-    protected void slot(@NotNull ChangeSlot changeSlot) { }
+    public void slot(@NotNull ChangeSlot changeSlot) { }
 
     /**
      * パーミッションを所持しているのか判定します。
@@ -69,15 +87,6 @@ public abstract class ItemAction implements Cloneable {
      */
     public boolean hasPermission(@NotNull Permissible permissible) {
         return true;
-    }
-
-    /**
-     * アイテムを取得します。
-     * @return {@link ItemStack} - アイテム
-     */
-    @NotNull
-    public ItemStack getItem() {
-        return item.clone();
     }
 
     /**

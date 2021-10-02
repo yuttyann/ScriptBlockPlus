@@ -5,7 +5,7 @@
 
 ## ===== Commands ===== ##
 # 沒有佔位符
-ToolCommandMessage: 'tool - 获得脚本编辑工具'
+ToolCommandMessage: 'tool - 显示一个选择辅助工具的窗口'
 ReloadCommandMessage: 'reload - 重载插件'
 BackupCommandMessage: 'backup - 备份插件数据'
 CheckVerCommandMessage: 'checkver - 查询最新版本'
@@ -14,21 +14,47 @@ CreateCommandMessage: '<scriptkey> create <options> - 创建脚本方块'
 AddCommandMessage: '<scriptkey> add <options> - 添加脚本方块'
 RemoveCommandMessage: '<scriptkey> remove - 移除脚本方块'
 ViewCommandMessage: '<scriptkey> view - 查看方块的脚本'
+NameTagCommandMessage: '<scriptkey> nametag [tag] - 设置块的名称标签'
+RedstoneCommandMessage: '<scriptkey> redstone [repeat] [filter] [selector] - 设置脚本块是否与红石一起使用'
 RunCommandMessage: '<scriptkey> run [player] <world> <x> <y> <z> - 执行脚本块'
-RedstoneCommandMessage: '<scriptkey> redstone <needs> [repeat] [filter] [selector] - 设置脚本块是否与红石一起使用'
 SelectorPasteCommandMessage: 'selector paste [pasteonair] [overwrite] - 粘贴选区内的脚本方块'
 SelectorRemoveCommandMessage: 'selector remove - 移除选区内的脚本方块'
 
 # &(code) : 可以使用彩色代码
 
-## ===== BlockSelector ===== ##
+## ===== GUI ===== ##
 # 沒有佔位符
-BlockSelector:
-- '&a这是一个可以选择方块区域的工具'
-- '&6左键点击: &e选择区域的起点'
-- '&6右键点击: &e选择区域的结束点'
-- '&6Shift+左键点击: &e将当前位置设置为区域的起点'
-- '&6Shift+右键点击: &e将当前位置设置为区域的结束点'
+CustomGUI:
+  System:
+    Input: '文本输入表格'
+    Reset: '&c重置文本'
+    InPlayer: '&c另一个玩家正在编辑剧本'
+    Overflow: '&c字符数超过了限制，不能正常编辑'
+    SearchGUI: '搜索'
+    SettingGUI: '设置'
+    ToolBoxGUI: '工具箱'
+  Item:
+    SearchGUI:
+      Next: '&d下一页'
+      Prev: '&d上一页'
+      Reset: '&d复位'
+      Reload: '&d重新加载'
+      Setting: '&6脚本'
+      Scriptkey: '&d脚本键'
+      Time: '&b时间'
+      Coords: '&b坐标'
+      NameTag: '&b姓名标签'
+    SettingGUI:
+      Delete: '&c删除设置'
+      Close: '&d回到搜索页面'
+      Copy: '&d拷贝'
+      Paste: '&d粘贴'
+      Teleport: '&b远距传输'
+      Execute: '&b执行'
+      View: '&b显示'
+      Redstone: '&a编辑一个目标选择器'
+      Script: '&a编辑一个脚本'
+      NameTag: '&a编辑一个姓名标签'
 
 ## ===== ScriptEditor ===== ##
 # %scriptkey% : 脚本键
@@ -42,9 +68,24 @@ ScriptEditor:
 ## ===== ScriptViewer ===== ##
 # %scriptkey% : 脚本键
 ScriptViewer:
-- '&a该工具支持脚本检查。'
-- '&6左键点击: &e开始搜索周围的脚本。'
-- '&6右键点击: &e停止搜索周围的脚本。'
+- '&a该工具支持脚本检查'
+- '&6左键点击: &e开始搜索周围的脚本'
+- '&6右键点击: &e停止搜索周围的脚本'
+
+## ===== ScriptManager ===== ##
+# 沒有佔位符
+ScriptManager:
+- '&a这个工具支持对脚本的管理'
+- '&6右键点击: &e打开搜索窗口'
+
+## ===== BlockSelector ===== ##
+# 沒有佔位符
+BlockSelector:
+- '&a这是一个可以选择方块区域的工具'
+- '&6左键点击: &e选择区域的起点'
+- '&6右键点击: &e选择区域的结束点'
+- '&6Shift+左键点击: &e将当前位置设置为区域的起点'
+- '&6Shift+右键点击: &e将当前位置设置为区域的结束点'
 
 # |~ \n : 改行
 
@@ -76,20 +117,20 @@ UpdateCheckMessage: '&b新版本插件可用|~v%version% 最新版本|~插件名
 ErrorUpdateMessage: '&c查询更新失败，可能是国内网络导致的，建议去这个中文搬运帖查看更新http://www.mcbbs.net/thread-691900-1-1.html'
 
 # %scriptkey% : 脚本键
-ScriptCopyMessage: '&a复制一个脚本键是"%scriptkey%"的脚本'
-ScriptPasteMessage: '&a粘贴一个脚本键是"%scriptkey%"的脚本'
-ScriptCreateMessage: '&a创建一个脚本键是"%scriptkey%"的脚本'
-ScriptAddMessage: '&a添加一个脚本键是"%scriptkey%"的脚本'
-ScriptRemoveMessage: '&c删除一个脚本键是"%scriptkey%"的脚本'
-ScriptRedstoneEnableMessage: '&a启用脚本键"%scriptkey%"的红石操作'
-ScriptRedstoneDisableMessage: '&c禁用脚本键"%scriptkey%"的红石行为'
+ScriptCopyMessage: '&a我复制了"%scriptkey%"块中的脚本'
+ScriptPasteMessage: '&a我把脚本粘贴到"%scriptkey%"区块中'
+ScriptCreateMessage: '&a我创建了一个带有"%scriptkey%"块的脚本'
+ScriptAddMessage: '&a我在"%scriptkey%"块中添加了一个脚本'
+ScriptRemoveMessage: '&c我已经删除了"%scriptkey%"块中的脚本'
+ScriptNameTagMessage: '&c我已经编辑了"%scriptkey%"区块的名称标签'
+ScriptRedstoneMessage: '&a我已经编辑了"%scriptkey%"区块的目标选择器'
 
 # 沒有佔位符
 NotSelectionMessage: '&cBlockSelector坐标范围未选择'
 
 # 沒有佔位符
-ScriptViewerStartMessage: '&a开始搜索周围的脚本。'
-ScriptViewerStopMessage: '&c对周围脚本的搜索已停止。'
+ScriptViewerStartMessage: '&a开始搜索周围的脚本'
+ScriptViewerStopMessage: '&c对周围脚本的搜索已停止'
 
 # %world%  : 世界名
 # %coords% : 坐标(x, y, z)

@@ -29,6 +29,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.splittype.Filter;
 import com.github.yuttyann.scriptblockplus.enums.splittype.Repeat;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -148,7 +149,7 @@ public final class BlockListener implements Listener {
                 continue;
             }
             index.incrementAndGet();
-            new ScriptRead(player, blockCoords, scriptKey).read(0);
+            new ScriptRead(SBPlayer.fromPlayer(player), blockCoords, scriptKey).read(0);
         }
     }
 

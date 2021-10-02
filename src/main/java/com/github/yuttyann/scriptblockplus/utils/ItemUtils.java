@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -57,40 +58,147 @@ public class ItemUtils {
     }
 
     @NotNull
-    public static ItemStack getBlockSelector() {
-        var item = new ItemStack(Material.STICK);
-        var meta = item.getItemMeta();
-        meta.setDisplayName("§dBlock Selector");
-        meta.setLore(StringUtils.setListColor(SBConfig.BLOCK_SELECTOR.getValue()));
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        item.setItemMeta(meta);
-        return item;
-    }
-
-    @NotNull
     public static ItemStack getScriptEditor() {
         var item = new ItemStack(Material.BLAZE_ROD);
-        var meta = item.getItemMeta();
-        meta.setDisplayName("§dScript Editor");
-        meta.setLore(StringUtils.setListColor(SBConfig.SCRIPT_EDITOR.getValue()));
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        item.setItemMeta(meta);
+        var itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName("§dScript Editor");
+        itemMeta.setLore(SBConfig.SCRIPT_EDITOR.setListColor());
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        item.setItemMeta(itemMeta);
         return item;
     }
 
     @NotNull
     public static ItemStack getScriptViewer() {
-        var item = new ItemStack(getMaterial(Utils.isCBXXXorLater("1.13") ? "CLOCK" : "WATCH"));
-        var meta = item.getItemMeta();
-        meta.setDisplayName("§dScript Viewer");
-        meta.setLore(StringUtils.setListColor(SBConfig.SCRIPT_VIEWER.getValue()));
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        item.setItemMeta(meta);
+        var item = new ItemStack(getClockMaterial());
+        var itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName("§dScript Viewer");
+        itemMeta.setLore(SBConfig.SCRIPT_VIEWER.setListColor());
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        item.setItemMeta(itemMeta);
         return item;
     }
 
     @NotNull
+    public static ItemStack getScriptManager() {
+        var item = new ItemStack(Material.BOOK);
+        var itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName("§dScript Manager");
+        itemMeta.setLore(SBConfig.SCRIPT_MANAGER.setListColor());
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+
+
+    @NotNull
+    public static ItemStack getBlockSelector() {
+        var item = new ItemStack(Material.STICK);
+        var itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName("§dBlock Selector");
+        itemMeta.setLore(SBConfig.BLOCK_SELECTOR.setListColor());
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+
+    @NotNull
+    public static ItemStack getGlassPane(@NotNull int color) {
+        if (Utils.isCBXXXorLater("1.12")) {
+            var material = (Material) null;
+            switch (color) {
+                case 0:
+                    material = getMaterial("WHITE_STAINED_GLASS_PANE");
+                    break;
+                case 1:
+                    material = getMaterial("ORANGE_STAINED_GLASS_PANE");
+                    break;
+                case 2:
+                    material = getMaterial("MAGENTA_STAINED_GLASS_PANE");
+                    break;
+                case 3:
+                    material = getMaterial("LIGHT_BLUE_STAINED_GLASS_PANE");
+                    break;
+                case 4:
+                    material = getMaterial("YELLOW_STAINED_GLASS_PANE");
+                    break;
+                case 5:
+                    material = getMaterial("LIME_STAINED_GLASS_PANE");
+                    break;
+                case 6:
+                    material = getMaterial("PINK_STAINED_GLASS_PANE");
+                    break;
+                case 7:
+                    material = getMaterial("GRAY_STAINED_GLASS_PANE");
+                    break;
+                case 8:
+                    material = getMaterial("LIGHT_GRAY_STAINED_GLASS_PANE");
+                    break;
+                case 9:
+                    material = getMaterial("CYAN_STAINED_GLASS_PANE");
+                    break;
+                case 10:
+                    material = getMaterial("PURPLE_STAINED_GLASS_PANE");
+                    break;
+                case 11:
+                    material = getMaterial("BLUE_STAINED_GLASS_PANE");
+                    break;
+                case 12:
+                    material = getMaterial("BROWN_STAINED_GLASS_PANE");
+                    break;
+                case 13:
+                    material = getMaterial("GREEN_STAINED_GLASS_PANE");
+                    break;
+                case 14:
+                    material = getMaterial("RED_STAINED_GLASS_PANE");
+                    break;
+                case 15:
+                    material = getMaterial("BLACK_STAINED_GLASS_PANE");
+                    break;
+                default:
+                    material = getMaterial("STAINED_GLASS_PANE");
+                    break;
+            }
+            return new ItemStack(material, 1);
+        } else {
+            @SuppressWarnings("deprecation")
+            var item = new ItemStack(getMaterial("STAINED_GLASS_PANE"), 1, (short) color);
+            return item;
+        }
+    }
+
+    @NotNull
+    public static Material getClockMaterial() {
+        return getMaterial("CLOCK", "WATCH");
+    }
+
+    @NotNull
+    public static Material getOakSignMaterial() {
+        return getMaterial("OAK_SIGN", "SIGN");
+    }
+
+    @NotNull
+    public static Material getWritableBookMaterial() {
+        return getMaterial("WRITABLE_BOOK", "BOOK_AND_QUILL");
+    }
+
+    @NotNull
+    public static Material getCommandMaterial() {
+        return getMaterial("COMMAND_BLOCK", "COMMAND");
+    }
+
+    @NotNull
+    public static Material getChainCommandMaterial() {
+        return getMaterial("CHAIN_COMMAND_BLOCK", "COMMAND_CHAIN");
+    }
+
+    @NotNull
     public static Material getMaterial(@NotNull String name) {
+        return getMaterial(name, null);
+    }
+
+    @NotNull
+    public static Material getMaterial(@NotNull String name, @Nullable String def) {
         name = StringUtils.removeStart(name.replace(' ', '_'), Utils.MINECRAFT);
         if (KEY_MATERIALS != null) {
             var key = name.toLowerCase(Locale.ROOT);
@@ -99,7 +207,7 @@ public class ItemUtils {
             }
         }
         var material = Material.getMaterial(name.toUpperCase(Locale.ROOT));
-        return material == null ? Material.AIR : material;
+        return material == null ? def == null ? Material.AIR : Objects.requireNonNull(getMaterial(def)) : material;
     }
 
     @NotNull
@@ -109,6 +217,17 @@ public class ItemUtils {
         }
         var filter = (Predicate<Entry<?, ?>>) e -> e.getValue() == material;
         return KEY_MATERIALS.entrySet().stream().filter(filter).findFirst().get().getKey();
+    }
+
+    @NotNull
+    public static ItemStack setName(@NotNull ItemStack item, @Nullable String name) {
+        var itemMeta = item.getItemMeta();
+        if (itemMeta == null) {
+            return item;
+        }
+        itemMeta.setDisplayName(name);
+        item.setItemMeta(itemMeta);
+        return item;
     }
 
     @NotNull
@@ -122,24 +241,32 @@ public class ItemUtils {
         if (item.getType() == Material.AIR) {
             return def;
         }
-        var meta = item.getItemMeta();
-        return meta == null ? def : meta.hasDisplayName() ? meta.getDisplayName() : def;
+        var itemMeta = item.getItemMeta();
+        return itemMeta == null ? def : itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : def;
+    }
+
+    @NotNull
+    public static ItemStack setLore(@NotNull ItemStack item, @Nullable List<String> lore) {
+        var itemMeta = item.getItemMeta();
+        if (itemMeta == null) {
+            return item;
+        }
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+        return item;
     }
 
     @NotNull
     public static List<String> getLore(@NotNull ItemStack item) {
-        if (!item.hasItemMeta()) {
-            return Collections.emptyList();
-        }
-        var meta = item.getItemMeta();
-        return meta.hasLore() ? meta.getLore() : Collections.emptyList();
+        var itemMeta = item.getItemMeta();
+        return itemMeta != null && itemMeta.hasLore() ? itemMeta.getLore() : Collections.emptyList();
     }
 
     @SuppressWarnings("deprecation")
     public static int getDamage(@NotNull ItemStack item) {
         if (Utils.isCBXXXorLater("1.13")) {
-            var meta = item.getItemMeta();
-            return meta instanceof Damageable ? ((Damageable) meta).getDamage() : 0;
+            var itemMeta = item.getItemMeta();
+            return itemMeta instanceof Damageable ? ((Damageable) itemMeta).getDamage() : 0;
         }
         return item.getDurability();
     }

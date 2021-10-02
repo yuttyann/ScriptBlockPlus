@@ -65,5 +65,5 @@ public final class Scheduler {
     @NotNull
     public BukkitTask asyncRun(@NotNull Runnable task, final long delay, final long period) {
         return Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, task, delay, period);
-    }    
+    }
 }

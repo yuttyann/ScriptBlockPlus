@@ -13,7 +13,7 @@ commands:
     description: ScriptBlockPlus Commands
     aliases: [sbp]
     usage: |
-           /<command> tool - Distribute the tools to the sender.
+           /<command> tool - Displays the auxiliary tool select window.
            /<command> reload - Reload the plugin.
            /<command> backup - Make a backup of the plugin data.
            /<command> checkver - Check new version.
@@ -22,8 +22,9 @@ commands:
            /<command> <scriptkey> add <options> - Add a new script to the block.
            /<command> <scriptkey> remove - Remove the script from the block.
            /<command> <scriptkey> view - View the script for the block.
+           /<command> <scriptkey> nametag [tag] - Set a nametag for the block.
+           /<command> <scriptkey> redstone [repeat] [filter] [selector] - Set if the script works with Redstone.
            /<command> <scriptkey> run [player] <world> <x> <y> <z> - Execute the specified script.
-           /<command> <scriptkey> redstone <needs> [repeat] [filter] [selector] - Set if the script works with Redstone.
            /<command> selector paste [pasteonair] [overwrite] - Paste the script into the selection.
            /<command> selector remove - Remove the script into the selection.
 
@@ -56,9 +57,10 @@ permissions:
   scriptblockplus.tool.*:
     default: op
     children:
-      scriptblockplus.tool.blockselector: true
       scriptblockplus.tool.scripteditor: true
       scriptblockplus.tool.scriptviewer: true
+      scriptblockplus.tool.scriptmanager: true
+      scriptblockplus.tool.blockselector: true
   scriptblockplus.command.tool:
     default: false
   scriptblockplus.command.reload:
@@ -87,9 +89,11 @@ permissions:
     default: true
   scriptblockplus.hit.use:
     default: true
-  scriptblockplus.tool.blockselector:
-    default: false
   scriptblockplus.tool.scripteditor:
     default: false
   scriptblockplus.tool.scriptviewer:
+    default: false
+  scriptblockplus.tool.scriptmanager:
+    default: false
+  scriptblockplus.tool.blockselector:
     default: false

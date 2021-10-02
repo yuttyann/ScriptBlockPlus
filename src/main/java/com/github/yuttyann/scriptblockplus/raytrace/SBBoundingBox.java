@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.raytrace;
 
+import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
@@ -35,6 +36,10 @@ public final class SBBoundingBox {
 
     public SBBoundingBox() {
         setXYZ(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+    }
+
+    public SBBoundingBox(@NotNull BlockCoords min, @NotNull BlockCoords max) {
+        this(min.toVector(), max.toVector());
     }
 
     public SBBoundingBox(@NotNull Vector min, @NotNull Vector max) {

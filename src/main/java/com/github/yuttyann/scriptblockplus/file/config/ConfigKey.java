@@ -16,11 +16,14 @@
 package com.github.yuttyann.scriptblockplus.file.config;
 
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -45,6 +48,30 @@ public interface ConfigKey<T> {
     @NotNull
     default T getValue() {
         return get().orElseThrow(NullPointerException::new);
+    }
+
+    /**
+     * カラーコードを置換した文字列を取得します。
+     * @return {@link String} - 文字列
+     */
+    @NotNull
+    default String setColor() {
+        return StringUtils.setColor(toString());
+    }
+
+    /**
+     * カラーコードを置換した文字列のリストを取得します。
+     * @return {@link List}&lt;{@link String}&gt; - 文字列のリスト
+     */
+    @NotNull
+    default List<String> setListColor() {
+        T value = getValue();
+        if (value instanceof List) {
+            @SuppressWarnings("unchecked")
+            var list = (List<String>) value;
+            return StringUtils.setListColor(list);
+        }
+        return Collections.emptyList();
     }
 
     /**

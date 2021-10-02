@@ -21,6 +21,7 @@ import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.basic.OneJson;
 import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,10 +46,22 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
         CacheJson.register(PlayerTimerJson.class);
         INIT_PROCESS.add((s, b) -> PlayerCountJson.removeAll(s, b));
         INIT_PROCESS.add((s, b) -> PlayerTimerJson.removeAll(s, b));
+        INIT_PROCESS.add((s, b) -> {
+            try {
+                for (var blockCoords : b) {
+                    TickRunnable.GLOW_ENTITY.broadcastDestroy(blockCoords);
+                }
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
+        });
     }
+
+    private final ScriptKey scriptKey;
 
     private BlockScriptJson(@NotNull String name) {
         super(name);
+        this.scriptKey = ScriptKey.valueOf(name);
     }
 
     public void init(@NotNull BlockCoords... blockCoords) {
@@ -60,7 +73,7 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
 
     @NotNull
     public ScriptKey getScriptKey() {
-        return ScriptKey.valueOf(getName());
+        return scriptKey;
     }
 
     @Override

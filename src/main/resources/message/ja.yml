@@ -4,7 +4,7 @@
 
 ## ===== Commands ===== ##
 # プレースホルダはありません
-ToolCommandMessage: 'tool - 送信者に補助ツールを配布します。'
+ToolCommandMessage: 'tool - 補助ツールの選択ウィンドウを表示します。'
 ReloadCommandMessage: 'reload - 全てのファイルの再読み込みを行います。'
 BackupCommandMessage: 'backup - プラグインデータのバックアップを作成します。'
 CheckVerCommandMessage: 'checkver - 最新のプラグインが存在するかチェックします。'
@@ -13,21 +13,47 @@ CreateCommandMessage: '<scriptkey> create <options> - ブロックにスクリ�
 AddCommandMessage: '<scriptkey> add <options> - ブロックにスクリプトを追加します。'
 RemoveCommandMessage: '<scriptkey> remove - ブロックのスクリプトを削除します。'
 ViewCommandMessage: '<scriptkey> view - ブロックのスクリプトを表示します。'
+NameTagCommandMessage: '<scriptkey> nametag <tag> - ブロックにネームタグを設定します。'
+RedstoneCommandMessage: '<scriptkey> redstone <needs> [repeat] [filter] [selector] - レッドストーンの動力で動作するか設定します。'
 RunCommandMessage: '<scriptkey> run [player] <world> <x> <y> <z> - 指定したスクリプトを実行します。'
-RedstoneCommandMessage: '<scriptkey> redstone <needs> [repeat] [filter] [selector] - スクリプトが動力で動作するか設定します。'
 SelectorPasteCommandMessage: 'selector paste [pasteonair] [overwrite] - 選択範囲にスクリプトをペーストします。'
 SelectorRemoveCommandMessage: 'selector remove - 選択範囲のスクリプトを削除します。'
 
 # &(code) : カラーコード(以降の項目全て対象)
 
-## ===== BlockSelector ===== ##
+## ===== GUI ===== ##
 # プレースホルダはありません
-BlockSelector:
-- '&aこのツールは、範囲選択をサポートします。'
-- '&6左クリック: &eブロックを選択範囲の始点に指定します。'
-- '&6右クリック: &eブロックを選択範囲の終点に指定します。'
-- '&6シフト+左クリック: &e現在位置を選択範囲の始点に指定します。'
-- '&6シフト+右クリック: &e現在位置を選択範囲の終点に指定します。'
+CustomGUI:
+  System:
+    Input: '入力してください'
+    Reset: '&cテキストをリセット'
+    InPlayer: '&c他のプレイヤーが、スクリプトを編集中です。'
+    Overflow: '&c文字数が、上限を越えているため正常な編集ができません。'
+    SearchGUI: '検索'
+    SettingGUI: '設定'
+    ToolBoxGUI: 'ツールボックス'
+  Item:
+    SearchGUI:
+      Next: '&d次のページ'
+      Prev: '&d前のページ'
+      Reset: '&dリセット'
+      Reload: '&dリロード'
+      Setting: '&6スクリプト'
+      Scriptkey: '&dスクリプトキー'
+      Time: '&b時間'
+      Coords: '&b座標'
+      NameTag: '&bネームタグ'
+    SettingGUI:
+      Delete: '&c設定の削除'
+      Close: '&d検索ページへ戻る'
+      Copy: '&dコピー'
+      Paste: '&dペースト'
+      Teleport: '&b移動'
+      Execute: '&b実行'
+      View: '&b表示'
+      Redstone: '&aターゲットセレクターの編集'
+      Script: '&aスクリプトの編集'
+      NameTag: '&aネームタグの編集'
 
 ## ===== ScriptEditor ===== ##
 # プレースホルダはありません
@@ -44,6 +70,21 @@ ScriptViewer:
 - '&aこのツールは、スクリプトのチェックをサポートします。'
 - '&6左クリック: &e周囲のスクリプトの検索を開始します。'
 - '&6右クリック: &e周囲のスクリプトの検索を停止します。'
+
+## ===== ScriptManager ===== ##
+# プレースホルダはありません
+ScriptManager:
+- '&aこのツールは、スクリプトの管理をサポートします。'
+- '&6右クリック: &e検索ウィンドウを開きます。'
+
+## ===== BlockSelector ===== ##
+# プレースホルダはありません
+BlockSelector:
+- '&aこのツールは、範囲選択をサポートします。'
+- '&6左クリック: &eブロックを選択範囲の始点に指定します。'
+- '&6右クリック: &eブロックを選択範囲の終点に指定します。'
+- '&6シフト+左クリック: &e現在位置を選択範囲の始点に指定します。'
+- '&6シフト+右クリック: &e現在位置を選択範囲の終点に指定します。'
 
 # |~, \n : 改行(以降の項目全て対象)
 
@@ -77,11 +118,11 @@ ErrorUpdateMessage: '&cアップデートに失敗しました。'
 # %scriptkey% : スクリプトキー
 ScriptCopyMessage: '&aブロック"%scriptkey%"のスクリプトをコピーしました。'
 ScriptPasteMessage: '&aブロック"%scriptkey%"にスクリプトをペーストしました。'
-ScriptCreateMessage: '&aブロック"%scriptkey%"のスクリプトを作成しました。'
+ScriptCreateMessage: '&aブロック"%scriptkey%"でスクリプトを作成しました。'
 ScriptAddMessage: '&aブロック"%scriptkey%"にスクリプトを追加しました。'
 ScriptRemoveMessage: '&cブロック"%scriptkey%"のスクリプトを削除しました。'
-ScriptRedstoneEnableMessage: '&aブロック"%scriptkey%"の動力による動作を有効にしました。'
-ScriptRedstoneDisableMessage: '&cブロック"%scriptkey%"の動力による動作を無効にしました。'
+ScriptNameTagMessage: '&aブロック"%scriptkey%"のネームタグを編集しました。'
+ScriptRedstoneMessage: '&aブロック"%scriptkey%"のターゲットセレクターを編集しました。'
 
 # プレースホルダはありません
 NotSelectionMessage: '&cBlockSelectorで座標を選択してください。'

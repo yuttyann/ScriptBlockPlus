@@ -26,7 +26,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.Predicate;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import com.google.common.base.Predicates;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +44,7 @@ public class Backup extends SimpleFileVisitor<Path> {
      * @param backup - バックアップフォルダ
      */
     public Backup(@NotNull File backup) {
-        this(backup, Predicates.alwaysTrue());
+        this(backup, f -> true);
     }
 
     /**

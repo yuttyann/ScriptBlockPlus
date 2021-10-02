@@ -38,6 +38,10 @@ bin
 plugin.txt
 header.txt
 
+# Markdown
+WIKI_EN.md
+WIKI_JP.md
+
 # Other
 *.log
 *.swp

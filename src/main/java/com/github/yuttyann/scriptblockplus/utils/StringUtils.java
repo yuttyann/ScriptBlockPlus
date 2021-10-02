@@ -63,7 +63,7 @@ public final class StringUtils {
     @NotNull
     public static List<String> split(@Nullable String source, @NotNull char delimiter) {
         if (isEmpty(source)) {
-            return Collections.emptyList();   
+            return Collections.emptyList();
         }
         var list = new ArrayList<String>(1);
         var chars = source.toCharArray();

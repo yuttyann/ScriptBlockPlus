@@ -26,6 +26,8 @@ import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
 import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
+import com.github.yuttyann.scriptblockplus.item.gui.CustomGUI;
+import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -63,6 +65,8 @@ public class ReloadCommand extends SubCommand {
         SBFiles.reload();
         BaseJson.clear();
         CacheJson.loading();
+        CustomGUI.reload();
+        UserWindow.closeAll();
         SBConfig.ALL_FILE_RELOAD.send(sender);
         return true;
     }

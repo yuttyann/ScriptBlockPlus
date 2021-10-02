@@ -108,7 +108,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
             b.registerTypeHierarchyAdapter(BlockCoords.class, new BlockCoordsAdapter());
             b.registerTypeAdapter(BlockScript.class, BlockScript.INSTANCE);
             b.registerTypeAdapter(PlayerCount.class, PlayerCount.INSTANCE);
-            b.registerTypeAdapter(PlayerTimer.class, PlayerTimer.INSTANCE); 
+            b.registerTypeAdapter(PlayerTimer.class, PlayerTimer.INSTANCE);
         });
     }
 
@@ -386,7 +386,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
      * @return {@link Collection}&lt;{@link E}&gt; - エレメントのコレクション
      */
     @NotNull
-    private Collection<E> copyElements() {
+    public final Collection<E> copyElements() {
         int size = elementMap.size() + subSize();
         if (size == 0) {
             return Collections.emptyList();

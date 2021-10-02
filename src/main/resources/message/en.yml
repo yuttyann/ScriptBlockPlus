@@ -5,7 +5,7 @@
 
 ## ===== Commands ===== ##
 # There are no placeholders
-ToolCommandMessage: 'tool - Distribute the tools to the sender.'
+ToolCommandMessage: 'tool - Displays the auxiliary tool select window.'
 ReloadCommandMessage: 'reload - Reload the plugin.'
 BackupCommandMessage: 'backup - Make a backup of the plugin data.'
 CheckVerCommandMessage: 'checkver - Check new version.'
@@ -14,21 +14,47 @@ CreateCommandMessage: '<scriptkey> create <options> - Create a new script to the
 AddCommandMessage: '<scriptkey> add <options> - Add a new script to the block.'
 RemoveCommandMessage: '<scriptkey> remove - Remove the script from the block.'
 ViewCommandMessage: '<scriptkey> view - View the script for the block.'
+NameTagCommandMessage: '<scriptkey> nametag [tag] - Set a nametag for the block.'
+RedstoneCommandMessage: '<scriptkey> redstone [repeat] [filter] [selector] - Set if the script works with Redstone.'
 RunCommandMessage: '<scriptkey> run [player] <world> <x> <y> <z> - Execute the specified script.'
-RedstoneCommandMessage: '<scriptkey> redstone <needs> [repeat] [filter] [selector] - Set if the script works with Redstone.'
 SelectorPasteCommandMessage: 'selector paste [pasteonair] [overwrite] - Paste the script into the selection.'
 SelectorRemoveCommandMessage: 'selector remove - Remove the script into the selection.'
 
 # &(code) : you can use color code
 
-## ===== BlockSelector ===== ##
+## ===== GUI ===== ##
 # There are no placeholders
-BlockSelector:
-- '&aThis tool supports range selection.'
-- '&6Left-click: &eSpecify the block as Pos1.'
-- '&6Right-click: &eSpecify the block as Pos2.'
-- '&6Shift+Leftclick: &eSpecify Player as Pos1.'
-- '&6Shift+Rightclick: &eSpecify Player as Pos2.'
+CustomGUI:
+  System:
+    Input: 'Input Text'
+    Reset: '&cReset Text'
+    InPlayer: '&cAnother player is editing the script.'
+    Overflow: '&cThe number of characters exceeds the limit and cannot be edited properly.'
+    SearchGUI: 'Search'
+    SettingGUI: 'Setting'
+    ToolBoxGUI: 'ToolBox'
+  Item:
+    SearchGUI:
+      Next: '&dNext page'
+      Prev: '&dPrev page'
+      Reset: '&dReset'
+      Reload: '&dReload'
+      Setting: '&6Script'
+      Scriptkey: '&dScriptKey'
+      Time: '&bTime'
+      Coords: '&bCoords'
+      NameTag: '&bNameTag'
+    SettingGUI:
+      Delete: '&cSetting Delete'
+      Close: '&dReturn to search page'
+      Copy: '&dCopy'
+      Paste: '&dPaste'
+      Teleport: '&bTeleport'
+      Execute: '&bExecute'
+      View: '&bView'
+      Redstone: '&aEdit target selector'
+      Script: '&aEdit script'
+      NameTag: '&aEdit nametag'
 
 ## ===== ScriptEditor ===== ##
 # %scriptkey% : Script key
@@ -45,6 +71,21 @@ ScriptViewer:
 - '&aThis tool supports script checking.'
 - '&6Left-click: &eStart searching for surrounding scripts.'
 - '&6Right-click: &eStop searching for surrounding scripts.'
+
+## ===== ScriptManager ===== ##
+# There are no placeholders
+ScriptManager:
+- '&aThis tool supports script management.'
+- '&6Right-click: &eOpen the search window.'
+
+## ===== BlockSelector ===== ##
+# There are no placeholders
+BlockSelector:
+- '&aThis tool supports range selection.'
+- '&6Left-click: &eSpecify the block as Pos1.'
+- '&6Right-click: &eSpecify the block as Pos2.'
+- '&6Shift+Leftclick: &eSpecify Player as Pos1.'
+- '&6Shift+Rightclick: &eSpecify Player as Pos2.'
 
 # |~, \n : change the line
 
@@ -76,13 +117,13 @@ UpdateCheckMessage: '&bNew version available!|~v%version% the latest ver.|~Name:
 ErrorUpdateMessage: '&cError occurred while checking new version.'
 
 # %scriptkey% : Script key
-ScriptCopyMessage: '&aCopy the script for the "%scriptkey%" scriptkey.'
-ScriptPasteMessage: '&aPaste the script for the "%scriptkey%" scriptkey.'
-ScriptCreateMessage: '&aCreate the script for the "%scriptkey%" scriptkey.'
-ScriptAddMessage: '&aAdd the script to the script of the "%scriptkey%" scriptkey.'
-ScriptRemoveMessage: '&cRemove the script for the "%scriptkey%" scriptkey.'
-ScriptRedstoneEnableMessage: '&aThe script for the "%scriptkey%" scriptkey now works with Redstone.'
-ScriptRedstoneDisableMessage: '&cThe script for the "%scriptkey%" scriptkey no longer works with Redstone.'
+ScriptCopyMessage: '&aI copied the script for the block "%scriptkey%".'
+ScriptPasteMessage: '&aI pasted the script into the block "%scriptkey%".'
+ScriptCreateMessage: '&aI created a script with the block "%scriptkey%".'
+ScriptAddMessage: '&aI added a script to the block "%scriptkey%".'
+ScriptRemoveMessage: '&cI removed the script in the block "%scriptkey%".'
+ScriptNameTagMessage: '&aI edited the nametag for the block "%scriptkey%".'
+ScriptRedstoneMessage: '&aI edited the target selector for the block "%scriptkey%".'
 
 # There are no placeholders
 NotSelectionMessage: '&cBlockSelector area not selected.'
