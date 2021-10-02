@@ -194,12 +194,9 @@ public final class Updater {
             }
         }
         if (SBConfig.OPEN_CHANGE_LOG.getValue() && sameLogs && !failure) {
-            var desktop = Desktop.getDesktop();
             try {
-                desktop.open(logFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                Desktop.getDesktop().open(logFile);
+            } catch (Exception e) { /* 非対応のOSの場合スルー */ }
         }
         return true;
     }
