@@ -43,9 +43,10 @@ public enum Permission {
     BREAK_USE("scriptblockplus.break.use"),
     WALK_USE("scriptblockplus.walk.use"),
     */
-    TOOL_BLOCK_SELECTOR("scriptblockplus.tool.blockselector"),
     TOOL_SCRIPT_EDITOR("scriptblockplus.tool.scripteditor"),
     TOOL_SCRIPT_VIEWER("scriptblockplus.tool.scriptviewer"),
+    TOOL_SCRIPT_MANAGER("scriptblockplus.tool.scriptmanager"),
+    TOOL_BLOCK_SELECTOR("scriptblockplus.tool.blockselector"),
 
     // Minecraft Permissions
     MINECRAFT_COMMAND_SAY("minecraft.command.say"),

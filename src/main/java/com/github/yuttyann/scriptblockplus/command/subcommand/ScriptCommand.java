@@ -71,8 +71,9 @@ public class ScriptCommand extends SubCommand {
                 new CommandUsage(SBConfig.ADD_COMMAND.getValue(), PERMISSIONS),
                 new CommandUsage(SBConfig.REMOVE_COMMAND.getValue(), PERMISSIONS),
                 new CommandUsage(SBConfig.VIEW_COMMAND.getValue(), PERMISSIONS),
-                new CommandUsage(SBConfig.RUN_COMMAND.getValue(), PERMISSIONS),
-                new CommandUsage(SBConfig.REDSTONE_COMMAND.getValue(), PERMISSIONS));
+                new CommandUsage(SBConfig.NAMETAG_COMMAND.getValue(), PERMISSIONS),
+                new CommandUsage(SBConfig.REDSTONE_COMMAND.getValue(), PERMISSIONS),
+                new CommandUsage(SBConfig.RUN_COMMAND.getValue(), PERMISSIONS));
     }
 
     @Override
@@ -88,9 +89,9 @@ public class ScriptCommand extends SubCommand {
             }
             var target = Optional.ofNullable(i == 1 ? Bukkit.getPlayerExact(args(2)) : (Player) sender);
             var blockCoords = BlockCoords.of(Utils.getWorld(args(2 + i)), parseInt(args(3 + i)), parseInt(args(4 + i)), parseInt(args(5 + i)));
-            target.ifPresent(p -> new ScriptRead(p, blockCoords, scriptKey).read(0));
+            target.ifPresent(p -> new ScriptRead(SBPlayer.fromPlayer(p), blockCoords, scriptKey).read(0));
             return true;
-        } else if (compare(1, "create", "add", "remove", "view", "redstone") && isPlayer(sender)) {
+        } else if (compare(1, "create", "add", "remove", "redstone", "nametag", "view") && isPlayer(sender)) {
             var sbPlayer = SBPlayer.fromPlayer((Player) sender);
             if (sbPlayer.getScriptEdit().isPresent()) {
                 SBConfig.ERROR_ACTION_DATA.send(sbPlayer);
@@ -110,16 +111,16 @@ public class ScriptCommand extends SubCommand {
                     }
                     scriptEdit.setValue(script);
                     break;
+                case NAMETAG:
+                    scriptEdit.setValue(range(2) ? (String) null : StringUtils.createString(args(), 2).trim());
+                    break;
                 case REDSTONE:
-                    if (range(2)) {
-                        return false;
-                    }
-                    if (compare(2, "true")) {
+                    if (!range(2)) {
                         var selector = StringUtils.createString(args(), 3).trim();
                         if (!CommandSelector.has(selector)) {
                             selector = selector.isEmpty() ? "@p" : selector + " @p";
                         }
-                        scriptEdit.setValue(selector.startsWith("@s") ? "@p" : selector);
+                        scriptEdit.setValue(selector);
                     }
                     break;
                 default:
