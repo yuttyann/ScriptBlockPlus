@@ -35,17 +35,18 @@ import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
  */
 public final class SBConfig {
 
-    // List Keys
-    public static final ConfigKey<List<String>> BLOCK_SELECTOR = stringListKey("BlockSelector", Collections.emptyList());
+    /* List Keys */
     public static final ConfigKey<List<String>> SCRIPT_EDITOR = stringListKey("ScriptEditor", Collections.emptyList());
     public static final ConfigKey<List<String>> SCRIPT_VIEWER = stringListKey("ScriptViewer", Collections.emptyList());
+    public static final ConfigKey<List<String>> SCRIPT_MANAGER = stringListKey("ScriptManager", Collections.emptyList());
+    public static final ConfigKey<List<String>> BLOCK_SELECTOR = stringListKey("BlockSelector", Collections.emptyList());
 
 
-    // Integer Keys
+    /* Integer Keys */
     public static final ConfigKey<Integer> FORMAT_LIMIT = integerKey("FormatLimit", 100000);
 
 
-    // Boolean Keys
+    /* Boolean Keys */
     public static final ConfigKey<Boolean> UPDATE_CHECKER = booleanKey("UpdateChecker", true);
     public static final ConfigKey<Boolean> AUTO_DOWNLOAD = booleanKey("AutoDownload", true);
     public static final ConfigKey<Boolean> OPEN_CHANGE_LOG = booleanKey("OpenChangeLog", true);
@@ -58,7 +59,40 @@ public final class SBConfig {
     public static final ConfigKey<Boolean> ACTIONS_INTERACT_RIGHT = booleanKey("Actions.InteractRight", true);
 
 
-    // String Keys
+    /* String Keys */
+    // CustomGUI System
+    public static final ConfigKey<String> GUI_SYS_INPUT = stringKey("CustomGUI.System.Input", "");
+    public static final ConfigKey<String> GUI_SYS_RESET = stringKey("CustomGUI.System.Reset", "");
+    public static final ConfigKey<String> GUI_SYS_INPLAYER = stringKey("CustomGUI.System.InPlayer", "");
+    public static final ConfigKey<String> GUI_SYS_OVERFLOW = stringKey("CustomGUI.System.Overflow", "");
+    public static final ConfigKey<String> GUI_SYS_SEARCHGUI = stringKey("CustomGUI.System.SearchGUI", "");
+    public static final ConfigKey<String> GUI_SYS_SETTINGGUI = stringKey("CustomGUI.System.SettingGUI", "");
+    public static final ConfigKey<String> GUI_SYS_TOOLBOXGUI = stringKey("CustomGUI.System.ToolBoxGUI", "");
+    
+    // CustomGUI Item SearchGUI
+    public static final ConfigKey<String> GUI_SEARCH_NEXT = stringKey("CustomGUI.Item.SearchGUI.Next", "");
+    public static final ConfigKey<String> GUI_SEARCH_PREV = stringKey("CustomGUI.Item.SearchGUI.Prev", "");
+    public static final ConfigKey<String> GUI_SEARCH_RESET = stringKey("CustomGUI.Item.SearchGUI.Reset", "");
+    public static final ConfigKey<String> GUI_SEARCH_RELOAD = stringKey("CustomGUI.Item.SearchGUI.Reload", "");
+    public static final ConfigKey<String> GUI_SEARCH_SETTING = stringKey("CustomGUI.Item.SearchGUI.Setting", "");
+    public static final ConfigKey<String> GUI_SEARCH_SCRIPTKEY = stringKey("CustomGUI.Item.SearchGUI.Scriptkey", "");
+    public static final ConfigKey<String> GUI_SEARCH_TIME = stringKey("CustomGUI.Item.SearchGUI.Time", "");
+    public static final ConfigKey<String> GUI_SEARCH_COORDS = stringKey("CustomGUI.Item.SearchGUI.Coords", "");
+    public static final ConfigKey<String> GUI_SEARCH_NAMETAG = stringKey("CustomGUI.Item.SearchGUI.NameTag", "");
+
+    // CustomGUI Item SettingGUI
+    public static final ConfigKey<String> GUI_SETTING_DELETE = stringKey("CustomGUI.Item.SettingGUI.Delete", "");
+    public static final ConfigKey<String> GUI_SETTING_CLOSE = stringKey("CustomGUI.Item.SettingGUI.Close", "");
+    public static final ConfigKey<String> GUI_SETTING_COPY = stringKey("CustomGUI.Item.SettingGUI.Copy", "");
+    public static final ConfigKey<String> GUI_SETTING_PASTE = stringKey("CustomGUI.Item.SettingGUI.Paste", "");
+    public static final ConfigKey<String> GUI_SETTING_EXECUTE = stringKey("CustomGUI.Item.SettingGUI.Execute", "");
+    public static final ConfigKey<String> GUI_SETTING_TELEPORT = stringKey("CustomGUI.Item.SettingGUI.Teleport", "");
+    public static final ConfigKey<String> GUI_SETTING_VIEW = stringKey("CustomGUI.Item.SettingGUI.View", "");
+    public static final ConfigKey<String> GUI_SETTING_REDSTONE = stringKey("CustomGUI.Item.SettingGUI.Redstone", "");
+    public static final ConfigKey<String> GUI_SETTING_SCRIPT = stringKey("CustomGUI.Item.SettingGUI.Script", "");
+    public static final ConfigKey<String> GUI_SETTING_NAMETAG = stringKey("CustomGUI.Item.SettingGUI.NameTag", "");
+
+    // Message
     public static final ConfigKey<String> TOOL_COMMAND = stringKey("ToolCommandMessage", "");
     public static final ConfigKey<String> RELOAD_COMMAND = stringKey("ReloadCommandMessage", "");
     public static final ConfigKey<String> BACKUP_COMMAND = stringKey("BackupCommandMessage", "");
@@ -68,8 +102,9 @@ public final class SBConfig {
     public static final ConfigKey<String> ADD_COMMAND = stringKey("AddCommandMessage", "");
     public static final ConfigKey<String> REMOVE_COMMAND = stringKey("RemoveCommandMessage", "");
     public static final ConfigKey<String> VIEW_COMMAND = stringKey("ViewCommandMessage", "");
-    public static final ConfigKey<String> RUN_COMMAND = stringKey("RunCommandMessage", "");
+    public static final ConfigKey<String> NAMETAG_COMMAND = stringKey("NameTagCommandMessage", "");
     public static final ConfigKey<String> REDSTONE_COMMAND = stringKey("RedstoneCommandMessage", "");
+    public static final ConfigKey<String> RUN_COMMAND = stringKey("RunCommandMessage", "");
     public static final ConfigKey<String> SELECTOR_PASTE_COMMAND = stringKey("SelectorPasteCommandMessage", "");
     public static final ConfigKey<String> SELECTOR_REMOVE_COMMAND = stringKey("SelectorRemoveCommandMessage", "");
     public static final ConfigKey<String> SENDER_NO_PLAYER = stringKey("SenderNoPlayerMessage", "");
@@ -93,7 +128,7 @@ public final class SBConfig {
     public static final ConfigKey<String> ERROR_SCRIPT_FILE_CHECK = stringKey("ErrorScriptFileCheckMessage", "");
 
 
-    // Functions (Private)
+    /* Functions (Private) */
     private static Function<ReplaceKey, String> FUNCTION_UPDATE_CHECK = r -> {
         var value = r.getValue();
         value = replace(value, "%name%", r.getArgument(0, String.class));
@@ -105,7 +140,8 @@ public final class SBConfig {
             for (int i = 0; i < list.size(); i++) {
                 var info = removeStart(list.get(i), "$");
                 var tree = list.get(i).startsWith("$");
-                builder.append(tree ? "  - " : "・").append(info).append(i == (list.size() - 1) ? "" : "|~");
+                builder.append("§7" + (tree ? "  - " : "・") + "§b")
+                .append(info).append(i == (list.size() - 1) ? "" : "|~");
             }
             value = replace(value, "%details%", builder.toString());
         }
@@ -159,7 +195,7 @@ public final class SBConfig {
     };
 
 
-    // Replace Keys
+    /* Replace Keys */
     /**
      * Parameter: {@link String} name, {@link String} path, {@link String} size
      */
@@ -198,12 +234,12 @@ public final class SBConfig {
     /**
      * Parameter: {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey SCRIPT_REDSTONE_ENABLE = replaceKey("ScriptRedstoneEnableMessage", "", FUNCTION_SCRIPT_TYPE);
+    public static final ReplaceKey SCRIPT_NAMETAG = replaceKey("ScriptNameTagMessage", "", FUNCTION_SCRIPT_TYPE);
 
     /**
      * Parameter: {@link ScriptKey} scriptKey
      */
-    public static final ReplaceKey SCRIPT_REDSTONE_DISABLE = replaceKey("ScriptRedstoneDisableMessage", "", FUNCTION_SCRIPT_TYPE);
+    public static final ReplaceKey SCRIPT_REDSTONE = replaceKey("ScriptRedstoneMessage", "", FUNCTION_SCRIPT_TYPE);
 
     /**
      * Parameter: {@link String} worldName, {@link String} coords
