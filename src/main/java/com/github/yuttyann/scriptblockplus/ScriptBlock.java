@@ -31,7 +31,13 @@ import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.action.BlockSelector;
 import com.github.yuttyann.scriptblockplus.item.action.ScriptEditor;
 import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
+import com.github.yuttyann.scriptblockplus.item.action.ScriptManager;
 import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
+import com.github.yuttyann.scriptblockplus.item.gui.CustomGUI;
+import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
+import com.github.yuttyann.scriptblockplus.item.gui.custom.SearchGUI;
+import com.github.yuttyann.scriptblockplus.item.gui.custom.SettingGUI;
+import com.github.yuttyann.scriptblockplus.item.gui.custom.ToolBoxGUI;
 import com.github.yuttyann.scriptblockplus.listener.trigger.BreakTrigger;
 import com.github.yuttyann.scriptblockplus.listener.trigger.HitTrigger;
 import com.github.yuttyann.scriptblockplus.listener.trigger.InteractTrigger;
@@ -70,7 +76,7 @@ public class ScriptBlock extends JavaPlugin {
 
         // NMSが見つからなかった場合警告
         if (!NetMinecraft.hasNMS()) {
-            getLogger().warning("NetMinecraft(" + (NetMinecraft.isLegacy() ? NetMinecraft.LEGACY : NetMinecraft.SERVER) + ") not found.");
+            getLogger().warning(NetMinecraft.WARNING_TEXT);
         }
 
         // 全ファイルの読み込み
@@ -111,9 +117,15 @@ public class ScriptBlock extends JavaPlugin {
         TriggerListener.register(new BreakTrigger(this));
         TriggerListener.register(new InteractTrigger(this));
 
+        // GUI の登録
+        CustomGUI.register(new SearchGUI());
+        CustomGUI.register(new SettingGUI());
+        CustomGUI.register(new ToolBoxGUI());
+
         // アイテムアクションの登録
-        ItemAction.register(new ScriptViewer());
         ItemAction.register(new ScriptEditor());
+        ItemAction.register(new ScriptViewer());
+        ItemAction.register(new ScriptManager());
         ItemAction.register(new BlockSelector());
 
         // オプションの更新
@@ -129,6 +141,7 @@ public class ScriptBlock extends JavaPlugin {
     @Override
     public void onDisable() {
         try {
+            UserWindow.closeAll();
             ScriptViewer.PLAYERS.clear();
             TickRunnable.GLOW_ENTITY.removeAll();
         } catch (ReflectiveOperationException e) {

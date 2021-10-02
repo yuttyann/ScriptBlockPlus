@@ -17,6 +17,7 @@ package com.github.yuttyann.scriptblockplus.listener;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,16 +28,21 @@ import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
+import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -90,13 +96,46 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
+        var sbPlayer = SBPlayer.fromUUID(event.getWhoClicked().getUniqueId());
         var inventory = Optional.ofNullable(event.getClickedInventory());
-        if (!inventory.isPresent() || inventory.get().getType() != InventoryType.PLAYER) {
+        if (inventory.isPresent() && inventory.get().getType() == InventoryType.PLAYER) {
+            if (sbPlayer.getObjectMap().get(KEY_INVENTORY, Collections.EMPTY_SET).size() > 0) {
+                event.setCancelled(true);
+            }
+        }
+        var window = (UserWindow) sbPlayer.getObjectMap().get(UserWindow.KEY_WINDOW);
+        if (window == null || event.getSlotType() != SlotType.CONTAINER) {
             return;
         }
-        var sbPlayer = SBPlayer.fromUUID(event.getWhoClicked().getUniqueId());
-        if (sbPlayer.getObjectMap().get(KEY_INVENTORY, Collections.EMPTY_SET).size() > 0) {
+        var customGUI = window.getCustomGUI();
+        if (!Objects.equals(customGUI.getTitle(), event.getView().getTitle())) {
+            return;
+        }
+        if (customGUI.isCancelled()) {
             event.setCancelled(true);
+        }
+        var guiItem = window.getItem(event.getSlot());
+        if (guiItem == null || guiItem.toBukkit().getType() == Material.AIR) {
+            return;
+        }
+        if (customGUI.isCancelled() && !guiItem.toBukkit().equals(event.getCurrentItem())) {
+            window.closeGUI();
+            return;
+        }
+        var clickType = event.getClick();
+        if (clickType == ClickType.LEFT || clickType == ClickType.RIGHT) {
+            guiItem.onClicked(window, guiItem, clickType);
+            if (guiItem.getClicked() != null) {
+                window.getCustomGUI().playSoundEffect(sbPlayer);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInventoryClose(InventoryCloseEvent event) {
+        var objectMap = SBPlayer.fromUUID(event.getPlayer().getUniqueId()).getObjectMap();
+        if (objectMap.has(UserWindow.KEY_WINDOW)) {
+            ((UserWindow) objectMap.get(UserWindow.KEY_WINDOW)).closeGUI();
         }
     }
 
