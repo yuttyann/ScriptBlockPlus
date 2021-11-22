@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 
@@ -36,18 +37,20 @@ public abstract class CustomGUI {
 
     private static final Map<Class<? extends CustomGUI>, CustomGUI> GUIS = new HashMap<>();
 
+    private final Supplier<String> title;
+
     private final UUID uuid;
-    private final String key, title;
+    private final String key;
     private final GUIItem[] items;
     private final boolean cancelled;
 
     private Sound sound;
     private float volume, pitch;
 
-    protected CustomGUI(@NotNull String title, @NotNull int size, final boolean cancelled) {
+    protected CustomGUI(@NotNull Supplier<String> title, @NotNull int size, final boolean cancelled) {
+        this.title = title;
         this.uuid = UUID.randomUUID();
         this.key = uuid.toString();
-        this.title = title;
         this.items = new GUIItem[size < 0 ? size * -1 : size == 0 ? 9 : size > 6 ? 54 : size * 9];
         this.cancelled = cancelled;
     }
@@ -75,7 +78,7 @@ public abstract class CustomGUI {
     @NotNull
     public static Optional<UserWindow> getWindow(@NotNull Class<? extends CustomGUI> guiClass, @NotNull SBPlayer sbPlayer) {
         var customGUI = GUIS.get(guiClass);
-        return customGUI == null ? Optional.empty() : Optional.ofNullable(customGUI.getUserWindow(sbPlayer));
+        return customGUI == null ? Optional.empty() : Optional.of(customGUI.getUserWindow(sbPlayer));
     }
 
     @NotNull
@@ -85,7 +88,7 @@ public abstract class CustomGUI {
 
     @NotNull
     public String getTitle() {
-        return title;
+        return title.get();
     }
 
     @NotNull
