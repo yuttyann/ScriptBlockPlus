@@ -101,7 +101,7 @@ public interface ScriptBlockAPI {
         void create(@NotNull Player player, @NotNull Location location, @NotNull String script);
 
         /**
-         * 指定した座標にスクリプト追加します。
+         * 指定した座標にスクリプトを追加します。
          * @param player - プレイヤー
          * @param location - スクリプトの座標
          * @param script - スクリプト
@@ -121,6 +121,22 @@ public interface ScriptBlockAPI {
          * @param location - スクリプトの座標
          */
         void view(@NotNull Player player, @NotNull Location location);
+
+        /**
+         * 指定した座標のスクリプトにネームタグを設定します。
+         * @param player - プレイヤー
+         * @param location - スクリプトの座標
+         * @param nameTag - ネームタグ
+         */
+        void nameTag(@NotNull Player player, @NotNull Location location, @Nullable String nameTag);
+    
+        /**
+         * 指定した座標のスクリプトにターゲットセレクターを設定します。
+         * @param player - プレイヤー
+         * @param location - スクリプトの座標
+         * @param selector - ターゲットセレクター
+         */
+        void redstone(@NotNull Player player, @NotNull Location location, @Nullable String selector);
     }
 
     /**
@@ -206,14 +222,26 @@ public interface ScriptBlockAPI {
         String getLastEdit();
 
         /**
-         * セレクターを設定します。
-         * @param selector - セレクター
+         * ネームタグを設定します。
+         * @param nameTag - ネームタグ
+         */
+        void setNameTag(@Nullable String nameTag);
+
+        /**
+         * ネームタグを取得します。
+         * @return {@link String} - ネームタグ
+         */
+        String getNameTag();
+
+        /**
+         * ターゲットセレクターを設定します。
+         * @param selector - ターゲットセレクター
          */
         void setSelector(@Nullable String selector);
 
         /**
-         * セレクターを取得します。
-         * @return {@link String} - セレクター
+         * ターゲットセレクターを取得します。
+         * @return {@link String} - ターゲットセレクター
          */
         String getSelector();
 

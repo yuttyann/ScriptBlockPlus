@@ -18,7 +18,7 @@ package com.github.yuttyann.scriptblockplus.manager;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -111,6 +111,16 @@ public final class APIManager implements ScriptBlockAPI {
         public void view(@NotNull Player player, @NotNull Location location) {
             sbOperation.view(player, BlockCoords.of(location));
         }
+
+        @Override
+        public void nameTag(@NotNull Player player, @NotNull Location location, @Nullable String nameTag) {            
+            sbOperation.nameTag(player, BlockCoords.of(location), nameTag);
+        }
+
+        @Override
+        public void redstone(@NotNull Player player, @NotNull Location location, @Nullable String selector) {
+            sbOperation.redstone(player, BlockCoords.of(location), selector);
+        }
     }
 
     @Override
@@ -135,6 +145,9 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         public void save() {
+            if (!scriptJson.has(blockCoords)) {
+                scriptJson.init(blockCoords);
+            }
             scriptJson.saveJson();
         }
 
@@ -145,7 +158,7 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         public boolean has() {
-            return blockScript.getAuthors().size() > 0;
+            return scriptJson.has(blockCoords) && blockScript.getAuthors().size() > 0;
         }
 
         @Override
@@ -194,6 +207,16 @@ public final class APIManager implements ScriptBlockAPI {
         }
 
         @Override
+        public void setNameTag(@Nullable String nameTag) {
+            blockScript.setNameTag(nameTag);
+        }
+
+        @Override
+        public String getNameTag() {
+            return blockScript.getNameTag();
+        }
+
+        @Override
         public void setSelector(@Nullable String selector) {
             blockScript.setSelector(selector);
         }
@@ -226,7 +249,6 @@ public final class APIManager implements ScriptBlockAPI {
 
         @Override
         public void remove() {
-            scriptJson.init(blockCoords);
             scriptJson.remove(blockCoords);
         }
     }
