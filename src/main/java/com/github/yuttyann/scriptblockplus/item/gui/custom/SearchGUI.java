@@ -149,7 +149,7 @@ public final class SearchGUI extends CustomGUI {
         ).setName(SBConfig.GUI_SEARCH_PREV.setColor()));
 
         // AnvilGUI
-        window.setItem(SLOTS[0], new GUIItem(1, ItemUtils.getCommandMaterial(), "§bスクリプト", EMPTY_LORE, (w, g, c) -> {
+        window.setItem(SLOTS[0], new GUIItem(1, ItemUtils.getCommandMaterial(), SBConfig.GUI_SEARCH_SCRIPT.setColor(), EMPTY_LORE, (w, g, c) -> {
             OPEN_ANVIL.accept(w, GET_VALUE.apply(g.getLore().get(0), true), (p, t) -> {
                 w.setItem(SLOTS[0], g.setLore(TEXT + (t == null ? "" : ChatColor.stripColor(t))));
                 return Response.close();

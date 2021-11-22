@@ -163,7 +163,7 @@ public final class SettingGUI extends CustomGUI {
                 w.setItem(SLOTS[7], w.getItem(SLOTS[7]).setLore(s.createLore(w.getSBPlayer().getPlayer())));
             });
         }));
-        window.setItem(SLOTS[7], new GUIItem(1, Material.ENCHANTED_BOOK, SBConfig.GUI_SETTING_VIEW.setColor(), null, (w, g, c) -> {
+        window.setItem(SLOTS[7], new GUIItem(1, Material.ENCHANTED_BOOK, SBConfig.GUI_SETTING_INFO.setColor(), null, (w, g, c) -> {
             getScriptJson(w).ifPresent(s -> update(w, s));
         }));
 

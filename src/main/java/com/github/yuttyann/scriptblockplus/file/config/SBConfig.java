@@ -73,9 +73,9 @@ public final class SBConfig {
     public static final ConfigKey<String> GUI_SEARCH_NEXT = stringKey("CustomGUI.Item.SearchGUI.Next", "");
     public static final ConfigKey<String> GUI_SEARCH_PREV = stringKey("CustomGUI.Item.SearchGUI.Prev", "");
     public static final ConfigKey<String> GUI_SEARCH_RESET = stringKey("CustomGUI.Item.SearchGUI.Reset", "");
-    public static final ConfigKey<String> GUI_SEARCH_RELOAD = stringKey("CustomGUI.Item.SearchGUI.Reload", "");
     public static final ConfigKey<String> GUI_SEARCH_SETTING = stringKey("CustomGUI.Item.SearchGUI.Setting", "");
     public static final ConfigKey<String> GUI_SEARCH_SCRIPTKEY = stringKey("CustomGUI.Item.SearchGUI.Scriptkey", "");
+    public static final ConfigKey<String> GUI_SEARCH_SCRIPT = stringKey("CustomGUI.Item.SearchGUI.Script", "");
     public static final ConfigKey<String> GUI_SEARCH_TIME = stringKey("CustomGUI.Item.SearchGUI.Time", "");
     public static final ConfigKey<String> GUI_SEARCH_COORDS = stringKey("CustomGUI.Item.SearchGUI.Coords", "");
     public static final ConfigKey<String> GUI_SEARCH_NAMETAG = stringKey("CustomGUI.Item.SearchGUI.NameTag", "");
@@ -87,7 +87,7 @@ public final class SBConfig {
     public static final ConfigKey<String> GUI_SETTING_PASTE = stringKey("CustomGUI.Item.SettingGUI.Paste", "");
     public static final ConfigKey<String> GUI_SETTING_EXECUTE = stringKey("CustomGUI.Item.SettingGUI.Execute", "");
     public static final ConfigKey<String> GUI_SETTING_TELEPORT = stringKey("CustomGUI.Item.SettingGUI.Teleport", "");
-    public static final ConfigKey<String> GUI_SETTING_VIEW = stringKey("CustomGUI.Item.SettingGUI.View", "");
+    public static final ConfigKey<String> GUI_SETTING_INFO = stringKey("CustomGUI.Item.SettingGUI.Info", "");
     public static final ConfigKey<String> GUI_SETTING_REDSTONE = stringKey("CustomGUI.Item.SettingGUI.Redstone", "");
     public static final ConfigKey<String> GUI_SETTING_SCRIPT = stringKey("CustomGUI.Item.SettingGUI.Script", "");
     public static final ConfigKey<String> GUI_SETTING_NAMETAG = stringKey("CustomGUI.Item.SettingGUI.NameTag", "");
