@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public final class ToolBoxGUI extends CustomGUI {
 
     public ToolBoxGUI() {
-        super(SBConfig.GUI_SYS_TOOLBOXGUI.setColor(), 3, true);
+        super(SBConfig.GUI_SYS_TOOLBOXGUI::setColor, 3, true);
         setSoundEffect(Sound.ENTITY_HORSE_SADDLE, 1, 1);
     }
 
@@ -43,9 +43,12 @@ public final class ToolBoxGUI extends CustomGUI {
     @Override
     public void onOpened(@NotNull UserWindow window) {
         var index = new AtomicInteger();
-        ItemAction.getItems().forEach(i -> window.setItem(index.getAndIncrement(), new GUIItem(i.getItem(), (w, g, c) -> {
-            w.getSBPlayer().getInventory().addItem(g.toBukkit().clone());
-        })));
+        ItemAction.getItems().forEach(i -> {
+            if (i.hasPermission(window.getSBPlayer())) {
+                window.setItem(index.getAndIncrement(), new GUIItem(i.getItem(),
+                (w, g, c) -> w.getSBPlayer().getInventory().addItem(g.toBukkit().clone())));
+            }
+        });
     }
 
     @Override
