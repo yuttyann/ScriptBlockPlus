@@ -412,30 +412,24 @@ public final class NMSHelper {
     }
 
     public static void setActiveContainerId(@NotNull Object container, int containerId) throws ReflectiveOperationException {
-        if (Utils.isCBXXXorLater("1.14")) {
-            return;
+        if (!Utils.isCBXXXorLater("1.14")) {
+            NetMinecraft.LEGACY.setFieldValue("Container", "windowId", container, containerId);
         }
-        NetMinecraft.LEGACY.setFieldValue("Container", "windowId", container, containerId);
     }
 
     public static void addActiveContainerSlotListener(@NotNull Object container, @NotNull Player player) throws ReflectiveOperationException {
         if (Utils.isCBXXXorLater("1.17")) {
-            NetMinecraft.SR_LEVEL.invokeMethod(false, getNMSPlayer(player), "EntityPlayer", "initMenu",
-            new Class<?>[] { NetMinecraft.WR_INVENTORY.getClass("Container") }, container);
+            NetMinecraft.SR_LEVEL.invokeMethod(false, getNMSPlayer(player), "EntityPlayer", "initMenu", new Class<?>[] { NetMinecraft.WR_INVENTORY.getClass("Container") }, container);
         } else {
-            NetMinecraft.LEGACY.invokeMethod(false, container, "Container", "addSlotListener",
-            new Class[] { NetMinecraft.LEGACY.getClass("ICrafting") }, getNMSPlayer(player));
+            NetMinecraft.LEGACY.invokeMethod(false, container, "Container", "addSlotListener", new Class[] { NetMinecraft.LEGACY.getClass("ICrafting") }, getNMSPlayer(player));
         }
     }
 
     @NotNull
     public static Inventory toBukkitInventory(@NotNull Object container) throws ReflectiveOperationException {
-        var inventoryView = (InventoryView) null;
-        if (Utils.isCBXXXorLater("1.17")) {
-            inventoryView = (InventoryView) NetMinecraft.WR_INVENTORY.invokeMethod(container, "Container", "getBukkitView");
-        } else {
-            inventoryView = (InventoryView) NetMinecraft.LEGACY.invokeMethod(container, "Container", "getBukkitView");
-        }
+        var inventoryView = (InventoryView) (Utils.isCBXXXorLater("1.17") 
+        ? NetMinecraft.WR_INVENTORY.invokeMethod(container, "Container", "getBukkitView")
+        : NetMinecraft.LEGACY.invokeMethod(container, "Container", "getBukkitView"));
         return inventoryView.getTopInventory();
     }
 
@@ -456,10 +450,11 @@ public final class NMSHelper {
             new Class<?>[] { NetMinecraft.NW_CHAT.getClass("IChatBaseComponent") }, message);
             NetMinecraft.WR_INVENTORY.setFieldValue("Container", "checkReachable", containerAnvil, false);
             return containerAnvil;
-        } else if (Utils.isCBXXXorLater("1.14")) {
+        }
+        var position = NetMinecraft.LEGACY.newInstance("BlockPosition", 0, 0, 0);
+        var inventory = NetMinecraft.LEGACY.getFieldValue("EntityHuman", "inventory", nmsPlayer);
+        if (Utils.isCBXXXorLater("1.14")) {
             var message = NetMinecraft.LEGACY.newInstance("ChatComponentText", title);
-            var position = NetMinecraft.LEGACY.newInstance("BlockPosition", 0, 0, 0);
-            var inventory = NetMinecraft.LEGACY.getFieldValue("EntityPlayer", "inventory", nmsPlayer);
             var container = NetMinecraft.LEGACY.invokeMethod(false, (Object) null, "ContainerAccess", "at",
             new Class<?>[] { nmsWorld.getClass().getSuperclass(), position.getClass() }, nmsWorld, position);
             var containerAnvil = NetMinecraft.LEGACY.newInstance(false, "ContainerAnvil",
@@ -470,8 +465,6 @@ public final class NMSHelper {
             NetMinecraft.LEGACY.setFieldValue("Container", "checkReachable", containerAnvil, false);
             return containerAnvil;
         } else {
-            var position = NetMinecraft.LEGACY.newInstance("BlockPosition", 0, 0, 0);
-            var inventory = NetMinecraft.LEGACY.getFieldValue("EntityHuman", "inventory", nmsPlayer);
             var containerAnvil = NetMinecraft.LEGACY.newInstance(false, "ContainerAnvil",
             new Class<?>[] { NetMinecraft.LEGACY.getClass("PlayerInventory"), NetMinecraft.LEGACY.getClass("World"),
             NetMinecraft.LEGACY.getClass("BlockPosition"), NetMinecraft.LEGACY.getClass("EntityHuman") }, inventory, nmsWorld, position, nmsPlayer);
