@@ -41,6 +41,13 @@
 プラグイン自体は正常に動作するのですが、問題が発生する可能性があるのでなるべく"[**1.13.2**](https://papermc.io/legacy)"を利用してください。  
 **解決方法(非推奨)**、`<Server>.jar`内の`org/objectweb/asm/ClassVisitor.class`を[改変](https://pastebin.com/UFBdKXJD)することで動作します。  
 
+**== プラグインの不具合について ==**  
+報告される不具合の多くはデータファイルや設定ファイル系が殆んどです。  
+報告される際は、一度`plugins/ScriptBlockPlus/json`内の`format.sbp`を削除して再生成を行ってください。  
+また、アップデートで設定ファイルが変更されることもままあるので、再生成を推奨します。  
+**(データファイル、設定ファイルの再生成や削除で解決しなかった場合は[Issue](https://github.com/yuttyann/ScriptBlockPlus/issues)で報告してください。)**  
+`ちなみにそもそも起動しない場合は、Javaのバージョンをチェックしてください。`
+
 対応プラットフォーム
 -----------
 **[`BukkitAPI`](https://hub.spigotmc.org/javadocs/bukkit/overview-summary.html)を実装しているのであれば**基本的に動作します。  
