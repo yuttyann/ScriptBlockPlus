@@ -17,10 +17,8 @@ package com.github.yuttyann.scriptblockplus.utils;
 
 import com.github.yuttyann.scriptblockplus.enums.MatchType;
 import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
-import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.jetbrains.annotations.NotNull;
@@ -58,53 +56,8 @@ public class ItemUtils {
     }
 
     @NotNull
-    public static ItemStack getScriptEditor() {
-        var item = new ItemStack(Material.BLAZE_ROD);
-        var itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName("§dScript Editor");
-        itemMeta.setLore(SBConfig.SCRIPT_EDITOR.setListColor());
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        item.setItemMeta(itemMeta);
-        return item;
-    }
-
-    @NotNull
-    public static ItemStack getScriptViewer() {
-        var item = new ItemStack(getClockMaterial());
-        var itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName("§dScript Viewer");
-        itemMeta.setLore(SBConfig.SCRIPT_VIEWER.setListColor());
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        item.setItemMeta(itemMeta);
-        return item;
-    }
-
-    @NotNull
-    public static ItemStack getScriptManager() {
-        var item = new ItemStack(Material.BOOK);
-        var itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName("§dScript Manager");
-        itemMeta.setLore(SBConfig.SCRIPT_MANAGER.setListColor());
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        item.setItemMeta(itemMeta);
-        return item;
-    }
-
-
-    @NotNull
-    public static ItemStack getBlockSelector() {
-        var item = new ItemStack(Material.STICK);
-        var itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName("§dBlock Selector");
-        itemMeta.setLore(SBConfig.BLOCK_SELECTOR.setListColor());
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        item.setItemMeta(itemMeta);
-        return item;
-    }
-
-    @NotNull
     public static ItemStack getGlassPane(@NotNull int color) {
-        if (Utils.isCBXXXorLater("1.12")) {
+        if (Utils.isCBXXXorLater("1.13")) {
             var material = (Material) null;
             switch (color) {
                 case 0:
