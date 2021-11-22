@@ -30,7 +30,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.hook.nms.AnvilGUI.AnvilBuilder;
 import com.github.yuttyann.scriptblockplus.hook.nms.AnvilGUI.Response;
 import com.github.yuttyann.scriptblockplus.item.gui.CustomGUI;
@@ -40,6 +40,7 @@ import com.github.yuttyann.scriptblockplus.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.raytrace.SBBoundingBox;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriConsumer;
@@ -61,9 +62,8 @@ import org.jetbrains.annotations.Nullable;
 public final class SearchGUI extends CustomGUI {
 
     private static final int[] SLOTS =  {
-        10 /* スクリプトキー */,
-        11 /* リロード */, 19 /* 更新時間 */, 28 /* 座標 */, 37 /* タグ */, 38 /* クリア */,
-        20 /* 次のぺージ */, 29 /* 前のページ */,
+        10 /* [0]=スクリプト */, 19 /* [1]=更新時間 */, 28 /* [2]=座標 */, 37 /* [3]=ネームタグ */, 
+        11 /* [4]=スクリプトキー */, 20 /* [5]=次のぺージ */, 29 /* [6]=前のページ */, 38 /* [7]=クリア */,
         /*              空白                 */
         12, 13, 14, 15, 16, 21, 22, 23, 24, 25,
         30, 31, 32, 33, 34, 39, 40, 41, 42, 43
@@ -79,7 +79,7 @@ public final class SearchGUI extends CustomGUI {
         return (b ? ChatColor.stripColor(StringUtils.removeStart(s, TEXT)) : StringUtils.removeStart(s, TEXT)).trim();
     };
 
-    private final TriConsumer<UserWindow, String, BiFunction<Player, String, Response>> ANVIL_OPEN = (w, s, r) -> {
+    private final TriConsumer<UserWindow, String, BiFunction<Player, String, Response>> OPEN_ANVIL = (w, s, r) -> {
         new AnvilBuilder()
         .title(SBConfig.GUI_SYS_INPUT.setColor())
         .text(s.isEmpty() ? "§r" : s)
@@ -89,7 +89,7 @@ public final class SearchGUI extends CustomGUI {
             playSoundEffect(w.getSBPlayer());
             return r.apply(p, t);
         })
-        .left(GUIItem.PAPER.toBukkit())
+        .left(GUIItem.PAPER.get().toBukkit())
         .onLeftClick(p -> {
             playSoundEffect(w.getSBPlayer());
             r.apply(p, null);
@@ -123,49 +123,53 @@ public final class SearchGUI extends CustomGUI {
     }
 
     public SearchGUI() {
-        super(SBConfig.GUI_SYS_SEARCHGUI.setColor(), 6, true);
+        super(SBConfig.GUI_SYS_SEARCHGUI::setColor, 6, true);
         setSoundEffect(Sound.UI_BUTTON_CLICK, 1, 1);
     }
 
     @Override
     public void onLoaded(@NotNull UserWindow window) {
-        window.setItem(SLOTS[0], new GUIItem(1, ItemUtils.getOakSignMaterial(), SBConfig.GUI_SEARCH_SCRIPTKEY.setColor(), INTERACT_LORE, (w, g, c) -> {
-            w.setItem(SLOTS[0], g.setLore(TEXT + nextType(getScriptKey(g), c == ClickType.LEFT ? -1 : 1)));
+        window.setItem(SLOTS[4], new GUIItem(1, ItemUtils.getOakSignMaterial(), SBConfig.GUI_SEARCH_SCRIPTKEY.setColor(), INTERACT_LORE, (w, g, c) -> {
+            w.setItem(SLOTS[4], g.setLore(TEXT + nextType(getScriptKey(g), c == ClickType.LEFT ? -1 : 1)));
             updateWindow(w, true, false, 0);
         }));
-        window.setItem(SLOTS[1], new GUIItem(1, Material.BARRIER, SBConfig.GUI_SEARCH_RELOAD.setColor(), null, (w, g, c) -> {
-            updateWindow(w, true, false, 0);
-        }));
-        window.setItem(SLOTS[5], new GUIItem(1, Material.BARRIER, SBConfig.GUI_SEARCH_RESET.setColor(), null, (w, g, c) -> {
+        window.setItem(SLOTS[7], new GUIItem(1, Material.BARRIER, SBConfig.GUI_SEARCH_RESET.setColor(), null, (w, g, c) -> {
+            w.setItem(SLOTS[0], w.getItem(SLOTS[0]).setLore(EMPTY_LORE));
+            w.setItem(SLOTS[1], w.getItem(SLOTS[1]).setLore(EMPTY_LORE));
             w.setItem(SLOTS[2], w.getItem(SLOTS[2]).setLore(EMPTY_LORE));
             w.setItem(SLOTS[3], w.getItem(SLOTS[3]).setLore(EMPTY_LORE));
-            w.setItem(SLOTS[4], w.getItem(SLOTS[4]).setLore(EMPTY_LORE));
             updateWindow(w, true, false, 0);
         }));
 
-        window.setItem(SLOTS[6], new GUIItem(ItemUtils.getGlassPane(5), (w, g, c) ->
+        window.setItem(SLOTS[5], new GUIItem(ItemUtils.getGlassPane(5), (w, g, c) ->
             updateWindow(w, false, false, w.getSBPlayer().getObjectMap().getInt(KEY_INDEX))
         ).setName(SBConfig.GUI_SEARCH_NEXT.setColor()));
-        window.setItem(SLOTS[7], new GUIItem(ItemUtils.getGlassPane(14), (w, g, c) ->
+        window.setItem(SLOTS[6], new GUIItem(ItemUtils.getGlassPane(14), (w, g, c) ->
             updateWindow(w, false, true, w.getSBPlayer().getObjectMap().getInt(KEY_INDEX))
         ).setName(SBConfig.GUI_SEARCH_PREV.setColor()));
 
         // AnvilGUI
+        window.setItem(SLOTS[0], new GUIItem(1, ItemUtils.getCommandMaterial(), "§bスクリプト", EMPTY_LORE, (w, g, c) -> {
+            OPEN_ANVIL.accept(w, GET_VALUE.apply(g.getLore().get(0), true), (p, t) -> {
+                w.setItem(SLOTS[0], g.setLore(TEXT + (t == null ? "" : ChatColor.stripColor(t))));
+                return Response.close();
+            });
+        }));
+        window.setItem(SLOTS[1], new GUIItem(1, Material.COMPASS, SBConfig.GUI_SEARCH_COORDS.setColor(), EMPTY_LORE, (w, g, c) -> {
+            OPEN_ANVIL.accept(w, GET_VALUE.apply(g.getLore().get(0), true), (p, t) -> {
+                w.setItem(SLOTS[1], g.setLore(TEXT + (t == null ? "" : ChatColor.stripColor(t))));
+                return Response.close();
+            });
+        }));
         window.setItem(SLOTS[2], new GUIItem(1, ItemUtils.getClockMaterial(), SBConfig.GUI_SEARCH_TIME.setColor(), EMPTY_LORE, (w, g, c) -> {
-            ANVIL_OPEN.accept(w, GET_VALUE.apply(g.getLore().get(0), true), (p, t) -> {
+            OPEN_ANVIL.accept(w, GET_VALUE.apply(g.getLore().get(0), true), (p, t) -> {
                 w.setItem(SLOTS[2], g.setLore(TEXT + (t == null ? "" : ChatColor.stripColor(t))));
                 return Response.close();
             });
         }));
-        window.setItem(SLOTS[3], new GUIItem(1, Material.COMPASS, SBConfig.GUI_SEARCH_COORDS.setColor(), EMPTY_LORE, (w, g, c) -> {
-            ANVIL_OPEN.accept(w, GET_VALUE.apply(g.getLore().get(0), true), (p, t) -> {
+        window.setItem(SLOTS[3], new GUIItem(1, Material.NAME_TAG, SBConfig.GUI_SEARCH_NAMETAG.setColor(), EMPTY_LORE, (w, g, c) -> {
+            OPEN_ANVIL.accept(w, GET_VALUE.apply(g.getLore().get(0), true), (p, t) -> {
                 w.setItem(SLOTS[3], g.setLore(TEXT + (t == null ? "" : ChatColor.stripColor(t))));
-                return Response.close();
-            });
-        }));
-        window.setItem(SLOTS[4], new GUIItem(1, Material.NAME_TAG, SBConfig.GUI_SEARCH_NAMETAG.setColor(), EMPTY_LORE, (w, g, c) -> {
-            ANVIL_OPEN.accept(w, GET_VALUE.apply(g.getLore().get(0), true), (p, t) -> {
-                w.setItem(SLOTS[4], g.setLore(TEXT + (t == null ? "" : ChatColor.stripColor(t))));
                 return Response.close();
             });
         }));
@@ -180,36 +184,36 @@ public final class SearchGUI extends CustomGUI {
     public void onClosed(@NotNull UserWindow window) { }
 
     private void updateWindow(@NotNull UserWindow window, final boolean init, boolean prev, int index) {
-        int size = SLOTS.length - 8;
-        var json = BlockScriptJson.newJson(getScriptKey(window.getItem(SLOTS[0])));
+        var json = BlockScriptJson.newJson(getScriptKey(window.getItem(SLOTS[4])));
         var elements = filterElements(window, Lists.newArrayList(json.copyElements()));
         var objectMap = window.getSBPlayer().getObjectMap();
+        int slot = 8, slotSize = SLOTS.length - 8, jsonSize = elements.size();
         if (init) {
-            if (elements.size() == 0) {
-                window.setItem(SLOTS[6], window.getItem(SLOTS[6]).setLore(NEXT + ZERO));
-                window.setItem(SLOTS[7], window.getItem(SLOTS[7]).setLore(PREV + ZERO));
+            if (jsonSize == 0) {
+                window.setItem(SLOTS[5], window.getItem(SLOTS[5]).setLore(NEXT + ZERO));
+                window.setItem(SLOTS[6], window.getItem(SLOTS[6]).setLore(PREV + ZERO));
             }
             objectMap.put(KEY_INDEX, index = 0);
             objectMap.put(KEY_SWITCH, false);
         } else if (objectMap.getBoolean(KEY_SWITCH) == !prev) {
-            if ((prev ? index > 20 : index >= 0) && index < elements.size()) {
-                index = prev ? index - size : index + size;
+            if ((prev ? index > 20 : index >= 0) && index < jsonSize) {
+                index = prev ? index - slotSize : index + slotSize;
             }
             objectMap.put(KEY_SWITCH, prev);
         }
-        double now = (double) index / size, last = (double) elements.size() / size;
+        double now = (double) index / slotSize, last = (double) jsonSize / slotSize;
         boolean update = prev ? now >= 1 : now < last;
-        if (elements.size() == 0 || update) {
+        if (jsonSize == 0 || update) {
             objectMap.put(KEY_INDEX, 0);
-            IntStream.range(0, size).forEach(i -> window.setItem(SLOTS[i + 8], null));
+            IntStream.range(0, slotSize).forEach(i -> window.setItem(SLOTS[i + slot], null));
         }
         if (update) {
-            int surplus = index % size, from = prev ? index - (size + surplus) : index, to = prev ? index - surplus : size + index;
-            var subList = elements.subList(from = from > 0 ? from : 0, prev ? to : (to = elements.size() > to ? to : elements.size()));
+            int surplus = index % slotSize, from = prev ? index - (slotSize + surplus) : index, to = prev ? index - surplus : slotSize + index;
+            var subList = elements.subList(from = from > 0 ? from : 0, prev ? to : (to = jsonSize > to ? to : jsonSize));
             var player = window.getSBPlayer().getPlayer();
             for (int i = 0, l = subList.size(); i < l; i++) {
                 var scriptJson = new ScriptJson(subList.get(i), json);
-                window.setItem(SLOTS[i + 8],
+                window.setItem(SLOTS[i + slot],
                 new GUIItem(
                     true,
                     1,
@@ -219,24 +223,28 @@ public final class SearchGUI extends CustomGUI {
                     (w, g, c) -> OPEN_SETTING.accept(w, g, scriptJson))
                 );
             }
-            var pages = (int) Math.ceil((double) to / size) + "§6 / §e" + (int) Math.ceil(last);
-            window.setItem(SLOTS[6], window.getItem(SLOTS[6]).setLore(NEXT + pages));
-            window.setItem(SLOTS[7], window.getItem(SLOTS[7]).setLore(PREV + pages));
+            var pages = (int) Math.ceil((double) to / slotSize) + "§6 / §e" + (int) Math.ceil(last);
+            window.setItem(SLOTS[5], window.getItem(SLOTS[5]).setLore(NEXT + pages));
+            window.setItem(SLOTS[6], window.getItem(SLOTS[6]).setLore(PREV + pages));
             objectMap.put(KEY_INDEX, prev ? from : to);
         }
     }
 
     @NotNull
     private List<BlockScript> filterElements(@NotNull UserWindow window, @NotNull List<BlockScript> elements) {
-        var upTime = GET_VALUE.apply(window.getItem(SLOTS[2]).getLore().get(0), true);
-        var coords = GET_VALUE.apply(window.getItem(SLOTS[3]).getLore().get(0), true);
-        var nameTag = GET_VALUE.apply(window.getItem(SLOTS[4]).getLore().get(0), true);
+        var script = GET_VALUE.apply(window.getItem(SLOTS[0]).getLore().get(0), true);
+        var upTime = GET_VALUE.apply(window.getItem(SLOTS[1]).getLore().get(0), true);
+        var coords = GET_VALUE.apply(window.getItem(SLOTS[2]).getLore().get(0), true);
+        var nameTag = GET_VALUE.apply(window.getItem(SLOTS[3]).getLore().get(0), true);
         return elements.stream().filter(b -> {
+            // スクリプトの部分一致検索
+            return script.isEmpty() ? true : StreamUtils.anyMatch(b.getScripts(), s -> s.contains(script));
+        }).filter(b -> {
             // 日付検索 yyyy/MM/dd ～ | yyyy/MM/dd~yyyy/MM/dd
-            try {
-                if (upTime.isEmpty()) {
-                    return true;
-                }
+            if (upTime.isEmpty()) {
+                return true;
+            }
+            try {   
                 var dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                 var lastEdit = dateFormat.parse(b.getLastEdit());
                 var tilde = StringUtils.split(upTime, '~');
@@ -252,10 +260,10 @@ public final class SearchGUI extends CustomGUI {
             if (coords.isEmpty()) {
                 return true;
             }
-            var colon = StringUtils.split(coords, ':');
-            var tilde = StringUtils.split(colon.size() > 1 ? colon.get(1) : coords, '~');
             try {
                 var world = BlockCoords.ZERO.getWorld();
+                var colon = StringUtils.split(coords, ':');
+                var tilde = StringUtils.split(colon.size() > 1 ? colon.get(1) : coords, '~');
                 var coords0 = b.getBlockCoords();
                 if (colon.size() > 1 && !coords0.getWorld().equals(Utils.getWorld(colon.get(0)))) {
                     return false;
@@ -266,7 +274,7 @@ public final class SearchGUI extends CustomGUI {
                     return coords0.toVector().equals(coords1.toVector());
                 }
                 return RayTrace.intersects(coords0.toVector(), new SBBoundingBox(coords1, coords2));
-            } catch (Exception e1) {
+            } catch (Exception e) {
                 try {
                     return b.getWorld().equals(Utils.getWorld(coords));
                 } catch (NullPointerException e2) {
@@ -275,7 +283,7 @@ public final class SearchGUI extends CustomGUI {
             }
         })
         .filter(b -> {
-            // タグ検索
+            // ネームタグ検索
             return nameTag.isEmpty() ? true : Objects.equals(nameTag, b.getNameTag());
         }).collect(Collectors.toList());
     }
@@ -294,6 +302,10 @@ public final class SearchGUI extends CustomGUI {
         }
     }
 
+    /**
+     * ScriptBlockPlus ScriptJson クラス
+     * @author yuttyann44581
+     */
     final class ScriptJson {
 
         private final ScriptKey scriptKey;
