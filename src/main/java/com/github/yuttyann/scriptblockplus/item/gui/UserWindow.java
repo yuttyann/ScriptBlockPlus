@@ -37,15 +37,14 @@ public class UserWindow {
     protected final CustomGUI customGUI;
     protected final GUIItem[] items;
 
-    protected boolean update;
+    protected boolean open, update;
     protected Inventory inventory;
 
     public UserWindow(@NotNull SBPlayer sbPlayer, @NotNull CustomGUI customGUI) {
         this.sbPlayer = sbPlayer;
         this.customGUI = customGUI;
         this.items = copyItems(customGUI.getContents());
-        this.inventory = customGUI.isCancelled() ? createInventory() : null;
-        this.customGUI.onLoaded(this);
+        reload();
     }
 
     public static void closeAll() {
@@ -61,16 +60,16 @@ public class UserWindow {
 
     public void closeGUI() {
         if (!update && sbPlayer.isOnline()) {
+            this.open = false;
             customGUI.onClosed(this);
             sbPlayer.getObjectMap().put(KEY_WINDOW, null);
-            if (sbPlayer.getPlayer().getOpenInventory() != null) {
-                sbPlayer.getPlayer().closeInventory();
-            }
+            sbPlayer.getPlayer().closeInventory();
         }
     }
 
     public void openGUI() {
         if (sbPlayer.isOnline()) {
+            this.open = true;
             customGUI.onOpened(this);
             sbPlayer.getObjectMap().put(KEY_WINDOW, this);
             sbPlayer.getPlayer().openInventory(getInventory());
@@ -98,7 +97,15 @@ public class UserWindow {
     }
 
     public void reload() {
-        customGUI.onLoaded(this);
+        try {
+            this.inventory = customGUI.isCancelled() ? createInventory() : null;  
+        } finally {
+            customGUI.onLoaded(this);
+        }
+    }
+
+    public boolean isOpened() {
+        return open;
     }
 
     @NotNull

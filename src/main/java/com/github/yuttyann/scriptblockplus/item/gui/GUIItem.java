@@ -26,11 +26,13 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * ScriptBlockPlus GUIItem クラス
@@ -40,8 +42,8 @@ public final class GUIItem implements Cloneable {
 
     private static final ItemFlag[] FLAGS = { ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE };
 
-    public static final GUIItem BLACK = new GUIItem(ItemUtils.getGlassPane(15), null).setName("§r"),
-                                PAPER = new GUIItem(1, Material.PAPER, "", Arrays.asList(SBConfig.GUI_SYS_RESET.setColor()), null);
+    public static final GUIItem BLACK = new GUIItem(ItemUtils.getGlassPane(15), null).setName("§r");
+    public static final Supplier<GUIItem> PAPER = () -> new GUIItem(1, Material.PAPER, "", Arrays.asList(SBConfig.GUI_SYS_RESET.setColor()), null);
 
     private ItemStack item;
     private TriConsumer<UserWindow, GUIItem, ClickType> clicked;
@@ -53,6 +55,9 @@ public final class GUIItem implements Cloneable {
         this.clicked = clicked;
 
         var itemMeta = item.getItemMeta();
+        if (itemMeta == null) {
+            return;
+        }
         itemMeta.addItemFlags(FLAGS);
         item.setItemMeta(itemMeta);
     }
@@ -66,6 +71,9 @@ public final class GUIItem implements Cloneable {
         this.clicked = clicked;
 
         var itemMeta = item.getItemMeta();
+        if (itemMeta == null) {
+            return;
+        }
         itemMeta.addItemFlags(FLAGS);
         if (enchant) {
             itemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 1, false);
@@ -79,9 +87,9 @@ public final class GUIItem implements Cloneable {
         item.setItemMeta(itemMeta);
     }
 
-    public void onClicked(@NotNull UserWindow window, @NotNull GUIItem guiItem, @NotNull ClickType clickType) {
+    public void onClicked(@NotNull UserWindow window, @NotNull ClickType clickType) {
         if (clicked != null) {
-            clicked.accept(window, guiItem, clickType);
+            clicked.accept(window, this, clickType);
         }
     }
 
@@ -137,6 +145,11 @@ public final class GUIItem implements Cloneable {
     @NotNull
     public ItemStack toBukkit() {
         return item;
+    }
+
+    @Nullable
+    public ItemMeta toBukkitMeta() {
+        return item.hasItemMeta() ? item.getItemMeta() : null;
     }
 
     @Override
