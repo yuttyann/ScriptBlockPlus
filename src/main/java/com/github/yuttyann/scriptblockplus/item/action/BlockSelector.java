@@ -21,7 +21,9 @@ import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +36,8 @@ import static com.github.yuttyann.scriptblockplus.BlockCoords.*;
 public final class BlockSelector extends ItemAction {
 
     public BlockSelector() {
-        super(ItemUtils.getBlockSelector());
+        super(Material.STICK, () -> "§dBlock Selector", SBConfig.BLOCK_SELECTOR::setListColor);
+        setItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     }
 
     @Override

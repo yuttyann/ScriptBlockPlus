@@ -25,8 +25,10 @@ import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +44,8 @@ public final class ScriptEditor extends ItemAction {
     private static final String PREFIX = "§6§lToolMode: §d§l";
 
     public ScriptEditor() {
-        super(ItemUtils.getScriptEditor());
+        super(Material.BLAZE_ROD, () -> "§dScript Editor", SBConfig.SCRIPT_EDITOR::setListColor);
+        setItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     }
 
     @Override

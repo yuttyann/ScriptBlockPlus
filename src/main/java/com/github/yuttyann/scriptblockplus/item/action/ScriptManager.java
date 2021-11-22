@@ -17,13 +17,15 @@ package com.github.yuttyann.scriptblockplus.item.action;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.RunItem;
 import com.github.yuttyann.scriptblockplus.item.gui.CustomGUI;
 import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
 import com.github.yuttyann.scriptblockplus.item.gui.custom.SearchGUI;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +36,8 @@ import org.jetbrains.annotations.NotNull;
 public class ScriptManager extends ItemAction {
 
     public ScriptManager() {
-        super(ItemUtils.getScriptManager());
+        super(Material.BOOK, () -> "§dScript Manager", SBConfig.SCRIPT_MANAGER::setListColor);
+        setItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     }
 
     @Override

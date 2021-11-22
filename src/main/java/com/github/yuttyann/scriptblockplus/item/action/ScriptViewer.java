@@ -24,6 +24,7 @@ import com.github.yuttyann.scriptblockplus.item.RunItem;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +44,8 @@ public final class ScriptViewer extends ItemAction {
     }
 
     public ScriptViewer() {
-        super(ItemUtils.getScriptViewer());
+        super(ItemUtils.getClockMaterial(), () -> "§dScript Viewer", SBConfig.SCRIPT_VIEWER::setListColor);
+        setItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     }
 
     @Override

@@ -16,21 +16,26 @@
 package com.github.yuttyann.scriptblockplus.item;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.MatchType;
 import com.github.yuttyann.scriptblockplus.event.RunItemEvent;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * ScriptBlockPlus ItemAction クラス
@@ -40,23 +45,31 @@ public abstract class ItemAction implements Cloneable {
 
     private static final Set<ItemAction> ITEMS = new HashSet<>();
 
-    private final ItemStack item;
+    private final Material material;
+    private final Supplier<String> name;
+    private final Supplier<List<String>> lore;
+
+    private ItemFlag[] flags;
 
     /**
      * コンストラクタ
-     * @param item - 処理を実装したいアイテム
+     * @param material - アイテムの種類
+     * @param name - アイテムの名前
      */
-    public ItemAction(@NotNull ItemStack item) {
-        this.item = item;
+    public ItemAction(@NotNull Material material, @NotNull Supplier<String> name) {
+        this(material, name, null);
     }
 
     /**
-     * 元のアイテムを取得します。
-     * @return {@link ItemStack} - アイテム
+     * コンストラクタ
+     * @param material - アイテムの種類
+     * @param name - アイテムの名前
+     * @param lore - アイテムの概要
      */
-    @NotNull
-    protected final ItemStack getOriginal() {
-        return item;
+    public ItemAction(@NotNull Material material, @NotNull Supplier<String> name, @Nullable Supplier<List<String>> lore) {
+        this.material = material;
+        this.name = name;
+        this.lore = lore;
     }
 
     /**
@@ -65,7 +78,25 @@ public abstract class ItemAction implements Cloneable {
      */
     @NotNull
     public final ItemStack getItem() {
-        return item.clone();
+        var item = new ItemStack(material);
+        ItemUtils.setName(item, name.get());
+        if (lore != null) {
+            ItemUtils.setLore(item, lore.get());
+        }
+        if (flags != null) {
+            var meta = item.getItemMeta();
+            meta.addItemFlags(flags);
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
+    /**
+     * アイテムフラグを設定します。
+     * @param flags - アイテムフラグ
+     */
+    public void setItemFlags(@Nullable ItemFlag... flags) {
+        this.flags = flags;
     }
 
     /**
@@ -158,10 +189,13 @@ public abstract class ItemAction implements Cloneable {
      * @return {@code boolean} - 一致する場合は{@code true}
      */
     public boolean compare(@Nullable ItemStack item) {
-        return item != null
-                && ItemUtils.compare(MatchType.TYPE, this.item, item.getType()) 
-                && ItemUtils.compare(MatchType.META, this.item, ItemUtils.getDamage(item)) 
-                && ItemUtils.compare(MatchType.NAME, this.item, ItemUtils.getName(item));
+        if (item == null || item.getType() != material) {
+            return false;
+        }
+        if (lore != null && !ItemUtils.getLore(item).equals(StringUtils.setListColor(lore.get()))) {
+            return false;
+        }
+        return ItemUtils.getName(item).equals(StringUtils.setColor(name.get()));
     }
 
     @Override
@@ -179,11 +213,12 @@ public abstract class ItemAction implements Cloneable {
         if (!(obj instanceof ItemAction)) {
             return false;
         }
-        return compare(((ItemAction) obj).item);
+        var item = (ItemAction) obj;
+        return this.material == item.material && this.name == item.name && this.lore == item.lore;
     }
 
     @Override
     public int hashCode() {
-        return item.hashCode();
+        return getItem().hashCode();
     }
 }
