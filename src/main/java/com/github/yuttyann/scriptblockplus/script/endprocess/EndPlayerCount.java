@@ -16,7 +16,7 @@
 package com.github.yuttyann.scriptblockplus.script.endprocess;
 
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.PlayerCount;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.PlayerCount;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 
 import org.jetbrains.annotations.NotNull;

@@ -65,8 +65,8 @@ public class ReloadCommand extends SubCommand {
         SBFiles.reload();
         BaseJson.clear();
         CacheJson.loading();
-        CustomGUI.reload();
         UserWindow.closeAll();
+        CustomGUI.reload();
         SBConfig.ALL_FILE_RELOAD.send(sender);
         return true;
     }

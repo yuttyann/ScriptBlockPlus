@@ -123,11 +123,9 @@ public final class PlayerListener implements Listener {
             return;
         }
         var clickType = event.getClick();
-        if (clickType == ClickType.LEFT || clickType == ClickType.RIGHT) {
-            guiItem.onClicked(window, guiItem, clickType);
-            if (guiItem.getClicked() != null) {
-                window.getCustomGUI().playSoundEffect(sbPlayer);
-            }
+        if ((clickType == ClickType.LEFT || clickType == ClickType.RIGHT) && guiItem.getClicked() != null) {
+            guiItem.onClicked(window, clickType);
+            window.getCustomGUI().playSoundEffect(sbPlayer);
         }
     }
 

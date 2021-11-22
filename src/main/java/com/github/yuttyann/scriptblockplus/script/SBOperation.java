@@ -19,7 +19,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -144,12 +144,6 @@ public final class SBOperation {
         blockScript.setSelector(selector);
         blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
         scriptJson.saveJson();
-        /*
-        if (StringUtils.isEmpty(selector)) {
-            SBConfig.SCRIPT_REDSTONE_DISABLE.replace(scriptKey).send(player);
-        } else {
-            SBConfig.SCRIPT_REDSTONE_ENABLE.replace(scriptKey).send(player);
-        }*/
         SBConfig.SCRIPT_REDSTONE.replace(scriptKey).send(player);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
     }

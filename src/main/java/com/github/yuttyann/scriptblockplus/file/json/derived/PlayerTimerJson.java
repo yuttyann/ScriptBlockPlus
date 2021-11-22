@@ -18,7 +18,7 @@ package com.github.yuttyann.scriptblockplus.file.json.derived;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.basic.ThreeJson;
-import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.PlayerTimer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.time.OldCooldown;
 import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;

@@ -98,10 +98,9 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     }
 
     private boolean execute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length > 0) {
+        if ((this.args = args).length > 0) {
             for (var subCommand : COMMANDS) {
                 if (StreamUtils.anyMatch(subCommand.getNames(), s -> compare(s, args[0]))) {
-                    this.args = args;
                     return subCommand.runCommand(sender, command, label);
                 }
             }

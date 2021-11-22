@@ -16,7 +16,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.time;
 
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.file.json.element.PlayerTimer;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.PlayerTimer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 
 import org.jetbrains.annotations.NotNull;

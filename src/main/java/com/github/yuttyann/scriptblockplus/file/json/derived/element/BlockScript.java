@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.file.json.element;
+package com.github.yuttyann.scriptblockplus.file.json.derived.element;
 
 import java.util.ArrayList;
 import java.util.Collection;
