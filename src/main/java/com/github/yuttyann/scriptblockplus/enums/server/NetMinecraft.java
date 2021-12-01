@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.enums.server;
 
+import com.github.yuttyann.scriptblockplus.enums.server.reflect.IReflection;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
