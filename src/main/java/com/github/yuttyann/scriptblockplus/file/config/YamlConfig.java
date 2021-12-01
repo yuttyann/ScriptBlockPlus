@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.file.config;
 import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -144,7 +143,7 @@ public class YamlConfig {
     }
 
     public final void reload() {
-        Validate.notNull(file, "File cannot be null");
+        Objects.requireNonNull(file, "File cannot be null");
         if (isCopyFile && !file.exists()) {
             try {
                 FileUtils.copyFileFromPlugin(plugin, file, getFolderPath());
@@ -522,7 +521,7 @@ public class YamlConfig {
 
     @Nullable
     protected Object getDefault(@NotNull String path) {
-        Validate.notNull(path, "Path cannot be null");
+        Objects.requireNonNull(path, "Path cannot be null");
         var root = getRoot();
         var defaults = root == null ? null : root.getDefaults();
         return defaults == null ? null : defaults.get(MemorySection.createPath(yaml, path));
