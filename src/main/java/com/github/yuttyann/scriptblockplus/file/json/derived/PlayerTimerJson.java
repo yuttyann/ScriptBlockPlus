@@ -35,7 +35,7 @@ import java.util.UUID;
 @JsonTag(path = "json/playertimer")
 public final class PlayerTimerJson extends ThreeJson<UUID, ScriptKey, BlockCoords, PlayerTimer> {
 
-    private PlayerTimerJson(@NotNull String name) {
+    public PlayerTimerJson(@NotNull String name) {
         super(name);
     }
 
@@ -57,7 +57,7 @@ public final class PlayerTimerJson extends ThreeJson<UUID, ScriptKey, BlockCoord
         for (int i = 0, l = names.size(), e = ".json".length(); i < l; i++) {
             var name = names.get(i);
             var index = name.length() - e;
-            var timerJson = getCache(PlayerTimerJson.class, name.substring(0, index));
+            var timerJson = newJson(PlayerTimerJson.class, name.substring(0, index));
             if (timerJson.isEmpty()) {
                 continue;
             }

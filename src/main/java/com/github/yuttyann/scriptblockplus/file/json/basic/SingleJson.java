@@ -52,14 +52,6 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
     /**
      * コンストラクタ
      * @param name - ファイルの名前
-     * @apiNote
-     * <pre>
-     * キャッシュ(CacheJson)を利用する場合は、以下の様なコンストラクタを実装してください。
-     * private ...Json(&#064;NotNull String name) {
-     *     super(name);
-     *     etc...
-     * }
-     * </pre>
      */
     protected SingleJson(@NotNull String name) {
         super(name);

@@ -70,5 +70,5 @@ public @interface JsonTag {
      * ファイルが存在する時のみキャッシュを保存するのかどうか。
      * @return {@link boolean} - ファイルが存在する時のみキャッシュを保存する場合は{@code true}
      */
-    boolean cachefileexists() default true;
+    boolean cachefileexists() default false;
 }

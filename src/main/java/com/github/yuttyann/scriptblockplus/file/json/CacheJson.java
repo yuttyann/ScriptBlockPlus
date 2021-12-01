@@ -15,13 +15,12 @@
  */
 package com.github.yuttyann.scriptblockplus.file.json;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.google.common.base.Function;
+import com.google.gson.internal.UnsafeAllocator;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,39 +30,62 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class CacheJson {
 
+    private static final UnsafeAllocator UNSAFE = UnsafeAllocator.create();
+
     static final Map<Class<? extends BaseJson<?>>, CacheJson> CACHE_MAP = new HashMap<>();
 
     private final Class<? extends BaseJson<?>> json;
-    private final Constructor<?> constructor;
+
+    private Function<String, ? extends BaseJson<?>> creator;
 
     /**
      * コンストラクタ
-     * @param json - Jsonのクラス
+     * @param json - JSONのクラス
      */
     private CacheJson(@NotNull Class<? extends BaseJson<?>> json) {
         this.json = json;
-
-        var constructor = (Constructor<?>) null;
-        try {
-            constructor = json.getDeclaredConstructor(String.class);
-            constructor.setAccessible(true);
-        } catch (SecurityException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        this.constructor = Objects.requireNonNull(constructor);
+        this.creator = s -> {
+            try {
+               var baseJson = UNSAFE.newInstance(json);
+               baseJson.constructor(json, s, s.hashCode());
+               return baseJson;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            throw new IllegalArgumentException("Failed to create an instance");
+        };
     }
 
     /**
      * キャッシュを登録します。
-     * @param json - Jsonのクラス
+     * @param json - JSONのクラス
      */
     public static void register(@NotNull Class<? extends BaseJson<?>> json) {
         CACHE_MAP.put(json, new CacheJson(json));
     }
 
     /**
-     * Jsonのクラスを取得します。
-     * @return {@link Class}&lt;? extends {@link BaseJson}&gt; - Jsonのクラス
+     * キャッシュを登録します。
+     * @param json - JSONのクラス
+     * @param creator - インスタンスの生成処理
+     */
+    public static void register(@NotNull Class<? extends BaseJson<?>> json, @NotNull Function<String, ? extends BaseJson<?>> creator) {
+        var cacheJson = new CacheJson(json);
+        cacheJson.creator = creator;
+        CACHE_MAP.put(json, cacheJson);
+    }
+
+    /**
+     * インスタンスの生成処理を設定します。
+     * @param creator - インスタンスの生成処理
+     */
+    public void setCreator(@NotNull Function<String, ? extends BaseJson<?>> creator) {
+        this.creator = creator;
+    }
+
+    /**
+     * JSONのクラスを取得します。
+     * @return {@link Class}&lt;? extends {@link BaseJson}&gt; - JSONのクラス
      */
     @NotNull
     public Class<? extends BaseJson<?>> getJsonClass() {
@@ -72,34 +94,28 @@ public final class CacheJson {
 
     /**
      * インスタンスを生成します。
-     * @throws IllegalArgumentException インスタンスの生成に失敗した際にスローされます。
      * @param name - ファイルの名前
      * @return {@link BaseJson} - インスタンス
      */
     @NotNull
     BaseJson<?> newInstance(@NotNull String name) {
-        try {
-            return (BaseJson<?>) constructor.newInstance(name);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        throw new IllegalArgumentException();
+        return creator.apply(name);
     }
 
     /**
-     * 登録されている全てのJsonのキャッシュを生成する。
+     * 登録されている全てのJSONのキャッシュを生成します。
      */
     public static void loading() {
         CACHE_MAP.values().forEach(c -> loading(c.getJsonClass()));
     }
 
     /**
-     * 指定したJsonのキャッシュを生成する。
+     * 指定したJSONのキャッシュを生成します。
      * <p>
      * キャッシュに登録していない場合は、生成できません。
      * <p>
      * また、{@link SBConfig#CACHE_ALL_JSON}が無効な場合も生成できません。
-     * @param json - Jsonのクラス
+     * @param json - JSONのクラス
      */
     public static void loading(@NotNull Class<? extends BaseJson<?>> json) {
         if (!SBConfig.CACHE_ALL_JSON.getValue()) {

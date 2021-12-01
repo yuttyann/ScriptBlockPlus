@@ -33,7 +33,7 @@ import java.util.UUID;
 @JsonTag(path = "json/playercount")
 public final class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount> {
 
-    private PlayerCountJson(@NotNull String name) {
+    public PlayerCountJson(@NotNull String name) {
         super(name);
     }
 
@@ -54,7 +54,7 @@ public final class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, Playe
         for (int i = 0, l = names.size(), e = ".json".length(); i < l; i++) {
             var name = names.get(i);
             var index = name.length() - e;
-            var countJson = getCache(PlayerCountJson.class, name.substring(0, index));
+            var countJson = newJson(PlayerCountJson.class, name.substring(0, index));
             if (countJson.isEmpty()) {
                 continue;
             }

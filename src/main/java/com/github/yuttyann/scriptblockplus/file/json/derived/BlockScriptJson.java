@@ -35,15 +35,15 @@ import java.util.function.BiConsumer;
  * ScriptBlockPlus BlockScriptJson クラス
  * @author yuttyann44581
  */
-@JsonTag(path = "json/blockscript", cachefileexists = false)
+@JsonTag(path = "json/blockscript")
 public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
 
     public static final List<BiConsumer<ScriptKey, BlockCoords[]>> INIT_PROCESS = new ArrayList<>();
 
     static {
-        CacheJson.register(BlockScriptJson.class);
-        CacheJson.register(PlayerCountJson.class);
-        CacheJson.register(PlayerTimerJson.class);
+        CacheJson.register(BlockScriptJson.class, BlockScriptJson::new);
+        CacheJson.register(PlayerCountJson.class, PlayerCountJson::new);
+        CacheJson.register(PlayerTimerJson.class, PlayerTimerJson::new);
         INIT_PROCESS.add((s, b) -> PlayerCountJson.removeAll(s, b));
         INIT_PROCESS.add((s, b) -> PlayerTimerJson.removeAll(s, b));
         INIT_PROCESS.add((s, b) -> {
@@ -57,11 +57,10 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
         });
     }
 
-    private final ScriptKey scriptKey;
+    private ScriptKey scriptKey;
 
-    private BlockScriptJson(@NotNull String name) {
+    public BlockScriptJson(@NotNull String name) {
         super(name);
-        this.scriptKey = ScriptKey.valueOf(name);
     }
 
     public void init(@NotNull BlockCoords... blockCoords) {
@@ -73,7 +72,7 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
 
     @NotNull
     public ScriptKey getScriptKey() {
-        return scriptKey;
+        return scriptKey == null ? this.scriptKey = ScriptKey.valueOf(getName()) : scriptKey;
     }
 
     @Override

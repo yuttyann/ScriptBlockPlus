@@ -44,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * ScriptBlockPlus BaseJson クラス
@@ -86,17 +87,16 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
     public static final GsonHolder GSON_HOLDER = new GsonHolder(new GsonBuilder());
 
     private static final Map<Class<? extends BaseJson<?>>, IntMap<BaseJson<?>>> JSON_CACHE = new HashMap<>();
-
-    private final File file;
-    private final String name;
-    private final JsonTag jsonTag;
+    private static final Function<Class<? extends BaseJson<?>>, IntMap<BaseJson<?>>> CREATE_MAP = m -> IntHashMap.create();
 
     private int id;
+    private String name;
+    private File file;
     private File parent;
     private Status status;
-    private CollectionType collectionType;
-
+    private JsonTag jsonTag;
     private IntMap<E> elementMap;
+    private CollectionType collectionType;
 
     // GsonBuilderにアダプター等の追加を行う。
     static {
@@ -112,71 +112,62 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         });
     }
 
+    final void constructor(@NotNull Class<? extends BaseJson<?>> json, @NotNull String name, final int hash) {
+        if ((this.jsonTag = getClass().getAnnotation(JsonTag.class)) == null) {
+            throw new NullPointerException("Annotation not found @JsonTag()");
+        }
+        this.name = name;
+        this.file = getJsonFile(name);
+        reload();
+
+        // キャッシュが保存できる状態なら保存する(データの相違を起こさないため)
+        if (CacheJson.CACHE_MAP.containsKey(json)) {
+            if (jsonTag.cachefileexists() && !exists()) {
+                return;
+            }
+            keepCache();
+            setCacheId(hash);
+            JSON_CACHE.computeIfAbsent(json, CREATE_MAP).put(hash, this);
+        } else {
+            noCache();
+        }
+    }
+
     /**
      * コンストラクタ
      * @param name - ファイルの名前
      */
     protected BaseJson(@NotNull String name) {
-        if ((this.jsonTag = getClass().getAnnotation(JsonTag.class)) == null) {
-            throw new NullPointerException("Annotation not found @JsonTag()");
+        int hash = name.hashCode();
+        var cacheMap = JSON_CACHE.get(getClass());
+        var baseJson = cacheMap == null ? null : (BaseJson<E>) cacheMap.get(hash);
+        if (baseJson == null) {
+            constructor((Class<? extends BaseJson<?>>) getClass(), name, hash);
+        } else {
+            // キャッシュが見つかった場合は渡す。
+            this.jsonTag = baseJson.jsonTag;
+            this.id = baseJson.id;
+            this.name = baseJson.name;
+            this.file = baseJson.file;
+            this.parent = baseJson.parent;
+            this.status = baseJson.status;
+            this.elementMap = baseJson.elementMap;
+            this.subElementMap = baseJson.subElementMap;
+            this.collectionType = baseJson.collectionType;
         }
-        this.file = getJsonFile(name);
-        this.name = name;
-        try {
-            setMap(loadJson());
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        noCache();
     }
 
     /**
      * JSONを生成、取得します。
      * <p>
-     * このメソッドは、キャッシュの保存を行います。
-     * <p>
-     * キャッシュが見つからない場合は、インスタンスの生成を行います。
-     * <p>
-     * また、キャッシュを利用する場合は基本的に"private"なコンストラクタの実装を推奨します。
-     * @param <T> - JSONの型
-     * @param json - Jsonのクラス
-     * @param name - ファイルの名前
-     * @return {@link BaseJson} - インスタンス
-     */
-    @NotNull
-    public static <T extends BaseJson<?>> T newJson(@NotNull Class<T> json, @NotNull String name) {
-        int hash = name.hashCode();
-        var cacheMap = JSON_CACHE.get(json);
-        var baseJson = cacheMap == null ? null : cacheMap.get(hash);
-        if (baseJson == null) {
-            var cacheJson = CacheJson.CACHE_MAP.get(json);
-            if (cacheJson == null) {
-                throw new NullPointerException("The class is not registered");
-            }
-            baseJson = cacheJson.newInstance(name);
-            if (baseJson.jsonTag.cachefileexists() && !baseJson.exists()) {
-                return (T) baseJson;
-            }
-            baseJson.keepCache();
-            baseJson.setCacheId(hash);
-            JSON_CACHE.computeIfAbsent(json, v -> IntHashMap.create()).put(hash, baseJson);
-        }
-        return (T) baseJson;
-    }
-
-    /**
-     * キャッシュを取得します。
-     * <p>
      * キャッシュが見つからない場合は、生成したインスタンスを返します。
-     * <p>
-     * また、キャッシュを利用する場合は基本的に"private"なコンストラクタの実装を推奨します。
      * @param <T> JSONの型
      * @param json - Jsonのクラス
      * @param name - ファイルの名前
      * @return {@link BaseJson} - インスタンス
      */
     @NotNull
-    public static <T extends BaseJson<?>> T getCache(@NotNull Class<T> json, @NotNull String name) {
+    public static <T extends BaseJson<?>> T newJson(@NotNull Class<T> json, @NotNull String name) {
         var cacheMap = JSON_CACHE.get(json);
         var baseJson = cacheMap == null ? null : cacheMap.get(name.hashCode());
         if (baseJson == null) {

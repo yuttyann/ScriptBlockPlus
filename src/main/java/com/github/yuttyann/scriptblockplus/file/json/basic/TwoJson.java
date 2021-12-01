@@ -88,14 +88,6 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
     /**
      * コンストラクタ
      * @param name - ファイルの名前
-     * @apiNote
-     * <pre>
-     * キャッシュ(CacheJson)を利用する場合は、以下の様なコンストラクタを実装してください。
-     * private ...Json(&#064;NotNull String name) {
-     *     super(name);
-     *     etc...
-     * }
-     * </pre>
      */
     protected TwoJson(@NotNull String name) {
         super(name);

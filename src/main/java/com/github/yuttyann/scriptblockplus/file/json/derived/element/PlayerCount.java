@@ -68,7 +68,7 @@ public final class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
     }
 
     public synchronized void setAmount(int amount) {
-        this.amount = Math.min(amount, 0);
+        this.amount = Math.max(amount, 0);
     }
 
     public synchronized int add() {

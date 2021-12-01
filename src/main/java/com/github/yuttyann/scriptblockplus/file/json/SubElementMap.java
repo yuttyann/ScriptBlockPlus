@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class SubElementMap<E extends BaseElement> {
     
-    private ArrayListMultimap<Integer, E> subMap;
+    ArrayListMultimap<Integer, E> subElementMap;
 
     /**
      * コンストラクタ
@@ -53,15 +53,15 @@ public abstract class SubElementMap<E extends BaseElement> {
      */
     @NotNull
     protected final ArrayListMultimap<Integer, E> getSubElementMap() {
-        return subMap == null ? this.subMap = ArrayListMultimap.create() : subMap;
+        return subElementMap == null ? this.subElementMap = ArrayListMultimap.create() : subElementMap;
     }
 
     /**
      * 全てのサブ要素を削除します。
      */
     protected final void subClear() {
-        if (subMap != null) {
-            subMap.clear();
+        if (subElementMap != null) {
+            subElementMap.clear();
         }
     }
 
@@ -70,7 +70,7 @@ public abstract class SubElementMap<E extends BaseElement> {
      * @return {@code int} - 要素数
      */
     protected final int subSize() {
-        return subMap == null ? 0 : subMap.size();
+        return subElementMap == null ? 0 : subElementMap.size();
     }
 
     /**
@@ -78,7 +78,7 @@ public abstract class SubElementMap<E extends BaseElement> {
      * @return {@code boolean} - 要素が存在しない場合は{@code true}
      */
     protected final boolean isSubEmpty() {
-        return subMap == null || subMap.isEmpty();
+        return subElementMap == null || subElementMap.isEmpty();
     }
 
     /**
@@ -95,7 +95,7 @@ public abstract class SubElementMap<E extends BaseElement> {
      * @return {@code boolean} - キーが存在する場合は{@code true}
      */
     protected final boolean subContainsKey(final Integer hash) {
-        return isSubNotEmpty() && subMap.containsKey(hash);
+        return isSubNotEmpty() && subElementMap.containsKey(hash);
     }
 
     /**
