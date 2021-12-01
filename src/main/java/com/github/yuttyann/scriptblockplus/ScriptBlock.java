@@ -47,6 +47,7 @@ import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
@@ -74,12 +75,19 @@ public class ScriptBlock extends JavaPlugin {
             return;
         }
 
-        // NMSが見つからなかった場合警告
-        if (!NetMinecraft.hasNMS()) {
+        // 一部のリフレクションをキャッシュする。
+        if (NetMinecraft.hasNMS()) {
+            try {
+                NMSHelper.build();
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // NMSが見つからなかった場合警告
             getLogger().warning(NetMinecraft.WARNING_TEXT);
         }
 
-        // 全ファイルの読み込み
+        // 全てのファイルを読み込む。
         SBFiles.reload();
 
         // Vaultが導入されているのか確認

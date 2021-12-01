@@ -19,11 +19,15 @@ import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
+import com.github.yuttyann.scriptblockplus.enums.server.CraftBukkit;
+import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
+import com.github.yuttyann.scriptblockplus.enums.server.reflect.ReflectMatcher;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,6 +41,7 @@ public final class GlowEntity {
     private final int id;
     
     private final UUID uuid;
+    private final Object nmsEntity;
     private final SBPlayer sbPlayer;
     private final TeamColor teamColor;
     private final BlockCoords blockCoords;
@@ -48,14 +53,16 @@ public final class GlowEntity {
      * コンストラクタ
      * @param id - エンティティのID
      * @param uuid - エンティティの{@link UUID}
+     * @param nmsEntity - {@code net.minecraft.world.entity.Entity}
      * @param sbPlayer - 送信者
      * @param teamColor - 発光色
      * @param blockCoords - 座標
      * @param flagSize - フラグの初期容量
      */
-    private GlowEntity(final int id, @NotNull UUID uuid, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) {
+    private GlowEntity(final int id, @NotNull UUID uuid, @NotNull Object nmsEntity, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) {
         this.id = id;
         this.uuid = uuid;
+        this.nmsEntity = nmsEntity;
         this.sbPlayer = sbPlayer;
         this.teamColor = teamColor;
         this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
@@ -66,7 +73,6 @@ public final class GlowEntity {
 
     /**
      * {@link GlowEntity}を作成します。
-     * @param nmsEntity - {@code net.minecraft.server.vX_X_RX.Entity}
      * @param sbPlayer - 送信者
      * @param teamColor - 発光色
      * @param blockCoords - 座標
@@ -75,8 +81,14 @@ public final class GlowEntity {
      * @throws ReflectiveOperationException - リフレクション関係で例外が発生した場合にスローされます。
      */
     @NotNull
-    static GlowEntity create(@NotNull Object nmsEntity, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) throws ReflectiveOperationException {
-        var glowEntity = new GlowEntity(NMSHelper.getEntityId(nmsEntity), NMSHelper.getUniqueId(nmsEntity), sbPlayer, teamColor, blockCoords, flagSize);
+    static GlowEntity create(@NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) throws ReflectiveOperationException {
+        var nmsEntity = NMSHelper.newEntityMagmaCube(blockCoords.getWorld());
+        var craftEntity = ReflectMatcher.constructor("CraftMagmaCube").newInstance(Bukkit.getServer(), nmsEntity);
+        CraftBukkit.ENTITY.invokeMethod(craftEntity, "CraftMagmaCube", "setSize", 2);
+        CraftBukkit.ENTITY.invokeMethod(craftEntity, "CraftMagmaCube", "setGlowing", true);
+        ReflectMatcher.method("setInvisible").invoke(NetMinecraft.isLegacy() ? nmsEntity : craftEntity, true);
+        ReflectMatcher.method("setLocation").invoke(nmsEntity, blockCoords.getX() + 0.5D, blockCoords.getY(), blockCoords.getZ() + 0.5D, 0.0F, 0.0F);
+        var glowEntity = new GlowEntity(NMSHelper.getEntityId(craftEntity), NMSHelper.getUniqueId(craftEntity), nmsEntity, sbPlayer, teamColor, blockCoords, flagSize);
         teamColor.getTeam().addEntry(glowEntity.uuid.toString());
         return glowEntity;
     }
@@ -96,6 +108,14 @@ public final class GlowEntity {
     @NotNull
     public UUID getUniqueId() {
         return uuid;
+    }
+
+    /**
+     * {@code net.minecraft.world.entity.Entity}のエンティティを取得します。
+     * @return {@code net.minecraft.world.entity.Entity} - エンティティ
+     */
+    public Object getNMSEntity() {
+        return nmsEntity;
     }
 
     /**

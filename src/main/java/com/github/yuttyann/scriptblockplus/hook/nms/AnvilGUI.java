@@ -208,7 +208,7 @@ public final class AnvilGUI {
                     return;
                 }
                 var name = ItemUtils.getName(output, "");
-                if (!Utils.isCBXXXorLater("1.15") && name.length() > 0 && name.startsWith("r")) {
+                if (!Utils.isCBXXXorLater("1.16.2") && name.length() > 0 && name.startsWith("r")) {
                     ItemUtils.setName(output, name.substring(1));
                 }
                 if (Utils.isCBXXXorLater("1.11")) {

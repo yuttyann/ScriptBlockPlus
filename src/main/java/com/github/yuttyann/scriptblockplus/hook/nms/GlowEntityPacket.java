@@ -148,10 +148,9 @@ public final class GlowEntityPacket {
         if (has(sbPlayer, blockCoords)) {
             return null;
         }
-        var nmsEntity = NMSHelper.createMagmaCube(blockCoords);
-        var glowEntity = GlowEntity.create(nmsEntity, sbPlayer, teamColor, blockCoords, flagSize);
+        var glowEntity = GlowEntity.create(sbPlayer, teamColor, blockCoords, flagSize);
+        NMSHelper.sendPackets(sbPlayer.getPlayer(), NMSHelper.createSpawnEntity(glowEntity), NMSHelper.createMetadata(glowEntity));
         GLOW_ENTITIES.computeIfAbsent(sbPlayer.getUniqueId(), CREATE_MAP).put(blockCoords.hashCode(), glowEntity);
-        NMSHelper.sendPackets(sbPlayer.getPlayer(), NMSHelper.createSpawnEntity(nmsEntity), NMSHelper.createMetadata(glowEntity.getId(), nmsEntity));
         return glowEntity;
     }
 
