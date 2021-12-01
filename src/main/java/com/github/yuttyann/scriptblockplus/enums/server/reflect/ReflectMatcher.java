@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * ScriptBlockPlus Reflect クラス
+ * ScriptBlockPlus ReflectMatcher クラス
  * @author yuttyann44581
  */
 public class ReflectMatcher {
