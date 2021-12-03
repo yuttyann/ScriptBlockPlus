@@ -208,7 +208,7 @@ public enum NetMinecraft implements IReflection {
     /** {@code 1.17}未満の{@code NetMinecraft} */
     LEGACY(SERVER, Utils.getPackageVersion());
 
-    public static final String WARNING_TEXT = "NetMinecraft(" + (isLegacy() ? LEGACY : SERVER) + ") not found.";
+    public static final String WARNING_TEXT = "NetMinecraft(" + (Utils.isCBXXXorLater("1.17") ? SERVER : LEGACY) + ") not found.";
 
     private static final boolean HAS_NMS, IS_LEGACY;
 
@@ -250,12 +250,12 @@ public enum NetMinecraft implements IReflection {
     @Override
     @NotNull
     public String getPath() {
-        return path;
+        return IS_LEGACY ? LEGACY.path : path;
     }
 
     @Override
     @NotNull
     public String toString() {
-        return path;
+        return getPath();
     }
 }
