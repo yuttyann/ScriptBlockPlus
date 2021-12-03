@@ -70,7 +70,7 @@ public class ScriptBlock extends JavaPlugin {
     public void onEnable() {
         // 1.9未満のバージョンだった場合はプラグインを無効化
         if (!Utils.isCBXXXorLater("1.9")) {
-            getLogger().warning("Unsupported Version: v" + Utils.getServerVersion());
+            getLogger().warning("Unsupported Version: " + Utils.getServerVersion());
             getServer().getPluginManager().disablePlugin(this);
             return;
         }

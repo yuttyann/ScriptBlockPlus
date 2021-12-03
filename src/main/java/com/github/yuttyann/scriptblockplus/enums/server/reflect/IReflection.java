@@ -32,13 +32,13 @@ import org.jetbrains.annotations.Nullable;
 public interface IReflection {
 
     @NotNull
-    public String getPath();
+    String getPath();
 
-    public default void setFieldValue(@NotNull String className, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {
+    default void setFieldValue(@NotNull String className, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {
         getField(false, className, fieldName).set(instance, value);
     }
 
-    public default void setFieldValue(boolean declared, @NotNull String className, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {
+    default void setFieldValue(boolean declared, @NotNull String className, @NotNull String fieldName, @Nullable Object instance, @Nullable Object value) throws ReflectiveOperationException {
         if (StringUtils.isEmpty(className)) {
             className = instance.getClass().getSimpleName();
         }
@@ -46,22 +46,22 @@ public interface IReflection {
     }
 
     @Nullable
-    public default Object getFieldValue(@NotNull String className, @NotNull String fieldName, @Nullable Object instance) throws ReflectiveOperationException {
+    default Object getFieldValue(@NotNull String className, @NotNull String fieldName, @Nullable Object instance) throws ReflectiveOperationException {
         return getField(false, className, fieldName).get(instance);
     }
 
     @Nullable
-    public default Object getFieldValue(boolean declared, @NotNull String className, @NotNull String fieldName, @Nullable Object instance) throws ReflectiveOperationException {
+    default Object getFieldValue(boolean declared, @NotNull String className, @NotNull String fieldName, @Nullable Object instance) throws ReflectiveOperationException {
         return getField(declared, className, fieldName).get(instance);
     }
 
     @Nullable
-    public default Field getField(@NotNull String className, @NotNull String fieldName) throws ReflectiveOperationException {
+    default Field getField(@NotNull String className, @NotNull String fieldName) throws ReflectiveOperationException {
         return getField(false, className, fieldName);
     }
 
     @Nullable
-    public default Field getField(boolean declared, @NotNull String className, @NotNull String fieldName) throws ReflectiveOperationException {
+    default Field getField(boolean declared, @NotNull String className, @NotNull String fieldName) throws ReflectiveOperationException {
         var field = (Field) null;
         if (field == null) {
             if (declared) {
@@ -75,22 +75,22 @@ public interface IReflection {
     }
 
     @Nullable
-    public default Object invokeMethod(@Nullable Object instance, @NotNull String className, @NotNull String methodName) throws ReflectiveOperationException {
+    default Object invokeMethod(@Nullable Object instance, @NotNull String className, @NotNull String methodName) throws ReflectiveOperationException {
         return invokeMethod(false, instance, className, methodName, ArrayUtils.EMPTY_OBJECT_ARRAY);
     }
 
     @Nullable
-    public default Object invokeMethod(@Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Object... arguments) throws ReflectiveOperationException {
+    default Object invokeMethod(@Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Object... arguments) throws ReflectiveOperationException {
         return invokeMethod(false, instance, className, methodName, arguments);
     }
 
     @Nullable
-    public default Object invokeMethod(boolean declared, @Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Object... arguments) throws ReflectiveOperationException {
+    default Object invokeMethod(boolean declared, @Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Object... arguments) throws ReflectiveOperationException {
         return invokeMethod(declared, instance, className, methodName, ClassType.getPrimitive(arguments), arguments);
     }
 
     @Nullable
-    public default Object invokeMethod(boolean declared, @Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Class<?>[] parameterTypes, @Nullable Object... arguments) throws ReflectiveOperationException {
+    default Object invokeMethod(boolean declared, @Nullable Object instance, @NotNull String className, @NotNull String methodName, @Nullable Class<?>[] parameterTypes, @Nullable Object... arguments) throws ReflectiveOperationException {
         if (StringUtils.isEmpty(className)) {
             className = instance.getClass().getSimpleName();
         }
@@ -101,17 +101,17 @@ public interface IReflection {
     }
 
     @Nullable
-    public default Method getMethod(@NotNull String className, @NotNull String methodName) throws ReflectiveOperationException {
+    default Method getMethod(@NotNull String className, @NotNull String methodName) throws ReflectiveOperationException {
         return getMethod(false, className, methodName, ArrayUtils.EMPTY_CLASS_ARRAY);
     }
 
     @Nullable
-    public default Method getMethod(@NotNull String className, @NotNull String methodName, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
+    default Method getMethod(@NotNull String className, @NotNull String methodName, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
         return getMethod(false, className, methodName, parameterTypes);
     }
 
     @Nullable
-    public default Method getMethod(boolean declared, @NotNull String className, @NotNull String methodName, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
+    default Method getMethod(boolean declared, @NotNull String className, @NotNull String methodName, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
         if (parameterTypes == null) {
             parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
         }
@@ -128,22 +128,22 @@ public interface IReflection {
     }
 
     @Nullable
-    public default Object newInstance(@NotNull String className) throws ReflectiveOperationException {
+    default Object newInstance(@NotNull String className) throws ReflectiveOperationException {
         return newInstance(false, className, ArrayUtils.EMPTY_OBJECT_ARRAY);
     }
 
     @Nullable
-    public default Object newInstance(@NotNull String className, @Nullable Object... arguments) throws ReflectiveOperationException {
+    default Object newInstance(@NotNull String className, @Nullable Object... arguments) throws ReflectiveOperationException {
         return newInstance(false, className, arguments);
     }
 
     @Nullable
-    public default Object newInstance(boolean declared, @NotNull String className, @Nullable Object... arguments) throws ReflectiveOperationException {
+    default Object newInstance(boolean declared, @NotNull String className, @Nullable Object... arguments) throws ReflectiveOperationException {
         return newInstance(declared, className, ClassType.getPrimitive(arguments), arguments);
     }
 
     @Nullable
-    public default Object newInstance(boolean declared, @NotNull String className, @Nullable Class<?>[] parameterTypes, @Nullable Object... arguments) throws ReflectiveOperationException {
+    default Object newInstance(boolean declared, @NotNull String className, @Nullable Class<?>[] parameterTypes, @Nullable Object... arguments) throws ReflectiveOperationException {
         if (arguments == null || arguments.length == 0) {
             return getClass(className).getConstructor(ArrayUtils.EMPTY_CLASS_ARRAY).newInstance();
         }
@@ -151,17 +151,17 @@ public interface IReflection {
     }
 
     @Nullable
-    public default Constructor<?> getConstructor(@NotNull String className) throws ReflectiveOperationException {
+    default Constructor<?> getConstructor(@NotNull String className) throws ReflectiveOperationException {
         return getConstructor(false, className, ArrayUtils.EMPTY_CLASS_ARRAY);
     }
 
     @Nullable
-    public default Constructor<?> getConstructor(@NotNull String className, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
+    default Constructor<?> getConstructor(@NotNull String className, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
         return getConstructor(false, className, parameterTypes);
     }
 
     @Nullable
-    public default Constructor<?> getConstructor(boolean declared, @NotNull String className, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
+    default Constructor<?> getConstructor(boolean declared, @NotNull String className, @Nullable Class<?>... parameterTypes) throws ReflectiveOperationException {
         if (parameterTypes == null) {
             parameterTypes = ArrayUtils.EMPTY_CLASS_ARRAY;
         }
@@ -178,13 +178,13 @@ public interface IReflection {
     }
 
     @Nullable
-    public default Enum<?> getEnumValueOf(@NotNull String className, @NotNull String name) throws ReflectiveOperationException {
+    default Enum<?> getEnumValueOf(@NotNull String className, @NotNull String name) throws ReflectiveOperationException {
         var clazz = getClass(className);
         return clazz.isEnum() ? (Enum<?>) getMethod(className, "valueOf", String.class).invoke(null, name) : null;
     }
 
     @Nullable
-    public default Class<?> getClass(@NotNull String className) throws IllegalArgumentException, ClassNotFoundException {
+    default Class<?> getClass(@NotNull String className) throws IllegalArgumentException, ClassNotFoundException {
         if (StringUtils.isEmpty(className)) {
             throw new IllegalArgumentException();
         }
