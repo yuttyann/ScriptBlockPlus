@@ -20,7 +20,6 @@ import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
@@ -30,10 +29,12 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -75,51 +76,83 @@ public final class APIManager implements ScriptBlockAPI {
 
     private static class SEdit implements SBEdit {
 
-        private final SBOperation sbOperation;
+        private final ScriptKey scriptKey;
+        private final BlockScriptJson scriptJson;
 
         public SEdit(@NotNull ScriptKey scriptKey) {
-            this.sbOperation = new SBOperation(scriptKey);
-        }
-
-        @Override
-        public void save() {
-            sbOperation.save();
+            this.scriptKey = scriptKey;
+            this.scriptJson = BlockScriptJson.newJson(scriptKey);
         }
 
         @Override
         @NotNull
         public ScriptKey getScriptKey() {
-            return sbOperation.getScriptKey();
+            return scriptKey;
         }
 
         @Override
-        public void create(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-            sbOperation.create(player, BlockCoords.of(location), script);
+        public void create(@NotNull OfflinePlayer player, @NotNull Location location, @NotNull String script) {
+            var blockCoords = BlockCoords.of(location);
+            var blockScript = scriptJson.load(blockCoords);
+            blockScript.getAuthors().add(player.getUniqueId());
+            blockScript.setScripts(Collections.singletonList(script));
+            blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+            scriptJson.init(blockCoords);
+            scriptJson.saveJson();
         }
 
         @Override
-        public void add(@NotNull Player player, @NotNull Location location, @NotNull String script) {
-            sbOperation.add(player, BlockCoords.of(location), script);
+        public boolean add(@NotNull OfflinePlayer player, @NotNull Location location, @NotNull String script) {
+            var blockCoords = BlockCoords.of(location);
+            if (!scriptJson.has(blockCoords)) {
+                return false;
+            }
+            var blockScript = scriptJson.load(blockCoords);
+            blockScript.getAuthors().add(player.getUniqueId());
+            blockScript.getScripts().add(script);
+            blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+            scriptJson.saveJson();
+            return true;
         }
 
         @Override
-        public void remove(@NotNull Player player, @NotNull Location location) {
-            sbOperation.remove(player, BlockCoords.of(location));
+        public boolean remove(@NotNull OfflinePlayer player, @NotNull Location location) {
+            var blockCoords = BlockCoords.of(location);
+            if (!scriptJson.has(blockCoords)) {
+                return false;
+            }
+            scriptJson.init(blockCoords);
+            scriptJson.remove(blockCoords);
+            scriptJson.saveJson();
+            return true;
         }
 
         @Override
-        public void view(@NotNull Player player, @NotNull Location location) {
-            sbOperation.view(player, BlockCoords.of(location));
+        public boolean nameTag(@NotNull OfflinePlayer player, @NotNull Location location, @Nullable String nametag) {            
+            var blockCoords = BlockCoords.of(location);
+            if (!scriptJson.has(blockCoords)) {
+                return false;
+            }
+            var blockScript = scriptJson.load(blockCoords);
+            blockScript.getAuthors().add(player.getUniqueId());
+            blockScript.setNameTag(nametag);
+            blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+            scriptJson.saveJson();
+            return true;
         }
 
         @Override
-        public void nameTag(@NotNull Player player, @NotNull Location location, @Nullable String nameTag) {            
-            sbOperation.nameTag(player, BlockCoords.of(location), nameTag);
-        }
-
-        @Override
-        public void redstone(@NotNull Player player, @NotNull Location location, @Nullable String selector) {
-            sbOperation.redstone(player, BlockCoords.of(location), selector);
+        public boolean redstone(@NotNull OfflinePlayer player, @NotNull Location location, @Nullable String selector) {
+            var blockCoords = BlockCoords.of(location);
+            if (!scriptJson.has(blockCoords)) {
+                return false;
+            }
+            var blockScript = scriptJson.load(blockCoords);
+            blockScript.getAuthors().add(player.getUniqueId());
+            blockScript.setSelector(selector);
+            blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+            scriptJson.saveJson();
+            return true;
         }
     }
 

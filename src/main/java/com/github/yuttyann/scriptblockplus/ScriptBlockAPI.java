@@ -22,6 +22,7 @@ import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -81,11 +82,6 @@ public interface ScriptBlockAPI {
     interface SBEdit {
 
         /**
-         * 変更を保存します。
-         */
-        void save();
-
-        /**
          * スクリプトキーを取得します。
          * @return {@link ScriptKey} - スクリプトキー
          */
@@ -98,45 +94,42 @@ public interface ScriptBlockAPI {
          * @param location - スクリプトの座標
          * @param script - スクリプト
          */
-        void create(@NotNull Player player, @NotNull Location location, @NotNull String script);
+        void create(@NotNull OfflinePlayer player, @NotNull Location location, @NotNull String script);
 
         /**
          * 指定した座標にスクリプトを追加します。
          * @param player - プレイヤー
          * @param location - スクリプトの座標
          * @param script - スクリプト
+         * @return {@code boolean} - 設定に成功した場合は{@code true}
          */
-        void add(@NotNull Player player, @NotNull Location location, @NotNull String script);
+        boolean add(@NotNull OfflinePlayer player, @NotNull Location location, @NotNull String script);
 
         /**
          * 指定した座標のスクリプトを削除します。
          * @param player - プレイヤー
          * @param location - スクリプトの座標
+         * @return {@code boolean} - 設定に成功した場合は{@code true}
          */
-        void remove(@NotNull Player player, @NotNull Location location);
-
-        /**
-         * 指定した座標のスクリプトの情報を表示します。
-         * @param player - プレイヤー
-         * @param location - スクリプトの座標
-         */
-        void view(@NotNull Player player, @NotNull Location location);
+        boolean remove(@NotNull OfflinePlayer player, @NotNull Location location);
 
         /**
          * 指定した座標のスクリプトにネームタグを設定します。
          * @param player - プレイヤー
          * @param location - スクリプトの座標
-         * @param nameTag - ネームタグ
+         * @param nametag - ネームタグ
+         * @return {@code boolean} - 設定に成功した場合は{@code true}
          */
-        void nameTag(@NotNull Player player, @NotNull Location location, @Nullable String nameTag);
+        boolean nameTag(@NotNull OfflinePlayer player, @NotNull Location location, @Nullable String nametag);
     
         /**
          * 指定した座標のスクリプトにターゲットセレクターを設定します。
          * @param player - プレイヤー
          * @param location - スクリプトの座標
          * @param selector - ターゲットセレクター
+         * @return {@code boolean} - 設定に成功した場合は{@code true}
          */
-        void redstone(@NotNull Player player, @NotNull Location location, @Nullable String selector);
+        boolean redstone(@NotNull OfflinePlayer player, @NotNull Location location, @Nullable String selector);
     }
 
     /**

@@ -56,26 +56,25 @@ public final class ScriptEdit {
             return false;
         }
         try {
-            var player = sbPlayer.getPlayer();
             var sbOperation = new SBOperation(scriptKey);
             switch (actionKey) {
                 case CREATE:
-                    sbOperation.create(player, blockCoords, value);
+                    sbOperation.create(sbPlayer, blockCoords, value);
                     break;
                 case ADD:
-                    sbOperation.add(player, blockCoords, value);
+                    sbOperation.add(sbPlayer, blockCoords, value);
                     break;
                 case REMOVE:
-                    sbOperation.remove(player, blockCoords);
+                    sbOperation.remove(sbPlayer, blockCoords);
                     break;
                 case VIEW:
-                    sbOperation.view(player, blockCoords);
+                    sbOperation.view(sbPlayer, blockCoords);
                     break;
                 case NAMETAG:
-                    sbOperation.nameTag(player, blockCoords, value);
+                    sbOperation.nameTag(sbPlayer, blockCoords, value);
                     break;
                 case REDSTONE:
-                    sbOperation.redstone(player, blockCoords, value);
+                    sbOperation.redstone(sbPlayer, blockCoords, value);
                     break;
             }
         } finally {
