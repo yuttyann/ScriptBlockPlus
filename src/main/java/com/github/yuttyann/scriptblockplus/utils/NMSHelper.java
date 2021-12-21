@@ -15,7 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus.utils;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -388,8 +387,7 @@ public final class NMSHelper {
 
     @NotNull
     public static Inventory toBukkitInventory(@NotNull Object container) throws ReflectiveOperationException {
-        var view = (Utils.isCBXXXorLater("1.17") ? NetMinecraft.WR_INVENTORY : NetMinecraft.LEGACY).invokeMethod(container, "Container", "getBukkitView");
-        return ((InventoryView) view).getTopInventory();
+        return ((InventoryView) NetMinecraft.WR_INVENTORY.invokeMethod(container, "Container", "getBukkitView")).getTopInventory();
     }
 
     @NotNull
@@ -497,7 +495,6 @@ public final class NMSHelper {
 
     @NotNull
     private static String getKey(@NotNull Object minecraftKey) throws ReflectiveOperationException {
-        var name = Utils.isCBXXXorLater("1.12") ? "getKey" : "a";
-        return (String) NetMinecraft.LEGACY.invokeMethod(minecraftKey, "MinecraftKey", name);
+        return (String) NetMinecraft.LEGACY.invokeMethod(minecraftKey, "MinecraftKey", Utils.isCBXXXorLater("1.12") ? "getKey" : "a");
     }
 }

@@ -40,7 +40,7 @@ public final class StringUtils {
         }
         int start = 0, end = 0;
         var chars = source.toCharArray();
-        var parse = new ArrayList<String>(4);
+        var parse = new ArrayList<String>(2);
         for (int i = 0, j = 0, k = 0; i < length; i++) {
             if (chars[i] == '[') {
                 start++;
@@ -65,7 +65,7 @@ public final class StringUtils {
         if (isEmpty(source)) {
             return Collections.emptyList();
         }
-        var list = new ArrayList<String>(1);
+        var list = new ArrayList<String>(2);
         var chars = source.toCharArray();
         var match = false;
         int start = 0;
@@ -134,6 +134,21 @@ public final class StringUtils {
         var joiner = new StringJoiner(" ");
         IntStream.range(start, list.size()).forEach(i -> joiner.add(list.get(i)));
         return joiner.toString();
+    }
+
+    @NotNull
+    public static String remove(@NotNull String source, char remove) {
+        if (isEmpty(source) || source.indexOf(remove) == -1) {
+            return source;
+        }
+        var chars = source.toCharArray();
+        int position = 0;
+        for(int i = 0, l = chars.length; i < l; ++i) {
+            if (chars[i] != remove) {
+                chars[position++] = chars[i];
+            }
+        }
+        return new String(chars, 0, position);
     }
 
     @NotNull

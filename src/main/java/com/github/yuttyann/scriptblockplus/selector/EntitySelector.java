@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -29,7 +30,6 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -167,7 +167,7 @@ public final class EntitySelector {
                 location = ((BlockCommandSender) sender).getBlock().getLocation().add(0.5D, 0.0D, 0.5D);
             }
         }
-        Validate.notNull(location, "location");
+        Objects.requireNonNull(location, "location");
         return new Location(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
@@ -179,7 +179,7 @@ public final class EntitySelector {
             order = Comparator.reverseOrder();
             limit = -limit;
         }
-        entities.sort(Comparator.comparing((Entity e) -> e.getLocation().distance(location), order).thenComparing(Entity::getTicksLived));
+        entities.sort(Comparator.comparing((Entity e) -> e.getLocation().distanceSquared(location), order).thenComparing(Entity::getTicksLived));
         return limit;
     }
 

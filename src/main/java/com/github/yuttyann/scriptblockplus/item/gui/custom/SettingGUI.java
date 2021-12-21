@@ -41,7 +41,6 @@ import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriConsumer;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -81,7 +80,7 @@ public final class SettingGUI extends CustomGUI {
                         if (!sbPlayer.isOnline()) {
                             onClosed(w);
                         } else if (s.has()) {
-                            w.openGUI();
+                            w.open();
                         }
                     });
                 })
@@ -110,16 +109,9 @@ public final class SettingGUI extends CustomGUI {
         });
     };
 
-    {
-        for (int i = 0; i < getSize(); i++) {
-            if (!ArrayUtils.contains(SLOTS, i)) {
-                setItem(i, GUIItem.BLACK);
-            }
-        }
-    }
-
     public SettingGUI() {
         super(SBConfig.GUI_SYS_SETTINGGUI::setColor, 6, true);
+        setItem(0, getSize(), SLOTS, GUIItem.BLACK);
         setSoundEffect(Sound.UI_BUTTON_CLICK, 1, 1);
     }
 
@@ -130,11 +122,11 @@ public final class SettingGUI extends CustomGUI {
                 s.getBlockScriptJson().init(s.getBlockCoords());
                 s.getBlockScriptJson().remove(s.getBlockCoords());
                 s.getBlockScriptJson().saveJson();
-                getWindow(SearchGUI.class, w.getSBPlayer()).ifPresent(w::shiftWindow);
+                getWindow(SearchGUI.class, w.getSBPlayer()).ifPresent(w::shift);
             });
         }));
         window.setItem(SLOTS[9], new GUIItem(1, Material.ARROW, SBConfig.GUI_SETTING_CLOSE.setColor(), null, (w, g, c) -> {
-            getWindow(SearchGUI.class, w.getSBPlayer()).ifPresent(w::shiftWindow);
+            getWindow(SearchGUI.class, w.getSBPlayer()).ifPresent(w::shift);
         }));
 
         window.setItem(SLOTS[4], new GUIItem(1, Material.BOOK, SBConfig.GUI_SETTING_COPY.setColor(), null, (w, g, c) -> {
@@ -280,7 +272,7 @@ public final class SettingGUI extends CustomGUI {
             objectMap.remove(KEY_ANVIL);
             objectMap.remove(KEY_SCRIPTS);
             objectMap.remove(SearchGUI.KEY_SCRIPT);
-            window.closeGUI();
+            window.close();
             return Optional.empty();
         }
         return Optional.of(scriptJson);

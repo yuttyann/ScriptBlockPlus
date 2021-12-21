@@ -19,9 +19,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import com.github.yuttyann.scriptblockplus.utils.ArrayUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

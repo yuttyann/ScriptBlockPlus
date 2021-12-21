@@ -46,7 +46,6 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriConsumer;
 import com.google.common.collect.Lists;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -83,7 +82,7 @@ public final class SearchGUI extends CustomGUI {
         new AnvilBuilder()
         .title(SBConfig.GUI_SYS_INPUT.setColor())
         .text(s.isEmpty() ? "§r" : s)
-        .onClose(p -> ScriptBlock.getScheduler().run(w::openGUI))
+        .onClose(p -> ScriptBlock.getScheduler().run(w::open))
         .onUpdate((p, i) -> ItemUtils.setLore(i, null))
         .onComplete((p, t) -> {
             playSoundEffect(w.getSBPlayer());
@@ -109,21 +108,14 @@ public final class SearchGUI extends CustomGUI {
                 sbPlayer.sendMessage(SBConfig.GUI_SYS_INPLAYER.setColor());
             } else {
                 sbPlayer.getObjectMap().put(KEY_SCRIPT, s);
-                w1.shiftWindow(w2);
+                w1.shift(w2);
             }
         });
     };
 
-    {
-        for (int i = 0; i < getSize(); i++) {
-            if (!ArrayUtils.contains(SLOTS, i)) {
-                setItem(i, GUIItem.BLACK);
-            }
-        }
-    }
-
     public SearchGUI() {
         super(SBConfig.GUI_SYS_SEARCHGUI::setColor, 6, true);
+        setItem(0, getSize(), SLOTS, GUIItem.BLACK);
         setSoundEffect(Sound.UI_BUTTON_CLICK, 1, 1);
     }
 

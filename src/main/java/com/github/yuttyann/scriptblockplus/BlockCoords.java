@@ -17,10 +17,10 @@ package com.github.yuttyann.scriptblockplus;
 
 import java.util.Objects;
 
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -285,9 +285,7 @@ public class BlockCoords {
      */
     @NotNull
     public static BlockCoords fromString(@NotNull World world, @NotNull String coords) {
-        if (coords.indexOf(' ') != -1) {
-            coords = StringUtils.remove(coords, ' ');
-        }
+        coords = StringUtils.remove(coords, ' ');
         int comma1 = coords.indexOf(',', 0);
         int comma2 = coords.indexOf(',', comma1 + 1);
         if (comma2 < 0) {
@@ -306,9 +304,7 @@ public class BlockCoords {
      */
     @NotNull
     public static BlockCoords fromString(@NotNull String fullCoords) {
-        if (fullCoords.indexOf(' ') != -1) {
-            fullCoords = StringUtils.remove(fullCoords, ' ');
-        }
+        fullCoords = StringUtils.remove(fullCoords, ' ');
         int comma1 = fullCoords.indexOf(',', 0);
         int comma2 = fullCoords.indexOf(',', comma1 + 1);
         int comma3 = fullCoords.indexOf(',', comma2 + 1);

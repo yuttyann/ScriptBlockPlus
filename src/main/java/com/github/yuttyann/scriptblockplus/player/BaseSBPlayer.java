@@ -65,9 +65,8 @@ public final class BaseSBPlayer extends PlayerMap {
     }
 
     @Override
-    @NotNull
-    public Server getServer() {
-        return player.getServer();
+    public boolean isSneaking() {
+        return isOnline && player.isSneaking();
     }
 
     @Override
@@ -75,6 +74,12 @@ public final class BaseSBPlayer extends PlayerMap {
     public Player getPlayer() {
         var player = isOnline() ? this.player : Bukkit.getPlayer(uuid);
         return Objects.requireNonNull(player, "Player not found.");
+    }
+
+    @Override
+    @NotNull
+    public Server getServer() {
+        return player.getServer();
     }
 
     @Override

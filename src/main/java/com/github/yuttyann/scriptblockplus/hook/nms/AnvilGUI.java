@@ -23,6 +23,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
@@ -61,7 +62,7 @@ public final class AnvilGUI {
     private final AnvilListener listener;
     private final boolean prevent;
 
-    private String title;
+    private String title, text;
     private ItemStack left, right;
     private Inventory inventory;
     private Object container;
@@ -107,7 +108,7 @@ public final class AnvilGUI {
         this.left = left;
         this.right = right;
         if (text != null) {
-            ItemUtils.setName(left == null ? this.left = new ItemStack(Material.PAPER) : left, text);
+            ItemUtils.setName(left == null ? this.left = new ItemStack(Material.PAPER) : left, this.text = text);
         }
         openInventory();
     }
@@ -202,21 +203,22 @@ public final class AnvilGUI {
     
         @EventHandler(priority = EventPriority.LOW)
         public void onPrepareAnvil(PrepareAnvilEvent event) {
-            if (event.getInventory().equals(inventory)) {
-                var output = event.getResult();
-                if (output == null || output.getType() == Material.AIR) {
-                    return;
-                }
-                var name = ItemUtils.getName(output, "");
-                if (!Utils.isCBXXXorLater("1.16.2") && name.length() > 0 && name.startsWith("r")) {
-                    ItemUtils.setName(output, name.substring(1));
-                }
-                if (Utils.isCBXXXorLater("1.11")) {
-                    ScriptBlock.getScheduler().run(() -> ((AnvilInventory) inventory).setRepairCost(0));
-                }
-                if (update != null) {
-                    update.accept((Player) event.getView().getPlayer(), output);
-                }
+            if (!event.getInventory().equals(inventory)) {
+                return;
+            }
+            var output = event.getResult();
+            if (output == null || output.getType() == Material.AIR) {
+                return;
+            }
+            var name = ItemUtils.getName(output, "");
+            if (!Utils.isCBXXXorLater("1.16.2") && StringUtils.isNotEmpty(text) && text.startsWith("§") && name.length() > 0) {
+                ItemUtils.setName(output, name.substring(1));
+            }
+            if (Utils.isCBXXXorLater("1.11")) {
+                ScriptBlock.getScheduler().run(() -> ((AnvilInventory) inventory).setRepairCost(0));
+            }
+            if (update != null) {
+                update.accept((Player) event.getView().getPlayer(), output);
             }
         }
 
@@ -263,12 +265,13 @@ public final class AnvilGUI {
 
         @EventHandler(priority = EventPriority.LOW)
         public void onInventoryDrag(InventoryDragEvent event) {
-            if (event.getInventory().equals(inventory)) {
-                for (int slot : Slot.VALUES) {
-                    if (event.getRawSlots().contains(slot)) {
-                        event.setCancelled(true);
-                        break;
-                    }
+            if (!event.getInventory().equals(inventory)) {
+                return;
+            }
+            for (int slot : Slot.VALUES) {
+                if (event.getRawSlots().contains(slot)) {
+                    event.setCancelled(true);
+                    break;
                 }
             }
         }

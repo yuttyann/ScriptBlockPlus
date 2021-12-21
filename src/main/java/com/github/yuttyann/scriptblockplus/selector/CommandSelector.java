@@ -20,10 +20,10 @@ import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.google.common.collect.Lists;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -51,6 +51,10 @@ public final class CommandSelector {
     private final static String[] SELECTOR_NAMES = { "@a", "@e", "@p", "@r", "@s" };
     private final static String[] SELECTOR_ARGUMENT_NAMES = { "@a[", "@e[", "@p[", "@r[", "@s[" };
 
+    /**
+     * ScriptBlockPlus Index クラス
+     * @author yuttyann44581
+     */
     private static class Index {
 
         private final int start;

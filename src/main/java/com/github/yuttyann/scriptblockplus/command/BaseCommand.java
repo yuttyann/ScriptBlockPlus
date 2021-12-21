@@ -17,9 +17,9 @@ package com.github.yuttyann.scriptblockplus.command;
 
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.utils.ArrayUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;

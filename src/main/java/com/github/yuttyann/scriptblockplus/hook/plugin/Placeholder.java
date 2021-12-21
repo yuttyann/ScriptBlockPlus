@@ -103,6 +103,9 @@ public final class Placeholder extends HookPlugin {
      */
     @NotNull
     public String escape(@NotNull String source) {
-        return org.apache.commons.lang.StringUtils.replaceEach(source, ESCAPE_SEARCH, ESCAPE_RESULT);
+        for (int i = 0; i < ESCAPE_SEARCH.length; i++) {
+            source = StringUtils.replace(source, ESCAPE_SEARCH[i], ESCAPE_RESULT[i]);
+        }
+        return source;
     }
 }

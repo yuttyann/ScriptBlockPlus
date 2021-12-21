@@ -14,13 +14,14 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 package com.github.yuttyann.scriptblockplus.enums.server.reflect;
-
-import org.apache.commons.lang.ArrayUtils;
+ 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.github.yuttyann.scriptblockplus.utils.ArrayUtils;
 
 /**
  * ScriptBlockPlus ClassType 列挙型

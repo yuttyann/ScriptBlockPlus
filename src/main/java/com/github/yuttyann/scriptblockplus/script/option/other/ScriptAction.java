@@ -43,7 +43,7 @@ public final class ScriptAction extends BaseOption {
     }
 
     private boolean compare(@Nullable Action action, @NotNull String type) {
-        return type.equalsIgnoreCase("shift") ? getPlayer().isSneaking() : ScriptKey.INTERACT.equals(getScriptKey()) && action == getAction(type);
+        return type.equalsIgnoreCase("shift") ? getSBPlayer().isSneaking() : ScriptKey.INTERACT.equals(getScriptKey()) && action == getAction(type);
     }
 
     @Nullable

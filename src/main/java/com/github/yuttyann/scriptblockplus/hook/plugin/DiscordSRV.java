@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.hook.HookPlugin;
+import com.github.yuttyann.scriptblockplus.utils.ArrayUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

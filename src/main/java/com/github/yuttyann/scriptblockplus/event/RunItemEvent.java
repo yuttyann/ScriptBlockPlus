@@ -34,7 +34,7 @@ public class RunItemEvent extends PlayerEvent implements Cancellable {
     private boolean cancelled;
 
     public RunItemEvent(@NotNull RunItem runItem) {
-        super(runItem.getPlayer());
+        super(runItem.getSBPlayer().getPlayer());
         this.runItem = runItem;
     }
 
