@@ -40,6 +40,11 @@ public class UserWindow {
     protected boolean open, update;
     protected Inventory inventory;
 
+    /**
+     * コンストラクタ
+     * @param sbPlayer - プレイヤー
+     * @param customGUI - GUIの骨組み
+     */
     public UserWindow(@NotNull SBPlayer sbPlayer, @NotNull CustomGUI customGUI) {
         this.sbPlayer = sbPlayer;
         this.customGUI = customGUI;
@@ -47,18 +52,24 @@ public class UserWindow {
         reload();
     }
 
+    /**
+     * 全てのプレイヤーのウィンドウを閉じます。
+     */
     public static void closeAll() {
         for (var player : Bukkit.getOnlinePlayers()) {
             var objectMap = SBPlayer.fromPlayer(player).getObjectMap();
             if (objectMap.has(KEY_WINDOW)) {
-                ((UserWindow) objectMap.get(KEY_WINDOW)).closeGUI();
+                ((UserWindow) objectMap.get(KEY_WINDOW)).close();
             } else if (objectMap.getBoolean(AnvilGUI.KEY_OPEN)) {
                 player.closeInventory();
             }
         }
     }
 
-    public void closeGUI() {
+    /**
+     * ウィンドウを閉じます。
+     */
+    public void close() {
         if (!update && sbPlayer.isOnline()) {
             this.open = false;
             customGUI.onClosed(this);
@@ -67,7 +78,10 @@ public class UserWindow {
         }
     }
 
-    public void openGUI() {
+    /**
+     * ウィンドウを開きます。
+     */
+    public void open() {
         if (sbPlayer.isOnline()) {
             this.open = true;
             customGUI.onOpened(this);
@@ -76,26 +90,36 @@ public class UserWindow {
         }
     }
 
-    public void updateWindow() {
+    /**
+     * ウィンドウを更新します。
+     */
+    public void update() {
         this.update = true;
         try {
-            shiftWindow(this);
+            shift(this);
         } finally {
             this.update = false;
         }
     }
 
-    public void shiftWindow(@NotNull UserWindow window) {
+    /**
+     * 指定したウィンドウに変更します。
+     * @param window
+     */
+    public void shift(@NotNull UserWindow window) {
         if (!sbPlayer.isOnline()) {
             return;
         }
         try {
             sbPlayer.getPlayer().closeInventory();
         } finally {
-            ScriptBlock.getScheduler().run(window::openGUI);
+            ScriptBlock.getScheduler().run(window::open);
         }
     }
 
+    /**
+     * ウィンドウを更新します。
+     */
     public void reload() {
         try {
             this.inventory = customGUI.isCancelled() ? createInventory() : null;  
@@ -104,25 +128,47 @@ public class UserWindow {
         }
     }
 
+    /**
+     * ウィンドウを開いている場合は{@code true}を返します。
+     * @return {@code boolean} - ウィンドウを開いている場合は{@code true}
+     */
     public boolean isOpened() {
         return open;
     }
 
+    /**
+     * 骨組みとなる{@code CustomGUI}を取得します。
+     * @return {@code CustomGUI} - GUI
+     */
     @NotNull
     public CustomGUI getCustomGUI() {
         return customGUI;
     }
 
+    /**
+     * プレイヤーを取得します。
+     * @return {@link SBPlayer} - プレイヤー
+     */
     @NotNull
     public SBPlayer getSBPlayer() {
         return sbPlayer;
     }
 
+    /**
+     * ウィンドウのアイテムの配列を取得します。
+     * @return {@link GUIItem}[] - アイテムの配列
+     */
     @NotNull
     public GUIItem[] getContents() {
         return items;
     }
 
+    /**
+     * ウィンドウにアイテムを設定します。
+     * @param slot - スロット
+     * @param item - アイテム
+     * @return {@link UserWindow}
+     */
     @NotNull
     public UserWindow setItem(int slot, @Nullable GUIItem item) {
         if (slot < items.length) {
@@ -134,16 +180,29 @@ public class UserWindow {
         return this;
     }
 
+    /**
+     * ウィンドウのアイテムを取得します。
+     * @param slot - スロット
+     * @return {@link GUIItem} - アイテム
+     */
     @Nullable
     public GUIItem getItem(int slot) {
         return slot < items.length ? items[slot] : null;
     }
 
+    /**
+     * ウィンドウのインベントリを取得します。
+     * @return {@link Inventory} - インベントリ
+     */
     @NotNull
     public Inventory getInventory() {
         return inventory == null ? createInventory() : inventory;
     }
 
+    /**
+     * インベントリを作成します。
+     * @return {@link Inventory} - インベントリ
+     */
     @NotNull
     protected Inventory createInventory() {
         var inventory = Bukkit.createInventory(sbPlayer.getPlayer(), items.length, customGUI.getTitle());
@@ -156,6 +215,11 @@ public class UserWindow {
         return inventory;
     }
 
+    /**
+     * アイテムの配列の内容をコピーして返します。
+     * @param items - アイテムの配列
+     * @return {@link GUIItem}[] - アイテムの配列のコピー
+     */
     @NotNull
     protected final GUIItem[] copyItems(@NotNull GUIItem[] items) {
         var copy = new GUIItem[items.length];

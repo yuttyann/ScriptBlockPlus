@@ -16,6 +16,7 @@
 package com.github.yuttyann.scriptblockplus.item;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -30,42 +31,83 @@ import org.jetbrains.annotations.Nullable;
 public final class RunItem {
 
     private final ItemStack item;
-    private final Player player;
+    private final SBPlayer sbPlayer;
     private final Action action;
     private final BlockCoords blockCoords;
 
-    public RunItem(@NotNull ItemStack item, @NotNull Player player, @NotNull Action action, @Nullable BlockCoords blockCoords) {
+    /**
+     * コンストラクタ
+     * @param item - アイテム
+     * @param sbPlayer - プレイヤー
+     * @param action - アクション
+     * @param blockCoords - 座標
+     */
+    public RunItem(@NotNull ItemStack item, @NotNull SBPlayer sbPlayer, @NotNull Action action, @Nullable BlockCoords blockCoords) {
         this.item = item;
-        this.player = player;
+        this.sbPlayer = sbPlayer;
         this.action = action;
         this.blockCoords = blockCoords;
     }
 
+    /**
+     * アイテムを取得します。
+     * @return {@link ItemStack} - アイテム
+     */
     @NotNull
     public ItemStack getItem() {
         return item;
     }
 
+    /**
+     * {@code BukkitAPI}の{@code org.bukkit.entity.Player}を取得します。
+     * @return {@link Player} - プレイヤー
+     */
+    @Deprecated
     @NotNull
     public Player getPlayer() {
-        return player;
+        return sbPlayer.getPlayer();
     }
 
+    /**
+     * プレイヤーを取得します。
+     * @return {@link SBPlayer} - プレイヤー
+     */
+    @NotNull
+    public SBPlayer getSBPlayer() {
+        return sbPlayer;
+    }
+
+    /**
+     * アクションを取得します。
+     * @return {@link Player} - アクション
+     */
     @NotNull
     public Action getAction() {
         return action;
     }
 
+    /**
+     * 座標を取得します。
+     * @return {@link BlockCoords} - 座標
+     */
     @Nullable
     public BlockCoords getBlockCoords() {
         return blockCoords;
     }
 
+    /**
+     * 空気関連のアクションの場合は{@code true}を返します。
+     * @return {@code boolean} - 空気関連のアクションの場合は{@code true}
+     */
     public boolean isAIR() {
         return action.name().endsWith("_CLICK_AIR");
     }
 
+    /**
+     * プレイヤーがスニーク状態の場合は{@code true}を返します。
+     * @return {@code boolean} - プレイヤーがスニーク状態の場合は{@code true}
+     */
     public boolean isSneaking() {
-        return player.isSneaking();
+        return sbPlayer.isSneaking();
     }
 }

@@ -49,6 +49,11 @@ public final class GUIItem implements Cloneable {
 
     private GUIItem() { }
 
+    /**
+     * コンストラクタ
+     * @param source - アイテム
+     * @param clicked - クリックした時の処理
+     */
     public GUIItem(@NotNull ItemStack source, @Nullable TriConsumer<UserWindow, GUIItem, ClickType> clicked) {
         this.item = new ItemStack(source);
         this.clicked = clicked;
@@ -61,10 +66,27 @@ public final class GUIItem implements Cloneable {
         item.setItemMeta(itemMeta);
     }
 
+    /**
+     * コンストラクタ
+     * @param amount - アイテムの数量
+     * @param material - アイテムの種類
+     * @param name - アイテムの名前
+     * @param lore - アイテムの概要
+     * @param clicked - クリックした時の処理
+     */
     public GUIItem(final int amount, @NotNull Material material, @Nullable String name, @Nullable List<String> lore, @Nullable TriConsumer<UserWindow, GUIItem, ClickType> clicked) {
         this(false, amount, material, name, lore, clicked);
     }
 
+    /**
+     * コンストラクタ
+     * @param enchant - アイテムにエンチャントのエフェクトを付ける場合は{@code true}
+     * @param amount - アイテムの数量
+     * @param material - アイテムの種類
+     * @param name - アイテムの名前
+     * @param lore - アイテムの概要
+     * @param clicked - クリックした時の処理
+     */
     public GUIItem(final boolean enchant, final int amount, @NotNull Material material, @Nullable String name, @Nullable List<String> lore, @Nullable TriConsumer<UserWindow, GUIItem, ClickType> clicked) {
         this.item = new ItemStack(material, amount);
         this.clicked = clicked;
@@ -86,21 +108,39 @@ public final class GUIItem implements Cloneable {
         item.setItemMeta(itemMeta);
     }
 
+    /**
+     * アイテムのクリックした時の処理を実行します。
+     * @param window - プレイヤーのウィンドウ
+     * @param clickType - クリックの種類
+     */
     public void onClicked(@NotNull UserWindow window, @NotNull ClickType clickType) {
         if (clicked != null) {
             clicked.accept(window, this, clickType);
         }
     }
 
+    /**
+     * アイテムにクリックした時の処理を設定します。
+     * @param clicked - クリックした時の処理
+     */
     public void setClicked(@Nullable TriConsumer<UserWindow, GUIItem, ClickType> clicked) {
         this.clicked = clicked;
     }
 
+    /**
+     * アイテムのクリックした時の処理を取得します。
+     * @return {@link TriConsumer}&lt;{@link UserWindow}, {@link GUIItem}, {@link ClickType}&gt; - クリックした時の処理
+     */
     @Nullable
     public TriConsumer<UserWindow, GUIItem, ClickType> getClicked() {
         return clicked;
     }
 
+    /**
+     * アイテムにエンチャントのエフェクトを設定します。
+     * @param enchant - アイテムにエンチャントのエフェクトを付ける場合は{@code true}
+     * @return {@link GUIItem}
+     */
     @NotNull
     public GUIItem setEnchant(final boolean enchant) {
         var itemMeta = item.getItemMeta();
@@ -113,39 +153,70 @@ public final class GUIItem implements Cloneable {
         return this;
     }
 
+    /**
+     * アイテムに名前を設定します。
+     * @param name - アイテムの名前
+     * @return {@link GUIItem}
+     */
     @NotNull
     public GUIItem setName(@Nullable String name) {
         ItemUtils.setName(item, name);
         return this;
     }
 
+    /**
+     * アイテムの名前を取得します。
+     * @return {@link String} - アイテムの名前
+     */
     @NotNull
     public String getName() {
         return ItemUtils.getName(item, "");
     }
 
+    /**
+     * アイテムに概要を設定します。
+     * @param lore - アイテムの概要
+     * @return {@link GUIItem}
+     */
     @NotNull
     public GUIItem setLore(@Nullable String lore) {
         return setLore(Arrays.asList(lore));
     }
 
+    /**
+     * アイテムに概要を設定します。
+     * @param lore - アイテムの概要
+     * @return {@link GUIItem}
+     */
     @NotNull
     public GUIItem setLore(@Nullable List<String> lore) {
         ItemUtils.setLore(item, lore);
         return this;
     }
 
+    /**
+     * アイテムの概要を取得します。
+     * @return {@link List}&lt;{@link String}&gt; - アイテムの概要
+     */
     @NotNull
     public List<String> getLore() {
         var itemMeta = item.getItemMeta();
         return itemMeta.hasLore() ? itemMeta.getLore() : Collections.emptyList();
     }
 
+    /**
+     * {@code BukkitAPI}の{@code org.bukkit.inventory.ItemStack}を取得します。
+     * @return {@link ItemStack} - アイテム
+     */
     @NotNull
     public ItemStack toBukkit() {
         return item;
     }
 
+    /**
+     * {@code BukkitAPI}の{@code org.bukkit.inventory.meta.ItemMeta}を取得します。
+     * @return {@link ItemStack} - アイテムのメタデータ
+     */
     @Nullable
     public ItemMeta toBukkitMeta() {
         return item.hasItemMeta() ? item.getItemMeta() : null;

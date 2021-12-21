@@ -50,7 +50,7 @@ public final class ScriptViewer extends ItemAction {
 
     @Override
     public void run(@NotNull RunItem runItem) {
-        var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
+        var sbPlayer = runItem.getSBPlayer();
         switch (runItem.getAction()) {
             case LEFT_CLICK_AIR: case LEFT_CLICK_BLOCK:
                 PLAYERS.add(sbPlayer);

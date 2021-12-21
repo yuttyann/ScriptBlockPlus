@@ -38,21 +38,23 @@ public class ReflectMatcher {
 
     private static final IntMap<Map<String, Object>> REFLECT_MAP = IntHashMap.create();
 
+    private static final int FIELD = 0, METHOD = 1, CONSTRUCTOR = 2;
+
     private ReflectMatcher() { }
 
     @Nullable
     public static Field field(@NotNull String key) {
-        return (Field) getReflect(0).get(key);
+        return (Field) getReflect(FIELD).get(key);
     }
 
     @Nullable
     public static Method method(@NotNull String key) {
-        return (Method) getReflect(1).get(key);
+        return (Method) getReflect(METHOD).get(key);
     }
 
     @Nullable
     public static Constructor<?> constructor(@NotNull String key) {
-        return (Constructor<?>) getReflect(2).get(key);
+        return (Constructor<?>) getReflect(CONSTRUCTOR).get(key);
     }
 
     @NotNull
@@ -80,21 +82,21 @@ public class ReflectMatcher {
 
         @NotNull
         public Builder field(@Nullable Class<?> clazz) {
-            VALUES[0] = 0;
+            VALUES[0] = FIELD;
             VALUES[2] = clazz;
             return this;
         }
 
         @NotNull
         public Builder method(@Nullable Class<?> clazz) {
-            VALUES[0] = 1;
+            VALUES[0] = METHOD;
             VALUES[2] = clazz;
             return this;
         }
 
         @NotNull
         public Builder constructor(@Nullable Class<?> clazz) {
-            VALUES[0] = 2;
+            VALUES[0] = CONSTRUCTOR;
             VALUES[2] = clazz;
             return this;
         }
@@ -136,7 +138,7 @@ public class ReflectMatcher {
             var returnType = (Class<?>) VALUES[4];
             var parameterType = (Class<?>[]) VALUES[5];
             switch (type) {
-                case 0:
+                case FIELD:
                     for (var field : clazz.getDeclaredFields()) {
                         if (modFilter != -1 && (field.getModifiers() & modFilter) == 0) {
                             continue;
@@ -155,7 +157,7 @@ public class ReflectMatcher {
                         break;
                     }
                     break;
-                case 1:
+                case METHOD:
                     for (var method : clazz.getDeclaredMethods()) {
                         if (modFilter != -1 && (method.getModifiers() & modFilter) == 0) {
                             continue;
@@ -177,7 +179,7 @@ public class ReflectMatcher {
                         break;
                     }
                     break;
-                case 2:
+                case CONSTRUCTOR:
                     for (var constructor : clazz.getDeclaredConstructors()) {
                         if (modFilter != -1 && (constructor.getModifiers() & modFilter) == 0) {
                             continue;
@@ -200,12 +202,12 @@ public class ReflectMatcher {
                 throw new NullPointerException();
             }
 
-            // デバッグ用
             /**
-            System.out.println(
-                "Type(" + type + "): " + value.getClass().getSimpleName() +
-                ", Key: " + (String) VALUES[1] + ", Reflect: " + value.toString()
-            );
+                デバッグ用
+                System.out.println(
+                    "Type(" + type + "): " + value.getClass().getSimpleName() +
+                    ", Key: " + (String) VALUES[1] + ", Reflect: " + value.toString()
+                );
             */
 
             getReflect(type).put(Objects.requireNonNull((String) VALUES[1]), value);

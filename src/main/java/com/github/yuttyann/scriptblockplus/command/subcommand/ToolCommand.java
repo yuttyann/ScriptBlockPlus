@@ -61,7 +61,7 @@ public class ToolCommand extends SubCommand {
         if (!hasPermission(sender, PERMISSION)) {
             return false;
         }
-        CustomGUI.getWindow(ToolBoxGUI.class, (Player) sender).ifPresent(UserWindow::openGUI);
+        CustomGUI.getWindow(ToolBoxGUI.class, (Player) sender).ifPresent(UserWindow::open);
         return true;
     }
 }

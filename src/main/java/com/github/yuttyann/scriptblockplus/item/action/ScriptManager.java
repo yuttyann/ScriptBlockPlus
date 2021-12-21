@@ -45,10 +45,10 @@ public class ScriptManager extends ItemAction {
         switch (runItem.getAction()) {
             case RIGHT_CLICK_AIR: case RIGHT_CLICK_BLOCK:
                 if (!NetMinecraft.hasNMS()) {
-                    runItem.getPlayer().sendMessage("§c" + NetMinecraft.WARNING_TEXT);
+                    runItem.getSBPlayer().sendMessage("§c" + NetMinecraft.WARNING_TEXT);
                     return;
                 }
-                CustomGUI.getWindow(SearchGUI.class, runItem.getPlayer()).ifPresent(UserWindow::openGUI);
+                CustomGUI.getWindow(SearchGUI.class, runItem.getSBPlayer()).ifPresent(UserWindow::open);
                 break;
             default:
                 break;

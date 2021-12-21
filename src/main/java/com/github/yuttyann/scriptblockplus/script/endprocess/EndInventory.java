@@ -17,7 +17,6 @@ package com.github.yuttyann.scriptblockplus.script.endprocess;
 
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +32,9 @@ public final class EndInventory implements EndProcess {
     @Override
     public void success(@NotNull SBRead sbRead) {
         var sbPlayer = sbRead.getSBPlayer();
-        StreamUtils.ifAction(sbPlayer.isOnline(), () -> sbPlayer.getPlayer().updateInventory());
+        if (sbPlayer.isOnline()) {
+            sbPlayer.getPlayer().updateInventory();
+        }
     }
 
     @Override

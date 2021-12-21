@@ -119,7 +119,7 @@ public final class PlayerListener implements Listener {
             return;
         }
         if (customGUI.isCancelled() && !guiItem.toBukkit().equals(event.getCurrentItem())) {
-            window.closeGUI();
+            window.close();
             return;
         }
         var clickType = event.getClick();
@@ -133,7 +133,7 @@ public final class PlayerListener implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         var objectMap = SBPlayer.fromUUID(event.getPlayer().getUniqueId()).getObjectMap();
         if (objectMap.has(UserWindow.KEY_WINDOW)) {
-            ((UserWindow) objectMap.get(UserWindow.KEY_WINDOW)).closeGUI();
+            ((UserWindow) objectMap.get(UserWindow.KEY_WINDOW)).close();
         }
     }
 

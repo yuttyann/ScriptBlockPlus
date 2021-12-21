@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * ScriptBlockPlus ItemUtils クラス
  * @author yuttyann44581
  */
-public class ItemUtils {
+public final class ItemUtils {
 
     private static final Map<String, Material> KEY_MATERIALS;
 

@@ -20,7 +20,6 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.item.ChangeSlot;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.RunItem;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
@@ -50,13 +49,13 @@ public final class ScriptEditor extends ItemAction {
 
     @Override
     public void run(@NotNull RunItem runItem) {
-        var sbPlayer = SBPlayer.fromPlayer(runItem.getPlayer());
+        var sbPlayer = runItem.getSBPlayer();
         var scriptKey = sbPlayer.getObjectMap().get(KEY, ScriptKey.INTERACT);
         var blockCoords = Optional.ofNullable(runItem.getBlockCoords());
         switch (runItem.getAction()) {
             case LEFT_CLICK_AIR: case LEFT_CLICK_BLOCK:
                 if (runItem.isSneaking() && !runItem.isAIR() && blockCoords.isPresent()) {
-                    new SBOperation(scriptKey).remove(sbPlayer.getPlayer(), blockCoords.get());
+                    new SBOperation(scriptKey).remove(sbPlayer, blockCoords.get());
                 } else if (!runItem.isSneaking()) {
                     sbPlayer.getObjectMap().put(KEY, scriptKey = getNextType(scriptKey));
                     ActionBar.send(sbPlayer, PREFIX + scriptKey);
@@ -78,7 +77,7 @@ public final class ScriptEditor extends ItemAction {
 
     @Override
     public void slot(@NotNull ChangeSlot changeSlot) {
-        var sbPlayer = SBPlayer.fromPlayer(changeSlot.getPlayer());
+        var sbPlayer = changeSlot.getSBPlayer();
         var scriptKey = sbPlayer.getObjectMap().get(KEY, ScriptKey.INTERACT);
         ActionBar.send(sbPlayer, PREFIX + scriptKey);
     }

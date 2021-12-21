@@ -17,6 +17,7 @@ package com.github.yuttyann.scriptblockplus.item;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.event.RunItemEvent;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -160,7 +161,7 @@ public abstract class ItemAction implements Cloneable {
     public static boolean callRun(@NotNull Player player, @Nullable ItemStack item, @Nullable Location location, @NotNull Action action) {
         var itemAction = ITEMS.stream().filter(i -> i.compare(item)).filter(i -> i.hasPermission(player)).findFirst();
         if (itemAction.isPresent()) {
-            var runItem = new RunItem(item, player, action, location == null ? null : BlockCoords.of(location));
+            var runItem = new RunItem(item, SBPlayer.fromPlayer(player), action, location == null ? null : BlockCoords.of(location));
             var runItemEvent = new RunItemEvent(runItem);
             Bukkit.getPluginManager().callEvent(runItemEvent);
             if (!runItemEvent.isCancelled()) {
@@ -180,7 +181,7 @@ public abstract class ItemAction implements Cloneable {
      */
     public static void callSlot(@NotNull Player player, @Nullable ItemStack item, int newSlot, int oldSlot) {
         var itemAction = ITEMS.stream().filter(i -> i.compare(item)).filter(i -> i.hasPermission(player));
-        itemAction.findFirst().ifPresent(i -> i.clone().slot(new ChangeSlot(player, newSlot, oldSlot)));
+        itemAction.findFirst().ifPresent(i -> i.clone().slot(new ChangeSlot(SBPlayer.fromPlayer(player), newSlot, oldSlot)));
     }
 
     /**

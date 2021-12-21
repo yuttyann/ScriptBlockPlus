@@ -29,34 +29,48 @@ import java.util.Optional;
  */
 public final class ChangeSlot {
 
-    private final Player player;
-    private final int newSlot;
-    private final int oldSlot;
+    private final SBPlayer sbPlayer;
+    private final int newSlot, oldSlot;
 
-    public ChangeSlot(@NotNull Player player, int newSlot, int oldSlot) {
-        this.player = player;
+    /**
+     * コンストラクタ
+     * @param sbPlayer - プレイヤー
+     * @param newSlot - 移動先のスロット
+     * @param oldSlot - 移動前のスロット
+     */
+    public ChangeSlot(@NotNull SBPlayer sbPlayer, int newSlot, int oldSlot) {
+        this.sbPlayer = sbPlayer;
         this.newSlot = newSlot;
         this.oldSlot = oldSlot;
     }
 
+    /**
+     * {@code BukkitAPI}の{@code org.bukkit.entity.Player}を取得します。
+     * @return {@link Player} - プレイヤー
+     */
+    @Deprecated
     @NotNull
     public Player getPlayer() {
-        return player;
+        return sbPlayer.getPlayer();
     }
 
+    /**
+     * プレイヤーを取得します。
+     * @return {@link SBPlayer} - プレイヤー
+     */
     @NotNull
     public SBPlayer getSBPlayer() {
-        return SBPlayer.fromPlayer(player);
+        return sbPlayer;
     }
 
     @NotNull
     public ItemStack getNewItem() {
-        return Optional.ofNullable(player.getInventory().getItem(newSlot)).orElse(new ItemStack(Material.AIR));
+        return Optional.ofNullable(sbPlayer.getInventory().getItem(newSlot)).orElse(new ItemStack(Material.AIR));
     }
 
     @NotNull
     public ItemStack getOldItem() {
-        return Optional.ofNullable(player.getInventory().getItem(oldSlot)).orElse(new ItemStack(Material.AIR));
+        return Optional.ofNullable(sbPlayer.getInventory().getItem(oldSlot)).orElse(new ItemStack(Material.AIR));
     }
 
     public int getNewSlot() {
