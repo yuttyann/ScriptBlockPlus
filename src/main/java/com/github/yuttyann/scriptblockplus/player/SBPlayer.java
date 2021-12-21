@@ -67,10 +67,23 @@ public interface SBPlayer extends Permissible {
     }
 
     /**
-     * プレイヤーがオンラインの場合にtrueを返します。
-     * @return {@link Boolean} - プレイヤーがオンラインの場合は{@code true}
+     * プレイヤーがオンラインの場合は{@code true}を返します。
+     * @return {@code boolean} - プレイヤーがオンラインの場合は{@code true}
      */
     boolean isOnline();
+
+    /**
+     * プレイヤーがスニーク状態の場合は{@code true}を返します。
+     * @return {@code boolean} - プレイヤーがスニーク状態の場合は{@code true}
+     */
+    boolean isSneaking();
+
+    /**
+     * {@code BukkitAPI}の{@code org.bukkit.entity.Player}を取得します。
+     * @return {@link Player} - プレイヤー
+     */
+    @NotNull
+    Player getPlayer();
 
     /**
      * プレイヤーのサーバーを取得します。
@@ -78,13 +91,6 @@ public interface SBPlayer extends Permissible {
      */
     @NotNull
     public Server getServer();
-
-    /**
-     * {@link Bukkit}の{@link Player}を取得します。
-     * @return {@link Player} - プレイヤー
-     */
-    @NotNull
-    Player getPlayer();
 
     /**
      * {@link Bukkit}の{@link OfflinePlayer}を取得します。
