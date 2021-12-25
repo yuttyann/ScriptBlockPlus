@@ -206,9 +206,10 @@ public interface ScriptBlockAPI {
         List<String> getScripts();
 
         /**
-         * 編集時刻を現在の時刻に設定します。
+         * 編集時刻を設定します。
+         * @param date - 時刻
          */
-        void setLastEdit();
+        public void setLastEdit(@NotNull Date date);
 
         /**
          * 編集時刻を取得します。
