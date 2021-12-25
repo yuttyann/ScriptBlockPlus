@@ -29,23 +29,47 @@ public final class ConfigAdapter {
 
     private final Map<String, Object> map;
 
+    /**
+     * コンストラクタ
+     * @param map - マップ
+     */
     public ConfigAdapter(@NotNull Map<String, Object> map) {
         this.map = map;
     }
 
+    /**
+     * 全ての要素をクリアします。
+     */
     public void clear() {
         map.clear();
     }
 
+    /**
+     * ファイルに含まれている全ての要素をロードします。
+     * @param yaml - ファイル
+     */
     public void load(@NotNull YamlConfig yaml) {
         yaml.getKeys(true).forEach(s -> map.put(s, yaml.get(s)));
     }
 
+    /**
+     * 値を取得します。
+     * @param <T> - 値の型
+     * @param key - キー
+     * @return {@link T} - 値
+     */
     @Nullable
     public <T> T get(@NotNull String key) {
         return (T) map.get(key);
     }
 
+    /**
+     * 値を取得します。
+     * @param <T> - 値の型
+     * @param key - キー
+     * @param def - デフォルトの値
+     * @return {@link T} - 値
+     */
     @NotNull
     public <T> T get(@NotNull String key, @NotNull T def) {
         T value = get(key);

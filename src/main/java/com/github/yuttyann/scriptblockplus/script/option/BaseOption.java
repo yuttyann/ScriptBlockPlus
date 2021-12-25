@@ -16,17 +16,16 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.ConfigKey;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
-import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.collection.ObjectMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -62,21 +61,21 @@ public abstract class BaseOption extends Option {
     }
 
     /**
-     * {@link ScriptBlock}の{@link SBPlayer}を取得します。
-     * @return {@link SBPlayer} - プレイヤー
-     */
-    @NotNull
-    protected final SBPlayer getSBPlayer() {
-        return sbRead.getSBPlayer();
-    }
-
-    /**
-     * {@link Bukkit}の{@link Player}を取得します。
+     * {@code BukkitAPI}の{@code org.bukkit.entity.Player}を取得します。
      * @return {@link Player} - プレイヤー
      */
     @NotNull
     protected final Player getPlayer() {
         return sbRead.getPlayer();
+    }
+
+    /**
+     * プレイヤーを取得します。
+     * @return {@link SBPlayer} - プレイヤー
+     */
+    @NotNull
+    protected final SBPlayer getSBPlayer() {
+        return sbRead.getSBPlayer();
     }
 
     /**
@@ -98,7 +97,7 @@ public abstract class BaseOption extends Option {
     }
 
     /**
-     * {@link Bukkit}の{@link Location}を取得します。
+     * {@code BukkitAPI}の{@code org.bukkit.Location}を取得します。
      * @return {@link Location} - スクリプトの座標
      */
     @NotNull
@@ -107,7 +106,7 @@ public abstract class BaseOption extends Option {
     }
     
     /**
-     * {@link ScriptBlock}の{@link BlockCoords}を取得します。
+     * スクリプトの座標を取得します。
      * @return {@link BlockCoords} - スクリプトの座標
      */
     @NotNull

@@ -17,10 +17,9 @@ package com.github.yuttyann.scriptblockplus.script;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.utils.collection.ObjectMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -34,20 +33,20 @@ import java.util.List;
 public interface SBRead extends ObjectMap {
 
     /**
-     * {@link ScriptBlock}の{@link SBPlayer}を取得します。
-     * @return {@link SBPlayer} - プレイヤー
-     */
-    @NotNull
-    SBPlayer getSBPlayer();
-
-    /**
-     * {@link Bukkit}の{@link Player}を取得します。
+     * {@code BukkitAPI}の{@code org.bukkit.entity.Player}を取得します。
      * @return {@link Player} - プレイヤー
      */
     @NotNull
     default Player getPlayer() {
         return getSBPlayer().getPlayer();
     }
+
+    /**
+     * プレイヤーを取得します。
+     * @return {@link SBPlayer} - プレイヤー
+     */
+    @NotNull
+    SBPlayer getSBPlayer();
 
     /**
      * スクリプトキーを取得します。
@@ -57,11 +56,13 @@ public interface SBRead extends ObjectMap {
     ScriptKey getScriptKey();
 
     /**
-     * {@link Bukkit}の{@link Location}を取得します。
+     * {@code BukkitAPI}の{@code org.bukkit.Location}を取得します。
      * @return {@link Location} - スクリプトの座標
      */
     @NotNull
-    Location getLocation();
+    default Location getLocation() {
+        return getBlockCoords().toLocation();
+    }
 
     /**
      * {@link ScriptBlock}の{@link BlockCoords}を取得します。

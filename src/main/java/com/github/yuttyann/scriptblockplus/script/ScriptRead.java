@@ -23,16 +23,15 @@ import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.manager.EndProcessManager;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
-import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.collection.ObjectMap;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
 import com.google.common.collect.Iterators;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -60,68 +59,110 @@ public class ScriptRead extends ScriptMap implements SBRead {
     protected String value;
     protected List<String> list;
 
+    /**
+     * コンストラクタ
+     * @param sbPlayer - プレイヤー
+     * @param blockCoords - 座標
+     * @param scriptKey - スクリプトキー
+     */
     public ScriptRead(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull ScriptKey scriptKey) {
         this.initialize = true;
         this.sbPlayer = sbPlayer;
         this.scriptKey = scriptKey;
         this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
-        this.scriptJson = BlockScriptJson.newJson(scriptKey);
+        this.scriptJson = BlockScriptJson.get(scriptKey);
     }
-    
+
+
+    /**
+     * スクリプトの実行完了後に一時データを削除するのかを設定します。
+     * @param initialize - 一時データを削除する場合は{@code true}
+     */
     public final void setInitialize(boolean initialize) {
         this.initialize = initialize;
     }
 
+    /**
+     * スクリプトの実行完了後に一時データを削除する場合は{@code true}を返します。
+     * @return {@code boolean} - スクリプトの実行完了後に一時データを削除する場合は{@code true}
+     */
     public final boolean isInitialize() {
         return initialize;
     }
 
+    /**
+     * プレイヤーを取得します。
+     * @return {@link SBPlayer} - プレイヤー
+     */
     @Override
     @NotNull
     public SBPlayer getSBPlayer() {
         return sbPlayer;
     }
 
+    /**
+     * スクリプトキーを取得します。
+     * @return {@link ScriptKey} - スクリプトキー
+     */
     @Override
     @NotNull
     public ScriptKey getScriptKey() {
         return scriptKey;
     }
 
-    @Override
-    @NotNull
-    public Location getLocation() {
-        return blockCoords.toLocation();
-    }
-
+    /**
+     * スクリプトの座標を取得します。
+     * @return {@link BlockCoords} - スクリプトの座標
+     */
     @Override
     @NotNull
     public BlockCoords getBlockCoords() {
         return blockCoords;
     }
 
+    /**
+     * スクリプトの一覧を取得します。
+     * @return {@link List}&lt;{@link String}&gt; - スクリプトの一覧
+     */
     @Override
     @NotNull
     public List<String> getScripts() {
         return list;
     }
 
+    /**
+     * オプションの値を取得します。
+     * @return {@link String} - オプションの値
+     */
     @Override
     @NotNull
     public String getOptionValue() {
         return value;
     }
 
+    /**
+     * スクリプトを何番目まで実行したのか取得します。
+     * @return {@code int} - 進行度
+     */
     @Override
     public int getScriptIndex() {
         return index;
     }
 
+    /**
+     * オプションの結果を反転するのかどうか。
+     * @return {@code boolean} - 反転する場合は{@code true}
+     */
     @Override
     public boolean isInverted() {
         return invert;
     }
 
+    /**
+     * スクリプトを実行します。
+     * @param index - 開始位置
+     * @return {@code boolean} - 実行に成功した場合は{@code true}
+     */
     @Override
     public boolean read(final int index) {
         if (!sbPlayer.isOnline()) {
@@ -145,6 +186,11 @@ public class ScriptRead extends ScriptMap implements SBRead {
         }
     }
 
+    /**
+     * オプションを実行します。
+     * @param index - 開始位置
+     * @return {@code boolean} - 実行に成功した場合は{@code true}
+     */
     protected boolean perform(final int index) {
         for (this.index = index; this.index < list.size(); this.index++) {
             var script = list.get(this.index);
@@ -163,6 +209,11 @@ public class ScriptRead extends ScriptMap implements SBRead {
         return true;
     }
 
+    /**
+     * スクリプトの並び替えに成功した場合は{@code true}を返します。
+     * @param scripts - スクリプト
+     * @return {@code boolean} - スクリプトの並び替えに成功した場合は{@code true}
+     */
     protected boolean sortScripts(@NotNull List<String> scripts) {
         try {
             var parse = new ArrayList<String>();

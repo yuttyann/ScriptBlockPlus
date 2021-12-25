@@ -135,8 +135,8 @@ public final class ConvertList {
     }
 
     /**
-     * 検索を行った、JSONのファイルパスのリストを取得します。
-     * @return {@link List}&lt;{@link String}&gt; - ファイルパスのリスト
+     * 検索を行った、Jsonのファイルパスの一覧を取得します。
+     * @return {@link List}&lt;{@link String}&gt; - ファイルパスの一覧
      */
     @NotNull
     public List<String> getConvertPaths() {
@@ -144,9 +144,9 @@ public final class ConvertList {
     }
 
     /**
-     * JSONの検索を行います。
+     * Jsonの検索を行います。
      * @throws IOException I/O系の例外が発生した場合にスローされます。
-     * @throws ParseException JSONの読み込みに失敗した場合にスローされます。
+     * @throws ParseException Jsonの読み込みに失敗した場合にスローされます。
      */
     public void searchFiles() throws IOException, ParseException {
         if (folder.exists()) {
@@ -158,9 +158,9 @@ public final class ConvertList {
     }
 
     /**
-     * JSONの検索を行います。
+     * Jsonの検索を行います。
      * @throws IOException I/O系の例外が発生した場合にスローされます。
-     * @throws ParseException JSONの読み込みに失敗した場合にスローされます。
+     * @throws ParseException Jsonの読み込みに失敗した場合にスローされます。
      * @param folder - 検索を行うフォルダ
      */
     private void searchFiles(@NotNull File folder) throws IOException, ParseException {
@@ -181,19 +181,16 @@ public final class ConvertList {
     }
 
     /**
-     * 古い形式のJSONなのか判定します。
+     * 古い形式のJsonなのか判定します。
      * @throws IOException I/O系の例外が発生した場合にスローされます。
-     * @throws ParseException JSONの読み込みに失敗した場合にスローされます。
-     * @param json - JSONのファイル
+     * @throws ParseException Jsonの読み込みに失敗した場合にスローされます。
+     * @param json - Jsonのファイル
      * @return {@code boolean} - 古い形式の場合は{@code true}
      */
     private boolean isLegacy(@NotNull File json) throws IOException, ParseException {
-        /**
-         * 今後新たに実装する場合はバージョンごとに処理を分けるようにする。
-         * if (getFormatVersion().getVersion() != 2.0) {
-         *     return false;
-         * }
-        */
+        if (getFormatVersion().getVersion() != FormatVersion.CURRENT.getVersion()) {
+            return true;
+        }
         try (var reader = FileUtils.newBufferedReader(json)) {
             var parse = parser.parse(reader);
             if (!(parse instanceof JSONObject)) {

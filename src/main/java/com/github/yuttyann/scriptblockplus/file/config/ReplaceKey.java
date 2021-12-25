@@ -32,27 +32,52 @@ public class ReplaceKey implements ConfigKey<String> {
     protected Object[] args = {};
     protected String result = null;
 
+    /**
+     * コンストラクタ
+     * @param configKey - コンフィグのキー
+     * @param replaceKeys - 検索する文字列
+     */
     public ReplaceKey(@NotNull ConfigKey<String> configKey, @NotNull String... replaceKeys) {
         this.configKey = configKey;
         this.replaceKeys = replaceKeys;
     }
 
+    /**
+     * コンフィグのキーを取得します。
+     * @return {@link ConfigKey}&lt;{@link String}&gt; - コンフィグのキー
+     */
     @NotNull
     protected final ConfigKey<String> getConfigKey() {
         return configKey;
     }
 
+    /**
+     * 値を取得します。
+     * @return {@link Optional}&lt;{@link String}&gt; - 値
+     */
     @Override
     @NotNull
     public Optional<String> get() {
         return configKey.get();
     }
 
+    /**
+     * 要素を取得します。
+     * @param <T> - 要素の型
+     * @param index - 位置
+     * @param classOf - 要素のクラス
+     * @return
+     */
     @NotNull
     public final <T> T getArgument(final int index, @NotNull Class<T> classOf) {
         return classOf.cast(args[index]);
     }
 
+    /**
+     * 置換を行います。
+     * @param replaces - 置換する要素
+     * @return {@link ReplaceKey} - 置換後のキー
+     */
     @NotNull
     public ReplaceKey replace(@NotNull Object... replaces) {
         if (replaces.length != replaceKeys.length) {

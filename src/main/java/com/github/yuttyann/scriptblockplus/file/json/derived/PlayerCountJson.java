@@ -34,20 +34,24 @@ import java.util.UUID;
 public final class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount> {
 
     public PlayerCountJson(@NotNull String name) {
-        super(name);
+        super(name, PlayerCount::new);
     }
 
-    @Override
+    /**
+     * インスタンスを取得します。
+     * @param uuid - ファイルの{@link UUID}
+     * @return {@link PlayerCountJson} - インスタンス
+     */
     @NotNull
-    protected PlayerCount newInstance(@NotNull ScriptKey scriptKey, @NotNull BlockCoords location) {
-        return new PlayerCount(scriptKey, location);
-    }
-
-    @NotNull
-    public static PlayerCountJson newJson(@NotNull UUID uuid) {
+    public static PlayerCountJson get(@NotNull UUID uuid) {
         return newJson(PlayerCountJson.class, uuid.toString());
     }
 
+    /**
+     * 指定した座標の設定を削除します。
+     * @param scriptKey - スクリプトキー
+     * @param blockCoords - 座標
+     */
     public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords... blockCoords) {
         var names = getNames(PlayerCountJson.class);
         var iterator = new ReuseIterator<>(blockCoords);

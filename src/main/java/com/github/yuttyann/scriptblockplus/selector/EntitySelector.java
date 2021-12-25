@@ -52,6 +52,13 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class EntitySelector {
 
+    /**
+     * ターゲットセレクターの対象になったエンティティの一覧を取得します。
+     * @param sender - 送信者
+     * @param start - 起点となる座標
+     * @param selector - ターゲットセレクター
+     * @return {@link List}&lt;{@link Entity}&gt; - エンティティの一覧
+     */
     @NotNull
     public static List<Entity> getEntities(@NotNull CommandSender sender, @NotNull Location start, @NotNull String selector) {
         var result = new ArrayList<Entity>();
@@ -159,7 +166,7 @@ public final class EntitySelector {
     }
 
     @NotNull
-    public static Location copy(@NotNull CommandSender sender, @Nullable Location location) {
+    private static Location copy(@NotNull CommandSender sender, @Nullable Location location) {
         if (location == null) {
             if (sender instanceof Entity) {
                 location = ((Entity) sender).getLocation();

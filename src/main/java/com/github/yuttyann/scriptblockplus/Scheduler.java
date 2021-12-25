@@ -28,40 +28,84 @@ public final class Scheduler {
 
     private final Plugin plugin;
 
+    /**
+     * コンストラクタ
+     * @param plugin - プラグイン
+     */
     public Scheduler(@NotNull Plugin plugin) {
         this.plugin = plugin;
     }
 
+    /**
+     * プラグインを取得します。
+     * @return {@link Plugin} - プラグイン
+     */
     @NotNull
     public Plugin getPlugin() {
         return plugin;
     }
 
+    /**
+     * 次のサーバーティックで実行されるタスクを返します。
+     * @param task - 処理
+     * @return {@link BukkitTask} - タスク
+     */
     @NotNull
     public BukkitTask run(@NotNull Runnable task) {
         return Bukkit.getScheduler().runTask(plugin, task);
     }
 
+    /**
+     * 指定されたサーバーティック数の後に実行されるタスクを返します。
+     * @param task - 処理
+     * @param delay - 遅延
+     * @return {@link BukkitTask} - タスク
+     */
     @NotNull
     public BukkitTask run(@NotNull Runnable task, final long delay) {
         return Bukkit.getScheduler().runTaskLater(plugin, task, delay);
     }
 
+    /**
+     * 指定されたサーバーティック数後に開始され、キャンセルされるまで繰り返し実行されるタスクを返します。
+     * @param task - 処理
+     * @param delay - 遅延
+     * @param period - 待機
+     * @return {@link BukkitTask} - タスク
+     */
     @NotNull
     public BukkitTask run(@NotNull Runnable task, final long delay, final long period) {
         return Bukkit.getScheduler().runTaskTimer(plugin, task, delay, period);
     }
 
+    /**
+     * 非同期で実行されるタスクを返します。
+     * @param task - 処理
+     * @return {@link BukkitTask} - タスク
+     */
     @NotNull
     public BukkitTask asyncRun(@NotNull Runnable task) {
         return Bukkit.getScheduler().runTaskAsynchronously(plugin, task);
     }
 
+    /**
+     * 指定されたサーバーティック数の後に非同期で実行されるタスクを返します。
+     * @param task - 処理
+     * @param delay - 遅延
+     * @return {@link BukkitTask} - タスク
+     */
     @NotNull
     public BukkitTask asyncRun(@NotNull Runnable task, final long delay) {
         return Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, task, delay);
     }
 
+    /**
+     * 指定されたサーバーティック数後に開始され、キャンセルされるまで非同期で繰り返し実行されるタスクを返します。
+     * @param task - 処理
+     * @param delay - 遅延
+     * @param period - 待機
+     * @return {@link BukkitTask} - タスク
+     */
     @NotNull
     public BukkitTask asyncRun(@NotNull Runnable task, final long delay, final long period) {
         return Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, task, delay, period);

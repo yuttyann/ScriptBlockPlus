@@ -28,7 +28,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,23 +44,26 @@ import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 public final class Utils {
 
     public static final String MINECRAFT = "minecraft:";
-    public static final String DATE_PATTERN = "yyyy/MM/dd HH:mm:ss";
-
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    
     private static final String SERVER_VERSION = getServerVersion();
     private static final Map<String, Boolean> VERSION_CACHE = new HashMap<>();
 
     private static final Splitter SPLITTER = Splitter.on("|~").omitEmptyStrings();
 
+    /**
+     * ランダムなUUIDの文字列を取得します。
+     * @return {@link String} - UUIDの文字列
+     */
     @NotNull
     public static String randomUUID() {
         return UUID.randomUUID().toString();
     }
 
-    @NotNull
-    public static String getPluginName(@NotNull Plugin plugin) {
-        return plugin.getName() + " v" + plugin.getDescription().getVersion();
-    }
-
+    /**
+     * サーバーのバージョンを取得します。
+     * @return {@link String} - サーバーバージョン
+     */
     @NotNull
     public static String getServerVersion() {
         if (SERVER_VERSION == null) {
@@ -71,12 +73,21 @@ public final class Utils {
         return SERVER_VERSION;
     }
 
+    /**
+     * パッケージのバージョン(例: {@code v1_16_R3})を取得します。
+     * @return {@link String} - パッケージのバージョン
+     */
     @NotNull
     public static String getPackageVersion() {
         var name = Bukkit.getServer().getClass().getPackage().getName();
         return name.substring(name.lastIndexOf('.') + 1);
     }
 
+    /**
+     * サーバーバージョンを比較します。
+     * @param version - 比較元
+     * @return @code boolean} - 比較元がサーバーのバージョン以上だった場合は{@code true}
+     */
     public static boolean isCBXXXorLater(@NotNull String version) {
         var result = VERSION_CACHE.get(version);
         if (result == null) {
@@ -85,6 +96,18 @@ public final class Utils {
         return result;
     }
 
+    /**
+     * バージョンを比較します。
+     * <p>
+     * {@code isUpperVersion("1.8", "1.8")} -> {@code true}
+     * <p>
+     * {@code isUpperVersion("1.8", "1.8.1")} -> {@code true}
+     * <p>
+     * {@code isUpperVersion("1.8.1", "1.8")} -> {@code false}
+     * @param source - 比較元
+     * @param target - 比較先
+     * @return {@code boolean} - 比較元が比較先のバージョン以上だった場合は{@code true}
+     */
     public static boolean isUpperVersion(@NotNull String source, @NotNull String target) {
         if (isNotEmpty(source) && isNotEmpty(target)) {
             return getVersionInt(source) >= getVersionInt(target);
@@ -92,6 +115,11 @@ public final class Utils {
         return false;
     }
 
+    /**
+     * バージョンを数値に変換します。
+     * @param version - バージョン
+     * @return {@code int} - バージョンの数値
+     */
     public static int getVersionInt(@NotNull String version) {
         int dot1 = version.indexOf('.', 0);
         int dot2 = version.indexOf('.', dot1 + 1);
@@ -107,11 +135,13 @@ public final class Utils {
         return result;
     }
 
-    @NotNull
-    public static String getFormatTime(@NotNull String pattern) {
-        return new SimpleDateFormat(pattern).format(new Date());
-    }
-
+    /**
+     * 送信対象にメッセージを送信します。
+     * <p>
+     * {@code \n}または{@code |~}で改行を行うことができます。
+     * @param sender - 送信対象
+     * @param message - メッセージ
+     */
     public static void sendColorMessage(@NotNull CommandSender sender, @Nullable String message) {
         var color = "";
         for (var line : SPLITTER.split(replace(setColor(message), "\\n", "|~"))) {
@@ -122,6 +152,13 @@ public final class Utils {
         }
     }
 
+    /**
+     * 権限を一時的に与えて、処理を実行します。
+     * @param sbPlayer - プレイヤー
+     * @param permission - 権限
+     * @param supplier - 処理
+     * @return {@code boolean} - 実行に成功した場合は{@code true}
+     */
     public static boolean tempPerm(@NotNull SBPlayer sbPlayer, @NotNull Permission permission, @NotNull Supplier<Boolean> supplier) {
         return sbPlayer.isOnline() && CommandLog.supplier(sbPlayer.getWorld(), () -> {
             if (sbPlayer.hasPermission(permission.getNode())) {
@@ -138,6 +175,15 @@ public final class Utils {
         });
     }
 
+    /**
+     * コマンドを実行します。
+     * <p>
+     * ターゲットセレクターが含まれている場合は、それを考慮した上で実行されます。
+     * @param sender - 送信者
+     * @param location - 座標
+     * @param command - コマンド
+     * @return {@code boolean} - コマンドの実行に成功した場合は{@code true}
+     */
     public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull Location location, @NotNull String command) {
         if (CommandSelector.has(command = command.startsWith("/") ? command.substring(1) : command)) {
             var commands = CommandSelector.build(sender, location, command);
@@ -146,6 +192,11 @@ public final class Utils {
         return Bukkit.dispatchCommand(sender, command);
     }
 
+    /**
+     * ワールドを取得します。
+     * @param name - ワールドの名前 
+     * @return {@link World} - ワールド
+     */
     @NotNull
     public static World getWorld(@NotNull String name) {
         var world = Bukkit.getWorld(name);
@@ -160,6 +211,11 @@ public final class Utils {
         return world;
     }
 
+    /**
+     * プレイヤーの名前を取得します。
+     * @param uuid - プレイヤーの{@link UUID}
+     * @return {@link String} - プレイヤーの名前
+     */
     @NotNull
     public static String getName(@NotNull UUID uuid) {
         var player = Bukkit.getOfflinePlayer(uuid);

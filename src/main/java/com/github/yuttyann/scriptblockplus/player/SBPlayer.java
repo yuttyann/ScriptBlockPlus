@@ -16,10 +16,10 @@
 package com.github.yuttyann.scriptblockplus.player;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
+import com.github.yuttyann.scriptblockplus.utils.collection.ObjectMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -43,7 +43,7 @@ import java.util.UUID;
 public interface SBPlayer extends Permissible {
 
     /**
-     * {@link ScriptBlock}の{@link SBPlayer}を取得します。
+     * プレイヤーを取得します。
      * @param player - {@link Bukkit}の{@link OfflinePlayer}
      * @return {@link SBPlayer} - プレイヤー
      */
@@ -53,7 +53,7 @@ public interface SBPlayer extends Permissible {
     }
 
     /**
-     * {@link ScriptBlock}の{@link SBPlayer}を取得します。
+     * プレイヤーを取得します。
      * @param uuid - プレイヤーの{@link UUID}
      * @return {@link SBPlayer} - プレイヤー
      */

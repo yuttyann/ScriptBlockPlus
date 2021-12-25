@@ -27,7 +27,6 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -38,6 +37,9 @@ import java.util.function.BiConsumer;
 @JsonTag(path = "json/blockscript")
 public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
 
+    /**
+     * 初期化処理の一覧
+     */
     public static final List<BiConsumer<ScriptKey, BlockCoords[]>> INIT_PROCESS = new ArrayList<>();
 
     static {
@@ -59,10 +61,18 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
 
     private ScriptKey scriptKey;
 
+    /**
+     * コンストラクタ
+     * @param name - ファイルの名前
+     */
     public BlockScriptJson(@NotNull String name) {
-        super(name);
+        super(name, BlockScript::new);
     }
 
+    /**
+     * 初期化処理({@link BlockScriptJson#INIT_PROCESS})を実行します。
+     * @param blockCoords - 座標
+     */
     public void init(@NotNull BlockCoords... blockCoords) {
         if (blockCoords.length > 0) {
             var scriptKey = getScriptKey();
@@ -70,31 +80,43 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
         }
     }
 
+    /**
+     * スクリプトキーを取得します。
+     * @return {@link ScriptKey} - スクリプトキー
+     */
     @NotNull
     public ScriptKey getScriptKey() {
         return scriptKey == null ? this.scriptKey = ScriptKey.valueOf(getName()) : scriptKey;
     }
 
-    @Override
+    /**
+     * インスタンスを取得します。
+     * @param scriptKey - スクリプトキー
+     * @return {@link BlockScriptJson} - インスタンス
+     */
     @NotNull
-    protected BlockScript newInstance(@NotNull BlockCoords blockCoords) {
-        return new BlockScript(blockCoords);
-    }
-
-    @NotNull
-    public static BlockScriptJson newJson(@NotNull ScriptKey scriptKey) {
+    public static BlockScriptJson get(@NotNull ScriptKey scriptKey) {
         return newJson(BlockScriptJson.class, scriptKey.getName());
     }
 
+    /**
+     * 指定座標にスクリプトが存在する場合は{@code true}を返します。
+     * @param blockCoords - 座標
+     * @return {@code boolean} - 指定座標にスクリプトが存在する場合は{@code true}
+     */
     public static boolean contains(@NotNull BlockCoords blockCoords) {
         for (var scriptKey : ScriptKey.iterable()) {
-            if (newJson(scriptKey).has(blockCoords)) {
+            if (get(scriptKey).has(blockCoords)) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * 古い形式(Yaml)のスクリプトを最新の形式(Json)へ移行します。
+     * @param scriptKey - スクリプトキー
+     */
     public static void convert(@NotNull ScriptKey scriptKey) {
         // YAML形式のファイルからデータを読み込むクラス
         var scriptLoader = new SBLoader(scriptKey);
@@ -102,7 +124,7 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
             return;
         }
         // JSONを作成
-        var scriptJson = newJson(scriptKey);
+        var scriptJson = get(scriptKey);
         if (scriptJson.exists()) {
             return;
         }
@@ -113,10 +135,10 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
                 return;
             }
             var blockScript = scriptJson.load(s.getBlockCoords());
-            blockScript.setAuthors(new LinkedHashSet<>(author));
+            blockScript.setAuthors(author);
             blockScript.setScripts(s.getScripts());
             blockScript.setLastEdit(s.getLastEdit());
-            blockScript.setAmount(s.getAmount());
+            blockScript.setValue(BlockScript.AMOUNT, s.getAmount());
         });
         scriptJson.saveJson();
 

@@ -30,49 +30,108 @@ public final class ConfigKeys {
 
     private static final ConfigAdapter ADAPTER = new ConfigAdapter(new HashMap<>());
 
+    /**
+     * 全ての要素をクリアします。
+     */
     public static void clear() {
         ADAPTER.clear();
     }
 
+    /**
+     * ファイルに含まれている全ての要素をロードします。
+     * @param yaml - ファイル
+     */
     public static void load(@NotNull YamlConfig yaml) {
         ADAPTER.load(yaml);
     }
 
+    /**
+     * キーを取得します。
+     * @param key - キー
+     * @param def - デフォルトの値
+     * @return {@link ConfigKey}&lt;{@link Integer}&gt; - コンフィグのキー
+     */
     @NotNull
     public static ConfigKey<Integer> integerKey(@NotNull String key, int def) {
         return elementKey(key, def);
     }
 
+    /**
+     * キーを取得します。
+     * @param key - キー
+     * @param def - デフォルトの値
+     * @return {@link ConfigKey}&lt;{@link Boolean}&gt; - コンフィグのキー
+     */
     @NotNull
     public static ConfigKey<Boolean> booleanKey(@NotNull String key, boolean def) {
         return elementKey(key, def);
     }
 
+    /**
+     * キーを取得します。
+     * @param key - キー
+     * @param def - デフォルトの値
+     * @return {@link ConfigKey}&lt;{@link String}&gt; - コンフィグのキー
+     */
     @NotNull
     public static ConfigKey<String> stringKey(@NotNull String key, @NotNull String def) {
         return elementKey(key, def);
     }
 
+
+    /**
+     * キーを取得します。
+     * @param key - キー
+     * @param def - デフォルトの値
+     * @return {@link ConfigKey}&lt;{@link List}&lt;{@link String}&gt;&gt; - コンフィグのキー
+     */
     @NotNull
     public static ConfigKey<List<String>> stringListKey(@NotNull String key, @NotNull List<String> def) {
         return elementKey(key, def);
     }
 
+    /**
+     * キーを取得します。
+     * @param <T> 値の型
+     * @param key - キー
+     * @param def - デフォルトの値
+     * @return {@link ConfigKey}&lt;{@link T}&gt; - コンフィグのキー
+     */
     @NotNull
     public static <T> ConfigKey<T> elementKey(@NotNull String key, @NotNull T def) {
         return new ElementKey<>(ADAPTER, key, def);
     }
 
+    /**
+     * 任意のキーを取得します。
+     * @param <T> 値の型
+     * @param function - 取得処理
+     * @return {@link ConfigKey}&lt;{@link T}&gt; - コンフィグのキー
+     */
     @NotNull
     public static <T> ConfigKey<T> customKey(@NotNull Function<ConfigAdapter, T> function) {
         return new CustomKey<>(ADAPTER, function);
     }
 
+    /**
+     * キーの内容を置換して取得します。
+     * @param key - キー
+     * @param def - デフォルトの値
+     * @param replaceKeys - 検索する文字列
+     * @return {@link ReplaceKey} - コンフィグのキー
+     */
     @NotNull
     public static ReplaceKey replaceKey(@NotNull String key, @NotNull String def, @NotNull String... replaceKeys) {
         return new ReplaceKey(stringKey(key, def), replaceKeys);
     }
 
+    /**
+     * キーを取得します。
+     * @param key - キー
+     * @param def - デフォルトの値
+     * @param function - 置換処理
+     * @return {@link ReplaceKey} - コンフィグのキー
+     */
     @NotNull
     public static ReplaceKey replaceKey(@NotNull String key, @NotNull String def, @NotNull Function<ReplaceKey, String> function) {
         return new FunctionalReplaceKey(stringKey(key, def), function);

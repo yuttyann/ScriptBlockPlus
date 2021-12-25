@@ -108,8 +108,8 @@ public abstract class CustomGUI {
     }
 
     /**
-     * GUIのUUIDを取得します。
-     * @return {@link UUID} - GUIのUUID
+     * GUIの{@link UUID}を取得します。
+     * @return {@link UUID} - GUIの{@link UUID}
      */
     @NotNull
     public UUID getUniqueId() {

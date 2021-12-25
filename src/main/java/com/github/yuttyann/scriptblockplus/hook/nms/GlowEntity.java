@@ -102,8 +102,8 @@ public final class GlowEntity {
     }
 
     /**
-     * エンティティのUUIDを取得します。
-     * @return {@link UUID} - エンティティのUUID
+     * エンティティの{@link UUID}を取得します。
+     * @return {@link UUID} - エンティティの{@link UUID}
      */
     @NotNull
     public UUID getUniqueId() {

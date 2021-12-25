@@ -71,10 +71,22 @@ public final class CommandSelector {
         }
     }
 
+    /**
+     * 文字列にターゲットセレクターが含まれている場合は{@code true}を返します。
+     * @param source - 文字列
+     * @return {@code boolean} - 文字列にターゲットセレクターが含まれている場合は{@code true}
+     */
     public static boolean has(@NotNull String source) {
         return StreamUtils.anyMatch(SELECTOR_NAMES, source::contains);
     }
 
+    /**
+     * 文字列に含まれているターゲットセレクターを置換します。
+     * @param sender - 送信者
+     * @param start - 起点となる座標
+     * @param command - コマンド
+     * @return {@link List}&lt;{@link String}&gt; - 置換後の文字列
+     */
     @NotNull
     public static List<String> build(@NotNull CommandSender sender, @NotNull Location start, @NotNull String command) {
         int modCount = 0;
@@ -147,6 +159,15 @@ public final class CommandSelector {
         return builder.toString();
     }
 
+    /**
+     * ターゲットセレクターの対象になったエンティティの一覧を取得します。
+     * <p>
+     * NMSが存在しない場合は、{@code BukkitAPI}の機能を利用して返します。
+     * @param sender - 送信者
+     * @param start - 起点となる座標
+     * @param selector - ターゲットセレクター
+     * @return {@link List}&lt;{@link Entity}&gt; - エンティティの一覧
+     */
     @NotNull
     public static List<Entity> getTargets(@NotNull CommandSender sender, @NotNull Location start, @NotNull String selector) {
         selector = Placeholder.INSTANCE.replace(getWorld(sender, start), selector);

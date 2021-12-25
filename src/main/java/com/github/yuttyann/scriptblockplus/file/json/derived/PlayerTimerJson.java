@@ -24,7 +24,6 @@ import com.github.yuttyann.scriptblockplus.script.option.time.OldCooldown;
 import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -36,20 +35,24 @@ import java.util.UUID;
 public final class PlayerTimerJson extends ThreeJson<UUID, ScriptKey, BlockCoords, PlayerTimer> {
 
     public PlayerTimerJson(@NotNull String name) {
-        super(name);
+        super(name, PlayerTimer::new);
     }
 
-    @Override
+    /**
+     * インスタンスを取得します。
+     * @param uuid - ファイルの{@link UUID}
+     * @return {@link PlayerTimerJson} - インスタンス
+     */
     @NotNull
-    protected PlayerTimer newInstance(@Nullable UUID uuid, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
-        return new PlayerTimer(uuid, scriptKey, blockCoords);
-    }
-
-    @NotNull
-    public static PlayerTimerJson newJson(@NotNull UUID uuid) {
+    public static PlayerTimerJson get(@NotNull UUID uuid) {
         return newJson(PlayerTimerJson.class, uuid.toString());
     }
 
+    /**
+     * 指定した座標の設定を削除します。
+     * @param scriptKey - スクリプトキー
+     * @param blockCoords - 座標
+     */
     public static void removeAll(@NotNull ScriptKey scriptKey, @NotNull BlockCoords... blockCoords) {
         var names = getNames(PlayerTimerJson.class);
         var oldUUID = OldCooldown.UUID_OLDCOOLDOWN.toString();

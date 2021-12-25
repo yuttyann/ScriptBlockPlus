@@ -60,8 +60,8 @@ public interface ConfigKey<T> {
     }
 
     /**
-     * カラーコードを置換した文字列のリストを取得します。
-     * @return {@link List}&lt;{@link String}&gt; - 文字列のリスト
+     * カラーコードを置換した文字列の一覧を取得します。
+     * @return {@link List}&lt;{@link String}&gt; - 文字列の一覧
      */
     @NotNull
     default List<String> setListColor() {
