@@ -45,6 +45,11 @@ public final class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
     @SerializedName("amount")
     private int amount;
 
+    /**
+     * コンストラクタ
+     * @param scriptKey - スクリプトキー
+     * @param blockCoords - 座標
+     */
     public PlayerCount(@NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
         this.scriptKey = Objects.requireNonNull(scriptKey);
         this.blockCoords = Objects.requireNonNull(blockCoords);
@@ -67,18 +72,34 @@ public final class PlayerCount extends TwoElement<ScriptKey, BlockCoords> {
         return this.scriptKey.ordinal() == scriptKey.ordinal() && this.blockCoords.compare(blockCoords);
     }
 
+    /**
+     * 実行回数を設定します。
+     * @param amount - 値
+     */
     public synchronized void setAmount(int amount) {
         this.amount = Math.max(amount, 0);
     }
 
+    /**
+     * 実行回数を{@code 1}増やします。
+     * @return {@code int} - 実行回数
+     */
     public synchronized int add() {
         return ++amount;
     }
 
+    /**
+     * 実行回数を{@code 1}減らします。
+     * @return {@code int} - 実行回数
+     */
     public synchronized int subtract() {
         return amount > 0 ? --amount : 0;
     }
 
+    /**
+     * 実行回数を取得します。
+     * @return {@code int} - 実行回数
+     */
     public synchronized int getAmount() {
         return amount;
     }

@@ -47,6 +47,12 @@ public final class PlayerTimer extends ThreeElement<UUID, ScriptKey, BlockCoords
     @SerializedName("blockcoords")
     private final BlockCoords blockCoords;
 
+    /**
+     * コンストラクタ
+     * @param uuid - ファイルの{@link UUID}
+     * @param scriptKey - スクリプトキー
+     * @param blockCoords - 座標
+     */
     public PlayerTimer(@Nullable UUID uuid, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
         this.uuid = uuid;
         this.scriptKey = Objects.requireNonNull(scriptKey);
@@ -79,11 +85,19 @@ public final class PlayerTimer extends ThreeElement<UUID, ScriptKey, BlockCoords
         return this.scriptKey.ordinal() == scriptKey.ordinal() && this.blockCoords.compare(blockCoords);
     }
 
+    /**
+     * 時間を設定します。
+     * @param time - 時間(現在のミリ秒, 指定秒数*1000, 前者二つの合計)
+     */
     @NotNull
     public void setTime(@NotNull long... time) {
         this.time = time;
     }
 
+    /**
+     * 残り秒数を取得します。
+     * @return {@code int} - 秒数
+     */
     public int getSecond() {
         if (time == null) {
             return 0;
