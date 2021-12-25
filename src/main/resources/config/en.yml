@@ -18,7 +18,7 @@ OpenChangeLog: true
 # [true -> Enable | false -> Disable]
 # Cache all files on server startup or reload.
 # It can run smoothly, but may consume a lot of memory.
-CacheAllJson: false
+CacheAllJson: true
 
 # Sets the upper limit of the number of elements allowed to format JSON.
 # By setting an upper limit, you can expect to reduce the capacity and speed up the process.

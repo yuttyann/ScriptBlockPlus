@@ -16,7 +16,7 @@ OpenChangeLog: false
 # [true -> 真 | false -> 假]
 # 是否在服务器启动时预先缓存所有Json
 # 可以大大增加流畅性但是会消耗大量内存
-CacheAllJson: false
+CacheAllJson: true
 
 # 为Json中可被格式化的元素数量设置一个上限
 # 通过设置一个上限 你可以期望减少容量 加快进程
