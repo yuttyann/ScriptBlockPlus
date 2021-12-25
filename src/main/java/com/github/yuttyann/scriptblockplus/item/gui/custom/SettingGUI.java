@@ -16,6 +16,7 @@
 package com.github.yuttyann.scriptblockplus.item.gui.custom;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -119,9 +120,9 @@ public final class SettingGUI extends CustomGUI {
     public void onLoaded(@NotNull UserWindow window) {
         window.setItem(SLOTS[0], new GUIItem(1, Material.BARRIER, SBConfig.GUI_SETTING_DELETE.setColor(), null, (w, g, c) -> {
             getScriptJson(w).ifPresent(s -> {
-                s.getBlockScriptJson().init(s.getBlockCoords());
-                s.getBlockScriptJson().remove(s.getBlockCoords());
-                s.getBlockScriptJson().saveJson();
+                s.scriptJson.init(s.blockCoords);
+                s.scriptJson.remove(s.blockCoords);
+                s.scriptJson.saveJson();
                 getWindow(SearchGUI.class, w.getSBPlayer()).ifPresent(w::shift);
             });
         }));
@@ -137,21 +138,21 @@ public final class SettingGUI extends CustomGUI {
                     sbPlayer.setSBClipboard(null);
                 } else {
                     g.setEnchant(true);
-                    new SBClipboard(sbPlayer, s.getScriptKey(), s.getBlockCoords()).copy();
+                    new SBClipboard(sbPlayer, s.scriptKey, s.blockCoords).copy();
                 }
                 w.setItem(SLOTS[4], g);
             });
         }));
         window.setItem(SLOTS[8], new GUIItem(1, ItemUtils.getWritableBookMaterial(), SBConfig.GUI_SETTING_PASTE.setColor(), null, (w, g, c) -> {
-            getScriptJson(w).ifPresent(s -> w.getSBPlayer().getSBClipboard().ifPresent(b -> { b.paste(s.getBlockCoords(), true); update(w, s); }));
+            getScriptJson(w).ifPresent(s -> w.getSBPlayer().getSBClipboard().ifPresent(b -> { b.paste(s.blockCoords, true); update(w, s); }));
         }));
 
         window.setItem(SLOTS[5], new GUIItem(1, Material.NETHER_STAR, SBConfig.GUI_SETTING_TELEPORT.setColor(), null, (w, g, c) -> {
-            getScriptJson(w).ifPresent(s -> w.getSBPlayer().getPlayer().teleport(s.getBlockCoords().toLocation(), TeleportCause.PLUGIN));
+            getScriptJson(w).ifPresent(s -> w.getSBPlayer().getPlayer().teleport(s.blockCoords.toLocation(), TeleportCause.PLUGIN));
         }));
         window.setItem(SLOTS[6], new GUIItem(1, Material.END_CRYSTAL, SBConfig.GUI_SETTING_EXECUTE.setColor(), null, (w, g, c) -> {
             getScriptJson(w).ifPresent(s -> {
-                new ScriptRead(w.getSBPlayer(), s.getBlockCoords(), s.getScriptKey()).read(0);
+                new ScriptRead(w.getSBPlayer(), s.blockCoords, s.scriptKey).read(0);
                 w.setItem(SLOTS[7], w.getItem(SLOTS[7]).setLore(s.createLore(w.getSBPlayer().getPlayer())));
             });
         }));
@@ -161,20 +162,20 @@ public final class SettingGUI extends CustomGUI {
 
         // AnvilGUI
         window.setItem(SLOTS[1], new GUIItem(1, Material.REDSTONE_BLOCK, SBConfig.GUI_SETTING_REDSTONE.setColor(), null, (w, g, c) -> {
-            OPEN_ANVIL.accept(w, s -> s.getBlockScript().getSelector(), (t, s) -> {
+            OPEN_ANVIL.accept(w, s -> s.blockScript.getSafeValue(BlockScript.SELECTOR).asString(null), (t, s) -> {
                 var text = ChatColor.stripColor(t);
                 if (StringUtils.isNotEmpty(text) && !CommandSelector.has(text)) {
                     text = text.trim() + " @p";
                 }
-                s.getBlockScript().setSelector(def(text, null));
-                s.getBlockScript().setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
-                s.getBlockScriptJson().saveJson();
+                s.blockScript.setLastEdit(new Date());
+                s.blockScript.setValue(BlockScript.SELECTOR, def(text, null));
+                s.scriptJson.saveJson();
                 return Response.close();
             });
         }));
         window.setItem(SLOTS[2], new GUIItem(1, ItemUtils.getCommandMaterial(), SBConfig.GUI_SETTING_SCRIPT.setColor(), null, (w, g, c) -> {
             if (c == ClickType.LEFT) {
-                getScriptJson(w).ifPresent(s -> w.setItem(SLOTS[2], g.setLore(createLore(w.getSBPlayer(), s, 1))));
+                getScriptJson(w).ifPresent(s -> w.setItem(SLOTS[2], g.setLore(selectScript(w.getSBPlayer(), s, 1))));
                 return;
             }
             var index = w.getSBPlayer().getObjectMap().getInt(KEY_LORE);
@@ -184,26 +185,26 @@ public final class SettingGUI extends CustomGUI {
                 var text = ChatColor.stripColor(t);
                 if (text == null) {
                     if (scripts.size() == 1) {
-                        s.getBlockScriptJson().init(s.getBlockCoords());
-                        s.getBlockScriptJson().remove(s.getBlockCoords());
-                        s.getBlockScriptJson().saveJson();
+                        s.scriptJson.init(s.blockCoords);
+                        s.scriptJson.remove(s.blockCoords);
+                        s.scriptJson.saveJson();
                         return Response.close();
                     }
                     scripts.remove(index);
                 } else {
                     scripts.set(index, text);
                 }
-                s.getBlockScript().setScripts(scripts);
-                s.getBlockScript().setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
-                s.getBlockScriptJson().saveJson();
+                s.blockScript.setScripts(scripts);
+                s.blockScript.setLastEdit(new Date());
+                s.scriptJson.saveJson();
                 return Response.close();
             });
         }));
         window.setItem(SLOTS[3], new GUIItem(1, Material.NAME_TAG, SBConfig.GUI_SETTING_NAMETAG.setColor(), null, (w, g, c) -> {
-            OPEN_ANVIL.accept(w, s -> s.getBlockScript().getNameTag(), (t, s) -> {
-                s.getBlockScript().setNameTag(def(ChatColor.stripColor(t), null));
-                s.getBlockScript().setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
-                s.getBlockScriptJson().saveJson();
+            OPEN_ANVIL.accept(w, s -> s.blockScript.getSafeValue(BlockScript.NAMETAG).asString(null), (t, s) -> {
+                s.blockScript.setLastEdit(new Date());
+                s.blockScript.setValue(BlockScript.NAMETAG, def(ChatColor.stripColor(t), null));
+                s.scriptJson.saveJson();
                 return Response.close();
             });
         }));
@@ -231,9 +232,9 @@ public final class SettingGUI extends CustomGUI {
     }
 
     @NotNull
-    public List<String> createLore(@NotNull SBPlayer sbPlayer, @NotNull ScriptJson scriptJson, final int amount) {
+    public List<String> selectScript(@NotNull SBPlayer sbPlayer, @NotNull ScriptJson scriptJson, final int amount) {
         var lore = new ArrayList<String>();
-        var scripts = getScripts(sbPlayer, scriptJson.getBlockScript());
+        var scripts = getScripts(sbPlayer, scriptJson.blockScript);
         var objectMap = sbPlayer.getObjectMap();
         scripts.forEach(s -> lore.add(s.length() > LIMIT ? "   §c[" + s + "]" : "   §7[" + s + "]"));
         if (lore.size() == 1 || amount == 0) {
@@ -284,9 +285,10 @@ public final class SettingGUI extends CustomGUI {
     }
 
     private void update(@NotNull UserWindow window, @NotNull ScriptJson scriptJson) {
-        window.setItem(SLOTS[1], window.getItem(SLOTS[1]).setLore(SearchGUI.TEXT + def(scriptJson.getBlockScript().getSelector(), "")));
-        window.setItem(SLOTS[2], window.getItem(SLOTS[2]).setLore(createLore(window.getSBPlayer(), scriptJson, 0)));
-        window.setItem(SLOTS[3], window.getItem(SLOTS[3]).setLore(SearchGUI.TEXT + def(scriptJson.getBlockScript().getNameTag(), "")));
+        var blockScript = scriptJson.blockScript;
+        window.setItem(SLOTS[1], window.getItem(SLOTS[1]).setLore(SearchGUI.TEXT + blockScript.getSafeValue(BlockScript.SELECTOR).asString()));
+        window.setItem(SLOTS[2], window.getItem(SLOTS[2]).setLore(selectScript(window.getSBPlayer(), scriptJson, 0)));
+        window.setItem(SLOTS[3], window.getItem(SLOTS[3]).setLore(SearchGUI.TEXT + blockScript.getSafeValue(BlockScript.NAMETAG).asString()));
         window.setItem(SLOTS[4], window.getItem(SLOTS[4]).setEnchant(window.getSBPlayer().getSBClipboard().isPresent()));
         window.setItem(SLOTS[7], window.getItem(SLOTS[7]).setLore(scriptJson.createLore(window.getSBPlayer().getPlayer())));
     }

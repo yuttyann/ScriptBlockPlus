@@ -28,7 +28,7 @@ public final class FormatVersion implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public static final FormatVersion ZERO = new FormatVersion(0.0);
-    public static final FormatVersion CURRENT = new FormatVersion(2.0);
+    public static final FormatVersion CURRENT = new FormatVersion(3.0);
 
     private final double version;
 

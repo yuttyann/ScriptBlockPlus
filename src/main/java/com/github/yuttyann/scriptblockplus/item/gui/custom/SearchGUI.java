@@ -17,7 +17,6 @@ package com.github.yuttyann.scriptblockplus.item.gui.custom;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -29,15 +28,16 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.hook.nms.AnvilGUI.AnvilBuilder;
 import com.github.yuttyann.scriptblockplus.hook.nms.AnvilGUI.Response;
 import com.github.yuttyann.scriptblockplus.item.gui.CustomGUI;
 import com.github.yuttyann.scriptblockplus.item.gui.GUIItem;
 import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.raytrace.SBBoundingBox;
+import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
@@ -176,7 +176,7 @@ public final class SearchGUI extends CustomGUI {
     public void onClosed(@NotNull UserWindow window) { }
 
     private void updateWindow(@NotNull UserWindow window, final boolean init, boolean prev, int index) {
-        var json = BlockScriptJson.newJson(getScriptKey(window.getItem(SLOTS[4])));
+        var json = BlockScriptJson.get(getScriptKey(window.getItem(SLOTS[4])));
         var elements = filterElements(window, Lists.newArrayList(json.copyElements()));
         var objectMap = window.getSBPlayer().getObjectMap();
         int slot = 8, slotSize = SLOTS.length - 8, jsonSize = elements.size();
@@ -227,7 +227,7 @@ public final class SearchGUI extends CustomGUI {
         var script = GET_VALUE.apply(window.getItem(SLOTS[0]).getLore().get(0), true);
         var upTime = GET_VALUE.apply(window.getItem(SLOTS[1]).getLore().get(0), true);
         var coords = GET_VALUE.apply(window.getItem(SLOTS[2]).getLore().get(0), true);
-        var nameTag = GET_VALUE.apply(window.getItem(SLOTS[3]).getLore().get(0), true);
+        var nametag = GET_VALUE.apply(window.getItem(SLOTS[3]).getLore().get(0), true);
         return elements.stream().filter(b -> {
             // スクリプトの部分一致検索
             return script.isEmpty() ? true : StreamUtils.anyMatch(b.getScripts(), s -> s.contains(script));
@@ -238,7 +238,7 @@ public final class SearchGUI extends CustomGUI {
             }
             try {   
                 var dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                var lastEdit = dateFormat.parse(b.getLastEdit());
+                var lastEdit = b.getLastEdit();
                 var tilde = StringUtils.split(upTime, '~');
                 var date1 = dateFormat.parse(tilde.get(0));
                 var date2 = tilde.size() > 1 ? dateFormat.parse(tilde.get(1)) : null;
@@ -276,7 +276,7 @@ public final class SearchGUI extends CustomGUI {
         })
         .filter(b -> {
             // ネームタグ検索
-            return nameTag.isEmpty() ? true : Objects.equals(nameTag, b.getNameTag());
+            return nametag.isEmpty() ? true : Objects.equals(nametag, b.getSafeValue(BlockScript.NAMETAG).asString(null));
         }).collect(Collectors.toList());
     }
 
@@ -300,54 +300,25 @@ public final class SearchGUI extends CustomGUI {
      */
     final class ScriptJson {
 
-        private final ScriptKey scriptKey;
-        private final BlockCoords blockCoords;
-        private final BlockScript blockScript;
-        private final BlockScriptJson blockScriptJson;
+        protected final ScriptKey scriptKey;
+        protected final BlockCoords blockCoords;
+        protected final BlockScript blockScript;
+        protected final BlockScriptJson scriptJson;
 
-        private ScriptJson(@NotNull BlockScript blockScript, @NotNull BlockScriptJson blockScriptJson) {
-            this.scriptKey = blockScriptJson.getScriptKey();
+        private ScriptJson(@NotNull BlockScript blockScript, @NotNull BlockScriptJson scriptJson) {
+            this.scriptKey = scriptJson.getScriptKey();
             this.blockCoords = blockScript.getBlockCoords();
             this.blockScript = blockScript;
-            this.blockScriptJson = blockScriptJson;
+            this.scriptJson = scriptJson;
         }
 
         public boolean has() {
-            return blockScriptJson.has(blockCoords);
-        }
-
-        @NotNull
-        public ScriptKey getScriptKey() {
-            return scriptKey;
-        }
-
-        @NotNull
-        public BlockCoords getBlockCoords() {
-            return blockCoords;
-        }
-
-        @NotNull
-        public BlockScript getBlockScript() {
-            return blockScript;
-        }
-
-        @NotNull
-        public BlockScriptJson getBlockScriptJson() {
-            return blockScriptJson;
+            return scriptJson.has(blockCoords);
         }
 
         @NotNull
         public List<String> createLore(@NotNull Player player) {
-            var lore = new ArrayList<String>(8);
-            lore.add("§eAuthor: §a" + blockScript.getAuthors().stream().map(Utils::getName).collect(Collectors.joining(", ")));
-            lore.add("§eUpdate: §a" + blockScript.getLastEdit());
-            lore.add("§eCoords: §a" + blockCoords.getFullCoords());
-            lore.add("§eMyCount: §a" + PlayerCountJson.newJson(player.getUniqueId()).load(scriptKey, blockCoords).getAmount());
-            lore.add("§eTagName: §" + (blockScript.getNameTag() == null ? "cNone" : "a" + blockScript.getNameTag()));
-            lore.add("§eRedstone: §" + (blockScript.getSelector() == null ? "cfalse" : "atrue §d: §a" + blockScript.getSelector()));
-            lore.add("§eScripts:");
-            blockScript.getScripts().forEach(s -> lore.add("§6- §b" + s));
-            return lore;
+            return SBOperation.getScriptInfos(SBPlayer.fromPlayer(player), scriptKey, scriptJson, blockCoords);
         }
 
         @Override

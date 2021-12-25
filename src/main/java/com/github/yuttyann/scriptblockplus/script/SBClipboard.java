@@ -15,12 +15,16 @@
  */
 package com.github.yuttyann.scriptblockplus.script;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.ValueHolder;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,22 +39,22 @@ public final class SBClipboard {
     private final SBPlayer sbPlayer;
     private final ScriptKey scriptKey;
     private final BlockCoords blockCoords;
-    private final BlockScript blockScript;
+    private final BlockScript cloneScript;
     private final BlockScriptJson scriptJson;
 
     public SBClipboard(@NotNull SBPlayer sbPlayer, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
         this.sbPlayer = sbPlayer;
         this.scriptKey = scriptKey;
-        this.scriptJson = BlockScriptJson.newJson(scriptKey); 
+        this.scriptJson = BlockScriptJson.get(scriptKey); 
         this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
 
-        var copyScript = scriptJson.fastLoad(this.blockCoords);
+        var cloneScript = scriptJson.fastLoad(this.blockCoords);
         try {
-            copyScript = copyScript == null ? null : (BlockScript) copyScript.clone();
+            cloneScript = cloneScript == null ? null : (BlockScript) cloneScript.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
-        this.blockScript = copyScript;
+        this.cloneScript = cloneScript;
     }
 
     @NotNull
@@ -70,7 +74,7 @@ public final class SBClipboard {
 
     @Nullable
     public BlockScript getBlockScript() {
-        return blockScript;
+        return cloneScript;
     }
 
     @NotNull
@@ -79,7 +83,7 @@ public final class SBClipboard {
     }
 
     public boolean copy() {
-        if (blockScript == null || !scriptJson.has(blockCoords)) {
+        if (cloneScript == null || !scriptJson.has(blockCoords)) {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
             return false;
         }
@@ -94,17 +98,16 @@ public final class SBClipboard {
     }
 
     public boolean paste(@NotNull BlockCoords blockCoords, boolean overwrite) {
-        if (blockScript == null || (scriptJson.has(blockCoords) && !overwrite)) {
+        if (cloneScript == null || (scriptJson.has(blockCoords) && !overwrite)) {
             return false;
         }
         try {
-            var scriptParam = scriptJson.load(blockCoords);
-            scriptParam.setAuthors(blockScript.getAuthors());
-            scriptParam.getAuthors().add(sbPlayer.getUniqueId());
-            scriptParam.setScripts(blockScript.getScripts());
-            scriptParam.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
-            scriptParam.setSelector(blockScript.getSelector());
-            scriptParam.setAmount(blockScript.getAmount());
+            var blockScript = scriptJson.load(blockCoords);
+            blockScript.setAuthors(cloneScript.getAuthors());
+            blockScript.getAuthors().add(sbPlayer.getUniqueId());
+            blockScript.setScripts(cloneScript.getScripts());
+            blockScript.setLastEdit(new Date());
+            blockScript.setValues(cloneValues());
             scriptJson.init(blockCoords);
             scriptJson.saveJson();
             SBConfig.SCRIPT_PASTE.replace(scriptKey).send(sbPlayer);
@@ -114,5 +117,17 @@ public final class SBClipboard {
             sbPlayer.setSBClipboard(null);
         }
         return true;
+    }
+
+    @Nullable
+    public Map<String, ValueHolder> cloneValues() {
+        if (!cloneScript.hasValues()) {
+            return null;
+        }
+        var newMap = new HashMap<String, ValueHolder>();
+        for (var entry : cloneScript.getValues().entrySet()) {
+            newMap.put(entry.getKey(), entry.getValue().clone());
+        }
+        return newMap;
     }
 }

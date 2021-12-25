@@ -16,6 +16,7 @@
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 
@@ -28,14 +29,14 @@ public final class Amount extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var scriptJson = BlockScriptJson.newJson(getScriptKey());
+        var scriptJson = BlockScriptJson.get(getScriptKey());
         var blockCoords = getBlockCoords();
         var blockScript = scriptJson.load(blockCoords);
-        if (blockScript.getAmount() == -1) {
-            blockScript.setAmount(Integer.parseInt(getOptionValue()));
-        }
-        blockScript.subtractAmount(1);
-        if (blockScript.getAmount() <= 0) {
+
+        var amount = blockScript.getSafeValue(BlockScript.AMOUNT).asInt(Integer.parseInt(getOptionValue())) - 1;
+        if (amount > 0) {
+            blockScript.setValue(BlockScript.AMOUNT, amount);
+        } else {
             if (scriptJson.remove(blockCoords)) {
                 scriptJson.init(blockCoords);
             }

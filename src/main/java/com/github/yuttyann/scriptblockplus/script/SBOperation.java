@@ -39,12 +39,7 @@ public final class SBOperation {
 
     public SBOperation(@NotNull ScriptKey scriptKey) {
         this.scriptKey = scriptKey;
-        this.scriptJson = BlockScriptJson.newJson(scriptKey);
-    }
-
-    @NotNull
-    public BlockScriptJson getBlockScriptJson() {
-        return scriptJson;
+        this.scriptJson = BlockScriptJson.get(scriptKey);
     }
 
     @NotNull
@@ -60,16 +55,12 @@ public final class SBOperation {
         scriptJson.saveJson();
     }
 
-    @NotNull
-    public String getAuthors(@NotNull BlockScript blockScript) {
-        return blockScript.getAuthors().stream().map(Utils::getName).collect(Collectors.joining(", "));
-    }
-
     public void create(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull String script) {
         var blockScript = scriptJson.load(blockCoords);
         blockScript.getAuthors().add(sbPlayer.getUniqueId());
         blockScript.setScripts(Collections.singletonList(script));
-        blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        blockScript.setLastEdit(new Date());
+        blockScript.setValues(null);
         scriptJson.init(blockCoords);
         scriptJson.saveJson();
         SBConfig.SCRIPT_CREATE.replace(scriptKey).send(sbPlayer);
@@ -84,7 +75,7 @@ public final class SBOperation {
         var blockScript = scriptJson.load(blockCoords);
         blockScript.getAuthors().add(sbPlayer.getUniqueId());
         blockScript.getScripts().add(script);
-        blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        blockScript.setLastEdit(new Date());
         scriptJson.saveJson();
         SBConfig.SCRIPT_ADD.replace(scriptKey).send(sbPlayer);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
@@ -107,16 +98,9 @@ public final class SBOperation {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
             return;
         }
-        var blockScript = scriptJson.load(blockCoords);
         sbPlayer.sendMessage("--------- [ Script Views ] ---------");
-        sbPlayer.sendMessage("§eAuthor: §a" + getAuthors(blockScript));
-        sbPlayer.sendMessage("§eUpdate: §a" + blockScript.getLastEdit());
-        sbPlayer.sendMessage("§eMyCount: §a" + PlayerCountJson.newJson(sbPlayer.getUniqueId()).load(scriptKey, blockCoords).getAmount());
-        sbPlayer.sendMessage("§eTagName: §" + (blockScript.getNameTag() == null ? "cNone" : "a" + blockScript.getNameTag()));
-        sbPlayer.sendMessage("§eRedstone: §" + (blockScript.getSelector() == null ? "cfalse" : "atrue §d: §a" + blockScript.getSelector()));
-        sbPlayer.sendMessage("§eScripts:");
-        blockScript.getScripts().forEach(s -> sbPlayer.sendMessage("§6- §b" + s));
-        sbPlayer.sendMessage("--------------------------------");
+        getScriptInfos(sbPlayer, scriptKey, scriptJson, blockCoords).forEach(sbPlayer::sendMessage);
+        sbPlayer.sendMessage("----------------------------------");
         SBConfig.CONSOLE_SCRIPT_VIEW.replace(scriptKey, blockCoords).console();
     }
 
@@ -127,8 +111,8 @@ public final class SBOperation {
         }
         var blockScript = scriptJson.load(blockCoords);
         blockScript.getAuthors().add(sbPlayer.getUniqueId());
-        blockScript.setNameTag(nametag);
-        blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        blockScript.setLastEdit(new Date());
+        blockScript.setValue(BlockScript.NAMETAG, nametag);
         scriptJson.saveJson();
         SBConfig.SCRIPT_NAMETAG.replace(scriptKey).send(sbPlayer);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
@@ -141,10 +125,28 @@ public final class SBOperation {
         }
         var blockScript = scriptJson.load(blockCoords);
         blockScript.getAuthors().add(sbPlayer.getUniqueId());
-        blockScript.setSelector(selector);
-        blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        blockScript.setLastEdit(new Date());
+        blockScript.setValue(BlockScript.SELECTOR, selector);
         scriptJson.saveJson();
         SBConfig.SCRIPT_REDSTONE.replace(scriptKey).send(sbPlayer);
         SBConfig.CONSOLE_SCRIPT_EDIT.replace(scriptKey, blockCoords).console();
+    }
+
+    @NotNull
+    public static List<String> getScriptInfos(@NotNull SBPlayer sbPlayer, @NotNull ScriptKey scriptKey, @NotNull BlockScriptJson scriptJson, @NotNull BlockCoords blockCoords) {
+        var info = new ArrayList<String>();
+        var blockScript = scriptJson.load(blockCoords);
+        info.add("§eAuthor: §a" + blockScript.getAuthors().stream().map(Utils::getName).collect(Collectors.joining(", ")));
+        info.add("§eUpdate: §a" + Utils.DATE_FORMAT.format(blockScript.getLastEdit()));
+        info.add("§eMyCount: §a" + PlayerCountJson.get(sbPlayer.getUniqueId()).load(scriptKey, blockCoords).getAmount());
+        info.add("§eScripts:");
+        blockScript.getScripts().forEach(s -> info.add("§6- §b" + s));
+        info.add("§eValues:");
+        blockScript.getValues().entrySet().forEach(e -> {
+            var value = e.getValue().toString();
+            var index = value.indexOf(':');
+            info.add("§6- §a" + e.getKey() + "§d: §b" + value.substring(index + 1, value.length()));
+        });
+        return info;
     }
 }
