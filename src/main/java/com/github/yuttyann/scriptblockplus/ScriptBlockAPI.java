@@ -15,6 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus;
 
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.ValueHolder;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.ValueHolder.ValueType;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
@@ -27,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -120,7 +123,7 @@ public interface ScriptBlockAPI {
          * @param nametag - ネームタグ
          * @return {@code boolean} - 設定に成功した場合は{@code true}
          */
-        boolean nameTag(@NotNull OfflinePlayer player, @NotNull Location location, @Nullable String nametag);
+        boolean nametag(@NotNull OfflinePlayer player, @NotNull Location location, @Nullable String nametag);
     
         /**
          * 指定した座標のスクリプトにターゲットセレクターを設定します。
@@ -157,8 +160,8 @@ public interface ScriptBlockAPI {
         void reload();
 
         /**
-         * スクリプトが存在するのか確認します。
-         * @return {@link Boolean} - スクリプトが存在する場合は{@code true}
+         * スクリプトが存在する場合は{@code true}を返します。
+         * @return {@code boolean} - スクリプトが存在する場合は{@code true}
          */
         boolean has();
 
@@ -180,87 +183,85 @@ public interface ScriptBlockAPI {
          * スクリプトの作者を設定します。
          * @param author - 作者の一覧
          */
-        void setAuthor(@NotNull Set<UUID> author);
+        void setAuthors(@NotNull Set<UUID> author);
 
         /**
          * スクリプトの作者の一覧を取得します。
          * @return {@link Set}&lt;{@link UUID}&gt; - スクリプトの作者の一覧
          */
         @NotNull
-        Set<UUID> getAuthor();
+        Set<UUID> getAuthors();
 
         /**
-         * スクリプトを設定します。
+         * スクリプトの一覧を設定します。
          * @param script - スクリプトの一覧
          */
-        void setScript(@NotNull List<String> script);
+        void setScripts(@NotNull List<String> script);
 
         /**
          * スクリプトの一覧を取得します。
          * @return {@link List}&lt;{@link String}&gt; - スクリプトの一覧
          */
         @NotNull
-        List<String> getScript();
+        List<String> getScripts();
 
         /**
-         * スクリプトの編集時刻を現在の時刻に設定します。
+         * 編集時刻を現在の時刻に設定します。
          */
         void setLastEdit();
 
         /**
-         * スクリプトの編集時刻を取得します。
-         * @return {@link String} - 時刻
+         * 編集時刻を取得します。
+         * @return {@link Date} - 時刻
          */
         @Nullable
-        String getLastEdit();
-
+        Date getLastEdit();
+    
         /**
-         * ネームタグを設定します。
-         * @param nameTag - ネームタグ
+         * スクリプトのデータ構造に任意の値を追加、保存します。
+         * <p>
+         * 値に{@code null}を指定することで設定を削除することができます。
+         * <p>
+         * 利用できる値の型については、{@link ValueType}を参照してください。
+         * <p>
+         * <pre>
+         * 以下のような形式で保存されます("values"を参照)
+         * {
+         *   "author": [
+         *     "00000000-0000-0000-0000-000000000000"
+         *   ],
+         *   "blockcoords": "world,0,0,0",
+         *   "lastedit": "0000/00/00 00:00:00",
+         *   "script": [
+         *     "@command ...."
+         *   ],
+         *   "values": {
+         *     "key": "type:value",
+         *     "example1": "integer:10",
+         *     "example2": "string:example"
+         *   }
+         * }
+         * </pre>
+         * @param key - キー
+         * @param value - 値
+         * @return {@link ValueHolder} - 保存した値
          */
-        void setNameTag(@Nullable String nameTag);
-
+        @Nullable
+        public ValueHolder setValue(@NotNull String key, @Nullable Object value);
+    
         /**
-         * ネームタグを取得します。
-         * @return {@link String} - ネームタグ
+         * 指定したキーの値を取得します。
+         * <pre>
+         * 例えば、以下のデータの場合は"example"を指定することで"int型"の数値"2525"を取得できます。
+         * "values": {
+         *   "example": "integer:2525"
+         * }
+         * </pre>
+         * @param key - キー
+         * @return {@link ValueHolder} - 値
          */
-        String getNameTag();
-
-        /**
-         * ターゲットセレクターを設定します。
-         * @param selector - ターゲットセレクター
-         */
-        void setSelector(@Nullable String selector);
-
-        /**
-         * ターゲットセレクターを取得します。
-         * @return {@link String} - ターゲットセレクター
-         */
-        String getSelector();
-
-        /**
-         * スクリプトの実行可能な回数を設定します。
-         * @param amount - 実行可能な回数
-         */
-        void setAmount(int amount);
-
-        /**
-         * スクリプトの実行可能な回数を増します。
-         * @param amount - 増やす回数
-         */
-        void addAmount(int amount);
-
-        /**
-         * スクリプトの実行可能な回数を減します。
-         * @param amount - 減らす回数
-         */
-        void subtractAmount(int amount);
-
-        /**
-         * スクリプトの実行可能な回数を取得します。
-         * @return {@link Integer} - 実行可能な回数
-         */
-        int getAmount();
+        @Nullable
+        public ValueHolder getValue(@NotNull String key);
 
         /**
          * 全ての設定を削除します。
