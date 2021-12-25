@@ -32,10 +32,10 @@ public enum ClassType {
     SHORT(short.class, Short.class),
     INTEGER(int.class, Integer.class),
     LONG(long.class, Long.class),
-    CHARACTER(char.class, Character.class),
     FLOAT(float.class, Float.class),
     DOUBLE(double.class, Double.class),
-    BOOLEAN(boolean.class, Boolean.class);
+    BOOLEAN(boolean.class, Boolean.class),
+    CHARACTER(char.class, Character.class);
 
     private static final Map<Class<?>, ClassType> CLASSES = new HashMap<>();
 
@@ -62,6 +62,16 @@ public enum ClassType {
     @NotNull
     public Class<?> getReference() {
         return reference;
+    }
+
+    @Nullable
+    public static ClassType fromName(@NotNull String name) {
+        for (var type : values()) {
+            if (name.equalsIgnoreCase(type.name())) {
+                return type;
+            }
+        }
+        return null;
     }
 
     @Nullable

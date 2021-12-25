@@ -29,7 +29,7 @@ public class EndPlayerCount implements EndProcess {
 
     @Override
     public void success(@NotNull SBRead sbRead) {
-        PlayerCountJson.newJson(sbRead.getSBPlayer().getUniqueId()).action(PlayerCount::add, sbRead.getScriptKey(), sbRead.getBlockCoords());
+        PlayerCountJson.get(sbRead.getSBPlayer().getUniqueId()).action(PlayerCount::add, sbRead.getScriptKey(), sbRead.getBlockCoords());
     }
 
     @Override

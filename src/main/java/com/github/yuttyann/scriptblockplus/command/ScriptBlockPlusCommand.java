@@ -103,7 +103,7 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
                         var rayTrace = RayTrace.rayTraceBlocks(player, player.getGameMode() == GameMode.CREATIVE ? 5.0D : 4.5D);
                         if (rayTrace != null) {
                             var hitBlock = rayTrace.getHitBlock();
-                            if (BlockScriptJson.newJson(ScriptKey.valueOf(args(0))).has(BlockCoords.of(hitBlock))) {
+                            if (BlockScriptJson.get(ScriptKey.valueOf(args(0))).has(BlockCoords.of(hitBlock))) {
                                 answers.add(hitBlock.getX() + " " + hitBlock.getY() + " " + hitBlock.getZ());
                             }
                         }

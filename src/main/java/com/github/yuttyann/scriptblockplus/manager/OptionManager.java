@@ -47,13 +47,13 @@ public final class OptionManager {
     private static final Comparator<? super String> SORT = (c1, c2) -> OPTION_MAP.getOption(c1).compareTo(OPTION_MAP.getOption(c2));
 
     static {
-        register(ScriptAction::new);
+        register(PlayerAction::new);
         register(BlockType::new);
         register(Group::new);
         register(Perm::new);
         register(DiscordRole::new);
         register(DiscordChannel::new);
-        register(Calculation::new);
+        register(IfAction::new);
         register(OldCooldown::new);
         register(Cooldown::new);
         register(Delay::new);

@@ -18,12 +18,13 @@ package com.github.yuttyann.scriptblockplus.utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
 
 /**
  * ScriptBlockPlus StreamUtils クラス
@@ -42,7 +43,7 @@ public final class StreamUtils {
     @FunctionalInterface
     public interface ThrowableConsumer<T> {
 
-        void accept(T t) throws Exception;
+        void accept(@Nullable T t) throws Exception;
     }
 
     /**
@@ -52,12 +53,17 @@ public final class StreamUtils {
     @FunctionalInterface
     public interface TriConsumer<T, U, V> {
 
-        void accept(T t, U u, V v);
+        void accept(@Nullable T t, @Nullable U u, @Nullable V v);
+    }
 
-        default TriConsumer<T, U, V> andThen(@NotNull TriConsumer<? super T, ? super U, ? super V> after) {
-            Objects.requireNonNull(after);
-            return (t, u, v) -> { accept(t, u, v); after.accept(t, u, v); };
-        }
+    /**
+     * ScriptBlockPlus TriFunction インターフェース
+     * @author yuttyann44581
+     */
+    @FunctionalInterface
+    public interface TriFunction<T, U, V, R> {
+
+        R apply(@Nullable T t, @Nullable U u, @Nullable V v);
     }
 
     @NotNull

@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
  * ScriptBlockPlus BlockType オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "blocktype", syntax = "@blocktype:", description = "<id>")
+@OptionTag(name = "blocktype", syntax = "@blocktype:", description = "<ids>")
 public final class BlockType extends BaseOption {
 
     @Override
@@ -47,7 +47,7 @@ public final class BlockType extends BaseOption {
             return false;
         }
         var blockId = split(StringUtils.removeStart(type, Utils.MINECRAFT), ':', false);
-        if (Calculation.REALNUMBER_PATTERN.matcher(blockId.get(0)).matches()) {
+        if (IfAction.REALNUMBER_PATTERN.matcher(blockId.get(0)).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }
         var material = ItemUtils.getMaterial(blockId.get(0));

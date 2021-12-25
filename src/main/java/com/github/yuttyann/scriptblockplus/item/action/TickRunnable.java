@@ -201,7 +201,7 @@ public class TickRunnable extends BukkitRunnable {
     private void forEach(@NotNull Region region, @NotNull Predicate<BlockCoords> filter, @NotNull ThrowableConsumer<BlockCoords> action) throws Exception {
         var iterator = new CuboidRegionIterator(region);
         for (var scriptKey : ScriptKey.iterable()) {
-            var scriptJson = BlockScriptJson.newJson(scriptKey);
+            var scriptJson = BlockScriptJson.get(scriptKey);
             if (scriptJson.isEmpty()) {
                 continue;
             }

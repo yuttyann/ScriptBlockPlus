@@ -29,6 +29,7 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.splittype.Filter;
 import com.github.yuttyann.scriptblockplus.enums.splittype.Repeat;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -108,7 +109,7 @@ public final class BlockListener implements Listener {
             return;
         }
         for (var scriptKey : ScriptKey.iterable()) {
-            var scriptJson = BlockScriptJson.newJson(scriptKey);
+            var scriptJson = BlockScriptJson.get(scriptKey);
             if (scriptJson.isEmpty()) {
                 continue;
             }
@@ -116,7 +117,11 @@ public final class BlockListener implements Listener {
             if (blockScript == null) {
                 continue;
             }
-            var selector = blockScript.getSelector();
+            var valueHolder = blockScript.getValue(BlockScript.SELECTOR);
+            if (valueHolder.isEmpty()) {
+                continue;
+            }
+            var selector = valueHolder.get().asString();
             if (StringUtils.isEmpty(selector) || !CommandSelector.has(selector)) {
                 continue;
             }

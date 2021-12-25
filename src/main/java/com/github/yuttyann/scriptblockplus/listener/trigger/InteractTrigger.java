@@ -21,7 +21,7 @@ import com.github.yuttyann.scriptblockplus.event.BlockClickEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.github.yuttyann.scriptblockplus.script.option.other.ScriptAction;
+import com.github.yuttyann.scriptblockplus.script.option.other.PlayerAction;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.EventPriority;
@@ -60,7 +60,7 @@ public final class InteractTrigger extends TriggerListener<BlockClickEvent> {
     protected Result handle(@NotNull Trigger trigger) {
         switch (trigger.getProgress()) {
             case READ:
-                trigger.getTempMap().get().put(ScriptAction.KEY, trigger.getEvent().getAction());
+                trigger.getTempMap().get().put(PlayerAction.KEY, trigger.getEvent().getAction());
                 return Result.SUCCESS;
             default:
                 return super.handle(trigger);

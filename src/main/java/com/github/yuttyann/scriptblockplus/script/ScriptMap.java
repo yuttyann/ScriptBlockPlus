@@ -15,13 +15,14 @@
  */
 package com.github.yuttyann.scriptblockplus.script;
 
-import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import com.github.yuttyann.scriptblockplus.utils.collection.ObjectMap;
 
 /**
  * ScriptBlockPlus ScriptMap クラス

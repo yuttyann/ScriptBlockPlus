@@ -24,10 +24,10 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.TriggerEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.player.ObjectMap;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.utils.collection.ObjectMap;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 
 import org.bukkit.Bukkit;
@@ -193,7 +193,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
             return;
         }
         var blockCoords = trigger.getBlockCoords();
-        if (!BlockScriptJson.newJson(scriptKey).has(blockCoords)) {
+        if (!BlockScriptJson.get(scriptKey).has(blockCoords)) {
             return;
         }
         var player = trigger.getPlayer();

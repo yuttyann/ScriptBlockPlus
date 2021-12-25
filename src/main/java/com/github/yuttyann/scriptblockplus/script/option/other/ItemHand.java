@@ -37,7 +37,7 @@ public final class ItemHand extends BaseOption {
     protected boolean isValid() throws Exception {
         var space = split(getOptionValue(), ' ', false);
         var itemId = split(removeStart(space.get(0), Utils.MINECRAFT), ':', false);
-        if (Calculation.REALNUMBER_PATTERN.matcher(itemId.get(0)).matches()) {
+        if (IfAction.REALNUMBER_PATTERN.matcher(itemId.get(0)).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }
         var material = getMaterial(itemId.get(0));

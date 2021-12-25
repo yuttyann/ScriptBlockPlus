@@ -63,7 +63,7 @@ public final class CuboidRegionRemove {
         var blocks = new HashSet<BlockCoords>();
         var iterator = new CuboidRegionIterator(region);
         for (var scriptKey : ScriptKey.iterable()) {
-            var scriptJson = BlockScriptJson.newJson(scriptKey);
+            var scriptJson = BlockScriptJson.get(scriptKey);
             if (scriptJson.isEmpty()) {
                 continue;
             }
@@ -84,7 +84,7 @@ public final class CuboidRegionRemove {
             }
         }
         var blockCoords = blocks.toArray(BlockCoords[]::new);
-        scriptKeys.forEach(s -> BlockScriptJson.newJson(s).init(blockCoords));
+        scriptKeys.forEach(s -> BlockScriptJson.get(s).init(blockCoords));
         this.iterator = iterator;
         this.volume = blocks.size();
         return this;
