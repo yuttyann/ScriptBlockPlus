@@ -28,8 +28,8 @@ import org.jetbrains.annotations.Nullable;
  * ScriptBlockPlus ScriptAction オプションクラス
  * @author yuttyann44581
  */
-@OptionTag(name = "scriptaction", syntax = "@scriptaction:", description = "<action>")
-public final class ScriptAction extends BaseOption {
+@OptionTag(name = "action", syntax = "@action:", description = "<actions>")
+public final class PlayerAction extends BaseOption {
 
     public static final String KEY = Utils.randomUUID();
 
