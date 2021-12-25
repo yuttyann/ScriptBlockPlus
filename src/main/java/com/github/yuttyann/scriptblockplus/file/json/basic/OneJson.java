@@ -17,6 +17,7 @@ package com.github.yuttyann.scriptblockplus.file.json.basic;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
 import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
@@ -73,21 +74,17 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
         }
     }
 
+    private final Function<A, E> newInstance;
+
     /**
      * コンストラクタ
      * @param name - ファイルの名前
+     * @param newInstance - インスタンスの生成処理
      */
-    protected OneJson(@NotNull String name) {
+    protected OneJson(@NotNull String name, @NotNull Function<A, E> newInstance) {
         super(name);
+        this.newInstance = newInstance;
     }
-
-    /**
-     * インスタンスを生成します。
-     * @param a - 引数
-     * @return {@link E} - インスタンス
-     */
-    @NotNull
-    protected abstract E newInstance(@Nullable A a);
 
     /**
      * 要素を取得します。
@@ -99,11 +96,11 @@ public abstract class OneJson<A, E extends OneJson.OneElement<A>> extends BaseJs
         int hash = hash(a);
         var element = getElementMap().get(hash);
         if (element == null) {
-            getElementMap().put(hash, element = newInstance(a));
+            getElementMap().put(hash, element = newInstance.apply(a));
         } else if (!element.isElement(a)) {
             var subHash = Integer.valueOf(hash);
             if ((element = subGet(subHash, e -> e.isElement(a))) == null) {
-                subPut(subHash, element = newInstance(a));
+                subPut(subHash, element = newInstance.apply(a));
             }
         }
         return element;

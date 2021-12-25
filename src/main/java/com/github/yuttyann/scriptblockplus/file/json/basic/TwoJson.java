@@ -16,6 +16,7 @@
 package com.github.yuttyann.scriptblockplus.file.json.basic;
 
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
@@ -85,22 +86,17 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
         }
     }
 
+    private final BiFunction<A, B, E> newInstance;
+
     /**
      * コンストラクタ
      * @param name - ファイルの名前
+     * @param newInstance - インスタンスの生成処理
      */
-    protected TwoJson(@NotNull String name) {
+    protected TwoJson(@NotNull String name, @NotNull BiFunction<A, B, E> newInstance) {
         super(name);
+        this.newInstance = newInstance;
     }
-
-    /**
-     * インスタンスを生成します。
-     * @param a - 引数1
-     * @param b - 引数2
-     * @return {@link E} - インスタンス
-     */
-    @NotNull
-    protected abstract E newInstance(@Nullable A a, @Nullable B b);
 
     /**
      * 要素を取得します。
@@ -113,11 +109,11 @@ public abstract class TwoJson<A, B, E extends TwoJson.TwoElement<A, B>> extends 
         int hash = hash(a, b);
         var element = getElementMap().get(hash);
         if (element == null) {
-            getElementMap().put(hash, element = newInstance(a, b));
+            getElementMap().put(hash, element = newInstance.apply(a, b));
         } else if (!element.isElement(a, b)) {
             var subHash = Integer.valueOf(hash);
             if ((element = subGet(subHash, e -> e.isElement(a, b))) == null) {
-                subPut(subHash, element = newInstance(a, b));
+                subPut(subHash, element = newInstance.apply(a, b));
             }
         }
         return element;

@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 
 import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
 import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriFunction;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -97,23 +98,17 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
         }
     }
 
+    private final TriFunction<A, B, C, E> newInstance;
+
     /**
      * コンストラクタ
      * @param name - ファイルの名前
+     * @param newInstance - インスタンスの生成処理
      */
-    protected ThreeJson(@NotNull String name) {
+    protected ThreeJson(@NotNull String name, @NotNull TriFunction<A, B, C, E> newInstance) {
         super(name);
+        this.newInstance = newInstance;
     }
-
-    /**
-     * インスタンスを生成します。
-     * @param a - 引数1
-     * @param b - 引数2
-     * @param c - 引数3
-     * @return {@link E} - インスタンス
-     */
-    @NotNull
-    protected abstract E newInstance(@Nullable A a, @Nullable B b, @Nullable C c);
 
     /**
      * 要素を取得します。
@@ -127,11 +122,11 @@ public abstract class ThreeJson<A, B, C, E extends ThreeJson.ThreeElement<A, B, 
         int hash = hash(a, b, c);
         var element = getElementMap().get(hash);
         if (element == null) {
-            getElementMap().put(hash, element = newInstance(a, b, c));
+            getElementMap().put(hash, element = newInstance.apply(a, b, c));
         } else if (!element.isElement(a, b, c)) {
             var subHash = Integer.valueOf(hash);
             if ((element = subGet(subHash, e -> e.isElement(a, b, c))) == null) {
-                subPut(subHash, element = newInstance(a, b, c));
+                subPut(subHash, element = newInstance.apply(a, b, c));
             }
         }
         return element;
