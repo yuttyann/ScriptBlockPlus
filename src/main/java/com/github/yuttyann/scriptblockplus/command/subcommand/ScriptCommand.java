@@ -116,7 +116,7 @@ public class ScriptCommand extends SubCommand {
                     break;
                 case REDSTONE:
                     if (!range(2)) {
-                        var selector = StringUtils.createString(args(), 3).trim();
+                        var selector = StringUtils.createString(args(), 2).trim();
                         if (!CommandSelector.has(selector)) {
                             selector = selector.isEmpty() ? "@p" : selector + " @p";
                         }

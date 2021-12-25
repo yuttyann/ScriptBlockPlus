@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Date;
 import java.util.function.Predicate;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -53,7 +54,7 @@ public class Backup extends SimpleFileVisitor<Path> {
      * @param filter - ファイルフィルター
      */
     public Backup(@NotNull File backup, @NotNull Predicate<String> filter) {
-        this.target = new SBFile(backup, Utils.getFormatTime("yyyy-MM-dd HH-mm-ss")).toPath();
+        this.target = new SBFile(backup, Utils.DATE_FORMAT.format(new Date())).toPath();
         this.source = backup.getParentFile().toPath();
         this.filter = filter;
     }

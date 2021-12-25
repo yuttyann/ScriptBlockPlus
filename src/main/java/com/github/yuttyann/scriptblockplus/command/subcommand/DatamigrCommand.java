@@ -17,6 +17,7 @@ package com.github.yuttyann.scriptblockplus.command.subcommand;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -92,8 +93,9 @@ public class DatamigrCommand extends SubCommand {
         if (!file.exists()) {
             return;
         }
+        var date = new Date();
         var scriptFile = YamlConfig.load(ScriptBlock.getInstance(), file, false);
-        var scriptJson = BlockScriptJson.newJson(scriptKey);
+        var scriptJson = BlockScriptJson.get(scriptKey);
         for (var name : scriptFile.getKeys()) {
             var world = Utils.getWorld(name);
             for (var coords : scriptFile.getKeys(name)) {
@@ -104,7 +106,7 @@ public class DatamigrCommand extends SubCommand {
                 }
                 var blockScript = scriptJson.load(BlockCoords.fromString(world, coords));
                 blockScript.getAuthors().add(uuid);
-                blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+                blockScript.setLastEdit(date);
                 blockScript.setScripts(options);
             }
         }

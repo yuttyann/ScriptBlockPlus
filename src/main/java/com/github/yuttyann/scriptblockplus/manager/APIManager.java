@@ -19,6 +19,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.ValueHolder;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
@@ -26,7 +27,6 @@ import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.Option;
 import com.github.yuttyann.scriptblockplus.script.option.OptionIndex;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -81,7 +82,7 @@ public final class APIManager implements ScriptBlockAPI {
 
         public SEdit(@NotNull ScriptKey scriptKey) {
             this.scriptKey = scriptKey;
-            this.scriptJson = BlockScriptJson.newJson(scriptKey);
+            this.scriptJson = BlockScriptJson.get(scriptKey);
         }
 
         @Override
@@ -96,7 +97,8 @@ public final class APIManager implements ScriptBlockAPI {
             var blockScript = scriptJson.load(blockCoords);
             blockScript.getAuthors().add(player.getUniqueId());
             blockScript.setScripts(Collections.singletonList(script));
-            blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+            blockScript.setLastEdit(new Date());
+            blockScript.setValues(null);
             scriptJson.init(blockCoords);
             scriptJson.saveJson();
         }
@@ -110,7 +112,7 @@ public final class APIManager implements ScriptBlockAPI {
             var blockScript = scriptJson.load(blockCoords);
             blockScript.getAuthors().add(player.getUniqueId());
             blockScript.getScripts().add(script);
-            blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+            blockScript.setLastEdit(new Date());
             scriptJson.saveJson();
             return true;
         }
@@ -128,15 +130,15 @@ public final class APIManager implements ScriptBlockAPI {
         }
 
         @Override
-        public boolean nameTag(@NotNull OfflinePlayer player, @NotNull Location location, @Nullable String nametag) {            
+        public boolean nametag(@NotNull OfflinePlayer player, @NotNull Location location, @Nullable String nametag) {            
             var blockCoords = BlockCoords.of(location);
             if (!scriptJson.has(blockCoords)) {
                 return false;
             }
             var blockScript = scriptJson.load(blockCoords);
             blockScript.getAuthors().add(player.getUniqueId());
-            blockScript.setNameTag(nametag);
-            blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+            blockScript.setLastEdit(new Date());
+            blockScript.setValue(BlockScript.NAMETAG, nametag);
             scriptJson.saveJson();
             return true;
         }
@@ -149,8 +151,8 @@ public final class APIManager implements ScriptBlockAPI {
             }
             var blockScript = scriptJson.load(blockCoords);
             blockScript.getAuthors().add(player.getUniqueId());
-            blockScript.setSelector(selector);
-            blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+            blockScript.setLastEdit(new Date());
+            blockScript.setValue(BlockScript.SELECTOR, selector);
             scriptJson.saveJson();
             return true;
         }
@@ -171,7 +173,7 @@ public final class APIManager implements ScriptBlockAPI {
 
         public SFile(@NotNull ScriptKey scriptKey, @NotNull Location location) {
             this.scriptKey = scriptKey;
-            this.scriptJson = BlockScriptJson.newJson(scriptKey);
+            this.scriptJson = BlockScriptJson.get(scriptKey);
             this.blockCoords = BlockCoords.of(location);
             this.blockScript = scriptJson.load(blockCoords);
         }
@@ -207,77 +209,47 @@ public final class APIManager implements ScriptBlockAPI {
         }
 
         @Override
-        public void setAuthor(@NotNull Set<UUID> author) {
+        public void setAuthors(@NotNull Set<UUID> author) {
             blockScript.setAuthors(author);
         }
 
         @Override
         @NotNull
-        public Set<UUID> getAuthor() {
+        public Set<UUID> getAuthors() {
             return blockScript.getAuthors();
         }
 
         @Override
-        public void setScript(@NotNull List<String> script) {
+        public void setScripts(@NotNull List<String> script) {
             blockScript.setScripts(script);
         }
 
         @Override
         @NotNull
-        public List<String> getScript() {
+        public List<String> getScripts() {
             return blockScript.getScripts();
         }
 
-        @Override
-        public void setLastEdit() {
-            blockScript.setLastEdit(Utils.getFormatTime(Utils.DATE_PATTERN));
+        public void setLastEdit(@NotNull Date date) {
+            blockScript.setLastEdit(date);
         }
 
         @Override
         @Nullable
-        public String getLastEdit() {
+        public Date getLastEdit() {
             return blockScript.getLastEdit();
         }
 
         @Override
-        public void setNameTag(@Nullable String nameTag) {
-            blockScript.setNameTag(nameTag);
-        }
-
-        @Override
-        public String getNameTag() {
-            return blockScript.getNameTag();
-        }
-
-        @Override
-        public void setSelector(@Nullable String selector) {
-            blockScript.setSelector(selector);
-        }
-
-        @Override  
         @Nullable
-        public String getSelector() {
-            return blockScript.getSelector();
+        public ValueHolder setValue(@NotNull String key, @Nullable Object value) {
+            return blockScript.setValue(key, value).orElse(null);
         }
-
+    
         @Override
-        public void setAmount(int amount) {
-            blockScript.setAmount(amount);
-        }
-
-        @Override
-        public void addAmount(int amount) {
-            blockScript.addAmount(amount);
-        }
-
-        @Override
-        public void subtractAmount(int amount) {
-            blockScript.subtractAmount(amount);
-        }
-
-        @Override
-        public int getAmount() {
-            return blockScript.getAmount();
+        @Nullable
+        public ValueHolder getValue(@NotNull String key) {
+            return blockScript.getValue(key).orElse(null);
         }
 
         @Override
