@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.player;
+package com.github.yuttyann.scriptblockplus.utils.collection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,81 +32,81 @@ public interface ObjectMap {
     void put(@NotNull String key, @Nullable Object value);
 
     /**
-     * 指定されたキーがマップされている値を{@link Byte}にキャストして返します。
+     * 指定されたキーがマップされている値を{@code byte}にキャストして返します。
      * @param key - キー
-     * @return {@link Byte} - 指定されたキーがマップされている値
+     * @return {@code byte} - 値
      */
     default byte getByte(@NotNull String key) {
         return get(key, (byte) 0);
     }
 
     /**
-     * 指定されたキーがマップされている値を{@link Short}にキャストして返します。
+     * 指定されたキーがマップされている値を{@code short}にキャストして返します。
      * @param key - キー
-     * @return {@link Short} - 指定されたキーがマップされている値
+     * @return {@code short} - 値
      */
     default short getShort(@NotNull String key) {
         return get(key, (short) 0);
     }
 
     /**
-     * 指定されたキーがマップされている値を{@link Integer}にキャストして返します。
+     * 指定されたキーがマップされている値を{@code int}にキャストして返します。
      * @param key - キー
-     * @return {@link Integer} - 指定されたキーがマップされている値
+     * @return {@code int} - 値
      */
     default int getInt(@NotNull String key) {
         return get(key, 0);
     }
 
     /**
-     * 指定されたキーがマップされている値を{@link Long}にキャストして返します。
+     * 指定されたキーがマップされている値を{@code long}にキャストして返します。
      * @param key - キー
-     * @return {@link Long} - 指定されたキーがマップされている値
+     * @return {@code long} - 値
      */
     default long getLong(@NotNull String key) {
         return get(key, 0L);
     }
 
     /**
-     * 指定されたキーがマップされている値を{@link Character}にキャストして返します。
+     * 指定されたキーがマップされている値を{@code float}にキャストして返します。
      * @param key - キー
-     * @return {@link Character} - 指定されたキーがマップされている値
-     */
-    default char getChar(@NotNull String key) {
-        return get(key, Character.MIN_VALUE);
-    }
-
-    /**
-     * 指定されたキーがマップされている値を{@link Float}にキャストして返します。
-     * @param key - キー
-     * @return {@link Float} - 指定されたキーがマップされている値
+     * @return {@code float} - 値
      */
     default float getFloat(@NotNull String key) {
         return get(key, 0.0F);
     }
 
     /**
-     * 指定されたキーがマップされている値を{@link Double}にキャストして返します。
+     * 指定されたキーがマップされている値を{@code double}にキャストして返します。
      * @param key - キー
-     * @return {@link Double} - 指定されたキーがマップされている値
+     * @return {@code double} - 値
      */
     default double getDouble(@NotNull String key) {
         return get(key, 0.0D);
     }
 
     /**
-     * 指定されたキーがマップされている値を{@link Boolean}にキャストして返します。
+     * 指定されたキーがマップされている値を{@code boolean}にキャストして返します。
      * @param key - キー
-     * @return {@link Boolean} - 指定されたキーがマップされている値
+     * @return {@code boolean} - 値
      */
     default boolean getBoolean(@NotNull String key) {
         return get(key, false);
     }
 
     /**
+     * 指定されたキーがマップされている値を{@code char}にキャストして返します。
+     * @param key - キー
+     * @return {@code char} - 値
+     */
+    default char getChar(@NotNull String key) {
+        return get(key, Character.MIN_VALUE);
+    }
+
+    /**
      * 指定されたキーがマップされている値を{@link String}にキャストして返します。
      * @param key - キー
-     * @return {@link String} - 指定されたキーがマップされている値
+     * @return {@link String} - 値
      */
     @NotNull
     default String getString(@NotNull String key) {
@@ -119,7 +119,7 @@ public interface ObjectMap {
      * このマップにそのキーのマッピングが含まれていない場合は{@code null}を返します。
      * @param key - キー
      * @param <T> 戻り値の型
-     * @return {@link T} - 指定されたキーがマップされている値
+     * @return {@link T} - 値
      */
     @Nullable
     <T> T get(@NotNull String key);
@@ -131,7 +131,7 @@ public interface ObjectMap {
      * @param key - キー
      * @param other - その他
      * @param <T> 戻り値の型
-     * @return {@link T} - 指定されたキーがマップされている値
+     * @return {@link T} - 値
      */
     @NotNull
     default <T> T get(@NotNull String key, @NotNull T other) {
@@ -148,7 +148,7 @@ public interface ObjectMap {
     /**
      * 指定されたキーに値がマップされている場合にtrueを返します。
      * @param key - キー
-     * @return {@link Boolean} - 指定されたキーに値がマップされている場合は{@code true}
+     * @return {@code boolean} - 指定されたキーに値がマップされている場合は{@code true}
      */
     default boolean has(@NotNull String key) {
         return get(key) != null;
