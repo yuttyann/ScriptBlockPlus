@@ -25,9 +25,11 @@ import com.github.yuttyann.scriptblockplus.file.json.builder.CollectionType;
 import com.github.yuttyann.scriptblockplus.file.json.builder.FieldExclusion;
 import com.github.yuttyann.scriptblockplus.file.json.builder.NumberAdapter;
 import com.github.yuttyann.scriptblockplus.file.json.builder.ScriptKeyAdapter;
+import com.github.yuttyann.scriptblockplus.file.json.builder.ValueHolderAdapter;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.PlayerCount;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.PlayerTimer;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.ValueHolder;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
@@ -105,6 +107,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
             b.registerTypeAdapter(Map.class, new NumberAdapter());
             b.registerTypeAdapter(List.class, new NumberAdapter());
             b.registerTypeAdapter(ScriptKey.class, new ScriptKeyAdapter());
+            b.registerTypeAdapter(ValueHolder.class, new ValueHolderAdapter());
             b.registerTypeHierarchyAdapter(BlockCoords.class, new BlockCoordsAdapter());
             b.registerTypeAdapter(BlockScript.class, BlockScript.INSTANCE);
             b.registerTypeAdapter(PlayerCount.class, PlayerCount.INSTANCE);
@@ -158,10 +161,10 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
     }
 
     /**
-     * JSONを生成、取得します。
+     * Jsonを生成、取得します。
      * <p>
      * キャッシュが見つからない場合は、生成したインスタンスを返します。
-     * @param <T> JSONの型
+     * @param <T> Jsonの型
      * @param json - Jsonのクラス
      * @param name - ファイルの名前
      * @return {@link BaseJson} - インスタンス
@@ -189,7 +192,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
 
     /**
      * キャッシュされた全ての要素を削除します。
-     * @param json - JSONのクラス 
+     * @param json - Jsonのクラス 
      */
     public static final void clear(@NotNull Class<? extends BaseJson<?>> json) {
         var cacheMap = JSON_CACHE.get(json);
@@ -349,7 +352,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
     }
 
     /**
-     * JSONのシリアライズ化を行います。
+     * Jsonのシリアライズ化を行います。
      */
     public final void saveJson() {
         var parent = getParentFile();
@@ -396,7 +399,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
     }
 
     /**
-     * JSONのデシリアライズ化を行います。
+     * Jsonのデシリアライズ化を行います。
      * @return {@link Set}&lt;{@link E}&gt; - エレメントの配列
      * @throws ClassNotFoundException
      */
@@ -450,9 +453,9 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
     }
 
     /**
-     * JSONのファイルを取得します。
+     * Jsonのファイルを取得します。
      * @param name - ファイルの名前
-     * @return {@link File} - JSONのファイル
+     * @return {@link File} - Jsonのファイル
      */
     @NotNull
     private File getJsonFile(@Nullable String name) {
@@ -495,7 +498,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
 
     /**
      * プラグインを取得します。
-     * @param jsonTag - JSONタグ
+     * @param jsonTag - Jsonタグ
      * @return {@link Plugin} - プラグイン
      */
     @NotNull
