@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.SBFile;
@@ -103,8 +104,9 @@ public final class LegacyFormatJson {
         if (!file.exists()) {
             return false;
         }
-        var name = file.getName();
-        if (!StreamUtils.anyMatch((Collection<ScriptKey>) ScriptKey.iterable(), s -> name.startsWith(s.getName()))) {
+        var full = file.getName();
+        var name = full.substring(0, full.lastIndexOf('.'));
+        if (!StreamUtils.anyMatch((Collection<ScriptKey>) ScriptKey.iterable(), s -> name.equals(s.getName()))) {
             return false;
         }
         var jsonArray = getJsonArray(file);
@@ -120,6 +122,7 @@ public final class LegacyFormatJson {
             return true;
         }
         var result = false;
+        var filter = (Predicate<String>) s -> s.contains("@calc:") || s.contains("@scriptaction:");
         for (var element : elements) {
             if (!(element instanceof Map)) {
                 continue;
@@ -129,8 +132,8 @@ public final class LegacyFormatJson {
                 result = true;
             }
             if (map.containsKey("script")) {
-                List<String> scripts = castList(map.get("script"));
-                if (StreamUtils.anyMatch(scripts, s -> s.contains("@calc:") || s.contains("@scriptaction:"))) {
+                var scripts = (List<String>) null;
+                if (StreamUtils.anyMatch(scripts = castList(map.get("script")), filter)) {
                     scripts.replaceAll(s -> StringUtils.replace(StringUtils.replace(s, "@calc:", "@if "), "@scriptaction:", "@action:"));
                     result = true;
                 }
