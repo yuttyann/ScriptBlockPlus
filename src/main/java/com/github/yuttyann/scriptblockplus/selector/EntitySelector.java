@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.github.yuttyann.scriptblockplus.enums.splittype.Argument;
+import com.github.yuttyann.scriptblockplus.selector.split.Split;
+import com.github.yuttyann.scriptblockplus.selector.split.SplitValue;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;

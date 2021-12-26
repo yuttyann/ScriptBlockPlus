@@ -15,7 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.enums.splittype;
 
-import com.github.yuttyann.scriptblockplus.selector.SplitType;
+import com.github.yuttyann.scriptblockplus.selector.split.SplitType;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;

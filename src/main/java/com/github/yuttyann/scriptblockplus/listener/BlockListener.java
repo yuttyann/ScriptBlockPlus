@@ -35,8 +35,8 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
-import com.github.yuttyann.scriptblockplus.selector.Split;
-import com.github.yuttyann.scriptblockplus.selector.SplitValue;
+import com.github.yuttyann.scriptblockplus.selector.split.Split;
+import com.github.yuttyann.scriptblockplus.selector.split.SplitValue;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

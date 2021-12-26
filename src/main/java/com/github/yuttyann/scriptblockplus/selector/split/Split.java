@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.selector;
+package com.github.yuttyann.scriptblockplus.selector.split;
 
 import com.github.yuttyann.scriptblockplus.enums.splittype.Argument;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
