@@ -21,6 +21,7 @@ import com.github.yuttyann.scriptblockplus.file.json.basic.ThreeJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.PlayerTimer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.time.OldCooldown;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriFunction;
 import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,8 +35,17 @@ import java.util.UUID;
 @JsonTag(path = "json/playertimer")
 public final class PlayerTimerJson extends ThreeJson<UUID, ScriptKey, BlockCoords, PlayerTimer> {
 
-    public PlayerTimerJson(@NotNull String name) {
-        super(name, PlayerTimer::new);
+    /**
+     * 要素のインスタンスの生成処理
+     */
+    private static final TriFunction<UUID, ScriptKey, BlockCoords, PlayerTimer> INSTANCE = PlayerTimer::new;
+
+    /**
+     * コンストラクタ
+     * @param uuid - ファイルの名前({@link UUID}の文字列)
+     */
+    public PlayerTimerJson(@NotNull String uuid) {
+        super(uuid, INSTANCE);
     }
 
     /**

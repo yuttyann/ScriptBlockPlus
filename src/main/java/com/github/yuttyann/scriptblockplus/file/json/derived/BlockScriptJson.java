@@ -17,7 +17,6 @@ package com.github.yuttyann.scriptblockplus.file.json.derived;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.SBLoader;
-import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.annotation.JsonTag;
 import com.github.yuttyann.scriptblockplus.file.json.basic.OneJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
@@ -29,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * ScriptBlockPlus BlockScriptJson クラス
@@ -38,14 +38,17 @@ import java.util.function.BiConsumer;
 public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
 
     /**
+     * 要素のインスタンスの生成処理
+     */
+    private static final Function<BlockCoords, BlockScript> INSTANCE = BlockScript::new;
+
+    /**
      * 初期化処理の一覧
      */
     public static final List<BiConsumer<ScriptKey, BlockCoords[]>> INIT_PROCESS = new ArrayList<>();
 
     static {
-        CacheJson.register(BlockScriptJson.class, BlockScriptJson::new);
-        CacheJson.register(PlayerCountJson.class, PlayerCountJson::new);
-        CacheJson.register(PlayerTimerJson.class, PlayerTimerJson::new);
+        // 初期化処理の追加
         INIT_PROCESS.add((s, b) -> PlayerCountJson.removeAll(s, b));
         INIT_PROCESS.add((s, b) -> PlayerTimerJson.removeAll(s, b));
         INIT_PROCESS.add((s, b) -> {
@@ -59,14 +62,17 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
         });
     }
 
+    /**
+     * スクリプトキー(ファイル名から取得)
+     */
     private ScriptKey scriptKey;
 
     /**
      * コンストラクタ
-     * @param name - ファイルの名前
+     * @param scriptKey - ファイルの名前({@link ScriptKey}の文字列)
      */
-    public BlockScriptJson(@NotNull String name) {
-        super(name, BlockScript::new);
+    public BlockScriptJson(@NotNull String scriptKey) {
+        super(scriptKey, INSTANCE);
     }
 
     /**
@@ -124,7 +130,7 @@ public final class BlockScriptJson extends OneJson<BlockCoords, BlockScript> {
             return;
         }
         // JSONを作成
-        var scriptJson = get(scriptKey);
+        var scriptJson = BlockScriptJson.get(scriptKey);
         if (scriptJson.exists()) {
             return;
         }

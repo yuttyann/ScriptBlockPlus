@@ -25,6 +25,7 @@ import com.github.yuttyann.scriptblockplus.utils.collection.ReuseIterator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 /**
  * ScriptBlockPlus PlayerCountJson クラス
@@ -33,8 +34,17 @@ import java.util.UUID;
 @JsonTag(path = "json/playercount")
 public final class PlayerCountJson extends TwoJson<ScriptKey, BlockCoords, PlayerCount> {
 
-    public PlayerCountJson(@NotNull String name) {
-        super(name, PlayerCount::new);
+    /**
+     * 要素のインスタンスの生成処理
+     */
+    private static final BiFunction<ScriptKey, BlockCoords, PlayerCount> INSTANCE = PlayerCount::new;
+
+    /**
+     * コンストラクタ
+     * @param uuid - ファイルの名前({@link UUID}の文字列)
+     */
+    public PlayerCountJson(@NotNull String uuid) {
+        super(uuid, INSTANCE);
     }
 
     /**
