@@ -86,9 +86,19 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         CLEAR_CACHE,
     }
 
+    /**
+     * 互換性の維持を行うためにGsonを保持したインスタンス。
+     */
     public static final GsonHolder GSON_HOLDER = new GsonHolder(new GsonBuilder());
 
+    /**
+     * Jsonのインスタンスが保存されるマップ
+     */
     private static final Map<Class<? extends BaseJson<?>>, IntMap<BaseJson<?>>> JSON_CACHE = new HashMap<>();
+
+    /**
+     * {@link IntMap}の生成処理
+     */
     private static final Function<Class<? extends BaseJson<?>>, IntMap<BaseJson<?>>> CREATE_MAP = m -> IntHashMap.create();
 
     private int id;
@@ -124,7 +134,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         reload();
 
         // キャッシュが保存できる状態なら保存する(データの相違を起こさないため)
-        if (CacheJson.CACHE_MAP.containsKey(json)) {
+        if (CacheJson.CACHES.containsKey(json)) {
             if (jsonTag.cachefileexists() && !exists()) {
                 return;
             }
@@ -174,7 +184,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         var cacheMap = JSON_CACHE.get(json);
         var baseJson = cacheMap == null ? null : cacheMap.get(name.hashCode());
         if (baseJson == null) {
-            var cacheJson = CacheJson.CACHE_MAP.get(json);
+            var cacheJson = CacheJson.CACHES.get(json);
             if (cacheJson == null) {
                 throw new NullPointerException("The class is not registered");
             }
