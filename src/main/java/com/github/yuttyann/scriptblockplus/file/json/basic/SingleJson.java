@@ -16,6 +16,7 @@
 package com.github.yuttyann.scriptblockplus.file.json.basic;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
 import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
@@ -49,12 +50,17 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
         }
     }
 
+
+    private final Supplier<E> newInstance;
+
     /**
      * コンストラクタ
      * @param name - ファイルの名前
+     * @param newInstance - インスタンスの生成処理
      */
-    protected SingleJson(@NotNull String name) {
+    protected SingleJson(@NotNull String name, @NotNull Supplier<E> newInstance) {
         super(name);
+        this.newInstance = newInstance;
     }
 
     /**
@@ -68,13 +74,6 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
     }
 
     /**
-     * インスタンスを生成します。
-     * @return {@link E} - インスタンス
-     */
-    @NotNull
-    protected abstract E newInstance();
-
-    /**
      * 要素を取得します。
      * @return {@link E} - 要素
      */
@@ -82,7 +81,7 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
     public E load() {
         var elementMap = getElementMap();
         if (elementMap.isEmpty()) {
-            elementMap.put(0, newInstance());
+            elementMap.put(0, newInstance.get());
         }
         return elementMap.get(0);
     }
