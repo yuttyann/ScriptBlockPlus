@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerTimerJson;
 import com.google.common.base.Function;
 import com.google.gson.internal.UnsafeAllocator;
 
@@ -30,22 +33,41 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class CacheJson {
 
+    /**
+     * 保存したクラスのインスタンスの生成処理が保存されます。
+     */
+    public static final Map<Class<? extends BaseJson<?>>, CacheJson> CACHES = new HashMap<>();
+
+    static {
+        // キャッシュするクラスを登録
+        register(BlockScriptJson.class, BlockScriptJson::new);
+        register(PlayerCountJson.class, PlayerCountJson::new);
+        register(PlayerTimerJson.class, PlayerTimerJson::new);
+    }
+
+    /**
+     * コンストラクタを呼び出さずに、インスタンスを生成する(非推奨)クラス
+     */
     private static final UnsafeAllocator UNSAFE = UnsafeAllocator.create();
 
-    static final Map<Class<? extends BaseJson<?>>, CacheJson> CACHE_MAP = new HashMap<>();
-
+    /**
+     * Jsonのクラス
+     */
     private final Class<? extends BaseJson<?>> json;
 
+    /**
+     * インスタンスの生成処理
+     */
     private Function<String, ? extends BaseJson<?>> creator;
 
     /**
      * コンストラクタ
-     * @param json - JSONのクラス
+     * @param json - Jsonのクラス
      */
     private CacheJson(@NotNull Class<? extends BaseJson<?>> json) {
-        this.json = json;
-        this.creator = s -> {
+        this(json, s -> {
             try {
+               // コンストラクタが呼び出されないためメソッドで値の代入を行う。
                var baseJson = UNSAFE.newInstance(json);
                baseJson.constructor(json, s, s.hashCode());
                return baseJson;
@@ -53,26 +75,35 @@ public final class CacheJson {
                 e.printStackTrace();
             }
             throw new IllegalArgumentException("Failed to create an instance");
-        };
+        });
     }
 
     /**
-     * キャッシュを登録します。
-     * @param json - JSONのクラス
-     */
-    public static void register(@NotNull Class<? extends BaseJson<?>> json) {
-        CACHE_MAP.put(json, new CacheJson(json));
-    }
-
-    /**
-     * キャッシュを登録します。
-     * @param json - JSONのクラス
+     * コンストラクタ
+     * @param json - Jsonのクラス
      * @param creator - インスタンスの生成処理
      */
-    public static void register(@NotNull Class<? extends BaseJson<?>> json, @NotNull Function<String, ? extends BaseJson<?>> creator) {
-        var cacheJson = new CacheJson(json);
-        cacheJson.creator = creator;
-        CACHE_MAP.put(json, cacheJson);
+    private CacheJson(@NotNull Class<? extends BaseJson<?>> json, @NotNull Function<String, ? extends BaseJson<?>> creator) {
+        this.json = json;
+        this.creator = creator;
+    }
+
+    /**
+     * キャッシュの保存を許可するJsonを登録します。
+     * @param json - Jsonのクラス
+     */
+    public static void register(@NotNull Class<? extends BaseJson<?>> json) {
+        CACHES.put(json, new CacheJson(json));
+    }
+
+    /**
+     * キャッシュの保存を許可するJsonを登録します。
+     * @param <T> Jsonの型
+     * @param json - Jsonのクラス
+     * @param creator - インスタンスの生成処理
+     */
+    public static <T extends BaseJson<?>> void register(@NotNull Class<T> json, @NotNull Function<String, T> creator) {
+        CACHES.put(json, new CacheJson(json, creator));
     }
 
     /**
@@ -84,8 +115,8 @@ public final class CacheJson {
     }
 
     /**
-     * JSONのクラスを取得します。
-     * @return {@link Class}&lt;? extends {@link BaseJson}&gt; - JSONのクラス
+     * Jsonのクラスを取得します。
+     * @return {@link Class}&lt;? extends {@link BaseJson}&gt; - Jsonのクラス
      */
     @NotNull
     public Class<? extends BaseJson<?>> getJsonClass() {
@@ -103,25 +134,25 @@ public final class CacheJson {
     }
 
     /**
-     * 登録されている全てのJSONのキャッシュを生成します。
+     * 登録されている全てのJsonのキャッシュを生成します。
      */
     public static void loading() {
-        CACHE_MAP.values().forEach(c -> loading(c.getJsonClass()));
+        CACHES.values().forEach(c -> loading(c.getJsonClass()));
     }
 
     /**
-     * 指定したJSONのキャッシュを生成します。
+     * 指定したJsonのキャッシュを生成します。
      * <p>
      * キャッシュに登録していない場合は、生成できません。
      * <p>
-     * また、{@link SBConfig#CACHE_ALL_JSON}が無効な場合も生成できません。
-     * @param json - JSONのクラス
+     * また、{@link SBConfig#CACHE_ALL_Json}が無効な場合も生成できません。
+     * @param json - Jsonのクラス
      */
     public static void loading(@NotNull Class<? extends BaseJson<?>> json) {
         if (!SBConfig.CACHE_ALL_JSON.getValue()) {
             return;
         }
-        var cacheJson = CACHE_MAP.get(json);
+        var cacheJson = CACHES.get(json);
         if (cacheJson == null) {
             return;
         }
