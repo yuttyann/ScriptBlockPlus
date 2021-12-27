@@ -35,8 +35,6 @@ import com.github.yuttyann.scriptblockplus.item.gui.CustomGUI;
 import com.github.yuttyann.scriptblockplus.item.gui.GUIItem;
 import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.raytrace.RayTrace;
-import com.github.yuttyann.scriptblockplus.raytrace.SBBoundingBox;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
@@ -44,6 +42,8 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriConsumer;
+import com.github.yuttyann.scriptblockplus.utils.raytrace.RayTrace;
+import com.github.yuttyann.scriptblockplus.utils.raytrace.SBBoundingBox;
 import com.google.common.collect.Lists;
 
 import org.bukkit.ChatColor;

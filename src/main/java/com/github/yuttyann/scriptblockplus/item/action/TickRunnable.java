@@ -26,7 +26,6 @@ import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntity;
 import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntityPacket;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.raytrace.RayTrace;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionIterator;
 import com.github.yuttyann.scriptblockplus.region.PlayerRegion;
 import com.github.yuttyann.scriptblockplus.region.Region;
@@ -34,6 +33,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils.ThrowableConsumer;
+import com.github.yuttyann.scriptblockplus.utils.raytrace.RayTrace;
 import com.google.common.base.Predicates;
 
 import org.bukkit.Color;

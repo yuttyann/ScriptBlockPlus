@@ -46,14 +46,20 @@ import com.github.yuttyann.scriptblockplus.enums.server.Mojang;
 import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.enums.server.reflect.ReflectMatcher;
 import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntity;
-import com.github.yuttyann.scriptblockplus.raytrace.RayResult;
+import com.github.yuttyann.scriptblockplus.utils.raytrace.RayResult;
 
 /**
  * ScriptBlockPlus NMSHelper クラス
+ * <p>
+ * 一番不安定な機能の為、最大限互換性と安定性を意識しながら制作しています。
  * @author yuttyann44581
  */
 public final class NMSHelper {
 
+    /**
+     * リフレクション({@code フィールド、メソッド、コンストラクタ})の検出を行います。
+     * @throws ReflectiveOperationException リフレクション関係で例外が発生した際にスローします。
+     */
     public static void build() throws ReflectiveOperationException {
         var builder = new ReflectMatcher.Builder();
         if (Utils.isCBXXXorLater("1.14")) {
