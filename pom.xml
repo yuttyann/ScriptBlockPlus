@@ -126,12 +126,12 @@
     <dependency>
       <groupId>me.clip</groupId>
       <artifactId>placeholderapi</artifactId>
-      <version>2.9.1</version>
+      <version>2.11.1</version>
     </dependency>
     <dependency>
       <groupId>com.discordsrv</groupId>
       <artifactId>discordsrv</artifactId>
-      <version>1.22.0</version>
+      <version>1.24.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
