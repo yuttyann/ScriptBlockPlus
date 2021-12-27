@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.raytrace;
+package com.github.yuttyann.scriptblockplus.utils.raytrace;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -29,21 +29,38 @@ public final class RayResult {
     private Block block;
     private BlockFace blockFace;
 
+    /**
+     * コンストラクタ
+     * @param block - ブロック
+     * @param blockFace - ブロックの側面
+     */
     public RayResult(@NotNull Block block, @Nullable BlockFace blockFace) {
         this.block = block;
         this.blockFace = blockFace == null ? BlockFace.SOUTH : blockFace;
     }
 
+    /**
+     * ブロックを取得します。
+     * @return {@link Block} - ブロック
+     */
     @NotNull
     public Block getHitBlock() {
         return block;
     }
 
+    /**
+     * 側面のブロックを取得します。
+     * @return {@link Block} - 側面のブロック
+     */
     @NotNull
     public Block getRelative() {
         return block.getRelative(blockFace);
     }
 
+    /**
+     * ブロックの側面を取得します。
+     * @return {@link BlockFace} - ブロックの側面
+     */
     @NotNull
     public BlockFace getHitBlockFace() {
         return blockFace == null ? BlockFace.SELF : blockFace;

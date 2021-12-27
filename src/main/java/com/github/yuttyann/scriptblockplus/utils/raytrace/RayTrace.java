@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.raytrace;
+package com.github.yuttyann.scriptblockplus.utils.raytrace;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -35,22 +35,36 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus RayTrace クラス
- * @author yuttyann44581
+ * @author yuttyann44581, 
  */
 public final class RayTrace {
 
-    private final Vector start;
-    private final Vector direction;
+    private final Vector start, direction;
 
+    /**
+     * コンストラクタ
+     * @param player - プレイヤー
+     */
     public RayTrace(@NotNull Player player) {
         this(player.getEyeLocation().toVector(), player.getEyeLocation().getDirection());
     }
 
+    /**
+     * コンストラクタ
+     * @param start - 開始位置
+     * @param direction - 方向
+     */
     public RayTrace(@NotNull Vector start, @NotNull Vector direction) {
         this.start = start;
         this.direction = direction;
     }
 
+    /**
+     * プレイヤーの射線上に存在するブロックを取得します。
+     * @param player - プレイヤー
+     * @param distance - 距離
+     * @return {@link RayResult} - ブロック
+     */
     @Nullable
     public static RayResult rayTraceBlocks(@NotNull Player player, final double distance) {
         if (Utils.isCBXXXorLater("1.13.2")) {
@@ -90,6 +104,14 @@ public final class RayTrace {
         }
     }
 
+    /**
+     * プレイヤー射線上に存在するブロックの一覧を取得します。
+     * @param player - プレイヤー
+     * @param distance - 距離
+     * @param accuracy - 精度
+     * @param square - 正方形のブロックとして判定する場合は{@code true}
+     * @return {@link Set}&lt;{@link Block}&gt; - ブロックの一覧
+     */
     @NotNull
     public static Set<Block> rayTraceBlocks(@NotNull Player player, final double distance, final double accuracy, final boolean square) {
         var world = player.getWorld();
@@ -108,6 +130,11 @@ public final class RayTrace {
         return blocks;
     }
 
+    /**
+     * 指定した距離の位置を取得する。
+     * @param distance - 距離
+     * @return {@link Vector} - 位置
+     */
     @NotNull
     public Vector getPostion(final double distance) {
         var vector1 = new Vector(start.getX(), start.getY(), start.getZ());
@@ -115,6 +142,11 @@ public final class RayTrace {
         return vector1.add(vector2.multiply(distance));
     }
 
+    /**
+     * 指定した位置が含まれている場合は{@code true}を返します。
+     * @param position - 位置
+     * @return {@code boolean} - 指定した位置が含まれている場合は{@code true}
+     */
     public boolean isOnLine(@NotNull Vector position) {
         double t = (position.getX() - start.getX()) / direction.getX();
         if (position.getBlockY() == start.getY() + (t * direction.getY()) && position.getBlockZ() == start.getZ() + (t * direction.getZ())) {
@@ -123,24 +155,41 @@ public final class RayTrace {
         return false;
     }
 
+    /**
+     * レイトレース上の全ての位置を取得します。
+     * @param distance - 距離
+     * @param accuracy - 精度
+     * @return {@link List}&lt;{@link Vector}&gt; - 全ての位置
+     */
     @NotNull
     public List<Vector> traverse(final double distance, final double accuracy) {
-        var positions = new ArrayList<Vector>();
+        var positions = new ArrayList<Vector>(16);
         for (double d = 0.0D; d <= distance; d += accuracy) {
             positions.add(getPostion(d));
         }
         return positions;
     }
 
+    /**
+     * 現在のレイトレースに対する交差点検出を行います。
+     * @param min - 最小値
+     * @param max - 最大値
+     * @param distance - 距離
+     * @param accuracy - 精度
+     * @return {@link Vector} - 交差点
+     */
     @Nullable
     public Vector positionOfIntersection(@NotNull Vector min, @NotNull Vector max, final double distance, final double accuracy) {
         return positionOfIntersection(new SBBoundingBox(min, max), distance, accuracy);
     }
 
-    public boolean intersects(@NotNull Vector min, @NotNull Vector max, final double distance, final double accuracy) {
-        return intersects(new SBBoundingBox(min, max), distance, accuracy);
-    }
-
+    /**
+     * 現在のレイトレースに対する交差点検出を行います。
+     * @param boundingBox - バウンディングボックス
+     * @param distance - 距離
+     * @param accuracy - 精度
+     * @return {@link Vector} - 交差点
+     */
     @Nullable
     public Vector positionOfIntersection(@NotNull SBBoundingBox boundingBox, final double distance, final double accuracy) {
         var positions = traverse(distance, accuracy);
@@ -153,6 +202,25 @@ public final class RayTrace {
         return null;
     }
 
+    /**
+     * 現在のレイトレースに対する交差点検出
+     * @param min - 最小値
+     * @param max - 最大値
+     * @param distance - 距離
+     * @param accuracy - 精度
+     * @return {@code boolean} - 交差点検出した場合は{@code true}
+     */
+    public boolean intersects(@NotNull Vector min, @NotNull Vector max, final double distance, final double accuracy) {
+        return intersects(new SBBoundingBox(min, max), distance, accuracy);
+    }
+
+    /**
+     * 現在のレイトレースの交差点検出した場合は{@code true}を返します。
+     * @param boundingBox - バウンディングボックス
+     * @param distance - 距離
+     * @param accuracy - 精度
+     * @return {@code boolean} - 交差点検出した場合は{@code true}
+     */
     public boolean intersects(@NotNull SBBoundingBox boundingBox, final double distance, final double accuracy) {
         var positions = traverse(distance, accuracy);
         for(int i = 0, l = positions.size(); i < l; i++) {
@@ -163,6 +231,12 @@ public final class RayTrace {
         return false;
     }
 
+    /**
+     * 交差点検出した場合は{@code true}を返します。
+     * @param position - 位置
+     * @param boundingBox - バウンディングボックス
+     * @return {@code boolean} - 交差点検出した場合は{@code true}
+     */
     public static boolean intersects(@NotNull Vector position, @NotNull SBBoundingBox boundingBox) {
         if (position.getX() < boundingBox.getMinX() || position.getX() > boundingBox.getMaxX()) {
             return false;

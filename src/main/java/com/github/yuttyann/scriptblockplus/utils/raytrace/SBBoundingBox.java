@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-package com.github.yuttyann.scriptblockplus.raytrace;
+package com.github.yuttyann.scriptblockplus.utils.raytrace;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
@@ -31,49 +31,103 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class SBBoundingBox {
 
+    /**
+     * 最小値
+     */
     private double minX, minY, minZ;
+
+    /**
+     * 最大値
+     */
     private double maxX, maxY, maxZ;
 
+    /**
+     * コンストラクタ(全ての値が{@code 0})
+     */
     public SBBoundingBox() {
         setXYZ(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
     }
 
+    /**
+     * コンストラクタ
+     * @param min - 最小値
+     * @param max - 最大値
+     */
     public SBBoundingBox(@NotNull BlockCoords min, @NotNull BlockCoords max) {
         this(min.toVector(), max.toVector());
     }
 
+    /**
+     * コンストラクタ
+     * @param min - 最小値
+     * @param max - 最大値
+     */
     public SBBoundingBox(@NotNull Vector min, @NotNull Vector max) {
         setVector(min, max);
     }
 
+    /**
+     * コンストラクタ
+     * @param block - ブロック
+     * @param square - 正方形のブロックとして設定する場合は{@code true}
+     */
     public SBBoundingBox(@NotNull Block block, final boolean square) {
         setBlock(block, square);
     }
 
+    /**
+     * Xの最小値を取得します。
+     * @return {@code double} - X
+     */
     public double getMinX() {
         return minX;
     }
 
+    /**
+     * Yの最小値を取得します。
+     * @return {@code double} - Y
+     */
     public double getMinY() {
         return minY;
     }
 
+    /**
+     * Zの最小値を取得します。
+     * @return {@code double} - Z
+     */
     public double getMinZ() {
         return minZ;
     }
 
+    /**
+     * Xの最大値を取得します。
+     * @return {@code double} - X
+     */
     public double getMaxX() {
         return maxX;
     }
 
+    /**
+     * Yの最大値を取得します。
+     * @return {@code double} - Y
+     */
     public double getMaxY() {
         return maxY;
     }
 
+    /**
+     * Zの最大値を取得します。
+     * @return {@code double} - Z
+     */
     public double getMaxZ() {
         return maxZ;
     }
 
+    /**
+     * ブロックのヒットボックスを設定します。
+     * @param block - ブロック
+     * @param square - 正方形のブロックとして設定する場合は{@code true}
+     */
     public void setBlock(@NotNull Block block, final boolean square) {
         if (square || ItemUtils.isAIR(block.getType())) {
             setSquare(block);
@@ -85,6 +139,7 @@ public final class SBBoundingBox {
                 setXYZ(minX, minY, minZ, maxX, maxY, maxZ);
             } else {
                 try {
+                    // 古いバージョンの場合はNMSを利用して設定
                     setAxisAlignedBB(block);
                 } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
@@ -93,6 +148,11 @@ public final class SBBoundingBox {
         }
     }
 
+    /**
+     * {@code NMS}を利用してブロックのヒットボックスを設定します。
+     * @throws ReflectiveOperationException リフレクション関係で例外が発生した際にスローされます。
+     * @param block - ブロック
+     */
     private void setAxisAlignedBB(@NotNull Block block) throws ReflectiveOperationException {
         if (NetMinecraft.hasNMS()) {
             setSquare(block);
@@ -114,15 +174,33 @@ public final class SBBoundingBox {
         }
     }
 
+    /**
+     * 正方形のヒットボックスとして設定します。
+     * @param block - ブロック
+     */
     public void setSquare(@NotNull Block block) {
         int x = block.getX(), y = block.getY(), z = block.getZ();
         setXYZ(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D);
     }
 
+    /**
+     * 最小値と最大値を設定します。
+     * @param min - 最小値
+     * @param max - 最大値
+     */
     public void setVector(@NotNull Vector min, @NotNull Vector max) {
         setXYZ(min.getX(), min.getY(), min.getZ(), max.getX(), max.getY(), max.getZ());
     }
 
+    /**
+     * 最小値と最大値を設定します。
+     * @param x1 - Xの最小値
+     * @param y1 - Yの最小値
+     * @param z1 - Zの最小値
+     * @param x2 - Xの最大値
+     * @param y2 - Yの最大値
+     * @param z2 - Zの最大値
+     */
     public void setXYZ(double x1, double y1, double z1, double x2, double y2, double z2) {
         this.minX = Math.min(x1, x2);
         this.minY = Math.min(y1, y2);
