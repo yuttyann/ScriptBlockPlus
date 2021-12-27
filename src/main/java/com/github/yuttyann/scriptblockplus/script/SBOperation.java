@@ -98,9 +98,9 @@ public final class SBOperation {
             SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sbPlayer);
             return;
         }
-        sbPlayer.sendMessage("--------- [ Script Views ] ---------");
+        sbPlayer.sendMessage("§6--------- [ Script Views ] ---------");
         getScriptInfos(sbPlayer, scriptKey, scriptJson, blockCoords).forEach(sbPlayer::sendMessage);
-        sbPlayer.sendMessage("----------------------------------");
+        sbPlayer.sendMessage("§6----------------------------------");
         SBConfig.CONSOLE_SCRIPT_VIEW.replace(scriptKey, blockCoords).console();
     }
 
@@ -141,12 +141,15 @@ public final class SBOperation {
         info.add("§eMyCount: §a" + PlayerCountJson.get(sbPlayer.getUniqueId()).load(scriptKey, blockCoords).getAmount());
         info.add("§eScripts:");
         blockScript.getScripts().forEach(s -> info.add("§6- §b" + s));
-        info.add("§eValues:");
-        blockScript.getValues().entrySet().forEach(e -> {
-            var value = e.getValue().toString();
-            var index = value.indexOf(':');
-            info.add("§6- §a" + e.getKey() + "§d: §b" + value.substring(index + 1, value.length()));
-        });
+
+        if (blockScript.hasValues()) {
+            info.add("§eValues:");
+            blockScript.getValues().entrySet().forEach(e -> {
+                var value = e.getValue().toString();
+                var index = value.indexOf(':');
+                info.add("§6- §a" + e.getKey() + "§d: §b" + value.substring(index + 1, value.length()));
+            });
+        }
         return info;
     }
 }
