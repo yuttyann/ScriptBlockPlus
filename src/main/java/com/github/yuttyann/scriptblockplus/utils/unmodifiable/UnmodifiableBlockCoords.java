@@ -23,9 +23,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * ScriptBlockPlus UnmodifiableBlockCoords クラス
  * <p>
- * 座標が変更されることが無いため、
- * <p>
- * {@link UnmodifiableBlockCoords#toLocation()}の情報はキャッシュされる。
+ * 座標が変更されることが無いため、{@link UnmodifiableBlockCoords#toLocation}の情報はキャッシュされる。
  * @author yuttyann44581
  */
 public final class UnmodifiableBlockCoords extends BlockCoords {
