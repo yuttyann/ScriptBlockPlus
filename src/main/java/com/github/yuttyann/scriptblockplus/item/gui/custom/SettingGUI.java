@@ -78,9 +78,9 @@ public final class SettingGUI extends CustomGUI {
                 .text(def(input, "§r"))
                 .onClose(p -> {
                     ScriptBlock.getScheduler().run(() -> {
-                        if (!sbPlayer.isOnline()) {
+                        if (!s.has() || !sbPlayer.isOnline()) {
                             onClosed(w);
-                        } else if (s.has()) {
+                        } else {
                             w.open();
                         }
                     });
@@ -222,8 +222,15 @@ public final class SettingGUI extends CustomGUI {
     @Override
     public void onClosed(@NotNull UserWindow window) {
         var objectMap = window.getSBPlayer().getObjectMap();
-        if (!objectMap.getBoolean(KEY_ANVIL)) {
-            Optional.ofNullable(objectMap.get(SearchGUI.KEY_SCRIPT)).ifPresent(OPENED::remove);
+        var scriptJson = (ScriptJson) objectMap.get(SearchGUI.KEY_SCRIPT);
+        if (scriptJson == null || !scriptJson.has() || !objectMap.getBoolean(KEY_ANVIL)) {
+            if (scriptJson != null) {
+                OPENED.remove(scriptJson);
+            }
+            objectMap.remove(KEY_LORE);
+            objectMap.remove(KEY_ANVIL);
+            objectMap.remove(KEY_SCRIPTS);
+            objectMap.remove(SearchGUI.KEY_SCRIPT);
         }
     }
 
@@ -266,13 +273,6 @@ public final class SettingGUI extends CustomGUI {
         var objectMap = window.getSBPlayer().getObjectMap();
         var scriptJson = (ScriptJson) objectMap.get(SearchGUI.KEY_SCRIPT);
         if (scriptJson == null || !scriptJson.has()) {
-            if (scriptJson != null) {
-                OPENED.remove(scriptJson);
-            }
-            objectMap.remove(KEY_LORE);
-            objectMap.remove(KEY_ANVIL);
-            objectMap.remove(KEY_SCRIPTS);
-            objectMap.remove(SearchGUI.KEY_SCRIPT);
             window.close();
             return Optional.empty();
         }
