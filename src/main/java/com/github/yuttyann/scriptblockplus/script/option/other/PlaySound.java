@@ -15,8 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
-import java.util.Collections;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
@@ -27,6 +27,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,28 +52,29 @@ public final class PlaySound extends BaseOption implements Runnable {
         this.pitch = Integer.parseInt(hyphen.get(2));
         this.sendAllPlayer = slash.size() > 1 && Boolean.parseBoolean(slash.get(1));
 
-        if (delay < 1) {
-            playSound();
+        if (delay > 0) {
+            ScriptBlock.getScheduler().asyncRun(this, delay);
         } else {
-            ScriptBlock.getScheduler().run(this, delay);
+            run();
         }
         return true;
     }
 
     @Override
     public void run() {
-        StreamUtils.ifAction(getSBPlayer().isOnline(), () -> playSound());
-    }
-
-    private void playSound() {
-        var sound = getSound(name);
-        var location = getLocation();
-        for (var player : sendAllPlayer ? Bukkit.getOnlinePlayers() : Collections.singleton(getPlayer())) {
+        var playSound = (Consumer<Player>) p -> {
+            var sound = getSound(name);
+            var location = getLocation();
             if (sound == null) {
-                player.playSound(location, name, volume, pitch);
+                p.playSound(location, name, volume, pitch);
             } else {
-                player.playSound(location, sound, volume, pitch);
+                p.playSound(location, sound, volume, pitch);
             }
+        };
+        if (sendAllPlayer) {
+            Bukkit.getOnlinePlayers().forEach(playSound);
+        } else if (getSBPlayer().isOnline()) {
+            playSound.accept(getSBPlayer().getPlayer());
         }
     }
 
