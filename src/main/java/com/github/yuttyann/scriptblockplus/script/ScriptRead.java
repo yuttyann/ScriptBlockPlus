@@ -49,7 +49,7 @@ public class ScriptRead extends ScriptMap {
     /**
      * 非同期の実行を許可する場合は{@code true}
      */
-    protected boolean async = false;
+    private boolean async = false;
 
     /**
      * 一時データを削除する場合は{@code true}
