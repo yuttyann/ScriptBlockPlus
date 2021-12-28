@@ -30,6 +30,7 @@ import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.file.json.basic.OneJson.OneElement;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.ValueHolder.ValueType;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.google.gson.InstanceCreator;
@@ -53,10 +54,10 @@ public final class BlockScript extends OneElement<BlockCoords> {
     private final BlockCoords blockCoords;
 
     @SerializedName("author")
-    private Set<UUID> author;
+    private Set<UUID> authors;
 
     @SerializedName("script")
-    private List<String> script;
+    private List<String> scripts;
 
     @SerializedName("lastedit")
     private String lastedit;
@@ -112,7 +113,7 @@ public final class BlockScript extends OneElement<BlockCoords> {
      * @param authors - 作者の一覧
      */
     public void setAuthors(@NotNull Collection<UUID> authors) {
-        this.author = new LinkedHashSet<>(authors);
+        this.authors = new LinkedHashSet<>(authors);
     }
 
     /**
@@ -121,15 +122,15 @@ public final class BlockScript extends OneElement<BlockCoords> {
      */
     @NotNull
     public Set<UUID> getAuthors() {
-        return author == null ? this.author = new LinkedHashSet<>() : author;
+        return authors == null ? this.authors = new LinkedHashSet<>() : authors;
     }
 
     /**
      * スクリプトの一覧を設定します。
-     * @param authors - スクリプトの一覧
+     * @param scripts - スクリプトの一覧
      */
     public void setScripts(@NotNull Collection<String> scripts) {
-        this.script = new ArrayList<>(scripts);
+        this.scripts = new ArrayList<>(scripts);
     }
 
     /**
@@ -138,7 +139,7 @@ public final class BlockScript extends OneElement<BlockCoords> {
      */
     @NotNull
     public List<String> getScripts() {
-        return script == null ? this.script = new ArrayList<>() : script;
+        return scripts == null ? this.scripts = new ArrayList<>() : scripts;
     }
 
     /**
@@ -151,7 +152,7 @@ public final class BlockScript extends OneElement<BlockCoords> {
 
     /**
      * 編集時刻({@code yyyy/MM/dd HH:mm:ss})を設定します。
-     * @param lastedit - 時刻
+     * @param date - 時刻
      */
     public void setLastEdit(@NotNull String date) {
         if (StringUtils.isNotEmpty(date)) {

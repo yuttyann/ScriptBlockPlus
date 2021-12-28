@@ -145,7 +145,7 @@ public final class CacheJson {
      * <p>
      * キャッシュに登録していない場合は、生成できません。
      * <p>
-     * また、{@link SBConfig#CACHE_ALL_Json}が無効な場合も生成できません。
+     * また、{@link SBConfig#CACHE_ALL_JSON}が無効な場合も生成できません。
      * @param json - Jsonのクラス
      */
     public static void loading(@NotNull Class<? extends BaseJson<?>> json) {
