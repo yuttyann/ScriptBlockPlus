@@ -188,7 +188,7 @@ public final class SearchGUI extends CustomGUI {
             objectMap.put(KEY_INDEX, index = 0);
             objectMap.put(KEY_SWITCH, false);
         } else if (objectMap.getBoolean(KEY_SWITCH) == !prev) {
-            if ((prev ? index > 20 : index >= 0) && index < jsonSize) {
+            if ((prev ? index > slotSize : index >= 0) && index < jsonSize) {
                 index = prev ? index - slotSize : index + slotSize;
             }
             objectMap.put(KEY_SWITCH, prev);
@@ -200,7 +200,11 @@ public final class SearchGUI extends CustomGUI {
             IntStream.range(0, slotSize).forEach(i -> window.setItem(SLOTS[i + slot], null));
         }
         if (update) {
-            int surplus = index % slotSize, from = prev ? index - (slotSize + surplus) : index, to = prev ? index - surplus : slotSize + index;
+            int surplus = index % slotSize;
+            if (prev && surplus == 0 && index > slotSize && index == jsonSize) {
+                index -= slotSize;
+            }
+            int from = prev ? index - (slotSize + surplus) : index, to = prev ? index - surplus : slotSize + index;
             var subList = elements.subList(from = from > 0 ? from : 0, prev ? to : (to = jsonSize > to ? to : jsonSize));
             var player = window.getSBPlayer().getPlayer();
             for (int i = 0, l = subList.size(); i < l; i++) {
