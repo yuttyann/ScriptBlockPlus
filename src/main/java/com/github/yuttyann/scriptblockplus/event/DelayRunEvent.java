@@ -15,7 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.event;
 
-import com.github.yuttyann.scriptblockplus.script.SBRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -29,15 +29,16 @@ public class DelayRunEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    private final SBRead sbRead;
+    private final ScriptRead scriptRead;
 
-    public DelayRunEvent(@NotNull SBRead sbRead) {
-        this.sbRead = sbRead;
+    public DelayRunEvent(@NotNull ScriptRead scriptRead) {
+        super(scriptRead.isAsynchronous());
+        this.scriptRead = scriptRead;
     }
     
     @NotNull
-    public SBRead getSBRead() {
-        return sbRead;
+    public ScriptRead getScriptRead() {
+        return scriptRead;
     }
 
     @Override

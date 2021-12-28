@@ -32,6 +32,8 @@ import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockC
 import com.google.common.collect.Iterators;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -42,22 +44,48 @@ import java.util.List;
  * ScriptBlockPlus ScriptRead クラス
  * @author yuttyann44581
  */
-public class ScriptRead extends ScriptMap implements SBRead {
+public class ScriptRead extends ScriptMap {
 
-    private boolean initialize;
+    /**
+     * 非同期の実行を許可する場合は{@code true}
+     */
+    protected boolean async = false;
+
+    /**
+     * 一時データを削除する場合は{@code true}
+     */
+    private boolean initialize = false;
+
+    /**
+     * 進行度
+     */
+    protected int index;
+
+    /**
+     * 結果を反転する場合は{@code true}
+     */
+    protected boolean invert;
+
+    /**
+     * オプション
+     */
+    protected Option option;
+
+    /**
+     * オプションの値
+     */
+    protected String value;
+
+    /**
+     * スクリプトの一覧
+     */
+    protected List<String> scripts;
 
     // 初期宣言
     protected final SBPlayer sbPlayer;
     protected final ScriptKey scriptKey;
     protected final BlockCoords blockCoords;
     protected final BlockScriptJson scriptJson;
-
-    // ScriptRead#read(int) から
-    protected int index;
-    protected boolean invert;
-    protected Option option;
-    protected String value;
-    protected List<String> list;
 
     /**
      * コンストラクタ
@@ -66,35 +94,57 @@ public class ScriptRead extends ScriptMap implements SBRead {
      * @param scriptKey - スクリプトキー
      */
     public ScriptRead(@NotNull SBPlayer sbPlayer, @NotNull BlockCoords blockCoords, @NotNull ScriptKey scriptKey) {
-        this.initialize = true;
         this.sbPlayer = sbPlayer;
         this.scriptKey = scriptKey;
         this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
         this.scriptJson = BlockScriptJson.get(scriptKey);
     }
 
-
     /**
-     * スクリプトの実行完了後に一時データを削除するのかを設定します。
-     * @param initialize - 一時データを削除する場合は{@code true}
+     * 非同期の実行を許可するのかを設定します。
+     * @param isAsync - 非同期の実行を許可する場合は{@code true}
      */
-    public final void setInitialize(boolean initialize) {
-        this.initialize = initialize;
+    public final void setAsynchronous(final boolean isAsync) {
+        this.async = isAsync;
     }
 
     /**
-     * スクリプトの実行完了後に一時データを削除する場合は{@code true}を返します。
-     * @return {@code boolean} - スクリプトの実行完了後に一時データを削除する場合は{@code true}
+     * 非同期の実行を許可する場合は{@code true}を返します。
+     * @return {@code boolean} - 非同期の実行を許可する場合は{@code true}
+     */
+    public final boolean isAsynchronous() {
+        return async;
+    }
+
+    /**
+     * 一時データを削除するのかを設定します。
+     * @param isInitialize - 一時データを削除する場合は{@code true}
+     */
+    public final void setInitialize(final boolean isInitialize) {
+        this.initialize = isInitialize;
+    }
+
+    /**
+     * 一時データを削除する場合は{@code true}を返します。
+     * @return {@code boolean} - 一時データを削除する場合は{@code true}
      */
     public final boolean isInitialize() {
         return initialize;
     }
 
     /**
+     * {@code BukkitAPI}の{@code org.bukkit.entity.Player}を取得します。
+     * @return {@link Player} - プレイヤー
+     */
+    @NotNull
+    public Player getPlayer() {
+        return sbPlayer.getPlayer();
+    }
+
+    /**
      * プレイヤーを取得します。
      * @return {@link SBPlayer} - プレイヤー
      */
-    @Override
     @NotNull
     public SBPlayer getSBPlayer() {
         return sbPlayer;
@@ -104,17 +154,24 @@ public class ScriptRead extends ScriptMap implements SBRead {
      * スクリプトキーを取得します。
      * @return {@link ScriptKey} - スクリプトキー
      */
-    @Override
     @NotNull
     public ScriptKey getScriptKey() {
         return scriptKey;
     }
 
     /**
+     * {@code BukkitAPI}の{@code org.bukkit.Location}を取得します。
+     * @return {@link Location} - スクリプトの座標
+     */
+    @NotNull
+    public Location getLocation() {
+        return blockCoords.toLocation();
+    }
+
+    /**
      * スクリプトの座標を取得します。
      * @return {@link BlockCoords} - スクリプトの座標
      */
-    @Override
     @NotNull
     public BlockCoords getBlockCoords() {
         return blockCoords;
@@ -124,17 +181,15 @@ public class ScriptRead extends ScriptMap implements SBRead {
      * スクリプトの一覧を取得します。
      * @return {@link List}&lt;{@link String}&gt; - スクリプトの一覧
      */
-    @Override
     @NotNull
     public List<String> getScripts() {
-        return list;
+        return scripts;
     }
 
     /**
      * オプションの値を取得します。
      * @return {@link String} - オプションの値
      */
-    @Override
     @NotNull
     public String getOptionValue() {
         return value;
@@ -144,7 +199,6 @@ public class ScriptRead extends ScriptMap implements SBRead {
      * スクリプトを何番目まで実行したのか取得します。
      * @return {@code int} - 進行度
      */
-    @Override
     public int getScriptIndex() {
         return index;
     }
@@ -153,7 +207,6 @@ public class ScriptRead extends ScriptMap implements SBRead {
      * オプションの結果を反転するのかどうか。
      * @return {@code boolean} - 反転する場合は{@code true}
      */
-    @Override
     public boolean isInverted() {
         return invert;
     }
@@ -163,8 +216,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
      * @param index - 開始位置
      * @return {@code boolean} - 実行に成功した場合は{@code true}
      */
-    @Override
-    public boolean read(final int index) {
+    public synchronized boolean read(final int index) {
         if (!sbPlayer.isOnline()) {
             return false;
         }
@@ -192,11 +244,11 @@ public class ScriptRead extends ScriptMap implements SBRead {
      * @return {@code boolean} - 実行に成功した場合は{@code true}
      */
     protected boolean perform(final int index) {
-        for (this.index = index; this.index < list.size(); this.index++) {
-            var script = list.get(this.index);
+        for (this.index = index; this.index < scripts.size(); this.index++) {
+            var script = scripts.get(this.index);
             this.invert = script.startsWith("!");
             this.option = OptionManager.newInstance(invert ? script = script.substring(1) : script);
-            this.value = Placeholder.INSTANCE.replace(getPlayer(), option.getValue(script));
+            this.value = Placeholder.INSTANCE.replace(getSBPlayer().getPlayer(), option.getValue(script));
             if (option.callOption(this) == invert) {
                 if (!option.isFailedIgnore()) {
                     EndProcessManager.forEach(e -> e.failed(this));
@@ -221,7 +273,7 @@ public class ScriptRead extends ScriptMap implements SBRead {
                 Iterators.addAll(parse, StringUtils.parseScript(scripts.get(i)).iterator());
             }
             SBConfig.SORT_SCRIPTS.ifPresentAndTrue(s -> OptionManager.sort(parse));
-            this.list = Collections.unmodifiableList(parse);
+            this.scripts = Collections.unmodifiableList(parse);
             return true;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

@@ -38,7 +38,7 @@ public final class Delay extends BaseOption implements Runnable {
 
     private static final Set<Integer> DELAYS = new HashSet<>();
 
-    private boolean saveDelay;
+    private boolean stay;
 
     @Override
     public boolean isFailedIgnore() {
@@ -51,36 +51,38 @@ public final class Delay extends BaseOption implements Runnable {
             throw new IllegalArgumentException("This option cannot be inverted");
         }
         var slash = split(getOptionValue(), '/', false);
-        this.saveDelay = slash.size() < 2 || Boolean.parseBoolean(slash.get(1));
+        this.stay = slash.size() < 2 || Boolean.parseBoolean(slash.get(1));
 
-        if (saveDelay && DELAYS.contains(delayHash())) {
+        if (stay && DELAYS.contains(delayHash())) {
             SBConfig.ACTIVE_DELAY.send(getSBPlayer());
         } else {
-            if (saveDelay) {
+            if (stay) {
                 DELAYS.add(delayHash());
             }
-            ((ScriptRead) getTempMap()).setInitialize(false);
-            ScriptBlock.getScheduler().run(this, Long.parseLong(slash.get(0)));
+            if (((ScriptRead) getTempMap()).isAsynchronous()) {
+                ScriptBlock.getScheduler().asyncRun(this, Long.parseLong(slash.get(0)));
+            } else {
+                ScriptBlock.getScheduler().run(this, Long.parseLong(slash.get(0)));
+            }
         }
         return false;
     }
 
     @Override
     public void run() {
-        if (saveDelay) {
+        if (stay) {
             DELAYS.remove(delayHash());
         }
-        var sbRead = (ScriptRead) getTempMap();
+        var scriptRead = (ScriptRead) getTempMap();
         if (getSBPlayer().isOnline()) {
-            Bukkit.getPluginManager().callEvent(new DelayRunEvent(sbRead));
+            Bukkit.getPluginManager().callEvent(new DelayRunEvent(scriptRead));
             try {
-                sbRead.setInitialize(true);
-                sbRead.read(getScriptIndex() + 1);
+                scriptRead.read(getScriptIndex() + 1);
             } finally {
-                Bukkit.getPluginManager().callEvent(new DelayEndEvent(sbRead));
+                Bukkit.getPluginManager().callEvent(new DelayEndEvent(scriptRead));
             }
         } else {
-            EndProcessManager.forEachFinally(e -> e.failed(sbRead), () -> sbRead.clear());
+            EndProcessManager.forEachFinally(e -> e.failed(scriptRead), () -> scriptRead.clear());
         }
     }
 

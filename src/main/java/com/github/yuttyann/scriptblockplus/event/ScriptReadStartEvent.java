@@ -17,7 +17,7 @@ package com.github.yuttyann.scriptblockplus.event;
 
 import java.util.UUID;
 
-import com.github.yuttyann.scriptblockplus.script.SBRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -32,11 +32,12 @@ public class ScriptReadStartEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final UUID uuid;
-    private final SBRead sbRead;
+    private final ScriptRead scriptRead;
 
-    public ScriptReadStartEvent(@NotNull UUID uuid, @NotNull SBRead sbRead) {
+    public ScriptReadStartEvent(@NotNull UUID uuid, @NotNull ScriptRead scriptRead) {
+        super(scriptRead.isAsynchronous());
         this.uuid = uuid;
-        this.sbRead = sbRead;
+        this.scriptRead = scriptRead;
     }
 
     @NotNull
@@ -45,8 +46,8 @@ public class ScriptReadStartEvent extends Event {
     }
     
     @NotNull
-    public SBRead getSBRead() {
-        return sbRead;
+    public ScriptRead getScriptRead() {
+        return scriptRead;
     }
 
     @Override

@@ -125,6 +125,7 @@ public final class BlockListener implements Listener {
             if (StringUtils.isEmpty(selector) || !CommandSelector.has(selector)) {
                 continue;
             }
+            REDSTONE_FLAG.add(blockCoords);
             var repeat = new Split(selector, "repeat", "{", "}");
             if (repeat.length() > 0) {
                 var values = repeat.getValues(Repeat.values());
@@ -132,15 +133,14 @@ public final class BlockListener implements Listener {
                 var delay = Long.parseLong(filterFirst(values, f -> Repeat.DELAY == f.getType()).map(SPLIT_VALUE).orElse("0"));
                 var limit = Integer.parseInt(filterFirst(values, f -> Repeat.LIMIT == f.getType()).map(SPLIT_VALUE).orElse("-1"));
                 var rtask = new RepeatTask(limit, repeat, selector, scriptKey, blockCoords);
-                LOOP_TASK_MAP.computeIfAbsent(blockCoords, CREATE_SET).add(rtask.bukkitTask = ScriptBlock.getScheduler().run(rtask, delay, rtick));
+                LOOP_TASK_MAP.computeIfAbsent(blockCoords, CREATE_SET).add(rtask.bukkitTask = ScriptBlock.getScheduler().asyncRun(rtask, delay, rtick));
             } else {
-                perform(repeat, selector, scriptKey, blockCoords);
+                ScriptBlock.getScheduler().asyncRun(() -> perform(repeat, selector, scriptKey, blockCoords));
             }
-            REDSTONE_FLAG.add(blockCoords);
         }
     }
 
-    private void perform(@NotNull Split repeat, @NotNull String selector, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+    private synchronized void perform(@NotNull Split repeat, @NotNull String selector, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
         var filter = new Split(selector, "filter", "{", "}", repeat.length());
         var target = new Split(selector, "@", 1, "[", "]", repeat.length() + filter.length());
         var values = filter.getValues(Filter.values());
@@ -154,7 +154,11 @@ public final class BlockListener implements Listener {
                 continue;
             }
             index.incrementAndGet();
-            new ScriptRead(SBPlayer.fromPlayer(player), blockCoords, scriptKey).read(0);
+
+            // 非同期で実行する。
+            var scriptRead = new ScriptRead(SBPlayer.fromPlayer(player), blockCoords, scriptKey);
+            scriptRead.setAsynchronous(true);
+            scriptRead.read(0);
         }
     }
 
