@@ -15,7 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.script.endprocess;
 
-import com.github.yuttyann.scriptblockplus.script.SBRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,13 +26,13 @@ public interface EndProcess {
 
     /**
      * スクリプトの実行が最後まで成功した場合に呼び出されます。
-     * @param sbRead {@link SBRead}
+     * @param scriptRead - {@link ScriptRead}
      */
-    void success(@NotNull SBRead sbRead);
+    void success(@NotNull ScriptRead scriptRead);
 
     /**
      * スクリプトの実行が途中で失敗した場合に呼び出されます。
-     * @param sbRead {@link SBRead}
+     * @param scriptRead - {@link ScriptRead}
      */
-    void failed(@NotNull SBRead sbRead);
+    void failed(@NotNull ScriptRead scriptRead);
 }

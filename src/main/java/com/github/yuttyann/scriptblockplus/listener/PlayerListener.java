@@ -147,7 +147,7 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onScriptReadStart(ScriptReadStartEvent event) {
-        var objectMap = event.getSBRead().getSBPlayer().getObjectMap();
+        var objectMap = event.getScriptRead().getSBPlayer().getObjectMap();
         var uuids = objectMap.get(KEY_INVENTORY, new HashSet<UUID>());
         uuids.add(event.getUniqueId());
         objectMap.put(KEY_INVENTORY, uuids);
@@ -155,7 +155,7 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onScriptEndStart(ScriptReadEndEvent event) {
-        var objectMap = event.getSBRead().getSBPlayer().getObjectMap();
+        var objectMap = event.getScriptRead().getSBPlayer().getObjectMap();
         objectMap.get(KEY_INVENTORY, new HashSet<>()).remove(event.getUniqueId());
     }
 }

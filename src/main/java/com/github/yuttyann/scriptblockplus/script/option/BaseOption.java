@@ -21,7 +21,7 @@ import com.github.yuttyann.scriptblockplus.file.config.ConfigKey;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.SBRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -45,10 +45,10 @@ public abstract class BaseOption extends Option {
 
     private static final UnaryOperator<String> ESCAPE = Placeholder.INSTANCE::escape;
 
-    private SBRead sbRead;
+    private ScriptRead scriptRead;
 
     /**
-     * {@link SBRead}の{@link ObjectMap}を取得します。
+     * {@link ScriptRead}の{@link ObjectMap}を取得します。
      * <p>
      * {@link UUID}によって管理されているため、重複することはありません。
      * <p>
@@ -57,7 +57,7 @@ public abstract class BaseOption extends Option {
      */
     @NotNull
     protected final ObjectMap getTempMap() {
-        return sbRead;
+        return scriptRead;
     }
 
     /**
@@ -66,7 +66,7 @@ public abstract class BaseOption extends Option {
      */
     @NotNull
     protected final Player getPlayer() {
-        return sbRead.getPlayer();
+        return scriptRead.getPlayer();
     }
 
     /**
@@ -75,7 +75,7 @@ public abstract class BaseOption extends Option {
      */
     @NotNull
     protected final SBPlayer getSBPlayer() {
-        return sbRead.getSBPlayer();
+        return scriptRead.getSBPlayer();
     }
 
     /**
@@ -93,7 +93,7 @@ public abstract class BaseOption extends Option {
      */
     @NotNull
     protected final ScriptKey getScriptKey() {
-        return sbRead.getScriptKey();
+        return scriptRead.getScriptKey();
     }
 
     /**
@@ -102,7 +102,7 @@ public abstract class BaseOption extends Option {
      */
     @NotNull
     protected final Location getLocation() {
-        return sbRead.getLocation();
+        return scriptRead.getLocation();
     }
     
     /**
@@ -111,7 +111,7 @@ public abstract class BaseOption extends Option {
      */
     @NotNull
     protected final BlockCoords getBlockCoords() {
-        return sbRead.getBlockCoords();
+        return scriptRead.getBlockCoords();
     }
 
     /**
@@ -120,7 +120,7 @@ public abstract class BaseOption extends Option {
      */
     @NotNull
     protected final List<String> getScripts() {
-        return sbRead.getScripts();
+        return scriptRead.getScripts();
     }
 
     /**
@@ -129,7 +129,7 @@ public abstract class BaseOption extends Option {
      */
     @NotNull
     protected final String getOptionValue() {
-        return sbRead.getOptionValue();
+        return scriptRead.getOptionValue();
     }
 
     /**
@@ -137,7 +137,7 @@ public abstract class BaseOption extends Option {
      * @return {@code int} - 進行度
      */
     protected final int getScriptIndex() {
-        return sbRead.getScriptIndex();
+        return scriptRead.getScriptIndex();
     }
 
     /**
@@ -145,7 +145,7 @@ public abstract class BaseOption extends Option {
      * @return {@code boolean} - 反転する場合は{@code true}
      */
     protected final boolean isInverted() {
-        return sbRead.isInverted();
+        return scriptRead.isInverted();
     }
 
     /**
@@ -231,13 +231,13 @@ public abstract class BaseOption extends Option {
 
     /**
      * オプションの処理を実行します。
-     * @param sbRead - {@link SBRead}
+     * @param scriptRead - {@link ScriptRead}
      * @return {@code boolean} - 有効な場合は{@code true}
      */
     @Override
     @Deprecated
-    public final boolean callOption(@NotNull SBRead sbRead) {
-        var sbPlayer = sbRead.getSBPlayer();
+    public final boolean callOption(@NotNull ScriptRead scriptRead) {
+        var sbPlayer = scriptRead.getSBPlayer();
         if (!sbPlayer.isOnline()) {
             return false;
         }
@@ -246,7 +246,7 @@ public abstract class BaseOption extends Option {
             SBConfig.NOT_PERMISSION.send(player);
             return false;
         }
-        this.sbRead = sbRead;
+        this.scriptRead = scriptRead;
         try {
             return isValid();
         } catch (Exception e) {

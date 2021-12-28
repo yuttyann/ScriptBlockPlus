@@ -16,7 +16,7 @@
 package com.github.yuttyann.scriptblockplus.script.endprocess;
 
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
-import com.github.yuttyann.scriptblockplus.script.SBRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.option.vault.MoneyCost;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,13 +27,13 @@ import org.jetbrains.annotations.NotNull;
 public final class EndMoneyCost implements EndProcess {
 
     @Override
-    public void success(@NotNull SBRead sbRead) { }
+    public void success(@NotNull ScriptRead scriptRead) { }
 
     @Override
-    public void failed(@NotNull SBRead sbRead) {
+    public void failed(@NotNull ScriptRead scriptRead) {
         var economy = VaultEconomy.INSTANCE;
-        if (economy.isEnabled() && sbRead.has(MoneyCost.KEY)) {
-            economy.depositPlayer(sbRead.getSBPlayer().getOfflinePlayer(), sbRead.getDouble(MoneyCost.KEY));
+        if (economy.isEnabled() && scriptRead.has(MoneyCost.KEY)) {
+            economy.depositPlayer(scriptRead.getSBPlayer().getOfflinePlayer(), scriptRead.getDouble(MoneyCost.KEY));
         }
     }
 }

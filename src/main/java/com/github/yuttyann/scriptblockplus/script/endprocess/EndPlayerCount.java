@@ -17,7 +17,7 @@ package com.github.yuttyann.scriptblockplus.script.endprocess;
 
 import com.github.yuttyann.scriptblockplus.file.json.derived.PlayerCountJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.PlayerCount;
-import com.github.yuttyann.scriptblockplus.script.SBRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,10 +28,10 @@ import org.jetbrains.annotations.NotNull;
 public class EndPlayerCount implements EndProcess {
 
     @Override
-    public void success(@NotNull SBRead sbRead) {
-        PlayerCountJson.get(sbRead.getSBPlayer().getUniqueId()).action(PlayerCount::add, sbRead.getScriptKey(), sbRead.getBlockCoords());
+    public void success(@NotNull ScriptRead scriptRead) {
+        PlayerCountJson.get(scriptRead.getSBPlayer().getUniqueId()).action(PlayerCount::add, scriptRead.getScriptKey(), scriptRead.getBlockCoords());
     }
 
     @Override
-    public void failed(@NotNull SBRead sbRead) { }
+    public void failed(@NotNull ScriptRead scriptRead) { }
 }

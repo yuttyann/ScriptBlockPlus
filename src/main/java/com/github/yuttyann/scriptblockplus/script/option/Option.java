@@ -15,7 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option;
 
-import com.github.yuttyann.scriptblockplus.script.SBRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -108,10 +108,10 @@ public abstract class Option implements Comparable<Option> {
 
     /**
      * オプションを呼び出します。
-     * @param sbRead - {@link SBRead}
+     * @param scriptRead - {@link ScriptRead}
      * @return {@code boolean} - 有効な場合は{@code true}
      */
-    public abstract boolean callOption(@NotNull SBRead sbRead);
+    public abstract boolean callOption(@NotNull ScriptRead scriptRead);
 
     @Override
     public int compareTo(@NotNull Option another) {

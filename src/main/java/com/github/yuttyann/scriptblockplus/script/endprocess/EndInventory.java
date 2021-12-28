@@ -15,7 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.script.endprocess;
 
-import com.github.yuttyann.scriptblockplus.script.SBRead;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.option.other.ItemCost;
 
 import org.bukkit.inventory.ItemStack;
@@ -30,17 +30,17 @@ public final class EndInventory implements EndProcess {
     private static final ItemStack[] EMPTY_ARRAY = new ItemStack[0];
 
     @Override
-    public void success(@NotNull SBRead sbRead) {
-        var sbPlayer = sbRead.getSBPlayer();
+    public void success(@NotNull ScriptRead scriptRead) {
+        var sbPlayer = scriptRead.getSBPlayer();
         if (sbPlayer.isOnline()) {
             sbPlayer.getPlayer().updateInventory();
         }
     }
 
     @Override
-    public void failed(@NotNull SBRead sbRead) {
-        var sbPlayer = sbRead.getSBPlayer();
-        var inventoryItems = sbRead.get(ItemCost.KEY_OPTION, EMPTY_ARRAY);
+    public void failed(@NotNull ScriptRead scriptRead) {
+        var sbPlayer = scriptRead.getSBPlayer();
+        var inventoryItems = scriptRead.get(ItemCost.KEY_OPTION, EMPTY_ARRAY);
         if (inventoryItems.length > 0 && sbPlayer.isOnline()) {
             sbPlayer.getInventory().setContents(inventoryItems);
             sbPlayer.getPlayer().updateInventory();

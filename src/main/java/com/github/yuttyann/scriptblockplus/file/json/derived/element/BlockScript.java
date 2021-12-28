@@ -284,6 +284,10 @@ public final class BlockScript extends OneElement<BlockCoords> {
      */
     @NotNull
     public ValueHolder getSafeValue(@NotNull String key) {
-        return getValue(key).orElse(ValueHolder.EMPTY);
+        if (hasValues()) {
+            var valueHolder = getValues().get(key);
+            return valueHolder == null ? ValueHolder.EMPTY : valueHolder;
+        }
+        return ValueHolder.EMPTY;
     }
 }

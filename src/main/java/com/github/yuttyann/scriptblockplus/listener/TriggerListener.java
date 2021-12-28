@@ -25,7 +25,6 @@ import com.github.yuttyann.scriptblockplus.event.TriggerEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.SBRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.collection.ObjectMap;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
@@ -49,7 +48,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unchecked")
 public abstract class TriggerListener<E extends Event> implements Listener {
 
-    // イベントが呼ばれた際にTriggerListener#onTrigger(Event)が呼ばれるようにする。
+    /** イベントが呼ばれた際に{@link TriggerListener#onTrigger(Event)}が呼ばれるようにする。*/
     private static final EventExecutor EXECUTE = (l, e) -> ((TriggerListener<?>) l).onTrigger(e);
 
     private final Plugin plugin;
@@ -280,7 +279,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         }
 
         /**
-         * {@link SBRead}の{@link ObjectMap}を取得します。
+         * {@link ScriptRead}の{@link ObjectMap}を取得します。
          * <p>
          * {@link UUID}によって管理されているため、重複することはありません。
          * <p>
