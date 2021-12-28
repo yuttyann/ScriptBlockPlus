@@ -154,7 +154,7 @@ public final class BlockScript extends OneElement<BlockCoords> {
      * @param lastedit - 時刻
      */
     public void setLastEdit(@NotNull String date) {
-        if (StringUtils.isNotEmpty(lastedit)) {
+        if (StringUtils.isNotEmpty(date)) {
             try {
                 setLastEdit(Utils.DATE_FORMAT.parse(date));
             } catch (ParseException e) {
