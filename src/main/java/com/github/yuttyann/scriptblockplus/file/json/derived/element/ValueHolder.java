@@ -101,6 +101,9 @@ public class ValueHolder implements Cloneable {
         }
     }
 
+    /**
+     * 空の値
+     */
     public static final ValueHolder EMPTY = new ValueHolder() {
 
         @Override

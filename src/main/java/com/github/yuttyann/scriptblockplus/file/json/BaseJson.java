@@ -125,6 +125,12 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
         });
     }
 
+    /**
+     * 必要な値を設定します。
+     * @param json - Jsonのクラス
+     * @param name - ファイルの名前
+     * @param hash - ハッシュコード
+     */
     final void constructor(@NotNull Class<? extends BaseJson<?>> json, @NotNull String name, final int hash) {
         if ((this.jsonTag = getClass().getAnnotation(JsonTag.class)) == null) {
             throw new NullPointerException("Annotation not found @JsonTag()");
@@ -474,8 +480,6 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
 
     /**
      * フォルダ内の全てのファイルを取得します。
-     * <p>
-     * また、ファイルの名前の取得に成功した場合は関連する全てのキャッシュを削除します。
      * @throws NullPointerException {@link JsonTag}が見つからなかった時にスローされます。
      * @param json - {@link BaseJson}を継承したクラス
      * @return {@link File}[] - 全てのファイル
