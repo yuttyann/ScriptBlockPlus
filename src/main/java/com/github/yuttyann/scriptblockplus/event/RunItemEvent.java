@@ -25,6 +25,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ScriptBlockPlus RunItemEvent イベントクラス
+ * @author yuttyann44581
+ */
 public class RunItemEvent extends PlayerEvent implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
@@ -33,39 +37,71 @@ public class RunItemEvent extends PlayerEvent implements Cancellable {
 
     private boolean cancelled;
 
+    /**
+     * コンストラクタ
+     * @param runItem - アイテム
+     */
     public RunItemEvent(@NotNull RunItem runItem) {
         super(runItem.getSBPlayer().getPlayer());
         this.runItem = runItem;
     }
 
+    /**
+     * アイテムを取得します。
+     * @return {@link ItemStack} - アイテム
+     */
     @NotNull
     public ItemStack getItem() {
         return runItem.getItem();
     }
 
+    /**
+     * アクションを取得します。
+     * @return {@link Action} - アクション
+     */
     @NotNull
     public Action getAction() {
         return runItem.getAction();
     }
 
+    /**
+     * 座標を取得します。
+     * @return {@link BlockCoords} - 座標
+     */
     @Nullable
     public BlockCoords getBlockCoords() {
         return runItem.getBlockCoords();
     }
 
+    /**
+     * 空気関連のアクションの場合は{@code true}を返します。
+     * @return {@code boolean} - 空気関連のアクションの場合は{@code true}
+     */
     public boolean isAIR() {
         return runItem.isAIR();
     }
 
+    /**
+     * プレイヤーがスニーク状態の場合は{@code true}を返します。
+     * @return {@code boolean} - プレイヤーがスニーク状態の場合は{@code true}
+     */
     public boolean isSneaking() {
         return runItem.isSneaking();
     }
 
+    /**
+     * このイベントのキャンセルする場合は{@code true}を返します。
+     * @return {@code boolean} - イベントのキャンセルする場合は{@code true}
+     */
     @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
+    /**
+     * このイベントをキャンセルするのかを設定します。
+     * @param cancel - イベントのキャンセルする場合は{@code true}
+     */
     @Override
     public void setCancelled(boolean cancel) {
         cancelled = cancel;

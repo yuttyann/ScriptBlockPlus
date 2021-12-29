@@ -79,7 +79,7 @@ public final class RunItem {
 
     /**
      * アクションを取得します。
-     * @return {@link Player} - アクション
+     * @return {@link Action} - アクション
      */
     @NotNull
     public Action getAction() {

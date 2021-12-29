@@ -34,17 +34,30 @@ public class ScriptReadStartEvent extends Event {
     private final UUID uuid;
     private final ScriptRead scriptRead;
 
+    /**
+     * コンストラクタ
+     * @param uuid - スクリプトの{@link UUID}
+     * @param scriptRead - {@link ScriptRead}のインスタンス
+     */
     public ScriptReadStartEvent(@NotNull UUID uuid, @NotNull ScriptRead scriptRead) {
         super(scriptRead.isAsynchronous());
         this.uuid = uuid;
         this.scriptRead = scriptRead;
     }
 
+    /**
+     * スクリプトの{@link UUID}を取得します。
+     * @return {@link UUID} - スクリプトの{@link UUID}
+     */
     @NotNull
     public UUID getUniqueId() {
         return uuid;
     }
-    
+
+    /**
+     * {@link ScriptRead}のインスタンスを取得します。
+     * @return {@link ScriptRead} - インスタンス
+     */
     @NotNull
     public ScriptRead getScriptRead() {
         return scriptRead;

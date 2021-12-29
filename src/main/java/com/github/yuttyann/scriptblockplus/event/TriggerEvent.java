@@ -20,6 +20,7 @@ import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,20 +29,47 @@ import org.jetbrains.annotations.NotNull;
  */
 public class TriggerEvent extends ScriptBlockEvent {
 
+    private final Event event;
     private final ScriptKey scriptKey;
 
     private boolean cancelled;
 
-    public TriggerEvent(@NotNull final Player player, @NotNull final Block block, @NotNull final ScriptKey scriptKey) {
+    /**
+     * コンストラクタ
+     * @param player - プレイヤー
+     * @param block - ブロック
+     * @param event - 呼び出されたイベント
+     * @param scriptKey - スクリプトキー
+     */
+    public TriggerEvent(@NotNull final Player player, @NotNull final Block block, @NotNull final Event event, @NotNull final ScriptKey scriptKey) {
         super(player, block);
+        this.event = event;
         this.scriptKey = scriptKey;
     }
 
+    /**
+     * 呼び出されたイベントを取得します。
+     * @return {@link Event} - イベント
+     */
+    @NotNull
+    public Event getEvent() {
+        return event;
+    }
+
+    /**
+     * スクリプトキーを取得します。
+     * @return {@link ScriptKey} - スクリプトキー
+     */
     @NotNull
     public ScriptKey getScriptKey() {
         return scriptKey;
     }
 
+    /**
+     * アイテムの種類を取得します。
+     * @param isMainHand - メインハンドの場合は{@code true}
+     * @return {@link Material} - アイテムの種類
+     */
     @NotNull
     public Material getMaterial(boolean isMainHand) {
         if (!hasItem(isMainHand)) {
@@ -50,15 +78,22 @@ public class TriggerEvent extends ScriptBlockEvent {
         return getItem(isMainHand).getType();
     }
 
+    /**
+     * アイテムを持っている場合は{@code true}を返します。
+     * @param isMainHand - メインハンドの場合は{@code true}
+     * @return {@code boolean} - アイテムを持っている場合は{@code true}
+     */
     public boolean hasItem(boolean isMainHand) {
         return getItem(isMainHand) != null;
     }
 
+    /**
+     * ブロックを持っている場合は{@code true}を返します。
+     * @param isMainHand - メインハンドの場合は{@code true}
+     * @return {@code boolean} - ブロックを持っている場合は{@code true}
+     */
     public boolean isBlockInHand(boolean isMainHand) {
-        if (!hasItem(isMainHand)) {
-            return false;
-        }
-        return getItem(isMainHand).getType().isBlock();
+        return hasItem(isMainHand) && getMaterial(isMainHand).isBlock();
     }
 
     @Override
@@ -68,6 +103,6 @@ public class TriggerEvent extends ScriptBlockEvent {
 
     @Override
     public void setCancelled(boolean cancel) {
-        this.cancelled = cancel;
+        cancelled = cancel;
     }
 }

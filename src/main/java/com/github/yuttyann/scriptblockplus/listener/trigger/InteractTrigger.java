@@ -46,7 +46,7 @@ public final class InteractTrigger extends TriggerListener<BlockClickEvent> {
     @Nullable
     protected Trigger create(@NotNull BlockClickEvent event) {
         var block = event.getBlock();
-        if (event.isInvalid() || event.getHand() != EquipmentSlot.HAND || block == null) {
+        if (event.getHand() != EquipmentSlot.HAND || block == null) {
             return null;
         }
         if (isPowered(block) || isOpen(block) || isDisableArm(event.getAction())) {

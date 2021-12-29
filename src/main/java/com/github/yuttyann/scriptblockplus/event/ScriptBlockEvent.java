@@ -49,33 +49,62 @@ public abstract class ScriptBlockEvent extends PlayerEvent implements Cancellabl
         this.offHand = player.getInventory().getItemInOffHand();
     }
 
+    /**
+     * ブロックを取得します。
+     * @return {@link Block} - ブロック
+     */
     @NotNull
     public final Block getBlock() {
         return block;
     }
 
+    /**
+     * ブロックの座標を取得します。
+     * @return {@link Location} - ブロックの座標
+     */
     @NotNull
     public final Location getLocation() {
         return location;
     }
 
+    /**
+    * メインハンドのアイテムを取得します。
+    * @return {@link ItemStack} - アイテム
+    */
     @NotNull
     public ItemStack getItemInMainHand() {
         return mainHand;
     }
 
+    /**
+     * オフハンドのアイテムを取得します。
+     * @return {@link ItemStack} - アイテム
+     */
     @NotNull
     public ItemStack getItemInOffHand() {
         return offHand;
     }
 
+    /**
+     * アイテムを取得します。
+     * @param isMainHand - メインハンドの場合は{@code true}
+     * @return {@link ItemStack} - アイテム
+     */
     public ItemStack getItem(boolean isMainHand) {
         return isMainHand ? getItemInMainHand() : getItemInOffHand();
     }
 
+    /**
+     * このイベントのキャンセルする場合は{@code true}を返します。
+     * @return {@code boolean} - イベントのキャンセルする場合は{@code true}
+     */
     @Override
     public abstract boolean isCancelled();
 
+    /**
+     * このイベントをキャンセルするのかを設定します。
+     * @param cancel - イベントのキャンセルする場合は{@code true}
+     */
     @Override
     public abstract void setCancelled(boolean cancel);
 

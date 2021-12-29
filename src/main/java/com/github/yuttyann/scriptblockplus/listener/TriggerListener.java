@@ -200,7 +200,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
             SBConfig.NOT_PERMISSION.send(player);
             return;
         }
-        trigger.triggerEvent = new TriggerEvent(player, trigger.getBlock(), scriptKey);
+        trigger.triggerEvent = new TriggerEvent(player, trigger.getBlock(), event, scriptKey);
         if (!trigger.call(Progress.EVENT) || trigger.isCancelled()) {
             return;
         }

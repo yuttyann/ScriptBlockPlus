@@ -43,9 +43,13 @@ public class BlockClickEvent extends PlayerEvent implements Cancellable {
     private BlockFace blockFace;
     private EquipmentSlot hand;
     private boolean isAnimation;
-    private boolean isInvalid;
     private boolean cancelled;
 
+    /**
+     * コンストラクタ
+     * @param event - イベント
+     * @param isAnimation - アニメーションイベント経由の場合は{@code true}
+     */
     public BlockClickEvent(@NotNull final PlayerInteractEvent event, final boolean isAnimation) {
         super(event.getPlayer());
         this.block = event.getClickedBlock();
@@ -56,21 +60,37 @@ public class BlockClickEvent extends PlayerEvent implements Cancellable {
         this.isAnimation = isAnimation;
     }
 
+    /**
+     * ブロックを取得します。
+     * @return {@link Block} - ブロック
+     */
     @Nullable
     public Block getBlock() {
         return block;
     }
 
+    /**
+     * ブロックの座標を取得します。
+     * @return {@link Location} - ブロックの座標
+     */
     @Nullable
     public Location getLocation() {
         return block == null ? null : block.getLocation();
     }
 
+    /**
+     * アイテムを取得します。
+     * @return {@link ItemStack} - アイテム
+     */
     @Nullable
     public ItemStack getItem() {
         return item;
     }
 
+    /**
+     * アイテムの種類を取得します。
+     * @return {@link Material} - アイテムの種類
+     */
     @NotNull
     public Material getMaterial() {
         if (!hasItem()) {
@@ -79,25 +99,45 @@ public class BlockClickEvent extends PlayerEvent implements Cancellable {
         return item.getType();
     }
 
+    /**
+     * アクションを取得します。
+     * @return {@link Action} - アクション
+     */
     @NotNull
     public Action getAction() {
         return action;
     }
 
+    /**
+     * ブロックの側面を取得します。
+     * @return {@link BlockFace} - ブロックの側面を取得します。
+     */
     @NotNull
     public BlockFace getBlockFace() {
         return blockFace;
     }
 
+    /**
+     * プレイヤーの部位を取得します。
+     * @return {@link EquipmentSlot} - プレイヤーの部位
+     */
     @NotNull
     public EquipmentSlot getHand() {
         return hand;
     }
 
+    /**
+     * アイテムを持っている場合は{@code true}を返します。
+     * @return {@code boolean} - アイテムを持っている場合は{@code true}
+     */
     public boolean hasItem() {
         return item != null;
     }
 
+    /**
+     * ブロックを持っている場合は{@code true}を返します。
+     * @return {@code boolean} - ブロックを持っている場合は{@code true}
+     */
     public boolean isBlockInHand() {
         if (!hasItem()) {
             return false;
@@ -105,23 +145,27 @@ public class BlockClickEvent extends PlayerEvent implements Cancellable {
         return item.getType().isBlock();
     }
 
+    /**
+     * アニメーションイベント経由の場合は{@code true}を返します。
+     * @return {@code boolean} - アニメーションイベント経由の場合は{@code true}
+     */
     public boolean isAnimation() {
         return isAnimation;
     }
 
-    public boolean isInvalid() {
-        return isInvalid;
-    }
-
-    public void setInvalid(boolean isInvalid) {
-        this.isInvalid = isInvalid;
-    }
-
+    /**
+     * このイベントのキャンセルする場合は{@code true}を返します。
+     * @return {@code boolean} - イベントのキャンセルする場合は{@code true}
+     */
     @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
+    /**
+     * このイベントをキャンセルするのかを設定します。
+     * @param cancel - イベントのキャンセルする場合は{@code true}
+     */
     @Override
     public void setCancelled(boolean cancel) {
         cancelled = cancel;

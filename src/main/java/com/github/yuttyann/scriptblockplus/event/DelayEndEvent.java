@@ -31,11 +31,19 @@ public class DelayEndEvent extends Event {
 
     private final ScriptRead scriptRead;
 
+    /**
+     * コンストラクタ
+     * @param scriptRead - {@link ScriptRead}のインスタンス
+     */
     public DelayEndEvent(@NotNull ScriptRead scriptRead) {
         super(scriptRead.isAsynchronous());
         this.scriptRead = scriptRead;
     }
-    
+
+    /**
+     * {@link ScriptRead}のインスタンスを取得します。
+     * @return {@link ScriptRead} - インスタンス
+     */
     @NotNull
     public ScriptRead getScriptRead() {
         return scriptRead;

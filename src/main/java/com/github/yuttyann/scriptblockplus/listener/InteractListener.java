@@ -113,16 +113,17 @@ public final class InteractListener implements Listener {
             if (objectMap.getBoolean(KEY_ENTITY) && interactEvent.getAction() == Action.LEFT_CLICK_AIR) {
                 return;
             }
+            var invalid = new AtomicBoolean(false);
             if (blockEvent.getHand() == EquipmentSlot.HAND) {
-                var invalid = new AtomicBoolean(false);
                 if (ItemAction.callRun(sbPlayer.getPlayer(), blockEvent.getItem(), blockEvent.getLocation(), blockEvent.getAction())) {
                     invalid.set(true);
                 } else if (blockEvent.getAction().name().endsWith("_CLICK_BLOCK")) {
                     sbPlayer.getScriptEdit().ifPresent(s -> invalid.set(s.perform(sbPlayer, BlockCoords.of(blockEvent.getBlock()))));
                 }
-                blockEvent.setInvalid(invalid.get());
             }
-            Bukkit.getPluginManager().callEvent(blockEvent);
+            if (!invalid.get()) {
+                Bukkit.getPluginManager().callEvent(blockEvent);
+            }
             if (blockEvent.isCancelled() || ItemAction.has(sbPlayer.getPlayer(), blockEvent.getItem(), true)) {
                 interactEvent.setCancelled(true);
             }
