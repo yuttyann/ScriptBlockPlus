@@ -90,7 +90,7 @@ public abstract class Option implements Comparable<Option> {
     }
 
     /**
-     * 指定されたスクリプト内のオプションが正常なのか確認します。
+     * 指定されたスクリプト内のオプションが正常だった場合は{@code true}を返します。
      * @param script - スクリプト
      * @return {@code boolean} - 正常だった場合は{@code true}
      */
@@ -99,7 +99,7 @@ public abstract class Option implements Comparable<Option> {
     }
 
     /**
-     * 失敗時に終了処理を無視するのかどうか。
+     * 終了処理を無視する場合は{@code true}を返します。
      * @return {@code boolean} - 終了処理を無視する場合は{@code true}
      */
     public boolean isFailedIgnore() {
