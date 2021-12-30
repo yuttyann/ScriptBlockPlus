@@ -19,10 +19,10 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +32,7 @@ import java.util.UUID;
  * ScriptBlockPlus SBPlayer インターフェース
  * @author yuttyann44581
  */
-public interface SBPlayer extends SBPlayerMap, CommandSender {
+public interface SBPlayer extends SBPlayerMap, Permissible {
 
     /**
      * プレイヤーがオンラインかどうなのかを設定します。
@@ -45,12 +45,6 @@ public interface SBPlayer extends SBPlayerMap, CommandSender {
      * @return {@code boolean} - プレイヤーがオンラインの場合は{@code true}
      */
     boolean isOnline();
-
-    /**
-     * プレイヤーがスニーク状態の場合は{@code true}を返します。
-     * @return {@code boolean} - プレイヤーがスニーク状態の場合は{@code true}
-     */
-    boolean isSneaking();
 
     /**
      * {@code BukkitAPI}の{@code org.bukkit.entity.Player}を取得します。

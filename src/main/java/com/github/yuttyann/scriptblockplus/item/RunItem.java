@@ -97,6 +97,6 @@ public final class RunItem {
      * @return {@code boolean} - プレイヤーがスニーク状態の場合は{@code true}
      */
     public boolean isSneaking() {
-        return sbPlayer.isSneaking();
+        return sbPlayer.toPlayer().isSneaking();
     }
 }

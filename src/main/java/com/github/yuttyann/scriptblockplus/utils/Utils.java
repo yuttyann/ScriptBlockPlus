@@ -185,16 +185,11 @@ public final class Utils {
      * @return {@code boolean} - コマンドの実行に成功した場合は{@code true}
      */
     public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull Location location, @NotNull String command) {
-        if (sender instanceof SBPlayer) {
-            var sbPlayer = ((SBPlayer) sender);
-            sender = sbPlayer.isOnline() ? sbPlayer.toPlayer() : sender;
-        }
-        final var finalSender = sender;
         if (CommandSelector.has(command = command.startsWith("/") ? command.substring(1) : command)) {
-            var commands = CommandSelector.build(finalSender, location, command);
-            return !commands.isEmpty() && StreamUtils.allMatch(commands, s -> Bukkit.dispatchCommand(finalSender, s));
+            var commands = CommandSelector.build(sender, location, command);
+            return !commands.isEmpty() && StreamUtils.allMatch(commands, s -> Bukkit.dispatchCommand(sender, s));
         }
-        return Bukkit.dispatchCommand(finalSender, command);
+        return Bukkit.dispatchCommand(sender, command);
     }
 
     /**

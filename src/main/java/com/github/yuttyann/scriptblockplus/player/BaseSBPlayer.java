@@ -88,11 +88,6 @@ public final class BaseSBPlayer extends PlayerMap {
     }
 
     @Override
-    public boolean isSneaking() {
-        return toPlayer().isSneaking();
-    }
-
-    @Override
     @NotNull
     public Server getServer() {
         return toPlayer().getServer();
@@ -241,11 +236,6 @@ public final class BaseSBPlayer extends PlayerMap {
     @Override
     public void removeAttachment(@NotNull PermissionAttachment attachment) {
         toPlayer().removeAttachment(attachment);
-    }
-
-    @Override
-    public Spigot spigot() {
-        return toPlayer().spigot();
     }
 
     @Override

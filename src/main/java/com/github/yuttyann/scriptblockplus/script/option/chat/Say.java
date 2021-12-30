@@ -31,6 +31,6 @@ public final class Say extends BaseOption {
     protected boolean isValid() throws Exception {
         var command = "minecraft:say " + setColor(getOptionValue(), true);
         var sbPlayer = getSBPlayer();
-        return Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_SAY, () -> Utils.dispatchCommand(sbPlayer, getLocation(), command));
+        return Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_SAY, () -> Utils.dispatchCommand(sbPlayer.toPlayer(), getLocation(), command));
     }
 }
