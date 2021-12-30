@@ -28,28 +28,37 @@ import static java.lang.Math.max;
 
 /**
  * ScriptBlockPlus CuboidRegion クラス
+ * <p>
+ * {@code 位置1}と{@code 位置2}の範囲内を取得することができます。
  * @author yuttyann44581
  */
 public final class CuboidRegion implements Region {
 
-    private BlockCoords pos1;
-    private BlockCoords pos2;
+    private BlockCoords position1, position2;
 
-    public void setPos1(@Nullable BlockCoords pos1) {
-        this.pos1 = pos1;
+    /**
+     * {@code 位置1}を設定します。
+     * @param position1 - 位置
+     */
+    public void setPosition1(@Nullable BlockCoords position1) {
+        this.position1 = position1;
     }
 
-    public void setPos2(@Nullable BlockCoords pos2) {
-        this.pos2 = pos2;
+    /**
+     * {@code 位置2}を設定します。
+     * @param position1 - 位置2
+     */
+    public void setPosition2(@Nullable BlockCoords position2) {
+        this.position2 = position2;
     }
 
     @Override
     @Nullable
     public World getWorld() {
-        if (pos1 != null && pos2 != null && Objects.equals(pos1.getWorld(), pos2.getWorld())) {
-            return pos1.getWorld();
+        if (position1 == null || position2 == null) {
+            return null;
         }
-        return null;
+        return Objects.equals(position1.getWorld(), position2.getWorld()) ? position1.getWorld() : null;
     }
 
     @Override
@@ -61,24 +70,24 @@ public final class CuboidRegion implements Region {
 
     @Override
     public boolean hasPositions() {
-        return getWorld() != null && pos1 != null && pos2 != null;
+        return getWorld() != null && position1 != null && position2 != null;
     }
 
     @Override
     @NotNull
     public BlockCoords getMinimumPoint() {
-        double minX = min(pos1.getX(), pos2.getX());
-        double minY = min(pos1.getY(), pos2.getY());
-        double minZ = min(pos1.getZ(), pos2.getZ());
+        double minX = min(position1.getX(), position2.getX());
+        double minY = min(position1.getY(), position2.getY());
+        double minZ = min(position1.getZ(), position2.getZ());
         return BlockCoords.of(getWorld(), minX, minY, minZ);
     }
 
     @Override
     @NotNull
     public BlockCoords getMaximumPoint() {
-        double maxX = max(pos1.getX(), pos2.getX());
-        double maxY = max(pos1.getY(), pos2.getY());
-        double maxZ = max(pos1.getZ(), pos2.getZ());
+        double maxX = max(position1.getX(), position2.getX());
+        double maxY = max(position1.getY(), position2.getY());
+        double maxZ = max(position1.getZ(), position2.getZ());
         return BlockCoords.of(getWorld(), maxX, maxY, maxZ);
     }
 }
