@@ -48,6 +48,8 @@ public final class OptionMap {
     private final List<String> SYNTAXES = new ArrayList<>();
     private final Map<String, SBInstance<Option>> SBINSTANCES = new HashMap<>();
 
+    OptionMap() { }
+
     public void clear() {
         SYNTAXES.clear();
         SBINSTANCES.clear();
