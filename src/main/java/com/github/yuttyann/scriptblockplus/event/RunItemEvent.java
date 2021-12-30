@@ -42,7 +42,7 @@ public class RunItemEvent extends PlayerEvent implements Cancellable {
      * @param runItem - アイテム
      */
     public RunItemEvent(@NotNull RunItem runItem) {
-        super(runItem.getSBPlayer().getPlayer());
+        super(runItem.getSBPlayer().toPlayer());
         this.runItem = runItem;
     }
 

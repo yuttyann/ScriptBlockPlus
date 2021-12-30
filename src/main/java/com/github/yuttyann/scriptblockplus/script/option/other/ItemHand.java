@@ -46,7 +46,7 @@ public final class ItemHand extends BaseOption {
         var name = space.size() > 2 ? escape(space.get(2)) : null;
         var lore = space.size() > 3 ? escape(space.get(3)) : null;
 
-        var inventory = getPlayer().getInventory();
+        var inventory = getSBPlayer().getInventory();
         for (var hand : new ItemStack[] { inventory.getItemInMainHand(), inventory.getItemInOffHand() }) {
             if (!compare(AMOUNT, hand, amount)
                 || !compare(TYPE, hand, material)

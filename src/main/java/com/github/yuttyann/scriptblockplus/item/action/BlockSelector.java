@@ -19,7 +19,6 @@ import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.RunItem;
-import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -42,18 +41,18 @@ public final class BlockSelector extends ItemAction {
     @Override
     public void run(@NotNull RunItem runItem) {
         var sbPlayer = runItem.getSBPlayer();
-        var region = ((CuboidRegion) sbPlayer.getRegion());
         var blockCoords = runItem.isSneaking() ? of(sbPlayer.getLocation()) : runItem.isAIR() ? null : copy(runItem.getBlockCoords());
         if (blockCoords == null) {
             return;
         }
+        var region = sbPlayer.getCuboidRegion();
         switch (runItem.getAction()) {
             case LEFT_CLICK_AIR: case LEFT_CLICK_BLOCK:
-                region.setPos1(blockCoords);
+                region.setPosition1(blockCoords);
                 SBConfig.SELECTOR_POS1.replace(region.getName(), blockCoords.getCoords()).send(sbPlayer);
                 break;
             case RIGHT_CLICK_AIR: case RIGHT_CLICK_BLOCK:
-                region.setPos2(blockCoords);
+                region.setPosition2(blockCoords);
                 SBConfig.SELECTOR_POS2.replace(region.getName(), blockCoords.getCoords()).send(sbPlayer);
                 break;
             default:

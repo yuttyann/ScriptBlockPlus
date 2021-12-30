@@ -34,13 +34,13 @@ public final class BypassGroup extends BaseOption {
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
             throw new UnsupportedOperationException("Invalid function");
         }
+        var player = getSBPlayer().toPlayer();
         var value = getOptionValue();
         int index = value.indexOf(" ");
         var slash = split(value.substring(0, index), '/', true);
         var world = slash.size() > 1 ? slash.get(0) : null;
         var group = slash.size() > 1 ? slash.get(1) : slash.get(0);
         var command = escape(value.substring(index + 1, value.length()));
-        var player = getPlayer();
         return CommandLog.supplier(player.getWorld(), () -> {    
             if (vaultPermission.playerInGroup(world, player, group)) {
                 return Utils.dispatchCommand(player, getLocation(), command);

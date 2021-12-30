@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.listener.trigger;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import org.bukkit.Material;
@@ -62,7 +61,7 @@ public final class HitTrigger extends TriggerListener<ProjectileHitEvent> {
     protected Result handle(@NotNull Trigger trigger) {
         switch (trigger.getProgress()) {
             case EVENT:
-                var objectMap = SBPlayer.fromPlayer(trigger.getPlayer()).getObjectMap();
+                var objectMap = ScriptBlock.getSBPlayer(trigger.getPlayer()).getObjectMap();
                 int oldEntityId = objectMap.has(KEY_HIT) ? objectMap.getInt(KEY_HIT) : -1;
                 int nowEntityId = trigger.getEvent().getEntity().getEntityId();
                 if (oldEntityId == -1) {

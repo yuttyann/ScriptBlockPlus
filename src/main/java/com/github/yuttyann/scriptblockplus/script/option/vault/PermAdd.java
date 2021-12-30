@@ -35,7 +35,7 @@ public final class PermAdd extends BaseOption {
         var slash = split(getOptionValue(), '/', true);
         var world = slash.size() > 1 ? slash.get(0) : null;
         var permission = slash.size() > 1 ? slash.get(1) : slash.get(0);
-        vaultPermission.playerAdd(world, getPlayer(), permission);
+        vaultPermission.playerAdd(world, getSBPlayer().toPlayer(), permission);
         return true;
     }
 }

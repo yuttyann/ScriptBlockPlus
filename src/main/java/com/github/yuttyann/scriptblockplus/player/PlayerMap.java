@@ -15,9 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.player;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegion;
-import com.github.yuttyann.scriptblockplus.region.Region;
 import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
@@ -36,21 +34,51 @@ import java.util.Optional;
  */
 public abstract class PlayerMap implements SBPlayer {
 
-    private static final String KEY_REGION = Utils.randomUUID();
-    private static final String KEY_SCRIPT_EDIT = Utils.randomUUID();
-    private static final String KEY_SB_CLIPBOARD = Utils.randomUUID();
-    private static final String KEY_OLD_BLOCK_COORDS = Utils.randomUUID();
+    private static final String KEY_REGION = Utils.randomUUID(), KEY_SCRIPT_EDIT = Utils.randomUUID(), KEY_SB_CLIPBOARD = Utils.randomUUID();
 
     private ObjectMap objectMap;
 
-    public final void init() {
-        objectMap = null;
+    @Override
+    public final void clear() {
+        this.objectMap = null;
     }
 
     @Override
     @NotNull
     public final ObjectMap getObjectMap() {
-        return objectMap == null ? objectMap = new ObjMap() : objectMap;
+        return objectMap == null ? this.objectMap = new ObjMap() : objectMap;
+    }
+
+    @Override
+    @NotNull
+    public CuboidRegion getCuboidRegion() {
+        var region = (CuboidRegion) getObjectMap().get(KEY_REGION);
+        if (region == null) {
+            getObjectMap().put(KEY_REGION, region = new CuboidRegion());
+        }
+        return region;
+    }
+
+    @Override
+    public void setScriptEdit(@Nullable ScriptEdit scriptEdit) {
+        getObjectMap().put(KEY_SCRIPT_EDIT, scriptEdit);
+    }
+
+    @Override
+    @NotNull
+    public Optional<ScriptEdit> getScriptEdit() {
+        return Optional.ofNullable(getObjectMap().get(KEY_SCRIPT_EDIT));
+    }
+
+    @Override
+    public void setSBClipboard(@Nullable SBClipboard sbClipboard) {
+        getObjectMap().put(KEY_SB_CLIPBOARD, sbClipboard);
+    }
+
+    @Override
+    @NotNull
+    public Optional<SBClipboard> getSBClipboard() {
+        return Optional.ofNullable(getObjectMap().get(KEY_SB_CLIPBOARD));
     }
 
     @SuppressWarnings("unchecked")
@@ -82,63 +110,5 @@ public abstract class PlayerMap implements SBPlayer {
         public void clear() {
             objectMap.clear();
         }
-    }
-
-    @Override
-    @NotNull
-    public Region getRegion() {
-        var region = (CuboidRegion) getObjectMap().get(KEY_REGION);
-        if (region == null) {
-            getObjectMap().put(KEY_REGION, region = new CuboidRegion());
-        }
-        return region;
-    }
-
-    @Override
-    public void setScriptEdit(@Nullable ScriptEdit scriptEdit) {
-        getObjectMap().put(KEY_SCRIPT_EDIT, scriptEdit);
-    }
-
-    @Override
-    public void setSBClipboard(@Nullable SBClipboard sbClipboard) {
-        getObjectMap().put(KEY_SB_CLIPBOARD, sbClipboard);
-    }
-
-    @Override
-    public void setOldBlockCoords(@Nullable BlockCoords blockCoords) {
-        getObjectMap().put(KEY_OLD_BLOCK_COORDS, blockCoords);
-    }
-
-    @Nullable
-    public ScriptEdit getDirectScriptEdit() {
-        return getObjectMap().get(KEY_SCRIPT_EDIT);
-    }
-
-    @Override
-    @NotNull
-    public Optional<ScriptEdit> getScriptEdit() {
-        return Optional.ofNullable(getObjectMap().get(KEY_SCRIPT_EDIT));
-    }
-
-    @Nullable
-    public SBClipboard getDirectSBClipboard() {
-        return getObjectMap().get(KEY_SB_CLIPBOARD);
-    }
-
-    @Override
-    @NotNull
-    public Optional<SBClipboard> getSBClipboard() {
-        return Optional.ofNullable(getObjectMap().get(KEY_SB_CLIPBOARD));
-    }
-
-    @Nullable
-    public BlockCoords getDirectOldBlockCoords() {
-        return getObjectMap().get(KEY_OLD_BLOCK_COORDS);
-    }
-
-    @Override
-    @NotNull
-    public Optional<BlockCoords> getOldBlockCoords() {
-        return Optional.ofNullable(getObjectMap().get(KEY_OLD_BLOCK_COORDS));
     }
 }

@@ -44,7 +44,7 @@ public final class IfAction extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         var space = split(getOptionValue(), ' ', true);
-        var player = getPlayer();
+        var player = getSBPlayer().toPlayer();
         var value1 = parse(player, space.get(0));
         var value2 = parse(player, space.get(2));
         var operator = space.get(1);

@@ -88,7 +88,7 @@ public class TickRunnable extends BukkitRunnable {
             if (tick % 5 == 0) {
                 for (var blockCoords : getBlockCoords(sbPlayer, KEY_TEMP)) {
                     var block = blockCoords.getBlock();
-                    spawnParticlesOnBlock(sbPlayer.getPlayer(), block, ItemUtils.isAIR(block.getType()) ? Color.BLUE : Color.GREEN);
+                    spawnParticlesOnBlock(sbPlayer.toPlayer(), block, ItemUtils.isAIR(block.getType()) ? Color.BLUE : Color.GREEN);
                 }
             }
             if (tick % 10 == 0) {
@@ -97,7 +97,7 @@ public class TickRunnable extends BukkitRunnable {
         } else {
             if (tick % 10 == 0) {
                 var count = new int[] { 0 };
-                var player = sbPlayer.getPlayer();
+                var player = sbPlayer.toPlayer();
                 forEach(new PlayerRegion(player, PARTICLE_RANGE), Predicates.alwaysTrue(), b -> {
                     if (count[0]++ < PARTICLE_LIMIT) {
                         spawnParticlesOnBlock(player, b.getBlock(), null);
@@ -108,7 +108,7 @@ public class TickRunnable extends BukkitRunnable {
     }
 
     private void lookBlocks(@NotNull SBPlayer sbPlayer) throws Exception {
-        var player = sbPlayer.getPlayer();
+        var player = sbPlayer.toPlayer();
         var rayResult = RayTrace.rayTraceBlocks(player, getDistance(player));
         clearSet(getBlockCoords(sbPlayer, KEY));
         clearSet(getBlockCoords(sbPlayer, KEY_TEMP));
@@ -134,7 +134,7 @@ public class TickRunnable extends BukkitRunnable {
     }
 
     private void spawnGlowEntity(@NotNull SBPlayer sbPlayer) throws Exception {
-        var region = new PlayerRegion(sbPlayer.getPlayer(), PLAYER_RANGE);
+        var region = new PlayerRegion(sbPlayer.toPlayer(), PLAYER_RANGE);
         var lookBlocks = getBlockCoords(sbPlayer, KEY);
         forEach(region, b -> !lookBlocks.contains(b), b -> {
             GLOW_ENTITY.spawn(sbPlayer, b, getTeamColor(b.getBlock()));

@@ -16,9 +16,9 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.BlockClickEvent;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.raytrace.RayTrace;
 
@@ -50,7 +50,7 @@ public final class InteractListener implements Listener {
         if (event.getAnimationType() != PlayerAnimationType.ARM_SWING || player.getGameMode() != GameMode.ADVENTURE) {
             return;
         }
-        var objectMap = SBPlayer.fromPlayer(player).getObjectMap();
+        var objectMap = ScriptBlock.getSBPlayer(player).getObjectMap();
         if (objectMap.getBoolean(KEY_ANIMATION)) {
             objectMap.put(KEY_ANIMATION, false);
             return;
@@ -78,7 +78,7 @@ public final class InteractListener implements Listener {
             if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
                 return;
             }
-            var objectMap = SBPlayer.fromPlayer(player).getObjectMap();
+            var objectMap = ScriptBlock.getSBPlayer(player).getObjectMap();
             if (action == Action.RIGHT_CLICK_BLOCK && !objectMap.getBoolean(KEY_ANIMATION)) {
                 objectMap.put(KEY_ANIMATION, true);
             }
@@ -88,25 +88,25 @@ public final class InteractListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().put(KEY_ENTITY, true);
+        ScriptBlock.getSBPlayer(event.getPlayer()).getObjectMap().put(KEY_ENTITY, true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         if (event.getPlayer().getGameMode() == GameMode.ADVENTURE) {
-            SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().put(KEY_ANIMATION, true);
+            ScriptBlock.getSBPlayer(event.getPlayer()).getObjectMap().put(KEY_ANIMATION, true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
         if (event.getNewGameMode() != GameMode.ADVENTURE) {
-            SBPlayer.fromPlayer(event.getPlayer()).getObjectMap().put(KEY_ANIMATION, false);
+            ScriptBlock.getSBPlayer(event.getPlayer()).getObjectMap().put(KEY_ANIMATION, false);
         }
     }
 
     private void callEvent(@NotNull PlayerInteractEvent interactEvent, boolean isAnimation) {
-        var sbPlayer = SBPlayer.fromPlayer(interactEvent.getPlayer());
+        var sbPlayer = ScriptBlock.getSBPlayer(interactEvent.getPlayer());
         var objectMap = sbPlayer.getObjectMap();
         try {
             var blockEvent = new BlockClickEvent(interactEvent, isAnimation);
@@ -115,7 +115,7 @@ public final class InteractListener implements Listener {
             }
             var invalid = new AtomicBoolean(false);
             if (blockEvent.getHand() == EquipmentSlot.HAND) {
-                if (ItemAction.callRun(sbPlayer.getPlayer(), blockEvent.getItem(), blockEvent.getLocation(), blockEvent.getAction())) {
+                if (ItemAction.callRun(sbPlayer.toPlayer(), blockEvent.getItem(), blockEvent.getLocation(), blockEvent.getAction())) {
                     invalid.set(true);
                 } else if (blockEvent.getAction().name().endsWith("_CLICK_BLOCK")) {
                     sbPlayer.getScriptEdit().ifPresent(s -> invalid.set(s.perform(sbPlayer, BlockCoords.of(blockEvent.getBlock()))));
@@ -124,7 +124,7 @@ public final class InteractListener implements Listener {
             if (!invalid.get()) {
                 Bukkit.getPluginManager().callEvent(blockEvent);
             }
-            if (blockEvent.isCancelled() || ItemAction.has(sbPlayer.getPlayer(), blockEvent.getItem(), true)) {
+            if (blockEvent.isCancelled() || ItemAction.has(sbPlayer.toPlayer(), blockEvent.getItem(), true)) {
                 interactEvent.setCancelled(true);
             }
         } finally {

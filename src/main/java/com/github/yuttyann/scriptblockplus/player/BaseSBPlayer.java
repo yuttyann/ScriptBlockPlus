@@ -41,63 +41,86 @@ public final class BaseSBPlayer extends PlayerMap {
     private final UUID uuid;
 
     private Player player;
-    private boolean isOnline;
+    private boolean online;
 
-    BaseSBPlayer(@NotNull UUID uuid) {
+    /**
+     * コンストラクタ
+     * @param uuid - プレイヤーの{@link UUID}
+     */
+    private BaseSBPlayer(@NotNull UUID uuid) {
         this.uuid = uuid;
     }
 
+    /**
+     * プレイヤーを取得します。
+     * @param uuid - プレイヤーの{@link UUID}
+     * @return {@link SBPlayer} - プレイヤー
+     */
     @NotNull
-    public static Map<UUID, BaseSBPlayer> getSBPlayers() {
-        return PLAYERS;
+    public static SBPlayer fromUUID(@NotNull UUID uuid) {
+        var sbPlayer = PLAYERS.get(uuid);
+        if (sbPlayer == null) {
+            PLAYERS.put(uuid, sbPlayer = new BaseSBPlayer(uuid));
+        }
+        return sbPlayer;
     }
 
+    /**
+     * プレイヤーの一覧を取得します。
+     * @return {@link Collection}&lt;{@link BaseSBPlayer}&gt; - プレイヤーの一覧
+     */
+    @NotNull
+    public static Collection<BaseSBPlayer> getPlayers() {
+        return PLAYERS.values();
+    }
+
+    @Override
     public synchronized void setOnline(boolean isOnline) {
-        this.player = (this.isOnline = isOnline) ? Bukkit.getPlayer(uuid) : null;
-        if (!isOnline) {
+        this.player = (this.online = isOnline) ? Bukkit.getPlayer(uuid) : null;
+        if (player == null) {
             PLAYERS.remove(uuid);
         }
     }
 
     @Override
     public boolean isOnline() {
-        return isOnline && player != null;
+        return online && player != null;
     }
 
     @Override
     public boolean isSneaking() {
-        return isOnline && player.isSneaking();
+        return toPlayer().isSneaking();
     }
 
     @Override
     @NotNull
-    public Player getPlayer() {
+    public Server getServer() {
+        return toPlayer().getServer();
+    }
+
+    @Override
+    @NotNull
+    public Player toPlayer() {
         var player = isOnline() ? this.player : Bukkit.getPlayer(uuid);
         return Objects.requireNonNull(player, "Player not found.");
     }
 
     @Override
     @NotNull
-    public Server getServer() {
-        return player.getServer();
-    }
-
-    @Override
-    @NotNull
-    public OfflinePlayer getOfflinePlayer() {
-        return isOnline() ? player : Bukkit.getOfflinePlayer(uuid);
+    public OfflinePlayer toOfflinePlayer() {
+        return isOnline() ? toPlayer() : Objects.requireNonNull(Bukkit.getOfflinePlayer(uuid), "Player not found.");
     }
 
     @Override
     @NotNull
     public PlayerInventory getInventory() {
-        return player.getInventory();
+        return toPlayer().getInventory();
     }
 
     @Override
     @NotNull
     public String getName() {
-        return getOfflinePlayer().getName();
+        return toOfflinePlayer().getName();
     }
 
     @Override
@@ -109,115 +132,120 @@ public final class BaseSBPlayer extends PlayerMap {
     @Override
     @NotNull
     public World getWorld() {
-        return player.getWorld();
+        return toPlayer().getWorld();
     }
 
     @Override
     @NotNull
     public Location getLocation() {
-        return player.getLocation();
+        return toPlayer().getLocation();
     }
 
     @Override
     @NotNull
     public ItemStack getItemInMainHand() {
-        return player.getInventory().getItemInMainHand();
+        return toPlayer().getInventory().getItemInMainHand();
     }
 
     @Override
     @NotNull
     public ItemStack getItemInOffHand() {
-        return player.getInventory().getItemInOffHand();
+        return toPlayer().getInventory().getItemInOffHand();
     }
 
     @Override
     public boolean isOp() {
-        return getOfflinePlayer().isOp();
+        return toOfflinePlayer().isOp();
     }
 
     @Override
     public void setOp(boolean value) {
-        getOfflinePlayer().setOp(value);
+        toOfflinePlayer().setOp(value);
     }
 
     @Override
     public void sendMessage(@NotNull String message) {
-        player.sendMessage(message);
+        toPlayer().sendMessage(message);
     }
 
     @Override
-    public void sendMessage(@NotNull String[] messages) {
-        player.sendMessage(messages);
+    public void sendMessage(@NotNull String... messages) {
+        toPlayer().sendMessage(messages);
     }
 
     @Override
     public void sendMessage(@NotNull UUID uuid, @NotNull String message) {
-        player.sendMessage(uuid, message);
+        toPlayer().sendMessage(uuid, message);
     }
 
     @Override
-    public void sendMessage(@NotNull UUID uuid, @NotNull String[] messages) {
-        player.sendMessage(uuid, messages);   
+    public void sendMessage(@NotNull UUID uuid, @NotNull String... messages) {
+        toPlayer().sendMessage(uuid, messages);   
     }
 
     @Override
     @NotNull
     public PermissionAttachment addAttachment(@NotNull Plugin plugin) {
-        return player.addAttachment(plugin);
+        return toPlayer().addAttachment(plugin);
     }
 
     @Override
     @Nullable
     public PermissionAttachment addAttachment(@NotNull Plugin plugin, int value) {
-        return player.addAttachment(plugin, value);
+        return toPlayer().addAttachment(plugin, value);
     }
 
     @Override
     @NotNull
     public PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String permission, boolean value) {
-        return player.addAttachment(plugin, permission, value);
+        return toPlayer().addAttachment(plugin, permission, value);
     }
 
     @Override
     @Nullable
     public PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String permission, boolean value, int ticks) {
-        return player.addAttachment(plugin, permission, value, ticks);
+        return toPlayer().addAttachment(plugin, permission, value, ticks);
     }
 
     @Override
     @NotNull
     public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-        return player.getEffectivePermissions();
+        return toPlayer().getEffectivePermissions();
     }
 
     @Override
     public boolean hasPermission(@NotNull String permission) {
-        return player.hasPermission(permission);
+        return toPlayer().hasPermission(permission);
     }
 
     @Override
     public boolean hasPermission(@NotNull Permission permission) {
-        return player.hasPermission(permission);
+        return toPlayer().hasPermission(permission);
     }
 
     @Override
     public boolean isPermissionSet(@NotNull String permission) {
-        return player.isPermissionSet(permission);
+        return toPlayer().isPermissionSet(permission);
     }
 
     @Override
     public boolean isPermissionSet(@NotNull Permission permission) {
-        return player.isPermissionSet(permission);
+        return toPlayer().isPermissionSet(permission);
     }
 
     @Override
     public void recalculatePermissions() {
-        player.recalculatePermissions();
+        toPlayer().recalculatePermissions();
     }
 
     @Override
     public void removeAttachment(@NotNull PermissionAttachment attachment) {
-        player.removeAttachment(attachment);
+        toPlayer().removeAttachment(attachment);
+    }
+
+    @Override
+    public Spigot spigot() {
+        return toPlayer().spigot();
     }
 
     @Override
@@ -233,6 +261,6 @@ public final class BaseSBPlayer extends PlayerMap {
     @Override
     @NotNull
     public String toString() {
-        return "BaseSBPlayer{uuid=" + uuid + ", player=" + player + ", isOnline=" + isOnline + '}';
+        return "BaseSBPlayer{uuid=" + uuid + ", player=" + toOfflinePlayer() + ", isOnline=" + online + '}';
     }
 }

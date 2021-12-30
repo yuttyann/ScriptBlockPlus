@@ -16,11 +16,11 @@
 package com.github.yuttyann.scriptblockplus.manager;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.ScriptBlockAPI;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.ValueHolder;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
@@ -49,7 +49,7 @@ public final class APIManager implements ScriptBlockAPI {
 
     @Override
     public boolean read(@NotNull Player player, @NotNull Location location, @NotNull ScriptKey scriptKey, int index) {
-        return new ScriptRead(SBPlayer.fromPlayer(player), BlockCoords.of(location), scriptKey).read(index);
+        return new ScriptRead(ScriptBlock.getSBPlayer(player), BlockCoords.of(location), scriptKey).read(index);
     }
 
     @Override

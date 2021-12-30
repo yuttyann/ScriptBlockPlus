@@ -29,7 +29,6 @@ import com.github.yuttyann.scriptblockplus.utils.collection.ObjectMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,15 +57,6 @@ public abstract class BaseOption extends Option {
     @NotNull
     protected final ObjectMap getTempMap() {
         return scriptRead;
-    }
-
-    /**
-     * {@code BukkitAPI}の{@code org.bukkit.entity.Player}を取得します。
-     * @return {@link Player} - プレイヤー
-     */
-    @NotNull
-    protected final Player getPlayer() {
-        return scriptRead.getPlayer();
     }
 
     /**
@@ -156,7 +146,7 @@ public abstract class BaseOption extends Option {
      */
     protected final void sendMessage(@NotNull ConfigKey<String> configKey) {
         if (!isInverted()) {
-            Utils.sendColorMessage(getPlayer(), configKey.toString());
+            Utils.sendColorMessage(getSBPlayer().toPlayer(), configKey.toString());
         }
     }
 
@@ -241,7 +231,7 @@ public abstract class BaseOption extends Option {
         if (!sbPlayer.isOnline()) {
             return false;
         }
-        var player = sbPlayer.getPlayer();
+        var player = sbPlayer.toPlayer();
         if (SBConfig.OPTION_PERMISSION.getValue() && !Permission.has(player, PERMISSION_ALL, getPermissionNode())) {
             SBConfig.NOT_PERMISSION.send(player);
             return false;

@@ -51,7 +51,7 @@ public final class Title extends BaseOption {
     }
 
     public static void send(@NotNull SBPlayer sbPlayer, @Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) {
-        var player = sbPlayer.getPlayer();
+        var player = sbPlayer.toPlayer();
         if (Utils.isCBXXXorLater("1.12")) {
             player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
         } else {

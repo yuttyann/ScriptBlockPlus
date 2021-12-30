@@ -36,7 +36,7 @@ public final class GroupAdd extends BaseOption {
         var world = slash.size() > 1 ? slash.get(0) : null;
         var group = slash.size() > 1 ? slash.get(1) : slash.get(0);
 
-        var player = getPlayer();
+        var player = getSBPlayer().toPlayer();
         if (!vaultPermission.playerInGroup(world, player, group)) {
             vaultPermission.playerAddGroup(world, player, group);
         }

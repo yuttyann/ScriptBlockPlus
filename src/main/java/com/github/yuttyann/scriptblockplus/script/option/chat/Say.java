@@ -20,8 +20,6 @@ import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-import org.bukkit.Bukkit;
-
 /**
  * ScriptBlockPlus Say オプションクラス
  * @author yuttyann44581
@@ -32,6 +30,7 @@ public final class Say extends BaseOption {
     @Override
     protected boolean isValid() throws Exception {
         var command = "minecraft:say " + setColor(getOptionValue(), true);
-        return Utils.tempPerm(getSBPlayer(), Permission.MINECRAFT_COMMAND_SAY, () -> Bukkit.dispatchCommand(getPlayer(), command));
+        var sbPlayer = getSBPlayer();
+        return Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_SAY, () -> Utils.dispatchCommand(sbPlayer, getLocation(), command));
     }
 }

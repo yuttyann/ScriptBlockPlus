@@ -33,7 +33,7 @@ public final class EndMoneyCost implements EndProcess {
     public void failed(@NotNull ScriptRead scriptRead) {
         var economy = VaultEconomy.INSTANCE;
         if (economy.isEnabled() && scriptRead.has(MoneyCost.KEY)) {
-            economy.depositPlayer(scriptRead.getSBPlayer().getOfflinePlayer(), scriptRead.getDouble(MoneyCost.KEY));
+            economy.depositPlayer(scriptRead.getSBPlayer().toOfflinePlayer(), scriptRead.getDouble(MoneyCost.KEY));
         }
     }
 }

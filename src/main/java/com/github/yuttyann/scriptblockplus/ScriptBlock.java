@@ -15,6 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus;
 
+import java.util.UUID;
+
 import com.github.yuttyann.scriptblockplus.command.BaseCommand;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
@@ -51,6 +53,7 @@ import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -112,7 +115,7 @@ public class ScriptBlock extends JavaPlugin {
         CacheJson.loading();
 
         // ログイン中のプレイヤーの設定をオンラインへ変更
-        Bukkit.getOnlinePlayers().forEach(p -> ((BaseSBPlayer) SBPlayer.fromPlayer(p)).setOnline(true));
+        Bukkit.getOnlinePlayers().forEach(p -> getSBPlayer(p).setOnline(true));
 
         // リスナーの登録
         getServer().getPluginManager().registerEvents(new BlockListener(), this);
@@ -211,5 +214,25 @@ public class ScriptBlock extends JavaPlugin {
     @NotNull
     public static ScriptBlock getInstance() {
         return scriptBlock == null ? scriptBlock = getPlugin(ScriptBlock.class) : scriptBlock;
+    }
+
+    /**
+     * {@link SBPlayer}を取得します。
+     * @param player - {@link Bukkit}の{@link OfflinePlayer}
+     * @return {@link SBPlayer} - プレイヤー
+     */
+    @NotNull
+    public static SBPlayer getSBPlayer(@NotNull OfflinePlayer player) {
+        return getSBPlayer(player.getUniqueId());
+    }
+
+    /**
+     * {@link SBPlayer}を取得します。
+     * @param uuid - プレイヤーの{@link UUID}
+     * @return {@link SBPlayer} - プレイヤー
+     */
+    @NotNull
+    public static SBPlayer getSBPlayer(@NotNull UUID uuid) {
+        return BaseSBPlayer.fromUUID(uuid);
     }
 }

@@ -91,7 +91,7 @@ public final class SettingGUI extends CustomGUI {
                         playSoundEffect(sbPlayer);
                         return r.apply(t, s);
                     } else {
-                        sbPlayer.getPlayer().closeInventory();
+                        sbPlayer.toPlayer().closeInventory();
                         return Response.close();
                     }
                 })
@@ -101,9 +101,9 @@ public final class SettingGUI extends CustomGUI {
                         playSoundEffect(sbPlayer);
                         r.apply(null, s);
                     }
-                    sbPlayer.getPlayer().closeInventory();
+                    sbPlayer.toPlayer().closeInventory();
                 })
-                .open(sbPlayer.getPlayer());
+                .open(sbPlayer.toPlayer());
             } finally {
                 sbPlayer.getObjectMap().put(KEY_ANVIL, false);
             }
@@ -148,12 +148,12 @@ public final class SettingGUI extends CustomGUI {
         }));
 
         window.setItem(SLOTS[5], new GUIItem(1, Material.NETHER_STAR, SBConfig.GUI_SETTING_TELEPORT.setColor(), null, (w, g, c) -> {
-            getScriptJson(w).ifPresent(s -> w.getSBPlayer().getPlayer().teleport(s.blockCoords.toLocation(), TeleportCause.PLUGIN));
+            getScriptJson(w).ifPresent(s -> w.getSBPlayer().toPlayer().teleport(s.blockCoords.toLocation(), TeleportCause.PLUGIN));
         }));
         window.setItem(SLOTS[6], new GUIItem(1, Material.END_CRYSTAL, SBConfig.GUI_SETTING_EXECUTE.setColor(), null, (w, g, c) -> {
             getScriptJson(w).ifPresent(s -> {
                 new ScriptRead(w.getSBPlayer(), s.blockCoords, s.scriptKey).read(0);
-                w.setItem(SLOTS[7], w.getItem(SLOTS[7]).setLore(s.createLore(w.getSBPlayer().getPlayer())));
+                w.setItem(SLOTS[7], w.getItem(SLOTS[7]).setLore(s.createLore(w.getSBPlayer().toPlayer())));
             });
         }));
         window.setItem(SLOTS[7], new GUIItem(1, Material.ENCHANTED_BOOK, SBConfig.GUI_SETTING_INFO.setColor(), null, (w, g, c) -> {
@@ -290,6 +290,6 @@ public final class SettingGUI extends CustomGUI {
         window.setItem(SLOTS[2], window.getItem(SLOTS[2]).setLore(selectScript(window.getSBPlayer(), scriptJson, 0)));
         window.setItem(SLOTS[3], window.getItem(SLOTS[3]).setLore(SearchGUI.TEXT + blockScript.getSafeValue(BlockScript.NAMETAG).asString()));
         window.setItem(SLOTS[4], window.getItem(SLOTS[4]).setEnchant(window.getSBPlayer().getSBClipboard().isPresent()));
-        window.setItem(SLOTS[7], window.getItem(SLOTS[7]).setLore(scriptJson.createLore(window.getSBPlayer().getPlayer())));
+        window.setItem(SLOTS[7], window.getItem(SLOTS[7]).setLore(scriptJson.createLore(window.getSBPlayer().toPlayer())));
     }
 }

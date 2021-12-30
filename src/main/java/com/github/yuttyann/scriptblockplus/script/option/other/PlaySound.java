@@ -74,7 +74,7 @@ public final class PlaySound extends BaseOption implements Runnable {
         if (sendAllPlayer) {
             Bukkit.getOnlinePlayers().forEach(playSound);
         } else if (getSBPlayer().isOnline()) {
-            playSound.accept(getSBPlayer().getPlayer());
+            playSound.accept(getSBPlayer().toPlayer());
         }
     }
 

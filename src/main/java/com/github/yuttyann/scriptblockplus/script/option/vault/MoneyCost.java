@@ -36,7 +36,7 @@ public final class MoneyCost extends BaseOption {
         if (!vaultEconomy.isEnabled()) {
             throw new UnsupportedOperationException("Invalid function");
         }
-        var player = getPlayer();
+        var player = getSBPlayer().toPlayer();
         double cost = Double.parseDouble(getOptionValue());
         if (vaultEconomy.has(player, cost)) {
             vaultEconomy.withdrawPlayer(player, cost);

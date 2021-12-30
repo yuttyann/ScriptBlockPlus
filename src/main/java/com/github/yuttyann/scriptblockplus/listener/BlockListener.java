@@ -30,7 +30,6 @@ import com.github.yuttyann.scriptblockplus.enums.splittype.Filter;
 import com.github.yuttyann.scriptblockplus.enums.splittype.Repeat;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -156,7 +155,7 @@ public final class BlockListener implements Listener {
             index.incrementAndGet();
 
             // 非同期で実行する。
-            var scriptRead = new ScriptRead(SBPlayer.fromPlayer(player), blockCoords, scriptKey);
+            var scriptRead = new ScriptRead(ScriptBlock.getSBPlayer(player), blockCoords, scriptKey);
             scriptRead.setAsynchronous(true);
             scriptRead.read(0);
         }

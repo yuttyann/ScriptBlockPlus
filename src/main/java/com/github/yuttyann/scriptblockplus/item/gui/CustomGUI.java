@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.ArrayUtils;
 
@@ -67,7 +68,7 @@ public abstract class CustomGUI {
      */
     public static void reload() {
         for (var player : Bukkit.getOnlinePlayers()) {
-            var sbPlayer = SBPlayer.fromPlayer(player);
+            var sbPlayer = ScriptBlock.getSBPlayer(player);
             for (var customGUI : GUIS.values()) {
                 if (customGUI.hasUserWindow(sbPlayer)) {
                     customGUI.getUserWindow(sbPlayer).reload();
@@ -92,7 +93,7 @@ public abstract class CustomGUI {
      */
     @NotNull
     public static Optional<UserWindow> getWindow(@NotNull Class<? extends CustomGUI> guiClass, @NotNull Player player) {
-        return getWindow(guiClass, SBPlayer.fromPlayer(player));
+        return getWindow(guiClass, ScriptBlock.getSBPlayer(player));
     }
 
     /**
@@ -277,7 +278,7 @@ public abstract class CustomGUI {
      */
     public final void playSoundEffect(@NotNull SBPlayer sbPlayer) {
         if (sound != null) {
-            sbPlayer.getPlayer().playSound(sbPlayer.getLocation(), sound, volume, pitch);
+            sbPlayer.toPlayer().playSound(sbPlayer.getLocation(), sound, volume, pitch);
         }
     }
 

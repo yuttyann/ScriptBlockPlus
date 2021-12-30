@@ -57,7 +57,7 @@ public class UserWindow {
      */
     public static void closeAll() {
         for (var player : Bukkit.getOnlinePlayers()) {
-            var objectMap = SBPlayer.fromPlayer(player).getObjectMap();
+            var objectMap = ScriptBlock.getSBPlayer(player).getObjectMap();
             if (objectMap.has(KEY_WINDOW)) {
                 ((UserWindow) objectMap.get(KEY_WINDOW)).close();
             } else if (objectMap.getBoolean(AnvilGUI.KEY_OPEN)) {
@@ -74,7 +74,7 @@ public class UserWindow {
             this.open = false;
             customGUI.onClosed(this);
             sbPlayer.getObjectMap().put(KEY_WINDOW, null);
-            sbPlayer.getPlayer().closeInventory();
+            sbPlayer.toPlayer().closeInventory();
         }
     }
 
@@ -86,7 +86,7 @@ public class UserWindow {
             this.open = true;
             customGUI.onOpened(this);
             sbPlayer.getObjectMap().put(KEY_WINDOW, this);
-            sbPlayer.getPlayer().openInventory(getInventory());
+            sbPlayer.toPlayer().openInventory(getInventory());
         }
     }
 
@@ -111,7 +111,7 @@ public class UserWindow {
             return;
         }
         try {
-            sbPlayer.getPlayer().closeInventory();
+            sbPlayer.toPlayer().closeInventory();
         } finally {
             ScriptBlock.getScheduler().run(window::open);
         }
@@ -205,7 +205,7 @@ public class UserWindow {
      */
     @NotNull
     protected Inventory createInventory() {
-        var inventory = Bukkit.createInventory(sbPlayer.getPlayer(), items.length, customGUI.getTitle());
+        var inventory = Bukkit.createInventory(sbPlayer.toPlayer(), items.length, customGUI.getTitle());
         for (int i = 0; i < items.length; i++) {
             var item = getItem(i);
             if (item != null) {

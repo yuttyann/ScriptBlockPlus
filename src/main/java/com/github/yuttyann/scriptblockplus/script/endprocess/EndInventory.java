@@ -33,7 +33,7 @@ public final class EndInventory implements EndProcess {
     public void success(@NotNull ScriptRead scriptRead) {
         var sbPlayer = scriptRead.getSBPlayer();
         if (sbPlayer.isOnline()) {
-            sbPlayer.getPlayer().updateInventory();
+            sbPlayer.toPlayer().updateInventory();
         }
     }
 
@@ -43,7 +43,7 @@ public final class EndInventory implements EndProcess {
         var inventoryItems = scriptRead.get(ItemCost.KEY_OPTION, EMPTY_ARRAY);
         if (inventoryItems.length > 0 && sbPlayer.isOnline()) {
             sbPlayer.getInventory().setContents(inventoryItems);
-            sbPlayer.getPlayer().updateInventory();
+            sbPlayer.toPlayer().updateInventory();
         }
     }
 }

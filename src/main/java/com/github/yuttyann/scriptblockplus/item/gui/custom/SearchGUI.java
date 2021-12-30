@@ -34,7 +34,6 @@ import com.github.yuttyann.scriptblockplus.hook.nms.AnvilGUI.Response;
 import com.github.yuttyann.scriptblockplus.item.gui.CustomGUI;
 import com.github.yuttyann.scriptblockplus.item.gui.GUIItem;
 import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.SBOperation;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
@@ -92,9 +91,9 @@ public final class SearchGUI extends CustomGUI {
         .onLeftClick(p -> {
             playSoundEffect(w.getSBPlayer());
             r.apply(p, null);
-            w.getSBPlayer().getPlayer().closeInventory();
+            w.getSBPlayer().toPlayer().closeInventory();
         })
-        .open(w.getSBPlayer().getPlayer());
+        .open(w.getSBPlayer().toPlayer());
     };
 
     private final TriConsumer<UserWindow, GUIItem, ScriptJson> OPEN_SETTING = (w1, g, s) -> {
@@ -206,7 +205,7 @@ public final class SearchGUI extends CustomGUI {
             }
             int from = prev ? index - (slotSize + surplus) : index, to = prev ? index - surplus : slotSize + index;
             var subList = elements.subList(from = from > 0 ? from : 0, prev ? to : (to = jsonSize > to ? to : jsonSize));
-            var player = window.getSBPlayer().getPlayer();
+            var player = window.getSBPlayer().toPlayer();
             for (int i = 0, l = subList.size(); i < l; i++) {
                 var scriptJson = new ScriptJson(subList.get(i), json);
                 window.setItem(SLOTS[i + slot],
@@ -322,7 +321,7 @@ public final class SearchGUI extends CustomGUI {
 
         @NotNull
         public List<String> createLore(@NotNull Player player) {
-            return SBOperation.getScriptInfos(SBPlayer.fromPlayer(player), scriptKey, scriptJson, blockCoords);
+            return SBOperation.getScriptInfos(ScriptBlock.getSBPlayer(player), scriptKey, scriptJson, blockCoords);
         }
 
         @Override

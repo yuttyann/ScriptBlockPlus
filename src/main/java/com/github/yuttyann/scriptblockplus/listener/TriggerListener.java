@@ -20,11 +20,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.event.TriggerEvent;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.collection.ObjectMap;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
@@ -204,7 +204,7 @@ public abstract class TriggerListener<E extends Event> implements Listener {
         if (!trigger.call(Progress.EVENT) || trigger.isCancelled()) {
             return;
         }
-        trigger.scriptRead = new ScriptRead(SBPlayer.fromPlayer(player), blockCoords, scriptKey);
+        trigger.scriptRead = new ScriptRead(ScriptBlock.getSBPlayer(player), blockCoords, scriptKey);
         if (trigger.call(Progress.READ)) {
             trigger.scriptRead.read(0);
         }

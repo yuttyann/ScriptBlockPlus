@@ -37,8 +37,7 @@ public final class Group extends BaseOption {
         var world = slash.size() > 1 ? slash.get(0) : null;
         var group = slash.size() > 1 ? slash.get(1) : slash.get(0);
 
-        var player = getPlayer();
-        if (!vaultPermission.playerInGroup(world, player, group)) {
+        if (!vaultPermission.playerInGroup(world, getSBPlayer().toPlayer(), group)) {
             sendMessage(SBConfig.ERROR_GROUP.replace(getOptionValue()));
             return false;
         }

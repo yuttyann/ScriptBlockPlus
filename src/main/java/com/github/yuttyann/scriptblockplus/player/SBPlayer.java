@@ -15,56 +15,30 @@
  */
 package com.github.yuttyann.scriptblockplus.player;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.region.Region;
-import com.github.yuttyann.scriptblockplus.script.SBClipboard;
-import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
-import com.github.yuttyann.scriptblockplus.utils.collection.ObjectMap;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
  * ScriptBlockPlus SBPlayer インターフェース
  * @author yuttyann44581
  */
-public interface SBPlayer extends Permissible {
+public interface SBPlayer extends SBPlayerMap, CommandSender {
 
     /**
-     * プレイヤーを取得します。
-     * @param player - {@link Bukkit}の{@link OfflinePlayer}
-     * @return {@link SBPlayer} - プレイヤー
+     * プレイヤーがオンラインかどうなのかを設定します。
+     * @param isOnline - プレイヤーがオンラインの場合は{@code true}
      */
-    @NotNull
-    public static SBPlayer fromPlayer(@NotNull OfflinePlayer player) {
-        return fromUUID(player.getUniqueId());
-    }
-
-    /**
-     * プレイヤーを取得します。
-     * @param uuid - プレイヤーの{@link UUID}
-     * @return {@link SBPlayer} - プレイヤー
-     */
-    @NotNull
-    public static SBPlayer fromUUID(@NotNull UUID uuid) {
-        var sbPlayer = BaseSBPlayer.getSBPlayers().get(uuid);
-        if (sbPlayer == null) {
-            BaseSBPlayer.getSBPlayers().put(uuid, sbPlayer = new BaseSBPlayer(uuid));
-        }
-        return sbPlayer;
-    }
+    void setOnline(boolean isOnline);
 
     /**
      * プレイヤーがオンラインの場合は{@code true}を返します。
@@ -83,7 +57,14 @@ public interface SBPlayer extends Permissible {
      * @return {@link Player} - プレイヤー
      */
     @NotNull
-    Player getPlayer();
+    Player toPlayer();
+
+    /**
+     * {@code BukkitAPI}の{@code org.bukkit.OfflinePlayer}を取得します。
+     * @return {@link OfflinePlayer} - オフラインプレイヤー
+     */
+    @NotNull
+    OfflinePlayer toOfflinePlayer();
 
     /**
      * プレイヤーのサーバーを取得します。
@@ -93,19 +74,11 @@ public interface SBPlayer extends Permissible {
     public Server getServer();
 
     /**
-     * {@link Bukkit}の{@link OfflinePlayer}を取得します。
-     * @return {@link OfflinePlayer} - オフラインプレイヤー
-     */
-    @NotNull
-    OfflinePlayer getOfflinePlayer();
-
-    /**
      * プレイヤーのインベントリを取得します。
      * @return {@link PlayerInventory} - インベントリ
      */
     @NotNull
     PlayerInventory getInventory();
-
 
     /**
      * プレイヤーの名前を取得します。
@@ -159,7 +132,7 @@ public interface SBPlayer extends Permissible {
      * プレイヤーにメッセージを送信します。
      * @param messages - メッセージ
      */
-    public void sendMessage(@NotNull String[] messages);
+    public void sendMessage(@NotNull String... messages);
 
     /**
      * プレイヤーにメッセージを送信します。
@@ -173,60 +146,5 @@ public interface SBPlayer extends Permissible {
      * @param uuid - 送信者
      * @param messages - メッセージ
      */
-    public void sendMessage(@NotNull UUID uuid, @NotNull String[] messages);
-
-    /**
-     * ワールドの選択範囲を取得します。
-     * @return {@link Region} - 選択範囲
-     */
-    @NotNull
-    Region getRegion();
-
-    /**
-     * {@link SBPlayer}の{@link ObjectMap}を取得します。
-     * <p>
-     * プレイヤー別のデータを格納しています。
-     * @return {@link ObjectMap} - データ構造
-     */
-    @NotNull
-    ObjectMap getObjectMap();
-
-    /**
-     * {@link ScriptEdit}をセットします。
-     * @param scriptEdit - {@link ScriptEdit}
-     */
-    void setScriptEdit(@Nullable ScriptEdit scriptEdit);
-
-    /**
-     * {@link SBClipboard}をセットします。
-     * @param sbClipboard - {@link SBClipboard}
-     */
-    void setSBClipboard(@Nullable SBClipboard sbClipboard);
-
-    /**
-     * {@link BlockCoords}をセットします。
-     * @param blockCoords - {@link BlockCoords}
-     */
-    void setOldBlockCoords(@Nullable BlockCoords blockCoords);
-
-    /**
-     * {@link ScriptEdit}を取得します。
-     * @return {@link Optional}&lt;{@link ScriptEdit}&gt;
-     */
-    @NotNull
-    Optional<ScriptEdit> getScriptEdit();
-
-    /**
-     * {@link SBClipboard}を取得します。
-     * @return {@link Optional}&lt;{@link SBClipboard}&gt;
-     */
-    @NotNull
-    Optional<SBClipboard> getSBClipboard();
-
-    /**
-     * {@link BlockCoords}を取得します。
-     * @return {@link Optional}&lt;{@link BlockCoords}&gt;
-     */
-    @NotNull
-    Optional<BlockCoords> getOldBlockCoords();
+    public void sendMessage(@NotNull UUID uuid, @NotNull String... messages);
 }

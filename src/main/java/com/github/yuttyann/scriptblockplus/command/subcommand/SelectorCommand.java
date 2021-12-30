@@ -19,12 +19,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.command.BaseCommand;
 import com.github.yuttyann.scriptblockplus.command.CommandUsage;
 import com.github.yuttyann.scriptblockplus.command.SubCommand;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionPaste;
 import com.github.yuttyann.scriptblockplus.region.CuboidRegionRemove;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
@@ -66,13 +66,13 @@ public class SelectorCommand extends SubCommand {
             return false;
         }
         var player = (Player) sender;
-        var region = SBPlayer.fromPlayer(player).getRegion();
+        var region = ScriptBlock.getSBPlayer(player).getCuboidRegion();
         if (!region.hasPositions()) {
             SBConfig.NOT_SELECTION.send(sender);
             return true;
         }
         if (compare(1, "paste")) {
-            var sbPlayer = SBPlayer.fromPlayer(player);
+            var sbPlayer = ScriptBlock.getSBPlayer(player);
             if (!sbPlayer.getSBClipboard().isPresent()) {
                 SBConfig.ERROR_SCRIPT_FILE_CHECK.send(sender);
                 return true;

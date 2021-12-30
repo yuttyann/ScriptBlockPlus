@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.command.BaseCommand;
 import com.github.yuttyann.scriptblockplus.command.CommandUsage;
 import com.github.yuttyann.scriptblockplus.command.SubCommand;
@@ -28,7 +29,6 @@ import com.github.yuttyann.scriptblockplus.enums.ActionKey;
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.manager.OptionManager;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptEdit;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
@@ -89,10 +89,10 @@ public class ScriptCommand extends SubCommand {
             }
             var target = Optional.ofNullable(i == 1 ? Bukkit.getPlayerExact(args(2)) : (Player) sender);
             var blockCoords = BlockCoords.of(Utils.getWorld(args(2 + i)), parseInt(args(3 + i)), parseInt(args(4 + i)), parseInt(args(5 + i)));
-            target.ifPresent(p -> new ScriptRead(SBPlayer.fromPlayer(p), blockCoords, scriptKey).read(0));
+            target.ifPresent(p -> new ScriptRead(ScriptBlock.getSBPlayer(p), blockCoords, scriptKey).read(0));
             return true;
         } else if (compare(1, "create", "add", "remove", "redstone", "nametag", "view") && isPlayer(sender)) {
-            var sbPlayer = SBPlayer.fromPlayer((Player) sender);
+            var sbPlayer = ScriptBlock.getSBPlayer((Player) sender);
             if (sbPlayer.getScriptEdit().isPresent()) {
                 SBConfig.ERROR_ACTION_DATA.send(sbPlayer);
                 return true;

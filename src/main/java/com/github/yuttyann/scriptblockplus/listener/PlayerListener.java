@@ -29,8 +29,7 @@ import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
 import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
-import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.listener.trigger.WalkTrigger;
 import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -58,28 +57,28 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
+        var sbPlayer = ScriptBlock.getSBPlayer(event.getPlayer());
         try {
-            ((BaseSBPlayer) sbPlayer).setOnline(true);
+            sbPlayer.setOnline(true);
         } finally {
-            sbPlayer.setOldBlockCoords(BlockCoords.of(sbPlayer.getLocation()).subtract(0, 1, 0));
+            sbPlayer.getObjectMap().put(WalkTrigger.KEY, BlockCoords.of(sbPlayer.getLocation()).subtract(0, 1, 0));
             if (sbPlayer.isOp()) {
-                ScriptBlock.getInstance().checkUpdate(sbPlayer.getPlayer(), false);
+                ScriptBlock.getInstance().checkUpdate(sbPlayer.toPlayer(), false);
             }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
+        var sbPlayer = ScriptBlock.getSBPlayer(event.getPlayer());
         try {
             ScriptViewer.PLAYERS.remove(sbPlayer);
             TickRunnable.GLOW_ENTITY.destroyAll(sbPlayer);
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         } finally {
-            ((BaseSBPlayer) sbPlayer).init();
-            ((BaseSBPlayer) sbPlayer).setOnline(false);
+            sbPlayer.clear();
+            sbPlayer.setOnline(false);
         }
     }
 
@@ -88,7 +87,7 @@ public final class PlayerListener implements Listener {
         var player = event.getPlayer();
         var oldSlot = player.getInventory().getItem(event.getPreviousSlot());
         if (ItemAction.has(player, oldSlot, true)) {
-            ActionBar.send(SBPlayer.fromPlayer(player), "");
+            ActionBar.send(ScriptBlock.getSBPlayer(player), "");
         }
         var newSlot = player.getInventory().getItem(event.getNewSlot());
         ItemAction.callSlot(player, newSlot, event.getNewSlot(), event.getPreviousSlot());
@@ -96,7 +95,7 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
-        var sbPlayer = SBPlayer.fromUUID(event.getWhoClicked().getUniqueId());
+        var sbPlayer = ScriptBlock.getSBPlayer(event.getWhoClicked().getUniqueId());
         var inventory = Optional.ofNullable(event.getClickedInventory());
         if (inventory.isPresent() && inventory.get().getType() == InventoryType.PLAYER) {
             if (sbPlayer.getObjectMap().get(KEY_INVENTORY, Collections.EMPTY_SET).size() > 0) {
@@ -131,7 +130,7 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClose(InventoryCloseEvent event) {
-        var objectMap = SBPlayer.fromUUID(event.getPlayer().getUniqueId()).getObjectMap();
+        var objectMap = ScriptBlock.getSBPlayer(event.getPlayer().getUniqueId()).getObjectMap();
         if (objectMap.has(UserWindow.KEY_WINDOW)) {
             ((UserWindow) objectMap.get(UserWindow.KEY_WINDOW)).close();
         }
@@ -139,7 +138,7 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        var sbPlayer = SBPlayer.fromUUID(event.getPlayer().getUniqueId());
+        var sbPlayer = ScriptBlock.getSBPlayer(event.getPlayer().getUniqueId());
         if (sbPlayer.getObjectMap().get(KEY_INVENTORY, Collections.EMPTY_SET).size() > 0) {
             event.setCancelled(true);
         }

@@ -51,8 +51,8 @@ public final class ItemCost extends BaseOption {
         var name = space.size() > 2 ? escape(space.get(2)) : null;
         var lore = space.size() > 3 ? escape(space.get(3)) : null;
 
-        var player = getPlayer();
-        var contents = player.getInventory().getContents();
+        var sbPlayer = getSBPlayer();
+        var contents = sbPlayer.getInventory().getContents();
         if (!getTempMap().has(KEY_OPTION)) {
             getTempMap().put(KEY_OPTION, copyItems(contents));
         }
@@ -72,7 +72,7 @@ public final class ItemCost extends BaseOption {
             sendMessage(SBConfig.ERROR_ITEM.replace(material, amount, damage, name, lore));
             return false;
         }
-        player.getInventory().setContents(contents);
+        sbPlayer.getInventory().setContents(contents);
         return true;
     }
 

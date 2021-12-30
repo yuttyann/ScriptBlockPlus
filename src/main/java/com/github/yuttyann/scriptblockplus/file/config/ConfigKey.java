@@ -100,7 +100,7 @@ public interface ConfigKey<T> {
      * @param sbPlayer - プレイヤー
      */
     default void send(@NotNull SBPlayer sbPlayer) {
-        send(sbPlayer.getPlayer());
+        send(sbPlayer.toPlayer());
     }
 
     /**

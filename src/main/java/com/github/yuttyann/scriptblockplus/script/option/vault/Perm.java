@@ -37,8 +37,7 @@ public final class Perm extends BaseOption {
         var world = slash.size() > 1 ? slash.get(0) : null;
         var permission = slash.size() > 1 ? slash.get(1) : slash.get(0);
 
-        var player = getPlayer();
-        if (!vaultPermission.playerHas(world, player, permission)) {
+        if (!vaultPermission.playerHas(world, getSBPlayer().toPlayer(), permission)) {
             sendMessage(SBConfig.NOT_PERMISSION);
             return false;
         }

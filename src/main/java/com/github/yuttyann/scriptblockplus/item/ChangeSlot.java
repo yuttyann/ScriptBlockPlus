@@ -51,7 +51,7 @@ public final class ChangeSlot {
     @Deprecated
     @NotNull
     public Player getPlayer() {
-        return sbPlayer.getPlayer();
+        return sbPlayer.toPlayer();
     }
 
     /**

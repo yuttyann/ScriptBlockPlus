@@ -20,7 +20,6 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
@@ -118,7 +117,7 @@ public final class AnvilGUI {
      * @param open - 開いているのかどうか
      */
     private void setOpened(final boolean open) {
-        SBPlayer.fromPlayer(player).getObjectMap().put(KEY_OPEN, this.open = open);
+        ScriptBlock.getSBPlayer(player).getObjectMap().put(KEY_OPEN, this.open = open);
     }
 
     /**

@@ -22,6 +22,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
@@ -149,7 +150,7 @@ public final class GlowEntityPacket {
             return null;
         }
         var glowEntity = GlowEntity.create(sbPlayer, teamColor, blockCoords, flagSize);
-        NMSHelper.sendPackets(sbPlayer.getPlayer(), NMSHelper.createSpawnEntity(glowEntity), NMSHelper.createMetadata(glowEntity));
+        NMSHelper.sendPackets(sbPlayer.toPlayer(), NMSHelper.createSpawnEntity(glowEntity), NMSHelper.createMetadata(glowEntity));
         GLOW_ENTITIES.computeIfAbsent(sbPlayer.getUniqueId(), CREATE_MAP).put(blockCoords.hashCode(), glowEntity);
         return glowEntity;
     }
@@ -188,7 +189,7 @@ public final class GlowEntityPacket {
             return false;
         }
         var sbPlayer = glowEntity.getSBPlayer();
-        NMSHelper.sendPackets(sbPlayer.getPlayer(), NMSHelper.createDestroy(new int[] { glowEntity.getId() }));
+        NMSHelper.sendPackets(sbPlayer.toPlayer(), NMSHelper.createDestroy(new int[] { glowEntity.getId() }));
         removeMap(sbPlayer.getUniqueId(), glowEntity.getBlockCoords());
         glowEntity.setDead(true);
         return true;
@@ -230,7 +231,7 @@ public final class GlowEntityPacket {
             try {
                 var entities = glowEntities.values();
                 entities.forEach(g -> g.setDead(true));
-                NMSHelper.sendPackets(sbPlayer.getPlayer(), NMSHelper.createDestroy(createIds(entities)));
+                NMSHelper.sendPackets(sbPlayer.toPlayer(), NMSHelper.createDestroy(createIds(entities)));
             } finally {
                 GLOW_ENTITIES.remove(sbPlayer.getUniqueId());
             }
@@ -245,11 +246,11 @@ public final class GlowEntityPacket {
         if (!GLOW_ENTITIES.isEmpty()) {
             try {
                 for (var entry : GLOW_ENTITIES.entrySet()) {
-                    var sbPlayer = SBPlayer.fromUUID(entry.getKey());
+                    var sbPlayer = ScriptBlock.getSBPlayer(entry.getKey());
                     var entities = entry.getValue().values();
                     entities.forEach(g -> g.setDead(true));
                     if (sbPlayer.isOnline()) {
-                        NMSHelper.sendPackets(sbPlayer.getPlayer(), NMSHelper.createDestroy(createIds(entities)));
+                        NMSHelper.sendPackets(sbPlayer.toPlayer(), NMSHelper.createDestroy(createIds(entities)));
                     }
                 }
             } finally {

@@ -29,7 +29,7 @@ public final class Command extends BaseOption {
 
     @Override
     protected boolean isValid() throws Exception {
-        var player = getPlayer();
+        var player = getSBPlayer().toPlayer();
         var command = setColor(getOptionValue(), true);
         return CommandLog.supplier(player.getWorld(), () -> Utils.dispatchCommand(player, getLocation(), command));
     }

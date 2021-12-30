@@ -20,9 +20,9 @@ import java.util.Objects;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
-import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.collection.ObjectMap;
 
 import org.bukkit.Location;
 import org.bukkit.event.EventPriority;
@@ -36,6 +36,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class WalkTrigger extends TriggerListener<PlayerMoveEvent> {
 
+    public static final String KEY = Utils.randomUUID();
+
     public WalkTrigger(@NotNull ScriptBlock plugin) {
         super(plugin, ScriptKey.WALK, EventPriority.HIGH);
     }
@@ -43,14 +45,15 @@ public final class WalkTrigger extends TriggerListener<PlayerMoveEvent> {
     @Override
     @Nullable
     public Trigger create(@NotNull PlayerMoveEvent event) {
-        var sbPlayer = SBPlayer.fromPlayer(event.getPlayer());
-        var blockCoords = ((BaseSBPlayer) sbPlayer).getDirectOldBlockCoords();
-        return compare(sbPlayer, sbPlayer.getLocation(), blockCoords) ? null : new Trigger(event, sbPlayer.getPlayer(), blockCoords);
+        var sbPlayer = ScriptBlock.getSBPlayer(event.getPlayer());
+        var objectMap = sbPlayer.getObjectMap();
+        var blockCoords = (BlockCoords) objectMap.get(KEY);
+        return compare(objectMap, sbPlayer.getLocation(), blockCoords) ? null : new Trigger(event, sbPlayer.toPlayer(), blockCoords);
     }
 
-    private boolean compare(@NotNull SBPlayer sbPlayer, @NotNull Location location, @Nullable BlockCoords blockCoords) {
+    private boolean compare(@NotNull ObjectMap objectMap, @NotNull Location location, @Nullable BlockCoords blockCoords) {
         if (blockCoords == null) {
-            sbPlayer.setOldBlockCoords(BlockCoords.of(location).subtract(0, 1, 0));
+            objectMap.put(KEY, BlockCoords.of(location).subtract(0, 1, 0));
             return false;
         }
         int oldX = blockCoords.getX();
@@ -61,7 +64,7 @@ public final class WalkTrigger extends TriggerListener<PlayerMoveEvent> {
             blockCoords.setY(location.getBlockY() - 1);
             blockCoords.setZ(location.getBlockZ());
         } else {
-            sbPlayer.setOldBlockCoords(blockCoords = BlockCoords.of(location).subtract(0, 1, 0));
+            objectMap.put(KEY, blockCoords = BlockCoords.of(location).subtract(0, 1, 0));
         }
         return blockCoords.compare(oldX, oldY, oldZ);
     }

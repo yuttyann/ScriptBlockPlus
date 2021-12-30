@@ -33,7 +33,6 @@ import com.google.common.collect.Iterators;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -130,15 +129,6 @@ public class ScriptRead extends ScriptMap {
      */
     public final boolean isInitialize() {
         return initialize;
-    }
-
-    /**
-     * {@code BukkitAPI}の{@code org.bukkit.entity.Player}を取得します。
-     * @return {@link Player} - プレイヤー
-     */
-    @NotNull
-    public Player getPlayer() {
-        return sbPlayer.getPlayer();
     }
 
     /**
@@ -248,7 +238,7 @@ public class ScriptRead extends ScriptMap {
             var script = scripts.get(this.index);
             this.invert = script.startsWith("!");
             this.option = OptionManager.newInstance(invert ? script = script.substring(1) : script);
-            this.value = Placeholder.INSTANCE.replace(getSBPlayer().getPlayer(), option.getValue(script));
+            this.value = Placeholder.INSTANCE.replace(getSBPlayer().toPlayer(), option.getValue(script));
             if (option.callOption(this) == invert) {
                 if (!option.isFailedIgnore()) {
                     EndProcessManager.forEach(e -> e.failed(this));

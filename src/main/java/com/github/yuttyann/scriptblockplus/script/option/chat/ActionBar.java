@@ -82,7 +82,7 @@ public final class ActionBar extends BaseOption implements Runnable {
     }
 
     public static void send(@NotNull SBPlayer sbPlayer, @NotNull String message) {
-        var player = sbPlayer.getPlayer();
+        var player = sbPlayer.toPlayer();
         if (HAS_SPIGOT) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
         } else if (Utils.isCBXXXorLater("1.12.2")) {
