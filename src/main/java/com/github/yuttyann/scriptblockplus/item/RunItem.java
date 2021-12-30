@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.item;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -56,16 +55,6 @@ public final class RunItem {
     @NotNull
     public ItemStack getItem() {
         return item;
-    }
-
-    /**
-     * {@code BukkitAPI}の{@code org.bukkit.entity.Player}を取得します。
-     * @return {@link Player} - プレイヤー
-     */
-    @Deprecated
-    @NotNull
-    public Player getPlayer() {
-        return sbPlayer.getPlayer();
     }
 
     /**
