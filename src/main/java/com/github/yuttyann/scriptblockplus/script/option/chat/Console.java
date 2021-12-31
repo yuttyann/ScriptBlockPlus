@@ -29,8 +29,8 @@ import org.bukkit.Bukkit;
 public final class Console extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var command = setColor(getOptionValue(), true);
-        return CommandLog.supplier(getSBPlayer().getWorld(), () -> Utils.dispatchCommand(Bukkit.getConsoleSender(), getLocation(), command));
+        return CommandLog.supplier(getSBPlayer().getWorld(), () -> toResult(Utils.dispatchCommand(Bukkit.getConsoleSender(), getLocation(), command)));
     }
 }

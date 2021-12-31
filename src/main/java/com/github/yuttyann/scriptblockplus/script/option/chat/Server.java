@@ -27,8 +27,8 @@ import org.bukkit.Bukkit;
 public final class Server extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         Bukkit.broadcastMessage(setColor(getOptionValue(), true));
-        return true;
+        return Result.SUCCESS;
     }
 }

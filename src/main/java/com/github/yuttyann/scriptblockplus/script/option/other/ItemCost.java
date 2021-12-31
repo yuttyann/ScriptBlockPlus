@@ -39,7 +39,7 @@ public final class ItemCost extends BaseOption {
     public static final String KEY_PLAYER = Utils.randomUUID();
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var space = split(getOptionValue(), ' ', false);
         var itemId = split(removeStart(space.get(0), Utils.MINECRAFT), ':', false);
         if (IfAction.REALNUMBER_PATTERN.matcher(itemId.get(0)).matches()) {
@@ -70,10 +70,10 @@ public final class ItemCost extends BaseOption {
         }
         if (result > 0) {
             sendMessage(SBConfig.ERROR_ITEM.replace(material, amount, damage, name, lore));
-            return false;
+            return Result.FAILURE;
         }
         sbPlayer.getInventory().setContents(contents);
-        return true;
+        return Result.SUCCESS;
     }
 
     private int setAmount(@NotNull ItemStack item, final int amount) {

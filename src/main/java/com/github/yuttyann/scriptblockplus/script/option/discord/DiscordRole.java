@@ -28,11 +28,11 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 public class DiscordRole extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         if (!DiscordSRV.INSTANCE.isEnabled()) {
             throw new UnsupportedOperationException("Invalid function");
         }
         var roles = DiscordSRV.INSTANCE.getRoles(getUniqueId());
-        return roles.length > 0 && StreamUtils.anyMatch(roles, r -> r.equals(getOptionValue()));
+        return toResult(roles.length > 0 && StreamUtils.anyMatch(roles, r -> r.equals(getOptionValue())));
     }
 }

@@ -27,12 +27,12 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 public class DiscordRoleRemove extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         if (!DiscordSRV.INSTANCE.isEnabled()) {
             throw new UnsupportedOperationException("Invalid function");
         }
         var comma = split(getOptionValue(), ',', false);
         DiscordSRV.INSTANCE.removeRoleToMember(getUniqueId(), comma.toArray(String[]::new));
-        return true;
+        return Result.SUCCESS;
     }
 }

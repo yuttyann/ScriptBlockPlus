@@ -28,7 +28,7 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 public final class Group extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
             throw new UnsupportedOperationException("Invalid function");
@@ -39,8 +39,8 @@ public final class Group extends BaseOption {
 
         if (!vaultPermission.playerInGroup(world, getSBPlayer().toPlayer(), group)) {
             sendMessage(SBConfig.ERROR_GROUP.replace(getOptionValue()));
-            return false;
+            return Result.FAILURE;
         }
-        return true;
+        return Result.SUCCESS;
     }
 }

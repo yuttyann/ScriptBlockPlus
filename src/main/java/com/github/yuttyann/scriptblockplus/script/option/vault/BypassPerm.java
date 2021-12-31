@@ -29,7 +29,7 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public final class BypassPerm extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
             throw new UnsupportedOperationException("Invalid function");
@@ -43,11 +43,11 @@ public final class BypassPerm extends BaseOption {
         var command = escape(value.substring(index + 1, value.length()));
         return CommandLog.supplier(player.getWorld(), () -> {
             if (vaultPermission.playerHas(world, player, permission)) {
-                return Utils.dispatchCommand(player, getLocation(), command);
+                return toResult(Utils.dispatchCommand(player, getLocation(), command));
             } else {
                 try {
                     vaultPermission.playerAdd(world, player, permission);
-                    return Utils.dispatchCommand(player, getLocation(), command);
+                    return toResult(Utils.dispatchCommand(player, getLocation(), command));
                 } finally {
                     vaultPermission.playerRemove(world, player, permission);
                 }

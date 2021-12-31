@@ -42,7 +42,7 @@ public final class IfAction extends BaseOption {
     public static final Pattern REALNUMBER_PATTERN = Pattern.compile("^-?(0|[1-9]\\d*)(\\.\\d+|)$");
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var space = split(getOptionValue(), ' ', true);
         var player = getSBPlayer().toPlayer();
         var value1 = parse(player, space.get(0));
@@ -50,12 +50,12 @@ public final class IfAction extends BaseOption {
         var operator = space.get(1);
 
         if (result(operator, value1, value2)) {
-            return true;
+            return Result.SUCCESS;
         }
         if (space.size() > 3) {
             Utils.sendColorMessage(player, StringUtils.createString(space, 3));
         }
-        return false;
+        return Result.FAILURE;
     }
 
     @NotNull

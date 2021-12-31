@@ -41,12 +41,7 @@ public final class Delay extends BaseOption implements Runnable {
     private boolean stay;
 
     @Override
-    public boolean isFailedIgnore() {
-        return true;
-    }
-
-    @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         if (isInverted()) {
             throw new IllegalArgumentException("This option cannot be inverted");
         }
@@ -65,7 +60,7 @@ public final class Delay extends BaseOption implements Runnable {
                 ScriptBlock.getScheduler().run(this, Long.parseLong(slash.get(0)));
             }
         }
-        return false;
+        return Result.STOP;
     }
 
     @Override

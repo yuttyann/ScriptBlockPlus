@@ -31,7 +31,7 @@ public final class MoneyCost extends BaseOption {
     public static final String KEY = Utils.randomUUID();
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var vaultEconomy = VaultEconomy.INSTANCE;
         if (!vaultEconomy.isEnabled()) {
             throw new UnsupportedOperationException("Invalid function");
@@ -41,9 +41,9 @@ public final class MoneyCost extends BaseOption {
         if (vaultEconomy.has(player, cost)) {
             vaultEconomy.withdrawPlayer(player, cost);
             getTempMap().put(KEY, cost + (getTempMap().has(KEY) ? getTempMap().getDouble(KEY) : 0.0D));
-            return true;
+            return Result.SUCCESS;
         }
         sendMessage(SBConfig.ERROR_COST.replace(cost, cost - vaultEconomy.getBalance(player)));
-        return false;
+        return Result.FAILURE;
     }
 }

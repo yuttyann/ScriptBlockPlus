@@ -16,6 +16,7 @@
 package com.github.yuttyann.scriptblockplus.script.option;
 
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.script.endprocess.EndProcess;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +26,30 @@ import org.jetbrains.annotations.Nullable;
  * @author yuttyann44581
  */
 public abstract class Option implements Comparable<Option> {
+
+    /**
+     * ScriptBlockPlus Result 列挙型
+     * @author yuttyann44581
+     */
+    public enum Result {
+
+        /**
+         * 成功({@code 一時データの削除を行います。})
+         */
+        SUCCESS,
+
+        /**
+         * 失敗({@code 一時データの削除を行います。})
+         */
+        FAILURE,
+
+        /**
+         * 停止({@code 一時データを削除しない状態で、停止させます。})
+         * <p>
+         * また、{@link EndProcess}の{@code 成功処理}や{@code 失敗処理}を行いません。
+         */
+        STOP
+    }
 
     public static final String PERMISSION_PREFIX = "scriptblockplus.option.";
     public static final String PERMISSION_ALL = PERMISSION_PREFIX + "*";
@@ -99,19 +124,24 @@ public abstract class Option implements Comparable<Option> {
     }
 
     /**
-     * 終了処理を無視する場合は{@code true}を返します。
-     * @return {@code boolean} - 終了処理を無視する場合は{@code true}
+     * 指定した{@code boolean}に応じて実行結果を返します。
+     * <p>
+     * 戻り値の記述を短縮することができます。
+     * @param value - {@code true}の場合は{@link Result#SUCCESS}、{@code false}の場合は{@link Result#FAILURE}
+     * @return {@link Result} - 実行結果
      */
-    public boolean isFailedIgnore() {
-        return false;
+    @NotNull
+    public final Result toResult(final boolean value) {
+        return value ? Result.SUCCESS : Result.FAILURE;
     }
 
     /**
      * オプションを呼び出します。
      * @param scriptRead - {@link ScriptRead}
-     * @return {@code boolean} - 有効な場合は{@code true}
+     * @return {@link Result} - 成功した場合は{@link Result#SUCCESS}
      */
-    public abstract boolean callOption(@NotNull ScriptRead scriptRead);
+    @NotNull
+    public abstract Result callOption(@NotNull ScriptRead scriptRead);
 
     @Override
     public int compareTo(@NotNull Option another) {

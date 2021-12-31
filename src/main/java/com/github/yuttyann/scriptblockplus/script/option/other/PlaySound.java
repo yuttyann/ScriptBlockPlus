@@ -43,7 +43,7 @@ public final class PlaySound extends BaseOption implements Runnable {
     private boolean sendAllPlayer;
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var slash = split(getOptionValue(), '/', false);
         var hyphen = split(slash.get(0), '-', false);
         this.name = StringUtils.removeStart(hyphen.get(0), Utils.MINECRAFT).toLowerCase(Locale.ROOT);
@@ -57,7 +57,7 @@ public final class PlaySound extends BaseOption implements Runnable {
         } else {
             run();
         }
-        return true;
+        return Result.SUCCESS;
     }
 
     @Override

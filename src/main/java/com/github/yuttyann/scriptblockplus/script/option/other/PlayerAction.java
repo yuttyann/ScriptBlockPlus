@@ -34,12 +34,12 @@ public final class PlayerAction extends BaseOption {
     public static final String KEY = Utils.randomUUID();
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         if (!getTempMap().has(KEY)) {
-            return false;
+            return Result.FAILURE;
         }
         var action = (Action) getTempMap().get(KEY);
-        return StreamUtils.allMatch(split(getOptionValue(), ',', false), s -> compare(action, s));
+        return toResult(StreamUtils.allMatch(split(getOptionValue(), ',', false), s -> compare(action, s)));
     }
 
     private boolean compare(@Nullable Action action, @NotNull String type) {

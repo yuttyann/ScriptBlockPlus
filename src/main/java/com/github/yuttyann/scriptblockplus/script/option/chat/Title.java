@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 public final class Title extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var slash = split(getOptionValue(), '/', false);
         var title = setColor(slash.get(0), true);
         var subtitle = setColor(slash.size() > 1 ? slash.get(1) : "", true);
@@ -47,7 +47,7 @@ public final class Title extends BaseOption {
             }
         }
         send(getSBPlayer(), title, subtitle, fadeIn, stay, fadeOut);
-        return true;
+        return Result.SUCCESS;
     }
 
     public static void send(@NotNull SBPlayer sbPlayer, @Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) {

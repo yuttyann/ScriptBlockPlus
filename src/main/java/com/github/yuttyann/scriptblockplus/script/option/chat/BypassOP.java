@@ -28,16 +28,16 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public final class BypassOP extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var player = getSBPlayer().toPlayer();
         var command = setColor(getOptionValue(), true);
         return CommandLog.supplier(player.getWorld(), () -> {
             if (player.isOp()) {
-                return Utils.dispatchCommand(player, getLocation(), command);
+                return toResult(Utils.dispatchCommand(player, getLocation(), command));
             } else {
                 try {
                     player.setOp(true);
-                    return Utils.dispatchCommand(player, getLocation(), command);
+                    return toResult(Utils.dispatchCommand(player, getLocation(), command));
                 } finally {
                     player.setOp(false);
                 }

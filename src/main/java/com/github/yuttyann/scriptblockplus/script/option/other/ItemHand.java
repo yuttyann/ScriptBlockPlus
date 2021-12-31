@@ -34,7 +34,7 @@ import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 public final class ItemHand extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var space = split(getOptionValue(), ' ', false);
         var itemId = split(removeStart(space.get(0), Utils.MINECRAFT), ':', false);
         if (IfAction.REALNUMBER_PATTERN.matcher(itemId.get(0)).matches()) {
@@ -55,9 +55,9 @@ public final class ItemHand extends BaseOption {
                 || lore != null && !compare(LORE, hand, lore)) {
                 continue;
             }
-            return true;
+            return Result.SUCCESS;
         }
         sendMessage(SBConfig.ERROR_HAND.replace(material, amount, damage, name, lore));
-        return false;
+        return Result.FAILURE;
     }
 }

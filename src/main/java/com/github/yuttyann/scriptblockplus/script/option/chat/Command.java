@@ -28,9 +28,9 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public final class Command extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var player = getSBPlayer().toPlayer();
         var command = setColor(getOptionValue(), true);
-        return CommandLog.supplier(player.getWorld(), () -> Utils.dispatchCommand(player, getLocation(), command));
+        return CommandLog.supplier(player.getWorld(), () -> toResult(Utils.dispatchCommand(player, getLocation(), command)));
     }
 }

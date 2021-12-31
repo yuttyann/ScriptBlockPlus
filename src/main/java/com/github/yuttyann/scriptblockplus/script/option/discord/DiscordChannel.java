@@ -27,11 +27,11 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 public class DiscordChannel extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         if (!DiscordSRV.INSTANCE.isEnabled()) {
             throw new UnsupportedOperationException("Invalid function");
         }
         var channelId = DiscordSRV.INSTANCE.getVoiceChannelId(getUniqueId());
-        return channelId == null ? false : channelId.equals(getOptionValue());
+        return toResult(channelId == null ? false : channelId.equals(getOptionValue()));
     }
 }

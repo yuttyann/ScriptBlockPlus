@@ -27,7 +27,7 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 public final class PermRemove extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
             throw new UnsupportedOperationException("Invalid function");
@@ -36,6 +36,6 @@ public final class PermRemove extends BaseOption {
         var world = slash.size() > 1 ? slash.get(0) : null;
         var permission = slash.size() > 1 ? slash.get(1) : slash.get(0);
         vaultPermission.playerRemove(world, getSBPlayer().toPlayer(), permission);
-        return true;
+        return Result.SUCCESS;
     }
 }

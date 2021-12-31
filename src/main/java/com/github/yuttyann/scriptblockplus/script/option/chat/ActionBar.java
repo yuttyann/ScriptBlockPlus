@@ -57,7 +57,7 @@ public final class ActionBar extends BaseOption implements Runnable {
     private BukkitTask task;
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var slash = split(getOptionValue(), '/', false);
         this.message = setColor(slash.get(0), true);
         if (slash.size() > 1) {
@@ -66,7 +66,7 @@ public final class ActionBar extends BaseOption implements Runnable {
         } else {
             send(getSBPlayer(), message);
         }
-        return true;
+        return Result.SUCCESS;
     }
 
     @Override

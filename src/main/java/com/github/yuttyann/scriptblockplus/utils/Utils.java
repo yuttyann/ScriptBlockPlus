@@ -154,13 +154,14 @@ public final class Utils {
 
     /**
      * 権限を一時的に与えて、処理を実行します。
+     * @param <T> 戻り値の型
      * @param sbPlayer - プレイヤー
      * @param permission - 権限
      * @param supplier - 処理
-     * @return {@code boolean} - 実行に成功した場合は{@code true}
+     * @return {@link T} - 任意の戻り値
      */
-    public static boolean tempPerm(@NotNull SBPlayer sbPlayer, @NotNull Permission permission, @NotNull Supplier<Boolean> supplier) {
-        return sbPlayer.isOnline() && CommandLog.supplier(sbPlayer.getWorld(), () -> {
+    public static <T> T tempPerm(@NotNull SBPlayer sbPlayer, @NotNull Permission permission, @NotNull Supplier<T> supplier) {
+        return CommandLog.supplier(sbPlayer.getWorld(), () -> {
             if (sbPlayer.hasPermission(permission.getNode())) {
                 return supplier.get();
             } else {

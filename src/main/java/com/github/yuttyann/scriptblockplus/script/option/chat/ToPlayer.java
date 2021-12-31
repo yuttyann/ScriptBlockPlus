@@ -27,8 +27,8 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public final class ToPlayer extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         Utils.sendColorMessage(getSBPlayer().toPlayer(), escape(getOptionValue()));
-        return true;
+        return Result.SUCCESS;
     }
 }

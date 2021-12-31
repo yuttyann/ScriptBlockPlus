@@ -28,7 +28,7 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 public final class Amount extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var scriptJson = BlockScriptJson.get(getScriptKey());
         var blockCoords = getBlockCoords();
         var blockScript = scriptJson.load(blockCoords);
@@ -42,6 +42,6 @@ public final class Amount extends BaseOption {
             }
         }
         scriptJson.saveJson();
-        return true;
+        return Result.SUCCESS;
     }
 }

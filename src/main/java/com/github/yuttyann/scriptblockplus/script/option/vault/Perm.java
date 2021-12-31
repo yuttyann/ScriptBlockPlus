@@ -28,7 +28,7 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 public final class Perm extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled()) {
             throw new UnsupportedOperationException("Invalid function");
@@ -39,8 +39,8 @@ public final class Perm extends BaseOption {
 
         if (!vaultPermission.playerHas(world, getSBPlayer().toPlayer(), permission)) {
             sendMessage(SBConfig.NOT_PERMISSION);
-            return false;
+            return Result.FAILURE;
         }
-        return true;
+        return Result.SUCCESS;
     }
 }

@@ -215,26 +215,28 @@ public abstract class BaseOption extends Option {
     /**
      * オプションの処理を実行します。
      * @throws Exception オプションの処理内で例外が発生した時にスローされます。
-     * @return {@code boolean} - 有効な場合は{@code true}
+     * @return {@link Result} - 成功した場合は{@link Result#SUCCESS}
      */
-    protected abstract boolean isValid() throws Exception;
+    @NotNull
+    protected abstract Result isValid() throws Exception;
 
     /**
-     * オプションの処理を実行します。
+     * オプションを呼び出します。
      * @param scriptRead - {@link ScriptRead}
-     * @return {@code boolean} - 有効な場合は{@code true}
+     * @return {@link Result} - 成功した場合は{@link Result#SUCCESS}
      */
     @Override
     @Deprecated
-    public final boolean callOption(@NotNull ScriptRead scriptRead) {
+    @NotNull
+    public final Result callOption(@NotNull ScriptRead scriptRead) {
         var sbPlayer = scriptRead.getSBPlayer();
         if (!sbPlayer.isOnline()) {
-            return false;
+            return Result.FAILURE;
         }
         var player = sbPlayer.toPlayer();
         if (SBConfig.OPTION_PERMISSION.getValue() && !Permission.has(player, PERMISSION_ALL, getPermissionNode())) {
             SBConfig.NOT_PERMISSION.send(player);
-            return false;
+            return Result.FAILURE;
         }
         this.scriptRead = scriptRead;
         try {
@@ -243,6 +245,6 @@ public abstract class BaseOption extends Option {
             e.printStackTrace();
             SBConfig.OPTION_FAILED_TO_EXECUTE.replace(this, e).send(player);
         }
-        return false;
+        return Result.FAILURE;
     }
 }

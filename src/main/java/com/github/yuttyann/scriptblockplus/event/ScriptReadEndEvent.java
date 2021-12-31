@@ -32,6 +32,7 @@ public class ScriptReadEndEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final UUID uuid;
+    private final com.github.yuttyann.scriptblockplus.script.option.Option.Result result;
     private final ScriptRead scriptRead;
 
     /**
@@ -39,9 +40,10 @@ public class ScriptReadEndEvent extends Event {
      * @param uuid - スクリプトの{@link UUID}
      * @param scriptRead - {@link ScriptRead}のインスタンス
      */
-    public ScriptReadEndEvent(@NotNull UUID uuid, @NotNull ScriptRead scriptRead) {
+    public ScriptReadEndEvent(@NotNull UUID uuid, @NotNull com.github.yuttyann.scriptblockplus.script.option.Option.Result result, @NotNull ScriptRead scriptRead) {
         super(scriptRead.isAsynchronous());
         this.uuid = uuid;
+        this.result = result;
         this.scriptRead = scriptRead;
     }
 
@@ -52,6 +54,15 @@ public class ScriptReadEndEvent extends Event {
     @NotNull
     public UUID getUniqueId() {
         return uuid;
+    }
+
+    /**
+     * スクリプトの実行結果を取得します。
+     * @return {@code Result} - 成功した場合は{@code Result#SUCCESS}
+     */
+    @NotNull
+    public com.github.yuttyann.scriptblockplus.script.option.Option.Result getResult() {
+        return result;
     }
 
     /**

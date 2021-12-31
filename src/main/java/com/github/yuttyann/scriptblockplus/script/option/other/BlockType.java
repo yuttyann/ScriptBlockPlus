@@ -32,14 +32,14 @@ import org.jetbrains.annotations.NotNull;
 public final class BlockType extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var block = getBlockCoords().getBlock();
         for (var value : split(getOptionValue(), ',', false)) {
             if (equals(block, value)) {
-                return true;
+                return Result.SUCCESS;
             }
         }
-        return false;
+        return Result.FAILURE;
     }
 
     private boolean equals(@NotNull Block block, @NotNull String type) throws IllegalAccessException {

@@ -29,8 +29,8 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 public final class Execute extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var slash = split(getOptionValue(), '/', false);
-        return new ScriptRead(getSBPlayer(), BlockCoords.fromString(slash.get(1)), ScriptKey.valueOf(slash.get(0))).read(0);
+        return toResult(new ScriptRead(getSBPlayer(), BlockCoords.fromString(slash.get(1)), ScriptKey.valueOf(slash.get(0))).read(0));
     }
 }

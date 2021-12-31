@@ -28,9 +28,9 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 public final class Say extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var command = "minecraft:say " + setColor(getOptionValue(), true);
         var sbPlayer = getSBPlayer();
-        return Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_SAY, () -> Utils.dispatchCommand(sbPlayer.toPlayer(), getLocation(), command));
+        return Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_SAY, () -> toResult(Utils.dispatchCommand(sbPlayer.toPlayer(), getLocation(), command)));
     }
 }

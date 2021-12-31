@@ -27,7 +27,7 @@ import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 public final class GroupRemove extends BaseOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         var vaultPermission = VaultPermission.INSTANCE;
         if (!vaultPermission.isEnabled() || vaultPermission.isSuperPerms()) {
             throw new UnsupportedOperationException("Invalid function");
@@ -40,6 +40,6 @@ public final class GroupRemove extends BaseOption {
         if (vaultPermission.playerInGroup(world, player, group)) {
             vaultPermission.playerRemoveGroup(world, player, group);
         }
-        return true;
+        return Result.SUCCESS;
     }
 }

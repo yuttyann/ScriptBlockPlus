@@ -28,9 +28,9 @@ import org.jetbrains.annotations.Nullable;
 public final class Cooldown extends TimerOption {
 
     @Override
-    protected boolean isValid() throws Exception {
+    protected Result isValid() throws Exception {
         if (inCooldown()) {
-            return false;
+            return Result.FAILURE;
         }
         var time = new long[] { System.currentTimeMillis(), Integer.parseInt(getOptionValue()) * 1000L, 0L };
         time[2] = time[0] + time[1];
@@ -38,7 +38,7 @@ public final class Cooldown extends TimerOption {
         var timerJson = PlayerTimerJson.get(getFileUniqueId());
         timerJson.load(getFileUniqueId(), getScriptKey(), getBlockCoords()).setTime(time);
         timerJson.saveJson();
-        return true;
+        return Result.SUCCESS;
     }
 
     @Override
