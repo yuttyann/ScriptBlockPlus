@@ -46,7 +46,7 @@ public final class CuboidRegion implements Region {
 
     /**
      * {@code 位置2}を設定します。
-     * @param position1 - 位置2
+     * @param position2 - 位置2
      */
     public void setPosition2(@Nullable BlockCoords position2) {
         this.position2 = position2;
