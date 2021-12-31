@@ -109,14 +109,6 @@ public interface ScriptBlockAPI {
         boolean add(@NotNull OfflinePlayer player, @NotNull Location location, @NotNull String script);
 
         /**
-         * 指定した座標のスクリプトを削除します。
-         * @param player - プレイヤー
-         * @param location - スクリプトの座標
-         * @return {@code boolean} - 設定に成功した場合は{@code true}
-         */
-        boolean remove(@NotNull OfflinePlayer player, @NotNull Location location);
-
-        /**
          * 指定した座標のスクリプトにネームタグを設定します。
          * @param player - プレイヤー
          * @param location - スクリプトの座標
@@ -133,6 +125,14 @@ public interface ScriptBlockAPI {
          * @return {@code boolean} - 設定に成功した場合は{@code true}
          */
         boolean redstone(@NotNull OfflinePlayer player, @NotNull Location location, @Nullable String selector);
+
+        /**
+         * 指定した座標のスクリプトを削除します。
+         * @param player - プレイヤー
+         * @param location - スクリプトの座標
+         * @return {@code boolean} - 設定に成功した場合は{@code true}
+         */
+        boolean remove(@NotNull Location location);
     }
 
     /**

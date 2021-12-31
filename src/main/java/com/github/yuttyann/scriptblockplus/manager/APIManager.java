@@ -118,18 +118,6 @@ public final class APIManager implements ScriptBlockAPI {
         }
 
         @Override
-        public boolean remove(@NotNull OfflinePlayer player, @NotNull Location location) {
-            var blockCoords = BlockCoords.of(location);
-            if (!scriptJson.has(blockCoords)) {
-                return false;
-            }
-            scriptJson.init(blockCoords);
-            scriptJson.remove(blockCoords);
-            scriptJson.saveJson();
-            return true;
-        }
-
-        @Override
         public boolean nametag(@NotNull OfflinePlayer player, @NotNull Location location, @Nullable String nametag) {            
             var blockCoords = BlockCoords.of(location);
             if (!scriptJson.has(blockCoords)) {
@@ -153,6 +141,18 @@ public final class APIManager implements ScriptBlockAPI {
             blockScript.getAuthors().add(player.getUniqueId());
             blockScript.setLastEdit(new Date());
             blockScript.setValue(BlockScript.SELECTOR, selector);
+            scriptJson.saveJson();
+            return true;
+        }
+
+        @Override
+        public boolean remove(@NotNull Location location) {
+            var blockCoords = BlockCoords.of(location);
+            if (!scriptJson.has(blockCoords)) {
+                return false;
+            }
+            scriptJson.init(blockCoords);
+            scriptJson.remove(blockCoords);
             scriptJson.saveJson();
             return true;
         }
