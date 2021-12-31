@@ -23,13 +23,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>maven-snapshots</id>
-      <url>https://repository.apache.org/content/repositories/snapshots/</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <build>
     <finalName>${project.artifactId} v${project.version}</finalName>
     <resources>
