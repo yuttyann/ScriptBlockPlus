@@ -155,9 +155,7 @@ public final class BlockListener implements Listener {
             index.incrementAndGet();
 
             // 非同期で実行する。
-            var scriptRead = new ScriptRead(ScriptBlock.getSBPlayer(player), blockCoords, scriptKey);
-            scriptRead.setAsynchronous(true);
-            scriptRead.read(0);
+            new ScriptRead(true, ScriptBlock.getSBPlayer(player), blockCoords, scriptKey).read(0);
         }
     }
 
