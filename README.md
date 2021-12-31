@@ -1,4 +1,4 @@
-[[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)] ScriptBlockPlus [v2.2.0](https://github.com/yuttyann/ScriptBlockPlus/releases/tag/v2.2.0) [MC1.9-1.18] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+[[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)] ScriptBlockPlus [v2.2.1](https://github.com/yuttyann/ScriptBlockPlus/releases/tag/v2.2.1) [MC1.9-1.18] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 
 概要
@@ -20,14 +20,14 @@
 | Plugin | Description | Development |
 |:---|:---|:---:|
 | [Vault](https://www.spigotmc.org/resources/vault.34315/) | 権限、経済系プラグインの機能を利用する事ができます。 | **1.7.3** |
-| [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/) | ディスコ―ドの機能を利用する事ができます。 | **1.22.0** |
-| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの機能を拡張する事ができます。 | **2.10.9** |
-| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定する事ができます。 | **1.2.0** |  
+| [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/) | ディスコ―ドの機能を利用する事ができます。 | **1.24.0** |
+| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの機能を拡張する事ができます。 | **2.11.1** |
+| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定する事ができます。 | **1.2.1** |  
 
 **== 各バージョンの動作範囲 ==**
 | Plugin | Server | Java |
 |:---:|:---:|:---:|
-|**`2.2.0`**|**`1.9-1.18`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
+|**`2.2.0-2.2.1`**|**`1.9-1.18`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |**`2.1.5-2.1.8`**|**`1.9-1.17.1`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |`2.1.2-2.1.4`|`1.9-1.17`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |`2.0.4-2.1.1`|`1.9-1.16.5`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
@@ -47,7 +47,7 @@
 報告される際は、一度`plugins/ScriptBlockPlus/json`内の`format.sbp`を削除して再生成を行ってください。  
 また、アップデートで設定ファイルが変更されることもままあるので、再生成を推奨します。  
 **(データファイル、設定ファイルの再生成や削除で解決しなかった場合は[Issue](https://github.com/yuttyann/ScriptBlockPlus/issues)で報告してください。)**  
-`ちなみにそもそも起動しない場合は、Javaのバージョンをチェックしてください。`
+`そもそも起動しない場合は、Javaのバージョンをチェックしてください。`
 
 対応プラットフォーム
 -----------
