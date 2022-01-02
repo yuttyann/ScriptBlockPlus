@@ -30,8 +30,6 @@ import java.util.*;
 
 /**
  * ScriptBlockPlus BaseSBPlayer クラス
- * <p>
- * {@link Player} のラッパークラス
  * @author yuttyann44581
  */
 public final class BaseSBPlayer extends PlayerMap {

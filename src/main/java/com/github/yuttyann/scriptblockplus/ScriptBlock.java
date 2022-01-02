@@ -177,14 +177,16 @@ public class ScriptBlock extends JavaPlugin {
      */
     public void checkUpdate(@NotNull CommandSender sender, @NotNull Updater updater, boolean latestMessage) {
         getScheduler().asyncRun(() -> {
-            try {
-                updater.load();
-                if (!updater.run(sender) && latestMessage) {
-                    SBConfig.NOT_LATEST_PLUGIN.send(sender);
+            synchronized (this) {
+                try {
+                    updater.load();
+                    if (!updater.run(sender) && latestMessage) {
+                        SBConfig.NOT_LATEST_PLUGIN.send(sender);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    SBConfig.ERROR_UPDATE.send(sender);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                SBConfig.ERROR_UPDATE.send(sender);
             }
         });
     }

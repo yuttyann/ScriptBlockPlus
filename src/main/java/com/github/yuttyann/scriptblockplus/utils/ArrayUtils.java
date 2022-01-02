@@ -17,9 +17,8 @@ package com.github.yuttyann.scriptblockplus.utils;
 
 import java.util.Objects;
 
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus ArrayUtils クラス
