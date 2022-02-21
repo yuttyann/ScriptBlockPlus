@@ -53,7 +53,10 @@ public final class IfAction extends BaseOption {
             return Result.SUCCESS;
         }
         if (space.size() > 3) {
-            Utils.sendColorMessage(player, StringUtils.createString(space, 3));
+            var result = StringUtils.createString(space, 3);
+            result = StringUtils.replace(result, "%value1%", value1);
+            result = StringUtils.replace(result, "%value2%", value2);
+            Utils.sendColorMessage(player, result);
         }
         return Result.FAILURE;
     }

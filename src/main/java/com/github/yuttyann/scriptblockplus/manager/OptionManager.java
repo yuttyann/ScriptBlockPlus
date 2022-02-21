@@ -79,6 +79,7 @@ public final class OptionManager {
         register(Console::new);
         register(Execute::new);
         register(Amount::new);
+        register(EventInvalid::new);
     }
 
     public static void update() {
