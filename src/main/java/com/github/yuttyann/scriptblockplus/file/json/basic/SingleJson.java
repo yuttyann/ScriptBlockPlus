@@ -50,7 +50,6 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
         }
     }
 
-
     private final Supplier<E> newInstance;
 
     /**

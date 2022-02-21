@@ -18,16 +18,17 @@ package com.github.yuttyann.scriptblockplus.utils.raytrace;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
-
 import org.bukkit.FluidCollisionMode;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -62,13 +63,13 @@ public final class RayTrace {
     /**
      * プレイヤーの射線上に存在するブロックを取得します。
      * @param player - プレイヤー
-     * @param distance - 距離
+     * @param maxDistance - 距離
      * @return {@link RayResult} - ブロック
      */
     @Nullable
-    public static RayResult rayTraceBlocks(@NotNull Player player, final double distance) {
+    public static RayResult rayTraceBlocks(@NotNull Player player, final double maxDistance) {
         if (Utils.isCBXXXorLater("1.13.2")) {
-            var rayTraceResult = player.rayTraceBlocks(distance, FluidCollisionMode.NEVER);
+            var rayTraceResult = player.rayTraceBlocks(maxDistance, FluidCollisionMode.NEVER);
             if (rayTraceResult == null || rayTraceResult.getHitBlock() == null) {
                 return null;
             }
@@ -76,32 +77,46 @@ public final class RayTrace {
         } else {
             if (NetMinecraft.hasNMS()) {
                 try {
-                    return NMSHelper.rayTraceBlocks(player, distance);
+                    return NMSHelper.rayTraceBlocks(player, maxDistance);
                 } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
                 }
             } else {
-                // 疑似的に再現、ブロックの側面取得の精度は劣る
-                var blocks = rayTraceBlocks(player, distance, 0.05D, true);
-                if (blocks.size() > 1) {
-                    Block old = null, now = null;
-                    var iterator = blocks.iterator();
-                    var location = player.getEyeLocation();
-                    while (iterator.hasNext()) {
-                        old = now;
-                        now = iterator.next();
-                        if (BlockCoords.compare(location, now.getLocation())) {
-                            continue;
-                        }
-                        if (old != null && now.getType().isOccluding()) {
-                            var blockFace = now.getFace(old);
-                            return new RayResult(now, blockFace);
-                        }
-                    }   
-                }
+                return new RayTrace(player).rayTraceBlock(player.getWorld(), FluidCollisionMode.NEVER, maxDistance, 0.01D);
             }
             return null;
         }
+    }
+
+    // 仮実装
+    @Nullable
+    private RayResult rayTraceBlock(@NotNull World world, @NotNull FluidCollisionMode fluidCollisionMode, final double maxDistance, final double accuracy) {
+        if (direction.lengthSquared() <= 0.0D || maxDistance < 0.0D) {
+            return null;
+        }
+        var oldBlock = (Block) null;
+        Vector start = new Vector(), direction = new Vector();
+        for (var d = 0.0D; d <= maxDistance; d += accuracy) {
+            var position = copy(start, this.start).add(copy(direction, this.direction).multiply(d));
+            var block = world.getBlockAt(position.getBlockX(), position.getBlockY(), position.getBlockZ());
+            if (Objects.equals(oldBlock, oldBlock = block) || block.getType().isAir()) {
+                continue;
+            }
+            if (fluidCollisionMode != FluidCollisionMode.NEVER && block.getBlockData() instanceof Levelled) {
+                if (fluidCollisionMode == FluidCollisionMode.ALWAYS) {
+                    continue;
+                }
+                var fluid = (Levelled) block;
+                if (fluid.getLevel() == fluid.getMaximumLevel()) {
+                    continue;
+                }
+            }
+            var hitResult = block.getBoundingBox().rayTrace(this.start, this.direction, maxDistance);
+            if (hitResult != null) {
+                return new RayResult(block, hitResult.getHitBlockFace());
+            }
+        }
+        return null;
     }
 
     /**
@@ -115,19 +130,28 @@ public final class RayTrace {
     @NotNull
     public static Set<Block> rayTraceBlocks(@NotNull Player player, final double distance, final double accuracy, final boolean square) {
         var world = player.getWorld();
-        var blocks = new LinkedHashSet<Block>();
+        var start = new Vector();
+        var direction = new Vector();
         var rayTrace = new RayTrace(player);
-        var positions = rayTrace.traverse(distance, accuracy);
         var boundingBox = new SBBoundingBox();
-        for(int i = 0, l = positions.size(); i < l; i++) {
-            var position = positions.get(i);
-            var location = position.toLocation(world);
-            boundingBox.setBlock(location.getBlock(), square);
-            if(rayTrace.intersects(boundingBox, distance, accuracy)){
-                blocks.add(location.getBlock());
+        var result = new LinkedHashSet<Block>();
+        for (var d = 0.0D; d <= distance; d += accuracy) {
+            var position = copy(start, rayTrace.start).add(copy(direction, rayTrace.direction).multiply(d));
+            var block = world.getBlockAt(position.getBlockX(), position.getBlockY(), position.getBlockZ());
+            boundingBox.setBlock(block, square);
+            if(intersects(position, boundingBox)) {
+                result.add(block);
             }
         }
-        return blocks;
+        return result;
+    }
+
+    @NotNull
+    private static Vector copy(@NotNull Vector from, @NotNull Vector to) {
+        from.setX(to.getX());
+        from.setY(to.getY());
+        from.setZ(to.getZ());
+        return from;
     }
 
     /**

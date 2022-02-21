@@ -266,7 +266,9 @@ public class ScriptRead extends ScriptMap {
             for (int i = 0, l = scripts.size(); i < l; i++) {
                 Iterators.addAll(parse, StringUtils.parseScript(scripts.get(i)).iterator());
             }
-            SBConfig.SORT_SCRIPTS.ifPresentAndTrue(s -> OptionManager.sort(parse));
+            if (SBConfig.SORT_SCRIPTS.getValue()) {
+                OptionManager.sort(parse);
+            }
             this.scripts = Collections.unmodifiableList(parse);
             return true;
         } catch (IllegalArgumentException e) {
