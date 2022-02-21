@@ -118,7 +118,10 @@ public final class InteractListener implements Listener {
                 if (ItemAction.callRun(sbPlayer.toPlayer(), blockEvent.getItem(), blockEvent.getLocation(), blockEvent.getAction())) {
                     invalid.set(true);
                 } else if (blockEvent.getAction().name().endsWith("_CLICK_BLOCK")) {
-                    sbPlayer.getScriptEdit().ifPresent(s -> invalid.set(s.perform(sbPlayer, BlockCoords.of(blockEvent.getBlock()))));
+                    sbPlayer.getScriptEdit().ifPresent(s -> {
+                        invalid.set(s.perform(sbPlayer, BlockCoords.of(blockEvent.getBlock())));
+                        interactEvent.setCancelled(true);
+                    });
                 }
             }
             if (!invalid.get()) {
