@@ -27,7 +27,9 @@
 **== 各バージョンの動作範囲 ==**
 | Plugin | Server | Java |
 |:---:|:---:|:---:|
-|**`2.2.0-2.2.2`**|**`1.9-1.18`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
+|**`ScriptBlock-Universal vX-X-X`**|**`1.13.2-1.1x.x`**|**JavaXX**|
+|**`2.2.3`**|**`1.9-1.19.2`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
+|`2.2.0-2.2.2`|`1.9-1.18`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |`2.1.5-2.1.8`|`1.9-1.17.1`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |`2.1.2-2.1.4`|`1.9-1.17`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |`2.0.4-2.1.1`|`1.9-1.16.5`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
