@@ -73,8 +73,8 @@ public final class OptionManager {
         register(Title::new);
         register(ActionBar::new);
         register(BypassOP::new);
-        register(BypassPerm::new);
         register(BypassGroup::new);
+        register(BypassPerm::new);
         register(Command::new);
         register(Console::new);
         register(Execute::new);

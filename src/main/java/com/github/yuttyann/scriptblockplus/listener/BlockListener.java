@@ -54,12 +54,12 @@ import static com.github.yuttyann.scriptblockplus.utils.StreamUtils.*;
  */
 public final class BlockListener implements Listener {
 
-    private static final Consumer<BukkitTask> CANCEL = b -> { if (b != null) b.cancel(); };
-    private static final Function<SplitValue, String> SPLIT_VALUE = SplitValue::getValue;
-    private static final Function<BlockCoords, Set<BukkitTask>> CREATE_SET = b -> new HashSet<>();
+    private final Consumer<BukkitTask> CANCEL = b -> { if (b != null) b.cancel(); };
+    private final Function<SplitValue, String> SPLIT_VALUE = SplitValue::getValue;
+    private final Function<BlockCoords, Set<BukkitTask>> CREATE_SET = b -> new HashSet<>();
 
-    private static final Set<BlockCoords> REDSTONE_FLAG = new HashSet<>();
-    private static final Map<BlockCoords, Set<BukkitTask>> LOOP_TASK_MAP = new HashMap<>();
+    private final Set<BlockCoords> REDSTONE_FLAG = new HashSet<>();
+    private final Map<BlockCoords, Set<BukkitTask>> LOOP_TASK = new HashMap<>();
 
     /**
      * ScriptBlockPlus RepeatTask クラス
@@ -99,8 +99,8 @@ public final class BlockListener implements Listener {
         var block = event.getBlock();
         var blockCoords = BlockCoords.of(block);
         if (!block.isBlockIndirectlyPowered() && !block.isBlockPowered()) {
-            LOOP_TASK_MAP.getOrDefault(blockCoords, Collections.emptySet()).forEach(CANCEL);
-            LOOP_TASK_MAP.remove(blockCoords);
+            LOOP_TASK.getOrDefault(blockCoords, Collections.emptySet()).forEach(CANCEL);
+            LOOP_TASK.remove(blockCoords);
             REDSTONE_FLAG.remove(blockCoords);
             return;
         }
@@ -132,7 +132,7 @@ public final class BlockListener implements Listener {
                 var delay = Long.parseLong(filterFirst(values, f -> Repeat.DELAY == f.getType()).map(SPLIT_VALUE).orElse("0"));
                 var limit = Integer.parseInt(filterFirst(values, f -> Repeat.LIMIT == f.getType()).map(SPLIT_VALUE).orElse("-1"));
                 var rtask = new RepeatTask(limit, repeat, selector, scriptKey, blockCoords);
-                LOOP_TASK_MAP.computeIfAbsent(blockCoords, CREATE_SET).add(rtask.bukkitTask = ScriptBlock.getScheduler().asyncRun(rtask, delay, rtick));
+                LOOP_TASK.computeIfAbsent(blockCoords, CREATE_SET).add(rtask.bukkitTask = ScriptBlock.getScheduler().asyncRun(rtask, delay, rtick));
             } else {
                 ScriptBlock.getScheduler().asyncRun(() -> perform(repeat, selector, scriptKey, blockCoords));
             }

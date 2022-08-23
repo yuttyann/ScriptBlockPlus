@@ -146,7 +146,7 @@ public abstract class ItemAction implements Cloneable {
      * @return {@code boolean} - 実行できる場合は{@code true}
      */
     public static boolean has(@NotNull Permissible permissible, @Nullable ItemStack item, boolean permission) {
-        var itemAction = StreamUtils.filterFirst(ITEMS, i -> i.compare(item));
+        var itemAction = StreamUtils.filterFirst(ITEMS, i -> i.equals(item));
         return itemAction.filter(i -> !permission || i.hasPermission(permissible)).isPresent();
     }
 
@@ -159,7 +159,7 @@ public abstract class ItemAction implements Cloneable {
      * @return {@code boolean} - 実行に成功した場合は{@code true}
      */
     public static boolean callRun(@NotNull Player player, @Nullable ItemStack item, @Nullable Location location, @NotNull Action action) {
-        var itemAction = ITEMS.stream().filter(i -> i.compare(item)).filter(i -> i.hasPermission(player)).findFirst();
+        var itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player)).findFirst();
         if (itemAction.isPresent()) {
             var runItem = new RunItem(item, ScriptBlock.getSBPlayer(player), action, location == null ? null : BlockCoords.of(location));
             var runItemEvent = new RunItemEvent(runItem);
@@ -180,23 +180,8 @@ public abstract class ItemAction implements Cloneable {
      * @param oldSlot - 前のスロット番号
      */
     public static void callSlot(@NotNull Player player, @Nullable ItemStack item, int newSlot, int oldSlot) {
-        var itemAction = ITEMS.stream().filter(i -> i.compare(item)).filter(i -> i.hasPermission(player));
+        var itemAction = ITEMS.stream().filter(i -> i.equals(item)).filter(i -> i.hasPermission(player));
         itemAction.findFirst().ifPresent(i -> i.clone().slot(new ChangeSlot(ScriptBlock.getSBPlayer(player), newSlot, oldSlot)));
-    }
-
-    /**
-     * アイテムを比較します。
-     * @param item - アイテム
-     * @return {@code boolean} - 一致する場合は{@code true}
-     */
-    public boolean compare(@Nullable ItemStack item) {
-        if (item == null || item.getType() != material) {
-            return false;
-        }
-        if (lore != null && !ItemUtils.getLore(item).equals(StringUtils.setListColor(lore.get()))) {
-            return false;
-        }
-        return ItemUtils.getName(item).equals(StringUtils.setColor(name.get()));
     }
 
     @Override
@@ -210,16 +195,35 @@ public abstract class ItemAction implements Cloneable {
     }
 
     @Override
-    public boolean equals(@Nullable Object obj) {
-        if (!(obj instanceof ItemAction)) {
-            return false;
-        }
-        var item = (ItemAction) obj;
-        return this.material == item.material && this.name == item.name && this.lore == item.lore;
-    }
-
-    @Override
     public int hashCode() {
         return getItem().hashCode();
     }
+
+    /**
+     * アイテムを比較します。
+     * @param item - アイテム
+     * @return {@code boolean} - 一致する場合は{@code true}
+     */
+    public boolean equals(@Nullable ItemStack item) {
+        if (item == null || item.getType() != material) {
+            return false;
+        }
+        if (lore != null && !ItemUtils.getLore(item).equals(StringUtils.setListColor(lore.get()))) {
+            return false;
+        }
+        return ItemUtils.getName(item).equals(StringUtils.setColor(name.get()));
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof ItemStack) {
+            return equals((ItemStack) obj);
+        }
+        if (obj instanceof ItemAction) {
+            var item = (ItemAction) obj;
+            return this.material == item.material && this.name == item.name && this.lore == item.lore;
+        }
+        return false;
+    }
+
 }

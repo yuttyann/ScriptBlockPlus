@@ -36,7 +36,6 @@ import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
 public final class ItemCost extends BaseOption {
 
     public static final String KEY_OPTION = Utils.randomUUID();
-    public static final String KEY_PLAYER = Utils.randomUUID();
 
     @Override
     protected Result isValid() throws Exception {
