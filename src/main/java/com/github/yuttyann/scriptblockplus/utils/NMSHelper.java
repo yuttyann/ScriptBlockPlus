@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,12 +57,25 @@ import com.github.yuttyann.scriptblockplus.utils.raytrace.RayResult;
  */
 public final class NMSHelper {
 
+    private static final String SPAWN_ENTITY_LIVING = Utils.isCBXXXorLater("1.19") ? "PacketPlayOutSpawnEntity" : "PacketPlayOutSpawnEntityLiving";
+
+    // build時に代入
+    private static Object magmaCubeType;
+
     /**
      * リフレクション({@code フィールド、メソッド、コンストラクタ})の検出を行います。
      * @throws ReflectiveOperationException リフレクション関係で例外が発生した際にスローします。
      */
     public static void build() throws ReflectiveOperationException {
         var builder = new ReflectMatcher.Builder();
+        if (Utils.isCBXXXorLater("1.19")) {
+            builder
+            .key("IChatBaseComponent.create")
+            .method(NetMinecraft.NW_CHAT.getClass("IChatBaseComponent"))
+            .type(NetMinecraft.NW_CHAT.getClass("IChatBaseComponent"))
+            .parameter(String.class)
+            .match(true);
+        }
         if (Utils.isCBXXXorLater("1.14")) {
             builder
             .key("setTitle")
@@ -74,6 +88,29 @@ public final class NMSHelper {
             .type(NetMinecraft.WR_INVENTORY.getClass("ContainerAccess"))
             .parameter(NetMinecraft.WR_LEVEL.getClass("World"), NetMinecraft.CORE.getClass("BlockPosition"))
             .match();
+
+            var magmaCube = NetMinecraft.WR_EN_MONSTER.getClass("EntityMagmaCube");
+            var entityTypes = NetMinecraft.WR_ENTITY.getClass("EntityTypes");
+            for (var field : entityTypes.getDeclaredFields()) {
+                if (!entityTypes.equals(field.getType())) {
+                    continue;
+                }
+                var type = field.getGenericType();
+                if (!(type instanceof ParameterizedType)) {
+                    continue;
+                }
+                var types = ((ParameterizedType) type).getActualTypeArguments();
+                if (types.length == 0) {
+                    throw new UnsupportedOperationException();
+                }
+                if (magmaCube.equals(types[0])) {
+                    magmaCubeType = field.get(null);
+                    break;
+                }
+            }
+            if (magmaCubeType == null) {
+                throw new NullPointerException("magmaCubeType null");
+            }
         }
         if (Utils.isCBXXXorLater("1.13.2")) {
             builder
@@ -196,7 +233,7 @@ public final class NMSHelper {
         .match()
 
         .key("PacketPlayOutSpawnEntityLiving")
-        .constructor(NetMinecraft.NW_PR_GAME.getClass("PacketPlayOutSpawnEntityLiving"))
+        .constructor(NetMinecraft.NW_PR_GAME.getClass(SPAWN_ENTITY_LIVING))
         .parameter(NetMinecraft.WR_ENTITY.getClass("EntityLiving"))
         .match();
     }
@@ -307,20 +344,17 @@ public final class NMSHelper {
     @NotNull
     public static Object newEntityMagmaCube(@NotNull World world) throws ReflectiveOperationException {
         var nmsWorld = getNMSWorld(world);
-        if (Utils.isCBXXXorLater("1.14")) {
-            var magmaCube = NetMinecraft.WR_ENTITY.getFieldValue("EntityTypes", NetMinecraft.isLegacy() ? "MAGMA_CUBE" : "X", null);
-            return ReflectMatcher.constructor("EntityMagmaCube").newInstance(magmaCube, nmsWorld);
-        }
-        return ReflectMatcher.constructor("EntityMagmaCube").newInstance(nmsWorld);
+        var constructor = ReflectMatcher.constructor("EntityMagmaCube");
+        return magmaCubeType == null ? constructor.newInstance(nmsWorld) : constructor.newInstance(magmaCubeType, nmsWorld);
     }
 
     @NotNull
     public static Object createSpawnEntity(@NotNull GlowEntity glowEntity) throws ReflectiveOperationException {
         var nmsEntity = glowEntity.getNMSEntity();
         var spawnEntity = ReflectMatcher.constructor("PacketPlayOutSpawnEntityLiving").newInstance(nmsEntity);
-        NetMinecraft.NW_PR_GAME.setFieldValue(true, "PacketPlayOutSpawnEntityLiving", "j", spawnEntity, (byte) 0);
-        NetMinecraft.NW_PR_GAME.setFieldValue(true, "PacketPlayOutSpawnEntityLiving", "k", spawnEntity, (byte) 0);
-        NetMinecraft.NW_PR_GAME.setFieldValue(true, "PacketPlayOutSpawnEntityLiving", "l", spawnEntity, (byte) 0);
+        NetMinecraft.NW_PR_GAME.setFieldValue(true, SPAWN_ENTITY_LIVING, "j", spawnEntity, (byte) 0);
+        NetMinecraft.NW_PR_GAME.setFieldValue(true, SPAWN_ENTITY_LIVING, "k", spawnEntity, (byte) 0);
+        NetMinecraft.NW_PR_GAME.setFieldValue(true, SPAWN_ENTITY_LIVING, "l", spawnEntity, (byte) 0);
         return spawnEntity;
     }
 
@@ -358,12 +392,10 @@ public final class NMSHelper {
     public static void sendPacketOpenWindow(@NotNull Player player, @NotNull String title, int containerId) throws ReflectiveOperationException {
         if (Utils.isCBXXXorLater("1.14")) {
             var anvil = NetMinecraft.WR_INVENTORY.getFieldValue("Containers",  NetMinecraft.isLegacy() ? "ANVIL" : "h", null);
-            var message = NetMinecraft.NW_CHAT.newInstance("ChatComponentText", title);
-            sendPacket(player, ReflectMatcher.constructor("PacketPlayOutOpenWindow").newInstance(containerId, anvil, message));
+            sendPacket(player, ReflectMatcher.constructor("PacketPlayOutOpenWindow").newInstance(containerId, anvil, newChatComponent(title)));
         } else {
             var name = NetMinecraft.LEGACY.invokeMethod(NetMinecraft.LEGACY.getFieldValue("Blocks", "ANVIL", null), "Block", "a");
-            var message = NetMinecraft.LEGACY.newInstance("ChatComponentText", name + ".name");
-            sendPacket(player, ReflectMatcher.constructor("PacketPlayOutOpenWindow").newInstance(containerId, "minecraft:anvil", message));
+            sendPacket(player, ReflectMatcher.constructor("PacketPlayOutOpenWindow").newInstance(containerId, "minecraft:anvil", newChatComponent(name + ".name")));
         }
     }
 
@@ -408,10 +440,16 @@ public final class NMSHelper {
             : new Object[] { inventory, nmsWorld, position, nmsPlayer }
         );
         if (Utils.isCBXXXorLater("1.14")) {
-            ReflectMatcher.method("setTitle").invoke(containerAnvil, NetMinecraft.NW_CHAT.newInstance("ChatComponentText", title));
+            ReflectMatcher.method("setTitle").invoke(containerAnvil, newChatComponent(title));
         }
         NetMinecraft.WR_INVENTORY.setFieldValue("Container", "checkReachable", containerAnvil, false);
         return containerAnvil;
+    }
+
+    @NotNull
+    public static Object newChatComponent(@NotNull String title) throws ReflectiveOperationException {
+        var chatBaseComponent = ReflectMatcher.method("IChatBaseComponent.create");
+        return chatBaseComponent == null ? NetMinecraft.NW_CHAT.newInstance("ChatComponentText", title) : chatBaseComponent.invoke(null, title);
     }
 
     public static void handleInventoryCloseEvent(@NotNull Player player) throws ReflectiveOperationException {
