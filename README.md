@@ -1,4 +1,4 @@
-[[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)] ScriptBlockPlus [v2.2.2](https://github.com/yuttyann/ScriptBlockPlus/releases/tag/v2.2.2) [MC1.9-1.18] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+[[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)] ScriptBlockPlus [v2.2.3](https://github.com/yuttyann/ScriptBlockPlus/releases/tag/v2.2.3) [MC1.9-1.19.2] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 
 概要
