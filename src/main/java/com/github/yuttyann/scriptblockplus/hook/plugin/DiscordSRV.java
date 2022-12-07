@@ -122,11 +122,11 @@ public class DiscordSRV extends HookPlugin {
             return;
         }
         var jda = member.getJDA();
-        if (jda == null) {
-            return;
-        }
         var roles = new ArrayList<Role>(roleIds.length);
         for (var roleId : roleIds) {
+            if (roleId == null) {
+                continue;
+            }
             var role = jda.getRoleById(roleId);
             if (role != null) { roles.add(role); }
         }
@@ -147,11 +147,11 @@ public class DiscordSRV extends HookPlugin {
             return;
         }
         var jda = member.getJDA();
-        if (jda == null) {
-            return;
-        }
         var roles = new ArrayList<Role>(roleIds.length);
         for (var roleId : roleIds) {
+            if (roleId == null) {
+                continue;
+            }
             var role = jda.getRoleById(roleId);
             if (role != null) { roles.add(role); }
         }

@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
 
@@ -99,7 +100,7 @@ public final class RayTrace {
         for (var d = 0.0D; d <= maxDistance; d += accuracy) {
             var position = copy(start, this.start).add(copy(direction, this.direction).multiply(d));
             var block = world.getBlockAt(position.getBlockX(), position.getBlockY(), position.getBlockZ());
-            if (Objects.equals(oldBlock, oldBlock = block) || block.getType().isAir()) {
+            if (Objects.equals(oldBlock, oldBlock = block) || ItemUtils.isAIR(block.getType())) {
                 continue;
             }
             if (fluidCollisionMode != FluidCollisionMode.NEVER && block.getBlockData() instanceof Levelled) {

@@ -174,8 +174,8 @@ public final class CommandSelector {
         if (NetMinecraft.hasNMS() && Utils.isCBXXXorLater("1.13")) {
             try {
                 return NMSHelper.selectEntities(sender, start, selector);
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
+            } catch (ReflectiveOperationException ex) {
+                ex.printStackTrace();
             }
         } else if (Utils.isCBXXXorLater("1.13.2")) {
             return Bukkit.selectEntities(sender, selector);

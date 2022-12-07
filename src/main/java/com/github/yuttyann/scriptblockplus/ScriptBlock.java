@@ -138,7 +138,7 @@ public class ScriptBlock extends JavaPlugin {
         ItemAction.register(new ScriptViewer());
         ItemAction.register(new ScriptManager());
         ItemAction.register(new BlockSelector());
-
+    
         // オプションの更新
         OptionManager.update();
 
@@ -183,8 +183,7 @@ public class ScriptBlock extends JavaPlugin {
                     if (!updater.run(sender) && latestMessage) {
                         SBConfig.NOT_LATEST_PLUGIN.send(sender);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception ex) {
                     SBConfig.ERROR_UPDATE.send(sender);
                 }
             }

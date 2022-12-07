@@ -1,10 +1,11 @@
-[[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)] ScriptBlockPlus [v2.2.3](https://github.com/yuttyann/ScriptBlockPlus/releases/tag/v2.2.3) [MC1.9-1.19.2] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+[[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)] ScriptBlockPlus [v2.2.4](https://github.com/yuttyann/ScriptBlockPlus/releases/tag/v2.2.4) [MC1.9-1.19.2] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 
 概要
 -----------
 [ScriptBlock](https://dev.bukkit.org/projects/scriptblock)の機能を引き継ぎ、新機能追加や改善を施したプラグインです。  
 また、開発者向けに[API](https://github.com/yuttyann/ScriptBlockPlus/wiki/%5BJP%5D-API-Tutorial)を公開しています。  
+(現在`Bukkit`,`Sponge`,`Forge`,`Fabric`で動作可能な、後継プラグインを作成中です。) 
 
 導入
 -----------
@@ -27,8 +28,8 @@
 **== 各バージョンの動作範囲 ==**
 | Plugin | Server | Java |
 |:---:|:---:|:---:|
-|**`ScriptBlock-Universal vX-X-X`**|**`1.13.2-1.1x.x`**|**JavaXX**|
-|**`2.2.3`**|**`1.9-1.19.2`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
+|**`ScriptBlock-Universal`**|**`1.13.2-1.1x.x`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
+|**`2.2.3-2.2.4`**|**`1.9-1.19.2`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |`2.2.0-2.2.2`|`1.9-1.18`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |`2.1.5-2.1.8`|`1.9-1.17.1`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
 |`2.1.2-2.1.4`|`1.9-1.17`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
