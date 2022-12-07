@@ -24,6 +24,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.splittype.Filter;
@@ -32,17 +34,24 @@ import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
 import com.github.yuttyann.scriptblockplus.selector.split.Split;
 import com.github.yuttyann.scriptblockplus.selector.split.SplitValue;
 
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,52 +70,73 @@ public final class BlockListener implements Listener {
     private final Set<BlockCoords> REDSTONE_FLAG = new HashSet<>();
     private final Map<BlockCoords, Set<BukkitTask>> LOOP_TASK = new HashMap<>();
 
-    /**
-     * ScriptBlockPlus RepeatTask クラス
-     * @author yuttyann44581
-     */
-    private class RepeatTask implements Runnable {
-    
-        private int count;
-        private BukkitTask bukkitTask;
+    private final BlockFace[] FACES = { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN };
 
-        private final int limit;
-        private final Split repeat;
-        private final String selector;
-        private final ScriptKey scriptKey;
-        private final BlockCoords blockCoords;
-    
-        private RepeatTask(final int limit, @NotNull Split repeat, @NotNull String selector, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
-            this.limit = limit;
-            this.repeat = repeat;
-            this.selector = selector;
-            this.scriptKey = scriptKey;
-            this.blockCoords = blockCoords;
-        }
-
-        @Override
-        public void run() {
-            if (limit > -1 && limit <= count++) {
-                CANCEL.accept(bukkitTask);
-            } else {
-                perform(repeat, selector, scriptKey, blockCoords);
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockPhysicsEvent(BlockPhysicsEvent event) {
+        var block = event.getBlock();
+        if (Utils.isCBXXXorLater("1.19")) {
+            call(block);
+            for (int i = 0, l = FACES.length; i < l; i++) {
+                var relative = block;
+                do {
+                    search(relative = relative.getRelative(FACES[i]));
+                } while (relative.isBlockPowered() || relative.isBlockIndirectlyPowered());
             }
+        } else {
+            search(block);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onBlockPhysics(BlockPhysicsEvent event) {
-        var block = event.getBlock();
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (Utils.isCBXXXorLater("1.19")) {
+            var block = event.getBlock();
+            ScriptBlock.getScheduler().run(() -> search(block));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (Utils.isCBXXXorLater("1.19")) {
+            var block = event.getBlock();
+            ScriptBlock.getScheduler().run(() -> search(block));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockPistonRetract(BlockPistonRetractEvent event) {
+        if (Utils.isCBXXXorLater("1.19")) {
+            var block = event.getBlock(); var blocks = event.getBlocks();
+            ScriptBlock.getScheduler().run(() -> { search(block); blocks.forEach(this::search); });
+        }
+    }
+
+    private void search(@NotNull Block block) {
+        call(block);
+        for (var BlockFace : FACES) {
+            call(block.getRelative(BlockFace));
+        }
+    }
+
+    @NotNull
+    private void call(@Nullable Block block) {
+        if (block == null || ItemUtils.isAIR(block.getType())) {
+            return;
+        }
         var blockCoords = BlockCoords.of(block);
-        if (!block.isBlockIndirectlyPowered() && !block.isBlockPowered()) {
+        if (!block.isBlockPowered() && !block.isBlockIndirectlyPowered()) {
             LOOP_TASK.getOrDefault(blockCoords, Collections.emptySet()).forEach(CANCEL);
             LOOP_TASK.remove(blockCoords);
             REDSTONE_FLAG.remove(blockCoords);
-            return;
+        } else if (!REDSTONE_FLAG.contains(blockCoords)) {
+            REDSTONE_FLAG.add(blockCoords);
+            onRedstone(block, blockCoords);
         }
-        if (REDSTONE_FLAG.contains(blockCoords)) {
-            return;
-        }
+        return;
+    }
+
+    private void onRedstone(@NotNull Block block, @NotNull BlockCoords blockCoords) {
         for (var scriptKey : ScriptKey.iterable()) {
             var scriptJson = BlockScriptJson.get(scriptKey);
             if (scriptJson.isEmpty()) {
@@ -124,7 +154,6 @@ public final class BlockListener implements Listener {
             if (StringUtils.isEmpty(selector) || !CommandSelector.has(selector)) {
                 continue;
             }
-            REDSTONE_FLAG.add(blockCoords);
             var repeat = new Split(selector, "repeat", "{", "}");
             if (repeat.length() > 0) {
                 var values = repeat.getValues(Repeat.values());
@@ -173,6 +202,39 @@ public final class BlockListener implements Listener {
                 return index < Integer.parseInt(value);
             default:
                 return false;
+        }
+    }
+
+    /**
+     * ScriptBlockPlus RepeatTask クラス
+     * @author yuttyann44581
+     */
+    private class RepeatTask implements Runnable {
+    
+        private int count;
+        private BukkitTask bukkitTask;
+
+        private final int limit;
+        private final Split repeat;
+        private final String selector;
+        private final ScriptKey scriptKey;
+        private final BlockCoords blockCoords;
+    
+        private RepeatTask(final int limit, @NotNull Split repeat, @NotNull String selector, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+            this.limit = limit;
+            this.repeat = repeat;
+            this.selector = selector;
+            this.scriptKey = scriptKey;
+            this.blockCoords = blockCoords;
+        }
+
+        @Override
+        public void run() {
+            if (limit > -1 && limit <= count++) {
+                CANCEL.accept(bukkitTask);
+            } else {
+                perform(repeat, selector, scriptKey, blockCoords);
+            }
         }
     }
 }
