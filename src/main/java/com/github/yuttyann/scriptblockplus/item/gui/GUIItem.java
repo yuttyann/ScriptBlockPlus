@@ -15,6 +15,7 @@
  */
 package com.github.yuttyann.scriptblockplus.item.gui;
 
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriConsumer;
@@ -114,8 +115,29 @@ public final class GUIItem implements Cloneable {
      * @param clickType - クリックの種類
      */
     public void onClicked(@NotNull UserWindow window, @NotNull ClickType clickType) {
+        if (clicked == null) {
+            return;
+        }
+        var sbPlayer = window.getSBPlayer();
+        if (!sbPlayer.isOnline()) {
+            return;   
+        }
+        var custom = window.getCustomGUI();
+        if (custom.getInterval() > 0) {
+            // クリックを素早く行うと連続で呼ばれてしまうので、インターバルを設ける。
+            var objectMap = sbPlayer.getObjectMap();
+            if (objectMap.getBoolean(custom.getIntervalKey())) {
+                return;
+            }
+            try {
+                objectMap.put(custom.getIntervalKey(), true);
+            } finally {
+                ScriptBlock.getScheduler().run(() -> objectMap.put(custom.getIntervalKey(), false), custom.getInterval());
+            }
+        }
         if (clicked != null) {
             clicked.accept(window, this, clickType);
+            window.getCustomGUI().playSoundEffect(window.getSBPlayer());
         }
     }
 

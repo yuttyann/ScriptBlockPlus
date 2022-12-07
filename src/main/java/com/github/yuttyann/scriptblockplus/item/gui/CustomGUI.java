@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.ArrayUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -44,10 +45,12 @@ public abstract class CustomGUI {
     private final UUID uuid;
     private final String key;
     private final GUIItem[] items;
+    private final long interval;
     private final boolean cancelled;
 
     private Sound sound;
     private float volume, pitch;
+    private String intervalKey;
 
     /**
      * コンストラクタ
@@ -55,11 +58,23 @@ public abstract class CustomGUI {
      * @param size - GUIのサイズ
      * @param cancelled - アイテムの移動をキャンセルする場合は{@code true}
     */
-    protected CustomGUI(@NotNull Supplier<String> title, @NotNull int size, final boolean cancelled) {
+    protected CustomGUI(@NotNull Supplier<String> title, final int size, final boolean cancelled) {
+        this(title, size, 3L, cancelled);
+    }
+
+    /**
+     * コンストラクタ
+     * @param title - GUIのタイトル
+     * @param size - GUIのサイズ
+     * @param interval 連続でクリックを行う場合のインターバル
+     * @param cancelled - アイテムの移動をキャンセルする場合は{@code true}
+    */
+    protected CustomGUI(@NotNull Supplier<String> title, final int size, final long interval, final boolean cancelled) {
         this.title = title;
         this.uuid = UUID.randomUUID();
         this.key = uuid.toString();
         this.items = new GUIItem[size < 0 ? size * -1 : size == 0 ? 9 : size > 6 ? 54 : size * 9];
+        this.interval = interval;
         this.cancelled = cancelled;
     }
 
@@ -113,7 +128,7 @@ public abstract class CustomGUI {
      * @return {@link UUID} - GUIの{@link UUID}
      */
     @NotNull
-    public UUID getUniqueId() {
+    public final UUID getUniqueId() {
         return uuid;
     }
 
@@ -122,7 +137,7 @@ public abstract class CustomGUI {
      * @return {@link String} - タイトル
      */
     @NotNull
-    public String getTitle() {
+    public final String getTitle() {
         return title.get();
     }
 
@@ -131,7 +146,7 @@ public abstract class CustomGUI {
      * @return {@link GUIItem}[] - アイテムの配列
      */
     @NotNull
-    public GUIItem[] getContents() {
+    public final GUIItem[] getContents() {
         return items;
     }
 
@@ -139,15 +154,32 @@ public abstract class CustomGUI {
      * GUIのサイズを取得します。
      * @return {@code int} - サイズ
      */
-    public int getSize() {
+    public final int getSize() {
         return items.length;
+    }
+
+    /**
+     * 連続でクリックを行う場合のインターバルを取得します。
+     * @return {@code long} - インターバル
+     */
+    public final long getInterval() {
+        return interval;
+    }
+
+    /**
+     * インターバルのキーを取得します。
+     * @return {@link String} - インターバルのキー
+     */
+    @NotNull
+    final String getIntervalKey() {
+        return intervalKey == null ? this.intervalKey = Utils.randomUUID() : intervalKey;
     }
 
     /**
      * アイテムの移動をキャンセルする場合は{@code true}を返します。 
      * @return {@code boolean} - アイテムの移動をキャンセルする場合は{@code true}
      */
-    public boolean isCancelled() {
+    public final boolean isCancelled() {
         return cancelled;
     }
 
@@ -158,7 +190,7 @@ public abstract class CustomGUI {
      * @return {@link CustomGUI}
      */
     @NotNull
-    public CustomGUI setItem(int slot, @Nullable GUIItem item) {
+    public final CustomGUI setItem(int slot, @Nullable GUIItem item) {
         if (slot < items.length) {
             items[slot] = item;
         }
@@ -172,7 +204,7 @@ public abstract class CustomGUI {
      * @return {@link CustomGUI}
      */
     @NotNull
-    public CustomGUI setItem(int[] slots, @Nullable GUIItem item) {
+    public final CustomGUI setItem(int[] slots, @Nullable GUIItem item) {
         return setItem(slots, ArrayUtils.EMPTY_INT_ARRAY, item);
     }
 
@@ -186,7 +218,7 @@ public abstract class CustomGUI {
      * @return {@link CustomGUI}
      */
     @NotNull
-    public CustomGUI setItem(int[] slots, int[] filter, @Nullable GUIItem item) {
+    public final CustomGUI setItem(int[] slots, int[] filter, @Nullable GUIItem item) {
         for (int i = 0; i < slots.length; i++) {
             if (ArrayUtils.indexOf(filter, slots[i]) == -1) {
                 setItem(i, item);
@@ -203,7 +235,7 @@ public abstract class CustomGUI {
      * @return {@link CustomGUI}
      */
     @NotNull
-    public CustomGUI setItem(int start, int end, @Nullable GUIItem item) {
+    public final CustomGUI setItem(int start, int end, @Nullable GUIItem item) {
         return setItem(start, end, ArrayUtils.EMPTY_INT_ARRAY, item);
     }
 
@@ -218,7 +250,7 @@ public abstract class CustomGUI {
      * @return {@link CustomGUI}
      */
     @NotNull
-    public CustomGUI setItem(int start, int end, int[] filter, @Nullable GUIItem item) {
+    public final CustomGUI setItem(int start, int end, int[] filter, @Nullable GUIItem item) {
         for (int i = start; i < end; i++) {
             if (ArrayUtils.indexOf(filter, i) == -1) {
                 setItem(i, item);
@@ -233,7 +265,7 @@ public abstract class CustomGUI {
      * @return {@link GUIItem} - アイテム
      */
     @Nullable
-    public GUIItem getItem(int slot) {
+    public final GUIItem getItem(int slot) {
         return slot < items.length ? items[slot] : null;
     }
 
@@ -243,7 +275,7 @@ public abstract class CustomGUI {
      * @return {@link UserWindow} - プレイヤーのウィンドウ
      */
     @NotNull
-    public UserWindow getUserWindow(@NotNull SBPlayer sbPlayer) {
+    public final UserWindow getUserWindow(@NotNull SBPlayer sbPlayer) {
         var window = (UserWindow) sbPlayer.getObjectMap().get(key);
         if (window == null) {
             sbPlayer.getObjectMap().put(key, window = new UserWindow(sbPlayer, this));
@@ -256,7 +288,7 @@ public abstract class CustomGUI {
      * @param sbPlayer - プレイヤー
      * @return {@link UserWindow} - プレイヤーのウィンドウが存在する場合は{@code true}
      */
-    public boolean hasUserWindow(@NotNull SBPlayer sbPlayer) {
+    public final boolean hasUserWindow(@NotNull SBPlayer sbPlayer) {
         return sbPlayer.getObjectMap().has(key);
     }
 

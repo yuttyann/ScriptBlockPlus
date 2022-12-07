@@ -103,7 +103,11 @@ public final class PlayerListener implements Listener {
             }
         }
         var window = (UserWindow) sbPlayer.getObjectMap().get(UserWindow.KEY_WINDOW);
-        if (window == null || event.getSlotType() != SlotType.CONTAINER) {
+        if (window == null) {
+            return;
+        }
+        var slotType = event.getSlotType();
+        if (slotType == SlotType.OUTSIDE) {
             return;
         }
         var customGUI = window.getCustomGUI();
@@ -113,18 +117,15 @@ public final class PlayerListener implements Listener {
         if (customGUI.isCancelled()) {
             event.setCancelled(true);
         }
+        if (event.getClick() == ClickType.DOUBLE_CLICK || event.getRawSlot() != event.getSlot()) {
+            return;
+        }
         var guiItem = window.getItem(event.getSlot());
-        if (guiItem == null || guiItem.toBukkit().getType() == Material.AIR) {
+        if (guiItem == null || guiItem.getClicked() == null || guiItem.toBukkit().getType() == Material.AIR || !guiItem.toBukkit().equals(event.getCurrentItem())) {
             return;
         }
-        if (customGUI.isCancelled() && !guiItem.toBukkit().equals(event.getCurrentItem())) {
-            window.close();
-            return;
-        }
-        var clickType = event.getClick();
-        if ((clickType == ClickType.LEFT || clickType == ClickType.RIGHT) && guiItem.getClicked() != null) {
-            guiItem.onClicked(window, clickType);
-            window.getCustomGUI().playSoundEffect(sbPlayer);
+        if (event.isRightClick() || event.isLeftClick()) {
+            guiItem.onClicked(window, event.getClick());
         }
     }
 
