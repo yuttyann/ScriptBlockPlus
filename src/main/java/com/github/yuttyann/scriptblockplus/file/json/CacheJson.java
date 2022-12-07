@@ -38,17 +38,28 @@ public final class CacheJson {
      */
     public static final Map<Class<? extends BaseJson<?>>, CacheJson> CACHES = new HashMap<>();
 
+    /**
+     * コンストラクタを呼び出さずに、インスタンスを生成する(非推奨)クラス
+     */
+    private static final UnsafeAllocator UNSAFE;
+
     static {
         // キャッシュするクラスを登録
         register(BlockScriptJson.class, BlockScriptJson::new);
         register(PlayerCountJson.class, PlayerCountJson::new);
         register(PlayerTimerJson.class, PlayerTimerJson::new);
+
+        UnsafeAllocator unsafe = null;
+        try {
+            var method = UnsafeAllocator.class.getDeclaredMethod("create");
+            method.setAccessible(true);
+            unsafe = (UnsafeAllocator) method.invoke(null);
+        } catch (ReflectiveOperationException ex) {
+            ex.printStackTrace();
+        }
+        UNSAFE = unsafe;
     }
 
-    /**
-     * コンストラクタを呼び出さずに、インスタンスを生成する(非推奨)クラス
-     */
-    private static final UnsafeAllocator UNSAFE = UnsafeAllocator.create();
 
     /**
      * Jsonのクラス
@@ -71,8 +82,8 @@ public final class CacheJson {
                var baseJson = UNSAFE.newInstance(json);
                baseJson.constructor(json, s, s.hashCode());
                return baseJson;
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
             throw new IllegalArgumentException("Failed to create an instance");
         });
