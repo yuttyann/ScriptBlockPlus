@@ -68,6 +68,15 @@ public final class NMSHelper {
      */
     public static void build() throws ReflectiveOperationException {
         var builder = new ReflectMatcher.Builder();
+        if (Utils.isCBXXXorLater("1.19.3")) {
+            builder
+            .key("DataWatcher.getListC")
+            .name("c")
+            .method(NetMinecraft.NW_SYNCHER.getClass("DataWatcher"))
+            .type(List.class)
+            .parameter(ArrayUtils.EMPTY_CLASS_ARRAY)
+            .match();
+        }
         if (Utils.isCBXXXorLater("1.19")) {
             builder
             .key("IChatBaseComponent.create")
@@ -229,12 +238,16 @@ public final class NMSHelper {
 
         .key("PacketPlayOutEntityMetadata")
         .constructor(NetMinecraft.NW_PR_GAME.getClass("PacketPlayOutEntityMetadata"))
-        .parameter(int.class, NetMinecraft.NW_SYNCHER.getClass("DataWatcher"), boolean.class)
+        .parameter(
+            Utils.isCBXXXorLater("1.19.3")
+            ? new Class<?>[] { int.class, List.class }
+            : new Class<?>[] { int.class, NetMinecraft.NW_SYNCHER.getClass("DataWatcher"), boolean.class }
+        )
         .match()
 
         .key("PacketPlayOutSpawnEntityLiving")
         .constructor(NetMinecraft.NW_PR_GAME.getClass(SPAWN_ENTITY_LIVING))
-        .parameter(NetMinecraft.WR_ENTITY.getClass("EntityLiving"))
+        .parameter(Utils.isCBXXXorLater("1.19.3") ? NetMinecraft.WR_ENTITY.getClass("Entity") : NetMinecraft.WR_ENTITY.getClass("EntityLiving"))
         .match();
     }
 
@@ -357,10 +370,14 @@ public final class NMSHelper {
         NetMinecraft.NW_PR_GAME.setFieldValue(true, SPAWN_ENTITY_LIVING, "l", spawnEntity, (byte) 0);
         return spawnEntity;
     }
-
+    
     @NotNull
     public static Object createMetadata(@NotNull GlowEntity glowEntity) throws ReflectiveOperationException {
         var watcher = ReflectMatcher.method("getDataWatcher").invoke(glowEntity.getNMSEntity(), ArrayUtils.EMPTY_OBJECT_ARRAY);
+        if (Utils.isCBXXXorLater("1.19.3")) {
+            var list = ReflectMatcher.method("DataWatcher.getListC").invoke(watcher, ArrayUtils.EMPTY_OBJECT_ARRAY);
+            return ReflectMatcher.constructor("PacketPlayOutEntityMetadata").newInstance(glowEntity.getId(), list);
+        }
         return ReflectMatcher.constructor("PacketPlayOutEntityMetadata").newInstance(glowEntity.getId(), watcher, true);
     }
 
