@@ -1,4 +1,4 @@
-[[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)] ScriptBlockPlus [v2.2.5](https://github.com/yuttyann/ScriptBlockPlus/releases/tag/v2.2.5) [MC1.9-1.19.3] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+[Java11] ScriptBlockPlus v2.2.5 [MC1.9-1.19.3] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 
 概要
@@ -9,7 +9,7 @@
 
 導入
 -----------
-[ダウンロード](https://www.spigotmc.org/resources/scriptblockplus.78413/)した`ScriptBlockPlus`を、`plugins`フォルダへ保存すれば完了です。  
+[ダウンロード](https://github.com/yuttyann/FileArchive/tree/main/ScriptBlockPlus)した`ScriptBlockPlus`を、`plugins`フォルダへ保存すれば完了です。  
 
 ### Java8版
 別の[リポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。  
@@ -28,20 +28,21 @@
 **== 各バージョンの動作範囲 ==**
 | Plugin | Server | Java |
 |:---:|:---:|:---:|
-|**`ScriptBlock-Universal`**|**`1.13.2-1.1x.x`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
-|**`2.2.3-2.2.4`**|**`1.9-1.19.2`**|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
-|`2.2.0-2.2.2`|`1.9-1.18`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
-|`2.1.5-2.1.8`|`1.9-1.17.1`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
-|`2.1.2-2.1.4`|`1.9-1.17`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
-|`2.0.4-2.1.1`|`1.9-1.16.5`|**[Java11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9)**|
-|[`2.x.x-JV8`](https://github.com/yuttyann/ScriptBlockPlus-Java8)|`1.9-1.16.5`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|`1.8.5-2.0.3`|`1.9-1.16.5`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|`1.6.0-1.8.4`|`1.8-1.15.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|`1.4.0-1.5.0`|`1.7.2-1.13.2`|**[Java8](https://adoptopenjdk.net/?variant=openjdk8)**|
-|`1.0.0-1.3.3`|`1.7.2-1.13.2`|**[Java7](https://jdk.java.net/java-se-ri/7)**|  
+|**`ScriptBlock-Universal`**|**`1.13.2-1.1x.x`**|**Java11**|
+|**`2.2.5`**|**`1.9-1.19.3`**|**Java11**|
+|**`2.2.3-2.2.4`**|**`1.9-1.19.2`**|**Java11**|
+|`2.2.0-2.2.2`|`1.9-1.18`|**Java11**|
+|`2.1.5-2.1.8`|`1.9-1.17.1`|**Java11**|
+|`2.1.2-2.1.4`|`1.9-1.17`|**Java11**|
+|`2.0.4-2.1.1`|`1.9-1.16.5`|**Java11**|
+|[`2.x.x-JV8`](https://github.com/yuttyann/ScriptBlockPlus-Java8)|`1.9-1.16.5`|**Java8**|
+|`1.8.5-2.0.3`|`1.9-1.16.5`|**Java8**|
+|`1.6.0-1.8.4`|`1.8-1.15.2`|**Java8**|
+|`1.4.0-1.5.0`|`1.7.2-1.13.2`|**Java8**|
+|`1.0.0-1.3.3`|`1.7.2-1.13.2`|**Java7**|  
 
 **== バージョン"1.13-1.13.1"の動作について ==**  
-サーバーが[**Java9**](https://jdk.java.net/java-se-ri/9)以降に対応していないことが原因で、**エラーが発生する不具合が存在します。**  
+サーバーが**Java9**以降に対応していないことが原因で、**エラーが発生する不具合が存在します。**  
 プラグイン自体は正常に動作するのですが、問題が発生する可能性があるので"[**1.13.2**](https://papermc.io/legacy)"を利用してください。  
 **解決方法(非推奨)**、`<Server>.jar`内の`org/objectweb/asm/ClassVisitor.class`を[改変](https://pastebin.com/UFBdKXJD)することで動作します。  
 
@@ -70,7 +71,6 @@
 
 リンク
 -----------
-**[[Files, JP]](https://file.yuttyann44581.net/)**  
 **[[Wiki, JP]](https://github.com/yuttyann/ScriptBlockPlus/wiki)**  
 **[[Poteton, JP]](https://mcpoteton.com/mcplugin-scriptblockplus)**  
 **[[SpigotMC, EN]](https://www.spigotmc.org/resources/scriptblockplus.78413/)**  
