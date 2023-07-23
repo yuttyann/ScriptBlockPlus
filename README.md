@@ -69,9 +69,17 @@
 |**[Mohist](https://mohistmc.com/)**|ForgeとSpigot(Paper)の両方の機能を備えています。|
 |**[Magma](https://magmafoundation.org/)**|ForgeとSpigot(Paper)の両方の機能を備えています。|
 
+
+ダウンロード
+-----------
+| サイト | 言語 | 説明 |
+|:---|:---|:---|
+| [**FileArchive**](https://github.com/yuttyann/FileArchive/tree/main/ScriptBlockPlus) | `Japanese` | 作者が配布物をまとめているリポジトリです。 |
+| [**SpigotMC**](https://www.spigotmc.org/resources/78413/) | `English` | 作者が海外向けに配布を行うために利用しているサイトです。 |
+| [**MCBBS**](https://www.mcbbs.net/thread-691900-1-1.html) | `Chinese` | 有志が解説、配布を行っている中国のマインクラフトのフォーラムです。 |
+
 リンク
 -----------
-**[[Wiki, JP]](https://github.com/yuttyann/ScriptBlockPlus/wiki)**  
-**[[Poteton, JP]](https://mcpoteton.com/mcplugin-scriptblockplus)**  
-**[[SpigotMC, EN]](https://www.spigotmc.org/resources/scriptblockplus.78413/)**  
-**[[MCBBS, ZH]](https://www.mcbbs.net/thread-691900-1-1.html)**
+| ページ | 説明 |
+|:---|:---|
+| [MCPoteton](https://mcpoteton.com/mcplugin-scriptblockplus) | あらゆる機能の解説をしています。 |
