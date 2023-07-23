@@ -27,10 +27,9 @@
 
 **== 各バージョンの動作範囲 ==**
 | Plugin | Server | Java |
-|:---:|:---:|:---:|
-|**`ScriptBlock-Universal`**|**`1.13.2-1.1x.x`**|**Java11**|
+|:---|:---|:---:|
 |**`2.2.5`**|**`1.9-1.19.3`**|**Java11**|
-|**`2.2.3-2.2.4`**|**`1.9-1.19.2`**|**Java11**|
+|`2.2.3-2.2.4`|`1.9-1.19.2`|**Java11**|
 |`2.2.0-2.2.2`|`1.9-1.18`|**Java11**|
 |`2.1.5-2.1.8`|`1.9-1.17.1`|**Java11**|
 |`2.1.2-2.1.4`|`1.9-1.17`|**Java11**|
@@ -59,24 +58,24 @@
 [**`net.minecraft.server`**](https://sodocumentation.net/ja/bukkit/topic/9576/nms)が見つからなかった場合は、**NMS依存の機能が強制的に無効**になります。  
 下記は、動作確認を行ったサーバーの一覧です。
 | Server | Description |
-|:---:|:---|
-|**[Spigot](https://www.spigotmc.org/)**|可もなく不可もない、一般的に採用されているサーバーです。|
-|**[Paper](https://papermc.io/)**|Spigotの派生サーバーで、最適化の他、詳細な設定の追加等も行われています。|
-|**[Tuinity](https://ci.codemc.io/job/Spottedleaf/job/Tuinity/)**|Paperの派生サーバーで、大規模なサーバー向けに最適化されています。|
-|**[Yatopia](https://yatopiamc.org/)**|Tuinityの派生サーバーで、様々なサーバープラットフォームの最適化パッチを適用しています。|
-|**[Purpur](https://purpur.pl3x.net/)**|Tuinityの派生サーバーで、様々なユニークな機能が追加されています。|
-|**[Akarin](https://github.com/Akarin-project/Akarin)**|Paperの派生サーバーで、パフォーマンスの向上を目的として作成されています。|
-|**[Mohist](https://mohistmc.com/)**|ForgeとSpigot(Paper)の両方の機能を備えています。|
-|**[Magma](https://magmafoundation.org/)**|ForgeとSpigot(Paper)の両方の機能を備えています。|
+|:---|:---|
+|[Spigot](https://www.spigotmc.org/)|可もなく不可もない、一般的に採用されているサーバーです。|
+|[Paper](https://papermc.io/)|Spigotの派生サーバーで、最適化の他、詳細な設定の追加等も行われています。|
+|[Tuinity](https://ci.codemc.io/job/Spottedleaf/job/Tuinity/)|Paperの派生サーバーで、大規模なサーバー向けに最適化されています。|
+|[Yatopia](https://yatopiamc.org/)|Tuinityの派生サーバーで、様々なサーバープラットフォームの最適化パッチを適用しています。|
+|[Purpur](https://purpur.pl3x.net/)|Tuinityの派生サーバーで、様々なユニークな機能が追加されています。|
+|[Akarin](https://github.com/Akarin-project/Akarin)|Paperの派生サーバーで、パフォーマンスの向上を目的として作成されています。|
+|[Mohist](https://mohistmc.com/)|ForgeとSpigot(Paper)の両方の機能を備えています。|
+|[Magma](https://magmafoundation.org/)|ForgeとSpigot(Paper)の両方の機能を備えています。|
 
 
 ダウンロード
 -----------
 | サイト | 言語 | 説明 |
 |:---|:---|:---|
-| [**FileArchive**](https://github.com/yuttyann/FileArchive/tree/main/ScriptBlockPlus) | `Japanese` | 作者が配布物をまとめているリポジトリです。 |
-| [**SpigotMC**](https://www.spigotmc.org/resources/78413/) | `English` | 作者が海外向けに配布を行うために利用しているサイトです。 |
-| [**MCBBS**](https://www.mcbbs.net/thread-691900-1-1.html) | `Chinese` | 有志が解説、配布を行っている中国のマインクラフトのフォーラムです。 |
+| [FileArchive](https://github.com/yuttyann/FileArchive/tree/main/ScriptBlockPlus) | `Japanese` | 作者が配布物をまとめているリポジトリです。 |
+| [SpigotMC](https://www.spigotmc.org/resources/78413/) | `English` | 作者が海外向けに配布を行うために利用しているサイトです。 |
+| [MCBBS](https://www.mcbbs.net/thread-691900-1-1.html) | `Chinese` | 有志が解説、配布を行っている中国のマインクラフトのフォーラムです。 |
 
 リンク
 -----------
