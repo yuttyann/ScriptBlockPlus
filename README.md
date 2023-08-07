@@ -1,4 +1,4 @@
-[Java11] ScriptBlockPlus v2.2.5 [MC1.9-1.19.3]
+[Java11] ScriptBlockPlus [MC1.9-1.20.1]
 ==========
 
 概要
@@ -18,17 +18,18 @@
 **プラグインバージョンv2.1.2より、更新を停止いたしました。**
 
 ### 連携プラグイン
-| Plugin | Description | Development |
-|:---|:---|:---:|
-| [Vault](https://www.spigotmc.org/resources/vault.34315/) | 権限、経済系プラグインの機能を利用する事ができます。 | **1.7.3** |
-| [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/) | ディスコ―ドの機能を利用する事ができます。 | **1.24.0** |
-| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの機能を拡張する事ができます。 | **2.11.1** |
-| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定する事ができます。 | **1.2.2** |  
+| Plugin | Description |
+|:---|:---|
+| [Vault](https://www.spigotmc.org/resources/vault.34315/) | 権限、経済系プラグインの機能を利用する事ができます。 |
+| [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/) | ディスコ―ドの機能を利用する事ができます。 |
+| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの機能を拡張する事ができます。 |
+| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定する事ができます。 |  
 
 **== 各バージョンの動作範囲 ==**
 | Plugin | Server | Java |
 |:---|:---|:---:|
-|**`2.2.5`**|**`1.9-1.19.3`**|**Java11**|
+|**`2.2.6`**|**`1.9-1.20.1`**|**Java11**|
+|`2.2.5`|`1.9-1.19.3`|**Java11**|
 |`2.2.3-2.2.4`|`1.9-1.19.2`|**Java11**|
 |`2.2.0-2.2.2`|`1.9-1.18`|**Java11**|
 |`2.1.5-2.1.8`|`1.9-1.17.1`|**Java11**|
