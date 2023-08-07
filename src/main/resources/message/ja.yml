@@ -7,7 +7,6 @@
 ToolCommandMessage: 'tool - 補助ツールの選択ウィンドウを表示します。'
 ReloadCommandMessage: 'reload - 全てのファイルの再読み込みを行います。'
 BackupCommandMessage: 'backup - プラグインデータのバックアップを作成します。'
-CheckVerCommandMessage: 'checkver - 最新のプラグインが存在するかチェックします。'
 DataMigrCommandMessage: 'datamigr - ScriptBlockのスクリプトをSBPlusへ移行します。'
 CreateCommandMessage: '<scriptkey> create <options> - ブロックにスクリプトを設定します。'
 AddCommandMessage: '<scriptkey> add <options> - ブロックにスクリプトを追加します。'
@@ -96,24 +95,9 @@ GiveToolMessage: '&a補助ツールが配布されました。'
 AllFileReloadMessage: '&a全てのファイルの再読み込みが完了しました。'
 PluginBackupMessage: '&aプラグインデータのバックアップが完了しました。'
 ErrorPluginBackupMessage: '&cプラグインデータのバックアップに失敗しました。'
-NotLatestPluginMessage: '&b現在のバージョンが最新です。'
 NotScriptBlockFileMessage: '&cScriptBlockのデータファイルが見つかりません。'
 DataMigrStartMessage: '&7ScriptBlockのスクリプトを移行しています....'
 DataMigrEndMessage: '&bスクリプトの移行が完了しました。'
-UpdateDownloadStartMessage: '&6最新のプラグインをダウンロードしています...'
-
-# %name% : ファイル名
-# %path% : ファイルパス
-# %size% : ファイルサイズ
-UpdateDownloadEndMessage: '&6ダウンロードが終了しました。|~ファイル名: %name%|~ファイルサイズ: %size%|~ファイルパス: %path%'
-
-# %name%    : プラグイン名
-# %version% : 最新バージョン
-# %details% : 更新内容
-UpdateCheckMessage: '&b最新のバージョンを検出しました。|~v%version%にアップデートしてください。|~プラグイン名: %name%|~☆アップデート内容☆|~%details%'
-
-# プレースホルダはありません
-ErrorUpdateMessage: '&cアップデートに失敗しました。'
 
 # %scriptkey% : スクリプトキー
 ScriptCopyMessage: '&aブロック"%scriptkey%"のスクリプトをコピーしました。'

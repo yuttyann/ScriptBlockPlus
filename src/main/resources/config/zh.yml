@@ -1,17 +1,6 @@
 # ScriptBlockPlus v${project.version} Config #
 
 
-## ===== 自动更新 ===== ##
-# [true -> 真 | false -> 假]
-# 鉴于国内网络实际情况 不建议开启
-UpdateChecker: false
-
-# 自动下载最新版
-AutoDownload: false
-
-# 显示更新内容
-OpenChangeLog: false
-
 ## ===== Json ===== ##
 # [true -> 真 | false -> 假]
 # 是否在服务器启动时预先缓存所有Json

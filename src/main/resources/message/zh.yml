@@ -8,7 +8,6 @@
 ToolCommandMessage: 'tool - 显示一个选择辅助工具的窗口'
 ReloadCommandMessage: 'reload - 重载插件'
 BackupCommandMessage: 'backup - 备份插件数据'
-CheckVerCommandMessage: 'checkver - 查询最新版本'
 DataMigrCommandMessage: 'datamigr - 将ScriptBlock的旧数据转移至ScriptBlockPlus'
 CreateCommandMessage: '<scriptkey> create <options> - 创建脚本方块'
 AddCommandMessage: '<scriptkey> add <options> - 添加脚本方块'
@@ -97,24 +96,9 @@ GiveToolMessage: '&a获得选择工具'
 AllFileReloadMessage: '&a插件成功重载，汉化 by 秋风残叶'
 PluginBackupMessage: '&a插件数据的备份已完成'
 ErrorPluginBackupMessage: '&c插件数据的备份已完成'
-NotLatestPluginMessage: '&c已是最新版本'
 NotScriptBlockFileMessage: '&cScriptBlock无数据或者数据损坏'
 DataMigrStartMessage: '&7开始从ScriptBlock转移数据....'
 DataMigrEndMessage: '&b数据转移完毕'
-UpdateDownloadStartMessage: '&6开始下载最新版本ScriptBlockPlus...如果发生卡顿 请不要启用自动更新'
-
-# %name% : 文件名
-# %path% : 文件路径
-# %size% : 文件大小
-UpdateDownloadEndMessage: '&6新更新下载完成|~文件名: %name%|~文件大小: %size%|~文件路径: %path%'
-
-# %name%    : 插件名
-# %version% : 最新版本
-# %details% : 更新内容
-UpdateCheckMessage: '&b新版本插件可用|~v%version% 最新版本|~插件名: %name%|~☆更新内容☆|~%details%'
-
-# 沒有佔位符
-ErrorUpdateMessage: '&c查询更新失败，可能是国内网络导致的，建议去这个中文搬运帖查看更新http://www.mcbbs.net/thread-691900-1-1.html'
 
 # %scriptkey% : 脚本键
 ScriptCopyMessage: '&a我复制了"%scriptkey%"块中的脚本'

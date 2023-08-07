@@ -1,19 +1,6 @@
 # ScriptBlockPlus v${project.version} Lang #
 
 
-## ===== Auto Update ===== ##
-# [true -> Enable | false -> Disable]
-# Check if the latest version of the plugin exists.
-UpdateChecker: false
-
-# Prerequisites "UpdateChecker: true"
-# The latest plugin will be downloaded automatically.
-AutoDownload: true
-
-# Prerequisites "UpdateChecker: true"
-# The updated contents will be automatically opened in Notepad.
-OpenChangeLog: true
-
 ## ===== Json ===== ##
 # [true -> Enable | false -> Disable]
 # Cache all files on server startup or reload.

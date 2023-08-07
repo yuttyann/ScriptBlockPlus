@@ -8,7 +8,6 @@
 ToolCommandMessage: 'tool - Displays the auxiliary tool select window.'
 ReloadCommandMessage: 'reload - Reload the plugin.'
 BackupCommandMessage: 'backup - Make a backup of the plugin data.'
-CheckVerCommandMessage: 'checkver - Check new version.'
 DataMigrCommandMessage: 'datamigr - Migrate old data from ScriptBlock to ScriptBlockPlus.'
 CreateCommandMessage: '<scriptkey> create <options> - Create a new script to the block.'
 AddCommandMessage: '<scriptkey> add <options> - Add a new script to the block.'
@@ -97,24 +96,9 @@ GiveToolMessage: '&aAuxiliary tools were distributed.'
 AllFileReloadMessage: '&aReloaded successfully.'
 PluginBackupMessage: '&aBackup of plugin data is complete.'
 ErrorPluginBackupMessage: '&cBackup of plugin data failed.'
-NotLatestPluginMessage: '&cNo latest version!'
 NotScriptBlockFileMessage: '&cNo ScriptBlock File.'
 DataMigrStartMessage: '&7Start migrating from Scriptblock....'
 DataMigrEndMessage: '&bMigrating completed.'
-UpdateDownloadStartMessage: '&6Start downloading the latest ScriptBlockPlus...'
-
-# %name% : Downloaded file name
-# %path% : File save destination
-# %size% : File capacity
-UpdateDownloadEndMessage: '&6Download completed!|~File name: %name%|~File size: %size%|~File path: %path%'
-
-# %name%    : Name of the updated plugin
-# %version% : Latest version
-# %details% : update information
-UpdateCheckMessage: '&bNew version available!|~v%version% the latest ver.|~Name: %name%|~>>>Change log<<<|~%details%'
-
-# There are no placeholders
-ErrorUpdateMessage: '&cError occurred while checking new version.'
 
 # %scriptkey% : Script key
 ScriptCopyMessage: '&aI copied the script for the block "%scriptkey%".'

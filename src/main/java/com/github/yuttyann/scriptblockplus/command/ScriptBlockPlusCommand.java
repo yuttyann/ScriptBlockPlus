@@ -18,7 +18,6 @@ package com.github.yuttyann.scriptblockplus.command;
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.command.subcommand.BackupCommand;
-import com.github.yuttyann.scriptblockplus.command.subcommand.CheckverCommand;
 import com.github.yuttyann.scriptblockplus.command.subcommand.DatamigrCommand;
 import com.github.yuttyann.scriptblockplus.command.subcommand.ReloadCommand;
 import com.github.yuttyann.scriptblockplus.command.subcommand.ScriptCommand;
@@ -60,7 +59,6 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
             new ToolCommand(this),
             new ReloadCommand(this),
             new BackupCommand(this),
-            new CheckverCommand(this),
             new DatamigrCommand(this),
             new ScriptCommand(this),
             new SelectorCommand(this)
@@ -139,7 +137,6 @@ public final class ScriptBlockPlusCommand extends BaseCommand {
         StreamUtils.ifAction(Permission.COMMAND_TOOL.has(sender), () -> list.add("tool"));
         StreamUtils.ifAction(Permission.COMMAND_RELOAD.has(sender), () -> list.add("reload"));
         StreamUtils.ifAction(Permission.COMMAND_BACKUP.has(sender), () -> list.add("backup"));
-        StreamUtils.ifAction(Permission.COMMAND_CHECKVER.has(sender), () -> list.add("checkver"));
         StreamUtils.ifAction(Permission.COMMAND_DATAMIGR.has(sender), () -> list.add("datamigr"));
         StreamUtils.ifAction(Permission.COMMAND_SELECTOR.has(sender), () -> list.add("selector"));
         StreamUtils.fForEach(ScriptKey.values(), s -> Permission.has(sender, s, true), s -> list.add(s.getName()));

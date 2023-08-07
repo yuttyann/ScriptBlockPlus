@@ -16,7 +16,6 @@ commands:
            /<command> tool - Displays the auxiliary tool select window.
            /<command> reload - Reload the plugin.
            /<command> backup - Make a backup of the plugin data.
-           /<command> checkver - Check new version.
            /<command> datamigr - Migrate old data from ScriptBlock to ScriptBlockPlus.
            /<command> <scriptkey> create <options> - Create a new script to the block.
            /<command> <scriptkey> add <options> - Add a new script to the block.
@@ -47,7 +46,6 @@ permissions:
       scriptblockplus.command.tool: true
       scriptblockplus.command.reload: true
       scriptblockplus.command.backup: true
-      scriptblockplus.command.checkver: true
       scriptblockplus.command.datamigr: true
       scriptblockplus.command.interact: true
       scriptblockplus.command.break: true
@@ -66,8 +64,6 @@ permissions:
   scriptblockplus.command.reload:
     default: false
   scriptblockplus.command.backup:
-    default: false
-  scriptblockplus.command.checkver:
     default: false
   scriptblockplus.command.datamigr:
     default: false

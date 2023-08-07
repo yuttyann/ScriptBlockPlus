@@ -21,7 +21,6 @@ import com.github.yuttyann.scriptblockplus.command.BaseCommand;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
 import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
-import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.ConvertList;
@@ -54,7 +53,6 @@ import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -66,8 +64,6 @@ public class ScriptBlock extends JavaPlugin {
 
     private static Scheduler scheduler;
     private static ScriptBlock scriptBlock;
-
-    private Updater updater;
 
     @Override
     public void onEnable() {
@@ -144,9 +140,6 @@ public class ScriptBlock extends JavaPlugin {
 
         // コマンドの登録
         BaseCommand.register("scriptblockplus", new ScriptBlockPlusCommand(this));
-
-        // アップデート処理
-        checkUpdate(Bukkit.getConsoleSender(), false);
     }
 
     @Override
@@ -158,36 +151,6 @@ public class ScriptBlock extends JavaPlugin {
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * {@code SBP}に最新のバージョンが存在するか確認します。
-     * @param sender - 送信先
-     * @param latestMessage - {@code true}の場合は送信先にアップデートのメッセージを表示します。
-     */
-    public void checkUpdate(@NotNull CommandSender sender, boolean latestMessage) {
-        checkUpdate(sender, updater == null ? updater = new Updater(this) : updater, latestMessage);
-    }
-
-    /**
-     * 最新のバージョンが存在するか確認します。
-     * @param sender - 送信先
-     * @param updater - 更新先
-     * @param latestMessage - {@code true}の場合は送信先にアップデートのメッセージを表示します。
-     */
-    public void checkUpdate(@NotNull CommandSender sender, @NotNull Updater updater, boolean latestMessage) {
-        getScheduler().asyncRun(() -> {
-            synchronized (this) {
-                try {
-                    updater.load();
-                    if (!updater.run(sender) && latestMessage) {
-                        SBConfig.NOT_LATEST_PLUGIN.send(sender);
-                    }
-                } catch (Exception ex) {
-                    SBConfig.ERROR_UPDATE.send(sender);
-                }
-            }
-        });
     }
 
     /**

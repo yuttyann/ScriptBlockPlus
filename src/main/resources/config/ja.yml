@@ -1,20 +1,6 @@
 # ScriptBlockPlus v${project.version} Config #
 
 
-## ===== 自動アップデート ===== ##
-# [true -> 有効 | false -> 無効]
-# 確認メッセージは"OP"にしか表示されません。
-# 最新バージョンを確認するかどうか。
-UpdateChecker: true
-
-# 前提 "UpdateChecker: true"
-# 最新のプラグインをダウンロードするかどうか。
-AutoDownload: true
-
-# 前提 "UpdateChecker: true"
-# ダウンロードした更新内容を、メモ帳で開くかどうか。
-OpenChangeLog: true
-
 ## ===== Json ===== ##
 # [true -> 有効 | false -> 無効]
 # リロード、サーバー起動時に全ファイルをキャッシュします。

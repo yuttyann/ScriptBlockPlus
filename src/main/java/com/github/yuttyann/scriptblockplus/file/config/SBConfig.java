@@ -47,9 +47,6 @@ public final class SBConfig {
 
 
     /* Boolean Keys */
-    public static final ConfigKey<Boolean> UPDATE_CHECKER = booleanKey("UpdateChecker", true);
-    public static final ConfigKey<Boolean> AUTO_DOWNLOAD = booleanKey("AutoDownload", true);
-    public static final ConfigKey<Boolean> OPEN_CHANGE_LOG = booleanKey("OpenChangeLog", true);
     public static final ConfigKey<Boolean> CACHE_ALL_JSON = booleanKey("CacheAllJson", false);
     public static final ConfigKey<Boolean> CONSOLE_LOG = booleanKey("ConsoleLog", false);
     public static final ConfigKey<Boolean> SORT_SCRIPTS = booleanKey("SortScripts", true);
@@ -96,7 +93,6 @@ public final class SBConfig {
     public static final ConfigKey<String> TOOL_COMMAND = stringKey("ToolCommandMessage", "");
     public static final ConfigKey<String> RELOAD_COMMAND = stringKey("ReloadCommandMessage", "");
     public static final ConfigKey<String> BACKUP_COMMAND = stringKey("BackupCommandMessage", "");
-    public static final ConfigKey<String> CHECKVER_COMMAND = stringKey("CheckVerCommandMessage", "");
     public static final ConfigKey<String> DATAMIGR_COMMAND = stringKey("DatamigrCommandMessage", "");
     public static final ConfigKey<String> CREATE_COMMAND = stringKey("CreateCommandMessage", "");
     public static final ConfigKey<String> ADD_COMMAND = stringKey("AddCommandMessage", "");
@@ -111,14 +107,11 @@ public final class SBConfig {
     public static final ConfigKey<String> NOT_PERMISSION = stringKey("NotPermissionMessage", "");
     public static final ConfigKey<String> GIVE_TOOL = stringKey("GiveToolMessage", "");
     public static final ConfigKey<String> ALL_FILE_RELOAD = stringKey("AllFileReloadMessage", "");
-    public static final ConfigKey<String> NOT_LATEST_PLUGIN = stringKey("NotLatestPluginMessage", "");
     public static final ConfigKey<String> NOT_SCRIPT_BLOCK_FILE = stringKey("NotScriptBlockFileMessage", "");
     public static final ConfigKey<String> PLUGIN_BACKUP = stringKey("PluginBackupMessage", "");
     public static final ConfigKey<String> ERROR_PLUGIN_BACKUP = stringKey("ErrorPluginBackupMessage", "");
     public static final ConfigKey<String> DATAMIGR_START = stringKey("DataMigrStartMessage", "");
     public static final ConfigKey<String> DATAMIGR_END = stringKey("DataMigrEndMessage", "");
-    public static final ConfigKey<String> UPDATE_DOWNLOAD_START = stringKey("UpdateDownloadStartMessage", "");
-    public static final ConfigKey<String> ERROR_UPDATE = stringKey("ErrorUpdateMessage", "");
     public static final ConfigKey<String> NOT_SELECTION = stringKey("NotSelectionMessage", "");
     public static final ConfigKey<String> SCRIPT_VIEWER_START = stringKey("ScriptViewerStartMessage", "");
     public static final ConfigKey<String> SCRIPT_VIEWER_STOP = stringKey("ScriptViewerStopMessage", "");
@@ -129,25 +122,6 @@ public final class SBConfig {
 
 
     /* Functions (Private) */
-    private static Function<ReplaceKey, String> FUNCTION_UPDATE_CHECK = r -> {
-        var value = r.getValue();
-        value = replace(value, "%name%", r.getArgument(0, String.class));
-        value = replace(value, "%version%", r.getArgument(1, String.class));
-        if (value.contains("%details%")) {
-            @SuppressWarnings("unchecked")
-            var list = (List<String>) r.getArgument(2, List.class);
-            var builder = new StringBuilder(list.size());
-            for (int i = 0; i < list.size(); i++) {
-                var info = removeStart(list.get(i), "$");
-                var tree = list.get(i).startsWith("$");
-                builder.append("§7" + (tree ? "  - " : "・") + "§b")
-                .append(info).append(i == (list.size() - 1) ? "" : "|~");
-            }
-            value = replace(value, "%details%", builder.toString());
-        }
-        return value;
-    };
-
     private static Function<ReplaceKey, String> FUNCTION_SCRIPT_TYPE = r -> {
         return replace(r.getValue(), "%scriptkey%", r.getArgument(0, ScriptKey.class).getName());
     };
@@ -196,15 +170,6 @@ public final class SBConfig {
 
 
     /* Replace Keys */
-    /**
-     * Parameter: {@link String} name, {@link String} path, {@link String} size
-     */
-    public static final ReplaceKey UPDATE_DOWNLOAD_END = replaceKey("UpdateDownloadEndMessage", "", "%name%", "%path%", "%size%");
-
-    /**
-     * Parameter: {@link String} name, {@link String} version, {@link List}&lt;{@link String}&gt; details
-     */
-    public static final ReplaceKey UPDATE_CHECK = replaceKey("UpdateCheckMessage", "", FUNCTION_UPDATE_CHECK);
 
     /**
      * Parameter: {@link ScriptKey} scriptKey

@@ -62,9 +62,6 @@ public final class PlayerListener implements Listener {
             sbPlayer.setOnline(true);
         } finally {
             sbPlayer.getObjectMap().put(WalkTrigger.KEY, BlockCoords.of(sbPlayer.getLocation()).subtract(0, 1, 0));
-            if (sbPlayer.isOp()) {
-                ScriptBlock.getInstance().checkUpdate(sbPlayer.toPlayer(), false);
-            }
         }
     }
 

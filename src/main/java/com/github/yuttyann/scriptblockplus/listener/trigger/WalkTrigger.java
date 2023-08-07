@@ -65,6 +65,7 @@ public final class WalkTrigger extends TriggerListener<PlayerMoveEvent> {
             blockCoords.setZ(location.getBlockZ());
         } else {
             objectMap.put(KEY, blockCoords = BlockCoords.of(location).subtract(0, 1, 0));
+            return true;
         }
         return blockCoords.compare(oldX, oldY, oldZ);
     }
