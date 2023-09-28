@@ -20,8 +20,9 @@ import java.util.function.Supplier;
 
 import com.github.yuttyann.scriptblockplus.file.json.BaseElement;
 import com.github.yuttyann.scriptblockplus.file.json.BaseJson;
-import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
-import com.github.yuttyann.scriptblockplus.utils.collection.IntSingleMap;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -63,13 +64,13 @@ public abstract class SingleJson<E extends SingleJson.SingleElement> extends Bas
     }
 
     /**
-     * {@link IntMap}&lt;{@link E}&gt;を生成します。
-     * @return {@link IntMap}&lt;{@link E}&gt; - マップ
+     * {@link Int2ObjectMap}&lt;{@link E}&gt;を生成します。
+     * @return {@link Int2ObjectMap}&lt;{@link E}&gt; - マップ
      */
     @Override
     @NotNull
-    protected final IntMap<E> createMap() {
-        return new IntSingleMap<>();
+    protected final Int2ObjectMap<E> createMap() {
+        return new Int2ObjectOpenHashMap<>(1);
     }
 
     /**

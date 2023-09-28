@@ -149,9 +149,9 @@ public class TickRunnable extends BukkitRunnable {
         }
         var min = region.getMinimumPoint();
         var max = region.getMaximumPoint();
-        var iterator = glowEntities.iterable().iterator();
+        var iterator = glowEntities.int2ObjectEntrySet().iterator();
         while (iterator.hasNext()) {
-            var glowEntity = iterator.next().value();
+            var glowEntity = iterator.next().getValue();
             if (!inRange(glowEntity, min, max)) {
                 iterator.remove();
                 GLOW_ENTITY.destroy(glowEntity);
@@ -222,7 +222,7 @@ public class TickRunnable extends BukkitRunnable {
         }
     }
 
-    private void spawnParticlesOnBlock(@NotNull Player player, @NotNull Block block, @Nullable Color color) {
+    public static void spawnParticlesOnBlock(@NotNull Player player, @NotNull Block block, @Nullable Color color) {
         if (color == null) {
             color = block.getType() == Material.AIR ? Color.AQUA : Color.LIME;
         }

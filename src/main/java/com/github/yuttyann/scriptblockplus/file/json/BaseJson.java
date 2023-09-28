@@ -31,13 +31,14 @@ import com.github.yuttyann.scriptblockplus.file.json.derived.element.PlayerCount
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.PlayerTimer;
 import com.github.yuttyann.scriptblockplus.file.json.derived.element.ValueHolder;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.collection.IntHashMap;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -94,12 +95,12 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
     /**
      * Jsonのインスタンスが保存されるマップ
      */
-    private static final Map<Class<? extends BaseJson<?>>, IntMap<BaseJson<?>>> JSON_CACHE = new HashMap<>();
+    private static final Map<Class<? extends BaseJson<?>>, Int2ObjectMap<BaseJson<?>>> JSON_CACHE = new HashMap<>();
 
     /**
-     * {@link IntMap}の生成処理
+     * {@link Int2ObjectMap}の生成処理
      */
-    private static final Function<Class<? extends BaseJson<?>>, IntMap<BaseJson<?>>> CREATE_MAP = m -> IntHashMap.create();
+    private static final Function<Class<? extends BaseJson<?>>, Int2ObjectMap<BaseJson<?>>> CREATE_MAP = m -> new Int2ObjectOpenHashMap<>();
 
     private int id;
     private String name;
@@ -107,7 +108,7 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
     private File parent;
     private Status status;
     private JsonTag jsonTag;
-    private IntMap<E> elementMap;
+    private Int2ObjectMap<E> elementMap;
     private CollectionType collectionType;
 
     // GsonBuilderにアダプター等の追加を行う。
@@ -213,28 +214,28 @@ public abstract class BaseJson<E extends BaseElement> extends SubElementMap<E> {
     public static final void clear(@NotNull Class<? extends BaseJson<?>> json) {
         var cacheMap = JSON_CACHE.get(json);
         if (cacheMap != null) {
-            cacheMap.iterable().forEach(i -> i.value().clearCache());
+            cacheMap.int2ObjectEntrySet().forEach(i -> i.getValue().clearCache());
             cacheMap.clear();
         }
     }
 
     /**
-     * {@link IntMap}&lt;{@link E}&gt;を取得します。
-     * @return {@link IntMap}&lt;{@link E}&gt; - エレメントのマップ
+     * {@link Int2ObjectMap}&lt;{@link E}&gt;を取得します。
+     * @return {@link Int2ObjectMap}&lt;{@link E}&gt; - エレメントのマップ
      */
     @Override
     @NotNull
-    protected final IntMap<E> getElementMap() {
+    protected final Int2ObjectMap<E> getElementMap() {
         return elementMap;
     }
 
     /**
-     * {@link IntMap}&lt;{@link E}&gt;を生成します。
-     * @return {@link IntMap}&lt;{@link E}&gt; - マップ
+     * {@link Int2ObjectMap}&lt;{@link E}&gt;を生成します。
+     * @return {@link Int2ObjectMap}&lt;{@link E}&gt; - マップ
      */
     @NotNull
-    protected IntMap<E> createMap() {
-        return IntHashMap.create();
+    protected Int2ObjectMap<E> createMap() {
+        return new Int2ObjectOpenHashMap<>();
     }
 
     /**

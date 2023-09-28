@@ -19,8 +19,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Predicate;
 
-import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
 import com.google.common.collect.ArrayListMultimap;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,10 +43,10 @@ public abstract class SubElementMap<E extends BaseElement> {
     protected SubElementMap() { }
 
     /**
-     * {@link IntMap}&lt;{@link E}&gt;を取得します。
-     * @return {@link IntMap}&lt;{@link E}&gt; - エレメントのマップ
+     * {@link Int2ObjectMap}&lt;{@link E}&gt;を取得します。
+     * @return {@link Int2ObjectMap}&lt;{@link E}&gt; - エレメントのマップ
      */
-    protected abstract IntMap<E> getElementMap();
+    protected abstract Int2ObjectMap<E> getElementMap();
 
     /**
      * {@link ArrayListMultimap}&lt;{@link Integer}, {@link E}&gt;を取得します。
@@ -166,7 +167,7 @@ public abstract class SubElementMap<E extends BaseElement> {
         var list = getSubElementMap().get(hash);
         if (!list.isEmpty()) {
             E element = list.get(0);
-            getElementMap().put(hash, element);
+            getElementMap().put(hash.intValue(), element);
             list.remove(0);
         }
     }

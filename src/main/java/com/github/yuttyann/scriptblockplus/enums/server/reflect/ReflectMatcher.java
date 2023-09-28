@@ -24,11 +24,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.github.yuttyann.scriptblockplus.utils.collection.IntHashMap;
-import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 /**
  * ScriptBlockPlus ReflectMatcher クラス
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ReflectMatcher {
 
-    private static final IntMap<Map<String, Object>> REFLECT_MAP = IntHashMap.create();
+    private static final Int2ObjectMap<Map<String, Object>> REFLECT_MAP = new Int2ObjectOpenHashMap<>();
 
     private static final int FIELD = 0, METHOD = 1, CONSTRUCTOR = 2;
 

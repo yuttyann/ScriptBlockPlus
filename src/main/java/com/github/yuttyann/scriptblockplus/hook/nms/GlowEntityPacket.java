@@ -26,8 +26,9 @@ import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
-import com.github.yuttyann.scriptblockplus.utils.collection.IntHashMap;
-import com.github.yuttyann.scriptblockplus.utils.collection.IntMap;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -39,16 +40,16 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class GlowEntityPacket {
 
-    private static final Function<UUID, IntMap<GlowEntity>> CREATE_MAP = m -> IntHashMap.create();
+    private static final Function<UUID, Int2ObjectMap<GlowEntity>> CREATE_MAP = m -> new Int2ObjectOpenHashMap<>();
 
-    private final Map<UUID, IntMap<GlowEntity>> GLOW_ENTITIES = new HashMap<>();
+    private final Map<UUID, Int2ObjectMap<GlowEntity>> GLOW_ENTITIES = new HashMap<>();
 
     /**
      * 発光エンティティのマップを取得します。
-     * @return {@link Map}&lt;{@link UUID}, {@link IntMap}&lt;{@link GlowEntity}&gt;&gt; - 発光エンティティのマップ
+     * @return {@link Map}&lt;{@link UUID}, {@link Int2ObjectMap}&lt;{@link GlowEntity}&gt;&gt; - 発光エンティティのマップ
      */
     @NotNull
-    public Map<UUID, IntMap<GlowEntity>> getEntities() {
+    public Map<UUID, Int2ObjectMap<GlowEntity>> getEntities() {
         return GLOW_ENTITIES;
     }
 
