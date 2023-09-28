@@ -16,9 +16,7 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -37,6 +35,12 @@ import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
+
 import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
 import com.github.yuttyann.scriptblockplus.selector.split.Split;
 import com.github.yuttyann.scriptblockplus.selector.split.SplitValue;
@@ -55,6 +59,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
+import static org.bukkit.block.BlockFace.*;
 import static com.github.yuttyann.scriptblockplus.utils.StreamUtils.*;
 
 /**
@@ -65,24 +70,27 @@ public final class BlockListener implements Listener {
 
     private final Consumer<BukkitTask> CANCEL = b -> { if (b != null) b.cancel(); };
     private final Function<SplitValue, String> SPLIT_VALUE = SplitValue::getValue;
-    private final Function<BlockCoords, Set<BukkitTask>> CREATE_SET = b -> new HashSet<>();
+    private final Function<Integer, Set<BukkitTask>> CREATE_SET = b -> new HashSet<>();
 
-    private final Set<BlockCoords> REDSTONE_FLAG = new HashSet<>();
-    private final Map<BlockCoords, Set<BukkitTask>> LOOP_TASK = new HashMap<>();
+    private final IntSet BLOCK_FLAG = new IntOpenHashSet();
+    private final Int2ObjectMap<Set<BukkitTask>> LOOP_TASK = new Int2ObjectOpenHashMap<>();
 
-    private final BlockFace[] FACES = { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN };
+    private final boolean MC_1_19 = Utils.isCBXXXorLater("1.19");
+
+    private int prevSize = ScriptKey.size();
+    private ScriptKey[] tempKeys = ScriptKey.values();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPhysicsEvent(BlockPhysicsEvent event) {
         var block = event.getBlock();
-        if (Utils.isCBXXXorLater("1.19")) {
+        if (MC_1_19) {
             call(block);
-            for (int i = 0, l = FACES.length; i < l; i++) {
-                var relative = block;
-                do {
-                    search(relative = relative.getRelative(FACES[i]));
-                } while (relative.isBlockPowered() || relative.isBlockIndirectlyPowered());
-            }
+            relative(block, UP);
+            relative(block, DOWN);
+            relative(block, NORTH);
+            relative(block, SOUTH);
+            relative(block, EAST);
+            relative(block, WEST);
         } else {
             search(block);
         }
@@ -90,33 +98,65 @@ public final class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (Utils.isCBXXXorLater("1.19")) {
-            var block = event.getBlock();
+        if (MC_1_19) {
+            final var block = event.getBlock();
             ScriptBlock.getScheduler().run(() -> search(block));
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (Utils.isCBXXXorLater("1.19")) {
-            var block = event.getBlock();
+        if (MC_1_19) {
+            final var block = event.getBlock();
             ScriptBlock.getScheduler().run(() -> search(block));
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
-        if (Utils.isCBXXXorLater("1.19")) {
-            var block = event.getBlock(); var blocks = event.getBlocks();
-            ScriptBlock.getScheduler().run(() -> { search(block); blocks.forEach(this::search); });
+        if (MC_1_19) {
+            final var block = event.getBlock();
+            final var blocks = event.getBlocks();
+            ScriptBlock.getScheduler().run(() -> {
+                search(block);
+                blocks.forEach(this::search);
+            });
+        }
+    }
+
+    private void relative(@NotNull Block block, @NotNull BlockFace face) {
+        block = block.getRelative(face);
+        if (block.isBlockPowered() || block.isBlockIndirectlyPowered()) {
+            call(block);
+            if (face != DOWN) {
+                call(block.getRelative(UP));
+            }
+            if (face != UP) {
+                call(block.getRelative(DOWN));
+            }
+            if (face != SOUTH) {
+                call(block.getRelative(NORTH));
+            }
+            if (face != NORTH) {
+                call(block.getRelative(SOUTH));
+            }
+            if (face != WEST) {
+                call(block.getRelative(EAST));
+            }
+            if (face != EAST) {
+                call(block.getRelative(WEST));
+            }
         }
     }
 
     private void search(@NotNull Block block) {
         call(block);
-        for (var BlockFace : FACES) {
-            call(block.getRelative(BlockFace));
-        }
+        call(block.getRelative(UP));
+        call(block.getRelative(DOWN));
+        call(block.getRelative(NORTH));
+        call(block.getRelative(SOUTH));
+        call(block.getRelative(EAST));
+        call(block.getRelative(WEST));
     }
 
     @NotNull
@@ -124,34 +164,33 @@ public final class BlockListener implements Listener {
         if (block == null || ItemUtils.isAIR(block.getType())) {
             return;
         }
-        var blockCoords = BlockCoords.of(block);
+        var hash = (block.getX() ^ (block.getZ() << 12)) ^ (block.getY() << 24) ^ block.getWorld().hashCode();
         if (!block.isBlockPowered() && !block.isBlockIndirectlyPowered()) {
-            LOOP_TASK.getOrDefault(blockCoords, Collections.emptySet()).forEach(CANCEL);
-            LOOP_TASK.remove(blockCoords);
-            REDSTONE_FLAG.remove(blockCoords);
-        } else if (!REDSTONE_FLAG.contains(blockCoords)) {
-            REDSTONE_FLAG.add(blockCoords);
-            onRedstone(block, blockCoords);
+            LOOP_TASK.getOrDefault(hash, Collections.emptySet()).forEach(CANCEL);
+            LOOP_TASK.remove(hash);
+            BLOCK_FLAG.remove(hash);
+        } else if (BLOCK_FLAG.add(hash)) {
+            ScriptBlock.getScheduler().asyncRun(() -> onRedstone(block));
         }
         return;
     }
 
-    private void onRedstone(@NotNull Block block, @NotNull BlockCoords blockCoords) {
-        for (var scriptKey : ScriptKey.iterable()) {
+    private synchronized void onRedstone(@NotNull Block block) {
+        var blockCoords = (BlockCoords) null;
+        for (var scriptKey : getScriptKeys()) {
             var scriptJson = BlockScriptJson.get(scriptKey);
             if (scriptJson.isEmpty()) {
                 continue;
             }
+            if (blockCoords == null) {
+                blockCoords = BlockCoords.of(block);
+            }
             var blockScript = scriptJson.fastLoad(blockCoords);
-            if (blockScript == null) {
+            if (blockScript == null || !blockScript.hasValues()) {
                 continue;
             }
-            var valueHolder = blockScript.getValue(BlockScript.SELECTOR);
-            if (valueHolder.isEmpty()) {
-                continue;
-            }
-            var selector = valueHolder.get().asString();
-            if (StringUtils.isEmpty(selector) || !CommandSelector.has(selector)) {
+            var selector = blockScript.getSafeValue(BlockScript.SELECTOR).asString();
+            if (selector.isEmpty() || !CommandSelector.has(selector)) {
                 continue;
             }
             var repeat = new Split(selector, "repeat", "{", "}");
@@ -161,14 +200,15 @@ public final class BlockListener implements Listener {
                 var delay = Long.parseLong(filterFirst(values, f -> Repeat.DELAY == f.getType()).map(SPLIT_VALUE).orElse("0"));
                 var limit = Integer.parseInt(filterFirst(values, f -> Repeat.LIMIT == f.getType()).map(SPLIT_VALUE).orElse("-1"));
                 var rtask = new RepeatTask(limit, repeat, selector, scriptKey, blockCoords);
-                LOOP_TASK.computeIfAbsent(blockCoords, CREATE_SET).add(rtask.bukkitTask = ScriptBlock.getScheduler().asyncRun(rtask, delay, rtick));
+                LOOP_TASK.computeIfAbsent(blockCoords.hashCode(), CREATE_SET)
+                .add(rtask.bukkitTask = ScriptBlock.getScheduler().run(rtask, delay, rtick));
             } else {
-                ScriptBlock.getScheduler().asyncRun(() -> perform(repeat, selector, scriptKey, blockCoords));
+                perform(repeat, selector, scriptKey, blockCoords);
             }
         }
     }
 
-    private synchronized void perform(@NotNull Split repeat, @NotNull String selector, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
+    private void perform(@NotNull Split repeat, @NotNull String selector, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
         var filter = new Split(selector, "filter", "{", "}", repeat.length());
         var target = new Split(selector, "@", 1, "[", "]", repeat.length() + filter.length());
         var values = filter.getValues(Filter.values());
@@ -203,6 +243,11 @@ public final class BlockListener implements Listener {
             default:
                 return false;
         }
+    }
+
+    @NotNull
+    private ScriptKey[] getScriptKeys() {
+        return prevSize == ScriptKey.size() ? tempKeys : (this.tempKeys = ScriptKey.values());
     }
 
     /**
