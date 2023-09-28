@@ -42,7 +42,7 @@ public final class GUIItem implements Cloneable {
 
     private static final ItemFlag[] FLAGS = { ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE };
 
-    public static final GUIItem BLACK = new GUIItem(ItemUtils.getGlassPane(15), null).setName("§r");
+    public static final GUIItem BLACK = new GUIItem(ItemUtils.getGlassPane(15), null).setName("");
     public static final Supplier<GUIItem> PAPER = () -> new GUIItem(1, Material.PAPER, "", Arrays.asList(SBConfig.GUI_SYS_RESET.setColor()), null);
 
     private ItemStack item;

@@ -40,10 +40,12 @@ import java.util.stream.Collectors;
  */
 public final class ItemUtils {
 
+    private static final boolean MC_1_14_4 = Utils.isCBXXXorLater("1.14.4"), MC_1_13 = Utils.isCBXXXorLater("1.13");
+
     private static final Map<String, Material> KEY_MATERIALS;
 
     static {
-        if (!Utils.isCBXXXorLater("1.13") && NetMinecraft.hasNMS()) {
+        if (!MC_1_13 && NetMinecraft.hasNMS()) {
             KEY_MATERIALS = new HashMap<>();
             try {
                 KEY_MATERIALS.putAll(NMSHelper.getItemRegistry());
@@ -57,7 +59,7 @@ public final class ItemUtils {
 
     @NotNull
     public static ItemStack getGlassPane(@NotNull int color) {
-        if (Utils.isCBXXXorLater("1.13")) {
+        if (MC_1_13) {
             var material = (Material) null;
             switch (color) {
                 case 0:
@@ -217,7 +219,7 @@ public final class ItemUtils {
 
     @SuppressWarnings("deprecation")
     public static int getDamage(@NotNull ItemStack item) {
-        if (Utils.isCBXXXorLater("1.13")) {
+        if (MC_1_13) {
             var itemMeta = item.getItemMeta();
             return itemMeta instanceof Damageable ? ((Damageable) itemMeta).getDamage() : 0;
         }
@@ -225,9 +227,9 @@ public final class ItemUtils {
     }
 
     public static boolean isAIR(@NotNull Material material) {
-        if (Utils.isCBXXXorLater("1.14.4")) {
+        if (MC_1_14_4) {
             return material.isAir();
-        } else if (!Utils.isCBXXXorLater("1.13")) {
+        } else if (!MC_1_13) {
             return material == Material.AIR;
         }
         return material.name().endsWith("AIR");

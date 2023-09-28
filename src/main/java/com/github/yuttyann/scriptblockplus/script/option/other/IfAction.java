@@ -61,6 +61,7 @@ public final class IfAction extends BaseOption {
         return Result.FAILURE;
     }
 
+    @SuppressWarnings("deprecation")
     @NotNull
     private Object parse(@NotNull Player player, @NotNull String source) throws Exception {
         if (REALNUMBER_PATTERN.matcher(source).matches()) {
@@ -132,9 +133,7 @@ public final class IfAction extends BaseOption {
             case "%player_compass_z%":
                 return player.getCompassTarget().getBlockZ();
             case "%player_gamemode%":
-                @SuppressWarnings("deprecation")
-                int value = player.getGameMode().getValue();
-                return value;
+                return player.getGameMode().getValue();
             case "%player_world_time%":
                 return player.getWorld().getTime();
             case "%player_exp%":
@@ -154,9 +153,7 @@ public final class IfAction extends BaseOption {
             case "%player_last_damage%":
                 return player.getLastDamage();
             case "%player_max_health%":
-                @SuppressWarnings("deprecation")
-                double health = player.getMaxHealth();
-                return health;
+                return player.getMaxHealth();
             case "%player_max_air%":
                 return player.getMaximumAir();
             case "%player_max_no_damage_ticks%":
