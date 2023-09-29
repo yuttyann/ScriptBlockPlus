@@ -1,10 +1,9 @@
-[Java11] ScriptBlockPlus [MC1.9-1.20.1]
+[Java11] ScriptBlockPlus [MC1.9-1.20.2]
 ==========
 
 概要
 -----------
 [ScriptBlock](https://dev.bukkit.org/projects/scriptblock)の機能を引き継ぎ、新機能追加や改善を施したプラグインです。  
-また、開発者向けに[API](https://github.com/yuttyann/ScriptBlockPlus/wiki/%5BJP%5D-API-Tutorial)を公開しています。  
 (現在`Bukkit`,`Sponge`,`Forge`,`Fabric`で動作可能な、後継プラグインを作成中です。) 
 
 導入
@@ -28,7 +27,8 @@
 **== 各バージョンの動作範囲 ==**
 | Plugin | Server | Java |
 |:---|:---|:---:|
-|**`2.2.6`**|**`1.9-1.20.1`**|**Java11**|
+|**`2.2.7`**|**`1.9-1.20.2`**|**Java11**|
+|`2.2.6`|`1.9-1.20.1`|**Java11**|
 |`2.2.5`|`1.9-1.19.3`|**Java11**|
 |`2.2.3-2.2.4`|`1.9-1.19.2`|**Java11**|
 |`2.2.0-2.2.2`|`1.9-1.18`|**Java11**|
