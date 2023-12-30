@@ -170,7 +170,8 @@ public final class NMSHelper {
         .match()
 
         .key("sendPacket")
-        .method(NetMinecraft.SR_NETWORK.getClass("PlayerConnection"))
+        .method(Utils.isCBXXXorLater("1.20.2") ? NetMinecraft.SR_NETWORK.getClass("ServerCommonPacketListenerImpl") : NetMinecraft.SR_NETWORK.getClass("PlayerConnection"))
+        .type(void.class)
         .parameter(NetMinecraft.NW_PROTOCOL.getClass("Packet"))
         .match(false, Modifier.PUBLIC)
 
