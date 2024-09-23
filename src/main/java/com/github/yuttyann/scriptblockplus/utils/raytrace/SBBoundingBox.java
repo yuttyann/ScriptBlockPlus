@@ -15,15 +15,15 @@
  */
 package com.github.yuttyann.scriptblockplus.utils.raytrace;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
-
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
+import com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft;
+import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
 
 /**
  * ScriptBlockPlus SBBoundingBox クラス
@@ -132,7 +132,7 @@ public final class SBBoundingBox {
         if (square || ItemUtils.isAIR(block.getType())) {
             setSquare(block);
         } else {
-            if (Utils.isCBXXXorLater("1.13.2")) {
+            if (McVersion.V_1_13_2.isSupported()) {
                 var boundingBox = block.getBoundingBox();
                 double minX = boundingBox.getMinX(), minY = boundingBox.getMinY(), minZ = boundingBox.getMinZ();
                 double maxX = boundingBox.getMaxX(), maxY = boundingBox.getMaxY(), maxZ = boundingBox.getMaxZ();
@@ -169,7 +169,7 @@ public final class SBBoundingBox {
             double maxX = fields[3].getDouble(axisAlignedBB);
             double maxY = fields[4].getDouble(axisAlignedBB);
             double maxZ = fields[5].getDouble(axisAlignedBB);
-            int x = block.getX(), y = block.getY(), z = block.getZ(); 
+            int x = block.getX(), y = block.getY(), z = block.getZ();
             setXYZ(x + minX, y + minY, z + minZ, x + maxX, y + maxY, z + maxZ);
         }
     }

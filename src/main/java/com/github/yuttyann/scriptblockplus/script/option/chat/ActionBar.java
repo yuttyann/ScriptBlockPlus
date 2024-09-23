@@ -15,19 +15,21 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
-import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
-import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
+
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
+import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
+import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -85,7 +87,7 @@ public final class ActionBar extends BaseOption implements Runnable {
         var player = sbPlayer.toPlayer();
         if (HAS_SPIGOT) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-        } else if (Utils.isCBXXXorLater("1.12.2")) {
+        } else if (V_1_12_2.isSupported()) {
             var command = "minecraft:title " + sbPlayer.getName() + " actionbar {\"text\":\"" + message + "\"}";
             Utils.tempPerm(sbPlayer, Permission.MINECRAFT_COMMAND_TITLE, () -> Bukkit.dispatchCommand(player, command));
         } else if (NetMinecraft.hasNMS()) {

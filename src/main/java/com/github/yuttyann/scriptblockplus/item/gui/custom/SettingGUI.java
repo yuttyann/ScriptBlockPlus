@@ -15,6 +15,8 @@
  */
 package com.github.yuttyann.scriptblockplus.item.gui.custom;
 
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -23,6 +25,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
@@ -38,17 +48,9 @@ import com.github.yuttyann.scriptblockplus.script.SBClipboard;
 import com.github.yuttyann.scriptblockplus.script.ScriptRead;
 import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriConsumer;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriConsumer;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus SettingGUI クラス
@@ -58,7 +60,7 @@ public final class SettingGUI extends CustomGUI {
 
     private static final int[] SLOTS =  { 4, 21, 22, 23, 25, 30, 31, 32, 34, 49 };
 
-    private static final int LIMIT = Utils.isCBXXXorLater("1.17") ? 50 : 35;
+    private static final int LIMIT = V_1_17.isSupported() ? 50 : 35;
 
     private static final String KEY_LORE = Utils.randomUUID(), KEY_ANVIL = Utils.randomUUID(), KEY_SCRIPTS = Utils.randomUUID();
 

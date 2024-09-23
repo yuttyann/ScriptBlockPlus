@@ -15,15 +15,17 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.chat;
 
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
+
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.github.yuttyann.scriptblockplus.enums.Permission;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-
-import org.bukkit.Bukkit;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus Title オプションクラス
@@ -52,7 +54,7 @@ public final class Title extends BaseOption {
 
     public static void send(@NotNull SBPlayer sbPlayer, @Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) {
         var player = sbPlayer.toPlayer();
-        if (Utils.isCBXXXorLater("1.12")) {
+        if (V_1_12.isSupported()) {
             player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
         } else {
             var prefix = "minecraft:title " + sbPlayer.getName();

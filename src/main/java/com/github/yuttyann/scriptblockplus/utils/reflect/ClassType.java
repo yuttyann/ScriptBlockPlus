@@ -1,46 +1,26 @@
-/**
- * ScriptBlockPlus - Allow you to add script to any blocks.
- * Copyright (C) 2021 yuttyann44581
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
- */
-package com.github.yuttyann.scriptblockplus.enums.server.reflect;
+package com.github.yuttyann.scriptblockplus.utils.reflect;
  
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.yuttyann.scriptblockplus.utils.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * ScriptBlockPlus ClassType 列挙型
- * @author yuttyann44581
- */
 public enum ClassType {
-    BYTE(byte.class, Byte.class),
-    SHORT(short.class, Short.class),
-    INTEGER(int.class, Integer.class),
-    LONG(long.class, Long.class),
-    FLOAT(float.class, Float.class),
-    DOUBLE(double.class, Double.class),
-    BOOLEAN(boolean.class, Boolean.class),
-    CHARACTER(char.class, Character.class);
+    BYTE(false, byte.class, Byte.class),
+    SHORT(false, short.class, Short.class),
+    INTEGER(false, int.class, Integer.class),
+    LONG(false, long.class, Long.class),
+    FLOAT(true, float.class, Float.class),
+    DOUBLE(true, double.class, Double.class),
+    BOOLEAN(false, boolean.class, Boolean.class),
+    CHARACTER(false, char.class, Character.class);
 
     private static final Map<Class<?>, ClassType> CLASSES = new HashMap<>();
 
-    private final Class<?> primitive;
-    private final Class<?> reference;
+    private final boolean decimal;
+    private final Class<?> primitive, reference;
 
     static {
         for (var type : values()) {
@@ -49,9 +29,14 @@ public enum ClassType {
         }
     }
 
-    ClassType(@NotNull Class<?> primitive, @NotNull Class<?> reference) {
+    ClassType(boolean decimal, @NotNull Class<?> primitive, @NotNull Class<?> reference) {
+        this.decimal = decimal;
         this.primitive = primitive;
         this.reference = reference;
+    }
+
+    public boolean isDecimal() {
+        return decimal;
     }
 
     @NotNull

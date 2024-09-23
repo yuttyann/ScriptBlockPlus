@@ -15,14 +15,14 @@
  */
 package com.github.yuttyann.scriptblockplus.script.option.other;
 
+import org.bukkit.block.Block;
+import org.jetbrains.annotations.NotNull;
+
 import com.github.yuttyann.scriptblockplus.script.option.BaseOption;
 import com.github.yuttyann.scriptblockplus.script.option.OptionTag;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.Utils;
-
-import org.bukkit.block.Block;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * ScriptBlockPlus BlockType オプションクラス
@@ -46,21 +46,11 @@ public final class BlockType extends BaseOption {
         if (StringUtils.isEmpty(type)) {
             return false;
         }
-        var blockId = split(StringUtils.removeStart(type, Utils.MINECRAFT), ':', false);
-        if (IfAction.REALNUMBER_PATTERN.matcher(blockId.get(0)).matches()) {
+        var blockId = StringUtils.removeStart(type, Utils.MINECRAFT);
+        if (IfAction.REALNUMBER_PATTERN.matcher(blockId).matches()) {
             throw new IllegalAccessException("Numerical values can not be used");
         }
-        var material = ItemUtils.getMaterial(blockId.get(0));
-        if (material == null || !material.isBlock()) {
-            return false;
-        }
-        byte data = blockId.size() == 2 ? Byte.parseByte(blockId.get(1)) : -1;
-        return material == block.getType() && (data == -1 || data == getData(block));
-    }
-
-    private byte getData(@NotNull Block block) {
-        @SuppressWarnings("deprecation")
-        byte data = block.getData();
-        return data;
+        var material = ItemUtils.getMaterial(blockId);
+        return material != null && material.isBlock() && material == block.getType();
     }
 }

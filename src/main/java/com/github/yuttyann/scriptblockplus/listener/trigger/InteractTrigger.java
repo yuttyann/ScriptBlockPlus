@@ -15,6 +15,18 @@
  */
 package com.github.yuttyann.scriptblockplus.listener.trigger;
 
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
+
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Openable;
+import org.bukkit.block.data.Powerable;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.material.Redstone;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.event.BlockClickEvent;
@@ -22,15 +34,6 @@ import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
 import com.github.yuttyann.scriptblockplus.script.option.other.PlayerAction;
-
-import org.bukkit.block.Block;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.material.Openable;
-import org.bukkit.material.Redstone;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus InteractTrigger クラス
@@ -79,12 +82,22 @@ public final class InteractTrigger extends TriggerListener<BlockClickEvent> {
     }
 
     private boolean isPowered(Block block) {
-        var data = block.getState().getData();
-        return data instanceof Redstone && ((Redstone) data).isPowered();
+        if (V_1_13.isSupported()) {
+            var data = block.getBlockData();
+            return data instanceof Powerable && ((Powerable) data).isPowered();
+        } else {
+            var data = block.getState().getData();
+            return data instanceof Redstone && ((Redstone) data).isPowered();
+        }
     }
 
     private boolean isOpen(Block block) {
-        var data = block.getState().getData();
-        return data instanceof Openable && ((Openable) data).isOpen();
+        if (V_1_13.isSupported()) {
+            var data = block.getBlockData();
+            return data instanceof Openable && ((Openable) data).isOpen();
+        } else {
+            var data = block.getState().getData();
+            return data instanceof org.bukkit.material.Openable && ((org.bukkit.material.Openable) data).isOpen();
+        }
     }
 }

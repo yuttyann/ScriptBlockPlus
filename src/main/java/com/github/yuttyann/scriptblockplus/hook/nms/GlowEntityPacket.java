@@ -15,24 +15,26 @@
  */
 package com.github.yuttyann.scriptblockplus.hook.nms;
 
+import static com.github.yuttyann.scriptblockplus.utils.server.minecraft.Minecraft.*;
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
+import org.bukkit.block.Block;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-
-import org.bukkit.block.Block;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus GlowEntityPacket クラス
@@ -151,7 +153,13 @@ public final class GlowEntityPacket {
             return null;
         }
         var glowEntity = GlowEntity.create(sbPlayer, teamColor, blockCoords, flagSize);
-        NMSHelper.sendPackets(sbPlayer.toPlayer(), NMSHelper.createSpawnEntity(glowEntity), NMSHelper.createMetadata(glowEntity));
+        var entityCoords = glowEntity.getBlockCoords();
+        double x = entityCoords.getX() + 0.5D, y = blockCoords.getY(), z = entityCoords.getZ() + 0.5D;
+        sendPackets(
+            getServerPlayer(sbPlayer.toPlayer()),
+            newClientboundAddEntityPacket(glowEntity.getNMSEntity(), x, y, z),
+            newClientboundSetEntityDataPacket(glowEntity.getNMSEntity(), glowEntity.getId())
+        );
         GLOW_ENTITIES.computeIfAbsent(sbPlayer.getUniqueId(), CREATE_MAP).put(blockCoords.hashCode(), glowEntity);
         return glowEntity;
     }
@@ -189,9 +197,14 @@ public final class GlowEntityPacket {
         if (glowEntity.isDead()) {
             return false;
         }
-        var sbPlayer = glowEntity.getSBPlayer();
-        NMSHelper.sendPackets(sbPlayer.toPlayer(), NMSHelper.createDestroy(new int[] { glowEntity.getId() }));
-        removeMap(sbPlayer.getUniqueId(), glowEntity.getBlockCoords());
+        var serverPlayer = getServerPlayer(glowEntity.getSBPlayer().toPlayer());
+        var packets = newClientboundRemoveEntitiesPacket(new int[] { glowEntity.getId() });
+        if (V_1_17.isGameVersion()) {
+            sendPackets(serverPlayer, (Object[]) packets);
+        } else {
+            sendPacket(serverPlayer, packets);
+        }
+        removeMap(glowEntity.getSBPlayer().getUniqueId(), glowEntity.getBlockCoords());
         glowEntity.setDead(true);
         return true;
     }
@@ -213,7 +226,12 @@ public final class GlowEntityPacket {
             var glowEntity = intMap.remove(hash);
             if (glowEntity != null) {
                 id[0] = glowEntity.getId();
-                NMSHelper.sendPackets(NMSHelper.createDestroy(id));
+                var packets = newClientboundRemoveEntitiesPacket(id);
+                if (V_1_17.isGameVersion()) {
+                    sendAllPackets((Object[]) packets);
+                } else {
+                    sendAllPacket(packets);
+                }
                 glowEntity.setDead(true);
                 removed = true;
             }
@@ -232,7 +250,13 @@ public final class GlowEntityPacket {
             try {
                 var entities = glowEntities.values();
                 entities.forEach(g -> g.setDead(true));
-                NMSHelper.sendPackets(sbPlayer.toPlayer(), NMSHelper.createDestroy(createIds(entities)));
+                var serverPlayer = getServerPlayer(sbPlayer.toPlayer());
+                var packets = newClientboundRemoveEntitiesPacket(createIds(entities));
+                if (V_1_17.isGameVersion()) {
+                    sendPackets(serverPlayer, (Object[]) packets);
+                } else {
+                    sendPacket(serverPlayer, packets);
+                }
             } finally {
                 GLOW_ENTITIES.remove(sbPlayer.getUniqueId());
             }
@@ -251,7 +275,13 @@ public final class GlowEntityPacket {
                     var entities = entry.getValue().values();
                     entities.forEach(g -> g.setDead(true));
                     if (sbPlayer.isOnline()) {
-                        NMSHelper.sendPackets(sbPlayer.toPlayer(), NMSHelper.createDestroy(createIds(entities)));
+                        var serverPlayer = getServerPlayer(sbPlayer.toPlayer());
+                        var packets = newClientboundRemoveEntitiesPacket(createIds(entities));
+                        if (V_1_17.isGameVersion()) {
+                            sendPackets(serverPlayer, (Object[]) packets);
+                        } else {
+                            sendPacket(serverPlayer, packets);
+                        }
                     }
                 }
             } finally {

@@ -15,7 +15,10 @@
  */
 package com.github.yuttyann.scriptblockplus.listener;
 
-import java.util.Collections;
+import static com.github.yuttyann.scriptblockplus.utils.StreamUtils.*;
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
+import static org.bukkit.block.BlockFace.*;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,27 +26,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
-
-import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.splittype.Filter;
-import com.github.yuttyann.scriptblockplus.enums.splittype.Repeat;
-import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
-import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.github.yuttyann.scriptblockplus.script.ScriptRead;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
-
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
-
-import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
-import com.github.yuttyann.scriptblockplus.selector.split.Split;
-import com.github.yuttyann.scriptblockplus.selector.split.SplitValue;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -59,8 +41,24 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
-import static org.bukkit.block.BlockFace.*;
-import static com.github.yuttyann.scriptblockplus.utils.StreamUtils.*;
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.splittype.Filter;
+import com.github.yuttyann.scriptblockplus.enums.splittype.Repeat;
+import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.file.json.derived.element.BlockScript;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.github.yuttyann.scriptblockplus.script.ScriptRead;
+import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
+import com.github.yuttyann.scriptblockplus.selector.split.Split;
+import com.github.yuttyann.scriptblockplus.selector.split.SplitValue;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 
 /**
  * ScriptBlockPlus BlockListener クラス
@@ -75,15 +73,13 @@ public final class BlockListener implements Listener {
     private final IntSet BLOCK_FLAG = new IntOpenHashSet();
     private final Int2ObjectMap<Set<BukkitTask>> LOOP_TASK = new Int2ObjectOpenHashMap<>();
 
-    private final boolean MC_1_19 = Utils.isCBXXXorLater("1.19");
-
     private int prevSize = ScriptKey.size();
     private ScriptKey[] tempKeys = ScriptKey.values();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPhysicsEvent(BlockPhysicsEvent event) {
         var block = event.getBlock();
-        if (MC_1_19) {
+        if (V_1_19.isSupported()) {
             call(block);
             relative(block, UP);
             relative(block, DOWN);
@@ -98,7 +94,7 @@ public final class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (MC_1_19) {
+        if (V_1_19.isSupported()) {
             final var block = event.getBlock();
             ScriptBlock.getScheduler().run(() -> search(block));
         }
@@ -106,7 +102,7 @@ public final class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (MC_1_19) {
+        if (V_1_19.isSupported()) {
             final var block = event.getBlock();
             ScriptBlock.getScheduler().run(() -> search(block));
         }
@@ -114,7 +110,7 @@ public final class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
-        if (MC_1_19) {
+        if (V_1_19.isSupported()) {
             final var block = event.getBlock();
             final var blocks = event.getBlocks();
             ScriptBlock.getScheduler().run(() -> {
@@ -166,7 +162,10 @@ public final class BlockListener implements Listener {
         }
         var hash = (block.getX() ^ (block.getZ() << 12)) ^ (block.getY() << 24) ^ block.getWorld().hashCode();
         if (!block.isBlockPowered() && !block.isBlockIndirectlyPowered()) {
-            LOOP_TASK.getOrDefault(hash, Collections.emptySet()).forEach(CANCEL);
+            var tasks = LOOP_TASK.get(hash);
+            if (tasks != null) {
+                tasks.forEach(CANCEL);
+            }
             LOOP_TASK.remove(hash);
             BLOCK_FLAG.remove(hash);
         } else if (BLOCK_FLAG.add(hash)) {

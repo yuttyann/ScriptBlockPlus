@@ -15,15 +15,15 @@
  */
 package com.github.yuttyann.scriptblockplus.item.gui;
 
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.hook.nms.AnvilGUI;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.hook.nms.AnvilGUI;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 /**
  * ScriptBlockPlus UserWindow クラス
@@ -122,7 +122,7 @@ public class UserWindow {
      */
     public void reload() {
         try {
-            this.inventory = customGUI.isCancelled() ? createInventory() : null;  
+            this.inventory = customGUI.isCancelled() ? createInventory() : null;
         } finally {
             customGUI.onLoaded(this);
         }

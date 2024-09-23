@@ -15,8 +15,15 @@
  */
 package com.github.yuttyann.scriptblockplus.utils;
 
-import com.github.yuttyann.scriptblockplus.enums.MatchType;
-import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -24,15 +31,9 @@ import org.bukkit.inventory.meta.Damageable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Map.Entry;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import com.github.yuttyann.scriptblockplus.enums.MatchType;
+import com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft;
+import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
 
 /**
  * ScriptBlockPlus ItemUtils クラス
@@ -40,12 +41,10 @@ import java.util.stream.Collectors;
  */
 public final class ItemUtils {
 
-    private static final boolean MC_1_14_4 = Utils.isCBXXXorLater("1.14.4"), MC_1_13 = Utils.isCBXXXorLater("1.13");
-
     private static final Map<String, Material> KEY_MATERIALS;
 
     static {
-        if (!MC_1_13 && NetMinecraft.hasNMS()) {
+        if (McVersion.V_1_13.isUnSupported() && NetMinecraft.hasNMS()) {
             KEY_MATERIALS = new HashMap<>();
             try {
                 KEY_MATERIALS.putAll(NMSHelper.getItemRegistry());
@@ -59,7 +58,7 @@ public final class ItemUtils {
 
     @NotNull
     public static ItemStack getGlassPane(@NotNull int color) {
-        if (MC_1_13) {
+        if (McVersion.V_1_13.isSupported()) {
             var material = (Material) null;
             switch (color) {
                 case 0:
@@ -219,7 +218,7 @@ public final class ItemUtils {
 
     @SuppressWarnings("deprecation")
     public static int getDamage(@NotNull ItemStack item) {
-        if (MC_1_13) {
+        if (McVersion.V_1_13.isSupported()) {
             var itemMeta = item.getItemMeta();
             return itemMeta instanceof Damageable ? ((Damageable) itemMeta).getDamage() : 0;
         }
@@ -227,9 +226,9 @@ public final class ItemUtils {
     }
 
     public static boolean isAIR(@NotNull Material material) {
-        if (MC_1_14_4) {
+        if (McVersion.V_1_14_4.isSupported()) {
             return material.isAir();
-        } else if (!MC_1_13) {
+        } else if (McVersion.V_1_13.isUnSupported()) {
             return material == Material.AIR;
         }
         return material.name().endsWith("AIR");

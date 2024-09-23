@@ -15,13 +15,14 @@
  */
 package com.github.yuttyann.scriptblockplus.enums;
 
-import com.github.yuttyann.scriptblockplus.utils.Utils;
+import java.util.function.Supplier;
+
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
+import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
 
 /**
  * ScriptBlockPlus CommandLog 列挙型
@@ -47,7 +48,7 @@ public enum CommandLog {
     }
 
     public void setLogAdmin(@NotNull World world) {
-        if (Utils.isCBXXXorLater("1.13.2")) {
+        if (McVersion.V_1_13_2.isSupported()) {
             world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, this.value);
         } else {
             world.setGameRuleValue("logAdminCommands", String.valueOf(this.value));
@@ -55,7 +56,7 @@ public enum CommandLog {
     }
 
     public void setCommandFeedBack(@NotNull World world) {
-        if (Utils.isCBXXXorLater("1.13.2")) {
+        if (McVersion.V_1_13_2.isSupported()) {
             world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, this.value);
         } else {
             world.setGameRuleValue("sendCommandFeedback", String.valueOf(this.value));
@@ -64,7 +65,7 @@ public enum CommandLog {
 
     @NotNull
     private static CommandLog getLogAdmin(@NotNull World world) { 
-        if (Utils.isCBXXXorLater("1.13.2")) {
+        if (McVersion.V_1_13_2.isSupported()) {
             return world.getGameRuleValue(GameRule.LOG_ADMIN_COMMANDS) ? TRUE : FALSE;
         } else {
             return Boolean.valueOf(world.getGameRuleValue("logAdminCommands")) ? TRUE : FALSE;
@@ -73,7 +74,7 @@ public enum CommandLog {
 
     @NotNull
     public static CommandLog getCommandFeedBack(@NotNull World world) { 
-        if (Utils.isCBXXXorLater("1.13.2")) {
+        if (McVersion.V_1_13_2.isSupported()) {
             return world.getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK) ? TRUE : FALSE;
         } else {
             return Boolean.valueOf(world.getGameRuleValue("sendCommandFeedback")) ? TRUE : FALSE;

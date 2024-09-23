@@ -7,6 +7,9 @@
 # JavaDoc
 javadoc-latest
 
+# Visual Studio Code
+.vscode/*
+
 # Eclipse
 .project
 .classpath
@@ -46,3 +49,5 @@ WIKI_JP.md
 *.log
 *.swp
 *.bak
+
+dependency-reduced-pom.xml

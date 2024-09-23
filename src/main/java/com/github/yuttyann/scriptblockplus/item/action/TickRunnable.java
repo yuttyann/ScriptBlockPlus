@@ -15,26 +15,11 @@
  */
 package com.github.yuttyann.scriptblockplus.item.action;
 
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
-
-import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.TeamColor;
-import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
-import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
-import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntity;
-import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntityPacket;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.region.CuboidRegionIterator;
-import com.github.yuttyann.scriptblockplus.region.PlayerRegion;
-import com.github.yuttyann.scriptblockplus.region.Region;
-import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils.ThrowableConsumer;
-import com.github.yuttyann.scriptblockplus.utils.raytrace.RayTrace;
-import com.google.common.base.Predicates;
 
 import org.bukkit.Color;
 import org.bukkit.GameMode;
@@ -46,6 +31,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.enums.TeamColor;
+import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
+import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntity;
+import com.github.yuttyann.scriptblockplus.hook.nms.GlowEntityPacket;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.region.CuboidRegionIterator;
+import com.github.yuttyann.scriptblockplus.region.PlayerRegion;
+import com.github.yuttyann.scriptblockplus.region.Region;
+import com.github.yuttyann.scriptblockplus.script.ScriptKey;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils.ThrowableConsumer;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.raytrace.RayTrace;
+import com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft;
+import com.google.common.base.Predicates;
 
 /**
  * ScriptBlockPlus TickRunnable クラス
@@ -227,7 +229,7 @@ public class TickRunnable extends BukkitRunnable {
             color = block.getType() == Material.AIR ? Color.AQUA : Color.LIME;
         }
         double x = block.getX(), y = block.getY(), z = block.getZ(), a = 1D;
-        if (Utils.isCBXXXorLater("1.13")) {
+        if (V_1_13.isSupported()) {
             var dust = new DustOptions(color, 1);
             player.spawnParticle(Particle.REDSTONE, x, y, z, 0, 0, 0, 0, dust);
             player.spawnParticle(Particle.REDSTONE, x + a, y, z, 0, 0, 0, 0, dust);

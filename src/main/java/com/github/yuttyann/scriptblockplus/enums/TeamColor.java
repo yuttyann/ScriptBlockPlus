@@ -15,8 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus.enums;
 
-import com.github.yuttyann.scriptblockplus.utils.Utils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Scoreboard;
@@ -24,6 +22,8 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 import org.jetbrains.annotations.NotNull;
+
+import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
 
 public enum TeamColor {
     BLACK(ChatColor.BLACK),
@@ -63,7 +63,7 @@ public enum TeamColor {
         var team = SCOREBOARD.getTeam(name);
         if (team == null) {
             team = SCOREBOARD.registerNewTeam(name);
-            if (Utils.isCBXXXorLater("1.12")) {
+            if (McVersion.V_1_12.isSupported()) {
                 team.setColor(chatColor);
             }
             team.setPrefix(chatColor.toString());

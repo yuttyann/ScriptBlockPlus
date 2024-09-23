@@ -15,15 +15,13 @@
  */
 package com.github.yuttyann.scriptblockplus.hook.nms;
 
+import static com.github.yuttyann.scriptblockplus.utils.server.minecraft.Minecraft.*;
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
+import static org.bukkit.event.inventory.InventoryAction.*;
+
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -43,11 +41,19 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static org.bukkit.event.inventory.InventoryAction.MOVE_TO_OTHER_INVENTORY;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft;
+import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
 
 /**
  * ScriptBlockPlus AnvilGUI クラス
- * @author yuttyann44581, WesleySmith(https://github.com/WesJD/AnvilGUI)
+ * <p>
+ * https://github.com/WesJD/AnvilGUI
+ * @author yuttyann44581
  */
 public final class AnvilGUI {
 
@@ -154,12 +160,11 @@ public final class AnvilGUI {
             HandlerList.unregisterAll(listener);
             if (sendClosePacket) {
                 try {
-                    NMSHelper.handleInventoryCloseEvent(player);
-                    NMSHelper.setActiveContainerDefault(player);
-                    NMSHelper.sendPacketCloseWindow(player, containerId);
-                } catch (ReflectiveOperationException e) {
-                    e.printStackTrace();
-                }
+                    var serverPlayer = getServerPlayer(player);
+                    handleInventoryCloseEvent(serverPlayer);
+                    setActiveContainer(serverPlayer, getDefaultContainer(serverPlayer));
+                    sendPacket(serverPlayer, newClientboundContainerClosePacket(containerId));
+                } catch (ReflectiveOperationException ex) { ex.printStackTrace(); }
             }
             if (close != null) {
                 close.accept(player);
@@ -172,22 +177,28 @@ public final class AnvilGUI {
      */
     private void openInventory() {
         try {
-            NMSHelper.handleInventoryCloseEvent(player);
-            NMSHelper.setActiveContainerDefault(player);
+            var serverPlayer = getServerPlayer(player);
+            var serverLevel = getServerLevel(player.getWorld());
+            handleInventoryCloseEvent(serverPlayer);
+            setActiveContainer(serverPlayer, getDefaultContainer(serverPlayer));
             Bukkit.getPluginManager().registerEvents(listener, ScriptBlock.getInstance());
-    
-            this.container = NMSHelper.newContainerAnvil(player, title);
-            this.inventory = NMSHelper.toBukkitInventory(container);
+            var componentTitle = getComponentFromJson(title);
+            this.container = newAnvilMenu(serverPlayer, serverLevel, componentTitle);
+            this.inventory = getBukkitView(container).getTopInventory();
             inventory.setItem(Slot.INPUT_LEFT, left);
             if (right != null) {
                 inventory.setItem(Slot.INPUT_RIGHT, right);
             }
-    
-            this.containerId = NMSHelper.getContainerId(player, container);
-            NMSHelper.sendPacketOpenWindow(player, title, containerId);
-            NMSHelper.setActiveContainer(player, container);
+            this.containerId = NMSHelper.getContainerId(serverPlayer, container);
+            if (V_1_14.isSupported()) {
+                sendPacket(serverPlayer, newClientboundOpenScreenPacket(container, componentTitle));
+            } else {
+                var name = NetMinecraft.LEGACY_PATH.newInstance(true, "ChatMessage", "tile.anvil.name", new Object[0]);
+                sendPacket(serverPlayer, newClientboundOpenScreenPacket(containerId, "minecraft:anvil", name));
+            }
+            setActiveContainer(serverPlayer, container);
             NMSHelper.setActiveContainerId(container, containerId);
-            NMSHelper.addActiveContainerSlotListener(container, player);
+            initMenu(serverPlayer, container);
             setOpened(true);
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
@@ -210,10 +221,10 @@ public final class AnvilGUI {
                 return;
             }
             var name = ItemUtils.getName(output, "");
-            if (!Utils.isCBXXXorLater("1.16.2") && StringUtils.isNotEmpty(text) && text.startsWith("§") && name.length() > 0) {
+            if (McVersion.V_1_16_2.isUnSupported() && StringUtils.isNotEmpty(text) && text.startsWith("§") && name.length() > 0) {
                 ItemUtils.setName(output, name.substring(1));
             }
-            if (Utils.isCBXXXorLater("1.11")) {
+            if (McVersion.V_1_11.isSupported()) {
                 ScriptBlock.getScheduler().run(() -> ((AnvilInventory) inventory).setRepairCost(0));
             }
             if (update != null) {

@@ -15,10 +15,10 @@
  */
 package com.github.yuttyann.scriptblockplus.item.gui;
 
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriConsumer;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Supplier;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -29,16 +29,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Supplier;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriConsumer;
 
 /**
  * ScriptBlockPlus GUIItem クラス
  * @author yuttyann44581
  */
-public final class GUIItem implements Cloneable {                                 
+public final class GUIItem implements Cloneable {
 
     private static final ItemFlag[] FLAGS = { ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE };
 
@@ -120,7 +120,7 @@ public final class GUIItem implements Cloneable {
         }
         var sbPlayer = window.getSBPlayer();
         if (!sbPlayer.isOnline()) {
-            return;   
+            return;
         }
         var custom = window.getCustomGUI();
         if (custom.getInterval() > 0) {

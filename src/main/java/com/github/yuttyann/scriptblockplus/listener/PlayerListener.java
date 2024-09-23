@@ -18,20 +18,7 @@ package com.github.yuttyann.scriptblockplus.listener;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
-
-import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
-import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
-import com.github.yuttyann.scriptblockplus.item.ItemAction;
-import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
-import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
-import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
-import com.github.yuttyann.scriptblockplus.listener.trigger.WalkTrigger;
-import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -46,6 +33,18 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
+import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
+import com.github.yuttyann.scriptblockplus.item.ItemAction;
+import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
+import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
+import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
+import com.github.yuttyann.scriptblockplus.listener.trigger.WalkTrigger;
+import com.github.yuttyann.scriptblockplus.script.option.chat.ActionBar;
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 
 /**
  * ScriptBlockPlus JoinQuitListener クラス
@@ -93,32 +92,26 @@ public final class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
         var sbPlayer = ScriptBlock.getSBPlayer(event.getWhoClicked().getUniqueId());
-        var inventory = Optional.ofNullable(event.getClickedInventory());
-        if (inventory.isPresent() && inventory.get().getType() == InventoryType.PLAYER) {
+        var inventory = event.getClickedInventory();
+        if (inventory != null && inventory.getType() == InventoryType.PLAYER) {
             if (sbPlayer.getObjectMap().get(KEY_INVENTORY, Collections.EMPTY_SET).size() > 0) {
                 event.setCancelled(true);
             }
         }
         var window = (UserWindow) sbPlayer.getObjectMap().get(UserWindow.KEY_WINDOW);
-        if (window == null) {
-            return;
-        }
-        var slotType = event.getSlotType();
-        if (slotType == SlotType.OUTSIDE) {
+        if (window == null || !Objects.equals(inventory, window.getInventory())) {
             return;
         }
         var customGUI = window.getCustomGUI();
-        if (!Objects.equals(customGUI.getTitle(), event.getView().getTitle())) {
-            return;
-        }
         if (customGUI.isCancelled()) {
             event.setCancelled(true);
         }
-        if (event.getClick() == ClickType.DOUBLE_CLICK || event.getRawSlot() != event.getSlot()) {
+        var slotType = event.getSlotType();
+        if (slotType == SlotType.OUTSIDE || event.getClick() == ClickType.DOUBLE_CLICK) {
             return;
         }
-        var guiItem = window.getItem(event.getSlot());
-        if (guiItem == null || guiItem.getClicked() == null || guiItem.toBukkit().getType() == Material.AIR || !guiItem.toBukkit().equals(event.getCurrentItem())) {
+        var guiItem = window.getItem(event.getRawSlot());
+        if (guiItem == null || guiItem.getClicked() == null || guiItem.toBukkit().getType() == Material.AIR) {
             return;
         }
         if (event.isRightClick() || event.isLeftClick()) {

@@ -21,11 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
-import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
-import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
-
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -34,6 +29,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
+import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
+import com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft;
+import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
 
 /**
  * ScriptBlockPlus RayTrace クラス
@@ -69,7 +69,7 @@ public final class RayTrace {
      */
     @Nullable
     public static RayResult rayTraceBlocks(@NotNull Player player, final double maxDistance) {
-        if (Utils.isCBXXXorLater("1.13.2")) {
+        if (McVersion.V_1_13_2.isSupported()) {
             var rayTraceResult = player.rayTraceBlocks(maxDistance, FluidCollisionMode.NEVER);
             if (rayTraceResult == null || rayTraceResult.getHitBlock() == null) {
                 return null;

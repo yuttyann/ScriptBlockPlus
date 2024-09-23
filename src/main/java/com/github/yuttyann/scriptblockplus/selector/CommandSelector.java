@@ -15,14 +15,11 @@
  */
 package com.github.yuttyann.scriptblockplus.selector;
 
-import com.github.yuttyann.scriptblockplus.BlockCoords;
-import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
-import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
-import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
-import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
-import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
-import com.google.common.collect.Lists;
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -35,9 +32,13 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.github.yuttyann.scriptblockplus.BlockCoords;
+import com.github.yuttyann.scriptblockplus.hook.plugin.Placeholder;
+import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
+import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft;
+import com.github.yuttyann.scriptblockplus.utils.server.minecraft.Minecraft;
+import com.google.common.collect.Lists;
 
 /**
  * ScriptBlockPlus CommandSelector クラス
@@ -171,13 +172,13 @@ public final class CommandSelector {
     @NotNull
     public static List<Entity> getTargets(@NotNull CommandSender sender, @NotNull Location start, @NotNull String selector) {
         selector = Placeholder.INSTANCE.replace(getWorld(sender, start), selector);
-        if (NetMinecraft.hasNMS() && Utils.isCBXXXorLater("1.13")) {
+        if (NetMinecraft.hasNMS() && V_1_13.isSupported()) {
             try {
-                return NMSHelper.selectEntities(sender, start, selector);
+                return Minecraft.getEntities(sender, start.toVector(), selector);
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace();
             }
-        } else if (Utils.isCBXXXorLater("1.13.2")) {
+        } else if (V_1_13_2.isSupported()) {
             return Bukkit.selectEntities(sender, selector);
         }
         return EntitySelector.getEntities(sender, start, selector);

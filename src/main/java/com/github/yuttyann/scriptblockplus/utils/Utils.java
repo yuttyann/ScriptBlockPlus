@@ -15,13 +15,13 @@
  */
 package com.github.yuttyann.scriptblockplus.utils;
 
-import com.github.yuttyann.scriptblockplus.ScriptBlock;
-import com.github.yuttyann.scriptblockplus.enums.CommandLog;
-import com.github.yuttyann.scriptblockplus.enums.Permission;
-import com.github.yuttyann.scriptblockplus.file.SBFile;
-import com.github.yuttyann.scriptblockplus.player.SBPlayer;
-import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
-import com.google.common.base.Splitter;
+import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
+
+import java.text.SimpleDateFormat;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,11 +31,16 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.function.Supplier;
-
-import static com.github.yuttyann.scriptblockplus.utils.StringUtils.*;
+import com.github.yuttyann.scriptblockplus.ScriptBlock;
+import com.github.yuttyann.scriptblockplus.enums.CommandLog;
+import com.github.yuttyann.scriptblockplus.enums.Permission;
+import com.github.yuttyann.scriptblockplus.file.SBFile;
+import com.github.yuttyann.scriptblockplus.player.SBPlayer;
+import com.github.yuttyann.scriptblockplus.selector.CommandSelector;
+import com.github.yuttyann.scriptblockplus.utils.server.CraftBukkit;
+import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
+import com.github.yuttyann.scriptblockplus.utils.version.Version;
+import com.google.common.base.Splitter;
 
 /**
  * ScriptBlockPlus Utils クラス
@@ -45,9 +50,6 @@ public final class Utils {
 
     public static final String MINECRAFT = "minecraft:";
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    
-    private static final String SERVER_VERSION = getServerVersion();
-    private static final Map<String, Boolean> VERSION_CACHE = new HashMap<>();
 
     private static final Splitter SPLITTER = Splitter.on("|~").omitEmptyStrings();
 
@@ -61,22 +63,11 @@ public final class Utils {
     }
 
     /**
-     * サーバーのバージョンを取得します。
-     * @return {@link String} - サーバーバージョン
-     */
-    @NotNull
-    public static String getServerVersion() {
-        if (SERVER_VERSION == null) {
-            var version = Bukkit.getBukkitVersion();
-            return version.substring(0, version.indexOf("-"));
-        }
-        return SERVER_VERSION;
-    }
-
-    /**
      * パッケージのバージョン(例: {@code v1_16_R3})を取得します。
      * @return {@link String} - パッケージのバージョン
+     * @see CraftBukkit#getLegacyPackageVersion()
      */
+    @Deprecated
     @NotNull
     public static String getPackageVersion() {
         var name = Bukkit.getServer().getClass().getPackage().getName();
@@ -87,13 +78,11 @@ public final class Utils {
      * サーバーバージョンを比較します。
      * @param version - 比較元
      * @return @code boolean} - 比較元がサーバーのバージョン以上だった場合は{@code true}
+     * @see McVersion#isSupported()
      */
+    @Deprecated
     public static boolean isCBXXXorLater(@NotNull String version) {
-        var result = VERSION_CACHE.get(version);
-        if (result == null) {
-            VERSION_CACHE.put(version, result = isUpperVersion(getServerVersion(), version));
-        }
-        return result;
+        return GAME_VERSION.isUpperVersion(Version.of(version));
     }
 
     /**
@@ -107,32 +96,11 @@ public final class Utils {
      * @param source - 比較元
      * @param target - 比較先
      * @return {@code boolean} - 比較元が比較先のバージョン以上だった場合は{@code true}
+     * @see Version#isUpperVersion(String, String)
      */
+    @Deprecated
     public static boolean isUpperVersion(@NotNull String source, @NotNull String target) {
-        if (isNotEmpty(source) && isNotEmpty(target)) {
-            return getVersionInt(source) >= getVersionInt(target);
-        }
-        return false;
-    }
-
-    /**
-     * バージョンを数値に変換します。
-     * @param version - バージョン
-     * @return {@code int} - バージョンの数値
-     */
-    public static int getVersionInt(@NotNull String version) {
-        int dot1 = version.indexOf('.', 0);
-        int dot2 = version.indexOf('.', dot1 + 1);
-        if (dot1 < 0) {
-            throw new IllegalArgumentException("Invalid Version: " + version);
-        }
-        int part1 = Integer.parseInt(version, 0, dot1, 10);
-        int part2 = Integer.parseInt(version, dot1 + 1, dot2 < 0 ? version.length() : dot2, 10);
-        int result = (part1 * 100000) + (part2 * 1000);
-        if (dot2 >= 0) {
-            result += Integer.parseInt(version, dot2 + 1, version.length(), 10);
-        }
-        return result;
+        return Version.isUpperVersion(source, target);
     }
 
     /**
@@ -195,7 +163,7 @@ public final class Utils {
 
     /**
      * ワールドを取得します。
-     * @param name - ワールドの名前 
+     * @param name - ワールドの名前
      * @return {@link World} - ワールド
      */
     @NotNull
@@ -221,5 +189,18 @@ public final class Utils {
     public static String getName(@NotNull UUID uuid) {
         var player = Bukkit.getOfflinePlayer(uuid);
         return !player.hasPlayedBefore() ? "null" : player.getName();
+    }
+
+    @NotNull
+    public static Class<?> getClassForName(@NotNull String className) throws IllegalArgumentException {
+        try {
+            return Class.forName(Objects.requireNonNull(className));
+        } catch (ClassNotFoundException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
+
+    public static boolean isSupported(@NotNull Class<?> source, @NotNull Class<?> target) {
+        return source.isAssignableFrom(target) || source.equals(target);
     }
 }

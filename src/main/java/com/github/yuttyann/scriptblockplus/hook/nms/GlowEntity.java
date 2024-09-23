@@ -15,28 +15,38 @@
  */
 package com.github.yuttyann.scriptblockplus.hook.nms;
 
+import static com.github.yuttyann.scriptblockplus.utils.reflect.Reflection.*;
+import static com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft.*;
+import static com.github.yuttyann.scriptblockplus.utils.server.minecraft.Minecraft.*;
+import static java.lang.reflect.Modifier.*;
+
 import java.util.UUID;
+
+import org.bukkit.block.Block;
+import org.bukkit.entity.MagmaCube;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
-import com.github.yuttyann.scriptblockplus.enums.server.CraftBukkit;
-import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
-import com.github.yuttyann.scriptblockplus.enums.server.reflect.ReflectMatcher;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.ArrayUtils;
-import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
+import com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
-
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * ScriptBlockPlus GlowEntity クラス
  * @author yuttyann44581
  */
 public final class GlowEntity {
+
+    static {
+        method(WORLD_ENTITY.getClass("Entity"))
+                .modifiers(PUBLIC, -STATIC, -FINAL)
+                .returnType(void.class)
+                .parameterTypes(double.class, double.class, double.class, float.class, float.class)
+                .findFirst("Entity.moveTo");
+    }
 
     private final int id;
     
@@ -82,13 +92,17 @@ public final class GlowEntity {
      */
     @NotNull
     static GlowEntity create(@NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) throws ReflectiveOperationException {
-        var nmsEntity = NMSHelper.newEntityMagmaCube(blockCoords.getWorld());
-        var craftEntity = ReflectMatcher.constructor("CraftMagmaCube").newInstance(Bukkit.getServer(), nmsEntity);
-        CraftBukkit.ENTITY.invokeMethod(craftEntity, "CraftMagmaCube", "setSize", 2);
-        CraftBukkit.ENTITY.invokeMethod(craftEntity, "CraftMagmaCube", "setGlowing", true);
-        ReflectMatcher.method("setInvisible").invoke(NetMinecraft.isLegacy() ? nmsEntity : craftEntity, true);
-        ReflectMatcher.method("setLocation").invoke(nmsEntity, blockCoords.getX() + 0.5D, blockCoords.getY(), blockCoords.getZ() + 0.5D, 0.0F, 0.0F);
-        var glowEntity = new GlowEntity(NMSHelper.getEntityId(craftEntity), NMSHelper.getUniqueId(craftEntity), nmsEntity, sbPlayer, teamColor, blockCoords, flagSize);
+        var nmsMagmaCube = newMagmaCube(getServerLevel(blockCoords.getWorld()));
+        var magmaCube = (MagmaCube) newCraftMagmaCube(nmsMagmaCube);
+        magmaCube.setSize(2);
+        magmaCube.setGlowing(true);
+        if (NetMinecraft.isLegacy()) {
+            NetMinecraft.LEGACY_PATH.invokeMethod(nmsMagmaCube, "Entity", "setInvisible", true);
+        } else {
+            magmaCube.setInvisible(true);
+        }
+        methods().invoke("Entity.moveTo", nmsMagmaCube, blockCoords.getX() + 0.5D, blockCoords.getY(), blockCoords.getZ() + 0.5D, 0.0F, 0.0F);
+        var glowEntity = new GlowEntity(magmaCube.getEntityId(), magmaCube.getUniqueId(), nmsMagmaCube, sbPlayer, teamColor, blockCoords, flagSize);
         teamColor.getTeam().addEntry(glowEntity.uuid.toString());
         return glowEntity;
     }

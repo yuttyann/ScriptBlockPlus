@@ -17,9 +17,13 @@ package com.github.yuttyann.scriptblockplus;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+
 import com.github.yuttyann.scriptblockplus.command.BaseCommand;
 import com.github.yuttyann.scriptblockplus.command.ScriptBlockPlusCommand;
-import com.github.yuttyann.scriptblockplus.enums.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.file.SBFiles;
 import com.github.yuttyann.scriptblockplus.file.json.CacheJson;
 import com.github.yuttyann.scriptblockplus.file.json.derived.BlockScriptJson;
@@ -27,18 +31,21 @@ import com.github.yuttyann.scriptblockplus.file.json.legacy.ConvertList;
 import com.github.yuttyann.scriptblockplus.file.json.legacy.LegacyFormatJson;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultEconomy;
 import com.github.yuttyann.scriptblockplus.hook.plugin.VaultPermission;
-import com.github.yuttyann.scriptblockplus.listener.*;
 import com.github.yuttyann.scriptblockplus.item.ItemAction;
 import com.github.yuttyann.scriptblockplus.item.action.BlockSelector;
 import com.github.yuttyann.scriptblockplus.item.action.ScriptEditor;
-import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.item.action.ScriptManager;
+import com.github.yuttyann.scriptblockplus.item.action.ScriptViewer;
 import com.github.yuttyann.scriptblockplus.item.action.TickRunnable;
 import com.github.yuttyann.scriptblockplus.item.gui.CustomGUI;
 import com.github.yuttyann.scriptblockplus.item.gui.UserWindow;
 import com.github.yuttyann.scriptblockplus.item.gui.custom.SearchGUI;
 import com.github.yuttyann.scriptblockplus.item.gui.custom.SettingGUI;
 import com.github.yuttyann.scriptblockplus.item.gui.custom.ToolBoxGUI;
+import com.github.yuttyann.scriptblockplus.listener.BlockListener;
+import com.github.yuttyann.scriptblockplus.listener.InteractListener;
+import com.github.yuttyann.scriptblockplus.listener.PlayerListener;
+import com.github.yuttyann.scriptblockplus.listener.TriggerListener;
 import com.github.yuttyann.scriptblockplus.listener.trigger.BreakTrigger;
 import com.github.yuttyann.scriptblockplus.listener.trigger.HitTrigger;
 import com.github.yuttyann.scriptblockplus.listener.trigger.InteractTrigger;
@@ -48,13 +55,10 @@ import com.github.yuttyann.scriptblockplus.manager.OptionManager;
 import com.github.yuttyann.scriptblockplus.player.BaseSBPlayer;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.script.ScriptKey;
-import com.github.yuttyann.scriptblockplus.utils.NMSHelper;
-import com.github.yuttyann.scriptblockplus.utils.Utils;
-
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft;
+import com.github.yuttyann.scriptblockplus.utils.server.minecraft.Minecraft;
+import com.github.yuttyann.scriptblockplus.utils.server.minecraft.NativeAccessor;
+import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
 
 /**
  * ScriptBlockPlus ScriptBlock メインクラス
@@ -68,8 +72,8 @@ public class ScriptBlock extends JavaPlugin {
     @Override
     public void onEnable() {
         // 1.9未満のバージョンだった場合はプラグインを無効化
-        if (!Utils.isCBXXXorLater("1.9")) {
-            getLogger().warning("Unsupported Version: " + Utils.getServerVersion());
+        if (McVersion.V_1_9.isUnSupported()) {
+            getLogger().warning("Unsupported Version: " + McVersion.GAME_VERSION);
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -77,9 +81,9 @@ public class ScriptBlock extends JavaPlugin {
         // 一部のリフレクションをキャッシュする。
         if (NetMinecraft.hasNMS()) {
             try {
-                NMSHelper.build();
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
+                Minecraft.setAccessor(NativeAccessor.get());
+            } catch (ReflectiveOperationException ex) {
+                ex.printStackTrace();
             }
         } else {
             // NMSが見つからなかった場合警告
