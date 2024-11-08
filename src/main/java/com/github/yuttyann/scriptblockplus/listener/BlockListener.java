@@ -16,16 +16,12 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
 import static com.github.yuttyann.scriptblockplus.utils.StreamUtils.*;
-import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
+import static org.bukkit.Bukkit.*;
 import static org.bukkit.block.BlockFace.*;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 import java.util.function.Function;
-
-import javax.annotation.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -38,6 +34,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,11 +52,12 @@ import com.github.yuttyann.scriptblockplus.selector.split.Split;
 import com.github.yuttyann.scriptblockplus.selector.split.SplitValue;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
+import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 /**
  * ScriptBlockPlus BlockListener クラス
@@ -66,123 +65,140 @@ import it.unimi.dsi.fastutil.ints.IntSet;
  */
 public final class BlockListener implements Listener {
 
-    private final Consumer<BukkitTask> CANCEL = b -> { if (b != null) b.cancel(); };
-    private final Function<SplitValue, String> SPLIT_VALUE = SplitValue::getValue;
-    private final Function<Integer, Set<BukkitTask>> CREATE_SET = b -> new HashSet<>();
+    private static final boolean MC_1_19 = McVersion.V_1_19.isSupported();
+    private static final BlockFace[] GENERAL_FACES = { UP, DOWN, NORTH, SOUTH, EAST, WEST };
+    private static final Function<SplitValue, String> SPLIT_MAPPER = SplitValue::getValue;
 
-    private final IntSet BLOCK_FLAG = new IntOpenHashSet();
-    private final Int2ObjectMap<Set<BukkitTask>> LOOP_TASK = new Int2ObjectOpenHashMap<>();
+    private final Object2ObjectMap<Block, Set<BukkitTask>> repeatTasks = new Object2ObjectOpenHashMap<>();
 
-    private int prevSize = ScriptKey.size();
-    private ScriptKey[] tempKeys = ScriptKey.values();
+    private final Plugin plugin;
+    private final Set<Block> checkedBlocks, poweredBlocks;
 
-    @EventHandler(priority = EventPriority.HIGH)
+    public BlockListener(@NotNull Plugin plugin) {
+        this.plugin = plugin;
+        this.checkedBlocks = new ObjectOpenHashSet<>();
+        this.poweredBlocks = new ObjectOpenHashSet<>();
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPhysicsEvent(BlockPhysicsEvent event) {
-        var block = event.getBlock();
-        if (V_1_19.isSupported()) {
-            call(block);
-            relative(block, UP);
-            relative(block, DOWN);
-            relative(block, NORTH);
-            relative(block, SOUTH);
-            relative(block, EAST);
-            relative(block, WEST);
-        } else {
-            search(block);
-        }
+        final var block = event.getBlock();
+        if (checkedBlocks.contains(block)) return;
+        getScheduler().runTaskAsynchronously(plugin, () -> {
+            synchronized (checkedBlocks) {
+                if (MC_1_19 ? deepScanBlocks(block) : scanBlocks(block)) cleanup();
+            }
+        });
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (V_1_19.isSupported()) {
+        if (MC_1_19) {
             final var block = event.getBlock();
-            ScriptBlock.getScheduler().run(() -> search(block));
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onBlockBreak(BlockBreakEvent event) {
-        if (V_1_19.isSupported()) {
-            final var block = event.getBlock();
-            ScriptBlock.getScheduler().run(() -> search(block));
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onBlockPistonRetract(BlockPistonRetractEvent event) {
-        if (V_1_19.isSupported()) {
-            final var block = event.getBlock();
-            final var blocks = event.getBlocks();
-            ScriptBlock.getScheduler().run(() -> {
-                search(block);
-                blocks.forEach(this::search);
+            if (checkedBlocks.contains(block)) return;
+            getScheduler().runTaskAsynchronously(plugin, () -> {
+                synchronized (checkedBlocks) {
+                    if (scanBlocks(block)) cleanup();
+                }
             });
         }
     }
 
-    private void relative(@NotNull Block block, @NotNull BlockFace face) {
-        block = block.getRelative(face);
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (MC_1_19) {
+            final var block = event.getBlock();
+            if (checkedBlocks.contains(block)) return;
+            getScheduler().runTaskAsynchronously(plugin, () -> {
+                synchronized (checkedBlocks) {
+                    if (scanBlocks(block)) cleanup();
+                }
+            });
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onBlockPistonRetract(BlockPistonRetractEvent event) {
+        if (MC_1_19) {
+            var blocks = new ObjectArrayList<>(event.getBlocks());
+            blocks.add(event.getBlock());
+            blocks.removeIf(checkedBlocks::contains);
+            if (blocks.isEmpty()) return;
+            getScheduler().runTaskAsynchronously(plugin, () -> {
+                synchronized (checkedBlocks) {
+                    var scanned = false;
+                    for (var block : blocks) {
+                        if (scanBlocks(block)) scanned = true;
+                    }
+                    if (scanned) cleanup();
+                }
+            });
+        }
+    }
+
+    private boolean scanBlocks(@NotNull Block block) {
+        if (checkedBlocks.add(block)) {
+            if (isBlockPowered(block)) callRedstone(block);
+            for (var face : GENERAL_FACES) {
+                var relative = block.getRelative(face);
+                if (checkedBlocks.add(block) && isBlockPowered(relative)) callRedstone(relative);
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    private boolean deepScanBlocks(@NotNull Block block) {
+        if (checkedBlocks.add(block)) {
+            if (isBlockPowered(block)) callRedstone(block);
+            for (var face1 : GENERAL_FACES) {
+                block = block.getRelative(face1);
+                if (checkedBlocks.add(block) && isBlockPowered(block)) {
+                    callRedstone(block);
+                    for (var face2 : GENERAL_FACES) {
+                        var relative = block.getRelative(face2);
+                        if (checkedBlocks.add(relative) && isBlockPowered(relative)) callRedstone(relative);
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isBlockPowered(@NotNull Block block) {
         if (block.isBlockPowered() || block.isBlockIndirectlyPowered()) {
-            call(block);
-            if (face != DOWN) {
-                call(block.getRelative(UP));
-            }
-            if (face != UP) {
-                call(block.getRelative(DOWN));
-            }
-            if (face != SOUTH) {
-                call(block.getRelative(NORTH));
-            }
-            if (face != NORTH) {
-                call(block.getRelative(SOUTH));
-            }
-            if (face != WEST) {
-                call(block.getRelative(EAST));
-            }
-            if (face != EAST) {
-                call(block.getRelative(WEST));
-            }
+            return true;
+        } else {
+            getScheduler().runTask(plugin, () -> {
+                var tasks = repeatTasks.remove(block);
+                if (tasks != null) tasks.forEach(BukkitTask::cancel);
+            });
+            poweredBlocks.remove(block);
+            return false;
         }
     }
 
-    private void search(@NotNull Block block) {
-        call(block);
-        call(block.getRelative(UP));
-        call(block.getRelative(DOWN));
-        call(block.getRelative(NORTH));
-        call(block.getRelative(SOUTH));
-        call(block.getRelative(EAST));
-        call(block.getRelative(WEST));
+    private void cleanup() {
+        getScheduler().runTaskLater(plugin, checkedBlocks::clear, 1L);
     }
 
-    @NotNull
-    private void call(@Nullable Block block) {
-        if (block == null || ItemUtils.isAIR(block.getType())) {
-            return;
+    private void callRedstone(@NotNull Block block) {
+        if (poweredBlocks.add(block)) {
+            getScheduler().runTask(plugin, () -> {
+                if (block == null || ItemUtils.isAIR(block.getType())) return;
+                onRedstone(block);
+            });
         }
-        var hash = (block.getX() ^ (block.getZ() << 12)) ^ (block.getY() << 24) ^ block.getWorld().hashCode();
-        if (!block.isBlockPowered() && !block.isBlockIndirectlyPowered()) {
-            var tasks = LOOP_TASK.get(hash);
-            if (tasks != null) {
-                tasks.forEach(CANCEL);
-            }
-            LOOP_TASK.remove(hash);
-            BLOCK_FLAG.remove(hash);
-        } else if (BLOCK_FLAG.add(hash)) {
-            ScriptBlock.getScheduler().asyncRun(() -> onRedstone(block));
-        }
-        return;
     }
 
-    private synchronized void onRedstone(@NotNull Block block) {
-        var blockCoords = (BlockCoords) null;
-        for (var scriptKey : getScriptKeys()) {
+    private void onRedstone(@NotNull Block block) {
+        var blockCoords = BlockCoords.of(block);
+        for (var scriptKey : ScriptKey.values()) {
             var scriptJson = BlockScriptJson.get(scriptKey);
             if (scriptJson.isEmpty()) {
                 continue;
-            }
-            if (blockCoords == null) {
-                blockCoords = BlockCoords.of(block);
             }
             var blockScript = scriptJson.fastLoad(blockCoords);
             if (blockScript == null || !blockScript.hasValues()) {
@@ -195,12 +211,37 @@ public final class BlockListener implements Listener {
             var repeat = new Split(selector, "repeat", "{", "}");
             if (repeat.length() > 0) {
                 var values = repeat.getValues(Repeat.values());
-                var rtick = Long.parseLong(filterFirst(values, f -> Repeat.TICK == f.getType()).map(SPLIT_VALUE).orElse("1"));
-                var delay = Long.parseLong(filterFirst(values, f -> Repeat.DELAY == f.getType()).map(SPLIT_VALUE).orElse("0"));
-                var limit = Integer.parseInt(filterFirst(values, f -> Repeat.LIMIT == f.getType()).map(SPLIT_VALUE).orElse("-1"));
-                var rtask = new RepeatTask(limit, repeat, selector, scriptKey, blockCoords);
-                LOOP_TASK.computeIfAbsent(blockCoords.hashCode(), CREATE_SET)
-                .add(rtask.bukkitTask = ScriptBlock.getScheduler().run(rtask, delay, rtick));
+                var period = Long.parseLong(filterFirst(values, f -> Repeat.TICK == f.getType()).map(SPLIT_MAPPER).orElse("1"));
+                var delay = Long.parseLong(filterFirst(values, f -> Repeat.DELAY == f.getType()).map(SPLIT_MAPPER).orElse("0"));
+                var limit = Integer.parseInt(filterFirst(values, f -> Repeat.LIMIT == f.getType()).map(SPLIT_MAPPER).orElse("-1"));
+                var repeatTask = new BukkitRunnable() {
+
+                    private int index;
+                    private BukkitTask task;
+
+                    @Override
+                    public void run() {
+                        if (limit > -1 && limit <= index++) {
+                            var tasks = repeatTasks.remove(block);
+                            if (tasks != null) tasks.remove(task);
+                            cancel();
+                        } else {
+                            perform(repeat, selector, scriptKey, blockCoords);
+                        }
+                    }
+                };
+                var bukkitTask = (repeatTask.task = repeatTask.runTaskTimer(plugin, delay, period));
+                if (bukkitTask.isCancelled()) {
+                    return;
+                }
+                repeatTasks.compute(block, (k, v) -> {
+                    if (v == null) {
+                        return ObjectOpenHashSet.of(bukkitTask);
+                    } else {
+                        v.add(bukkitTask);
+                        return v;
+                    }
+                });
             } else {
                 perform(repeat, selector, scriptKey, blockCoords);
             }
@@ -221,9 +262,7 @@ public final class BlockListener implements Listener {
                 continue;
             }
             index.incrementAndGet();
-
-            // 非同期で実行する。
-            new ScriptRead(true, ScriptBlock.getSBPlayer(player), blockCoords, scriptKey).read(0);
+            new ScriptRead(ScriptBlock.getSBPlayer(player), blockCoords, scriptKey).read(0);
         }
     }
 
@@ -241,44 +280,6 @@ public final class BlockListener implements Listener {
                 return index < Integer.parseInt(value);
             default:
                 return false;
-        }
-    }
-
-    @NotNull
-    private ScriptKey[] getScriptKeys() {
-        return prevSize == ScriptKey.size() ? tempKeys : (this.tempKeys = ScriptKey.values());
-    }
-
-    /**
-     * ScriptBlockPlus RepeatTask クラス
-     * @author yuttyann44581
-     */
-    private class RepeatTask implements Runnable {
-    
-        private int count;
-        private BukkitTask bukkitTask;
-
-        private final int limit;
-        private final Split repeat;
-        private final String selector;
-        private final ScriptKey scriptKey;
-        private final BlockCoords blockCoords;
-    
-        private RepeatTask(final int limit, @NotNull Split repeat, @NotNull String selector, @NotNull ScriptKey scriptKey, @NotNull BlockCoords blockCoords) {
-            this.limit = limit;
-            this.repeat = repeat;
-            this.selector = selector;
-            this.scriptKey = scriptKey;
-            this.blockCoords = blockCoords;
-        }
-
-        @Override
-        public void run() {
-            if (limit > -1 && limit <= count++) {
-                CANCEL.accept(bukkitTask);
-            } else {
-                perform(repeat, selector, scriptKey, blockCoords);
-            }
         }
     }
 }

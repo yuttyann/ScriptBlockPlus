@@ -118,7 +118,7 @@ public class ScriptBlock extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(p -> getSBPlayer(p).setOnline(true));
 
         // リスナーの登録
-        getServer().getPluginManager().registerEvents(new BlockListener(), this);
+        getServer().getPluginManager().registerEvents(new BlockListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new InteractListener(), this);
 
@@ -138,7 +138,7 @@ public class ScriptBlock extends JavaPlugin {
         ItemAction.register(new ScriptViewer());
         ItemAction.register(new ScriptManager());
         ItemAction.register(new BlockSelector());
-    
+
         // オプションの更新
         OptionManager.update();
 
