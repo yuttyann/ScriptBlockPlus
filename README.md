@@ -1,4 +1,4 @@
-[Java11] ScriptBlockPlus [MC1.9-1.21]
+[Java11] ScriptBlockPlus [MC1.9-1.21] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 
 概要
