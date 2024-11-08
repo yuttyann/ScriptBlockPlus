@@ -15,6 +15,16 @@
  */
 package com.github.yuttyann.scriptblockplus.script;
 
+import static com.github.yuttyann.scriptblockplus.script.option.Option.Result.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
+
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadEndEvent;
 import com.github.yuttyann.scriptblockplus.event.ScriptReadStartEvent;
@@ -30,16 +40,6 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
 import com.google.common.collect.Iterators;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static com.github.yuttyann.scriptblockplus.script.option.Option.Result.*;
 
 /**
  * ScriptBlockPlus ScriptRead クラス
@@ -112,7 +112,7 @@ public class ScriptRead extends ScriptMap {
         this.sbPlayer = sbPlayer;
         this.scriptKey = scriptKey;
         this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
-        this.scriptJson = BlockScriptJson.get(scriptKey);   
+        this.scriptJson = BlockScriptJson.get(scriptKey);
     }
 
     /**

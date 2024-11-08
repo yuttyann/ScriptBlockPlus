@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +61,7 @@ public class SBFile extends File {
     public List<String> listNames(@NotNull FilenameFilter filter) {
         var names = list();
         if (names == null) {
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
         var list = new ArrayList<String>(names.length);
         for (int i = 0, l = names.length; i < l; i++) {
