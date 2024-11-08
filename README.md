@@ -3,17 +3,17 @@
 
 概要
 -----------
-[ScriptBlock](https://dev.bukkit.org/projects/scriptblock)の機能を引き継ぎ、新機能追加や改善を施したプラグインです。  
-(現在複数のプラットフォームで動作可能な後継プラグインを作成中です。) 
+[ScriptBlock](https://dev.bukkit.org/projects/scriptblock)の機能を引き継ぎ、新機能追加や改善を施したプラグインです。
+(現在複数のプラットフォームで動作可能な後継プラグインを作成中です。)
 
 導入
 -----------
-[ダウンロード](https://github.com/yuttyann/FileArchive/tree/main/ScriptBlockPlus)した`ScriptBlockPlus`を、`plugins`フォルダへ保存すれば完了です。  
+[ダウンロード](https://github.com/yuttyann/FileArchive/tree/main/ScriptBlockPlus)した`ScriptBlockPlus`を、`plugins`フォルダへ保存すれば完了です。
 
 ### Java8版
-別の[リポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。  
-古いプラットフォームのサーバーで[**Java11**](https://adoptopenjdk.net/?variant=openjdk11)が動作しない場合はご利用ください。  
-但し、基本的にはサポートを行っていない事と、近いうちに更新停止することをご了承ください。  
+別の[リポジトリ](https://github.com/yuttyann/ScriptBlockPlus-Java8)にて、**ScriptBlockPlus**の**Java8版**を[公開](https://github.com/yuttyann/ScriptBlockPlus-Java8/releases)しています。
+古いプラットフォームのサーバーで[**Java11**](https://adoptopenjdk.net/?variant=openjdk11)が動作しない場合はご利用ください。
+但し、基本的にはサポートを行っていない事と、近いうちに更新停止することをご了承ください。
 **プラグインバージョンv2.1.2より、更新を停止いたしました。**
 
 ### 連携プラグイン
@@ -22,13 +22,13 @@
 | [Vault](https://www.spigotmc.org/resources/vault.34315/) | 権限、経済系プラグインの機能を利用する事ができます。 |
 | [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/) | ディスコ―ドの機能を利用する事ができます。 |
 | [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | プレースホルダの機能を拡張する事ができます。 |
-| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定する事ができます。 |  
+| [ScriptEntityPlus](https://github.com/yuttyann/ScriptEntityPlus) | エンティティにスクリプトを設定する事ができます。 |
 
 **== 各バージョンの動作範囲 ==**
 | Plugin | Server | Java |
 |:---|:---|:---:|
 |**`2.3.0`**|**`1.9-1.21`**|**Java11**|
-|**`2.2.7-2.2.8`**|**`1.9-1.20.2`**|**Java11**|
+|`2.2.7-2.2.8`|`1.9-1.20.2`|**Java11**|
 |`2.2.6`|`1.9-1.20.1`|**Java11**|
 |`2.2.5`|`1.9-1.19.3`|**Java11**|
 |`2.2.3-2.2.4`|`1.9-1.19.2`|**Java11**|
@@ -40,24 +40,24 @@
 |`1.8.5-2.0.3`|`1.9-1.16.5`|**Java8**|
 |`1.6.0-1.8.4`|`1.8-1.15.2`|**Java8**|
 |`1.4.0-1.5.0`|`1.7.2-1.13.2`|**Java8**|
-|`1.0.0-1.3.3`|`1.7.2-1.13.2`|**Java7**|  
+|`1.0.0-1.3.3`|`1.7.2-1.13.2`|**Java7**|
 
-**== バージョン"1.13-1.13.1"の動作について ==**  
-サーバーが**Java9**以降に対応していないことが原因で、**エラーが発生する不具合が存在します。**  
-プラグイン自体は正常に動作するのですが、問題が発生する可能性があるので"[**1.13.2**](https://papermc.io/legacy)"を利用してください。  
-**解決方法(非推奨)**、`<Server>.jar`内の`org/objectweb/asm/ClassVisitor.class`を[改変](https://pastebin.com/UFBdKXJD)することで動作します。  
+**== バージョン"1.13-1.13.1"の動作について ==**
+サーバーが**Java9**以降に対応していないことが原因で、**エラーが発生する不具合が存在します。**
+プラグイン自体は正常に動作するのですが、問題が発生する可能性があるので"[**1.13.2**](https://papermc.io/legacy)"を利用してください。
+**解決方法(非推奨)**、`<Server>.jar`内の`org/objectweb/asm/ClassVisitor.class`を[改変](https://pastebin.com/UFBdKXJD)することで動作します。
 
-**== プラグインの不具合について ==**  
-報告される不具合の多くはデータファイルや設定ファイル系が殆んどです。  
-報告される際は、一度`plugins/ScriptBlockPlus/json`内の`format.sbp`を削除して再生成を行ってください。  
-また、アップデートで設定ファイルが変更されることもままあるので、再生成を推奨します。  
-**(データファイル、設定ファイルの再生成や削除で解決しなかった場合は[Issue](https://github.com/yuttyann/ScriptBlockPlus/issues)で報告してください。)**  
+**== プラグインの不具合について ==**
+報告される不具合の多くはデータファイルや設定ファイル系が殆んどです。
+報告される際は、一度`plugins/ScriptBlockPlus/json`内の`format.sbp`を削除して再生成を行ってください。
+また、アップデートで設定ファイルが変更されることもままあるので、再生成を推奨します。
+**(データファイル、設定ファイルの再生成や削除で解決しなかった場合は[Issue](https://github.com/yuttyann/ScriptBlockPlus/issues)で報告してください。)**
 `そもそも起動しない場合は、Javaのバージョンをチェックしてください。`
 
 対応プラットフォーム
 -----------
-**[`BukkitAPI`](https://hub.spigotmc.org/javadocs/bukkit/overview-summary.html)を実装しているのであれば**基本的に動作します。  
-[**`net.minecraft.server`**](https://sodocumentation.net/ja/bukkit/topic/9576/nms)が見つからなかった場合は、**NMS依存の機能が強制的に無効**になります。  
+**[`BukkitAPI`](https://hub.spigotmc.org/javadocs/bukkit/overview-summary.html)を実装しているのであれば**基本的に動作します。
+[**`net.minecraft.server`**](https://sodocumentation.net/ja/bukkit/topic/9576/nms)が見つからなかった場合は、**NMS依存の機能が強制的に無効**になります。
 下記は、動作確認を行ったサーバーの一覧です。
 | Server | Description |
 |:---|:---|
