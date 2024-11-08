@@ -19,7 +19,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
 import com.github.yuttyann.scriptblockplus.command.BaseCommand;
@@ -31,14 +34,6 @@ import com.github.yuttyann.scriptblockplus.file.SBFile;
 import com.github.yuttyann.scriptblockplus.file.config.SBConfig;
 import com.github.yuttyann.scriptblockplus.utils.FileUtils;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
-
-/**
- * ScriptBlockPlus BackupCommand コマンドクラス
- * @author yuttyann44581
- */
 public class BackupCommand extends SubCommand {
 
     private final Permission PERMISSION = Permission.COMMAND_BACKUP;
@@ -70,13 +65,11 @@ public class BackupCommand extends SubCommand {
             return true;
         }
         try {
-            var filter = (Predicate<String>) s -> s.contains(SBFile.setSeparator("/backup/"));
-            var backup = new Backup(new SBFile(dataFolder, "backup"), filter);
-            Files.walkFileTree(backup.getSource(), backup);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+            var backup = new Backup(new SBFile(dataFolder, "backup"), path -> path.contains(SBFile.setSeparator("/backup/")));
+            Files.walkFileTree(backup.getFrom(), backup);
             SBConfig.PLUGIN_BACKUP.send(sender);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
         return true;
     }

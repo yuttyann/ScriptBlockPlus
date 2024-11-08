@@ -15,7 +15,6 @@
  */
 package com.github.yuttyann.scriptblockplus.file;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -23,65 +22,57 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Predicate;
 
-import com.github.yuttyann.scriptblockplus.utils.Utils;
-
 import org.jetbrains.annotations.NotNull;
 
+import com.google.common.base.Predicates;
+
 /**
- * ScriptBlockPlus Backup クラス
+ * FBS-Common Backup
  * @author yuttyann44581
  */
 public class Backup extends SimpleFileVisitor<Path> {
 
-    private final Path target;
-    private final Path source;
-    private final Predicate<String> filter;
- 
-    /**
-     * コンストラクタ
-     * @param backup - バックアップフォルダ
-     */
-    public Backup(@NotNull File backup) {
-        this(backup, f -> true);
+    public static final SimpleDateFormat SHORT_DATE_FORMAT;
+
+    static {
+        SHORT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+        // SHORT_DATE_FORMAT.setTimeZone(Utils.DATE_FORMAT.getTimeZone());
     }
 
-    /**
-     * コンストラクタ
-     * @param backup - バックアップフォルダ
-     * @param filter - ファイルフィルター
-     */
-    public Backup(@NotNull File backup, @NotNull Predicate<String> filter) {
-        this.target = new SBFile(backup, Utils.DATE_FORMAT.format(new Date())).toPath();
-        this.source = backup.getParentFile().toPath();
+    private final Path from, to;
+    private final Predicate<String> filter;
+
+    public Backup(@NotNull SBFile backup) {
+        this(backup, Predicates.alwaysTrue());
+    }
+
+    public Backup(@NotNull SBFile backup, @NotNull Predicate<String> filter) {
+        var name = SHORT_DATE_FORMAT.format(new Date());
+        var size = backup.listNames((file, path) -> path.startsWith(name)).size() + 1;
+        this.from = backup.getParentFile().toPath();
+        this.to = new SBFile(backup, name + '-' + size).toPath();
         this.filter = filter;
     }
 
-    /**
-     * バックアップの保存場所を取得します。
-     * @return {@link Path} - バックアップの保存場所
-     */
     @NotNull
-    public Path getTarget() {
-        return target;
+    public Path getFrom() {
+        return from;
     }
 
-    /**
-     * バックアップフォルダの保存場所を取得します。
-     * @return {@link Path} - バックアップフォルダの保存場所
-     */
     @NotNull
-    public Path getSource() {
-        return source;
+    public Path getTo() {
+        return to;
     }
 
     @Override
     @NotNull
     public FileVisitResult visitFile(@NotNull Path path, @NotNull BasicFileAttributes attributes) throws IOException {
         if (!filter.test(path.toString())) {
-            var targetFile = target.resolve(source.relativize(path));
+            var targetFile = to.resolve(from.relativize(path));
             var parentDir = targetFile.getParent();
             Files.createDirectories(parentDir);
             Files.copy(path, targetFile, StandardCopyOption.REPLACE_EXISTING);
