@@ -226,12 +226,10 @@ public final class ItemUtils {
     }
 
     public static boolean isAIR(@NotNull Material material) {
-        if (McVersion.V_1_14_4.isSupported()) {
-            return material.isAir();
-        } else if (McVersion.V_1_13.isUnSupported()) {
+        if (McVersion.V_1_13.isUnSupported()) {
             return material == Material.AIR;
         }
-        return material.name().endsWith("AIR");
+        return material == Material.AIR || material == Material.CAVE_AIR || material == Material.VOID_AIR;
     }
 
     public static boolean compare(@NotNull MatchType matchType, @Nullable ItemStack item, @Nullable Object value) {
