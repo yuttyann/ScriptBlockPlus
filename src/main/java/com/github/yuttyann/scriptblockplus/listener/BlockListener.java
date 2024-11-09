@@ -16,6 +16,7 @@
 package com.github.yuttyann.scriptblockplus.listener;
 
 import static com.github.yuttyann.scriptblockplus.utils.StreamUtils.*;
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
 import static org.bukkit.Bukkit.*;
 import static org.bukkit.block.BlockFace.*;
 
@@ -38,6 +39,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.ScriptBlock;
@@ -52,11 +54,11 @@ import com.github.yuttyann.scriptblockplus.selector.split.Split;
 import com.github.yuttyann.scriptblockplus.selector.split.SplitValue;
 import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 import com.github.yuttyann.scriptblockplus.utils.StringUtils;
-import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
 
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 /**
@@ -65,137 +67,144 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
  */
 public final class BlockListener implements Listener {
 
-    private static final boolean MC_1_19 = McVersion.V_1_19.isSupported();
+    private static final long CACHE_EXPIRY_TIME = 300L;
+    private static final boolean MC_1_19 = V_1_19.isSupported(), MC_1_13 = V_1_13.isUnSupported();
     private static final BlockFace[] GENERAL_FACES = { UP, DOWN, NORTH, SOUTH, EAST, WEST };
     private static final Function<SplitValue, String> SPLIT_MAPPER = SplitValue::getValue;
 
-    private final Object2ObjectMap<Block, Set<BukkitTask>> repeatTasks = new Object2ObjectOpenHashMap<>();
-
     private final Plugin plugin;
-    private final Set<Block> checkedBlocks, poweredBlocks;
+    private final ObjectOpenHashSet<Block> checkedBlocks, poweredBlocks;
+    private final Object2LongMap<Block> poweredCache;
+    private final Object2ObjectMap<Block, Set<BukkitTask>> repeatTasks;
 
     public BlockListener(@NotNull Plugin plugin) {
         this.plugin = plugin;
-        this.checkedBlocks = new ObjectOpenHashSet<>();
+        this.checkedBlocks = new ObjectOpenHashSet<>(16, 0.5F);
         this.poweredBlocks = new ObjectOpenHashSet<>();
+        this.poweredCache = new Object2LongOpenHashMap<>(16, 0.5F);
+        this.repeatTasks = new Object2ObjectOpenHashMap<>();
+        poweredCache.defaultReturnValue(-1);
+        schedulePoweredCacheCleanup();
+        scheduleCheckedBlocksCleanup();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPhysicsEvent(BlockPhysicsEvent event) {
-        final var block = event.getBlock();
-        if (checkedBlocks.contains(block)) return;
-        getScheduler().runTaskAsynchronously(plugin, () -> {
-            synchronized (checkedBlocks) {
-                if (MC_1_19 ? deepScanBlocks(block) : scanBlocks(block)) cleanup();
-            }
-        });
+        if (MC_1_19) {
+            deepScanBlocks(event.getBlock());
+        } else {
+            scanBlocks(event.getBlock());
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPlace(BlockPlaceEvent event) {
         if (MC_1_19) {
-            final var block = event.getBlock();
-            if (checkedBlocks.contains(block)) return;
-            getScheduler().runTaskAsynchronously(plugin, () -> {
-                synchronized (checkedBlocks) {
-                    if (scanBlocks(block)) cleanup();
-                }
-            });
+            scanBlocks(event.getBlock());
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockBreak(BlockBreakEvent event) {
         if (MC_1_19) {
-            final var block = event.getBlock();
-            if (checkedBlocks.contains(block)) return;
-            getScheduler().runTaskAsynchronously(plugin, () -> {
-                synchronized (checkedBlocks) {
-                    if (scanBlocks(block)) cleanup();
-                }
-            });
+            scanBlocks(event.getBlock());
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         if (MC_1_19) {
-            var blocks = new ObjectArrayList<>(event.getBlocks());
-            blocks.add(event.getBlock());
-            blocks.removeIf(checkedBlocks::contains);
-            if (blocks.isEmpty()) return;
-            getScheduler().runTaskAsynchronously(plugin, () -> {
-                synchronized (checkedBlocks) {
-                    var scanned = false;
-                    for (var block : blocks) {
-                        if (scanBlocks(block)) scanned = true;
-                    }
-                    if (scanned) cleanup();
-                }
-            });
+            scanBlocks(event.getBlock());
+            for (var block : event.getBlocks()) scanBlocks(block);
         }
     }
 
-    private boolean scanBlocks(@NotNull Block block) {
+    private void scanBlocks(@NotNull Block block) {
         if (checkedBlocks.add(block)) {
-            if (isBlockPowered(block)) callRedstone(block);
-            for (var face : GENERAL_FACES) {
-                var relative = block.getRelative(face);
-                if (checkedBlocks.add(block) && isBlockPowered(relative)) callRedstone(relative);
-            }
-            return true;
+            for (var face : GENERAL_FACES) if (checkedBlocks.add(block.getRelative(face)));
         }
-        return false;
     }
 
-
-    private boolean deepScanBlocks(@NotNull Block block) {
+    private void deepScanBlocks(@NotNull Block block) {
         if (checkedBlocks.add(block)) {
-            if (isBlockPowered(block)) callRedstone(block);
             for (var face1 : GENERAL_FACES) {
-                block = block.getRelative(face1);
-                if (checkedBlocks.add(block) && isBlockPowered(block)) {
-                    callRedstone(block);
+                if (checkedBlocks.add(block = block.getRelative(face1))) {
                     for (var face2 : GENERAL_FACES) {
-                        var relative = block.getRelative(face2);
-                        if (checkedBlocks.add(relative) && isBlockPowered(relative)) callRedstone(relative);
+                        if (checkedBlocks.add(block.getRelative(face2)));
                     }
                 }
             }
-            return true;
         }
-        return false;
     }
 
-    private boolean isBlockPowered(@NotNull Block block) {
-        if (block.isBlockPowered() || block.isBlockIndirectlyPowered()) {
-            return true;
-        } else {
-            getScheduler().runTask(plugin, () -> {
+    private boolean isBlockPowered(@NotNull Block block, long currentTime) {
+        if (isBlockEmpty(block) || !isBlockPoweredCached(block, currentTime)) {
+            if (poweredBlocks.remove(block)) {
                 var tasks = repeatTasks.remove(block);
                 if (tasks != null) tasks.forEach(BukkitTask::cancel);
-            });
-            poweredBlocks.remove(block);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isBlockPoweredCached(@Nullable Block block, long currentTime) {
+        if (isValidPoweredCache(block, currentTime)) {
+            return true;
+        }
+        if (block.isBlockPowered() || block.isBlockIndirectlyPowered()) {
+            poweredCache.put(block, currentTime);
+            return true;
+        } else {
+            poweredCache.removeLong(block);
             return false;
         }
     }
 
-    private void cleanup() {
-        getScheduler().runTaskLater(plugin, checkedBlocks::clear, 1L);
+    private boolean isValidPoweredCache(@Nullable Block block, long currentTime) {
+        var cacheTime = poweredCache.getLong(block);
+        return cacheTime != -1 && (currentTime - cacheTime) < CACHE_EXPIRY_TIME;
+    }
+
+    private boolean isBlockEmpty(@NotNull Block block) {
+        return MC_1_13 ? block.isEmpty() : ItemUtils.isAIR(block.getType());
+    }
+
+    private void scheduleCheckedBlocksCleanup() {
+        getScheduler().runTaskTimer(plugin, () -> {
+            if (checkedBlocks.isEmpty()) return;
+            var currentTime = System.currentTimeMillis();
+            var iterator = checkedBlocks.iterator();
+            while (iterator.hasNext()) {
+                var block = iterator.next();
+                iterator.remove();
+                if (isBlockPowered(block, currentTime)) callRedstone(block);
+            }
+        }, 2L, 2L);
+    }
+
+    private void schedulePoweredCacheCleanup() {
+        getScheduler().runTaskTimer(plugin, () -> {
+            if (poweredCache.isEmpty()) return;
+            var currentTime = System.currentTimeMillis();
+            var iterator = poweredCache.keySet().iterator();
+            while (iterator.hasNext()) {
+                if (!isValidPoweredCache(iterator.next(), currentTime)) {
+                    iterator.remove();
+                }
+            }
+        }, 6000L, 6000L);
     }
 
     private void callRedstone(@NotNull Block block) {
         if (poweredBlocks.add(block)) {
-            getScheduler().runTask(plugin, () -> {
-                if (block == null || ItemUtils.isAIR(block.getType())) return;
-                onRedstone(block);
-            });
+            getScheduler().runTask(plugin, () -> onRedstone(block));
         }
     }
 
     private void onRedstone(@NotNull Block block) {
         var blockCoords = BlockCoords.of(block);
-        for (var scriptKey : ScriptKey.values()) {
+        for (var scriptKey : ScriptKey.iterable()) {
             var scriptJson = BlockScriptJson.get(scriptKey);
             if (scriptJson.isEmpty()) {
                 continue;
