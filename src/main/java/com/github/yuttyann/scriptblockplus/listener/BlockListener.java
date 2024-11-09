@@ -60,6 +60,7 @@ import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 
 /**
  * ScriptBlockPlus BlockListener クラス
@@ -73,7 +74,7 @@ public final class BlockListener implements Listener {
     private static final Function<SplitValue, String> SPLIT_MAPPER = SplitValue::getValue;
 
     private final Plugin plugin;
-    private final ObjectOpenHashSet<Block> checkedBlocks, poweredBlocks;
+    private final ObjectSet<Block> checkedBlocks, poweredBlocks;
     private final Object2LongMap<Block> poweredCache;
     private final Object2ObjectMap<Block, Set<BukkitTask>> repeatTasks;
 
