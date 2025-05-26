@@ -22,7 +22,7 @@ import com.github.yuttyann.scriptblockplus.utils.reflect.SimpleReflection;
 import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
 
 /**
- * FBS-Bukkit CraftBukkit
+ * Corelate-Bukkit CraftBukkit
  * @see McVersion#V_1_21_1
  * @author yuttyann44581
  */

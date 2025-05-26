@@ -32,7 +32,7 @@ import com.github.yuttyann.scriptblockplus.utils.server.CraftBukkit;
 import com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft;
 
 /**
- * FBS-Bukkit NativeAccessor
+ * Corelate-Bukkit NativeAccessor
  * @author yuttyann44581
  */
 public interface NativeAccessor {

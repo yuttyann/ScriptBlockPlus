@@ -1,4 +1,4 @@
-[Java11] ScriptBlockPlus [MC1.9-1.21] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
+[Java11] ScriptBlockPlus [MC1.9-1.21.5] [![](https://jitpack.io/v/yuttyann/ScriptBlockPlus.svg)](https://jitpack.io/#yuttyann/ScriptBlockPlus)
 ==========
 
 概要
@@ -27,7 +27,8 @@
 **== 各バージョンの動作範囲 ==**
 | Plugin | Server | Java |
 |:---|:---|:---:|
-|**`2.3.0-2.3.2`**|**`1.9-1.21`**|**Java11**|
+|**`2.3.3`**|**`1.9-1.21.5`**|**Java11**|
+|`2.3.0-2.3.2`|`1.9-1.21`|**Java11**|
 |`2.2.7-2.2.8`|`1.9-1.20.2`|**Java11**|
 |`2.2.6`|`1.9-1.20.1`|**Java11**|
 |`2.2.5`|`1.9-1.19.3`|**Java11**|

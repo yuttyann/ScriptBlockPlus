@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.NonNull;
 
 /**
- * FBS-Bukkit Minecraft
+ * Corelate-Bukkit Minecraft
  * @author yuttyann44581
  */
 public final class Minecraft {
@@ -45,7 +45,7 @@ public final class Minecraft {
     public static void sendAllPacket(@NotNull Object packet) throws ReflectiveOperationException {
         accessor.sendAllPacket(packet);
     }
-    
+
     public static void sendAllPackets(@NotNull Object... packets) throws ReflectiveOperationException {
         accessor.sendAllPackets(packets);
     }
@@ -124,7 +124,7 @@ public final class Minecraft {
     public static Object newVec3(double x, double y, double z) throws ReflectiveOperationException {
         return accessor.newVec3(x, y, z);
     }
-    
+
     @NotNull
     public static Object newAnvilMenu(@NotNull Object serverPlayer, @NotNull Object serverLevel, @NotNull Object title) throws ReflectiveOperationException {
         return accessor.newAnvilMenu(serverPlayer, serverLevel, title);

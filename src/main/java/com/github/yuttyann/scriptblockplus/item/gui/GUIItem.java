@@ -98,7 +98,7 @@ public final class GUIItem implements Cloneable {
         }
         itemMeta.addItemFlags(FLAGS);
         if (enchant) {
-            itemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 1, false);
+            itemMeta.addEnchant(Enchantment.EFFICIENCY, 1, false);
         }
         if (name != null) {
             itemMeta.setDisplayName("§r" + name);
@@ -167,9 +167,9 @@ public final class GUIItem implements Cloneable {
     public GUIItem setEnchant(final boolean enchant) {
         var itemMeta = item.getItemMeta();
         if (enchant) {
-            itemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 1, false);
+            itemMeta.addEnchant(Enchantment.EFFICIENCY, 1, false);
         } else {
-            itemMeta.removeEnchant(Enchantment.LOOT_BONUS_BLOCKS);
+            itemMeta.removeEnchant(Enchantment.EFFICIENCY);
         }
         item.setItemMeta(itemMeta);
         return this;

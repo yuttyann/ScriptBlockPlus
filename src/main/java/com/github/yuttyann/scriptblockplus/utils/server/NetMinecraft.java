@@ -21,7 +21,7 @@ import com.github.yuttyann.scriptblockplus.utils.reflect.SimpleReflection;
 import com.github.yuttyann.scriptblockplus.utils.version.McVersion;
 
 /**
- * FBS-Bukkit NetMinecraft
+ * Corelate-Bukkit NetMinecraft
  * @see McVersion#V_1_21_1
  * @author yuttyann44581
  */

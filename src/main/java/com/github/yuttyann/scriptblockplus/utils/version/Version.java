@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * FBS-Common Version
+ * Corelate-Common Version
  * @author yuttyann44581
  */
 public class Version implements Comparable<Version> {

@@ -48,7 +48,7 @@ import com.mojang.brigadier.StringReader;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 /**
- * FBS-Bukkit SpigotAccessor_v1_17
+ * Corelate-Bukkit SpigotAccessor_v1_17
  * @author yuttyann44581
  */
 final class SpigotAccessor_v1_17 implements NativeAccessor {
@@ -58,7 +58,7 @@ final class SpigotAccessor_v1_17 implements NativeAccessor {
     private final ConstructorStore c;
 
     private final Object magmaCubeType;
- 
+
     SpigotAccessor_v1_17() throws ReflectiveOperationException {
         // sendPacket
         field(SERVER_LEVEL.getClass("EntityPlayer"))
@@ -210,7 +210,7 @@ final class SpigotAccessor_v1_17 implements NativeAccessor {
         construct(WORLD_PHYS.getClass("Vec3D"))
             .parameterTypes(double.class, double.class, double.class)
             .findFirst("Vec3D");
-    
+
         // newAnvilMenu
         construct(CORE.getClass("BlockPosition"))
             .parameterTypes(int.class, int.class, int.class)

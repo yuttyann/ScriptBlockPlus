@@ -38,6 +38,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.view.AnvilView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -210,7 +211,7 @@ public final class AnvilGUI {
      * @author yuttyann44581
      */
     private class AnvilListener implements Listener {
-    
+
         @EventHandler(priority = EventPriority.LOW)
         public void onPrepareAnvil(PrepareAnvilEvent event) {
             if (!event.getInventory().equals(inventory)) {
@@ -224,7 +225,9 @@ public final class AnvilGUI {
             if (McVersion.V_1_16_2.isUnSupported() && StringUtils.isNotEmpty(text) && text.startsWith("§") && name.length() > 0) {
                 ItemUtils.setName(output, name.substring(1));
             }
-            if (McVersion.V_1_11.isSupported()) {
+            if (McVersion.V_1_12.isSupported()) {
+                ScriptBlock.getScheduler().run(() -> ((AnvilView) inventory).setRepairCost(0));
+            } else if (McVersion.V_1_11.isSupported()) {
                 ScriptBlock.getScheduler().run(() -> ((AnvilInventory) inventory).setRepairCost(0));
             }
             if (update != null) {

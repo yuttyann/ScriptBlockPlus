@@ -38,6 +38,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.NonNull;
 
+import com.github.yuttyann.scriptblockplus.utils.Utils;
 import com.github.yuttyann.scriptblockplus.utils.reflect.matcher.ReflectionMatcher.ConstructorStore;
 import com.github.yuttyann.scriptblockplus.utils.reflect.matcher.ReflectionMatcher.FieldStore;
 import com.github.yuttyann.scriptblockplus.utils.reflect.matcher.ReflectionMatcher.MethodStore;
@@ -46,7 +47,7 @@ import com.mojang.brigadier.StringReader;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 /**
- * FBS-Bukkit PaperRemappedAccessor
+ * Corelate-Bukkit PaperRemappedAccessor
  * @author yuttyann44581
  */
 public class PaperRemappedAccessor implements NativeAccessor {
@@ -55,9 +56,10 @@ public class PaperRemappedAccessor implements NativeAccessor {
     private final MethodStore m;
     private final ConstructorStore c;
 
+    private final Enum unknownReason;
     private final Object blockPosZero;
     private final Object magmaCubeType;
- 
+
     PaperRemappedAccessor() throws ReflectiveOperationException {
         // sendPacket
         field(SERVER_LEVEL.getClass("ServerPlayer"))
@@ -161,7 +163,7 @@ public class PaperRemappedAccessor implements NativeAccessor {
             .modifiers(PUBLIC, STATIC)
             .name("handleInventoryCloseEvent")
             .returnType(void.class)
-            .parameterTypes(WORLD_ENTITY_PLAYER.getClass("Player"))
+            .parameterTypes(WORLD_ENTITY_PLAYER.getClass("Player"), Utils.getClassForName("org.bukkit.event.inventory.InventoryCloseEvent$Reason"))
             .findFirst("CraftEventFactory.handleInventoryCloseEvent");
 
         // getMenuType - AbstractContainerMenu
@@ -312,6 +314,7 @@ public class PaperRemappedAccessor implements NativeAccessor {
         this.c = constructs();
         this.blockPosZero = c.newInstance("BlockPos", INT_ARRAY_ZERO_3);
         this.magmaCubeType = field(WORLD_ENTITY.getClass("EntityType")).modifiers(STATIC).name("MAGMA_CUBE").fieldType(WORLD_ENTITY.getClass("EntityType")).findFirst().get(null);
+        this.unknownReason = Enum.valueOf((Class) Utils.getClassForName("org.bukkit.event.inventory.InventoryCloseEvent$Reason"), "UNKNOWN");
     }
 
     @Override
@@ -418,7 +421,7 @@ public class PaperRemappedAccessor implements NativeAccessor {
 
     @Override
     public void handleInventoryCloseEvent(@NotNull Object serverPlayer) throws ReflectiveOperationException {
-        m.invokeStatic("CraftEventFactory.handleInventoryCloseEvent", serverPlayer);
+        m.invokeStatic("CraftEventFactory.handleInventoryCloseEvent", serverPlayer, unknownReason);
     }
 
     @Override

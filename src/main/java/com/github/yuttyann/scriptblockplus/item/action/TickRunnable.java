@@ -55,6 +55,16 @@ import com.google.common.base.Predicates;
  */
 public class TickRunnable extends BukkitRunnable {
 
+    private static Particle DUST;
+
+    static {
+        try {
+            DUST = Particle.valueOf("REDSTONE");
+        } catch (Exception ex) {
+            DUST = Particle.valueOf("DUST");
+        }
+    }
+
     private static final int PLAYER_RANGE = 15;
     private static final int PARTICLE_RANGE = 10;
     private static final int PARTICLE_LIMIT = 800;
@@ -231,26 +241,26 @@ public class TickRunnable extends BukkitRunnable {
         double x = block.getX(), y = block.getY(), z = block.getZ(), a = 1D;
         if (V_1_13.isSupported()) {
             var dust = new DustOptions(color, 1);
-            player.spawnParticle(Particle.REDSTONE, x, y, z, 0, 0, 0, 0, dust);
-            player.spawnParticle(Particle.REDSTONE, x + a, y, z, 0, 0, 0, 0, dust);
-            player.spawnParticle(Particle.REDSTONE, x + a, y, z + a, 0, 0, 0, 0, dust);
-            player.spawnParticle(Particle.REDSTONE, x, y, z + a, 0, 0, 0, 0, dust);
-            player.spawnParticle(Particle.REDSTONE, x, y + a, z, 0, 0, 0, 0, dust);
-            player.spawnParticle(Particle.REDSTONE, x + a, y + a, z, 0, 0, 0, 0, dust);
-            player.spawnParticle(Particle.REDSTONE, x + a, y + a, z + a, 0, 0, 0, 0, dust);
-            player.spawnParticle(Particle.REDSTONE, x, y + a, z + a, 0, 0, 0, 0, dust);
+            player.spawnParticle(DUST, x, y, z, 0, 0, 0, 0, dust);
+            player.spawnParticle(DUST, x + a, y, z, 0, 0, 0, 0, dust);
+            player.spawnParticle(DUST, x + a, y, z + a, 0, 0, 0, 0, dust);
+            player.spawnParticle(DUST, x, y, z + a, 0, 0, 0, 0, dust);
+            player.spawnParticle(DUST, x, y + a, z, 0, 0, 0, 0, dust);
+            player.spawnParticle(DUST, x + a, y + a, z, 0, 0, 0, 0, dust);
+            player.spawnParticle(DUST, x + a, y + a, z + a, 0, 0, 0, 0, dust);
+            player.spawnParticle(DUST, x, y + a, z + a, 0, 0, 0, 0, dust);
         } else {
             double r = (color.getRed() - 0.0001) / 255D;
             double g = (color.getGreen() - 0.0001) / 255D;
             double b = (color.getBlue() - 0.0001) / 255D;
-            player.spawnParticle(Particle.REDSTONE, x, y, z, 0, r, g, b, 1);
-            player.spawnParticle(Particle.REDSTONE, x + a, y, z, 0, r, g, b, 1);
-            player.spawnParticle(Particle.REDSTONE, x + a, y, z + a, 0, r, g, b, 1);
-            player.spawnParticle(Particle.REDSTONE, x, y, z + a, 0, r, g, b, 1);
-            player.spawnParticle(Particle.REDSTONE, x, y + a, z, 0, r, g, b, 1);
-            player.spawnParticle(Particle.REDSTONE, x + a, y + a, z, 0, r, g, b, 1);
-            player.spawnParticle(Particle.REDSTONE, x + a, y + a, z + a, 0, r, g, b, 1);
-            player.spawnParticle(Particle.REDSTONE, x, y + a, z + a, 0, r, g, b, 1);
+            player.spawnParticle(DUST, x, y, z, 0, r, g, b, 1);
+            player.spawnParticle(DUST, x + a, y, z, 0, r, g, b, 1);
+            player.spawnParticle(DUST, x + a, y, z + a, 0, r, g, b, 1);
+            player.spawnParticle(DUST, x, y, z + a, 0, r, g, b, 1);
+            player.spawnParticle(DUST, x, y + a, z, 0, r, g, b, 1);
+            player.spawnParticle(DUST, x + a, y + a, z, 0, r, g, b, 1);
+            player.spawnParticle(DUST, x + a, y + a, z + a, 0, r, g, b, 1);
+            player.spawnParticle(DUST, x, y + a, z + a, 0, r, g, b, 1);
         }
     }
 }

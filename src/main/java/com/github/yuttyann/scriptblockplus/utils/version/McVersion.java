@@ -22,7 +22,7 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * FBS-Common McVersion
+ * Corelate-Common McVersion
  * @author yuttyann44581
  */
 public final class McVersion extends Version {
@@ -30,7 +30,7 @@ public final class McVersion extends Version {
     /**
      * Minecraft 1.21.x 系列
      */
-    public static final McVersion V_1_21_1 = v(1, 20, 6), V_1_21 = v(1, 20, 5);
+    public static final McVersion V_1_21_1 = v(1, 20, 1), V_1_21 = v(1, 20, 5);
 
     /**
      * Minecraft 1.20.x 系列
@@ -47,7 +47,7 @@ public final class McVersion extends Version {
      * Minecraft 1.18.x 系列
      */
     public static final McVersion V_1_18_2 = v(1, 18, 2), V_1_18_1 = v(1, 18, 1), V_1_18 = v(1, 18);
-    
+
     /**
      * Minecraft 1.17.x 系列
      */
