@@ -1,0 +1,39 @@
+# ScriptBlockPlus v${project.version} Config #
+
+
+## ===== Json ===== ##
+# [true -> 真 | false -> 假]
+# 是否在服务器启动时预先缓存所有Json
+# 可以大大增加流畅性但是会消耗大量内存
+CacheAllJson: true
+
+# 为Json中可被格式化的元素数量设置一个上限
+# 通过设置一个上限 你可以期望减少容量 加快进程
+FormatLimit: 10000
+
+## ===== 排序脚本 ===== ##
+# [true -> 真 | false -> 假]
+# 按照推荐的脚本执行顺序运行选项
+SortScripts: true
+
+## ===== 控制台输出 ===== ##
+# [true -> 真 | false -> 假]
+# 在控制台记录脚本方块触发 情况
+ConsoleLog: false
+
+## ===== Tab内容补全设定 ===== ##
+# [true -> 真 | false -> 假]
+# タブ補完を行った際に、オプションのヘルプを表示するかどうか。
+OptionHelp: true
+
+## ===== 检查权限 ===== ##
+# [true -> 真 | false -> 假]
+# 当玩家输入指令并按Tab键时是否显示可选指令内容
+OptionPermission: false
+
+## ===== 点击脚本方块设定 ===== ##
+# [true -> 真 | false -> 假]
+# 左键点击和右键点击是否都可以？
+Actions:
+  InteractLeft: true
+  InteractRight: true

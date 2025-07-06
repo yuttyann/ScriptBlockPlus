@@ -1,0 +1,95 @@
+name: ${project.name}
+main: ${project.groupId}.scriptblockplus.ScriptBlock
+version: ${project.version}
+description: ${project.description}
+author: yuttyann44581
+website: ${project.url}
+api-version: 1.13
+loadbefore: [ScriptEntityPlus]
+softdepend: [Vault, ScriptBlock, DiscordSRV, PlaceholderAPI]
+
+commands:
+  scriptblockplus:
+    description: ScriptBlockPlus Commands
+    aliases: [sbp]
+    usage: |
+           /<command> tool - Displays the auxiliary tool select window.
+           /<command> reload - Reload the plugin.
+           /<command> backup - Make a backup of the plugin data.
+           /<command> datamigr - Migrate old data from ScriptBlock to ScriptBlockPlus.
+           /<command> <scriptkey> create <options> - Create a new script to the block.
+           /<command> <scriptkey> add <options> - Add a new script to the block.
+           /<command> <scriptkey> remove - Remove the script from the block.
+           /<command> <scriptkey> view - View the script for the block.
+           /<command> <scriptkey> nametag [tag] - Set a nametag for the block.
+           /<command> <scriptkey> redstone [repeat] [filter] [selector] - Set if the script works with Redstone.
+           /<command> <scriptkey> run [player] <world> <x> <y> <z> - Execute the specified script.
+           /<command> selector paste [pasteonair] [overwrite] - Paste the script into the selection.
+           /<command> selector remove - Remove the script into the selection.
+
+permissions:
+  scriptblockplus.*:
+    default: op
+    children:
+      scriptblockplus.option.*: true
+      scriptblockplus.command.*: true
+      scriptblockplus.tool.*: true
+      scriptblockplus.interact.use: true
+      scriptblockplus.break.use: true
+      scriptblockplus.walk.use: true
+      scriptblockplus.hit.use: true
+  scriptblockplus.option.*:
+    default: op
+  scriptblockplus.command.*:
+    default: op
+    children:
+      scriptblockplus.command.tool: true
+      scriptblockplus.command.reload: true
+      scriptblockplus.command.backup: true
+      scriptblockplus.command.datamigr: true
+      scriptblockplus.command.interact: true
+      scriptblockplus.command.break: true
+      scriptblockplus.command.walk: true
+      scriptblockplus.command.hit: true
+      scriptblockplus.command.selector: true
+  scriptblockplus.tool.*:
+    default: op
+    children:
+      scriptblockplus.tool.scripteditor: true
+      scriptblockplus.tool.scriptviewer: true
+      scriptblockplus.tool.scriptmanager: true
+      scriptblockplus.tool.blockselector: true
+  scriptblockplus.command.tool:
+    default: false
+  scriptblockplus.command.reload:
+    default: false
+  scriptblockplus.command.backup:
+    default: false
+  scriptblockplus.command.datamigr:
+    default: false
+  scriptblockplus.command.interact:
+    default: false
+  scriptblockplus.command.break:
+    default: false
+  scriptblockplus.command.walk:
+    default: false
+  scriptblockplus.command.hit:
+    default: false
+  scriptblockplus.command.selector:
+    default: false
+  scriptblockplus.interact.use:
+    default: true
+  scriptblockplus.break.use:
+    default: true
+  scriptblockplus.walk.use:
+    default: true
+  scriptblockplus.hit.use:
+    default: true
+  scriptblockplus.tool.scripteditor:
+    default: false
+  scriptblockplus.tool.scriptviewer:
+    default: false
+  scriptblockplus.tool.scriptmanager:
+    default: false
+  scriptblockplus.tool.blockselector:
+    default: false

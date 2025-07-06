@@ -1,0 +1,180 @@
+# ScriptBlockPlus v${project.version} Message #
+# 作成者: yuttyann44581
+
+
+## ===== Commands ===== ##
+# プレースホルダはありません
+ToolCommandMessage: 'tool - 補助ツールの選択ウィンドウを表示します。'
+ReloadCommandMessage: 'reload - 全てのファイルの再読み込みを行います。'
+BackupCommandMessage: 'backup - プラグインデータのバックアップを作成します。'
+DataMigrCommandMessage: 'datamigr - ScriptBlockのスクリプトをSBPlusへ移行します。'
+CreateCommandMessage: '<scriptkey> create <options> - ブロックにスクリプトを設定します。'
+AddCommandMessage: '<scriptkey> add <options> - ブロックにスクリプトを追加します。'
+RemoveCommandMessage: '<scriptkey> remove - ブロックのスクリプトを削除します。'
+ViewCommandMessage: '<scriptkey> view - ブロックのスクリプトを表示します。'
+NameTagCommandMessage: '<scriptkey> nametag <tag> - ブロックにネームタグを設定します。'
+RedstoneCommandMessage: '<scriptkey> redstone [repeat] [filter] [selector] - レッドストーンの動力で動作するか設定します。'
+RunCommandMessage: '<scriptkey> run [player] <world> <x> <y> <z> - 指定したスクリプトを実行します。'
+SelectorPasteCommandMessage: 'selector paste [pasteonair] [overwrite] - 選択範囲にスクリプトをペーストします。'
+SelectorRemoveCommandMessage: 'selector remove - 選択範囲のスクリプトを削除します。'
+
+# &(code) : カラーコード(以降の項目全て対象)
+
+## ===== GUI ===== ##
+# プレースホルダはありません
+CustomGUI:
+  System:
+    Input: '入力してください'
+    Reset: '&cテキストをリセット'
+    InPlayer: '&c他のプレイヤーが、スクリプトを編集中です。'
+    Overflow: '&c文字数が、上限を越えているため正常な編集ができません。'
+    SearchGUI: 'スクリプトの検索'
+    SettingGUI: 'スクリプトの設定'
+    ToolBoxGUI: 'ツールボックス'
+  Item:
+    SearchGUI:
+      Next: '&d次のページ'
+      Prev: '&d前のページ'
+      Reset: '&dリセット'
+      Setting: '&6スクリプト'
+      Scriptkey: '&dスクリプトキー'
+      Script: '&bスクリプトの指定'
+      Time: '&b時間の指定'
+      Coords: '&b座標の指定'
+      NameTag: '&bネームタグの指定'
+    SettingGUI:
+      Delete: '&c設定の削除'
+      Close: '&d検索ページへ戻る'
+      Copy: '&dコピー'
+      Paste: '&dペースト'
+      Teleport: '&b移動'
+      Execute: '&b実行'
+      Info: '&b情報'
+      Redstone: '&aターゲットセレクターの編集'
+      Script: '&aスクリプトの編集'
+      NameTag: '&aネームタグの編集'
+
+## ===== ScriptEditor ===== ##
+# プレースホルダはありません
+ScriptEditor:
+- '&aこのツールは、スクリプトの編集をサポートします。'
+- '&6左クリック: &eツールの対象を切り替えます。'
+- '&6右クリック: &eスクリプトのコピーを行います。'
+- '&6シフト+左クリック: &eスクリプトの削除を行います。'
+- '&6シフト+右クリック: &eスクリプトのペーストを行います。'
+
+## ===== ScriptViewer ===== ##
+# プレースホルダはありません
+ScriptViewer:
+- '&aこのツールは、スクリプトのチェックをサポートします。'
+- '&6左クリック: &e周囲のスクリプトの検索を開始します。'
+- '&6右クリック: &e周囲のスクリプトの検索を停止します。'
+
+## ===== ScriptManager ===== ##
+# プレースホルダはありません
+ScriptManager:
+- '&aこのツールは、スクリプトの管理をサポートします。'
+- '&6右クリック: &e検索ウィンドウを開きます。'
+
+## ===== BlockSelector ===== ##
+# プレースホルダはありません
+BlockSelector:
+- '&aこのツールは、範囲選択をサポートします。'
+- '&6左クリック: &eブロックを選択範囲の始点に指定します。'
+- '&6右クリック: &eブロックを選択範囲の終点に指定します。'
+- '&6シフト+左クリック: &e現在位置を選択範囲の始点に指定します。'
+- '&6シフト+右クリック: &e現在位置を選択範囲の終点に指定します。'
+
+# |~, \n : 改行(以降の項目全て対象)
+
+## ===== Messages ===== ##
+# プレースホルダはありません
+SenderNoPlayerMessage: '&cコマンドはゲーム内から実行してください。'
+NotPermissionMessage: '&cパーミッションが無いため、実行できません。'
+GiveToolMessage: '&a補助ツールが配布されました。'
+AllFileReloadMessage: '&a全てのファイルの再読み込みが完了しました。'
+PluginBackupMessage: '&aプラグインデータのバックアップが完了しました。'
+ErrorPluginBackupMessage: '&cプラグインデータのバックアップに失敗しました。'
+NotScriptBlockFileMessage: '&cScriptBlockのデータファイルが見つかりません。'
+DataMigrStartMessage: '&7ScriptBlockのスクリプトを移行しています....'
+DataMigrEndMessage: '&bスクリプトの移行が完了しました。'
+
+# %scriptkey% : スクリプトキー
+ScriptCopyMessage: '&aブロック"%scriptkey%"のスクリプトをコピーしました。'
+ScriptPasteMessage: '&aブロック"%scriptkey%"にスクリプトをペーストしました。'
+ScriptCreateMessage: '&aブロック"%scriptkey%"でスクリプトを作成しました。'
+ScriptAddMessage: '&aブロック"%scriptkey%"にスクリプトを追加しました。'
+ScriptRemoveMessage: '&cブロック"%scriptkey%"のスクリプトを削除しました。'
+ScriptNameTagMessage: '&aブロック"%scriptkey%"のネームタグを編集しました。'
+ScriptRedstoneMessage: '&aブロック"%scriptkey%"のターゲットセレクターを編集しました。'
+
+# プレースホルダはありません
+NotSelectionMessage: '&cBlockSelectorで座標を選択してください。'
+
+# プレースホルダはありません
+ScriptViewerStartMessage: '&a周囲のスクリプトの検索を開始しました。'
+ScriptViewerStopMessage: '&c周囲のスクリプトの検索を停止しました。'
+
+# %world%  : ワールドの名前
+# %coords% : 座標(x, y, z)
+SelectorPos1Message: '&b始点"%coords%"を選択しました。'
+SelectorPos2Message: '&b終点"%coords%"を選択しました。'
+
+# %scriptkey%  : スクリプトキー
+# %blockcount% : ブロック数
+SelectorPasteMessage: '&aブロック(%blockcount%)"%scriptkey%"にスクリプトをペーストしました。'
+SelectorRemoveMessage: '&cブロック(%blockcount%)"%scriptkey%"のスクリプトを削除しました。'
+
+# %option% : オプション名
+# %cause%  : 発生原因
+OptionFailedToExecuteMessage: '&cオプション"%option%"の実行に失敗しました。|~&c発生原因: %cause%'
+
+# プレースホルダはありません
+ActiveDelayMessage: '&c遅延したスクリプトが実行されるまで、再度実行することはできません。'
+
+# %hour%   : 時
+# %minute% : 分
+# %second% : 秒
+ActiveCooldownMessage: '&cクールダウン終了まで、%hour%時間%minute%分%second%秒です。'
+
+# %action% : アクション
+SuccActionDataMessage: '&aアクション"%action%"を選択しました。'
+
+# プレースホルダはありません
+ErrorActionDataMessage: '&c既にアクションが選択されています。'
+ErrorScriptCheckMessage: '&c入力されたスクリプトが正しくありません。'
+ErrorScriptFileCheckMessage: '&cスクリプトが見つかりません。'
+
+# %scriptkey% : スクリプトキー
+ErrorScriptExecMessage: '&cブロック"%scriptkey%"のスクリプトの実行に失敗しました。'
+
+# %group% : グループ名
+ErrorGroupMessage: '&cグループ"%group%"のメンバーのみ、スクリプトを実行することが出来ます。'
+
+# %material% : アイテムのID
+# %amount%   : アイテムの個数
+# %damage%   : アイテムのダメージ値
+# %name%     : アイテムの名前
+# %lore%     : アイテムの概要
+ErrorHandMessage: '&cアイテム"&r%name%&r[%material%:%damage%] &e%amount%個&c"を持っていません。'
+ErrorItemMessage: '&cアイテム"&r%name%&r[%material%:%damage%] &e%amount%個&c"を所持していません。'
+
+# %cost%   : 必要な金額
+# %result% : 足りない金額
+ErrorCostMessage: '&cお金が"%result%円"足りません。スクリプトの実行には"%cost%円"必要です。'
+
+# %scriptkey% : スクリプトキー
+# %world%     : ワールドの名前
+# %coords%    : 座標(x, y, z)
+ConsoleScriptEditMessage: '&aスクリプトが編集されました。[キー"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleScriptViewMessage: '&aスクリプトの設定が表示されました。[キー"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleSuccScriptExecMessage: '&aスクリプトが実行されました。[キー"%scriptkey%"、座標"%world%, %coords%"]'
+ConsoleErrorScriptExecMessage: '&cスクリプトの実行に失敗しました。[キー"%scriptkey%"、座標"%world%, %coords%"]'
+
+# %scriptkey%  : スクリプトキー
+# %blockcount% : ブロック数
+# %world%      : ワールドの名前
+# %mincoords%  : 最小座標(x, y, z)
+# %maxcoords%  : 最大座標(x, y, z)
+ConsoleSelectorPasteMessage: '&aスクリプトがペーストされました。[キー"%scriptkey%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'
+ConsoleSelectorRemoveMessage: '&cスクリプトが削除されました。[キー"%scriptkey%"、最小座標"%world%, %mincoords%"、最大座標"%world%, %maxcoords%"]'

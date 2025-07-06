@@ -1,0 +1,182 @@
+# ScriptBlockPlus v${project.version} Message #
+# MCBBS PCD小组 秋风残叶 搬运并汉化 请支持原作者 yuttyann44581
+# 本配置源语言为日本语，可能存在翻译不准确的地方
+
+
+## ===== Commands ===== ##
+# 沒有佔位符
+ToolCommandMessage: 'tool - 显示一个选择辅助工具的窗口'
+ReloadCommandMessage: 'reload - 重载插件'
+BackupCommandMessage: 'backup - 备份插件数据'
+DataMigrCommandMessage: 'datamigr - 将ScriptBlock的旧数据转移至ScriptBlockPlus'
+CreateCommandMessage: '<scriptkey> create <options> - 创建脚本方块'
+AddCommandMessage: '<scriptkey> add <options> - 添加脚本方块'
+RemoveCommandMessage: '<scriptkey> remove - 移除脚本方块'
+ViewCommandMessage: '<scriptkey> view - 查看方块的脚本'
+NameTagCommandMessage: '<scriptkey> nametag [tag] - 设置块的名称标签'
+RedstoneCommandMessage: '<scriptkey> redstone [repeat] [filter] [selector] - 设置脚本块是否与红石一起使用'
+RunCommandMessage: '<scriptkey> run [player] <world> <x> <y> <z> - 执行脚本块'
+SelectorPasteCommandMessage: 'selector paste [pasteonair] [overwrite] - 粘贴选区内的脚本方块'
+SelectorRemoveCommandMessage: 'selector remove - 移除选区内的脚本方块'
+
+# &(code) : 可以使用彩色代码
+
+## ===== GUI ===== ##
+# 沒有佔位符
+CustomGUI:
+  System:
+    Input: '文本输入表格'
+    Reset: '&c重置文本'
+    InPlayer: '&c另一个玩家正在编辑剧本'
+    Overflow: '&c字符数超过了限制，不能正常编辑'
+    SearchGUI: '脚本搜索'
+    SettingGUI: '脚本设置'
+    ToolBoxGUI: '工具箱'
+  Item:
+    SearchGUI:
+      Next: '&d下一页'
+      Prev: '&d上一页'
+      Reset: '&d复位'
+      Setting: '&6脚本'
+      Scriptkey: '&d脚本键'
+      Script: '&b指定脚本'
+      Time: '&b指定时间'
+      Coords: '&b指定坐标'
+      NameTag: '&b指定姓名标签'
+    SettingGUI:
+      Delete: '&c删除设置'
+      Close: '&d回到搜索页面'
+      Copy: '&d拷贝'
+      Paste: '&d粘贴'
+      Teleport: '&b远距传输'
+      Execute: '&b执行'
+      Info: '&b信息'
+      Redstone: '&a编辑一个目标选择器'
+      Script: '&a编辑一个脚本'
+      NameTag: '&a编辑一个姓名标签'
+
+## ===== ScriptEditor ===== ##
+# %scriptkey% : 脚本键
+ScriptEditor:
+- '&a这是一个可以复制并粘贴脚本的工具'
+- '&6左键点击: &e更改选择模式'
+- '&6右键点击: &e复制脚本'
+- '&6Shift+左键点击: &e删除脚本'
+- '&6Shift+右键点击: &e粘贴脚本'
+
+## ===== ScriptViewer ===== ##
+# %scriptkey% : 脚本键
+ScriptViewer:
+- '&a该工具支持脚本检查'
+- '&6左键点击: &e开始搜索周围的脚本'
+- '&6右键点击: &e停止搜索周围的脚本'
+
+## ===== ScriptManager ===== ##
+# 沒有佔位符
+ScriptManager:
+- '&a这个工具支持对脚本的管理'
+- '&6右键点击: &e打开搜索窗口'
+
+## ===== BlockSelector ===== ##
+# 沒有佔位符
+BlockSelector:
+- '&a这是一个可以选择方块区域的工具'
+- '&6左键点击: &e选择区域的起点'
+- '&6右键点击: &e选择区域的结束点'
+- '&6Shift+左键点击: &e将当前位置设置为区域的起点'
+- '&6Shift+右键点击: &e将当前位置设置为区域的结束点'
+
+# |~ \n : 改行
+
+## ===== Messages ===== ##
+# 沒有佔位符
+SenderNoPlayerMessage: '&c控制台不能这么做'
+NotPermissionMessage: '&c你没有权限'
+GiveToolMessage: '&a获得选择工具'
+AllFileReloadMessage: '&a插件成功重载，汉化 by 秋风残叶'
+PluginBackupMessage: '&a插件数据的备份已完成'
+ErrorPluginBackupMessage: '&c插件数据的备份已完成'
+NotScriptBlockFileMessage: '&cScriptBlock无数据或者数据损坏'
+DataMigrStartMessage: '&7开始从ScriptBlock转移数据....'
+DataMigrEndMessage: '&b数据转移完毕'
+
+# %scriptkey% : 脚本键
+ScriptCopyMessage: '&a我复制了"%scriptkey%"块中的脚本'
+ScriptPasteMessage: '&a我把脚本粘贴到"%scriptkey%"区块中'
+ScriptCreateMessage: '&a我创建了一个带有"%scriptkey%"块的脚本'
+ScriptAddMessage: '&a我在"%scriptkey%"块中添加了一个脚本'
+ScriptRemoveMessage: '&c我已经删除了"%scriptkey%"块中的脚本'
+ScriptNameTagMessage: '&c我已经编辑了"%scriptkey%"区块的名称标签'
+ScriptRedstoneMessage: '&a我已经编辑了"%scriptkey%"区块的目标选择器'
+
+# 沒有佔位符
+NotSelectionMessage: '&cBlockSelector坐标范围未选择'
+
+# 沒有佔位符
+ScriptViewerStartMessage: '&a开始搜索周围的脚本'
+ScriptViewerStopMessage: '&c对周围脚本的搜索已停止'
+
+# %world%  : 世界名
+# %coords% : 坐标(x, y, z)
+SelectorPos1Message: '&b已选择起点"%coords%"'
+SelectorPos2Message: '&b已选择终点"%coords%"'
+
+# %scriptkey%  : 脚本键
+# %blockcount% : 塊數
+SelectorPasteMessage: '&a脚本键"%scriptkey%"已通过BlockSelector进行粘贴'
+SelectorRemoveMessage: '&c脚本键"%scriptkey%"已通过BlockSelector移除'
+
+# %option% : 脚本名称
+# %cause%  : 错误发生原因
+OptionFailedToExecuteMessage: '&c脚本"%option%"执行失败|~&c可能的原因: %cause%'
+
+# 沒有佔位符
+ActiveDelayMessage: '&c该脚本在延迟中 你暂时不能使用'
+
+# %hour%   : 时
+# %minute% : 分
+# %second% : 秒
+ActiveCooldownMessage: '&c脚本还在冷却中 [%hour%时%minute%分%second%秒]'
+
+# %action% : 动作类型
+SuccActionDataMessage: '&a动作类型"%action%"的设定已选定。请点击需要生效的方块'
+
+# 沒有佔位符
+ErrorActionDataMessage: '&c设定出现错误'
+ErrorScriptCheckMessage: '&c脚本输入错误！'
+ErrorScriptFileCheckMessage: '&c无脚本'
+
+# %scriptkey% : 脚本键
+ErrorScriptExecMessage: '&c脚本键"%scriptkey%"执行失败'
+
+# %group% : 权限组名
+ErrorGroupMessage: '&c只有属于权限组"%group%"的玩家才可以运行该脚本'
+
+# %material% : 物品种类
+# %amount%   : 物品的数量
+# %damage%   : 物品的子ID
+# %name%     : 物品的名称
+# %lore%     : 物品的概览
+ErrorHandMessage: '&c您的手持物品不满足条件、所需物品必须满足"&r%name%&r[%material%:%damage%]&c"以及数量"&r%amount%个&c"'
+ErrorItemMessage: '&c您的背包内物品不满足条件、所需物品必须满足"&r%name%&r[%material%:%damage%]&c"以及数量"%amount%个&c"'
+
+# %cost%   : 需要支付的金额
+# %result% : 至少应该剩余的金钱
+ErrorCostMessage: '&c你的金钱至少应该有"%result%"，执行这个脚本需要花费金钱"%cost%"'
+
+# %scriptkey%  : 脚本键
+# %world%      : 世界名
+# %coords%     : 坐标(x, y, z)
+ConsoleScriptEditMessage: '&a[脚本键"%scriptkey%"、位置"%world%, %coords%"]脚本已被编辑'
+ConsoleScriptViewMessage: '&a[脚本键"%scriptkey%"、位置"%world%, %coords%"]脚本正在被预览'
+ConsoleSuccScriptExecMessage: '&a[脚本键"%scriptkey%"、位置"%world%, %coords%"]脚本被触发了'
+ConsoleErrorScriptExecMessage: '&c[脚本键"%scriptkey%"、位置"%world%, %coords%"]脚本触发失败'
+
+# %scriptkey%  : 脚本键
+# %blockcount% : 方块数量
+# %player%     : 玩家ID
+# %world%      : 世界名
+# %mincoords%  : 最小位置(x, y, z)
+# %maxcoords%  : 最大位置(x, y, z)
+ConsoleSelectorPasteMessage: '&a[脚本键"%scriptkey%", 最小值"%world%, %mincoords%", 最大值"%world%, %maxcoords%"]已完成粘贴'
+ConsoleSelectorRemoveMessage: '&c[脚本键"%scriptkey%", 最小值"%world%, %mincoords%", 最大值"%world%, %maxcoords%"]已被删除'

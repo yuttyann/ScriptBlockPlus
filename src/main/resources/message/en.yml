@@ -1,0 +1,181 @@
+# ScriptBlockPlus v${project.version} Message #
+# Created by yuttyann44581  Translated by AndyYu
+# There may be some mistakes in grammar
+
+
+## ===== Commands ===== ##
+# There are no placeholders
+ToolCommandMessage: 'tool - Displays the auxiliary tool select window.'
+ReloadCommandMessage: 'reload - Reload the plugin.'
+BackupCommandMessage: 'backup - Make a backup of the plugin data.'
+DataMigrCommandMessage: 'datamigr - Migrate old data from ScriptBlock to ScriptBlockPlus.'
+CreateCommandMessage: '<scriptkey> create <options> - Create a new script to the block.'
+AddCommandMessage: '<scriptkey> add <options> - Add a new script to the block.'
+RemoveCommandMessage: '<scriptkey> remove - Remove the script from the block.'
+ViewCommandMessage: '<scriptkey> view - View the script for the block.'
+NameTagCommandMessage: '<scriptkey> nametag [tag] - Set a nametag for the block.'
+RedstoneCommandMessage: '<scriptkey> redstone [repeat] [filter] [selector] - Set if the script works with Redstone.'
+RunCommandMessage: '<scriptkey> run [player] <world> <x> <y> <z> - Execute the specified script.'
+SelectorPasteCommandMessage: 'selector paste [pasteonair] [overwrite] - Paste the script into the selection.'
+SelectorRemoveCommandMessage: 'selector remove - Remove the script into the selection.'
+
+# &(code) : you can use color code
+
+## ===== GUI ===== ##
+# There are no placeholders
+CustomGUI:
+  System:
+    Input: 'Input Text'
+    Reset: '&cReset Text'
+    InPlayer: '&cAnother player is editing the script.'
+    Overflow: '&cThe number of characters exceeds the limit and cannot be edited properly.'
+    SearchGUI: 'Script Search'
+    SettingGUI: 'Script Setting'
+    ToolBoxGUI: 'ToolBox'
+  Item:
+    SearchGUI:
+      Next: '&dNext page'
+      Prev: '&dPrev page'
+      Reset: '&dReset'
+      Setting: '&6Script'
+      Scriptkey: '&dScriptKey'
+      Script: '&bSpecify script'
+      Time: '&bSpecify time'
+      Coords: '&bSpecify coords'
+      NameTag: '&bSpecify nametag'
+    SettingGUI:
+      Delete: '&cSetting Delete'
+      Close: '&dReturn to search page'
+      Copy: '&dCopy'
+      Paste: '&dPaste'
+      Teleport: '&bTeleport'
+      Execute: '&bExecute'
+      Info: '&bInformation'
+      Redstone: '&aEdit target selector'
+      Script: '&aEdit script'
+      NameTag: '&aEdit nametag'
+
+## ===== ScriptEditor ===== ##
+# %scriptkey% : Script key
+ScriptEditor:
+- '&aThis tool supports script editing.'
+- '&6Left-click: &eChange the target of the tool.'
+- '&6Right-click: &eCopy the script.'
+- '&6Shift+Leftclick: &eDelete the script.'
+- '&6Shift+Rightclick: &ePaste the script.'
+
+## ===== ScriptViewer ===== ##
+# There are no placeholders
+ScriptViewer:
+- '&aThis tool supports script checking.'
+- '&6Left-click: &eStart searching for surrounding scripts.'
+- '&6Right-click: &eStop searching for surrounding scripts.'
+
+## ===== ScriptManager ===== ##
+# There are no placeholders
+ScriptManager:
+- '&aThis tool supports script management.'
+- '&6Right-click: &eOpen the search window.'
+
+## ===== BlockSelector ===== ##
+# There are no placeholders
+BlockSelector:
+- '&aThis tool supports range selection.'
+- '&6Left-click: &eSpecify the block as Pos1.'
+- '&6Right-click: &eSpecify the block as Pos2.'
+- '&6Shift+Leftclick: &eSpecify Player as Pos1.'
+- '&6Shift+Rightclick: &eSpecify Player as Pos2.'
+
+# |~, \n : change the line
+
+## ===== Messages ===== ##
+# There are no placeholders
+SenderNoPlayerMessage: '&cYou cannot do this as console.'
+NotPermissionMessage: '&cYou don''t have permission to do this.'
+GiveToolMessage: '&aAuxiliary tools were distributed.'
+AllFileReloadMessage: '&aReloaded successfully.'
+PluginBackupMessage: '&aBackup of plugin data is complete.'
+ErrorPluginBackupMessage: '&cBackup of plugin data failed.'
+NotScriptBlockFileMessage: '&cNo ScriptBlock File.'
+DataMigrStartMessage: '&7Start migrating from Scriptblock....'
+DataMigrEndMessage: '&bMigrating completed.'
+
+# %scriptkey% : Script key
+ScriptCopyMessage: '&aI copied the script for the block "%scriptkey%".'
+ScriptPasteMessage: '&aI pasted the script into the block "%scriptkey%".'
+ScriptCreateMessage: '&aI created a script with the block "%scriptkey%".'
+ScriptAddMessage: '&aI added a script to the block "%scriptkey%".'
+ScriptRemoveMessage: '&cI removed the script in the block "%scriptkey%".'
+ScriptNameTagMessage: '&aI edited the nametag for the block "%scriptkey%".'
+ScriptRedstoneMessage: '&aI edited the target selector for the block "%scriptkey%".'
+
+# There are no placeholders
+NotSelectionMessage: '&cBlockSelector area not selected.'
+
+# There are no placeholders
+ScriptViewerStartMessage: '&aSearch for surrounding scripts has started.'
+ScriptViewerStopMessage: '&cSearch for surrounding scripts has stopped.'
+
+# %world%  : name of the world
+# %coords% : Coordinate(x, y, z)
+SelectorPos1Message: '&bI selected the starting point "%coords%".'
+SelectorPos2Message: '&bI chose the end point "%coords%".'
+
+# %scriptkey%  : Script key
+# %blockcount% : Block amount
+SelectorPasteMessage: '&aScript "%scriptkey%" has been pasted from selected area.'
+SelectorRemoveMessage: '&cScript "%scriptkey%" has been removed from selected area.'
+
+# %option% : Name of the option where the error occurred
+# %cause%  : Cause of error
+OptionFailedToExecuteMessage: '&cError occurred while executing script "%option%"|~&cPossible reason: %cause%'
+
+# There are no placeholders
+ActiveDelayMessage: '&cThis script is in delay, you cant use it now.'
+
+# %hour%   : hour
+# %minute% : minute
+# %second% : second
+ActiveCooldownMessage: '&cThis script is in cooldown [%hour%h %minute%m %second%s]'
+
+# %action% : Type of action
+SuccActionDataMessage: '&aAction "%action%" selected.'
+
+# There are no placeholders
+ErrorActionDataMessage: '&cInvalid setting.'
+ErrorScriptCheckMessage: '&cInvalid script.'
+ErrorScriptFileCheckMessage: '&cNo script file.'
+
+# %scriptkey% : Script key
+ErrorScriptExecMessage: '&cFailed to execute script for the "%scriptkey%" scriptkey.'
+
+# %group% : Group name
+ErrorGroupMessage: '&cOnly members of the group "%group%" can run the script.'
+
+# %material% : Type of item
+# %amount%   : Amount of item
+# %damage%   : Damage value of item
+# %name%     : Item name
+# %lore%     : Item lore
+ErrorHandMessage: '&cThe items you hold in hand is not valid,|~you must hold at least "&r%name%&r[%material%:%damage%]&c" with amount "&r%amount%x&c"'
+ErrorItemMessage: '&cThe items in your inventory is not valid,|~you must keep in your inventory at least "&r%name%&r[%material%:%damage%]&c" with amount "&r%amount%x&c"'
+
+# %cost%   : Required amount
+# %result% : Missing amount
+ErrorCostMessage: '&cYou need money "%cost%" to do this.'
+
+# %scriptkey%  : Script key
+# %world%      : The name of the world
+# %coords%     : Coordinate(x, y, z)
+ConsoleScriptEditMessage: '&a[Key"%scriptkey%", Location"%world%, %coords%"] has been edited.'
+ConsoleScriptViewMessage: '&a[Key"%scriptkey%", Location"%world%, %coords%"] has been viewed.'
+ConsoleSuccScriptExecMessage: '&a[Key"%scriptkey%", Location"%world%, %coords%"] executed successfully.'
+ConsoleErrorScriptExecMessage: '&c[Key"%scriptkey%", Location"%world%, %coords%"] fail to execute.'
+
+# %scriptkey%  : Script key
+# %blockcount% : Block amount
+# %world%      : The name of the world
+# %mincoords%  : Minimum coordinate(x, y, z)
+# %maxcoords%  : Maximum coordinate(x, y, z)
+ConsoleSelectorPasteMessage: '&a[Key"%scriptkey%", Min"%world%, %mincoords%", Max"%world%, %maxcoords%"] has been pasted.'
+ConsoleSelectorRemoveMessage: '&c[Key"%scriptkey%", Min"%world%, %mincoords%", Max"%world%, %maxcoords%"] has been removed.'

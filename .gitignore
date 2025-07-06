@@ -1,0 +1,55 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# JavaDoc
+javadoc-latest
+
+# Visual Studio Code
+.vscode/*
+
+# Eclipse
+.project
+.classpath
+.settings
+
+# Idea
+.idea
+*.iml
+*.iws
+*.ipr
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Gradle
+.gradle
+!gradle-wrapper.jar
+
+# Maven
+target
+
+# Build
+out
+build
+bin
+
+# Text
+plugin.txt
+header.txt
+
+# Markdown
+WIKI_EN.md
+WIKI_JP.md
+
+# Other
+*.log
+*.swp
+*.bak
+
+dependency-reduced-pom.xml
+
+.codegpt
