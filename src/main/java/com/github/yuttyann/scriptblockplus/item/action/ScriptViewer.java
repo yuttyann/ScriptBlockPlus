@@ -26,7 +26,6 @@ import com.github.yuttyann.scriptblockplus.utils.ItemUtils;
 
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.permissions.Permissible;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -39,26 +38,9 @@ import java.util.Set;
 public final class ScriptViewer extends ItemAction {
 
     public static final Set<SBPlayer> PLAYERS = new HashSet<>();
-    
-    private static BukkitTask tickTask = null;
-    
-    /**
-     * Initialize the tick task for Script Viewer functionality
-     */
-    public static void startTickTask() {
-        if (tickTask == null || tickTask.isCancelled()) {
-            tickTask = ScriptBlock.getScheduler().run(new TickRunnable(), 0L, 1L);
-        }
-    }
-    
-    /**
-     * Stop the tick task for Script Viewer functionality
-     */
-    public static void stopTickTask() {
-        if (tickTask != null && !tickTask.isCancelled()) {
-            tickTask.cancel();
-            tickTask = null;
-        }
+
+    static {
+        ScriptBlock.getScheduler().run(new TickRunnable(), 0L, 1L);
     }
 
     public ScriptViewer() {

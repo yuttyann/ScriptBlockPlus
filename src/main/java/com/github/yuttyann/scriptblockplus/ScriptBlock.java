@@ -144,17 +144,11 @@ public class ScriptBlock extends JavaPlugin {
 
         // コマンドの登録
         BaseCommand.register("scriptblockplus", new ScriptBlockPlusCommand(this));
-        
-        // Start ScriptViewer tick task
-        ScriptViewer.startTickTask();
     }
 
     @Override
     public void onDisable() {
         try {
-            // Stop ScriptViewer tick task
-            ScriptViewer.stopTickTask();
-            
             UserWindow.closeAll();
             ScriptViewer.PLAYERS.clear();
             TickRunnable.GLOW_ENTITY.removeAll();
