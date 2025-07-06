@@ -40,6 +40,10 @@ public interface NativeAccessor {
     @NotNull
     static NativeAccessor get() throws ReflectiveOperationException {
         if (CraftBukkit.isPaperRemapped()) {
+            // Use special accessor for 1.21.7+ to handle Component serializer changes
+            if (V_1_21_7.isSupported()) {
+                return new PaperRemappedAccessor_v1_21_7();
+            }
             return new PaperRemappedAccessor();
         } else if (NetMinecraft.isLegacy()) {
             if (V_1_14.isSupported()) {
