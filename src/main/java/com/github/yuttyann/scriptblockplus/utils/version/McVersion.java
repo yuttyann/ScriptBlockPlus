@@ -30,7 +30,8 @@ public final class McVersion extends Version {
     /**
      * Minecraft 1.21.x 系列
      */
-    public static final McVersion V_1_21_1 = v(1, 20, 1), V_1_21 = v(1, 20, 5);
+    public static final McVersion V_1_21_8 = v(1, 21, 8), V_1_21_7 = v(1, 21, 7), V_1_21_6 = v(1, 21, 6), V_1_21_5 = v(1, 21, 5), V_1_21_4 = v(1, 21, 4),
+                                  V_1_21_3 = v(1, 21, 2), V_1_21_2 = v(1, 21, 2), V_1_21_1 = v(1, 21, 1), V_1_21 = v(1, 21);
 
     /**
      * Minecraft 1.20.x 系列

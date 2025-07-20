@@ -226,9 +226,9 @@ public final class AnvilGUI {
                 ItemUtils.setName(output, name.substring(1));
             }
             if (McVersion.V_1_12.isSupported()) {
-                ScriptBlock.getScheduler().run(() -> ((AnvilView) inventory).setRepairCost(0));
+                ScriptBlock.getScheduler().run(() -> event.getView().setRepairCost(0));
             } else if (McVersion.V_1_11.isSupported()) {
-                ScriptBlock.getScheduler().run(() -> ((AnvilInventory) inventory).setRepairCost(0));
+                ScriptBlock.getScheduler().run(() -> ((AnvilInventory) event.getInventory()).setRepairCost(0));
             }
             if (update != null) {
                 update.accept((Player) event.getView().getPlayer(), output);

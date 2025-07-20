@@ -39,6 +39,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.NonNull;
 
 import com.github.yuttyann.scriptblockplus.utils.Utils;
+import com.github.yuttyann.scriptblockplus.utils.kyori.KyoriGson;
+import com.github.yuttyann.scriptblockplus.utils.kyori.KyoriLegacy;
 import com.github.yuttyann.scriptblockplus.utils.reflect.matcher.ReflectionMatcher.ConstructorStore;
 import com.github.yuttyann.scriptblockplus.utils.reflect.matcher.ReflectionMatcher.FieldStore;
 import com.github.yuttyann.scriptblockplus.utils.reflect.matcher.ReflectionMatcher.MethodStore;
@@ -50,7 +52,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
  * Corelate-Bukkit PaperRemappedAccessor
  * @author yuttyann44581
  */
-public class PaperRemappedAccessor implements NativeAccessor {
+public class PaperRemappedAccessorLegacy implements NativeAccessor {
 
     private final FieldStore f;
     private final MethodStore m;
@@ -60,7 +62,7 @@ public class PaperRemappedAccessor implements NativeAccessor {
     private final Object blockPosZero;
     private final Object magmaCubeType;
 
-    PaperRemappedAccessor() throws ReflectiveOperationException {
+    PaperRemappedAccessorLegacy() throws ReflectiveOperationException {
         // sendPacket
         field(SERVER_LEVEL.getClass("ServerPlayer"))
             .modifiers(PUBLIC, -STATIC, -FINAL)
@@ -376,7 +378,7 @@ public class PaperRemappedAccessor implements NativeAccessor {
     @Override
     @NotNull
     public Object getComponentFromJson(@NotNull String json) throws ReflectiveOperationException {
-        return m.invokeStatic("Serializer.fromJson", json, m.invokeStatic("CraftRegistry.getMinecraftRegistry"));
+        return m.invokeStatic("Serializer.fromJson", KyoriGson.isJsonInValid(json) ? KyoriGson.toJson(KyoriLegacy.fromString(json)) : json, m.invokeStatic("CraftRegistry.getMinecraftRegistry"));
     }
 
     @Override

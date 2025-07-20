@@ -40,13 +40,19 @@ public interface NativeAccessor {
     @NotNull
     static NativeAccessor get() throws ReflectiveOperationException {
         if (CraftBukkit.isPaperRemapped()) {
-            return new PaperRemappedAccessor();
+            if (V_1_21_6.isSupported()) {
+                return new PaperRemappedAccessor_v1_21_6();
+            } else {
+                return new PaperRemappedAccessorLegacy();
+            }
         } else if (NetMinecraft.isLegacy()) {
             if (V_1_14.isSupported()) {
                 return new SpigotAccessor_v1_14();
             } else {
                 return new SpigotAccessor_v1_9();
             }
+        } else if (V_1_21_6.isSupported()) {
+            return new SpigotAccessor_v1_21_6();
         } else if (V_1_20_5.isSupported()) {
             return new SpigotAccessor_v1_20_5();
         } else {
