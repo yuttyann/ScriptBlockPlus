@@ -26,6 +26,7 @@ import static java.lang.reflect.Modifier.*;
 import static org.apache.commons.lang3.ArrayUtils.*;
 import static org.apache.commons.lang3.math.NumberUtils.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -328,8 +329,48 @@ public class PaperRemappedAccessorLegacy implements NativeAccessor {
         this.m = methods();
         this.c = constructs();
         this.blockPosZero = c.newInstance("BlockPos", INT_ARRAY_ZERO_3);
-        this.magmaCubeType = field(WORLD_ENTITY.getClass("EntityType")).modifiers(STATIC).name("MAGMA_CUBE").fieldType(WORLD_ENTITY.getClass("EntityType")).findFirst().get(null);
+        this.magmaCubeType = getMagmaCubeType();
         this.unknownReason = Enum.valueOf((Class) Utils.getClassForName("org.bukkit.event.inventory.InventoryCloseEvent$Reason"), "UNKNOWN");
+    }
+
+    /**
+     * ゲームバージョンに応じた MagmaCube の {@code EntityType} を取得します。
+     * <p>
+     * 26.x では {@code EntityType.MAGMA_CUBE} の静的フィールドが廃止され、
+     * {@code BuiltInRegistries.ENTITY_TYPE} のレジストリから取得する必要があります。
+     */
+    private static Object getMagmaCubeType() throws ReflectiveOperationException {
+        // 1. EntityType.MAGMA_CUBE 静的フィールド（1.21.x 以前）
+        try {
+            return field(WORLD_ENTITY.getClass("EntityType")).modifiers(STATIC).name("MAGMA_CUBE")
+                    .fieldType(WORLD_ENTITY.getClass("EntityType")).findFirst().get(null);
+        } catch (NullPointerException ignored) { }
+
+        // 2. BuiltInRegistries.ENTITY_TYPE レジストリから取得（1.21.11+ / 26.x）
+        try {
+            var builtInRegistriesClass = Utils.getClassForName("net.minecraft.core.registries.BuiltInRegistries");
+            var registry = builtInRegistriesClass.getField("ENTITY_TYPE").get(null);
+            Class<?> identifierClass;
+            try {
+                // 1.21.11 以降は ResourceLocation が Identifier に改名された
+                identifierClass = Utils.getClassForName("net.minecraft.resources.Identifier");
+            } catch (IllegalArgumentException ignored) {
+                identifierClass = Utils.getClassForName("net.minecraft.resources.ResourceLocation");
+            }
+            var parseMethod = identifierClass.getMethod("parse", String.class);
+            var magmaCubeKey = parseMethod.invoke(null, "minecraft:magma_cube");
+            var getValueMethod = registry.getClass().getMethod("getValue", identifierClass);
+            return getValueMethod.invoke(registry, magmaCubeKey);
+        } catch (NoSuchMethodException | NoSuchFieldException | IllegalAccessException | InvocationTargetException ignored) { }
+
+        // 3. CraftEntityType.bukkitToMinecraft から取得
+        try {
+            var craftEntityTypeClass = Utils.getClassForName("org.bukkit.craftbukkit.entity.CraftEntityType");
+            var bukkitToMinecraft = craftEntityTypeClass.getMethod("bukkitToMinecraft", org.bukkit.entity.EntityType.class);
+            return bukkitToMinecraft.invoke(null, org.bukkit.entity.EntityType.MAGMA_CUBE);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) { }
+
+        throw new ReflectiveOperationException("Could not resolve EntityType for MagmaCube");
     }
 
     @Override
