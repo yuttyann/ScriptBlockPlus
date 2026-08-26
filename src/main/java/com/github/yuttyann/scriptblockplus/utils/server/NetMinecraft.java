@@ -302,6 +302,8 @@ public enum NetMinecraft implements SimpleReflection {
     WORLD_ENTITY_ITEM(WORLD_ENTITY, "item"),
     /** {@code net.minecraft.world.entity.monster} */
     WORLD_ENTITY_MONSTER(WORLD_ENTITY, "monster"),
+    /** {@code net.minecraft.world.entity.monster.cubemob} */
+    WORLD_ENTITY_MONSTER_CUBEMOB(WORLD_ENTITY_MONSTER, "cubemob"),
     /** {@code net.minecraft.world.entity.monster.breeze} */
     WORLD_ENTITY_MONSTER_BREEZE(WORLD_ENTITY_MONSTER, "breeze"),
     /** {@code net.minecraft.world.entity.monster.hoglin} */

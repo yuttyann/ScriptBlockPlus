@@ -62,6 +62,19 @@ public class PaperRemappedAccessorLegacy implements NativeAccessor {
     private final Object blockPosZero;
     private final Object magmaCubeType;
 
+    /**
+     * ゲームバージョンに応じた MagmaCube クラスを取得します。
+     * <p>
+     * 26.2 以降は {@code net.minecraft.world.entity.monster.cubemob} パッケージに移動されました。
+     */
+    private static Class<?> getMagmaCubeClass() {
+        try {
+            return WORLD_ENTITY_MONSTER.getClass("MagmaCube");
+        } catch (IllegalArgumentException e) {
+            return WORLD_ENTITY_MONSTER_CUBEMOB.getClass("MagmaCube");
+        }
+    }
+
     PaperRemappedAccessorLegacy() throws ReflectiveOperationException {
         // sendPacket
         field(SERVER_LEVEL.getClass("ServerPlayer"))
@@ -257,13 +270,13 @@ public class PaperRemappedAccessorLegacy implements NativeAccessor {
             .findFirst("ContainerMenu.checkReachable");
 
         // newMagmaCube
-        construct(WORLD_ENTITY_MONSTER.getClass("MagmaCube"))
+        construct(getMagmaCubeClass())
             .parameterTypes(WORLD_ENTITY.getClass("EntityType"), WORLD_LEVEL.getClass("Level"))
             .findFirst("MagmaCube");
 
         // newCraftMagmaCube
         construct(ENTITY.getClass("CraftMagmaCube"))
-            .parameterTypes(CRAFTBUKKIT.getClass("CraftServer"), WORLD_ENTITY_MONSTER.getClass("MagmaCube"))
+            .parameterTypes(CRAFTBUKKIT.getClass("CraftServer"), getMagmaCubeClass())
             .findFirst("CraftMagmaCube");
 
         // newClientboundSetEntityDataPacket
