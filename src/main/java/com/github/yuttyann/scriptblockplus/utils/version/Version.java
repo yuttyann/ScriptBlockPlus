@@ -54,8 +54,25 @@ public class Version implements Comparable<Version> {
         if (dot1 < 0) {
             throw new IllegalArgumentException("Invalid Version: " + version);
         }
-        int part1 = parseInt(version, 0, dot1, 10), part2 = parseInt(version, dot1 + 1, dot2 < 0 ? version.length() : dot2, 10);
-        return of(part1, part2, dot2 >= 0 ? parseInt(version, dot2 + 1, version.length(), 10) : 0, qualifier);
+        int part1 = parseLeadingInt(version, 0, dot1);
+        int part2 = parseLeadingInt(version, dot1 + 1, dot2 < 0 ? version.length() : dot2);
+        int part3 = dot2 >= 0 ? parseLeadingInt(version, dot2 + 1, version.length()) : 0;
+        return of(part1, part2, part3, qualifier);
+    }
+
+    /**
+     * 文字列の先頭から連続する数字を抽出して int に変換します。
+     * 数字が1つも無い場合は0を返します。
+     */
+    private static int parseLeadingInt(@NotNull String s, int start, int end) {
+        int actualEnd = start;
+        while (actualEnd < end && Character.isDigit(s.charAt(actualEnd))) {
+            actualEnd++;
+        }
+        if (actualEnd == start) {
+            return 0;
+        }
+        return parseInt(s, start, actualEnd, 10);
     }
 
     @NotNull
