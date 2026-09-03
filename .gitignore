@@ -51,5 +51,6 @@ WIKI_JP.md
 *.bak
 
 dependency-reduced-pom.xml
-
 .codegpt
+
+*/test/java/com/github/yuttyann/scriptblockplus
