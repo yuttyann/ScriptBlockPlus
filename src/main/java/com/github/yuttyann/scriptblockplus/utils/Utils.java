@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
@@ -187,8 +188,10 @@ public final class Utils {
      */
     @NotNull
     public static String getName(@NotNull UUID uuid) {
-        var player = Bukkit.getOfflinePlayer(uuid);
-        return !player.hasPlayedBefore() ? "null" : player.getName();
+        OfflinePlayer player = Bukkit.getPlayer(uuid);
+        if (player == null) player = Bukkit.getOfflinePlayer(uuid);
+        var name = player.getName();
+        return name == null ? "null" : name;
     }
 
     @NotNull
