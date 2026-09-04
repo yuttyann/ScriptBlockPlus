@@ -121,11 +121,10 @@ public interface NativeAccessor {
     Object newAnvilMenu(@NotNull Object serverPlayer, @NotNull Object serverLevel, @NotNull Object title) throws ReflectiveOperationException;
 
     @NotNull
-    Object newMagmaCube(@NotNull Object serverLevel) throws ReflectiveOperationException;
+    Object newCubeEntity(@NotNull Object serverLevel) throws ReflectiveOperationException;
 
     @NotNull
-    Object newCraftMagmaCube(@NotNull Object magmaCube) throws ReflectiveOperationException;
-
+    Object newCraftCubeEntity(@NotNull Object cubeEntity) throws ReflectiveOperationException;
 
     // net.minecraft-packets
 

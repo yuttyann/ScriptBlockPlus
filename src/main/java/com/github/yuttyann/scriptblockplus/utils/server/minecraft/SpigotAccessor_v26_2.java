@@ -31,6 +31,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.util.Vector;
@@ -48,7 +49,7 @@ import com.mojang.brigadier.StringReader;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 /**
- * Corelate-Bukkit SpigotAccessor_v26_1
+ * Corelate-Bukkit SpigotAccessor_v26_2
  * @author yuttyann44581
  */
 final class SpigotAccessor_v26_2 implements NativeAccessor {
@@ -58,7 +59,7 @@ final class SpigotAccessor_v26_2 implements NativeAccessor {
     private final ConstructorStore c;
 
     private final Object blockPosZero;
-    private final Object magmaCubeType;
+    private final Object cubeEntityType;
 
     SpigotAccessor_v26_2() throws ReflectiveOperationException {
         // sendPacket
@@ -255,15 +256,15 @@ final class SpigotAccessor_v26_2 implements NativeAccessor {
             .fieldType(boolean.class)
             .findFirst("ContainerMenu.checkReachable");
 
-        // newMagmaCube
-        construct(WORLD_ENTITY_MONSTER_CUBEMOB.getClass("MagmaCube"))
+        // newCubeEntity
+        construct(WORLD_ENTITY_MONSTER_CUBEMOB.getClass("SulfurCube"))
             .parameterTypes(WORLD_ENTITY.getClass("EntityType"), WORLD_LEVEL.getClass("Level"))
-            .findFirst("MagmaCube");
+            .findFirst("SulfurCube");
 
-        // newCraftMagmaCube
-        construct(ENTITY.getClass("CraftMagmaCube"))
-            .parameterTypes(CRAFTBUKKIT.getClass("CraftServer"), WORLD_ENTITY_MONSTER_CUBEMOB.getClass("MagmaCube"))
-            .findFirst("CraftMagmaCube");
+        // newCraftCubeEntity
+        construct(ENTITY.getClass("CraftSulfurCube"))
+            .parameterTypes(CRAFTBUKKIT.getClass("CraftServer"), WORLD_ENTITY_MONSTER_CUBEMOB.getClass("SulfurCube"))
+            .findFirst("CraftSulfurCube");
 
         // newClientboundSetEntityDataPacket
         method(WORLD_ENTITY.getClass("Entity"))
@@ -314,7 +315,7 @@ final class SpigotAccessor_v26_2 implements NativeAccessor {
         this.m = methods();
         this.c = constructs();
         this.blockPosZero = c.newInstance("BlockPos", INT_ARRAY_ZERO_3);
-        this.magmaCubeType = field(WORLD_ENTITY.getClass("EntityTypes")).modifiers(STATIC).name("MAGMA_CUBE").fieldType(WORLD_ENTITY.getClass("EntityType")).findFirst().get(null);
+        this.cubeEntityType = CubeEntityTypeResolver.resolve(ENTITY.getClass("CraftEntityType"), WORLD_ENTITY.getClass("EntityType"), EntityType.valueOf("SULFUR_CUBE"));
     }
 
     @Override
@@ -462,14 +463,14 @@ final class SpigotAccessor_v26_2 implements NativeAccessor {
 
     @Override
     @NotNull
-    public Object newMagmaCube(@NotNull Object serverLevel) throws ReflectiveOperationException {
-        return c.newInstance("MagmaCube", magmaCubeType, serverLevel);
+    public Object newCubeEntity(@NotNull Object serverLevel) throws ReflectiveOperationException {
+        return c.newInstance("SulfurCube", cubeEntityType, serverLevel);
     }
 
     @Override
     @NotNull
-    public Object newCraftMagmaCube(@NotNull Object magmaCube) throws ReflectiveOperationException {
-        return c.newInstance("CraftMagmaCube", Bukkit.getServer(), magmaCube);
+    public Object newCraftCubeEntity(@NotNull Object cubeEntity) throws ReflectiveOperationException {
+        return c.newInstance("CraftSulfurCube", Bukkit.getServer(), cubeEntity);
     }
 
     @Override

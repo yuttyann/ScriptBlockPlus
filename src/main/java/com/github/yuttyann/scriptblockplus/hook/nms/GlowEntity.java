@@ -18,11 +18,13 @@ package com.github.yuttyann.scriptblockplus.hook.nms;
 import static com.github.yuttyann.scriptblockplus.utils.reflect.Reflection.*;
 import static com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft.*;
 import static com.github.yuttyann.scriptblockplus.utils.server.minecraft.Minecraft.*;
+import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.V_26_2;
 import static java.lang.reflect.Modifier.*;
 
 import java.util.UUID;
 
 import org.bukkit.block.Block;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.MagmaCube;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +33,7 @@ import com.github.yuttyann.scriptblockplus.BlockCoords;
 import com.github.yuttyann.scriptblockplus.enums.TeamColor;
 import com.github.yuttyann.scriptblockplus.player.SBPlayer;
 import com.github.yuttyann.scriptblockplus.utils.ArrayUtils;
+import com.github.yuttyann.scriptblockplus.utils.server.CraftBukkit;
 import com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft;
 import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockCoords;
 
@@ -40,18 +43,55 @@ import com.github.yuttyann.scriptblockplus.utils.unmodifiable.UnmodifiableBlockC
  */
 public final class GlowEntity {
 
+    private static final Object SCALE_ATTRIBUTE;
+
     static {
         method(WORLD_ENTITY.getClass("Entity"))
                 .modifiers(PUBLIC, -STATIC, -FINAL)
                 .returnType(void.class)
                 .parameterTypes(double.class, double.class, double.class, float.class, float.class)
                 .findFirst("Entity.moveTo");
+        if (V_26_2.isSupported()) {
+            method(CraftBukkit.ENTITY.getClass("CraftAbstractCubeMob"))
+                .modifiers(PUBLIC, -STATIC)
+                .name("setSize")
+                .returnType(void.class)
+                .parameterTypes(int.class)
+                .findFirst("GlowEntity.setCubeSize");
+            method(WORLD_ENTITY.getClass("AgeableMob"))
+                .modifiers(PUBLIC, -STATIC)
+                .name("setBaby")
+                .returnType(void.class)
+                .parameterTypes(boolean.class)
+                .findFirst("GlowEntity.setBaby");
+            method(WORLD_ENTITY.getClass("LivingEntity"))
+                .modifiers(PUBLIC, -STATIC)
+                .name("getAttribute")
+                .returnType(WORLD_ENTITY_AI_ATTRIBUTES.getClass("AttributeInstance"))
+                .parameterTypes(CORE.getClass("Holder"))
+                .findFirst("GlowEntity.getAttribute");
+            method(WORLD_ENTITY_AI_ATTRIBUTES.getClass("AttributeInstance"))
+                .modifiers(PUBLIC, -STATIC)
+                .name("setBaseValue")
+                .returnType(void.class)
+                .parameterTypes(double.class)
+                .findFirst("GlowEntity.setAttributeBaseValue");
+            try {
+                SCALE_ATTRIBUTE = field(WORLD_ENTITY_AI_ATTRIBUTES.getClass("Attributes"))
+                    .modifiers(PUBLIC, STATIC, FINAL).name("SCALE").fieldType(CORE.getClass("Holder")).findFirst().get(null);
+            } catch (ReflectiveOperationException e) {
+                throw new ExceptionInInitializerError(e);
+            }
+        } else {
+            SCALE_ATTRIBUTE = null;
+        }
     }
 
     private final int id;
-    
+
     private final UUID uuid;
     private final Object nmsEntity;
+    private final Object scaleAttribute;
     private final SBPlayer sbPlayer;
     private final TeamColor teamColor;
     private final BlockCoords blockCoords;
@@ -64,15 +104,17 @@ public final class GlowEntity {
      * @param id - エンティティのID
      * @param uuid - エンティティの{@link UUID}
      * @param nmsEntity - {@code net.minecraft.world.entity.Entity}
+     * @param scaleAttribute - 初期表示時に同期するSCALE属性（未使用ならnull）
      * @param sbPlayer - 送信者
      * @param teamColor - 発光色
      * @param blockCoords - 座標
      * @param flagSize - フラグの初期容量
      */
-    private GlowEntity(final int id, @NotNull UUID uuid, @NotNull Object nmsEntity, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) {
+    private GlowEntity(final int id, @NotNull UUID uuid, @NotNull Object nmsEntity, @Nullable Object scaleAttribute, @NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) {
         this.id = id;
         this.uuid = uuid;
         this.nmsEntity = nmsEntity;
+        this.scaleAttribute = scaleAttribute;
         this.sbPlayer = sbPlayer;
         this.teamColor = teamColor;
         this.blockCoords = new UnmodifiableBlockCoords(blockCoords);
@@ -92,19 +134,33 @@ public final class GlowEntity {
      */
     @NotNull
     static GlowEntity create(@NotNull SBPlayer sbPlayer, @NotNull TeamColor teamColor, @NotNull BlockCoords blockCoords, final int flagSize) throws ReflectiveOperationException {
-        var nmsMagmaCube = newMagmaCube(getServerLevel(blockCoords.getWorld()));
-        var magmaCube = (MagmaCube) newCraftMagmaCube(nmsMagmaCube);
-        magmaCube.setSize(2);
-        magmaCube.setGlowing(true);
-        if (NetMinecraft.isLegacy()) {
-            NetMinecraft.LEGACY_PATH.invokeMethod(nmsMagmaCube, "Entity", "setInvisible", true);
+        var nmsCube = newCubeEntity(getServerLevel(blockCoords.getWorld()));
+        var cube = (LivingEntity) newCraftCubeEntity(nmsCube);
+        Object scaleAttribute = null;
+        if (V_26_2.isSupported()) {
+            // 発光表示の大きさを約1ブロックに揃えます。
+            methods().invoke("GlowEntity.setCubeSize", cube, SulfurCubeGlowAppearance.SIZE);
+            methods().invoke("GlowEntity.setBaby", nmsCube, true);
+            scaleAttribute = methods().invoke("GlowEntity.getAttribute", nmsCube, SCALE_ATTRIBUTE);
+            methods().invoke("GlowEntity.setAttributeBaseValue", scaleAttribute, SulfurCubeGlowAppearance.SCALE);
         } else {
-            magmaCube.setInvisible(true);
+            ((MagmaCube) cube).setSize(2);
         }
-        methods().invoke("Entity.moveTo", nmsMagmaCube, blockCoords.getX() + 0.5D, blockCoords.getY(), blockCoords.getZ() + 0.5D, 0.0F, 0.0F);
-        var glowEntity = new GlowEntity(magmaCube.getEntityId(), magmaCube.getUniqueId(), nmsMagmaCube, sbPlayer, teamColor, blockCoords, flagSize);
+        cube.setGlowing(true);
+        if (NetMinecraft.isLegacy()) {
+            NetMinecraft.LEGACY_PATH.invokeMethod(nmsCube, "Entity", "setInvisible", true);
+        } else {
+            cube.setInvisible(true);
+        }
+        methods().invoke("Entity.moveTo", nmsCube, blockCoords.getX() + 0.5D, blockCoords.getY(), blockCoords.getZ() + 0.5D, 0.0F, 0.0F);
+        var glowEntity = new GlowEntity(cube.getEntityId(), cube.getUniqueId(), nmsCube, scaleAttribute, sbPlayer, teamColor, blockCoords, flagSize);
         teamColor.getTeam().addEntry(glowEntity.uuid.toString());
         return glowEntity;
+    }
+
+    @Nullable
+    Object getScaleAttribute() {
+        return scaleAttribute;
     }
 
     /**

@@ -15,11 +15,14 @@
  */
 package com.github.yuttyann.scriptblockplus.hook.nms;
 
+import static com.github.yuttyann.scriptblockplus.utils.reflect.Reflection.*;
+import static com.github.yuttyann.scriptblockplus.utils.server.NetMinecraft.NETWORK_PROTOCOL_GAME;
 import static com.github.yuttyann.scriptblockplus.utils.server.minecraft.Minecraft.*;
 import static com.github.yuttyann.scriptblockplus.utils.version.McVersion.*;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
@@ -41,6 +44,14 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
  * @author yuttyann44581
  */
 public final class GlowEntityPacket {
+
+    static {
+        if (V_26_2.isSupported()) {
+            construct(NETWORK_PROTOCOL_GAME.getClass("ClientboundUpdateAttributesPacket"))
+                .parameterTypes(int.class, Collection.class)
+                .findFirst("GlowEntityPacket.updateAttributes");
+        }
+    }
 
     private static final Function<UUID, Int2ObjectMap<GlowEntity>> CREATE_MAP = m -> new Int2ObjectOpenHashMap<>();
 
@@ -155,11 +166,17 @@ public final class GlowEntityPacket {
         var glowEntity = GlowEntity.create(sbPlayer, teamColor, blockCoords, flagSize);
         var entityCoords = glowEntity.getBlockCoords();
         double x = entityCoords.getX() + 0.5D, y = blockCoords.getY(), z = entityCoords.getZ() + 0.5D;
-        sendPackets(
-            getServerPlayer(sbPlayer.toPlayer()),
-            newClientboundAddEntityPacket(glowEntity.getNMSEntity(), x, y, z),
-            newClientboundSetEntityDataPacket(glowEntity.getNMSEntity(), glowEntity.getId())
-        );
+        if (V_26_2.isSupported()) {
+            // 表示座標だけを補正し、管理用のブロック座標は変更しません。
+            y += SulfurCubeGlowAppearance.Y_OFFSET;
+        }
+        var spawnPacket = newClientboundAddEntityPacket(glowEntity.getNMSEntity(), x, y, z);
+        var metadataPacket = newClientboundSetEntityDataPacket(glowEntity.getNMSEntity(), glowEntity.getId());
+        // ワールドに登録しないエンティティのため、サイズ補正用の属性も明示的に同期します。
+        var packets = V_26_2.isSupported()
+            ? new Object[] { spawnPacket, metadataPacket, constructs().newInstance("GlowEntityPacket.updateAttributes", glowEntity.getId(), List.of(glowEntity.getScaleAttribute())) }
+            : new Object[] { spawnPacket, metadataPacket };
+        sendPackets(getServerPlayer(sbPlayer.toPlayer()), packets);
         GLOW_ENTITIES.computeIfAbsent(sbPlayer.getUniqueId(), CREATE_MAP).put(blockCoords.hashCode(), glowEntity);
         return glowEntity;
     }

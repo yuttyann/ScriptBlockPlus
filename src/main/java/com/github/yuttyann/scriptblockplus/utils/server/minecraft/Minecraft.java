@@ -131,13 +131,13 @@ public final class Minecraft {
     }
 
     @NotNull
-    public static Object newMagmaCube(@NotNull Object serverLevel) throws ReflectiveOperationException {
-        return accessor.newMagmaCube(serverLevel);
+    public static Object newCubeEntity(@NotNull Object serverLevel) throws ReflectiveOperationException {
+        return accessor.newCubeEntity(serverLevel);
     }
 
     @NotNull
-    public static Object newCraftMagmaCube(@NotNull Object magmaCube) throws ReflectiveOperationException {
-        return accessor.newCraftMagmaCube(magmaCube);
+    public static Object newCraftCubeEntity(@NotNull Object cubeEntity) throws ReflectiveOperationException {
+        return accessor.newCraftCubeEntity(cubeEntity);
     }
 
     @NotNull
