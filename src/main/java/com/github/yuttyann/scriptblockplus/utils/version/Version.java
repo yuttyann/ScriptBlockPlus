@@ -17,7 +17,6 @@ package com.github.yuttyann.scriptblockplus.utils.version;
 
 import static java.lang.Integer.parseInt;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
 
 import java.util.Objects;
 
@@ -183,7 +182,7 @@ public class Version implements Comparable<Version> {
      * @return ベータ版の場合は{@code true}です。
      */
     public boolean isBeta() {
-        return startsWithIgnoreCase(qualifier, "beta");
+        return qualifier.toLowerCase().startsWith("beta");
     }
 
     /**
@@ -193,7 +192,7 @@ public class Version implements Comparable<Version> {
      * @return アルファ版の場合は{@code true}です。
      */
     public boolean isAlpha() {
-        return startsWithIgnoreCase(qualifier, "alpha");
+        return qualifier.toLowerCase().startsWith("alpha");
     }
 
     /**
@@ -203,7 +202,7 @@ public class Version implements Comparable<Version> {
      * @return スナップショット版の場合は{@code true}です。
      */
     public boolean isSnapshot() {
-        return startsWithIgnoreCase(qualifier, "snapshot");
+        return qualifier.toLowerCase().startsWith("snapshot");
     }
 
     /**
