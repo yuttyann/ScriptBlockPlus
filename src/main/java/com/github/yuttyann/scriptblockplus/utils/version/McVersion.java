@@ -22,15 +22,24 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Corelate-Common McVersion
+ * Minecraftのバージョン管理と比較をサポートするクラスです。<p>
+ * また、ゲーム内で利用可能なバージョンの一覧を定義しており、各バージョンがサポートされているかどうかを簡単に確認できます。
+ *
  * @author yuttyann44581
  */
 public final class McVersion extends Version {
 
     /**
+     * Minecraft 26.x 系列
+     */
+    public static final McVersion V_26_3 = v(26, 3),  V_26_2 = v(26, 2),
+                                  V_26_1_2 = v(26, 1, 2), V_26_1_1 = v(26, 1, 1), V_26_1 = v(26, 1);
+
+    /**
      * Minecraft 1.21.x 系列
      */
-    public static final McVersion V_1_21_8 = v(1, 21, 8), V_1_21_7 = v(1, 21, 7), V_1_21_6 = v(1, 21, 6), V_1_21_5 = v(1, 21, 5), V_1_21_4 = v(1, 21, 4),
+    public static final McVersion V_1_21_11 = v(1, 21, 11), V_1_21_10 = v(1, 21, 10), V_1_21_9 = v(1, 21, 9), V_1_21_8 = v(1, 21, 8),
+                                  V_1_21_7 = v(1, 21, 7), V_1_21_6 = v(1, 21, 6), V_1_21_5 = v(1, 21, 5), V_1_21_4 = v(1, 21, 4),
                                   V_1_21_3 = v(1, 21, 2), V_1_21_2 = v(1, 21, 2), V_1_21_1 = v(1, 21, 1), V_1_21 = v(1, 21);
 
     /**
@@ -42,7 +51,8 @@ public final class McVersion extends Version {
     /**
      * Minecraft 1.19.x 系列
      */
-    public static final McVersion V_1_19_3 = v(1, 19, 3), V_1_19_2 = v(1, 19, 2), V_1_19_1 = v(1, 19, 1), V_1_19 = v(1, 19);
+    public static final McVersion V_1_19_4 = v(1, 19, 4), V_1_19_3 = v(1, 19, 3),
+                                  V_1_19_2 = v(1, 19, 2), V_1_19_1 = v(1, 19, 1), V_1_19 = v(1, 19);
 
     /**
      * Minecraft 1.18.x 系列
@@ -61,53 +71,50 @@ public final class McVersion extends Version {
                                   V_1_16_2 = v(1, 16, 2), V_1_16_1 = v(1, 16, 1), V_1_16 = v(1, 16);
 
     /**
-     * Minecraft 1.15.x
+     * Minecraft 1.15.x 系列
      */
     public static final McVersion V_1_15_2 = v(1, 15, 2), V_1_15_1 = v(1, 15, 1), V_1_15 = v(1, 15);
 
     /**
-     * Minecraft 1.14.x
+     * Minecraft 1.14.x 系列
      */
     public static final McVersion V_1_14_4 = v(1, 14, 4), V_1_14_3 = v(1, 14, 3), V_1_14_2 = v(1, 14, 2),
                                   V_1_14_1 = v(1, 14, 1), V_1_14 = v(1, 14);
 
     /**
-     * Minecraft 1.13.x
+     * Minecraft 1.13.x 系列
      */
     public static final McVersion V_1_13_2 = v(1, 13, 2), V_1_13_1 = v(1, 13, 1), V_1_13 = v(1, 13);
 
     /**
-     * Minecraft 1.12.x
+     * Minecraft 1.12.x 系列
      */
     public static final McVersion V_1_12_2 = v(1, 12, 2), V_1_12_1 = v(1, 12, 1), V_1_12 = v(1, 12);
 
     /**
-     * Minecraft 1.11.x
+     * Minecraft 1.11.x 系列
      */
     public static final McVersion V_1_11_2 = v(1, 11, 2), V_1_11_1 = v(1, 11, 1), V_1_11 = v(1, 11);
 
     /**
-     * Minecraft 1.10.x
+     * Minecraft 1.10.x 系列
      */
     public static final McVersion V_1_10_2 = v(1, 10, 2), V_1_10_1 = v(1, 12, 1), V_1_10 = v(1, 10);
 
     /**
-     * Minecraft 1.9.x
+     * Minecraft 1.9.x 系列
      */
     public static final McVersion V_1_9_4 = v(1, 9, 4), V_1_9_3 = v(1, 9, 3), V_1_9_2 = v(1, 9, 2),
                                   V_1_9_1 = v(1, 9, 1), V_1_9 = v(1, 9);
 
-    public static final Version GAME_VERSION;
-
-    static {
-        var bukkit = Bukkit.getBukkitVersion();
-        GAME_VERSION = Version.of(bukkit.substring(0, bukkit.indexOf("-")));
-    }
-
-    private McVersion(final int major, final int minor, final int incremental) {
-        super(major, minor, incremental, null);
-    }
-
+    /**
+     * バージョン情報（メジャー、マイナー、パッチ）を指定して{@link McVersion}インスタンスを生成します。<p>
+     * 引数の長さによってメジャー、マイナー、パッチのいずれかを決定します。
+     *
+     * @param parts メジャー、マイナー、パッチの配列
+     * @return {@link McVersion}インスタンス
+     * @throws IllegalArgumentException 引数が無効な場合にスローされます
+     */
     @NotNull
     public static McVersion v(@NotNull int... parts) {
         if (ArrayUtils.isEmpty(parts)) {
@@ -125,23 +132,47 @@ public final class McVersion extends Version {
         }
     }
 
-    public boolean isGameVersion() {
-        return versionInt == GAME_VERSION.versionInt;
+    public static final Version GAME_VERSION = MinecraftVersionResolver.resolve(Bukkit.getServer());
+
+    private Boolean supported;
+
+    /**
+     * メジャーバージョン、マイナーバージョン、パッチバージョンを設定します。
+     *
+     * @param major メジャーバージョン
+     * @param minor マイナーバージョン
+     * @param patch パッチバージョン
+     */
+    private McVersion(int major, int minor, int incremental) {
+        super(major, minor, incremental, null);
     }
 
     /**
-     * 現在のバージョンがゲームバージョン以上の場合は{@code true}を返します。
-     * @return {@code boolean} - 指定したバージョンがサーバーのゲームバージョン以上だった場合は{@code true}
+     * 現在のバージョンがゲームバージョンと一致する場合は{@code true}を返します。
+     *
+     * @return 現在のバージョンがゲームバージョンと一致する場合は{@code true}です。
+     */
+    public boolean isGameVersion() {
+        return compareTo(GAME_VERSION) == 0;
+    }
+
+    /**
+     * 現在のバージョンがゲームバージョン以上である場合は{@code true}を返します。
+     *
+     * @return サポートされているバージョンの場合は{@code true}です。
      */
     public boolean isSupported() {
-        return GAME_VERSION.isUpperVersion(this);
+        if (supported == null) this.supported = GAME_VERSION.isUpperVersion(this);
+        return supported;
     }
 
     /**
-     * 現在のバージョンがゲームバージョン未満の場合は{@code true}を返します。
-     * @return {@code boolean} - 指定したバージョンがサーバーのゲームバージョン未満だった場合は{@code true}
+     * 現在のバージョンがゲームバージョン未満である場合は{@code true}を返します。
+     *
+     * @return サポートされていないバージョンの場合は{@code true}です。
      */
     public boolean isUnSupported() {
-        return GAME_VERSION.isLowerVersion(this);
+        if (supported == null) this.supported = GAME_VERSION.isUpperVersion(this);
+        return !supported;
     }
 }
