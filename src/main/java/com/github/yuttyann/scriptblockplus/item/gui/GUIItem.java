@@ -38,7 +38,20 @@ import com.github.yuttyann.scriptblockplus.utils.StreamUtils.TriConsumer;
  * ScriptBlockPlus GUIItem クラス
  * @author yuttyann44581
  */
+
 public final class GUIItem implements Cloneable {
+
+    private static Enchantment EFFICIENCY;
+
+    static {
+        try {
+            EFFICIENCY = Enchantment.EFFICIENCY;
+        } catch (NoSuchFieldError ex) {
+            @SuppressWarnings("deprecation")
+            var dig_speed = Enchantment.getByName("DIG_SPEED");
+            EFFICIENCY = dig_speed;
+        }
+    }
 
     private static final ItemFlag[] FLAGS = { ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE };
 
@@ -88,17 +101,17 @@ public final class GUIItem implements Cloneable {
      * @param lore - アイテムの概要
      * @param clicked - クリックした時の処理
      */
+
     public GUIItem(final boolean enchant, final int amount, @NotNull Material material, @Nullable String name, @Nullable List<String> lore, @Nullable TriConsumer<UserWindow, GUIItem, ClickType> clicked) {
         this.item = new ItemStack(material, amount);
         this.clicked = clicked;
-
         var itemMeta = item.getItemMeta();
         if (itemMeta == null) {
             return;
         }
         itemMeta.addItemFlags(FLAGS);
         if (enchant) {
-            itemMeta.addEnchant(Enchantment.EFFICIENCY, 1, false);
+            itemMeta.addEnchant(EFFICIENCY, 1, false);
         }
         if (name != null) {
             itemMeta.setDisplayName("§r" + name);
@@ -167,9 +180,9 @@ public final class GUIItem implements Cloneable {
     public GUIItem setEnchant(final boolean enchant) {
         var itemMeta = item.getItemMeta();
         if (enchant) {
-            itemMeta.addEnchant(Enchantment.EFFICIENCY, 1, false);
+            itemMeta.addEnchant(EFFICIENCY, 1, false);
         } else {
-            itemMeta.removeEnchant(Enchantment.EFFICIENCY);
+            itemMeta.removeEnchant(EFFICIENCY);
         }
         item.setItemMeta(itemMeta);
         return this;
