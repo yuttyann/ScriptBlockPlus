@@ -60,7 +60,7 @@ import org.jetbrains.annotations.Nullable;
 public final class SearchGUI extends CustomGUI {
 
     private static final int[] SLOTS =  {
-        10 /* [0]=スクリプト */, 19 /* [1]=更新時間 */, 28 /* [2]=座標 */, 37 /* [3]=ネームタグ */, 
+        10 /* [0]=スクリプト */, 19 /* [1]=更新時間 */, 28 /* [2]=座標 */, 37 /* [3]=ネームタグ */,
         11 /* [4]=スクリプトキー */, 20 /* [5]=次のぺージ */, 29 /* [6]=前のページ */, 38 /* [7]=クリア */,
         /*              空白                 */
         12, 13, 14, 15, 16, 21, 22, 23, 24, 25,
@@ -140,7 +140,7 @@ public final class SearchGUI extends CustomGUI {
         ).setName(SBConfig.GUI_SEARCH_PREV.setColor()));
 
         // AnvilGUI
-        window.setItem(SLOTS[0], new GUIItem(1, ItemUtils.getCommandMaterial(), SBConfig.GUI_SEARCH_SCRIPT.setColor(), EMPTY_LORE, (w, g, c) -> {
+        window.setItem(SLOTS[0], new GUIItem(1, Material.BOOK, SBConfig.GUI_SEARCH_SCRIPT.setColor(), EMPTY_LORE, (w, g, c) -> {
             OPEN_ANVIL.accept(w, GET_VALUE.apply(g.getLore().get(0), true), (p, t) -> {
                 w.setItem(SLOTS[0], g.setLore(TEXT + (t == null ? "" : ChatColor.stripColor(t))));
                 return Response.close();
@@ -212,7 +212,7 @@ public final class SearchGUI extends CustomGUI {
                 new GUIItem(
                     true,
                     1,
-                    ItemUtils.getChainCommandMaterial(),
+                    Material.BOOKSHELF,
                     SBConfig.GUI_SEARCH_SETTING.setColor(),
                     scriptJson.createLore(player),
                     (w, g, c) -> OPEN_SETTING.accept(w, g, scriptJson))
@@ -239,7 +239,7 @@ public final class SearchGUI extends CustomGUI {
             if (upTime.isEmpty()) {
                 return true;
             }
-            try {   
+            try {
                 var dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                 var lastEdit = b.getLastEdit();
                 var tilde = StringUtils.split(upTime, '~');
