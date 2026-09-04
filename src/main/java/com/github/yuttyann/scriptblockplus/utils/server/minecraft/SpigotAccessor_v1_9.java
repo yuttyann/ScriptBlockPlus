@@ -178,12 +178,12 @@ public class SpigotAccessor_v1_9 implements NativeAccessor {
             .parameterTypes(LEGACY_PATH.getClass("PlayerInventory"), LEGACY_PATH.getClass("World"), LEGACY_PATH.getClass("BlockPosition"), LEGACY_PATH.getClass("EntityHuman"))
             .findFirst("ContainerAnvil");
 
-        // newMagmaCube
+        // newCubeEntity
         construct(LEGACY_PATH.getClass("EntityMagmaCube"))
             .parameterTypes(LEGACY_PATH.getClass("World"))
             .findFirst("EntityMagmaCube");
 
-        // newCraftMagmaCube
+        // newCraftCubeEntity
         construct(ENTITY.getClass("CraftMagmaCube"))
             .parameterTypes(CRAFTBUKKIT.getClass("CraftServer"), LEGACY_PATH.getClass("EntityMagmaCube"))
             .findFirst("CraftMagmaCube");
@@ -377,14 +377,14 @@ public class SpigotAccessor_v1_9 implements NativeAccessor {
 
     @Override
     @NotNull
-    public Object newMagmaCube(@NotNull Object serverLevel) throws ReflectiveOperationException {
+    public Object newCubeEntity(@NotNull Object serverLevel) throws ReflectiveOperationException {
         return c.newInstance("EntityMagmaCube", serverLevel);
     }
 
     @Override
     @NotNull
-    public Object newCraftMagmaCube(@NotNull Object magmaCube) throws ReflectiveOperationException {
-        return c.newInstance("CraftMagmaCube", Bukkit.getServer(), magmaCube);
+    public Object newCraftCubeEntity(@NotNull Object cubeEntity) throws ReflectiveOperationException {
+        return c.newInstance("CraftMagmaCube", Bukkit.getServer(), cubeEntity);
     }
 
     @Override

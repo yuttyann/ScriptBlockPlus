@@ -257,12 +257,12 @@ public class PaperRemappedAccessor_v1_21_6 implements NativeAccessor {
             .fieldType(boolean.class)
             .findFirst("ContainerMenu.checkReachable");
 
-        // newMagmaCube
+        // newCubeEntity
         construct(WORLD_ENTITY_MONSTER.getClass("MagmaCube"))
             .parameterTypes(WORLD_ENTITY.getClass("EntityType"), WORLD_LEVEL.getClass("Level"))
             .findFirst("MagmaCube");
 
-        // newCraftMagmaCube
+        // newCraftCubeEntity
         construct(ENTITY.getClass("CraftMagmaCube"))
             .parameterTypes(CRAFTBUKKIT.getClass("CraftServer"), WORLD_ENTITY_MONSTER.getClass("MagmaCube"))
             .findFirst("CraftMagmaCube");
@@ -465,14 +465,14 @@ public class PaperRemappedAccessor_v1_21_6 implements NativeAccessor {
 
     @Override
     @NotNull
-    public Object newMagmaCube(@NotNull Object serverLevel) throws ReflectiveOperationException {
+    public Object newCubeEntity(@NotNull Object serverLevel) throws ReflectiveOperationException {
         return c.newInstance("MagmaCube", magmaCubeType, serverLevel);
     }
 
     @Override
     @NotNull
-    public Object newCraftMagmaCube(@NotNull Object magmaCube) throws ReflectiveOperationException {
-        return c.newInstance("CraftMagmaCube", Bukkit.getServer(), magmaCube);
+    public Object newCraftCubeEntity(@NotNull Object cubeEntity) throws ReflectiveOperationException {
+        return c.newInstance("CraftMagmaCube", Bukkit.getServer(), cubeEntity);
     }
 
     @Override

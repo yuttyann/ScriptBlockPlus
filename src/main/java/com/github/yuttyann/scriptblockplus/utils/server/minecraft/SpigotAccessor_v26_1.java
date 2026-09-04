@@ -255,12 +255,12 @@ final class SpigotAccessor_v26_1 implements NativeAccessor {
             .fieldType(boolean.class)
             .findFirst("ContainerMenu.checkReachable");
 
-        // newMagmaCube
+        // newCubeEntity
         construct(WORLD_ENTITY_MONSTER.getClass("MagmaCube"))
             .parameterTypes(WORLD_ENTITY.getClass("EntityType"), WORLD_LEVEL.getClass("Level"))
             .findFirst("MagmaCube");
 
-        // newCraftMagmaCube
+        // newCraftCubeEntity
         construct(ENTITY.getClass("CraftMagmaCube"))
             .parameterTypes(CRAFTBUKKIT.getClass("CraftServer"), WORLD_ENTITY_MONSTER.getClass("MagmaCube"))
             .findFirst("CraftMagmaCube");
@@ -314,7 +314,7 @@ final class SpigotAccessor_v26_1 implements NativeAccessor {
         this.m = methods();
         this.c = constructs();
         this.blockPosZero = c.newInstance("BlockPos", INT_ARRAY_ZERO_3);
-        this.magmaCubeType = field(WORLD_ENTITY.getClass("EntityType")).modifiers(STATIC).name("MAGMA_CUBE").fieldType(WORLD_ENTITY.getClass("EntityType")).findFirst().get(null);
+        this.magmaCubeType = CubeEntityTypeResolver.resolve(ENTITY.getClass("CraftEntityType"), WORLD_ENTITY.getClass("EntityType"));
     }
 
     @Override
@@ -462,14 +462,14 @@ final class SpigotAccessor_v26_1 implements NativeAccessor {
 
     @Override
     @NotNull
-    public Object newMagmaCube(@NotNull Object serverLevel) throws ReflectiveOperationException {
+    public Object newCubeEntity(@NotNull Object serverLevel) throws ReflectiveOperationException {
         return c.newInstance("MagmaCube", magmaCubeType, serverLevel);
     }
 
     @Override
     @NotNull
-    public Object newCraftMagmaCube(@NotNull Object magmaCube) throws ReflectiveOperationException {
-        return c.newInstance("CraftMagmaCube", Bukkit.getServer(), magmaCube);
+    public Object newCraftCubeEntity(@NotNull Object cubeEntity) throws ReflectiveOperationException {
+        return c.newInstance("CraftMagmaCube", Bukkit.getServer(), cubeEntity);
     }
 
     @Override

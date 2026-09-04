@@ -243,12 +243,12 @@ final class SpigotAccessor_v1_20_5 implements NativeAccessor {
             .fieldType(boolean.class)
             .findFirst("Container.checkReachable");
 
-        // newMagmaCube
+        // newCubeEntity
         construct(WORLD_ENTITY_MONSTER.getClass("EntityMagmaCube"))
             .parameterTypes(WORLD_ENTITY.getClass("EntityTypes"), WORLD_LEVEL.getClass("World"))
             .findFirst("EntityMagmaCube");
 
-        // newCraftMagmaCube
+        // newCraftCubeEntity
         construct(ENTITY.getClass("CraftMagmaCube"))
             .parameterTypes(CRAFTBUKKIT.getClass("CraftServer"), WORLD_ENTITY_MONSTER.getClass("EntityMagmaCube"))
             .findFirst("CraftMagmaCube");
@@ -451,14 +451,14 @@ final class SpigotAccessor_v1_20_5 implements NativeAccessor {
 
     @Override
     @NotNull
-    public Object newMagmaCube(@NotNull Object serverLevel) throws ReflectiveOperationException {
+    public Object newCubeEntity(@NotNull Object serverLevel) throws ReflectiveOperationException {
         return c.newInstance("EntityMagmaCube", magmaCubeType, serverLevel);
     }
 
     @Override
     @NotNull
-    public Object newCraftMagmaCube(@NotNull Object magmaCube) throws ReflectiveOperationException {
-        return c.newInstance("CraftMagmaCube", Bukkit.getServer(), magmaCube);
+    public Object newCraftCubeEntity(@NotNull Object cubeEntity) throws ReflectiveOperationException {
+        return c.newInstance("CraftMagmaCube", Bukkit.getServer(), cubeEntity);
     }
 
     @Override
