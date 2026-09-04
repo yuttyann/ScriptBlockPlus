@@ -137,16 +137,6 @@ public final class ItemUtils {
     }
 
     @NotNull
-    public static Material getCommandMaterial() {
-        return getMaterial("COMMAND_BLOCK", "COMMAND");
-    }
-
-    @NotNull
-    public static Material getChainCommandMaterial() {
-        return getMaterial("CHAIN_COMMAND_BLOCK", "COMMAND_CHAIN");
-    }
-
-    @NotNull
     public static Material getMaterial(@NotNull String name) {
         return getMaterial(name, null);
     }
