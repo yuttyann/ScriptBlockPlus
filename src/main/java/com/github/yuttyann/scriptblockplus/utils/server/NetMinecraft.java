@@ -303,6 +303,8 @@ public enum NetMinecraft implements SimpleReflection {
     /** {@code net.minecraft.world.entity.monster} */
     WORLD_ENTITY_MONSTER(WORLD_ENTITY, "monster"),
     /** {@code net.minecraft.world.entity.monster.breeze} */
+    WORLD_ENTITY_MONSTER_CUBEMOB(WORLD_ENTITY_MONSTER, "cubemob"),
+    /** {@code net.minecraft.world.entity.monster.breeze} */
     WORLD_ENTITY_MONSTER_BREEZE(WORLD_ENTITY_MONSTER, "breeze"),
     /** {@code net.minecraft.world.entity.monster.hoglin} */
     WORLD_ENTITY_MONSTER_HOGLIN(WORLD_ENTITY_MONSTER, "hoglin"),
@@ -502,21 +504,8 @@ public enum NetMinecraft implements SimpleReflection {
 
     public static final String WARNING_TEXT = "NetMinecraft(" + (McVersion.V_1_17.isSupported() ? NET_MINECRAFT : LEGACY_PATH) + ") not found.";
 
-    private static boolean hasNMS, isLegacy;
-
-    static {
-        try {
-            Class.forName(LEGACY_PATH + ".Entity");
-            hasNMS = isLegacy = true;
-        } catch (ClassNotFoundException ignored) { }
-        if (!hasNMS) {
-            try {
-                Class.forName(SERVER + ".Main");
-                hasNMS = true;
-                isLegacy = false;
-            } catch (ClassNotFoundException ignored) { }
-        }
-    }
+    private static final boolean LEGACY = CraftBukkit.hasClass(LEGACY_PATH.path + ".Entity");
+    private static final boolean HAS_NMS = LEGACY || CraftBukkit.hasClass(SERVER.path + ".Main");
 
     private final String path;
 
@@ -531,7 +520,7 @@ public enum NetMinecraft implements SimpleReflection {
     @Override
     @NotNull
     public String getPath() {
-        return isLegacy ? LEGACY_PATH.path : path;
+        return LEGACY ? LEGACY_PATH.path : path;
     }
 
     @Override
@@ -541,10 +530,10 @@ public enum NetMinecraft implements SimpleReflection {
     }
 
     public static boolean hasNMS() {
-        return hasNMS;
+        return HAS_NMS;
     }
 
     public static boolean isLegacy() {
-        return isLegacy;
+        return LEGACY;
     }
 }

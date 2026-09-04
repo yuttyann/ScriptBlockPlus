@@ -55,7 +55,7 @@ public class SpigotAccessor_v1_9 implements NativeAccessor {
     private final FieldStore f;
     private final MethodStore m;
     private final ConstructorStore c;
- 
+
     SpigotAccessor_v1_9() throws ReflectiveOperationException {
         // sendPacket
         field(LEGACY_PATH.getClass("EntityPlayer"))
@@ -161,7 +161,7 @@ public class SpigotAccessor_v1_9 implements NativeAccessor {
         construct(LEGACY_PATH.getClass("Vec3D"))
             .parameterTypes(double.class, double.class, double.class)
             .findFirst("Vec3D");
-    
+
         // newAnvilMenu
         construct(LEGACY_PATH.getClass("BlockPosition"))
             .parameterTypes(int.class, int.class, int.class)

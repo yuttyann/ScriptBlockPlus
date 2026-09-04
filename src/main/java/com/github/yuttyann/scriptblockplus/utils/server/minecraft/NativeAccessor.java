@@ -39,25 +39,27 @@ public interface NativeAccessor {
 
     @NotNull
     static NativeAccessor get() throws ReflectiveOperationException {
-        if (CraftBukkit.isPaperRemapped()) {
-            if (V_1_21_6.isSupported()) {
-                return new PaperRemappedAccessor_v1_21_6();
-            } else {
-                return new PaperRemappedAccessorLegacy();
-            }
-        } else if (NetMinecraft.isLegacy()) {
-            if (V_1_14.isSupported()) {
-                return new SpigotAccessor_v1_14();
-            } else {
-                return new SpigotAccessor_v1_9();
-            }
-        } else if (V_1_21_6.isSupported()) {
-            return new SpigotAccessor_v1_21_6();
-        } else if (V_1_20_5.isSupported()) {
-            return new SpigotAccessor_v1_20_5();
-        } else {
-            return new SpigotAccessor_v1_17();
+        return CraftBukkit.isPaper() ? getPaperAccessor() : getSpigotAccessor();
+    }
+
+    @NotNull
+    private static NativeAccessor getPaperAccessor() throws ReflectiveOperationException {
+        if (V_26_2.isSupported()) return new PaperAccessor_v26_2();
+        if (V_26_1.isSupported()) return new PaperAccessor_v26_1();
+        if (!CraftBukkit.isPaperRemapped()) return getSpigotAccessor();
+        return V_1_21_6.isSupported() ? new PaperRemappedAccessor_v1_21_6() : new PaperRemappedAccessorLegacy();
+    }
+
+    @NotNull
+    private static NativeAccessor getSpigotAccessor() throws ReflectiveOperationException {
+        if (V_26_2.isSupported()) return new SpigotAccessor_v26_2();
+        if (V_26_1.isSupported()) return new SpigotAccessor_v26_1();
+        if (NetMinecraft.isLegacy()) {
+            return V_1_14.isSupported() ? new SpigotAccessor_v1_14() : new SpigotAccessor_v1_9();
         }
+        if (V_1_21_6.isSupported()) return new SpigotAccessor_v1_21_6();
+        if (V_1_20_5.isSupported()) return new SpigotAccessor_v1_20_5();
+        return new SpigotAccessor_v1_17();
     }
 
     // net.minecraft.server - methods

@@ -118,9 +118,6 @@ public enum CraftBukkit implements SimpleReflection {
     /** {@code org.bukkit.craftbukkit.util.permissions} */
     UTIL_PERMISSIONS(UTIL, "permissions");
 
-    private static String PACKAGE_VERSION;
-    private static boolean PAPER_REMAPPED;
-
     private final String path;
 
     CraftBukkit(@NotNull String path) {
@@ -144,22 +141,48 @@ public enum CraftBukkit implements SimpleReflection {
         return path;
     }
 
+    /** Paper 系サーバーかどうかを返します。旧版および26.1以降も含みます。 */
+    public static boolean isPaper() {
+        return PaperEnvironment.PAPER;
+    }
+
+    /**
+     * 26.1より前の、バージョンなしCraftBukkitを使用するMojang-mapped Paperかどうかを返します。
+     * 26.1以降はリマップが不要なため、Paperでもfalseを返します。
+     */
     public static boolean isPaperRemapped() {
-        return PAPER_REMAPPED;
+        return isPaper() && getLegacyPackageVersion().isEmpty() && McVersion.V_26_1.isUnSupported();
     }
 
     @NotNull
     public static String getLegacyPackageVersion() {
-        if (PACKAGE_VERSION == null) {
-            try {
-                Class.forName("org.bukkit.craftbukkit.CraftServer");
-                PAPER_REMAPPED = true;
-                PACKAGE_VERSION = "";
-            } catch (Exception ex) {
-                var packageName = Bukkit.getServer().getClass().getPackage().getName();
-                PACKAGE_VERSION = packageName.substring(packageName.lastIndexOf('.') + 1);
-            }
+        return PackageVersion.VALUE;
+    }
+
+    // クラスの存在確認ではサーバーや設定クラスのstatic初期化を実行しません。
+    static boolean hasClass(@NotNull String name) {
+        try {
+            Class.forName(name, false, CraftBukkit.class.getClassLoader());
+            return true;
+        } catch (ClassNotFoundException | LinkageError ex) {
+            return false;
         }
-        return PACKAGE_VERSION;
+    }
+
+    private static final class PackageVersion {
+        private static final String VALUE = resolve();
+
+        @NotNull
+        private static String resolve() {
+            if (hasClass("org.bukkit.craftbukkit.CraftServer")) return "";
+            var packageName = Bukkit.getServer().getClass().getPackage().getName();
+            return packageName.substring(packageName.lastIndexOf('.') + 1);
+        }
+    }
+
+    private static final class PaperEnvironment {
+        private static final boolean PAPER = hasClass("io.papermc.paper.configuration.GlobalConfiguration")
+            || hasClass("com.destroystokyo.paper.PaperConfig")
+            || hasClass("org.github.paperspigot.PaperSpigotConfig");
     }
 }
