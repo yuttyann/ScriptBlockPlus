@@ -35,10 +35,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.server.PluginDisableEvent;
-import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.view.AnvilView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -185,7 +183,7 @@ public final class AnvilGUI {
             Bukkit.getPluginManager().registerEvents(listener, ScriptBlock.getInstance());
             var componentTitle = getComponentFromJson(title);
             this.container = newAnvilMenu(serverPlayer, serverLevel, componentTitle);
-            this.inventory = getBukkitView(container).getTopInventory();
+            this.inventory = AnvilViewAccess.getTopInventory(getBukkitView(container));
             inventory.setItem(Slot.INPUT_LEFT, left);
             if (right != null) {
                 inventory.setItem(Slot.INPUT_RIGHT, right);
@@ -225,13 +223,17 @@ public final class AnvilGUI {
             if (McVersion.V_1_16_2.isUnSupported() && StringUtils.isNotEmpty(text) && text.startsWith("§") && name.length() > 0) {
                 ItemUtils.setName(output, name.substring(1));
             }
-            if (McVersion.V_1_12.isSupported()) {
-                ScriptBlock.getScheduler().run(() -> event.getView().setRepairCost(0));
-            } else if (McVersion.V_1_11.isSupported()) {
-                ScriptBlock.getScheduler().run(() -> ((AnvilInventory) event.getInventory()).setRepairCost(0));
+            if (AnvilViewAccess.supportsRepairCost()) {
+                ScriptBlock.getScheduler().run(() -> {
+                    try {
+                        AnvilViewAccess.setRepairCost(event, 0);
+                    } catch (ReflectiveOperationException ex) {
+                        ex.printStackTrace();
+                    }
+                });
             }
             if (update != null) {
-                update.accept((Player) event.getView().getPlayer(), output);
+                update.accept(player, output);
             }
         }
 
