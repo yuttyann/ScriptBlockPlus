@@ -31,6 +31,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -158,9 +159,20 @@ public final class SettingGUI extends CustomGUI {
                 w.setItem(SLOTS[7], w.getItem(SLOTS[7]).setLore(s.createLore(w.getSBPlayer().toPlayer())));
             });
         }));
-        window.setItem(SLOTS[7], new GUIItem(1, Material.ENCHANTED_BOOK, SBConfig.GUI_SETTING_INFO.setColor(), null, (w, g, c) -> {
+
+        var infoItem = new GUIItem(1, ItemUtils.getMaterial("PLAYER_HEAD", "SKULL_ITEM"), SBConfig.GUI_SETTING_INFO.setColor(), null, (w, g, c) -> {
             getScriptJson(w).ifPresent(s -> update(w, s));
-        }));
+        });
+        var skull = infoItem.toBukkit();
+        var skullMeta = (SkullMeta) skull.getItemMeta();
+        if (V_1_12_1.isSupported()) {
+            skullMeta.setOwningPlayer(window.getSBPlayer().toOfflinePlayer());
+        } else {
+            skull.setDurability((short) 3);
+            skullMeta.setOwner(window.getSBPlayer().getName());
+        }
+        skull.setItemMeta(skullMeta);
+        window.setItem(SLOTS[7], infoItem);
 
         // AnvilGUI
         window.setItem(SLOTS[1], new GUIItem(1, Material.REDSTONE_BLOCK, SBConfig.GUI_SETTING_REDSTONE.setColor(), null, (w, g, c) -> {
